@@ -28,6 +28,7 @@
 #include "awt_FileDialog.h"
 #include "awt_Dialog.h"
 #include "awt_Toolkit.h"
+#include "awt_ole.h"
 #include "ComCtl32Util.h"
 #include "com_jetbrains_desktop_JBRFileDialog.h"
 #include <commdlg.h>
@@ -154,11 +155,92 @@ class SmartHolder<T[]> : public SmartHolderBase<T> {
     }
 };
 
+class CoTaskStringHolder {
+public:
+    CoTaskStringHolder() : m_str(NULL) {}
+
+    CoTaskStringHolder& operator=(CoTaskStringHolder& other) {
+        Clean();
+        m_str = other.m_str;
+        other.m_str = NULL;
+        return *this;
+    }
+
+    LPTSTR* operator&() {
+        return &m_str;
+    }
+
+    operator bool() {
+        return m_str != NULL;
+    }
+
+    operator LPTSTR() {
+        return m_str;
+    }
+
+    ~CoTaskStringHolder() {
+        Clean();
+    }
+private:
+    LPTSTR m_str;
+
+    void Clean() {
+        if (m_str)
+            ::CoTaskMemFree(m_str);
+    }
+};
+
+template <typename T>
+class SmartHolderBase {
+public:
+    SmartHolderBase() : m_pointer(NULL) {}
+
+    SmartHolderBase& operator=(const SmartHolderBase&) = delete;
+
+    void Attach(T* other) {
+        Clean();
+        m_pointer = other;
+    }
+
+    operator bool() {
+        return m_pointer != NULL;
+    }
+
+    operator T*() {
+        return m_pointer;
+    }
+
+    ~SmartHolderBase() {
+        Clean();
+    }
+protected:
+    T* m_pointer;
+
+    virtual void Clean() {
+        if (m_pointer)
+            delete m_pointer;
+    }
+};
+
+template<typename T>
+class SmartHolder : public SmartHolderBase<T> {
+};
+
+template <typename T>
+class SmartHolder<T[]> : public SmartHolderBase<T> {
+    virtual void Clean() {
+        if (m_pointer)
+            delete [] m_pointer;
+    }
+};
+
 /* Localized filter string */
 #define MAX_FILTER_STRING       128
 static TCHAR s_fileFilterString[MAX_FILTER_STRING];
 /* Non-localized suffix of the filter string */
 static const TCHAR s_additionalString[] = TEXT(" (*.*)\0*.*\0");
+static SmartHolder<COMDLG_FILTERSPEC> s_fileFilterSpec;
+static UINT s_fileFilterCount;
 
 // Default limit of the output buffer.
 #define SINGLE_MODE_BUFFER_LIMIT     MAX_PATH+1
@@ -175,6 +257,36 @@ _COM_SMARTPTR_TYPEDEF(IShellItemArray, __uuidof(IShellItemArray));
 _COM_SMARTPTR_TYPEDEF(IOleWindowPtr, __uuidof(IOleWindowPtr));
 
 /***********************************************************************/
+
+COMDLG_FILTERSPEC *CreateFilterSpec(UINT *count) {
+    UINT filterCount = 0;
+    for (UINT index = 0; index < MAX_FILTER_STRING - 1; index++) {
+        if (s_fileFilterString[index] == _T('\0')) {
+            filterCount++;
+            if (s_fileFilterString[index + 1] == _T('\0'))
+                break;
+        }
+    }
+    filterCount /= 2;
+    COMDLG_FILTERSPEC *filterSpec = new COMDLG_FILTERSPEC[filterCount];
+    UINT currentIndex = 0;
+    TCHAR *currentStart = s_fileFilterString;
+    for (UINT index = 0; index < MAX_FILTER_STRING - 1; index++) {
+        if (s_fileFilterString[index] == _T('\0')) {
+            if (currentIndex & 1) {
+                filterSpec[currentIndex / 2].pszSpec = currentStart;
+            } else {
+                filterSpec[currentIndex / 2].pszName = currentStart;
+            }
+            currentStart = s_fileFilterString + index + 1;
+            currentIndex++;
+            if (s_fileFilterString[index + 1] == _T('\0'))
+                break;
+        }
+    }
+    *count = filterCount;
+    return filterSpec;
+}
 
 void
 AwtFileDialog::Initialize(JNIEnv *env, jstring filterDescription)
@@ -195,6 +307,7 @@ AwtFileDialog::Initialize(JNIEnv *env, jstring filterDescription)
     }
     DASSERT(s + sizeof(s_additionalString) < s_fileFilterString + MAX_FILTER_STRING);
     memcpy(s, s_additionalString, sizeof(s_additionalString));
+    s_fileFilterSpec.Attach(CreateFilterSpec(&s_fileFilterCount));
 }
 
 LRESULT CALLBACK FileDialogWndProc(HWND hWnd, UINT message,
@@ -762,6 +875,14 @@ AwtFileDialog::Show(void *p)
     FileDialogData data;
     DWORD dwCookie = OLE_BAD_COOKIE;
 
+    OLE_DECL
+    OLEHolder _ole_;
+    IFileDialogPtr pfd;
+    IFileDialogEventsPtr pfde;
+    IShellItemPtr psiResult;
+    FileDialogData data;
+    DWORD dwCookie;
+
     OPENFILENAME ofn;
     memset(&ofn, 0, sizeof(ofn));
 
@@ -1076,6 +1197,12 @@ AwtFileDialog::Show(void *p)
 
         if (useCommonItemDialog) {
             if (pfd && dwCookie != OLE_BAD_COOKIE) {
+                pfd->Unadvise(dwCookie);
+            }
+        }
+
+        if (useCommonItemDialog) {
+            if (pfd) {
                 pfd->Unadvise(dwCookie);
             }
         }
