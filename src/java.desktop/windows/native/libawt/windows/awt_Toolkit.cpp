@@ -238,6 +238,8 @@ BOOL DisplayChangeHandler::recoveryPending = FALSE;
 AdjustWindowRectExForDpiFunc* AwtToolkit::lpAdjustWindowRectExForDpi = NULL;
 GetDpiForWindowFunc* AwtToolkit::lpGetDpiForWindow = NULL;
 
+AdjustWindowRectExForDpiFunc* AwtToolkit::lpAdjustWindowRectExForDpi = NULL;
+
 static LPCTSTR szAwtToolkitClassName = TEXT("SunAwtToolkit");
 
 static const int MOUSE_BUTTONS_WINDOWS_SUPPORTED = 5; //three standard buttons + XBUTTON1 + XBUTTON2.
