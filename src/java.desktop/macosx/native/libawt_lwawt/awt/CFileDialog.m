@@ -297,6 +297,33 @@ canCreateDirectories:(BOOL)inCreateDirectories
     return editMenuItem;
 }
 
+- (NSMenuItem *) createEditMenu {
+    NSMenu *editMenu = [[NSMenu alloc] initWithTitle:@"Edit"];
+
+    NSMenuItem *cutItem = [[NSMenuItem alloc] initWithTitle:@"Cut" action:@selector(cut:) keyEquivalent:@"x"];
+    [editMenu addItem:cutItem];
+    [cutItem release];
+
+    NSMenuItem *copyItem = [[NSMenuItem alloc] initWithTitle:@"Copy" action:@selector(copy:) keyEquivalent:@"c"];
+    [editMenu addItem:copyItem];
+    [copyItem release];
+
+    NSMenuItem *pasteItem = [[NSMenuItem alloc] initWithTitle:@"Paste" action:@selector(paste:) keyEquivalent:@"v"];
+    [editMenu addItem:pasteItem];
+    [pasteItem release];
+
+    NSMenuItem *selectAllItem = [[NSMenuItem alloc] initWithTitle:@"Select All" action:@selector(selectAll:) keyEquivalent:@"a"];
+    [editMenu addItem:selectAllItem];
+    [selectAllItem release];
+
+    NSMenuItem *editMenuItem = [NSMenuItem new];
+    [editMenuItem setTitle:@"Edit"];
+    [editMenuItem setSubmenu:editMenu];
+    [editMenu release];
+
+    return editMenuItem;
+}
+
 - (BOOL) askFilenameFilter:(NSString *)filename {
     JNIEnv *env = [ThreadUtilities getJNIEnv];
     jstring jString = NormalizedPathJavaStringFromNSString(env, filename);
