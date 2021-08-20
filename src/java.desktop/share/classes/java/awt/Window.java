@@ -4185,8 +4185,18 @@ public class Window extends Container implements Accessible {
         TRACE_CAPACITY = USE_COUNTERS ? 8 : 0;
 
         AWTAccessor.setWindowAccessor(new AWTAccessor.WindowAccessor() {
+            private static final boolean isWLToolkit = Toolkit.getDefaultToolkit()
+                    .getClass().getName().equals("sun.awt.wl.WLToolkit");
             public void updateWindow(Window window) {
                 window.updateWindow();
+            }
+
+            public boolean needUpdateWindowAfterPaint(Window window) {
+                return window != null && isWLToolkit;
+            }
+
+            public boolean needUpdateWindow(Window window) {
+                return window != null && (isWLToolkit || !window.isOpaque());
             }
 
             public void setLWRequestStatus(Window changed, boolean status) {
