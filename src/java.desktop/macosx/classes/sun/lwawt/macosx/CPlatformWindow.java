@@ -74,6 +74,7 @@ import sun.awt.CGraphicsDevice;
 import sun.java2d.SunGraphicsEnvironment;
 import sun.java2d.SurfaceData;
 import sun.lwawt.LWKeyboardFocusManagerPeer;
+import sun.lwawt.LWComponentPeer;
 import sun.lwawt.LWLightweightFramePeer;
 import sun.lwawt.LWToolkit;
 import sun.lwawt.LWWindowPeer;
@@ -81,6 +82,8 @@ import sun.lwawt.LWWindowPeer.PeerType;
 import sun.lwawt.LWWindowPeerAPI;
 import sun.lwawt.PlatformWindow;
 import sun.util.logging.PlatformLogger;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class CPlatformWindow extends CFRetainedResource implements PlatformWindow {
     private native long nativeCreateNSWindow(long nsViewPtr,long ownerPtr, long styleBits, double x, double y, double w, double h);
@@ -1789,4 +1792,21 @@ public class CPlatformWindow extends CFRetainedResource implements PlatformWindo
         execute(ptr -> handle[0] = ptr);
         return handle[0];
     }
+
+    // JBR API internals
+    private static void setCustomDecorationTitleBarHeight(Window target, ComponentPeer peer, float height) {
+        if (peer instanceof LWComponentPeer) {
+            PlatformWindow platformWindow = ((LWComponentPeer<?, ?>) peer).getPlatformWindow();
+            if (platformWindow instanceof CPlatformWindow) {
+                ((CPlatformWindow) platformWindow).execute(ptr -> {
+                    AWTThreading.executeWaitToolkit(wait -> nativeSetTransparentTitleBarHeight(ptr, height));
+                });
+                if (target instanceof javax.swing.RootPaneContainer) {
+                    final javax.swing.JRootPane rootpane = ((javax.swing.RootPaneContainer)target).getRootPane();
+                    if (rootpane != null) rootpane.putClientProperty(WINDOW_TRANSPARENT_TITLE_BAR_HEIGHT, height);
+                }
+            }
+        }
+    }
+
 }
