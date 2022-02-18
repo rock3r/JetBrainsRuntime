@@ -141,6 +141,11 @@ public class LWCToolkitInvokeAndWaitTest {
             withCompletionTimeout(INVOKE_TIMEOUT_SECONDS * 2).
             run();
 
+        testCase("invokeAndWait is discarded", () -> test2(
+            "discarded"));
+
+        testCase("invokeAndWait is passed", LWCToolkitInvokeAndWaitTest::test3);
+
         System.out.println("Test PASSED");
     }
 
