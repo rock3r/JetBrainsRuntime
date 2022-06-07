@@ -575,6 +575,7 @@ AWT_NS_WINDOW_IMPLEMENTATION
                     styleBits:(jint)bits
                     frameRect:(NSRect)rect
                   contentView:(NSView *)view
+    transparentTitleBarHeight:(CGFloat)transparentTitleBarHeight
 {
 AWT_ASSERT_APPKIT_THREAD;
 
@@ -2235,7 +2236,7 @@ JNIEXPORT void JNICALL Java_sun_lwawt_macosx_CPlatformWindow_nativeSetAllowAutom
  * Signature: (JJIDDDD)J
  */
 JNIEXPORT jlong JNICALL Java_sun_lwawt_macosx_CPlatformWindow_nativeCreateNSWindow
-(JNIEnv *env, jobject obj, jlong contentViewPtr, jlong ownerPtr, jlong styleBits, jdouble x, jdouble y, jdouble w, jdouble h)
+(JNIEnv *env, jobject obj, jlong contentViewPtr, jlong ownerPtr, jlong styleBits, jdouble x, jdouble y, jdouble w, jdouble h, jdouble transparentTitleBarHeight)
 {
     __block AWTWindow *window = nil;
 
@@ -2262,7 +2263,8 @@ JNI_COCOA_ENTER(env);
                                                ownerWindow:owner
                                                  styleBits:styleBits
                                                  frameRect:frameRect
-                                               contentView:contentView];
+                                               contentView:contentView
+                                 transparentTitleBarHeight:(CGFloat)transparentTitleBarHeight];
         // the window is released is CPlatformWindow.nativeDispose()
 
         if (window) {
