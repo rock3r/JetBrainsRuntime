@@ -311,6 +311,13 @@ public class CPlatformWindow extends CFRetainedResource implements PlatformWindo
             public void applyProperty(final CPlatformWindow c, final Object value) {
                 c.setRoundedCorners(value);
             }
+        },
+        new Property<CPlatformWindow>(WINDOW_CORNER_RADIUS) {
+            public void applyProperty(final CPlatformWindow c, final Object value) {
+                if (value != null && (value instanceof Float)) {
+                    c.execute(ptr -> nativeSetRoundedCorners(ptr, (float) value));
+                }
+            }
         }
     }) {
         public CPlatformWindow convertJComponentToTarget(final JRootPane p) {
