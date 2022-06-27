@@ -297,10 +297,6 @@ class WindowsFileAttributeViews {
         return new Basic(file, followLinks);
     }
 
-    static Basic createBasicWithKeyView(WindowsPath file, boolean followLinks) {
-        return new BasicWithKey(file, followLinks);
-    }
-
     static Dos createDosView(WindowsPath file, boolean followLinks) {
         return new Dos(file, followLinks);
     }
