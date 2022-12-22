@@ -239,6 +239,7 @@ AdjustWindowRectExForDpiFunc* AwtToolkit::lpAdjustWindowRectExForDpi = NULL;
 GetDpiForWindowFunc* AwtToolkit::lpGetDpiForWindow = NULL;
 
 AdjustWindowRectExForDpiFunc* AwtToolkit::lpAdjustWindowRectExForDpi = NULL;
+GetDpiForWindowFunc* AwtToolkit::lpGetDpiForWindow = NULL;
 
 static LPCTSTR szAwtToolkitClassName = TEXT("SunAwtToolkit");
 
