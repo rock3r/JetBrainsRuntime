@@ -575,6 +575,10 @@ public class Font implements java.io.Serializable
         return font2DHandle.font2D;
     }
 
+    private boolean anyEnabledFeatures() {
+        return features.values().stream().anyMatch(x -> x != 0);
+    }
+
     /**
      * Creates a new {@code Font} from the specified name, style and
      * point size.
@@ -796,6 +800,12 @@ public class Font implements java.io.Serializable
         this.font2DHandle = font.font2DHandle;
         this.createdFont = font.createdFont;
         this.withFallback = font.withFallback;
+        this.features = font.features;
+    }
+
+    private Font(Font font, TreeMap<String, Integer> features) {
+        this(font);
+        this.features = features;
     }
 
     /**
@@ -1527,7 +1537,17 @@ public class Font implements java.io.Serializable
      * @since 1.6
      */
     public boolean hasLayoutAttributes() {
-        return hasLayoutAttributes;
+        return anyEnabledFeatures() || hasLayoutAttributes;
+    }
+
+    private static TreeMap<String, Integer> getFeatures(Font font) {
+        TreeMap<String, Integer> res = new TreeMap<>();
+        res.putAll(font.features);
+        res.put(KERN_FEATURE, font.getAttributeValues().getKerning());
+        res.put(LIGA_FEATURE, font.getAttributeValues().getLigatures());
+        res.put(CALT_FEATURE, font.getAttributeValues().getLigatures());
+
+        return res;
     }
 
     /**
