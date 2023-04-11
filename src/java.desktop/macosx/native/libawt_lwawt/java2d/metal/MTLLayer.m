@@ -565,6 +565,37 @@ BOOL MTLLayer_isExtraRedrawEnabled() {
         (*env)->DeleteLocalRef(env, javaLayerLocalRef);
     }
 }
+
+- (void)commitCommandBuffer:(MTLContext*)mtlc wait:(BOOL)waitUntilCompleted display:(BOOL)updateDisplay {
+    MTLCommandBufferWrapper * cbwrapper =[mtlc pullCommandBufferWrapper];
+
+    if (cbwrapper != nil) {
+        id <MTLCommandBuffer> commandbuf =[cbwrapper getCommandBuffer];
+        if (isDisplaySyncEnabled() || !updateDisplay) {
+            [commandbuf addCompletedHandler:^(id <MTLCommandBuffer> commandbuf) {
+                [cbwrapper release];
+            }];
+        } else {
+            __block MTLLayer* layer = self;
+            [layer retain];
+            [commandbuf addCompletedHandler:^(id <MTLCommandBuffer> commandbuf) {
+                [cbwrapper release];
+                [layer startRedraw];
+                [layer release];
+            }];
+       }
+       [commandbuf commit];
+       if (isDisplaySyncEnabled()) {
+            [self startRedraw];
+       }
+
+       if (waitUntilCompleted) {
+           [commandbuf waitUntilCompleted];
+       }
+    } else if (updateDisplay) {
+        [self startRedraw];
+    }
+}
 @end
 
 /*
