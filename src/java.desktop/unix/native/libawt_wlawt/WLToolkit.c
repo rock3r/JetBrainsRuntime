@@ -88,6 +88,8 @@ struct wp_cursor_shape_manager_v1 *wp_cursor_shape_manager; // optional, check f
 static uint32_t num_of_outstanding_sync = 0;
 static bool waiting_for_xdg_toplevel_icon_manager_done = false;
 
+static uint32_t num_of_outstanding_sync = 0;
+
 // This group of definitions corresponds to declarations from awt.h
 jclass    tkClass = NULL;
 jmethodID awtLockMID = NULL;
