@@ -576,12 +576,11 @@ BOOL MTLLayer_isExtraRedrawEnabled() {
                 [cbwrapper release];
             }];
         } else {
-            __block MTLLayer* layer = self;
-            [layer retain];
+            [self retain];
             [commandbuf addCompletedHandler:^(id <MTLCommandBuffer> commandbuf) {
                 [cbwrapper release];
-                [layer startRedraw];
-                [layer release];
+                [self startRedraw];
+                [self release];
             }];
        }
        [commandbuf commit];
