@@ -557,6 +557,41 @@ public abstract class UNIXToolkit extends SunToolkit
         }
     }
 
+    private static final String OS_THEME_IS_DARK = "awt.os.theme.isDark";
+
+    private static Thread systemPropertyWatcher = null;
+
+    private static native boolean dbusInit();
+
+    private void initSystemPropertyWatcher() {
+        String dbusEnabled = System.getProperty("jbr.dbus.enabled", "true").toLowerCase();
+        if (!"true".equals(dbusEnabled) || !dbusInit()) {
+            return;
+        }
+
+        int initialSystemDarkColorScheme = isSystemDarkColorScheme();
+        if (initialSystemDarkColorScheme >= 0) {
+            setDesktopProperty(OS_THEME_IS_DARK, initialSystemDarkColorScheme != 0);
+
+            systemPropertyWatcher = InnocuousThread.newThread("SystemPropertyWatcher",
+                    () -> {
+                        while (true) {
+                            try {
+                                int isSystemDarkColorScheme = isSystemDarkColorScheme();
+                                if (isSystemDarkColorScheme >= 0) {
+                                    setDesktopProperty(OS_THEME_IS_DARK, isSystemDarkColorScheme != 0);
+                                }
+
+                                Thread.sleep(1000);
+                            } catch (Exception ignored) {
+                            }
+                        }
+                    });
+            systemPropertyWatcher.setDaemon(true);
+            systemPropertyWatcher.start();
+        }
+    }
+
     // We rely on the X11 input grab mechanism, but for the Wayland session
     // it only works inside the XWayland server, so mouse clicks outside of it
     // will not be detected.
