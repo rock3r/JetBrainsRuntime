@@ -2667,6 +2667,15 @@ public class Font implements java.io.Serializable
     }
 
     /**
+     * Returns a list of OpenType's features supported by current Font.
+     * Implementation of such logic goes to HarfBuzz library.
+     * @return list of OpenType's features concatenated to String
+     */
+    private static Set<String> getAvailableFeatures(Font font) {
+        return SunLayoutEngine.getAvailableFeatures(FontUtilities.getFont2D(font));
+    }
+
+    /**
      * Returns the logical bounds of the characters indexed in the
      * specified {@link CharacterIterator} in the
      * specified {@code FontRenderContext}.  The logical bounds
