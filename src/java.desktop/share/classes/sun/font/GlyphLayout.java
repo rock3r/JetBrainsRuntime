@@ -68,8 +68,6 @@
 
 package sun.font;
 
-import com.jetbrains.desktop.FontExtensions;
-
 import java.lang.ref.SoftReference;
 import java.awt.Font;
 import java.awt.font.FontRenderContext;

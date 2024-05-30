@@ -77,6 +77,20 @@ public class RealTest {
             throw new Error("Different classes when passing through the same object");
         }
 
+        // Proxy passthrough
+        Proxy p = Objects.requireNonNull(service.getProxy());
+        Proxy np = Objects.requireNonNull(service.passthrough(p));
+        if (p.getClass() != np.getClass()) {
+            throw new Error("Different classes when passing through the same object");
+        }
+
+        // Client proxy passthrough
+        ClientImpl c = new ClientImpl();
+        ClientImpl nc = Objects.requireNonNull(service.passthrough(c));
+        if (c.getClass() != nc.getClass()) {
+            throw new Error("Different classes when passing through the same object");
+        }
+
         // Test JBR-side proxy wrapping & unwrapping
         Api2Way stw = Objects.requireNonNull(service.get2Way());
         Api2Way nstw = Objects.requireNonNull(service.passthrough(stw));

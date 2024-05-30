@@ -86,7 +86,7 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class CPlatformWindow extends CFRetainedResource implements PlatformWindow {
-    private native long nativeCreateNSWindow(long nsViewPtr,long ownerPtr, long styleBits, double x, double y, double w, double h, double transparentTitleBarHeight);
+    private native long nativeCreateNSWindow(long nsViewPtr,long ownerPtr, long styleBits, double x, double y, double w, double h);
     private static native void nativeSetNSWindowStyleBits(long nsWindowPtr, int mask, int data);
     private static native void nativeSetNSWindowAppearance(long nsWindowPtr, String appearanceName);
     private static native void nativeSetNSWindowMenuBar(long nsWindowPtr, long menuBarPtr);
@@ -384,8 +384,6 @@ public class CPlatformWindow extends CFRetainedResource implements PlatformWindo
         responder = createPlatformResponder();
         contentView.initialize(peer, responder);
 
-        float transparentTitleBarHeight = getTransparentTitleBarHeight(_target);
-
         Rectangle bounds;
         if (!IS(DECORATED, styleBits)) {
             // For undecorated frames the move/resize event does not come if the frame is centered on the screen
@@ -406,7 +404,7 @@ public class CPlatformWindow extends CFRetainedResource implements PlatformWindo
                                 + ", bounds=" + bounds);
                     }
                     long windowPtr = createNSWindow(viewPtr, ownerPtr, styleBits,
-                            bounds.x, bounds.y, bounds.width, bounds.height, transparentTitleBarHeight);
+                            bounds.x, bounds.y, bounds.width, bounds.height);
                     if (logger.isLoggable(PlatformLogger.Level.FINE)) {
                         logger.fine("window created: " + Long.toHexString(windowPtr));
                     }
@@ -421,7 +419,7 @@ public class CPlatformWindow extends CFRetainedResource implements PlatformWindo
                             + ", bounds=" + bounds);
                 }
                 long windowPtr = createNSWindow(viewPtr, 0, styleBits,
-                        bounds.x, bounds.y, bounds.width, bounds.height, transparentTitleBarHeight);
+                        bounds.x, bounds.y, bounds.width, bounds.height);
                 if (logger.isLoggable(PlatformLogger.Level.FINE)) {
                     logger.fine("window created: " + Long.toHexString(windowPtr));
                 }
@@ -584,14 +582,6 @@ public class CPlatformWindow extends CFRetainedResource implements PlatformWindo
             prop = rootpane.getClientProperty(WINDOW_TITLE_VISIBLE);
             if (prop != null) {
                 styleBits = SET(styleBits, TITLE_VISIBLE, Boolean.parseBoolean(prop.toString()));
-            }
-
-            prop = rootpane.getClientProperty(WINDOW_TRANSPARENT_TITLE_BAR_HEIGHT);
-            if (prop != null) {
-                boolean enabled = Float.parseFloat(prop.toString()) != 0f;
-                styleBits = SET(styleBits, FULL_WINDOW_CONTENT, enabled);
-                styleBits = SET(styleBits, TRANSPARENT_TITLE_BAR, enabled);
-                styleBits = SET(styleBits, TITLE_VISIBLE, !enabled);
             }
         }
 
