@@ -85,41 +85,16 @@
 #include "Trace.h"
 #include "D3DPipelineManager.h"
 
-typedef struct {
-    int monitorCounter;
-    int monitorLimit;
-    HMONITOR* hmpMonitors;
-} MonitorData;
 
+/* Some helper functions (from awt_MMStub.h/cpp) */
 
-// Only monitors where CreateDC does not fail are valid
-static BOOL IsValidMonitor(HMONITOR hMon)
-{
-    MONITORINFOEX mieInfo;
-    memset((void*)(&mieInfo), 0, sizeof(MONITORINFOEX));
-    mieInfo.cbSize = sizeof(MONITORINFOEX);
-    if (!::GetMonitorInfo(hMon, (LPMONITORINFOEX)(&mieInfo))) {
-        J2dTraceLn(J2D_TRACE_INFO,
-                   "Devices::IsValidMonitor: GetMonitorInfo failed for monitor with handle %p",
-                   hMon);
-        return FALSE;
-    }
-
-    HDC hDC = CreateDC(mieInfo.szDevice, NULL, NULL, NULL);
-    if (NULL == hDC) {
-        J2dTraceLn(J2D_TRACE_INFO,
-                   "Devices::IsValidMonitor: CreateDC failed for monitor with handle %p, device: %S",
-                   hMon, mieInfo.szDevice);
-        return FALSE;
-    }
-
-    ::DeleteDC(hDC);
-    return TRUE;
-}
+int g_nMonitorCounter;
+int g_nMonitorLimit;
+HMONITOR* g_hmpMonitors;
 
 
 // Callback for CollectMonitors below
-static BOOL WINAPI clb_fCollectMonitors(HMONITOR hMon, HDC hDC, LPRECT rRect, LPARAM lpMonitorData)
+BOOL WINAPI clb_fCollectMonitors(HMONITOR hMon, HDC hDC, LPRECT rRect, LPARAM lP)
 {
     MonitorData* pMonitorData = (MonitorData *)lpMonitorData;
 
