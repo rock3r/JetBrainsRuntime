@@ -144,6 +144,26 @@ public class WLToolkit extends UNIXToolkit implements Runnable, ToolkitAPI {
     private static final int AWT_MULTICLICK_DEFAULT_TIME_MS = 500;
     private static final int AWT_MULTICLICK_MOUSE_MOVE_THRESHOLD_JAVA_UNITS = 5;
 
+    // mapping of AWT cursor types to X cursor names
+    // multiple variants can be specified, that will be tried in order
+    // See https://freedesktop.org/wiki/Specifications/cursor-spec/
+    private static final String[][] CURSOR_NAMES = {
+            {"default", "arrow", "left_ptr", "left_arrow"}, // DEFAULT_CURSOR
+            {"crosshair", "cross"}, // CROSSHAIR_CURSOR
+            {"text", "xterm"}, // TEXT_CURSOR
+            {"wait", "watch", "progress"}, // WAIT_CURSOR
+            {"sw-resize", "bottom_left_corner"}, // SW_RESIZE_CURSOR
+            {"se-resize", "bottom_right_corner"}, // SE_RESIZE_CURSOR
+            {"nw-resize", "top_left_corner"}, // NW_RESIZE_CURSOR
+            {"ne-resize", "top_right_corner"}, // NE_RESIZE_CURSOR
+            {"n-resize", "top_side"}, // N_RESIZE_CURSOR
+            {"s-resize", "bottom_side"}, // S_RESIZE_CURSOR
+            {"w-resize", "left_side"}, // W_RESIZE_CURSOR
+            {"e-resize", "right_side"}, // E_RESIZE_CURSOR
+            {"pointer", "pointing_hand", "hand1", "hand2"}, // HAND_CURSOR
+            {"move"}, // MOVE_CURSOR
+    };
+
     private static boolean initialized = false;
     private static Thread toolkitThread;
     private static WLDataDevice dataDevice;
