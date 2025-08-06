@@ -162,6 +162,19 @@ public final class VKEnv {
         }
     }
 
+    private static void checkInit() {
+        if (state > INITIALIZING) return;
+        synchronized (VKEnv.class) {
+            if (state == UNINITIALIZED) {
+                // Try initializing the Toolkit first to give it a chance to init Vulkan with proper platform data.
+                state = INITIALIZING;
+                Toolkit.getDefaultToolkit();
+            }
+            // Still not initialized? Init without platform data.
+            if (state == INITIALIZING) init(0);
+        }
+    }
+
     public static boolean isVulkanEnabled() {
         checkInit();
         return (state & ENABLED) == ENABLED;
