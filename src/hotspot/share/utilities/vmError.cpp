@@ -1345,6 +1345,17 @@ void VMError::report(outputStream* st, bool _verbose) {
     print_classloaders_stats(st);
     print_dup_classes(st); // do it separately in case we're low on memory
 
+  STEP("OOME stack traces")
+  st->print_cr("OOME stack traces (most recent first):");
+  print_oome_stacks(st);
+
+  STEP("Classloader stats")
+  st->print_cr("Classloader memory used:");
+  FREE_C_HEAP_ARRAY(void*, _ballast_memory);
+  _ballast_memory = nullptr;
+  print_classloaders_stats(st);
+  print_dup_classes(st); // do it separately in case we're low on memory
+
   STEP_IF("printing system", _verbose)
     st->print_cr("---------------  S Y S T E M  ---------------");
     st->cr();
