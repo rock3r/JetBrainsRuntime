@@ -55,6 +55,8 @@ public abstract class JBRSkia {
 
         public abstract long getDirectContextPtr();
 
+        public abstract long getMetalTexturePtr();
+
         public abstract int getPixelFormat();
 
         public abstract int getColorSpaceId();

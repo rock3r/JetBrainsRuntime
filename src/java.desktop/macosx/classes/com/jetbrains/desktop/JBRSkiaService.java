@@ -26,6 +26,10 @@
 package com.jetbrains.desktop;
 
 import com.jetbrains.exported.JBRApi;
+import sun.java2d.SunGraphics2D;
+import sun.java2d.SurfaceData;
+import sun.java2d.metal.MTLRenderQueue;
+import sun.java2d.pipe.hw.AccelSurface;
 
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
@@ -47,18 +51,24 @@ public class JBRSkiaService extends JBRSkia {
     @Override
     public ScopedSkiaCanvas acquireCanvas(Graphics2D graphics) {
         Objects.requireNonNull(graphics, "graphics");
-        return new PocScopedSkiaCanvas(NEXT_SCOPE_ID.getAndIncrement(), graphics.getClipBounds());
+        return new PocScopedSkiaCanvas(
+                NEXT_SCOPE_ID.getAndIncrement(),
+                graphics.getClipBounds(),
+                getMetalTexturePtr(graphics)
+        );
     }
 
     private static final class PocScopedSkiaCanvas extends ScopedSkiaCanvas {
         private final long scopeId;
         private final Rectangle userSpaceClip;
+        private final long metalTexturePtr;
         private boolean closed;
         private boolean flushed;
 
-        private PocScopedSkiaCanvas(long scopeId, Rectangle userSpaceClip) {
+        private PocScopedSkiaCanvas(long scopeId, Rectangle userSpaceClip, long metalTexturePtr) {
             this.scopeId = scopeId;
             this.userSpaceClip = userSpaceClip == null ? null : new Rectangle(userSpaceClip);
+            this.metalTexturePtr = metalTexturePtr;
         }
 
         @Override
@@ -79,6 +89,11 @@ public class JBRSkiaService extends JBRSkia {
         @Override
         public long getDirectContextPtr() {
             return 0;
+        }
+
+        @Override
+        public long getMetalTexturePtr() {
+            return metalTexturePtr;
         }
 
         @Override
@@ -122,5 +137,25 @@ public class JBRSkiaService extends JBRSkia {
                 throw new IllegalStateException("JBR Skia scope is already closed");
             }
         }
+    }
+
+    private static long getMetalTexturePtr(Graphics2D graphics) {
+        if (!(graphics instanceof SunGraphics2D sunGraphics)) {
+            return 0;
+        }
+        SurfaceData surfaceData = sunGraphics.getSurfaceData();
+        if (!(surfaceData instanceof AccelSurface accelSurface)) {
+            return 0;
+        }
+
+        long[] texturePtr = new long[1];
+        MTLRenderQueue rq = MTLRenderQueue.getInstance();
+        rq.lock();
+        try {
+            rq.flushAndInvokeNow(() -> texturePtr[0] = accelSurface.getNativeResource(AccelSurface.TEXTURE));
+        } finally {
+            rq.unlock();
+        }
+        return texturePtr[0];
     }
 }

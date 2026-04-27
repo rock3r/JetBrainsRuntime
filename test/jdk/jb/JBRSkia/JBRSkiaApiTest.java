@@ -76,6 +76,7 @@ public class JBRSkiaApiTest {
             assertEquals(JBRSkia.ScopedSkiaCanvas.BACKEND_METAL, scope.getBackend(), "backend");
             assertEquals(0L, scope.getCanvasPtr(), "canvas pointer placeholder");
             assertEquals(0L, scope.getDirectContextPtr(), "direct context pointer placeholder");
+            assertEquals(0L, scope.getMetalTexturePtr(), "metal texture pointer for software test surface");
             assertEquals(1, scope.getSampleCount(), "sample count");
             assertEquals(new Rectangle(2, 3, 11, 13), scope.getUserSpaceClip(), "clip");
             scope.flush();
