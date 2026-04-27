@@ -144,6 +144,31 @@ Next native checkpoint:
   - Skiko calls only JBR ABI functions for drawing on that scope.
   - Skiko's bundled Skia path remains fallback-only.
 
+### Checkpoint 6: JBR-Owned Paint Invocation
+
+Status: completed as a diagnostic bridge; native Skia drawing is still the next implementation step.
+
+- Added a PoC-only scoped `renderDiagnosticFrame(width, height, frameTimeNanos)` API to the private JBR API and the public `JetBrainsRuntimeApi` mirror.
+- Skiko now invokes this method through the acquired JBR scope when `-Dskiko.jbr.interop.renderDiagnostic=true` is set.
+- The diagnostic method proves the desired call direction:
+  - CMP routes `SwingGraphics` painting into `JbrSkiaSwingLayer`.
+  - Skiko acquires the JBR scope through the version-gated public API path.
+  - JBR owns the actual paint into the current Java2D destination.
+  - Skiko does not wrap the JBR texture with its own Metal `DirectContext`.
+- Smoke command with patched `java.desktop`, temporary public API shim, and local Skiko reached:
+  - `SKIKO_JBR_INTEROP_SCOPE_ACQUIRED abi=1 build=skia-interop-poc:1 metalTexture=0xbe9274780`
+- Screenshot captured at `/tmp/jbr-skia-diagnostic-render.png`.
+- This checkpoint intentionally paints a JBR diagnostic pattern, not Compose UI and not native Skia yet. It closes the previous ownership gap by proving the correct direction for the next bridge: Skiko calls a JBR-owned render entry point inside the paint scope.
+
+Next native checkpoint:
+
+- Replace the Java diagnostic body with the first native JBR-owned Skia/Metal implementation:
+  - bootstrap or link the pinned Skia runtime into the JBR branch
+  - create a JBR-owned Skia direct context on the Java2D Metal queue
+  - wrap the current destination texture with load-not-clear semantics
+  - expose a narrow native C ABI entry point that can render a minimal Skia test pattern
+  - only after that succeeds, map the Skiko/CMP renderer command surface onto the JBR-owned ABI.
+
 Use separate worktrees for every existing repo touched:
 
 - `JetBrainsRuntime` worktree: `jbr-skia-compose-poc`

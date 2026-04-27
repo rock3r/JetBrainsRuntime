@@ -31,8 +31,10 @@ import sun.java2d.SurfaceData;
 import sun.java2d.metal.MTLRenderQueue;
 import sun.java2d.pipe.hw.AccelSurface;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.awt.RenderingHints;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -53,6 +55,7 @@ public class JBRSkiaService extends JBRSkia {
         Objects.requireNonNull(graphics, "graphics");
         return new PocScopedSkiaCanvas(
                 NEXT_SCOPE_ID.getAndIncrement(),
+                graphics,
                 graphics.getClipBounds(),
                 getMetalTexturePtr(graphics)
         );
@@ -60,13 +63,15 @@ public class JBRSkiaService extends JBRSkia {
 
     private static final class PocScopedSkiaCanvas extends ScopedSkiaCanvas {
         private final long scopeId;
+        private final Graphics2D graphics;
         private final Rectangle userSpaceClip;
         private final long metalTexturePtr;
         private boolean closed;
         private boolean flushed;
 
-        private PocScopedSkiaCanvas(long scopeId, Rectangle userSpaceClip, long metalTexturePtr) {
+        private PocScopedSkiaCanvas(long scopeId, Graphics2D graphics, Rectangle userSpaceClip, long metalTexturePtr) {
             this.scopeId = scopeId;
+            this.graphics = graphics;
             this.userSpaceClip = userSpaceClip == null ? null : new Rectangle(userSpaceClip);
             this.metalTexturePtr = metalTexturePtr;
         }
@@ -114,6 +119,40 @@ public class JBRSkiaService extends JBRSkia {
         @Override
         public Rectangle getUserSpaceClip() {
             return userSpaceClip == null ? null : new Rectangle(userSpaceClip);
+        }
+
+        @Override
+        public boolean renderDiagnosticFrame(int width, int height, long frameTimeNanos) {
+            ensureOpen();
+            if (width <= 0 || height <= 0) {
+                return false;
+            }
+
+            Graphics2D diagnosticGraphics = (Graphics2D) graphics.create();
+            try {
+                diagnosticGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                diagnosticGraphics.setColor(new Color(8, 24, 31));
+                diagnosticGraphics.fillRect(0, 0, width, height);
+
+                int phase = (int) ((frameTimeNanos / 12_000_000L) % 48L);
+                diagnosticGraphics.setColor(new Color(14, 180, 143, 190));
+                for (int x = -height + phase; x < width + height; x += 48) {
+                    diagnosticGraphics.drawLine(x, height, x + height, 0);
+                }
+
+                diagnosticGraphics.setColor(new Color(255, 205, 72, 230));
+                int box = Math.max(32, Math.min(width, height) / 4);
+                int x = Math.max(12, (width - box) / 2);
+                int y = Math.max(12, (height - box) / 2);
+                diagnosticGraphics.fillRoundRect(x, y, box, box, 14, 14);
+
+                diagnosticGraphics.setColor(new Color(255, 255, 255, 230));
+                diagnosticGraphics.drawString("JBR-owned paint scope", 16, Math.min(height - 16, 28));
+                diagnosticGraphics.drawString("texture=0x" + Long.toHexString(metalTexturePtr), 16, Math.min(height - 16, 46));
+            } finally {
+                diagnosticGraphics.dispose();
+            }
+            return true;
         }
 
         @Override

@@ -65,6 +65,8 @@ public abstract class JBRSkia {
 
         public abstract Rectangle getUserSpaceClip();
 
+        public abstract boolean renderDiagnosticFrame(int width, int height, long frameTimeNanos);
+
         public abstract void flush();
 
         @Override
