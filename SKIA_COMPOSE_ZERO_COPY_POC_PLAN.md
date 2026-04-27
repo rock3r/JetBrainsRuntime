@@ -123,6 +123,27 @@ Next native checkpoint:
   - fallback still works when the ABI/build gate is deliberately mismatched.
 - Use the exposed destination texture to prototype an actual Skiko render-to-JBR-texture path, while keeping the planned JBR-owned Skia C ABI as the correctness target.
 
+### Checkpoint 5: Destination Texture Probe
+
+Status: completed as a probe; direct Skiko-owned rendering into the JBR texture is intentionally disabled by default.
+
+- JBR scope metadata now returns a non-zero destination Metal texture pointer during the CMP Swing paint smoke run.
+- Skiko can read scope methods through the public scope superclass instead of reflectively invoking private implementation-class methods.
+- CMP sample task `runSwingJbrSkiaInterop` accepts extra PoC JVM arguments through `-PjbrSkiaInteropJvmArgs=...`, so patched-module and temporary API-shim runs do not require editing the task each time.
+- Smoke command with patched `java.desktop` and temporary public API shim reached:
+  - `SKIKO_JBR_INTEROP_SCOPE_ACQUIRED abi=1 build=skia-interop-poc:1 metalTexture=0xb9343c280`
+- A deliberately unsafe Skiko-owned render-to-destination-texture experiment was added behind `-Dskiko.jbr.interop.renderToTexture=true`.
+- That experiment crashed with SIGTRAP when wrapping the JBR texture with a Skiko-created Metal `DirectContext`, which confirms the plan's core ownership/ordering risk: this cannot be made correct by casually mixing Skiko's Metal queue/context with JBR's destination texture.
+
+Next native checkpoint:
+
+- Stop trying to submit with Skiko's own Metal context for the fast path.
+- Move to the planned JBR-owned Skia/Metal C ABI:
+  - JBR creates/owns the Skia `GrDirectContext` on the Java2D Metal queue.
+  - JBR wraps the destination texture into a Skia surface/canvas.
+  - Skiko calls only JBR ABI functions for drawing on that scope.
+  - Skiko's bundled Skia path remains fallback-only.
+
 Use separate worktrees for every existing repo touched:
 
 - `JetBrainsRuntime` worktree: `jbr-skia-compose-poc`
@@ -235,6 +256,7 @@ Primary target: **macOS + Metal + direct canvas path**. JCEF, video/external sur
   - closes the scope before returning from paint.
 - Route all fast-path text/font/typeface creation through JBR-provided Skia functions. Do not pass `SkTypeface*` or related objects from the bundled Skiko runtime into the JBR canvas.
 - Existing Skiko external-pointer APIs for Metal (`DirectContext.makeMetal`, `BackendRenderTarget.makeMetal`, `Surface.makeFromBackendRenderTarget`) are useful references, but the PoC must avoid crossing raw Skia C++ objects between two runtimes.
+- `skiko.jbr.interop.renderToTexture=true` is a diagnostic-only crash-prone probe that attempts to wrap the JBR destination texture with Skiko's bundled Metal context. It must remain disabled by default and must not be treated as the target architecture.
 - Add diagnostics counters:
   - fast-path frames
   - fallback frames
