@@ -31,12 +31,32 @@ Known limitation: this checkpoint is a runnable fallback MVP, not zero-copy rend
 
 ### Checkpoint 2: Version-Aligned Sample And Report Harness
 
-Status: next.
+Status: completed for the fallback MVP harness.
 
 - Resolve the local Skiko/CMP version mismatch observed when trying `SKIKO_VERSION=0.0.0-SNAPSHOT`; CMP currently expects Skiko API signatures from `0.9.47`.
 - Decide whether the next runnable sample consumes a Skiko branch rebased/aligned to CMP's expected Skiko version, or whether CMP is temporarily adapted to the Skiko worktree API for the PoC.
-- Add parseable old/new sample launch scripts and a minimal report that records fallback markers, process CPU samples, and elapsed run metadata.
-- Keep zero-copy fast-path frame counts reported as unavailable until the native JBR scope exists.
+- Added parseable old/new sample launch and report harness in CMP:
+  - `compose/desktop/desktop/samples/scripts/jbr-skia-interop-report.sh`
+  - old mode: `:compose:desktop:desktop:desktop-samples:runSwing`
+  - new mode: `:compose:desktop:desktop:desktop-samples:runSwingJbrSkiaInterop`
+- The report records fallback markers, process CPU samples, RSS samples, elapsed run metadata, and log/csv file locations.
+- Smoke report generated at `/tmp/jbr-skia-report-smoke2/report.md`.
+  - old marker count: `0`
+  - new marker count: `1`
+  - observed marker: `SKIKO_JBR_INTEROP_FALLBACK reason=skiko-jbr-runtime-missing`
+- Zero-copy fast-path frame counts remain reported as unavailable until the native JBR scope exists.
+
+Version alignment remains open for the true cross-repo Skiko runtime handoff. The attempt to consume the Skiko worktree as `SKIKO_VERSION=0.0.0-SNAPSHOT` from CMP fails because the CMP checkout expects Skiko `0.9.47` API signatures while the Skiko worktree has newer Skia wrapper signatures. The next implementation checkpoint must either rebase the Skiko interop changes onto the Skiko revision CMP expects, or move CMP forward to a compatible Skiko API set.
+
+### Checkpoint 3: Native Scope Or Version-Aligned Skiko Runtime
+
+Status: next.
+
+- Choose the version-alignment direction:
+  - rebase the Skiko JBR interop JVM/fallback changes onto the Skiko revision matching CMP `0.9.47`, or
+  - update CMP to the Skiko worktree API and contain the required graphics API adaptations.
+- Once CMP can consume the modified Skiko runtime, make the new-mode sample emit Skiko-owned fallback markers instead of CMP's runtime-missing marker.
+- Begin native JBR scope work only after the Java/Kotlin handoff is version-aligned and runnable.
 
 Use separate worktrees for every existing repo touched:
 
