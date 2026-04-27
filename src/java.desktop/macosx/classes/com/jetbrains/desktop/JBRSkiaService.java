@@ -28,21 +28,99 @@ package com.jetbrains.desktop;
 import com.jetbrains.exported.JBRApi;
 
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
+import java.util.Objects;
+import java.util.concurrent.atomic.AtomicLong;
 
 @JBRApi.Service
 @JBRApi.Provides("JBRSkia")
 public class JBRSkiaService extends JBRSkia {
     private static final String PROPERTY = "sun.java2d.skia.interop";
+    private static final AtomicLong NEXT_SCOPE_ID = new AtomicLong(1);
 
     public JBRSkiaService() {
         if (!Boolean.getBoolean(PROPERTY)) {
             throw new JBRApi.ServiceNotAvailableException("JBR Skia interop is disabled");
         }
-        throw new JBRApi.ServiceNotAvailableException("JBR Skia interop native runtime is not available");
     }
 
     @Override
     public ScopedSkiaCanvas acquireCanvas(Graphics2D graphics) {
-        return null;
+        Objects.requireNonNull(graphics, "graphics");
+        return new PocScopedSkiaCanvas(NEXT_SCOPE_ID.getAndIncrement(), graphics.getClipBounds());
+    }
+
+    private static final class PocScopedSkiaCanvas extends ScopedSkiaCanvas {
+        private final long scopeId;
+        private final Rectangle userSpaceClip;
+        private boolean closed;
+        private boolean flushed;
+
+        private PocScopedSkiaCanvas(long scopeId, Rectangle userSpaceClip) {
+            this.scopeId = scopeId;
+            this.userSpaceClip = userSpaceClip == null ? null : new Rectangle(userSpaceClip);
+        }
+
+        @Override
+        public long getScopeId() {
+            return scopeId;
+        }
+
+        @Override
+        public int getBackend() {
+            return BACKEND_METAL;
+        }
+
+        @Override
+        public long getCanvasPtr() {
+            return 0;
+        }
+
+        @Override
+        public long getDirectContextPtr() {
+            return 0;
+        }
+
+        @Override
+        public int getPixelFormat() {
+            return 0;
+        }
+
+        @Override
+        public int getColorSpaceId() {
+            return 0;
+        }
+
+        @Override
+        public int getSampleCount() {
+            return 1;
+        }
+
+        @Override
+        public Rectangle getUserSpaceClip() {
+            return userSpaceClip == null ? null : new Rectangle(userSpaceClip);
+        }
+
+        @Override
+        public void flush() {
+            ensureOpen();
+            flushed = true;
+        }
+
+        @Override
+        public void close() {
+            if (!closed) {
+                if (!flushed) {
+                    flush();
+                }
+                closed = true;
+            }
+        }
+
+        private void ensureOpen() {
+            if (closed) {
+                throw new IllegalStateException("JBR Skia scope is already closed");
+            }
+        }
     }
 }

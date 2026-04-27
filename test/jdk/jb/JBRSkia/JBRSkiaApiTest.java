@@ -37,6 +37,9 @@ import com.jetbrains.desktop.JBRSkia;
 import com.jetbrains.desktop.JBRSkiaService;
 import com.jetbrains.exported.JBRApi;
 
+import java.awt.Graphics2D;
+import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
 import java.lang.reflect.Field;
 
 public class JBRSkiaApiTest {
@@ -58,9 +61,34 @@ public class JBRSkiaApiTest {
 
         try {
             new JBRSkiaService();
-            throw new AssertionError("JBRSkiaService constructor must signal unavailability");
+            throw new AssertionError("JBRSkiaService constructor must signal unavailability without runtime flag");
         } catch (JBRApi.ServiceNotAvailableException expected) {
             // expected
+        }
+
+        System.setProperty("sun.java2d.skia.interop", "true");
+        var service = new JBRSkiaService();
+        var image = new BufferedImage(32, 24, BufferedImage.TYPE_INT_ARGB_PRE);
+        Graphics2D graphics = image.createGraphics();
+        try {
+            graphics.setClip(new Rectangle(2, 3, 11, 13));
+            JBRSkia.ScopedSkiaCanvas scope = service.acquireCanvas(graphics);
+            assertEquals(JBRSkia.ScopedSkiaCanvas.BACKEND_METAL, scope.getBackend(), "backend");
+            assertEquals(0L, scope.getCanvasPtr(), "canvas pointer placeholder");
+            assertEquals(0L, scope.getDirectContextPtr(), "direct context pointer placeholder");
+            assertEquals(1, scope.getSampleCount(), "sample count");
+            assertEquals(new Rectangle(2, 3, 11, 13), scope.getUserSpaceClip(), "clip");
+            scope.flush();
+            scope.close();
+            try {
+                scope.flush();
+                throw new AssertionError("flush after close must fail");
+            } catch (IllegalStateException expected) {
+                // expected
+            }
+        } finally {
+            graphics.dispose();
+            System.clearProperty("sun.java2d.skia.interop");
         }
     }
 
