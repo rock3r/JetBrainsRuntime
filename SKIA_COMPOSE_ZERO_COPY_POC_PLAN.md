@@ -84,7 +84,6 @@ Status: completed for Java/Kotlin scope acquisition; native Metal/Skia pointers 
 
 Next native checkpoint:
 
-- Add the real public JBR API jar mirror/accessor for `JBRSkia` so the temporary shim is unnecessary.
 - Build/run the CMP sample on a local JBR image rather than patching classes into the current JVM.
 - Replace the placeholder scope with the first real macOS Metal paint-scope acquisition:
   - destination `MTLContext`/device identity
@@ -93,9 +92,41 @@ Next native checkpoint:
   - command ordering before later Java2D commands in the same paint pass
   - non-zero Skia canvas/direct-context pointers only after ABI/build compatibility is proven.
 
+### Checkpoint 4: Public JBR API Mirror And Metal Texture Diagnostic
+
+Status: completed for source/API wiring; full runtime validation requires a JBR image built from this branch.
+
+- Added a fourth worktree, `/Users/rock3r/src/jbr-api-skia-poc`, for `JetBrainsRuntimeApi`.
+- Added experimental public `com.jetbrains.JBRSkia` to the public JBR API source, including:
+  - non-constant `ABI_ID`
+  - non-constant `BUILD_ID`
+  - `JBR.getJBRSkia()` / `JBR.isJBRSkiaSupported()` generated accessors
+  - `ScopedSkiaCanvas` public mirror with `AutoCloseable`.
+- Updated Skiko discovery to prefer the real public API shape:
+  - read `ABI_ID` / `BUILD_ID` reflectively from `com.jetbrains.JBRSkia`
+  - acquire the service reflectively from `com.jetbrains.JBR.getJBRSkia()`
+  - keep a fallback to the earlier `com.jetbrains.desktop.JBRSkia` mirror only for local patched-runtime smoke tests.
+- JBR scope metadata now includes `getMetalTexturePtr()` so the next runnable checkpoint can prove that Swing's current destination texture is visible at the Java scope boundary.
+- `JBRApiSupport` has a gated registry-file override, `-Djetbrains.runtime.api.registry=<file>`, intended only with the existing test gate `-Djetbrains.runtime.api.extendRegistry=true`. This lets local PoC runs exercise a newly generated public API against a patched runtime before a full JBR image is available.
+- Local generated-public-API verification completed in `JetBrainsRuntimeApi`:
+  - `tools/build.sh process`
+  - `tools/build.sh dev $(/usr/libexec/java_home -v 21) /tmp/jbr-api-skia-dev`
+  - `javap` confirmed `JBR.getJBRSkia()` and `JBR.isJBRSkiaSupported()`.
+- Local runtime validation found an expected limitation: the installed JBR 21 runtime does not contain this source tree's newer `com.jetbrains.internal.jbrapi` backend, and this JBR source requires a JDK 26/27 boot JDK for a full image build. Until a matching local JBR image is built, the generated public accessor cannot replace the temporary shim in the sample run.
+
+Next native checkpoint:
+
+- Build or obtain a matching JBR image from `/Users/rock3r/src/jbr-skia-compose-poc` so the generated public JBR API registry and `JBRSkiaService` are loaded together.
+- Run the CMP sample with the real public `com.jetbrains.JBR.getJBRSkia()` path and prove:
+  - `SKIKO_JBR_INTEROP_SCOPE_ACQUIRED`
+  - non-zero `metalTexture`
+  - fallback still works when the ABI/build gate is deliberately mismatched.
+- Use the exposed destination texture to prototype an actual Skiko render-to-JBR-texture path, while keeping the planned JBR-owned Skia C ABI as the correctness target.
+
 Use separate worktrees for every existing repo touched:
 
 - `JetBrainsRuntime` worktree: `jbr-skia-compose-poc`
+- `JetBrainsRuntimeApi` worktree: `jbr-api-skia-poc`
 - `skiko` worktree: `skiko-jbr-skia-poc`
 - `compose-multiplatform-core` worktree: `cmp-jbr-skia-poc`
 
@@ -133,6 +164,7 @@ Primary target: **macOS + Metal + direct canvas path**. JCEF, video/external sur
   - `acquireCanvas` returns null only when the service exists but the specific paint destination/scope is not compatible.
   - static `ABI_ID` and `BUILD_ID` must be mirrored into the public JBR API jar so Skiko can read them before acquiring the service.
   - `ABI_ID` and `BUILD_ID` must use non-constant initializers on both JBR-side and public-jar mirror classes, for example `Integer.parseInt("1")` and a static helper/string builder, so `javac` cannot inline stale values into Skiko or other `compileOnly` clients.
+- For local PoC and tests only, `JBRApiSupport` may load a replacement public registry from `-Djetbrains.runtime.api.registry=<file>` when `-Djetbrains.runtime.api.extendRegistry=true` is also enabled. Product/runtime validation should use the generated `META-INF/jbrapi.public` from a real JBR image.
 - Publish a native C ABI for Skiko to validate and call the runtime without sharing C++ ABI assumptions:
   - ABI id
   - Skia revision
@@ -177,7 +209,7 @@ Primary target: **macOS + Metal + direct canvas path**. JCEF, video/external sur
   - Do not call `JBRApi.internalService()` from Skiko; it is caller-sensitive and only works from the JBR-side `@JBRApi.Provided` interface.
   - The normal Skiko runtime must remain loadable on non-JBR and older-JBR runtimes.
 - Discovery order:
-  - `Class.forName("com.jetbrains.desktop.JBRSkia")` from the public JBR API jar and read static `ABI_ID` / `BUILD_ID`.
+  - `Class.forName("com.jetbrains.JBRSkia")` from the public JBR API jar and read static `ABI_ID` / `BUILD_ID`.
   - read those static fields reflectively, for example `clazz.getDeclaredField("ABI_ID").get(null)`, never through direct compiled field references.
   - perform compatibility checks before acquiring the service.
   - only after compatibility passes, reflect on `com.jetbrains.JBR.getJBRSkia()` or the final public accessor name.
@@ -263,7 +295,7 @@ Primary target: **macOS + Metal + direct canvas path**. JCEF, video/external sur
   - smoke test Swing window paint with Metal enabled
   - verify `JBRSkiaService` is registered with `@JBRApi.Service` and `@JBRApi.Provides`
   - verify a synthetic test-only `@JBRApi.Provided("JBRSkia")` interface can resolve the provider through `JBRApi.internalService()`
-  - verify an external-client test reads static `ABI_ID` / `BUILD_ID` reflectively via `Class.forName("com.jetbrains.desktop.JBRSkia")`
+  - verify an external-client test reads static `ABI_ID` / `BUILD_ID` reflectively via `Class.forName("com.jetbrains.JBRSkia")`
   - verify an external-client test acquires `JBRSkia` via reflection on `com.jetbrains.JBR.getJBRSkia()` or the final public accessor name and receives a non-null service when JBR is compatible
   - verify unavailable provider construction throws `JBRApi.ServiceNotAvailableException` and clients observe a null service
   - verify `acquireCanvas` returns non-null only in valid paint scope

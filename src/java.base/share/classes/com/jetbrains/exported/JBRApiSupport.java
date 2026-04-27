@@ -27,12 +27,16 @@ package com.jetbrains.exported;
 
 import com.jetbrains.internal.jbrapi.JBRApi;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.annotation.Annotation;
 import java.lang.invoke.CallSite;
 import java.lang.invoke.ConstantCallSite;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.lang.reflect.Method;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -58,14 +62,29 @@ public class JBRApiSupport {
                                                 Class<? extends Annotation> providesAnnotation,
                                                 Map<Enum<?>, Class<?>[]> knownExtensions,
                                                 Function<Method, Enum<?>> extensionExtractor) {
-        return JBRApi.init(
-                null,
-                apiInterface,
-                serviceAnnotation,
-                providedAnnotation,
-                providesAnnotation,
-                knownExtensions,
-                extensionExtractor);
+        String registry = System.getProperty("jetbrains.runtime.api.registry");
+        if (registry == null || registry.isEmpty()) {
+            return JBRApi.init(
+                    null,
+                    apiInterface,
+                    serviceAnnotation,
+                    providedAnnotation,
+                    providesAnnotation,
+                    knownExtensions,
+                    extensionExtractor);
+        }
+        try (InputStream in = Files.newInputStream(Path.of(registry))) {
+            return JBRApi.init(
+                    in,
+                    apiInterface,
+                    serviceAnnotation,
+                    providedAnnotation,
+                    providesAnnotation,
+                    knownExtensions,
+                    extensionExtractor);
+        } catch (IOException e) {
+            throw new Error("Cannot read JBR API registry: " + registry, e);
+        }
     }
 
     /**
