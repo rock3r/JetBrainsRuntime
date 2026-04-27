@@ -31,10 +31,13 @@ Known limitation: this checkpoint is a runnable fallback MVP, not zero-copy rend
 
 ### Checkpoint 2: Version-Aligned Sample And Report Harness
 
-Status: completed for the fallback MVP harness.
+Status: completed for the version-aligned fallback MVP harness.
 
-- Resolve the local Skiko/CMP version mismatch observed when trying `SKIKO_VERSION=0.0.0-SNAPSHOT`; CMP currently expects Skiko API signatures from `0.9.47`.
-- Decide whether the next runnable sample consumes a Skiko branch rebased/aligned to CMP's expected Skiko version, or whether CMP is temporarily adapted to the Skiko worktree API for the PoC.
+- Skiko and CMP worktrees are now rebased on current fetched remote heads:
+  - Skiko branch `skiko-jbr-skia-poc` is `0 behind / 1 ahead` of `origin/master`.
+  - CMP branch `cmp-jbr-skia-poc` is `0 behind / 2 ahead` of `origin/jb-main`.
+- The local Skiko/CMP version mismatch was caused by CMP resolving a remote timestamped `0.0.0-SNAPSHOT` before `mavenLocal()`, not by missing compatibility shims in the rebased Skiko source.
+- CMP now prioritizes `mavenLocal()` for `org.jetbrains.skiko` artifacts when `SKIKO_VERSION` is set, so `SKIKO_VERSION=0.0.0-SNAPSHOT` resolves the locally published Skiko worktree artifact deterministically.
 - Added parseable old/new sample launch and report harness in CMP:
   - `compose/desktop/desktop/samples/scripts/jbr-skia-interop-report.sh`
   - old mode: `:compose:desktop:desktop:desktop-samples:runSwing`
@@ -45,18 +48,25 @@ Status: completed for the fallback MVP harness.
   - new marker count: `1`
   - observed marker: `SKIKO_JBR_INTEROP_FALLBACK reason=skiko-jbr-runtime-missing`
 - Zero-copy fast-path frame counts remain reported as unavailable until the native JBR scope exists.
-
-Version alignment remains open for the true cross-repo Skiko runtime handoff. The attempt to consume the Skiko worktree as `SKIKO_VERSION=0.0.0-SNAPSHOT` from CMP fails because the CMP checkout expects Skiko `0.9.47` API signatures while the Skiko worktree has newer Skia wrapper signatures. The next implementation checkpoint must either rebase the Skiko interop changes onto the Skiko revision CMP expects, or move CMP forward to a compatible Skiko API set.
+- Additional verification after rebasing:
+  - Skiko `./gradlew :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`
+  - Skiko `./gradlew :skiko:publishToMavenLocal`
+  - CMP `./gradlew :compose:ui:ui:desktopTest --tests androidx.compose.ui.JbrSkiaInteropFeatureFlagTest`
+  - CMP `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew :compose:ui:ui-graphics:dependencyInsight --configuration desktopCompileClasspath --dependency org.jetbrains.skiko --refresh-dependencies`
+  - CMP `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew :compose:desktop:desktop:desktop-samples:jvmJar --refresh-dependencies`
+  - CMP smoke run `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew :compose:desktop:desktop:desktop-samples:runSwingJbrSkiaInterop`
+- Verified smoke behavior with local Skiko present: the app reaches the runnable sample and emits Skiko's structured fallback marker `SKIKO_JBR_INTEROP_FALLBACK reason=public-api-missing`, which is expected until the runtime JBR/public API surface exposes `JBRSkia`.
 
 ### Checkpoint 3: Native Scope Or Version-Aligned Skiko Runtime
 
 Status: next.
 
-- Choose the version-alignment direction:
-  - rebase the Skiko JBR interop JVM/fallback changes onto the Skiko revision matching CMP `0.9.47`, or
-  - update CMP to the Skiko worktree API and contain the required graphics API adaptations.
-- Once CMP can consume the modified Skiko runtime, make the new-mode sample emit Skiko-owned fallback markers instead of CMP's runtime-missing marker.
-- Begin native JBR scope work only after the Java/Kotlin handoff is version-aligned and runnable.
+- The Java/Kotlin handoff is now version-aligned and runnable for the fallback path.
+- Next native checkpoint:
+  - add the public JBR API jar mirror/accessor for `JBRSkia`
+  - make the runnable sample move from `reason=public-api-missing` to service discovery on a local JBR build
+  - implement the first valid paint-scope acquisition path in JBR, initially returning a scoped object with metadata and no direct draw
+  - only then begin attaching Skia/Metal native canvas pointers.
 
 Use separate worktrees for every existing repo touched:
 
