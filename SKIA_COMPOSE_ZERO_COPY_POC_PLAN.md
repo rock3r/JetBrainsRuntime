@@ -57,16 +57,41 @@ Status: completed for the version-aligned fallback MVP harness.
   - CMP smoke run `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew :compose:desktop:desktop:desktop-samples:runSwingJbrSkiaInterop`
 - Verified smoke behavior with local Skiko present: the app reaches the runnable sample and emits Skiko's structured fallback marker `SKIKO_JBR_INTEROP_FALLBACK reason=public-api-missing`, which is expected until the runtime JBR/public API surface exposes `JBRSkia`.
 
-### Checkpoint 3: Native Scope Or Version-Aligned Skiko Runtime
+### Checkpoint 3: JBR Scope Acquisition
 
-Status: next.
+Status: completed for Java/Kotlin scope acquisition; native Metal/Skia pointers still pending.
 
-- The Java/Kotlin handoff is now version-aligned and runnable for the fallback path.
-- Next native checkpoint:
-  - add the public JBR API jar mirror/accessor for `JBRSkia`
-  - make the runnable sample move from `reason=public-api-missing` to service discovery on a local JBR build
-  - implement the first valid paint-scope acquisition path in JBR, initially returning a scoped object with metadata and no direct draw
-  - only then begin attaching Skia/Metal native canvas pointers.
+- JBR now exposes an enabled-mode `JBRSkiaService` when `-Dsun.java2d.skia.interop=true`.
+- `JBRSkiaService.acquireCanvas(Graphics2D)` returns a scoped object with:
+  - monotonic scope id
+  - backend `METAL`
+  - user-space clip snapshot
+  - sample count metadata
+  - idempotent `close()` and guarded `flush()` lifecycle behavior.
+- The current scope deliberately reports `canvasPtr=0` and `directContextPtr=0`. This is a placeholder scope for acquisition/lifecycle validation only; it is not yet a Skia/Metal draw target.
+- Skiko closes scopes through the public `AutoCloseable` interface so private JBR scope implementations do not trip module-boundary reflection access checks.
+- Skiko emits `SKIKO_JBR_INTEROP_SCOPE_ACQUIRED abi=1 build=skia-interop-poc:1` when the scope path is reached.
+- Local runnable verification used:
+  - a patched `java.desktop` module containing the JBR worktree `JBRSkia`/`JBRSkiaService` classes
+  - a temporary public `com.jetbrains.JBR` accessor shim because the real external public JBR API jar is not present in these checkouts
+  - CMP sample task `runSwingJbrSkiaInterop`
+- Verified sample behavior: the runnable CMP sample reaches `CMP -> Skiko JbrSkiaSwingLayer -> JBRSkiaService.acquireCanvas(...)` and emits `SKIKO_JBR_INTEROP_SCOPE_ACQUIRED abi=1 build=skia-interop-poc:1`.
+- Verification completed:
+  - JBR patched-module compile/run of `JBRSkiaApiTest`
+  - Skiko `./gradlew :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaDebugOverlayTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`
+  - Skiko `./gradlew :skiko:publishToMavenLocal`
+  - CMP patched-service smoke run with `SKIKO_VERSION=0.0.0-SNAPSHOT`.
+
+Next native checkpoint:
+
+- Add the real public JBR API jar mirror/accessor for `JBRSkia` so the temporary shim is unnecessary.
+- Build/run the CMP sample on a local JBR image rather than patching classes into the current JVM.
+- Replace the placeholder scope with the first real macOS Metal paint-scope acquisition:
+  - destination `MTLContext`/device identity
+  - destination texture identity
+  - load-not-clear behavior
+  - command ordering before later Java2D commands in the same paint pass
+  - non-zero Skia canvas/direct-context pointers only after ABI/build compatibility is proven.
 
 Use separate worktrees for every existing repo touched:
 
