@@ -392,6 +392,40 @@ Next native checkpoint:
 - Add a smaller deterministic no-text visual sample to reduce noise in screenshot assertions.
 - Start CPU comparison runs using the old SwingGraphics path versus the JBR picture path, with the SKP byte count called out prominently.
 
+### Checkpoint 13: Report Harness Parses Picture Replay And Screenshot Assertions
+
+Status: completed for a short local report smoke; longer runs and a deterministic Jewel scene remain pending.
+
+- CMP's `jbr-skia-interop-report.sh` now supports:
+  - `NEW_JVM_ARGS`, passed through to `runSwingJbrSkiaInterop` as `-PjbrSkiaInteropJvmArgs=...`
+  - `CAPTURE_WINDOW_QUERY`, used to capture and assert the new-mode window
+  - Skiko picture marker summaries from `SKIKO_JBR_INTEROP_PICTURE_FRAME`
+  - JBR native replay marker summaries from `JBR_SKIA_INTEROP_PICTURE_FRAME`
+  - screenshot assertion counts from `JBR_SKIA_SCREENSHOT_COUNTS`.
+- Screenshot capture now waits until the new-mode log contains at least one Skiko picture-frame marker, then retries until the color assertion passes. This avoids capturing the empty launch window before Compose has painted.
+- Short report smoke generated at `/tmp/jbr-skia-report-picture-smoke3/report.md`.
+- Report highlights:
+  - old process samples: `samples=54 avg_cpu=89.98 max_cpu=445.30 avg_rss_kb=373639 max_rss_kb=1650880`
+  - new process samples: `samples=61 avg_cpu=35.66 max_cpu=340.40 avg_rss_kb=805385 max_rss_kb=5528480`
+  - fallback markers: old `0`, new `0`
+  - Skiko picture frames: `frames=28 avg_bytes=215626133 max_bytes=415432066`
+  - JBR picture replays: `frames=28 avg_bytes=215626133 max_bytes=415432066`
+  - screenshot counts: `green=428351 blue=511362 purple=83318 yellow=26392`
+
+Important caveats:
+
+- The CPU/RSS numbers are not yet a fair before/after result. They include Gradle/sample startup and are from a short smoke run. Use them only to prove the report pipeline works.
+- The memory signal is already concerning: new-mode max RSS reached roughly 5.5 GB in this smoke, consistent with the very large per-frame SKP payloads.
+- The next performance checkpoint should run a smaller deterministic scene and separate startup/build time from steady-state repaint time.
+
+Next native checkpoint:
+
+- Create or wire a deterministic Jewel standalone sample scene for stable report runs.
+- Add a no-text/no-Swing-child visual mode so screenshot assertions can be precise and SKP payload size can be measured without text/font noise.
+- Decide whether the next macOS implementation step is:
+  - cache/reuse JBR `GrDirectContext` to reduce native setup overhead, or
+  - move away from full SKP serialization toward a narrower command/display-list bridge because payload size is already too high.
+
 Use separate worktrees for every existing repo touched:
 
 - `JetBrainsRuntime` worktree: `jbr-skia-compose-poc`
