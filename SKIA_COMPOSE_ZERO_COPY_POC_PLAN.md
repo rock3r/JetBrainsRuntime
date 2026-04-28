@@ -595,6 +595,41 @@ Status: completed for the synthetic command renderer.
   - `scripts/assert-jbr-skia-command-window-screenshot.sh /tmp/magic-jewel-jbr-skia-command-window.png`
   - `OUT_DIR=/tmp/magic-jewel-jbr-skia-command-smoke DURATION_SECONDS=10 SAMPLE_INTERVAL_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT JBR_SKIA_RENDER_MODE=commands ./scripts/jbr-skia-interop-report.sh`
 
+### Checkpoint 20: Mixed Swing/Compose Layering and FPS Markers
+
+Status: completed as a Magic Jewel validation slice.
+
+- Magic Jewel now contains:
+  - always-on Compose animation driven by `rememberInfiniteTransition`
+  - an animated Compose progress strip and moving vector stress lines
+  - an embedded Swing island through `SwingPanel`
+  - a Swing-side indeterminate `JProgressBar` and Swing `Timer`
+  - a Compose overlay crossing the Swing island area for layering validation
+- Magic Jewel emits app-level draw markers from the Compose canvas:
+  - `MAGIC_JEWEL_COMPOSE_FRAME frame=<n>`
+- The report harness now:
+  - waits for the actual `com.magicjewel.MainKt` process before starting the measurement window
+  - samples summed CPU/RSS per timestamp, rather than averaging per-process rows
+  - reports old/new app draw FPS from `MAGIC_JEWEL_COMPOSE_FRAME`
+  - reports Skiko/JBR replay FPS from structured interop markers
+  - records that CPU/RSS numbers are noisy on a busy development machine
+  - records that app draw FPS and interop marker FPS are draw/replay-call rates, not display-presented FPS, and may exceed monitor refresh when rendering is not vsync-throttled
+- Added Magic Jewel's mixed screenshot oracle:
+  - `/Users/rock3r/src/magic-jewel/scripts/assert-jbr-skia-mixed-window-screenshot.sh`
+  - marker: `JBR_SKIA_MIXED_SCREENSHOT_COUNTS green=<n> blue=<n> purple=<n> yellow=<n> swingPanel=<n> overlayPurple=<n> orangeProgress=<n>`
+- Verification completed:
+  - `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew compileKotlin`
+  - `scripts/assert-jbr-skia-mixed-window-screenshot.sh /tmp/magic-jewel-mixed-picture-smoke/new-window.png`
+  - `OUT_DIR=/tmp/magic-jewel-mixed-picture-smoke DURATION_SECONDS=12 SAMPLE_INTERVAL_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT JBR_SKIA_RENDER_MODE=picture ./scripts/jbr-skia-interop-report.sh`
+- Mixed picture-mode smoke highlights:
+  - old process samples: `samples=10 avg_cpu=99.06 max_cpu=140.60 avg_rss_kb=1047909 max_rss_kb=1129760`
+  - new process samples: `samples=8 avg_cpu=109.49 max_cpu=119.10 avg_rss_kb=1219014 max_rss_kb=1554640`
+  - app draw markers: old `frames=2168 fps=180.7`, new `frames=1878 fps=156.5`
+  - Skiko picture frames: `frames=1877 fps=156.4 avg_bytes=827776 max_bytes=827778`
+  - JBR picture replays: `frames=1877 fps=156.4 avg_bytes=827776 max_bytes=827778`
+  - screenshot assertion: `passed`
+  - screenshot counts: `green=525345 blue=1013838 purple=30057 yellow=37520 swingPanel=966940 overlayPurple=30269 orangeProgress=21406`
+
 Next checkpoint:
 
 - Expand the command-list ABI beyond synthetic shapes toward a real subset of Compose vector drawing operations, while keeping SKP replay as the reference/fallback path.
