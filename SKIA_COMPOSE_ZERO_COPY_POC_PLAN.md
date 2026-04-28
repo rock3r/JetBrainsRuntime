@@ -689,10 +689,58 @@ Status: completed as a wider command-list stress slice; SKP picture replay remai
   - screenshot assertion: `passed`
   - screenshot counts: `green=847887 blue=1397277 purple=98490 yellow=96680 orange=71506 white=126156`
 
+### Checkpoint 23: CMP Sidecar Command Recorder
+
+Status: completed as the first real Compose-to-JBR command replay slice; SKP picture replay remains available for correctness and benchmark runs.
+
+- Preserved the serialized picture path for later quiet-machine benchmarks:
+  - `JBR_SKIA_RENDER_MODE=picture` still selects SKP replay.
+  - `JBR_SKIA_RENDER_MODE=commands` selects the lower-overhead command-list experiment.
+- Added `JbrSkiaCommandRenderDelegate` in Skiko so a real renderer can provide command frames; if no delegate is present, Skiko still falls back to its synthetic command scene.
+- CMP now records the normal `scene.render(...)` call into a real Skia `PictureRecorder` canvas for compatibility, while a sidecar `JbrSkiaCommandRecorder` mirrors the supported vector operations emitted through `SkiaBackedCanvas`.
+- The current sidecar command subset covers:
+  - solid-color `SrcOver` fill rects
+  - solid-color round-rect fills approximated through the current command ABI
+  - solid-color lines
+  - solid-color ovals and circles
+  - simple translate/scale state.
+- Unsupported operations intentionally stay out of the command list for this slice:
+  - text
+  - images
+  - shaders
+  - paths
+  - layer effects
+  - rotate/skew/concat transforms.
+- `SwingSkiaLayerComponent` forwards command-frame requests from Skiko into `ComposeSceneMediator`, so command mode now records real CMP scene drawing instead of the previous hand-authored Skiko vector scene.
+- Magic Jewel's launch script now passes `skiko.jbr.interop.renderCommands`, `skiko.jbr.interop.renderPicture`, or `skiko.jbr.interop.renderDiagnostic` as JVM arguments, not only as Gradle properties, so render mode reliably reaches the app process.
+- Magic Jewel's report harness now does a final window-only screenshot capture attempt before teardown when the new-mode replay marker exists, avoiding timing-dependent missed captures.
+- Verification completed:
+  - Skiko `./gradlew :skiko:compileKotlinAwt :skiko:publishToMavenLocal`
+  - CMP `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew :compose:ui:ui-graphics:compileKotlinDesktop :compose:ui:ui:compileKotlinDesktop`
+  - CMP `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew :compose:ui:ui:desktopJar`
+  - Magic Jewel `OUT_DIR=/tmp/magic-jewel-compose-command-sidecar-final DURATION_SECONDS=6 SAMPLE_INTERVAL_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT JBR_SKIA_RENDER_MODE=commands ./scripts/jbr-skia-interop-report.sh`
+- Command-sidecar smoke highlights, recorded on a noisy development machine:
+  - report: `/tmp/magic-jewel-compose-command-sidecar-final/report.md`
+  - screenshot: `/tmp/magic-jewel-compose-command-sidecar-final/new-window.png`
+  - fallback markers: old `0`, new `0`
+  - picture frames: `0`
+  - Skiko command frames: `frames=724 fps=120.7 avg_commands=702 max_commands=702`
+  - JBR command frames: `frames=724 fps=120.7 avg_commands=702 max_commands=702`
+  - screenshot assertion: `passed`
+  - screenshot counts: `green=565353 blue=1061166 purple=31358 yellow=38327 orange=22136 white=975211`
+
+Important caveats:
+
+- The command recorder is a deliberately tiny proof slice. It proves real CMP scene painting can produce JBR-owned Skia command replays, not that arbitrary Compose content is covered.
+- Text still needs a dedicated strategy because font/typeface ownership remains one of the core ABI risks.
+- The recorder currently mirrors draw operations while the normal Skia render still happens into an offscreen `PictureRecorder` canvas. The next slices should either widen the command coverage enough to skip the compatibility recording for supported scenes, or make the fallback boundary explicit per frame.
+- The temporary integer command ABI is still a PoC transport. Production should move to a tightly versioned native ABI or a validated display-list payload.
+
 Next checkpoint:
 
-- Start feeding command mode from real Compose draw-operation recording instead of the hand-built Magic-like command generator, while keeping SKP replay as the reference/fallback and benchmark path.
+- Widen the sidecar recorder enough for a richer no-text Compose/Jewel scene, then add an explicit per-frame fallback decision: command replay when every operation is supported, SKP replay when unsupported operations appear.
 - Keep text/images on the SKP path until the JBR-owned font/typeface story is implemented.
+- Preserve `JBR_SKIA_RENDER_MODE=picture` and SKP byte/frame markers for meaningful benchmark runs when the machine is quieter.
 
 Use separate worktrees for every existing repo touched:
 
