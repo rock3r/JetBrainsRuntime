@@ -38,6 +38,7 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.Shape;
+import java.awt.geom.Area;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.ArrayDeque;
@@ -62,7 +63,8 @@ public class JBRSkiaService extends JBRSkia {
                     | COMMAND_CAP_USER_SPACE_COORDINATES
                     | COMMAND_CAP_RECORD_ANTIALIAS
                     | COMMAND_CAP_STROKE_METADATA
-                    | COMMAND_CAP_BASIC_TRANSFORMS;
+                    | COMMAND_CAP_BASIC_TRANSFORMS
+                    | COMMAND_CAP_CLIP_RECT_OP;
     private static final boolean NATIVE_BRIDGE_AVAILABLE = loadNativeBridge();
     private static final AtomicLong NEXT_SCOPE_ID = new AtomicLong(1);
 
@@ -135,7 +137,8 @@ public class JBRSkiaService extends JBRSkia {
         if (op == COMMAND_ROTATE) return 4;
         if (op == COMMAND_TRANSLATE || op == COMMAND_SCALE) return 5;
         if (op == COMMAND_CLEAR) return 4;
-        if (op == COMMAND_CLEAR_RECT || op == COMMAND_CLIP_RECT) return 7;
+        if (op == COMMAND_CLEAR_RECT) return 7;
+        if (op == COMMAND_CLIP_RECT) return 8;
         if (op == COMMAND_FILL_OVAL) return 8;
         if (op == COMMAND_FILL_RECT) return 9;
         if (op == COMMAND_STROKE_LINE || op == COMMAND_STROKE_OVAL) return 12;
@@ -146,6 +149,10 @@ public class JBRSkiaService extends JBRSkia {
         if ((record.op() == COMMAND_TRANSLATE || record.op() == COMMAND_SCALE || record.op() == COMMAND_ROTATE)
                 && record.recordFlags() != COMMAND_RECORD_FLAGS_NONE) {
             return false;
+        }
+        if (record.op() == COMMAND_CLIP_RECT) {
+            int clipOp = commands[record.recordEnd() - 1];
+            return clipOp == COMMAND_CLIP_OP_INTERSECT || clipOp == COMMAND_CLIP_OP_DIFFERENCE;
         }
         if (record.op() != COMMAND_STROKE_LINE && record.op() != COMMAND_STROKE_OVAL) {
             return true;
@@ -461,8 +468,23 @@ public class JBRSkiaService extends JBRSkia {
                         current.dispose();
                         current = stack.removeLast();
                     } else if (op == COMMAND_CLIP_RECT) {
-                        if (offset + 4 != recordEnd) return false;
-                        current.clipRect(commands[offset++], commands[offset++], commands[offset++], commands[offset++]);
+                        if (offset + 5 != recordEnd) return false;
+                        int x = commands[offset++];
+                        int y = commands[offset++];
+                        int width = commands[offset++];
+                        int height = commands[offset++];
+                        int clipOp = commands[offset++];
+                        if (clipOp == COMMAND_CLIP_OP_INTERSECT) {
+                            current.clipRect(x, y, width, height);
+                        } else if (clipOp == COMMAND_CLIP_OP_DIFFERENCE) {
+                            Shape previousClip = current.getClip();
+                            if (previousClip == null) return false;
+                            Area clip = new Area(previousClip);
+                            clip.subtract(new Area(new Rectangle(x, y, width, height)));
+                            current.setClip(clip);
+                        } else {
+                            return false;
+                        }
                     } else if (op == COMMAND_TRANSLATE) {
                         if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE || offset + 2 != recordEnd) return false;
                         current.translate(commands[offset++] / 1000.0, commands[offset++] / 1000.0);

@@ -49,7 +49,7 @@
 
 #include "MTLSurfaceDataBase.h"
 
-static constexpr jint ABI_ID = 10;
+static constexpr jint ABI_ID = 11;
 static constexpr jint COMMAND_STREAM_MAGIC = 1246972723;
 static constexpr jint COMMAND_STREAM_HEADER_SIZE = 6;
 static constexpr jint COMMAND_STREAM_FLAGS_NONE = 0;
@@ -67,6 +67,8 @@ static constexpr jint COMMAND_CLEAR_RECT = 6;
 static constexpr jint COMMAND_SAVE = 7;
 static constexpr jint COMMAND_RESTORE = 8;
 static constexpr jint COMMAND_CLIP_RECT = 9;
+static constexpr jint COMMAND_CLIP_OP_INTERSECT = 0;
+static constexpr jint COMMAND_CLIP_OP_DIFFERENCE = 1;
 static constexpr jint COMMAND_TRANSLATE = 10;
 static constexpr jint COMMAND_SCALE = 11;
 static constexpr jint COMMAND_ROTATE = 12;
@@ -246,18 +248,22 @@ static bool drawCommandList(SkCanvas* canvas, CommandWords commands, jsize comma
                 break;
             }
             case COMMAND_CLIP_RECT: {
-                if (offset + 4 != recordEnd) {
+                if (offset + 5 != recordEnd) {
                     return false;
                 }
                 jint x = commands[offset++];
                 jint y = commands[offset++];
                 jint rectWidth = commands[offset++];
                 jint rectHeight = commands[offset++];
+                jint clipOp = commands[offset++];
+                if (clipOp != COMMAND_CLIP_OP_INTERSECT && clipOp != COMMAND_CLIP_OP_DIFFERENCE) {
+                    return false;
+                }
                 canvas->clipRect(SkRect::MakeXYWH(static_cast<SkScalar>(x),
                                                   static_cast<SkScalar>(y),
                                                   static_cast<SkScalar>(rectWidth),
                                                   static_cast<SkScalar>(rectHeight)),
-                                 SkClipOp::kIntersect,
+                                 clipOp == COMMAND_CLIP_OP_DIFFERENCE ? SkClipOp::kDifference : SkClipOp::kIntersect,
                                  antiAlias);
                 break;
             }

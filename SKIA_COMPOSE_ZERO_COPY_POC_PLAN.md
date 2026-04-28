@@ -1709,6 +1709,56 @@ Next checkpoint:
 - Reduce fallback frequency from remaining common probes: `image`, `clipRect_Difference`, and `saveLayer` are the next obvious unsupported surfaces.
 - Path/image work should be weighed against keeping the ABI compact; the SKP replay path remains the correctness oracle while command coverage grows.
 
+### Checkpoint 44: Clip Operation Payload And ABI 11
+
+Status: completed as the second canvas-state command expansion.
+
+- Bumped the PoC command ABI to `ABI_ID = 11`.
+- Added `COMMAND_CAP_CLIP_RECT_OP = 4096` to the JBR private API, public Runtime API mirror, and Skiko compatibility gate.
+- Expanded `COMMAND_CLIP_RECT` from an implicit intersect record to an explicit clip-op record:
+  - `COMMAND_CLIP_RECT`: `[op, 32, flags, x, y, width, height, clipOp]`
+  - `clipOp=0`: intersect
+  - `clipOp=1`: difference
+- CMP now records both `ClipOp.Intersect` and `ClipOp.Difference` instead of marking clip-out scopes unsupported.
+- JBR native Skia replay maps the op to `SkClipOp::kIntersect` or `SkClipOp::kDifference`.
+- JBR Java2D fallback replay maps intersect to `Graphics2D.clipRect` and difference to `Area.subtract(...)` when a current clip exists.
+- JBR validates clip op payloads and rejects unknown clip operation values as invalid command streams.
+
+Verification completed:
+
+- Runtime API `bash tools/build.sh process`.
+- Runtime API `bash tools/build.sh dev` and `/tmp/jbr-api-shim.jar` refresh from `out/classes/8`.
+- Skiko `./gradlew :skiko:compileKotlinAwt :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`.
+- Skiko `./gradlew :skiko:publishToMavenLocal`.
+- CMP `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest`.
+- CMP `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-configuration-cache :compose:ui:ui-graphics:desktopJar :compose:ui:ui:desktopJar`.
+- JBR isolated patched-class compile and `JBRSkiaApiTest` run against `/tmp/jbr-skia-abi11-compile`.
+- JBR native dylib rebuild into `/tmp/jbr-skia-native/libjbrskiainterop.dylib`.
+- Magic Jewel `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew compileKotlin`.
+
+ABI 11 clip command smoke report:
+
+- report: `/tmp/magic-jewel-command-clip-abi11-smoke/report.md`
+- validation status: `passed`
+- fallback markers: `0`
+- CMP command recorder: `frames=456 fps=76.0 avg_commands=2174 max_commands=2174 unsupported_frames=0 avg_unsupported=0.0 max_unsupported=0 reasons=none`
+- Skiko/JBR command frames: `455` / `455`
+- screenshot assertion: `passed`
+
+ABI 11 all-probe fallback report:
+
+- report: `/tmp/magic-jewel-command-probe-abi11-all/report.md`
+- validation status: `passed`
+- unsupported reasons: `unsupportedScope`, `saveLayer`, `image`
+- confirmed `clipRect_Difference` no longer appears in the unsupported-reason set.
+- Skiko/JBR picture replay frames: `406` / `406`
+- screenshot assertion: `passed`
+
+Next checkpoint:
+
+- Decide between image support and saveLayer support. Image is a single draw operation but needs pixel/texture payload design; saveLayer removes `unsupportedScope` for the current probe but needs compositing semantics.
+- Keep SKP replay as fallback/correctness oracle while command coverage remains incomplete.
+
 Use separate worktrees for every existing repo touched:
 
 - `JetBrainsRuntime` worktree: `jbr-skia-compose-poc`
