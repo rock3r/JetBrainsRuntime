@@ -321,6 +321,40 @@ Next native checkpoint:
 - Add logging/report markers for picture serialization size and replay success/failure.
 - Start measuring CPU overhead versus old SwingGraphics readback, since per-frame SKP serialization may trade GPU copies for CPU work.
 
+### Checkpoint 11: Device-Pixel Picture Replay And Destination Placement
+
+Status: completed as a macOS runnable correctness slice; interop child ordering and automated image assertions remain pending.
+
+- Skiko picture mode now records the serialized `SkPicture` at device-pixel size, matching the existing `SwingRedrawerBase` contract of `componentSize * graphicsConfiguration.defaultTransform.scale`.
+- Added focused Skiko tests for the JBR picture-frame size helper, including fractional scale and invalid-scale fallback.
+- JBR scope acquisition now derives a device-space paint clip from the scoped `Graphics2D` transform/clip at acquire time.
+- `JBRSkiaInterop.mm` now wraps the full destination `MTLTexture`, clips to the device-space destination rect, translates to that rect, and then replays the serialized picture. This fixes the previous behavior where every Compose panel replayed at texture origin and could stomp the whole Swing destination.
+- CMP's sample window capture helper now uses CoreGraphics `.optionAll` and filters captureable layer-0 windows, so it can capture the sample even when it lives on another macOS Space.
+- Verification completed:
+  - JBR patched-module compile for `JBRSkia` / `JBRSkiaService`
+  - local native dylib rebuild at `/tmp/jbr-skia-native/libjbrskiainterop.dylib`
+  - Skiko `./gradlew :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`
+  - Skiko `./gradlew :skiko:publishToMavenLocal`
+  - CMP sample smoke with patched `java.desktop`, temporary public API shim, local Skiko, and `skiko.jbr.interop.renderPicture=true`
+  - window-id capture via `compose/desktop/desktop/samples/scripts/capture-macos-window.sh`
+- Smoke reached:
+  - `SKIKO_JBR_INTEROP_SCOPE_ACQUIRED abi=1 build=skia-interop-poc:1 metalTexture=0x7f9adc280`
+- Window-only screenshot captured at `/tmp/jbr-skia-picture-frame-positioned-window-script.png`.
+- Visual validation: both green and blue Compose panels are now visible, scaled correctly on Retina, and placed in their Swing paint regions while surrounding Swing controls remain visible.
+
+Important caveats:
+
+- The current bridge still serializes an SKP every frame; this is a correctness bridge, not the final performance answer.
+- Swing interop children inside Compose panels are visible and placed, but ordering/clipping still needs specific tests. The yellow debug overlay can occlude sample content and should stay diagnostic-only.
+- JBR still creates a fresh `GrDirectContext` for each replay. The next implementation slice should cache per destination `MTLContext` and invalidate on screen migration/surface loss.
+
+Next native checkpoint:
+
+- Add parseable picture-frame markers for serialized byte size, replay success/failure, destination rect, and frame count.
+- Add automated screenshot/pixel assertions for a small no-text Compose scene and one Swing-interop child scene.
+- Cache/reuse the JBR-owned `GrDirectContext` per `MTLContext`.
+- Start the before/after CPU report against the old SwingGraphics path to determine whether SKP serialization is acceptable as an interim bridge.
+
 Use separate worktrees for every existing repo touched:
 
 - `JetBrainsRuntime` worktree: `jbr-skia-compose-poc`

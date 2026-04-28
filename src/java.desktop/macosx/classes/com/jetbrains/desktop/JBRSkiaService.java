@@ -35,6 +35,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
+import java.awt.Shape;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -72,6 +73,7 @@ public class JBRSkiaService extends JBRSkia {
         private final long scopeId;
         private final Graphics2D graphics;
         private final Rectangle userSpaceClip;
+        private final Rectangle deviceSpaceClip;
         private final long nativeOpsPtr;
         private final long metalTexturePtr;
         private boolean closed;
@@ -82,6 +84,7 @@ public class JBRSkiaService extends JBRSkia {
             this.scopeId = scopeId;
             this.graphics = graphics;
             this.userSpaceClip = userSpaceClip == null ? null : new Rectangle(userSpaceClip);
+            this.deviceSpaceClip = toDeviceSpaceClip(graphics, userSpaceClip);
             this.nativeOpsPtr = metadata.nativeOpsPtr();
             this.metalTexturePtr = metadata.texturePtr();
         }
@@ -205,7 +208,9 @@ public class JBRSkiaService extends JBRSkia {
                     && NATIVE_BRIDGE_AVAILABLE
                     && nativeOpsPtr != 0
                     && metalTexturePtr != 0
-                    && nativeRenderPictureFrame(nativeOpsPtr, metalTexturePtr, width, height, frameTimeNanos, pictureData);
+                    && nativeRenderPictureFrame(nativeOpsPtr, metalTexturePtr,
+                            deviceSpaceClip.x, deviceSpaceClip.y, deviceSpaceClip.width, deviceSpaceClip.height,
+                            width, height, frameTimeNanos, pictureData);
         }
 
         @Override
@@ -276,6 +281,20 @@ public class JBRSkiaService extends JBRSkia {
             }
             return true;
         }
+
+        private static Rectangle toDeviceSpaceClip(Graphics2D graphics, Rectangle userSpaceClip) {
+            Shape clip = userSpaceClip == null ? graphics.getClip() : userSpaceClip;
+            if (clip == null) {
+                return new Rectangle(0, 0, 0, 0);
+            }
+            Rectangle bounds = graphics.getTransform().createTransformedShape(clip).getBounds();
+            return new Rectangle(
+                    bounds.x,
+                    bounds.y,
+                    Math.max(1, bounds.width),
+                    Math.max(1, bounds.height)
+            );
+        }
     }
 
     private static MetalSurfaceMetadata getMetalSurfaceMetadata(Graphics2D graphics) {
@@ -323,6 +342,8 @@ public class JBRSkiaService extends JBRSkia {
                                                           int[] commands);
 
     private static native boolean nativeRenderPictureFrame(long nativeOpsPtr, long metalTexturePtr,
+                                                          int destinationX, int destinationY,
+                                                          int destinationWidth, int destinationHeight,
                                                           int width, int height, long frameTimeNanos,
                                                           byte[] pictureData);
 }

@@ -262,9 +262,11 @@ Java_com_jetbrains_desktop_JBRSkiaService_nativeRenderDiagnosticFrame
 extern "C" JNIEXPORT jboolean JNICALL
 Java_com_jetbrains_desktop_JBRSkiaService_nativeRenderPictureFrame
         (JNIEnv* env, jclass cls, jlong nativeOpsPtr, jlong metalTexturePtr,
+         jint destinationX, jint destinationY, jint destinationWidth, jint destinationHeight,
          jint width, jint height, jlong frameTimeNanos, jbyteArray pictureArray) {
     @autoreleasepool {
-        if (metalTexturePtr == 0 || width <= 0 || height <= 0 || pictureArray == nullptr) {
+        if (metalTexturePtr == 0 || destinationWidth <= 0 || destinationHeight <= 0 ||
+                width <= 0 || height <= 0 || pictureArray == nullptr) {
             return JNI_FALSE;
         }
 
@@ -299,12 +301,25 @@ Java_com_jetbrains_desktop_JBRSkiaService_nativeRenderPictureFrame
             return JNI_FALSE;
         }
 
-        sk_sp<SkSurface> surface = wrapTextureSurface(directContext.get(), texture, width, height);
+        sk_sp<SkSurface> surface = wrapTextureSurface(
+                directContext.get(),
+                texture,
+                static_cast<int>(texture.width),
+                static_cast<int>(texture.height));
         if (surface == nullptr) {
             return JNI_FALSE;
         }
 
-        picture->playback(surface->getCanvas());
+        SkCanvas* canvas = surface->getCanvas();
+        canvas->save();
+        canvas->clipRect(SkRect::MakeXYWH(static_cast<SkScalar>(destinationX),
+                                          static_cast<SkScalar>(destinationY),
+                                          static_cast<SkScalar>(destinationWidth),
+                                          static_cast<SkScalar>(destinationHeight)));
+        canvas->translate(static_cast<SkScalar>(destinationX),
+                          static_cast<SkScalar>(destinationY));
+        picture->playback(canvas);
+        canvas->restore();
         directContext->flushAndSubmit(surface.get(), GrSyncCpu::kYes);
         return JNI_TRUE;
     }
