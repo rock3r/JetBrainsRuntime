@@ -2196,6 +2196,37 @@ Next checkpoint:
 - Add an intentional unsupported text case and validate that it uses the cached-image/SKP fallback path explicitly, or begin a more structured JBR-owned shaped-text command.
 - Preserve the current Latin-1 gate until the JBR-owned font fallback/shaping story is explicit.
 
+### Checkpoint 55: Unsupported Text Uses Cached-Image Command Fallback
+
+Status: completed in Magic Jewel report validation.
+
+- Added a Magic Jewel `MAGIC_JEWEL_UNSUPPORTED_TEXT` toggle.
+- When enabled, Magic Jewel renders a normal `BasicText` label containing a surrogate-pair character (`\uD83D\uDE80`).
+- CMP's simple text command rejects this label because surrogate pairs remain outside the conservative Latin-1 gate.
+- The unsupported text still renders through the cached ARGB image command path, not through SKP picture replay and not through an unsupported-command fallback.
+- Added `EXPECT_MIN_IMAGE_REFS` to the Magic Jewel report harness so strict command runs can assert the cached-image fallback is present.
+
+Verification completed:
+
+- Magic Jewel `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew compileKotlin`.
+- Magic Jewel `./scripts/test-jbr-skia-report-validation.sh`.
+- Magic Jewel unsupported-text strict command report:
+  - report: `/tmp/magic-jewel-unsupported-text-image-ref-smoke/report.md`
+  - screenshot: `/tmp/magic-jewel-unsupported-text-image-ref-smoke/new-window.png`
+  - validation status: `passed`
+  - fallback markers: `0`
+  - `EXPECT_MIN_TEXT_COMMANDS`: `9`
+  - `EXPECT_MIN_IMAGE_REFS`: `1`
+  - CMP command recorder: `frames=800 fps=200.0 avg_commands=2552 max_commands=17661 unsupported_frames=0 avg_unsupported=0.0 max_unsupported=0 avg_text_commands=9.0 max_text_commands=9 avg_image_defines=0.0 max_image_defines=1 avg_image_refs=1.0 max_image_refs=1 reasons=none`
+  - Skiko/JBR command frames: `799` / `799`
+  - picture replay frames: `0`
+  - screenshot assertion: `passed`
+
+Next checkpoint:
+
+- Begin replacing text-as-image fallback with a real JBR-owned shaped text/paragraph command, or add a cache eviction/invalidation contract for image fallback if it remains in the PoC longer.
+- Preserve the SKP path as the correctness oracle for styled/rich text and future benchmark runs.
+
 Use separate worktrees for every existing repo touched:
 
 - `JetBrainsRuntime` worktree: `jbr-skia-compose-poc`
