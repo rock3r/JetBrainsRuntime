@@ -173,6 +173,29 @@ public class JBRSkiaService extends JBRSkia {
         }
 
         @Override
+        public boolean renderCommandFrame(int width, int height, long frameTimeNanos, int[] commands) {
+            ensureOpen();
+            Objects.requireNonNull(commands, "commands");
+            if (width <= 0 || height <= 0 || commands.length == 0) {
+                return false;
+            }
+            if (NATIVE_BRIDGE_AVAILABLE
+                    && nativeOpsPtr != 0
+                    && metalTexturePtr != 0
+                    && nativeRenderCommandFrame(nativeOpsPtr, metalTexturePtr, width, height, frameTimeNanos, commands)) {
+                return true;
+            }
+
+            Graphics2D commandGraphics = (Graphics2D) graphics.create();
+            try {
+                commandGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                return renderJava2DCommands(commandGraphics, commands);
+            } finally {
+                commandGraphics.dispose();
+            }
+        }
+
+        @Override
         public void flush() {
             ensureOpen();
             flushed = true;
@@ -192,6 +215,53 @@ public class JBRSkiaService extends JBRSkia {
             if (closed) {
                 throw new IllegalStateException("JBR Skia scope is already closed");
             }
+        }
+
+        private static boolean renderJava2DCommands(Graphics2D g, int[] commands) {
+            int offset = 0;
+            while (offset < commands.length) {
+                int op = commands[offset++];
+                if (op == COMMAND_CLEAR) {
+                    if (offset + 1 > commands.length) return false;
+                    g.setColor(new Color(commands[offset++], true));
+                    Rectangle clip = g.getClipBounds();
+                    if (clip == null) {
+                        return false;
+                    }
+                    g.fillRect(clip.x, clip.y, clip.width, clip.height);
+                } else if (op == COMMAND_FILL_RECT) {
+                    if (offset + 6 > commands.length) return false;
+                    g.setColor(new Color(commands[offset++], true));
+                    int x = commands[offset++];
+                    int y = commands[offset++];
+                    int width = commands[offset++];
+                    int height = commands[offset++];
+                    int radius = commands[offset++];
+                    if (radius > 0) {
+                        g.fillRoundRect(x, y, width, height, radius, radius);
+                    } else {
+                        g.fillRect(x, y, width, height);
+                    }
+                } else if (op == COMMAND_STROKE_LINE) {
+                    if (offset + 6 > commands.length) return false;
+                    g.setColor(new Color(commands[offset++], true));
+                    int x1 = commands[offset++];
+                    int y1 = commands[offset++];
+                    int x2 = commands[offset++];
+                    int y2 = commands[offset++];
+                    int strokeWidth = Math.max(1, commands[offset++]);
+                    java.awt.Stroke previous = g.getStroke();
+                    try {
+                        g.setStroke(new java.awt.BasicStroke(strokeWidth));
+                        g.drawLine(x1, y1, x2, y2);
+                    } finally {
+                        g.setStroke(previous);
+                    }
+                } else {
+                    return false;
+                }
+            }
+            return true;
         }
     }
 
@@ -234,4 +304,8 @@ public class JBRSkiaService extends JBRSkia {
 
     private static native boolean nativeRenderDiagnosticFrame(long nativeOpsPtr, long metalTexturePtr,
                                                              int width, int height, long frameTimeNanos);
+
+    private static native boolean nativeRenderCommandFrame(long nativeOpsPtr, long metalTexturePtr,
+                                                          int width, int height, long frameTimeNanos,
+                                                          int[] commands);
 }

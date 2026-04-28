@@ -37,6 +37,9 @@ import java.awt.Rectangle;
 public abstract class JBRSkia {
     public static final int ABI_ID = Integer.parseInt("1");
     public static final String BUILD_ID = buildId();
+    public static final int COMMAND_CLEAR = Integer.parseInt("1");
+    public static final int COMMAND_FILL_RECT = Integer.parseInt("2");
+    public static final int COMMAND_STROKE_LINE = Integer.parseInt("3");
 
     private static String buildId() {
         return "skia-interop-poc:" + ABI_ID;
@@ -66,6 +69,8 @@ public abstract class JBRSkia {
         public abstract Rectangle getUserSpaceClip();
 
         public abstract boolean renderDiagnosticFrame(int width, int height, long frameTimeNanos);
+
+        public abstract boolean renderCommandFrame(int width, int height, long frameTimeNanos, int[] commands);
 
         public abstract void flush();
 
