@@ -846,6 +846,39 @@ Next checkpoint:
 - Add image unsupported validation using the same expected-fallback pattern.
 - Keep the SKP picture path and report schema intact for quiet-machine benchmark runs.
 
+### Checkpoint 26: Image-Aware Strict Command Fallback
+
+Status: completed in Magic Jewel; no CMP recorder code change was required.
+
+- Magic Jewel now has an opt-in Compose image probe:
+  - `MAGIC_JEWEL_COMPOSE_IMAGE=true`
+  - The probe creates a tiny generated `ImageBitmap` and draws it from the Compose canvas.
+  - It is disabled by default so the strict command-safe report remains focused on the currently supported vector subset.
+- Magic Jewel's expected-fallback report mode is now parameterized by unsupported reason:
+  - `EXPECT_COMMAND_FALLBACK_REASON=text` for text fallback validation.
+  - `EXPECT_COMMAND_FALLBACK_REASON=image` for image fallback validation.
+- The existing CMP recorder already marks image draws as unsupported through the `SkiaBackedCanvas.drawImageRect` path, so the new sample/report mode validates that coverage rather than adding a new recorder hook.
+- Verification completed:
+  - Magic Jewel `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew compileKotlin`
+  - Magic Jewel `bash -n scripts/jbr-skia-interop-report.sh`
+  - Magic Jewel `git diff --check`
+  - Magic Jewel `OUT_DIR=/tmp/magic-jewel-command-image-fallback DURATION_SECONDS=5 SAMPLE_INTERVAL_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT JBR_SKIA_RENDER_MODE=commands MAGIC_JEWEL_COMPOSE_TEXT=false MAGIC_JEWEL_COMPOSE_IMAGE=true EXPECT_COMMAND_FALLBACK=true EXPECT_COMMAND_FALLBACK_REASON=image ./scripts/jbr-skia-interop-report.sh`
+- Image fallback report:
+  - report: `/tmp/magic-jewel-command-image-fallback/report.md`
+  - validation status: `passed`
+  - `MAGIC_JEWEL_COMPOSE_TEXT: false`
+  - `MAGIC_JEWEL_COMPOSE_IMAGE: true`
+  - CMP command recorder: `frames=1296 fps=259.2 avg_commands=847 max_commands=847 unsupported_frames=1296 avg_unsupported=1.0 max_unsupported=1 reasons=image:1296`
+  - Skiko/JBR command frames: `0` / `0`
+  - SKP picture frames: `1296` / `1296`
+  - screenshot assertion: `passed`
+
+Next checkpoint:
+
+- Decide whether to add a minimal native command for image blits or keep image content on SKP until the final ABI is less toy-like.
+- Start the same strict-fallback validation for transform/saveLayer-heavy content.
+- Keep working toward JBR-owned text/font/typeface creation before enabling command/direct text.
+
 Use separate worktrees for every existing repo touched:
 
 - `JetBrainsRuntime` worktree: `jbr-skia-compose-poc`
