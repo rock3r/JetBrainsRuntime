@@ -879,6 +879,50 @@ Next checkpoint:
 - Start the same strict-fallback validation for transform/saveLayer-heavy content.
 - Keep working toward JBR-owned text/font/typeface creation before enabling command/direct text.
 
+### Checkpoint 27: Transform And SaveLayer Strict Fallback
+
+Status: completed in Magic Jewel; existing CMP recorder hooks covered both probes.
+
+- Magic Jewel now has two more opt-in unsupported-operation probes:
+  - `MAGIC_JEWEL_COMPOSE_TRANSFORM=true` draws a rotated rect through Compose.
+  - `MAGIC_JEWEL_COMPOSE_SAVELAYER=true` draws a small `Canvas.saveLayer(...)` probe.
+  - Both are disabled by default so the command-safe strict report remains stable.
+- Magic Jewel's report captures the probe toggles in `report.md`, making fallback validation runs self-describing.
+- Verification completed:
+  - Magic Jewel `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew compileKotlin`
+  - Magic Jewel `bash -n scripts/jbr-skia-interop-report.sh`
+  - Magic Jewel `git diff --check`
+  - Transform fallback command: `OUT_DIR=/tmp/magic-jewel-command-transform-fallback DURATION_SECONDS=5 SAMPLE_INTERVAL_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT JBR_SKIA_RENDER_MODE=commands MAGIC_JEWEL_COMPOSE_TEXT=false MAGIC_JEWEL_COMPOSE_TRANSFORM=true EXPECT_COMMAND_FALLBACK=true EXPECT_COMMAND_FALLBACK_REASON=transform ./scripts/jbr-skia-interop-report.sh`
+  - SaveLayer fallback command: `OUT_DIR=/tmp/magic-jewel-command-savelayer-fallback DURATION_SECONDS=5 SAMPLE_INTERVAL_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT JBR_SKIA_RENDER_MODE=commands MAGIC_JEWEL_COMPOSE_TEXT=false MAGIC_JEWEL_COMPOSE_SAVELAYER=true EXPECT_COMMAND_FALLBACK=true EXPECT_COMMAND_FALLBACK_REASON=saveLayer ./scripts/jbr-skia-interop-report.sh`
+  - Command-safe default command: `OUT_DIR=/tmp/magic-jewel-command-strict-after-probes DURATION_SECONDS=5 SAMPLE_INTERVAL_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT JBR_SKIA_RENDER_MODE=commands ./scripts/jbr-skia-interop-report.sh`
+- Transform fallback report:
+  - report: `/tmp/magic-jewel-command-transform-fallback/report.md`
+  - validation status: `passed`
+  - CMP command recorder: `frames=1005 fps=201.0 avg_commands=847 max_commands=847 unsupported_frames=1005 avg_unsupported=2.0 max_unsupported=2 reasons=unsupportedScope:1005,transform:1005`
+  - Skiko/JBR command frames: `0` / `0`
+  - SKP picture frames: `1005` / `1005`
+  - screenshot assertion: `passed`
+- SaveLayer fallback report:
+  - report: `/tmp/magic-jewel-command-savelayer-fallback/report.md`
+  - validation status: `passed`
+  - CMP command recorder: `frames=887 fps=177.4 avg_commands=847 max_commands=847 unsupported_frames=887 avg_unsupported=2.0 max_unsupported=2 reasons=unsupportedScope:887,saveLayer:887`
+  - Skiko/JBR command frames: `0` / `0`
+  - SKP picture frames: Skiko `886`, JBR `886`
+  - screenshot assertion: `passed`
+- Command-safe default report after adding probes:
+  - report: `/tmp/magic-jewel-command-strict-after-probes/report.md`
+  - validation status: `passed`
+  - all probe toggles: `false`
+  - CMP command recorder: `frames=1098 fps=219.6 avg_commands=847 max_commands=847 unsupported_frames=0 avg_unsupported=0.0 max_unsupported=0 reasons=none`
+  - Skiko/JBR command frames: `1098` / `1098`
+  - picture frames: `0`
+  - screenshot assertion: `passed`
+
+Next checkpoint:
+
+- Add one or two focused unit tests around Magic Jewel report validation parsing so expected-fallback failures are caught without launching the app.
+- Then choose the next positive command-coverage expansion: either native image blit, clip rect support, or a small save/restore/transform stack in the command ABI.
+
 Use separate worktrees for every existing repo touched:
 
 - `JetBrainsRuntime` worktree: `jbr-skia-compose-poc`
