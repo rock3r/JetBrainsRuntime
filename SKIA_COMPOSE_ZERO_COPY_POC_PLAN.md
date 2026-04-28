@@ -2137,6 +2137,36 @@ Next checkpoint:
 - Add report assertions that can require a minimum text-command count for text-enabled strict command runs, so future regressions fail without manual report inspection.
 - Preserve SKP and cached-image fallback for styled/rich text until the JBR-owned paragraph/text shaping ABI exists.
 
+### Checkpoint 53: Report Guard For Real Text Commands
+
+Status: completed in Magic Jewel report validation.
+
+- Added `EXPECT_MIN_TEXT_COMMANDS` to the Magic Jewel report harness.
+- In strict command mode, the report can now fail if the maximum per-frame CMP `textCommands` count is below the requested threshold.
+- The guard is opt-in and defaults to `0`, so non-text and fallback tests keep their existing behavior.
+- Added report-validation unit cases for:
+  - passing when the threshold is met
+  - failing when the threshold is not met.
+
+Verification completed:
+
+- Magic Jewel `./scripts/test-jbr-skia-report-validation.sh`.
+- Magic Jewel strict text-command report with `EXPECT_MIN_TEXT_COMMANDS=8`:
+  - report: `/tmp/magic-jewel-basictext-min-text-guard-smoke/report.md`
+  - screenshot: `/tmp/magic-jewel-basictext-min-text-guard-smoke/new-window.png`
+  - validation status: `passed`
+  - fallback markers: `0`
+  - CMP command recorder: `frames=975 fps=243.8 avg_commands=2365 max_commands=2418 unsupported_frames=0 avg_unsupported=0.0 max_unsupported=0 avg_text_commands=8.0 max_text_commands=8 avg_image_defines=0.0 max_image_defines=0 avg_image_refs=0.0 max_image_refs=0 reasons=none`
+  - Skiko/JBR command frames: `975` / `975`
+  - picture replay frames: `0`
+  - screenshot assertion: `passed`
+
+Next checkpoint:
+
+- Continue text coverage beyond the single-line ASCII fast path while preserving JBR-owned font/typeface ownership.
+- Add a negative end-to-end report mode for text disabled or intentionally unsupported text if the harness needs stronger CI-style examples.
+- Preserve SKP and cached-image fallback for styled/rich text until the JBR-owned paragraph/text shaping ABI exists.
+
 Use separate worktrees for every existing repo touched:
 
 - `JetBrainsRuntime` worktree: `jbr-skia-compose-poc`
