@@ -1880,6 +1880,51 @@ Next checkpoint:
 - Text remains intentionally outside the command subset until the JBR-owned font/typeface story is implemented.
 - The command transport now covers the current non-text Magic Jewel probe without SKP fallback; the next valuable slice is either a stricter image cache/handle strategy or beginning the text/font bridge design.
 
+### Checkpoint 47: Temporary Text-As-Image Command Bridge
+
+Status: completed as a Magic Jewel validation bridge; not the final font/typeface architecture.
+
+- Added a CMP-side temporary text bridge that rasterizes Skia Paragraph output into an `ImageBitmap` and records it through the existing ABI 13 `COMMAND_DRAW_IMAGE_ARGB` command.
+- Raised CMP's inline image recorder limit from `512x512` to `2048x2048` so typical Jewel paragraph bounds can remain on command replay.
+- Kept the true production rule unchanged: final fast-path text must be produced by JBR-owned Skia text/font/typeface objects. This checkpoint avoids crossing Skiko/JBR `SkTypeface*` boundaries by crossing only ARGB pixels, so it is useful for mixed-content validation but still has CPU raster/pixel payload cost for text.
+- Updated Magic Jewel command-report defaults so Compose text is enabled by default in strict command mode.
+- Updated Magic Jewel README examples to treat text/image/transform/saveLayer/clip/clip-out as supported command-mode probes and keep corrupt command streams as the deliberate fallback case.
+
+Verification completed:
+
+- Baseline expected-fallback report before the bridge:
+  - report: `/tmp/magic-jewel-command-text-abi13-fallback/report.md`
+  - validation status: `passed`
+  - CMP command recorder: `frames=701 fps=116.8 avg_commands=2144 max_commands=2144 unsupported_frames=701 avg_unsupported=8.0 max_unsupported=8 reasons=text:5608`
+  - Skiko/JBR command frames: `0` / `0`
+  - Skiko/JBR picture replay frames: `700` / `700`
+- CMP `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest`.
+- CMP `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-configuration-cache :compose:ui:ui-text:desktopJar`.
+- CMP `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-configuration-cache :compose:ui:ui-graphics:desktopJar :compose:ui:ui-text:desktopJar :compose:ui:ui:desktopJar`.
+- Magic Jewel text command report:
+  - report: `/tmp/magic-jewel-command-text-image-bridge-abi13-smoke/report.md`
+  - validation status: `passed`
+  - fallback markers: `0`
+  - CMP command recorder: `frames=894 fps=149.0 avg_commands=80603 max_commands=80888 unsupported_frames=0 avg_unsupported=0.0 max_unsupported=0 reasons=none`
+  - Skiko/JBR command frames: `893` / `893`
+  - picture replay frames: `0`
+  - screenshot assertion: `passed`
+- Magic Jewel full mixed-content command report:
+  - report: `/tmp/magic-jewel-command-full-text-image-bridge-abi13-smoke/report.md`
+  - validation status: `passed`
+  - fallback markers: `0`
+  - CMP command recorder: `frames=784 fps=130.7 avg_commands=85880 max_commands=86183 unsupported_frames=0 avg_unsupported=0.0 max_unsupported=0 reasons=none`
+  - Skiko/JBR command frames: `784` / `784`
+  - picture replay frames: `0`
+  - screenshot assertion: `passed`
+
+Next checkpoint:
+
+- Begin replacing text-as-image with a real text ABI design:
+  - define the minimal records JBR needs to create/draw text with JBR-owned fonts/typefaces, or
+  - define a higher-level paragraph/text-layout service owned by JBR Skia.
+- In parallel, investigate image payload caching so stable raster/text payloads stop resending full ARGB pixels every frame.
+
 Use separate worktrees for every existing repo touched:
 
 - `JetBrainsRuntime` worktree: `jbr-skia-compose-poc`
