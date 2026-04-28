@@ -49,11 +49,11 @@ public class JBRSkiaApiTest {
     }
 
     public static void main(String[] args) throws Exception {
-        assertEquals(4, JBRSkia.ABI_ID, "ABI_ID");
-        assertEquals("skia-interop-poc:4", JBRSkia.BUILD_ID, "BUILD_ID");
+        assertEquals(5, JBRSkia.ABI_ID, "ABI_ID");
+        assertEquals("skia-interop-poc:5", JBRSkia.BUILD_ID, "BUILD_ID");
 
-        assertReflectiveStaticEquals(4, JBRSkia.class.getDeclaredField("ABI_ID"));
-        assertReflectiveStaticEquals("skia-interop-poc:4", JBRSkia.class.getDeclaredField("BUILD_ID"));
+        assertReflectiveStaticEquals(5, JBRSkia.class.getDeclaredField("ABI_ID"));
+        assertReflectiveStaticEquals("skia-interop-poc:5", JBRSkia.class.getDeclaredField("BUILD_ID"));
 
         if (TestJBRSkia.INSTANCE != null) {
             throw new AssertionError("JBRSkia service must be unavailable before native runtime is wired");
@@ -113,8 +113,8 @@ public class JBRSkiaApiTest {
 
     private static void assertCommandStreamValidation() {
         assertValidCommandStream(new int[] {
-                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 2,
-                JBRSkia.COMMAND_CLEAR, 0xff000000
+                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 3,
+                JBRSkia.COMMAND_CLEAR, 3, 0xff000000
         }, "valid clear stream");
         assertInvalidCommandStream(new int[] { JBRSkia.COMMAND_CLEAR, 0xff000000 }, "missing header");
         assertInvalidCommandStream(new int[] {
@@ -137,6 +137,10 @@ public class JBRSkiaApiTest {
                 JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 1,
                 JBRSkia.COMMAND_CLEAR, 0xff000000
         }, "extra payload");
+        assertInvalidCommandStream(new int[] {
+                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 3,
+                JBRSkia.COMMAND_CLEAR, 2, 0xff000000
+        }, "wrong command record length");
     }
 
     private static void assertValidCommandStream(int[] commands, String name) {

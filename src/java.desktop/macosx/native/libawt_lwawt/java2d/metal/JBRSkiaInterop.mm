@@ -49,7 +49,7 @@
 
 #include "MTLSurfaceDataBase.h"
 
-static constexpr jint ABI_ID = 4;
+static constexpr jint ABI_ID = 5;
 static constexpr jint COMMAND_STREAM_MAGIC = 1246972723;
 static constexpr jint COMMAND_STREAM_HEADER_SIZE = 4;
 static constexpr jint COMMAND_STREAM_FLAGS_NONE = 0;
@@ -161,13 +161,28 @@ static bool drawCommandList(SkCanvas* canvas, const jint* commands, jsize comman
     jsize offset = COMMAND_STREAM_HEADER_SIZE;
     jsize commandEnd = COMMAND_STREAM_HEADER_SIZE + payloadLength;
     while (offset < commandEnd) {
+        jsize recordStart = offset;
         jint op = commands[offset++];
+        if (offset >= commandEnd) {
+            return false;
+        }
+        jint recordLength = commands[offset++];
+        jsize recordEnd = recordStart + recordLength;
+        if (recordLength < 2 || recordEnd > commandEnd) {
+            return false;
+        }
         switch (op) {
             case COMMAND_SAVE: {
+                if (offset != recordEnd) {
+                    return false;
+                }
                 canvas->save();
                 break;
             }
             case COMMAND_RESTORE: {
+                if (offset != recordEnd) {
+                    return false;
+                }
                 if (canvas->getSaveCount() <= 1) {
                     return false;
                 }
@@ -175,7 +190,7 @@ static bool drawCommandList(SkCanvas* canvas, const jint* commands, jsize comman
                 break;
             }
             case COMMAND_CLIP_RECT: {
-                if (offset + 4 > commandEnd) {
+                if (offset + 4 != recordEnd) {
                     return false;
                 }
                 jint x = commands[offset++];
@@ -191,7 +206,7 @@ static bool drawCommandList(SkCanvas* canvas, const jint* commands, jsize comman
                 break;
             }
             case COMMAND_CLEAR: {
-                if (offset + 1 > commandEnd) {
+                if (offset + 1 != recordEnd) {
                     return false;
                 }
                 SkPaint paint;
@@ -200,7 +215,7 @@ static bool drawCommandList(SkCanvas* canvas, const jint* commands, jsize comman
                 break;
             }
             case COMMAND_FILL_RECT: {
-                if (offset + 6 > commandEnd) {
+                if (offset + 6 != recordEnd) {
                     return false;
                 }
                 SkPaint paint;
@@ -226,7 +241,7 @@ static bool drawCommandList(SkCanvas* canvas, const jint* commands, jsize comman
                 break;
             }
             case COMMAND_CLEAR_RECT: {
-                if (offset + 4 > commandEnd) {
+                if (offset + 4 != recordEnd) {
                     return false;
                 }
                 jint x = commands[offset++];
@@ -243,7 +258,7 @@ static bool drawCommandList(SkCanvas* canvas, const jint* commands, jsize comman
                 break;
             }
             case COMMAND_STROKE_LINE: {
-                if (offset + 6 > commandEnd) {
+                if (offset + 6 != recordEnd) {
                     return false;
                 }
                 SkPaint paint;
@@ -263,7 +278,7 @@ static bool drawCommandList(SkCanvas* canvas, const jint* commands, jsize comman
                 break;
             }
             case COMMAND_FILL_OVAL: {
-                if (offset + 5 > commandEnd) {
+                if (offset + 5 != recordEnd) {
                     return false;
                 }
                 SkPaint paint;
@@ -281,7 +296,7 @@ static bool drawCommandList(SkCanvas* canvas, const jint* commands, jsize comman
                 break;
             }
             case COMMAND_STROKE_OVAL: {
-                if (offset + 6 > commandEnd) {
+                if (offset + 6 != recordEnd) {
                     return false;
                 }
                 SkPaint paint;
@@ -302,6 +317,9 @@ static bool drawCommandList(SkCanvas* canvas, const jint* commands, jsize comman
             }
             default:
                 return false;
+        }
+        if (offset != recordEnd) {
+            return false;
         }
     }
     return true;

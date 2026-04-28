@@ -1139,6 +1139,69 @@ Next checkpoint:
   - explicit coordinate-space enum
   - reserved extension fields for images/text.
 
+### Checkpoint 33: Command Record Lengths And ABI 5
+
+Status: completed as the next ABI-structure slice for command replay.
+
+- Bumped the PoC command ABI to `ABI_ID = 5`.
+- Kept the outer command stream header from ABI 3/4:
+  - `COMMAND_STREAM_MAGIC`
+  - `ABI_ID`
+  - flags
+  - payload length.
+- Changed each command payload record from raw `[op, args...]` to:
+  - `[op, recordLength, args...]`
+  - `recordLength` is counted in integers and includes the opcode and length fields.
+- JBR validates command record boundaries before replay:
+  - record length must be at least `2`
+  - record end must stay inside the declared payload
+  - every supported opcode must consume exactly its record
+  - malformed records are rejected before native replay.
+- JBR native Skia replay now applies the same exact record-boundary checks as the Java fallback replay.
+- JBR `JBRSkiaApiTest` now includes a negative case for a wrong per-command record length.
+- Skiko and CMP command emitters now use helper functions that prepend record lengths, so future optional payload extensions can be skipped or rejected predictably.
+- The ABI remains a temporary int-array bridge. This slice makes the payload self-describing enough to map cleanly to the eventual native memory-block layout.
+
+Verification completed:
+
+- JBR patched class rebuild into `/tmp/jbr-skia-run/desktop`.
+- JBR `JBRSkiaApiTest` compiled and passed against the patched module.
+- JBR native dylib rebuild into `/tmp/jbr-skia-native/libjbrskiainterop.dylib`.
+- Runtime API `bash tools/build.sh process`.
+- Runtime API `bash tools/build.sh dev` and `/tmp/jbr-api-shim.jar` refresh.
+- Skiko `./gradlew :skiko:compileKotlinAwt :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`.
+- Skiko `./gradlew :skiko:publishToMavenLocal`.
+- CMP `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew :compose:ui:ui-graphics:desktopJar :compose:ui:ui:desktopJar`.
+- Magic Jewel `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew compileKotlin`.
+
+Record-length positive smoke report:
+
+- report: `/tmp/magic-jewel-command-record-length-smoke/report.md`
+- validation status: `passed`
+- fallback markers: `0`
+- picture frames: `0`
+- CMP command recorder: `frames=1392 fps=278.4 avg_commands=1085 max_commands=1085 unsupported_frames=0 avg_unsupported=0.0 max_unsupported=0 reasons=none`
+- Skiko/JBR command frames: `1391` / `1391`
+- screenshot assertion: `passed`
+
+Record-length invalid-stream fallback report:
+
+- report: `/tmp/magic-jewel-command-record-length-invalid/report.md`
+- validation status: `passed`
+- fallback markers: `1`
+- expected fallback reason: `command-stream-invalid`
+- CMP command recorder: `frames=612 fps=122.4 avg_commands=1067 max_commands=1067 unsupported_frames=0 avg_unsupported=0.0 max_unsupported=0 reasons=none`
+- Skiko/JBR command frames: `612` / `0`
+- screenshot assertion: `passed` on the old Swing fallback renderer.
+
+Next checkpoint:
+
+- Move the command payload one step closer to the native ABI:
+  - byte-sized or fixed-width opcodes
+  - byte lengths instead of integer counts
+  - explicit record alignment
+  - reserved per-record extension flags.
+
 Use separate worktrees for every existing repo touched:
 
 - `JetBrainsRuntime` worktree: `jbr-skia-compose-poc`

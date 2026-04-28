@@ -84,7 +84,25 @@ public class JBRSkiaService extends JBRSkia {
     }
 
     public static boolean isValidCommandStreamForTesting(int[] commands) {
-        return commandPayloadEnd(commands) >= 0;
+        int commandEnd = commandPayloadEnd(commands);
+        if (commandEnd < 0) {
+            return false;
+        }
+        int offset = COMMAND_STREAM_HEADER_SIZE;
+        while (offset < commandEnd) {
+            int recordStart = offset;
+            int op = commands[offset++];
+            if (offset >= commandEnd) {
+                return false;
+            }
+            int recordLength = commands[offset++];
+            int recordEnd = recordStart + recordLength;
+            if (recordLength < 2 || recordEnd > commandEnd || expectedRecordLength(op) != recordLength) {
+                return false;
+            }
+            offset = recordEnd;
+        }
+        return offset == commandEnd;
     }
 
     private static int commandPayloadEnd(int[] commands) {
@@ -100,6 +118,15 @@ public class JBRSkiaService extends JBRSkia {
             return -1;
         }
         return COMMAND_STREAM_HEADER_SIZE + payloadLength;
+    }
+
+    private static int expectedRecordLength(int op) {
+        if (op == COMMAND_SAVE || op == COMMAND_RESTORE) return 2;
+        if (op == COMMAND_CLEAR) return 3;
+        if (op == COMMAND_CLEAR_RECT || op == COMMAND_CLIP_RECT) return 6;
+        if (op == COMMAND_FILL_OVAL) return 7;
+        if (op == COMMAND_FILL_RECT || op == COMMAND_STROKE_LINE || op == COMMAND_STROKE_OVAL) return 8;
+        return -1;
     }
 
     private record MetalSurfaceMetadata(long nativeOpsPtr, long texturePtr) {
@@ -285,19 +312,26 @@ public class JBRSkiaService extends JBRSkia {
             int offset = COMMAND_STREAM_HEADER_SIZE;
             try {
                 while (offset < commandEnd) {
+                    int recordStart = offset;
                     int op = commands[offset++];
+                    if (offset >= commandEnd) return false;
+                    int recordLength = commands[offset++];
+                    int recordEnd = recordStart + recordLength;
+                    if (recordLength < 2 || recordEnd > commandEnd) return false;
                     if (op == COMMAND_SAVE) {
+                        if (offset != recordEnd) return false;
                         stack.addLast(current);
                         current = (Graphics2D) current.create();
                     } else if (op == COMMAND_RESTORE) {
+                        if (offset != recordEnd) return false;
                         if (stack.isEmpty()) return false;
                         current.dispose();
                         current = stack.removeLast();
                     } else if (op == COMMAND_CLIP_RECT) {
-                        if (offset + 4 > commandEnd) return false;
+                        if (offset + 4 != recordEnd) return false;
                         current.clipRect(commands[offset++], commands[offset++], commands[offset++], commands[offset++]);
                     } else if (op == COMMAND_CLEAR) {
-                        if (offset + 1 > commandEnd) return false;
+                        if (offset + 1 != recordEnd) return false;
                         current.setColor(new Color(commands[offset++], true));
                         Rectangle clip = current.getClipBounds();
                         if (clip == null) {
@@ -305,7 +339,7 @@ public class JBRSkiaService extends JBRSkia {
                         }
                         current.fillRect(clip.x, clip.y, clip.width, clip.height);
                     } else if (op == COMMAND_CLEAR_RECT) {
-                        if (offset + 4 > commandEnd) return false;
+                        if (offset + 4 != recordEnd) return false;
                         int x = commands[offset++];
                         int y = commands[offset++];
                         int width = commands[offset++];
@@ -315,7 +349,7 @@ public class JBRSkiaService extends JBRSkia {
                         current.fillRect(x, y, width, height);
                         current.setComposite(previousComposite);
                     } else if (op == COMMAND_FILL_RECT) {
-                        if (offset + 6 > commandEnd) return false;
+                        if (offset + 6 != recordEnd) return false;
                         current.setColor(new Color(commands[offset++], true));
                         int x = commands[offset++];
                         int y = commands[offset++];
@@ -328,7 +362,7 @@ public class JBRSkiaService extends JBRSkia {
                             current.fillRect(x, y, width, height);
                         }
                     } else if (op == COMMAND_STROKE_LINE) {
-                        if (offset + 6 > commandEnd) return false;
+                        if (offset + 6 != recordEnd) return false;
                         current.setColor(new Color(commands[offset++], true));
                         int x1 = commands[offset++];
                         int y1 = commands[offset++];
@@ -343,7 +377,7 @@ public class JBRSkiaService extends JBRSkia {
                             current.setStroke(previous);
                         }
                     } else if (op == COMMAND_FILL_OVAL) {
-                        if (offset + 5 > commandEnd) return false;
+                        if (offset + 5 != recordEnd) return false;
                         current.setColor(new Color(commands[offset++], true));
                         int x = commands[offset++];
                         int y = commands[offset++];
@@ -351,7 +385,7 @@ public class JBRSkiaService extends JBRSkia {
                         int height = commands[offset++];
                         current.fillOval(x, y, width, height);
                     } else if (op == COMMAND_STROKE_OVAL) {
-                        if (offset + 6 > commandEnd) return false;
+                        if (offset + 6 != recordEnd) return false;
                         current.setColor(new Color(commands[offset++], true));
                         int x = commands[offset++];
                         int y = commands[offset++];
@@ -368,6 +402,7 @@ public class JBRSkiaService extends JBRSkia {
                     } else {
                         return false;
                     }
+                    if (offset != recordEnd) return false;
                 }
                 return stack.isEmpty();
             } finally {
