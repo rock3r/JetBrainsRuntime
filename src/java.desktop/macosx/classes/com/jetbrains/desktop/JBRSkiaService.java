@@ -48,6 +48,16 @@ public class JBRSkiaService extends JBRSkia {
     private static final String PROPERTY = "sun.java2d.skia.interop";
     private static final String NATIVE_DIAGNOSTIC_PROPERTY = "sun.java2d.skia.interop.nativeDiagnostic";
     private static final String NATIVE_LIBRARY_PROPERTY = "sun.java2d.skia.interop.library";
+    private static final int COMMAND_CAPABILITIES =
+            COMMAND_CAP_CLEAR
+                    | COMMAND_CAP_FILL_RECT
+                    | COMMAND_CAP_STROKE_LINE
+                    | COMMAND_CAP_FILL_OVAL
+                    | COMMAND_CAP_STROKE_OVAL
+                    | COMMAND_CAP_CLEAR_RECT
+                    | COMMAND_CAP_SAVE_RESTORE
+                    | COMMAND_CAP_CLIP_RECT
+                    | COMMAND_CAP_USER_SPACE_COORDINATES;
     private static final boolean NATIVE_BRIDGE_AVAILABLE = loadNativeBridge();
     private static final AtomicLong NEXT_SCOPE_ID = new AtomicLong(1);
 
@@ -55,6 +65,11 @@ public class JBRSkiaService extends JBRSkia {
         if (!Boolean.getBoolean(PROPERTY)) {
             throw new JBRApi.ServiceNotAvailableException("JBR Skia interop is disabled");
         }
+    }
+
+    @Override
+    public int getCommandCapabilities() {
+        return COMMAND_CAPABILITIES;
     }
 
     @Override
@@ -66,6 +81,25 @@ public class JBRSkiaService extends JBRSkia {
                 graphics.getClipBounds(),
                 getMetalSurfaceMetadata(graphics)
         );
+    }
+
+    public static boolean isValidCommandStreamForTesting(int[] commands) {
+        return commandPayloadEnd(commands) >= 0;
+    }
+
+    private static int commandPayloadEnd(int[] commands) {
+        if (commands == null
+                || commands.length < COMMAND_STREAM_HEADER_SIZE
+                || commands[0] != COMMAND_STREAM_MAGIC
+                || commands[1] != ABI_ID
+                || commands[2] != COMMAND_STREAM_FLAGS_NONE) {
+            return -1;
+        }
+        int payloadLength = commands[3];
+        if (payloadLength < 0 || payloadLength != commands.length - COMMAND_STREAM_HEADER_SIZE) {
+            return -1;
+        }
+        return COMMAND_STREAM_HEADER_SIZE + payloadLength;
     }
 
     private record MetalSurfaceMetadata(long nativeOpsPtr, long texturePtr) {
@@ -241,21 +275,14 @@ public class JBRSkiaService extends JBRSkia {
         }
 
         private static boolean renderJava2DCommands(Graphics2D g, int[] commands) {
-            if (commands.length < COMMAND_STREAM_HEADER_SIZE
-                    || commands[0] != COMMAND_STREAM_MAGIC
-                    || commands[1] != ABI_ID
-                    || commands[2] != COMMAND_STREAM_FLAGS_NONE) {
-                return false;
-            }
-            int payloadLength = commands[3];
-            if (payloadLength < 0 || payloadLength != commands.length - COMMAND_STREAM_HEADER_SIZE) {
+            int commandEnd = commandPayloadEnd(commands);
+            if (commandEnd < 0) {
                 return false;
             }
 
             ArrayDeque<Graphics2D> stack = new ArrayDeque<>();
             Graphics2D current = g;
             int offset = COMMAND_STREAM_HEADER_SIZE;
-            int commandEnd = COMMAND_STREAM_HEADER_SIZE + payloadLength;
             try {
                 while (offset < commandEnd) {
                     int op = commands[offset++];

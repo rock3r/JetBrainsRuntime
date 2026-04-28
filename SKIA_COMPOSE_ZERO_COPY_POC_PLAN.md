@@ -1065,6 +1065,80 @@ Next checkpoint:
   - explicit coordinate-space units,
   - or a native memory block layout that mirrors the eventual C ABI.
 
+### Checkpoint 32: Command Capabilities And Invalid-Stream Fallback
+
+Status: completed as the first capability-negotiated ABI slice.
+
+- Bumped the PoC command ABI to `ABI_ID = 4` because Skiko now requires command capability discovery after the ABI/build gate.
+- Added service-level command capability bits to JBR and the public Runtime API mirror:
+  - clear
+  - fill rect
+  - stroke line
+  - fill oval
+  - stroke oval
+  - clear rect
+  - save/restore
+  - clip rect
+  - Swing user-space coordinates.
+- `JBRSkiaService.getCommandCapabilities()` returns the supported bitset.
+- Skiko now rejects otherwise-compatible services that do not expose all currently required command capabilities and emits:
+  - `SKIKO_JBR_INTEROP_FALLBACK reason=command-capability-mismatch`
+- JBR now has a focused command-stream validation test hook exercised from `JBRSkiaApiTest`:
+  - missing header
+  - wrong magic
+  - wrong ABI
+  - unsupported flags
+  - negative payload length
+  - truncated payload
+  - extra payload.
+- Skiko/Magic Jewel now have a deliberate corrupt-stream probe:
+  - `MAGIC_JEWEL_CORRUPT_COMMAND_STREAM=true`
+  - Skiko flips command-stream flags to an unsupported value.
+  - JBR rejects the frame before native replay.
+  - Skiko emits `SKIKO_JBR_INTEROP_FALLBACK reason=command-stream-invalid` and falls back to the old Swing renderer.
+
+Verification completed:
+
+- JBR patched class rebuild into `/tmp/jbr-skia-run/desktop`.
+- JBR `JBRSkiaApiTest` compiled and passed against the patched module.
+- JBR native dylib rebuild into `/tmp/jbr-skia-native/libjbrskiainterop.dylib`.
+- Runtime API `bash tools/build.sh process`.
+- Runtime API `bash tools/build.sh dev` and `/tmp/jbr-api-shim.jar` refresh.
+- Skiko `./gradlew :skiko:compileKotlinAwt :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest :skiko:publishToMavenLocal`.
+- CMP `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew :compose:ui:ui-graphics:desktopJar :compose:ui:ui:desktopJar`.
+- Magic Jewel `bash -n scripts/run-jbr-skia.sh scripts/jbr-skia-interop-report.sh scripts/test-jbr-skia-report-validation.sh`.
+- Magic Jewel `scripts/test-jbr-skia-report-validation.sh`.
+- Magic Jewel `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew compileKotlin`.
+
+Capability-positive smoke report:
+
+- report: `/tmp/magic-jewel-command-caps-smoke/report.md`
+- validation status: `passed`
+- fallback markers: `0`
+- picture frames: `0`
+- CMP command recorder: `frames=860 fps=172.0 avg_commands=911 max_commands=911 unsupported_frames=0 avg_unsupported=0.0 max_unsupported=0 reasons=none`
+- Skiko/JBR command frames: `859` / `859`
+- screenshot assertion: `passed`
+
+Invalid-stream fallback report:
+
+- report: `/tmp/magic-jewel-command-invalid-stream/report.md`
+- validation status: `passed`
+- fallback markers: `1`
+- expected fallback reason: `command-stream-invalid`
+- CMP command recorder: `frames=744 fps=148.8 avg_commands=897 max_commands=897 unsupported_frames=0 avg_unsupported=0.0 max_unsupported=0 reasons=none`
+- Skiko/JBR command frames: `743` / `0`
+- screenshot assertion: `passed` on the old Swing fallback renderer.
+
+Next checkpoint:
+
+- Push capability awareness down into the CMP command recorder so it can omit optional commands when a future JBR advertises a smaller command set.
+- Start replacing the int-array payload with a native memory block layout:
+  - fixed stream header struct
+  - per-command opcode + byte length
+  - explicit coordinate-space enum
+  - reserved extension fields for images/text.
+
 Use separate worktrees for every existing repo touched:
 
 - `JetBrainsRuntime` worktree: `jbr-skia-compose-poc`

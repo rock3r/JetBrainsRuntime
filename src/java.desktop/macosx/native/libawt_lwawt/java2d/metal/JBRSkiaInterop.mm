@@ -49,7 +49,7 @@
 
 #include "MTLSurfaceDataBase.h"
 
-static constexpr jint ABI_ID = 3;
+static constexpr jint ABI_ID = 4;
 static constexpr jint COMMAND_STREAM_MAGIC = 1246972723;
 static constexpr jint COMMAND_STREAM_HEADER_SIZE = 4;
 static constexpr jint COMMAND_STREAM_FLAGS_NONE = 0;

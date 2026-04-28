@@ -35,11 +35,20 @@ import java.awt.Rectangle;
  * so downstream compile-only clients cannot accidentally inline stale values.
  */
 public abstract class JBRSkia {
-    public static final int ABI_ID = Integer.parseInt("3");
+    public static final int ABI_ID = Integer.parseInt("4");
     public static final String BUILD_ID = buildId();
     public static final int COMMAND_STREAM_MAGIC = Integer.parseInt("1246972723");
     public static final int COMMAND_STREAM_HEADER_SIZE = Integer.parseInt("4");
     public static final int COMMAND_STREAM_FLAGS_NONE = Integer.parseInt("0");
+    public static final int COMMAND_CAP_CLEAR = Integer.parseInt("1");
+    public static final int COMMAND_CAP_FILL_RECT = Integer.parseInt("2");
+    public static final int COMMAND_CAP_STROKE_LINE = Integer.parseInt("4");
+    public static final int COMMAND_CAP_FILL_OVAL = Integer.parseInt("8");
+    public static final int COMMAND_CAP_STROKE_OVAL = Integer.parseInt("16");
+    public static final int COMMAND_CAP_CLEAR_RECT = Integer.parseInt("32");
+    public static final int COMMAND_CAP_SAVE_RESTORE = Integer.parseInt("64");
+    public static final int COMMAND_CAP_CLIP_RECT = Integer.parseInt("128");
+    public static final int COMMAND_CAP_USER_SPACE_COORDINATES = Integer.parseInt("256");
     public static final int COMMAND_CLEAR = Integer.parseInt("1");
     public static final int COMMAND_FILL_RECT = Integer.parseInt("2");
     public static final int COMMAND_STROKE_LINE = Integer.parseInt("3");
@@ -53,6 +62,8 @@ public abstract class JBRSkia {
     private static String buildId() {
         return "skia-interop-poc:" + ABI_ID;
     }
+
+    public abstract int getCommandCapabilities();
 
     public abstract ScopedSkiaCanvas acquireCanvas(Graphics2D graphics);
 

@@ -49,11 +49,11 @@ public class JBRSkiaApiTest {
     }
 
     public static void main(String[] args) throws Exception {
-        assertEquals(1, JBRSkia.ABI_ID, "ABI_ID");
-        assertEquals("skia-interop-poc:1", JBRSkia.BUILD_ID, "BUILD_ID");
+        assertEquals(4, JBRSkia.ABI_ID, "ABI_ID");
+        assertEquals("skia-interop-poc:4", JBRSkia.BUILD_ID, "BUILD_ID");
 
-        assertReflectiveStaticEquals(1, JBRSkia.class.getDeclaredField("ABI_ID"));
-        assertReflectiveStaticEquals("skia-interop-poc:1", JBRSkia.class.getDeclaredField("BUILD_ID"));
+        assertReflectiveStaticEquals(4, JBRSkia.class.getDeclaredField("ABI_ID"));
+        assertReflectiveStaticEquals("skia-interop-poc:4", JBRSkia.class.getDeclaredField("BUILD_ID"));
 
         if (TestJBRSkia.INSTANCE != null) {
             throw new AssertionError("JBRSkia service must be unavailable before native runtime is wired");
@@ -68,6 +68,8 @@ public class JBRSkiaApiTest {
 
         System.setProperty("sun.java2d.skia.interop", "true");
         var service = new JBRSkiaService();
+        assertEquals(expectedCommandCapabilities(), service.getCommandCapabilities(), "command capabilities");
+        assertCommandStreamValidation();
         var image = new BufferedImage(32, 24, BufferedImage.TYPE_INT_ARGB_PRE);
         Graphics2D graphics = image.createGraphics();
         try {
@@ -95,6 +97,58 @@ public class JBRSkiaApiTest {
 
     private static void assertReflectiveStaticEquals(Object expected, Field field) throws IllegalAccessException {
         assertEquals(expected, field.get(null), field.getName());
+    }
+
+    private static int expectedCommandCapabilities() {
+        return JBRSkia.COMMAND_CAP_CLEAR
+                | JBRSkia.COMMAND_CAP_FILL_RECT
+                | JBRSkia.COMMAND_CAP_STROKE_LINE
+                | JBRSkia.COMMAND_CAP_FILL_OVAL
+                | JBRSkia.COMMAND_CAP_STROKE_OVAL
+                | JBRSkia.COMMAND_CAP_CLEAR_RECT
+                | JBRSkia.COMMAND_CAP_SAVE_RESTORE
+                | JBRSkia.COMMAND_CAP_CLIP_RECT
+                | JBRSkia.COMMAND_CAP_USER_SPACE_COORDINATES;
+    }
+
+    private static void assertCommandStreamValidation() {
+        assertValidCommandStream(new int[] {
+                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 2,
+                JBRSkia.COMMAND_CLEAR, 0xff000000
+        }, "valid clear stream");
+        assertInvalidCommandStream(new int[] { JBRSkia.COMMAND_CLEAR, 0xff000000 }, "missing header");
+        assertInvalidCommandStream(new int[] {
+                0, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 0
+        }, "wrong magic");
+        assertInvalidCommandStream(new int[] {
+                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID - 1, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 0
+        }, "wrong abi");
+        assertInvalidCommandStream(new int[] {
+                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, 1, 0
+        }, "unsupported flags");
+        assertInvalidCommandStream(new int[] {
+                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, -1
+        }, "negative payload length");
+        assertInvalidCommandStream(new int[] {
+                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 2,
+                JBRSkia.COMMAND_CLEAR
+        }, "truncated payload");
+        assertInvalidCommandStream(new int[] {
+                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 1,
+                JBRSkia.COMMAND_CLEAR, 0xff000000
+        }, "extra payload");
+    }
+
+    private static void assertValidCommandStream(int[] commands, String name) {
+        if (!JBRSkiaService.isValidCommandStreamForTesting(commands)) {
+            throw new AssertionError(name + " should be valid");
+        }
+    }
+
+    private static void assertInvalidCommandStream(int[] commands, String name) {
+        if (JBRSkiaService.isValidCommandStreamForTesting(commands)) {
+            throw new AssertionError(name + " should be invalid");
+        }
     }
 
     private static void assertEquals(Object expected, Object actual, String name) {
