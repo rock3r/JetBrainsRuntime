@@ -43,6 +43,9 @@ import java.awt.image.BufferedImage;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.ArrayDeque;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -67,9 +70,18 @@ public class JBRSkiaService extends JBRSkia {
                     | COMMAND_CAP_BASIC_TRANSFORMS
                     | COMMAND_CAP_CLIP_RECT_OP
                     | COMMAND_CAP_SAVE_LAYER
-                    | COMMAND_CAP_DRAW_IMAGE_ARGB;
+                    | COMMAND_CAP_DRAW_IMAGE_ARGB
+                    | COMMAND_CAP_IMAGE_CACHE;
     private static final boolean NATIVE_BRIDGE_AVAILABLE = loadNativeBridge();
     private static final AtomicLong NEXT_SCOPE_ID = new AtomicLong(1);
+    private static final int MAX_CACHED_IMAGES = 256;
+    private static final Map<Long, BufferedImage> IMAGE_CACHE = Collections.synchronizedMap(
+            new LinkedHashMap<Long, BufferedImage>(MAX_CACHED_IMAGES, 0.75f, true) {
+                @Override
+                protected boolean removeEldestEntry(Map.Entry<Long, BufferedImage> eldest) {
+                    return size() > MAX_CACHED_IMAGES;
+                }
+            });
 
     public JBRSkiaService() {
         if (!Boolean.getBoolean(PROPERTY)) {
@@ -141,6 +153,8 @@ public class JBRSkiaService extends JBRSkia {
         if (op == COMMAND_TRANSLATE || op == COMMAND_SCALE) return 5;
         if (op == COMMAND_SAVE_LAYER) return 8;
         if (op == COMMAND_DRAW_IMAGE_ARGB) return -2;
+        if (op == COMMAND_DEFINE_IMAGE_ARGB) return -3;
+        if (op == COMMAND_DRAW_IMAGE_REF) return 17;
         if (op == COMMAND_CLEAR) return 4;
         if (op == COMMAND_CLEAR_RECT) return 7;
         if (op == COMMAND_CLIP_RECT) return 8;
@@ -154,6 +168,9 @@ public class JBRSkiaService extends JBRSkia {
         int expectedLength = expectedRecordLength(record.op());
         if (expectedLength == -2 && record.op() == COMMAND_DRAW_IMAGE_ARGB) {
             return record.recordLength() >= 16;
+        }
+        if (expectedLength == -3 && record.op() == COMMAND_DEFINE_IMAGE_ARGB) {
+            return record.recordLength() >= 8;
         }
         return expectedLength == record.recordLength();
     }
@@ -188,6 +205,38 @@ public class JBRSkiaService extends JBRSkia {
                     && imageHeight <= 4096
                     && pixelCount == imageWidth * imageHeight
                     && record.recordLength() == 16 + pixelCount
+                    && alpha1000 >= 0
+                    && alpha1000 <= 1000
+                    && filterQuality >= 0
+                    && filterQuality <= 3;
+        }
+        if (record.op() == COMMAND_DEFINE_IMAGE_ARGB) {
+            if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE) {
+                return false;
+            }
+            int imageWidth = commands[record.argsStart() + 2];
+            int imageHeight = commands[record.argsStart() + 3];
+            int pixelCount = commands[record.argsStart() + 4];
+            return imageWidth > 0
+                    && imageHeight > 0
+                    && imageWidth <= 4096
+                    && imageHeight <= 4096
+                    && pixelCount == imageWidth * imageHeight
+                    && record.recordLength() == 8 + pixelCount;
+        }
+        if (record.op() == COMMAND_DRAW_IMAGE_REF) {
+            if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE
+                    && record.recordFlags() != COMMAND_RECORD_FLAG_ANTIALIAS) {
+                return false;
+            }
+            int imageWidth = commands[record.argsStart() + 10];
+            int imageHeight = commands[record.argsStart() + 11];
+            int alpha1000 = commands[record.argsStart() + 12];
+            int filterQuality = commands[record.argsStart() + 13];
+            return imageWidth > 0
+                    && imageHeight > 0
+                    && imageWidth <= 4096
+                    && imageHeight <= 4096
                     && alpha1000 >= 0
                     && alpha1000 <= 1000
                     && filterQuality >= 0
@@ -544,6 +593,43 @@ public class JBRSkiaService extends JBRSkia {
                         stack.addLast(current);
                         current = (Graphics2D) current.create();
                         current.clipRect(x, y, width, height);
+                    } else if (op == COMMAND_DEFINE_IMAGE_ARGB) {
+                        if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE || offset + 5 > recordEnd) return false;
+                        long cacheKey = cacheKey(commands[offset++], commands[offset++]);
+                        int imageWidth = commands[offset++];
+                        int imageHeight = commands[offset++];
+                        int pixelCount = commands[offset++];
+                        if (imageWidth <= 0 || imageHeight <= 0 || pixelCount != imageWidth * imageHeight
+                                || offset + pixelCount != recordEnd) {
+                            return false;
+                        }
+                        BufferedImage image = new BufferedImage(imageWidth, imageHeight, BufferedImage.TYPE_INT_ARGB);
+                        image.setRGB(0, 0, imageWidth, imageHeight, commands, offset, imageWidth);
+                        offset += pixelCount;
+                        IMAGE_CACHE.put(cacheKey, image);
+                    } else if (op == COMMAND_DRAW_IMAGE_REF) {
+                        if (offset + 14 != recordEnd) return false;
+                        boolean filtered = (record.recordFlags() & COMMAND_RECORD_FLAG_ANTIALIAS) != 0;
+                        int srcLeft1000 = commands[offset++];
+                        int srcTop1000 = commands[offset++];
+                        int srcRight1000 = commands[offset++];
+                        int srcBottom1000 = commands[offset++];
+                        int dstLeft1000 = commands[offset++];
+                        int dstTop1000 = commands[offset++];
+                        int dstRight1000 = commands[offset++];
+                        int dstBottom1000 = commands[offset++];
+                        long cacheKey = cacheKey(commands[offset++], commands[offset++]);
+                        int imageWidth = commands[offset++];
+                        int imageHeight = commands[offset++];
+                        int alpha1000 = commands[offset++];
+                        int filterQuality = commands[offset++];
+                        BufferedImage image = IMAGE_CACHE.get(cacheKey);
+                        if (image == null || image.getWidth() != imageWidth || image.getHeight() != imageHeight
+                                || alpha1000 < 0 || alpha1000 > 1000 || filterQuality < 0 || filterQuality > 3) {
+                            return false;
+                        }
+                        drawImage(current, image, filtered, srcLeft1000, srcTop1000, srcRight1000, srcBottom1000,
+                                dstLeft1000, dstTop1000, dstRight1000, dstBottom1000, alpha1000);
                     } else if (op == COMMAND_DRAW_IMAGE_ARGB) {
                         if (offset + 13 > recordEnd) return false;
                         boolean filtered = (record.recordFlags() & COMMAND_RECORD_FLAG_ANTIALIAS) != 0;
@@ -568,29 +654,8 @@ public class JBRSkiaService extends JBRSkia {
                         BufferedImage image = new BufferedImage(imageWidth, imageHeight, BufferedImage.TYPE_INT_ARGB);
                         image.setRGB(0, 0, imageWidth, imageHeight, commands, offset, imageWidth);
                         offset += pixelCount;
-                        Composite previousComposite = current.getComposite();
-                        Object previousInterpolation = current.getRenderingHint(RenderingHints.KEY_INTERPOLATION);
-                        current.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha1000 / 1000.0f));
-                        current.setRenderingHint(
-                                RenderingHints.KEY_INTERPOLATION,
-                                filtered
-                                        ? RenderingHints.VALUE_INTERPOLATION_BILINEAR
-                                        : RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR
-                        );
-                        current.drawImage(
-                                image,
-                                Math.round(dstLeft1000 / 1000.0f),
-                                Math.round(dstTop1000 / 1000.0f),
-                                Math.round(dstRight1000 / 1000.0f),
-                                Math.round(dstBottom1000 / 1000.0f),
-                                Math.round(srcLeft1000 / 1000.0f),
-                                Math.round(srcTop1000 / 1000.0f),
-                                Math.round(srcRight1000 / 1000.0f),
-                                Math.round(srcBottom1000 / 1000.0f),
-                                null
-                        );
-                        current.setComposite(previousComposite);
-                        current.setRenderingHint(RenderingHints.KEY_INTERPOLATION, previousInterpolation);
+                        drawImage(current, image, filtered, srcLeft1000, srcTop1000, srcRight1000, srcBottom1000,
+                                dstLeft1000, dstTop1000, dstRight1000, dstBottom1000, alpha1000);
                     } else if (op == COMMAND_CLEAR) {
                         if (offset + 1 != recordEnd) return false;
                         applyAntialiasing(current, antiAlias);
@@ -688,6 +753,39 @@ public class JBRSkiaService extends JBRSkia {
                     current = stack.removeLast();
                 }
             }
+        }
+
+        private static long cacheKey(int high, int low) {
+            return ((long) high << 32) ^ (low & 0xffffffffL);
+        }
+
+        private static void drawImage(Graphics2D current, BufferedImage image, boolean filtered,
+                                      int srcLeft1000, int srcTop1000, int srcRight1000, int srcBottom1000,
+                                      int dstLeft1000, int dstTop1000, int dstRight1000, int dstBottom1000,
+                                      int alpha1000) {
+            Composite previousComposite = current.getComposite();
+            Object previousInterpolation = current.getRenderingHint(RenderingHints.KEY_INTERPOLATION);
+            current.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha1000 / 1000.0f));
+            current.setRenderingHint(
+                    RenderingHints.KEY_INTERPOLATION,
+                    filtered
+                            ? RenderingHints.VALUE_INTERPOLATION_BILINEAR
+                            : RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR
+            );
+            current.drawImage(
+                    image,
+                    Math.round(dstLeft1000 / 1000.0f),
+                    Math.round(dstTop1000 / 1000.0f),
+                    Math.round(dstRight1000 / 1000.0f),
+                    Math.round(dstBottom1000 / 1000.0f),
+                    Math.round(srcLeft1000 / 1000.0f),
+                    Math.round(srcTop1000 / 1000.0f),
+                    Math.round(srcRight1000 / 1000.0f),
+                    Math.round(srcBottom1000 / 1000.0f),
+                    null
+            );
+            current.setComposite(previousComposite);
+            current.setRenderingHint(RenderingHints.KEY_INTERPOLATION, previousInterpolation);
         }
 
         private static void applyAntialiasing(Graphics2D g, boolean antiAlias) {

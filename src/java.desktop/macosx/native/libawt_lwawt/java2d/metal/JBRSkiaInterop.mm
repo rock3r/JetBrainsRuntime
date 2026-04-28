@@ -54,7 +54,7 @@
 
 #include "MTLSurfaceDataBase.h"
 
-static constexpr jint ABI_ID = 13;
+static constexpr jint ABI_ID = 14;
 static constexpr jint COMMAND_STREAM_MAGIC = 1246972723;
 static constexpr jint COMMAND_STREAM_HEADER_SIZE = 6;
 static constexpr jint COMMAND_STREAM_FLAGS_NONE = 0;
@@ -79,9 +79,13 @@ static constexpr jint COMMAND_SCALE = 11;
 static constexpr jint COMMAND_ROTATE = 12;
 static constexpr jint COMMAND_SAVE_LAYER = 13;
 static constexpr jint COMMAND_DRAW_IMAGE_ARGB = 14;
+static constexpr jint COMMAND_DEFINE_IMAGE_ARGB = 15;
+static constexpr jint COMMAND_DRAW_IMAGE_REF = 16;
 
 static std::mutex gDirectContextMutex;
 static std::unordered_map<void*, sk_sp<GrDirectContext>> gDirectContextsByMtlContext;
+static std::mutex gImageCacheMutex;
+static std::unordered_map<uint64_t, sk_sp<SkImage>> gImagesByKey;
 
 @class AWTView;
 @class MTLLayer;
@@ -186,6 +190,11 @@ static bool isValidStrokeMetadata(jint strokeWidth, jint strokeCap, jint strokeJ
             && strokeMiter1000 >= 0;
 }
 
+static uint64_t imageCacheKey(jint high, jint low) {
+    return (static_cast<uint64_t>(static_cast<uint32_t>(high)) << 32)
+            | static_cast<uint32_t>(low);
+}
+
 struct IntCommandWords {
     const jint* words;
 
@@ -201,6 +210,51 @@ struct LittleEndianByteCommandWords {
         return decodeLittleEndianInt(bytes, index * static_cast<jsize>(sizeof(jint)));
     }
 };
+
+template<typename CommandWords>
+static sk_sp<SkImage> makeRasterImage(CommandWords commands, jsize pixelOffset, jint imageWidth, jint imageHeight, jint pixelCount) {
+    SkImageInfo imageInfo = SkImageInfo::Make(
+            imageWidth,
+            imageHeight,
+            kN32_SkColorType,
+            kUnpremul_SkAlphaType,
+            SkColorSpace::MakeSRGB());
+    std::vector<jint> pixels(static_cast<size_t>(pixelCount));
+    for (jint pixelIndex = 0; pixelIndex < pixelCount; pixelIndex++) {
+        pixels[static_cast<size_t>(pixelIndex)] = commands[pixelOffset + pixelIndex];
+    }
+    SkPixmap pixmap(imageInfo, pixels.data(), static_cast<size_t>(imageWidth) * sizeof(jint));
+    return SkImages::RasterFromPixmapCopy(pixmap);
+}
+
+static bool drawImage(SkCanvas* canvas,
+                      const sk_sp<SkImage>& image,
+                      jint recordFlags,
+                      SkScalar srcLeft,
+                      SkScalar srcTop,
+                      SkScalar srcRight,
+                      SkScalar srcBottom,
+                      SkScalar dstLeft,
+                      SkScalar dstTop,
+                      SkScalar dstRight,
+                      SkScalar dstBottom,
+                      jint alpha1000) {
+    if (image == nullptr || alpha1000 < 0 || alpha1000 > 1000) {
+        return false;
+    }
+    SkPaint imagePaint;
+    imagePaint.setAlphaf(static_cast<float>(alpha1000) / 1000.0f);
+    SkSamplingOptions sampling = (recordFlags & COMMAND_RECORD_FLAG_ANTIALIAS) != 0
+            ? SkSamplingOptions(SkFilterMode::kLinear, SkMipmapMode::kNone)
+            : SkSamplingOptions(SkFilterMode::kNearest, SkMipmapMode::kNone);
+    canvas->drawImageRect(image,
+                          SkRect::MakeLTRB(srcLeft, srcTop, srcRight, srcBottom),
+                          SkRect::MakeLTRB(dstLeft, dstTop, dstRight, dstBottom),
+                          sampling,
+                          &imagePaint,
+                          SkCanvas::kStrict_SrcRectConstraint);
+    return true;
+}
 
 template<typename CommandWords>
 static bool drawCommandList(SkCanvas* canvas, CommandWords commands, jsize commandCount, int width, int height) {
@@ -319,6 +373,70 @@ static bool drawCommandList(SkCanvas* canvas, CommandWords commands, jsize comma
                 canvas->saveLayerAlphaf(&bounds, static_cast<float>(alpha1000) / 1000.0f);
                 break;
             }
+            case COMMAND_DEFINE_IMAGE_ARGB: {
+                if (recordFlags != COMMAND_RECORD_FLAGS_NONE || offset + 5 > recordEnd) {
+                    return false;
+                }
+                const uint64_t key = imageCacheKey(commands[offset], commands[offset + 1]);
+                offset += 2;
+                const jint imageWidth = commands[offset++];
+                const jint imageHeight = commands[offset++];
+                const jint pixelCount = commands[offset++];
+                if (imageWidth <= 0 || imageHeight <= 0 || imageWidth > 4096 || imageHeight > 4096 ||
+                        pixelCount != imageWidth * imageHeight || offset + pixelCount != recordEnd) {
+                    return false;
+                }
+                sk_sp<SkImage> image = makeRasterImage(commands, offset, imageWidth, imageHeight, pixelCount);
+                offset += pixelCount;
+                if (image == nullptr) {
+                    return false;
+                }
+                {
+                    std::lock_guard<std::mutex> lock(gImageCacheMutex);
+                    gImagesByKey[key] = image;
+                }
+                break;
+            }
+            case COMMAND_DRAW_IMAGE_REF: {
+                if ((recordFlags & ~COMMAND_RECORD_FLAG_ANTIALIAS) != 0 || offset + 14 != recordEnd) {
+                    return false;
+                }
+                const SkScalar srcLeft = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkScalar srcTop = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkScalar srcRight = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkScalar srcBottom = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkScalar dstLeft = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkScalar dstTop = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkScalar dstRight = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkScalar dstBottom = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const uint64_t key = imageCacheKey(commands[offset], commands[offset + 1]);
+                offset += 2;
+                const jint imageWidth = commands[offset++];
+                const jint imageHeight = commands[offset++];
+                const jint alpha1000 = commands[offset++];
+                const jint filterQuality = commands[offset++];
+                if (imageWidth <= 0 || imageHeight <= 0 || imageWidth > 4096 || imageHeight > 4096 ||
+                        alpha1000 < 0 || alpha1000 > 1000 || filterQuality < 0 || filterQuality > 3) {
+                    return false;
+                }
+                sk_sp<SkImage> image;
+                {
+                    std::lock_guard<std::mutex> lock(gImageCacheMutex);
+                    auto found = gImagesByKey.find(key);
+                    if (found == gImagesByKey.end()) {
+                        return false;
+                    }
+                    image = found->second;
+                }
+                if (image->width() != imageWidth || image->height() != imageHeight) {
+                    return false;
+                }
+                if (!drawImage(canvas, image, recordFlags, srcLeft, srcTop, srcRight, srcBottom,
+                               dstLeft, dstTop, dstRight, dstBottom, alpha1000)) {
+                    return false;
+                }
+                break;
+            }
             case COMMAND_DRAW_IMAGE_ARGB: {
                 if ((recordFlags & ~COMMAND_RECORD_FLAG_ANTIALIAS) != 0 || offset + 13 > recordEnd) {
                     return false;
@@ -341,33 +459,12 @@ static bool drawCommandList(SkCanvas* canvas, CommandWords commands, jsize comma
                         alpha1000 < 0 || alpha1000 > 1000 || filterQuality < 0 || filterQuality > 3) {
                     return false;
                 }
-                SkImageInfo imageInfo = SkImageInfo::Make(
-                        imageWidth,
-                        imageHeight,
-                        kN32_SkColorType,
-                        kUnpremul_SkAlphaType,
-                        SkColorSpace::MakeSRGB());
-                std::vector<jint> pixels(static_cast<size_t>(pixelCount));
-                for (jint pixelIndex = 0; pixelIndex < pixelCount; pixelIndex++) {
-                    pixels[static_cast<size_t>(pixelIndex)] = commands[offset + pixelIndex];
-                }
-                SkPixmap pixmap(imageInfo, pixels.data(), static_cast<size_t>(imageWidth) * sizeof(jint));
-                sk_sp<SkImage> image = SkImages::RasterFromPixmapCopy(pixmap);
+                sk_sp<SkImage> image = makeRasterImage(commands, offset, imageWidth, imageHeight, pixelCount);
                 offset += pixelCount;
-                if (image == nullptr) {
+                if (!drawImage(canvas, image, recordFlags, srcLeft, srcTop, srcRight, srcBottom,
+                               dstLeft, dstTop, dstRight, dstBottom, alpha1000)) {
                     return false;
                 }
-                SkPaint imagePaint;
-                imagePaint.setAlphaf(static_cast<float>(alpha1000) / 1000.0f);
-                SkSamplingOptions sampling = (recordFlags & COMMAND_RECORD_FLAG_ANTIALIAS) != 0
-                        ? SkSamplingOptions(SkFilterMode::kLinear, SkMipmapMode::kNone)
-                        : SkSamplingOptions(SkFilterMode::kNearest, SkMipmapMode::kNone);
-                canvas->drawImageRect(image,
-                                      SkRect::MakeLTRB(srcLeft, srcTop, srcRight, srcBottom),
-                                      SkRect::MakeLTRB(dstLeft, dstTop, dstRight, dstBottom),
-                                      sampling,
-                                      &imagePaint,
-                                      SkCanvas::kStrict_SrcRectConstraint);
                 break;
             }
             case COMMAND_CLEAR: {

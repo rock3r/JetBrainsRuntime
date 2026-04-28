@@ -1925,6 +1925,55 @@ Next checkpoint:
   - define a higher-level paragraph/text-layout service owned by JBR Skia.
 - In parallel, investigate image payload caching so stable raster/text payloads stop resending full ARGB pixels every frame.
 
+### Checkpoint 48: Cached ARGB Image Handles And ABI 14
+
+Status: completed as a PoC command-stream cache for stable raster payloads.
+
+- Bumped the PoC command ABI to `ABI_ID = 14`.
+- Added `COMMAND_CAP_IMAGE_CACHE = 32768` to the JBR private API, public Runtime API mirror, and Skiko compatibility gate.
+- Added two cached-image records:
+  - `COMMAND_DEFINE_IMAGE_ARGB`: `[op, 32 + pixelCount * 4, 0, cacheKeyHigh, cacheKeyLow, imageWidth, imageHeight, pixelCount, argb0, ...]`
+  - `COMMAND_DRAW_IMAGE_REF`: `[op, 68, flags, srcLeft1000, srcTop1000, srcRight1000, srcBottom1000, dstLeft1000, dstTop1000, dstRight1000, dstBottom1000, cacheKeyHigh, cacheKeyLow, imageWidth, imageHeight, alpha1000, filterQuality]`
+- CMP now hashes image dimensions plus ARGB pixels, emits `DEFINE_IMAGE_ARGB` only once per process for each key, and emits `DRAW_IMAGE_REF` for every draw.
+- JBR Java2D fallback keeps a bounded LRU cache of `BufferedImage` instances.
+- JBR native Skia replay keeps a PoC process-local `SkImage` cache keyed by the 64-bit image key.
+- `COMMAND_DRAW_IMAGE_ARGB` remains available for compatibility within ABI 14, but CMP's recorder now prefers cached-image records.
+
+Verification completed:
+
+- Runtime API `bash tools/build.sh process`.
+- Runtime API `bash tools/build.sh dev` and `/tmp/jbr-api-shim.jar` refresh from `out/classes/8`.
+- Skiko `./gradlew :skiko:compileKotlinAwt :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`.
+- Skiko `./gradlew :skiko:publishToMavenLocal`.
+- CMP `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest`.
+- CMP `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-configuration-cache :compose:ui:ui-graphics:desktopJar :compose:ui:ui-text:desktopJar :compose:ui:ui:desktopJar`.
+- JBR isolated patched-class compile and `JBRSkiaApiTest` run against `/tmp/jbr-skia-abi14-compile`, using a temporary `JBRApi` compile stub for the isolated test harness only.
+- JBR native dylib rebuild into `/tmp/jbr-skia-native/libjbrskiainterop.dylib`.
+
+ABI 14 cached-image Magic Jewel report:
+
+- report: `/tmp/magic-jewel-command-image-cache-abi14-smoke/report.md`
+- validation status: `passed`
+- fallback markers: `0`
+- CMP command recorder: `frames=927 fps=154.5 avg_commands=2593 max_commands=85768 unsupported_frames=0 avg_unsupported=0.0 max_unsupported=0 reasons=none`
+- Skiko/JBR command frames: `927` / `927`
+- picture replay frames: `0`
+- screenshot assertion: `passed`
+- comparison note: the previous text-as-image bridge report averaged about `85880` command words per frame for the same mixed-content probe; ABI 14 cache refs reduce steady-state payload size while retaining the high first-frame max for image definitions.
+
+ABI 14 invalid-stream fallback report:
+
+- report: `/tmp/magic-jewel-command-image-cache-abi14-invalid/report.md`
+- validation status: `passed`
+- fallback markers: `1`
+- CMP/Skiko command frames: `466` / `466`
+- JBR command frames: `0`
+- screenshot assertion: `passed`
+
+Next checkpoint:
+
+- Replace the temporary text-as-image bridge with a real text/font ABI design, or add cache invalidation/eviction handshakes if this image cache becomes more than a PoC transport optimization.
+
 Use separate worktrees for every existing repo touched:
 
 - `JetBrainsRuntime` worktree: `jbr-skia-compose-poc`
