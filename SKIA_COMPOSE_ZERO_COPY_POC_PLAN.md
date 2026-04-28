@@ -573,18 +573,31 @@ Status: completed as a lower-overhead command-list smoke path.
   - `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew compileKotlin` in `/Users/rock3r/src/magic-jewel`
   - `OUT_DIR=/tmp/magic-jewel-jbr-skia-command-smoke DURATION_SECONDS=10 SAMPLE_INTERVAL_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT JBR_SKIA_RENDER_MODE=commands ./scripts/jbr-skia-interop-report.sh`
 - Command-mode smoke report highlights:
-  - old process samples: `samples=27 avg_cpu=50.94 max_cpu=263.20 avg_rss_kb=176480 max_rss_kb=597776`
-  - new process samples: `samples=24 avg_cpu=1.11 max_cpu=22.90 avg_rss_kb=38907 max_rss_kb=124864`
+  - old process samples: `samples=29 avg_cpu=46.82 max_cpu=308.10 avg_rss_kb=178099 max_rss_kb=530912`
+  - new process samples: `samples=24 avg_cpu=0.82 max_cpu=11.30 avg_rss_kb=40307 max_rss_kb=126064`
   - fallback markers: old `0`, new `0`
   - picture frames: `0`
-  - Skiko command frames: `frames=48 avg_commands=550 max_commands=555`
-  - JBR command frames: `frames=48 avg_commands=550 max_commands=555`
+  - Skiko command frames: `frames=318 avg_commands=549 max_commands=555`
+  - JBR command frames: `frames=318 avg_commands=549 max_commands=555`
+  - screenshot assertion: `passed`
+  - screenshot counts: `dark=3222263 cyan=121037 yellow=25752 pink=18260`
   - screenshot: `/tmp/magic-jewel-jbr-skia-command-window.png`
+
+### Checkpoint 19: Command-Mode Screenshot Oracle
+
+Status: completed for the synthetic command renderer.
+
+- Added `/Users/rock3r/src/magic-jewel/scripts/assert-jbr-skia-command-window-screenshot.sh`.
+- The command oracle checks for the synthetic renderer's dark/cyan/yellow/pink palette and emits:
+  - `JBR_SKIA_COMMAND_SCREENSHOT_COUNTS dark=<n> cyan=<n> yellow=<n> pink=<n>`
+- Magic Jewel's report harness now selects the picture or command screenshot assertion based on `JBR_SKIA_RENDER_MODE`.
+- Verification completed:
+  - `scripts/assert-jbr-skia-command-window-screenshot.sh /tmp/magic-jewel-jbr-skia-command-window.png`
+  - `OUT_DIR=/tmp/magic-jewel-jbr-skia-command-smoke DURATION_SECONDS=10 SAMPLE_INTERVAL_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT JBR_SKIA_RENDER_MODE=commands ./scripts/jbr-skia-interop-report.sh`
 
 Next checkpoint:
 
 - Expand the command-list ABI beyond synthetic shapes toward a real subset of Compose vector drawing operations, while keeping SKP replay as the reference/fallback path.
-- Add a command-mode screenshot oracle instead of reusing the picture-mode color assertion.
 - Keep text/images on the SKP path until the JBR-owned font/typeface story is implemented.
 
 Use separate worktrees for every existing repo touched:
