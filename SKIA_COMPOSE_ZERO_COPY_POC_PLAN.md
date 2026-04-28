@@ -488,7 +488,7 @@ Next native checkpoint:
 
 ### Checkpoint 16: Standalone Magic Jewel Swing Sample
 
-Status: completed as a standalone validation harness; report automation is still pending.
+Status: completed as a standalone validation harness; report automation is covered by checkpoint 17.
 
 - Created a new standalone local project at `/Users/rock3r/src/magic-jewel` and initialized it as its own Git repository.
 - Bootstrapped the Gradle/Jewel setup from `compose-pi` conventions while keeping the app intentionally small:
@@ -512,13 +512,40 @@ Status: completed as a standalone validation harness; report automation is still
   - paired `SKIKO_JBR_INTEROP_PICTURE_FRAME ... rendered=true` and `JBR_SKIA_INTEROP_PICTURE_FRAME ... rendered=true` markers
 - Window-only screenshot captured at `/tmp/magic-jewel-jbr-skia-window.png`.
 
+### Checkpoint 17: Magic Jewel Old/New Report Harness
+
+Status: completed as an automated smoke/report harness.
+
+- Added `/Users/rock3r/src/magic-jewel/scripts/jbr-skia-interop-report.sh`.
+- The harness runs two modes:
+  - old: `./gradlew --no-daemon run`
+  - new: `./scripts/run-jbr-skia.sh`
+- The report captures:
+  - coarse `ps` CPU/RSS samples for each process tree
+  - `SKIKO_JBR_INTEROP_FALLBACK` marker counts
+  - `SKIKO_JBR_INTEROP_PICTURE_FRAME` marker counts and SKP payload sizes
+  - `JBR_SKIA_INTEROP_PICTURE_FRAME` marker counts and replay payload sizes
+  - window-only screenshot and deterministic color assertion status
+- The harness reuses the CMP window-capture helper instead of whole-screen capture:
+  - `/Users/rock3r/src/cmp-jbr-skia-poc/compose/desktop/desktop/samples/scripts/capture-macos-window.sh`
+  - `/Users/rock3r/src/cmp-jbr-skia-poc/compose/desktop/desktop/samples/scripts/assert-jbr-skia-window-screenshot.sh`
+- Short smoke verification completed with:
+  - `OUT_DIR=/tmp/magic-jewel-jbr-skia-report-smoke DURATION_SECONDS=12 SAMPLE_INTERVAL_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-interop-report.sh`
+- Smoke report highlights from `/tmp/magic-jewel-jbr-skia-report-smoke/report.md`:
+  - old process samples: `samples=34 avg_cpu=32.58 max_cpu=201.30 avg_rss_kb=160221 max_rss_kb=495328`
+  - new process samples: `samples=18 avg_cpu=1.50 max_cpu=21.10 avg_rss_kb=38720 max_rss_kb=123296`
+  - fallback markers: old `0`, new `0`
+  - Skiko picture frames: `frames=28 avg_bytes=823345 max_bytes=823350`
+  - JBR picture replays: `frames=28 avg_bytes=823345 max_bytes=823350`
+  - screenshot assertion: `passed`
+  - screenshot counts: `green=716429 blue=1098423 purple=26400 yellow=12488`
+  - screenshot: `/tmp/magic-jewel-jbr-skia-report-smoke/new-window.png`
+
 Next checkpoint:
 
-- Add a Magic Jewel report script mirroring the CMP report harness:
-  - old path: stock SwingGraphics readback
-  - new path: patched JBR Skia picture replay path
-  - parse Skiko/JBR frame markers, fallback markers, CPU/RSS samples, and a window-only screenshot assertion.
+- Run a longer Magic Jewel report once the current patch stack is rebuilt cleanly, then treat that report as the first shareable before/after artifact.
 - Keep the standalone classpath override documented until the local CMP artifacts are published/consumed through a cleaner Maven-local or composite-build path.
+- Start narrowing the bridge from SKP replay toward a lower-overhead command/display-list path while preserving the same fallback markers and report schema.
 
 Use separate worktrees for every existing repo touched:
 
