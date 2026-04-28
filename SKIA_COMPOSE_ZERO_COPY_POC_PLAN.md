@@ -2110,6 +2110,33 @@ Next checkpoint:
 - Start the next text slice: either wider Unicode coverage with safe JBR-owned font selection, or a shaped-glyph/paragraph command that keeps all font/typeface objects inside JBR Skia.
 - Preserve the cached-image text fallback and the SKP replay path as correctness oracles for styled text and future benchmark runs.
 
+### Checkpoint 52: Magic Jewel Text Signal Comes From Real UI Labels
+
+Status: completed as a sample cleanup after Checkpoint 51.
+
+- Removed the explicit `JbrSkiaCommandRecorder.drawTextUtf16(...)` probe from Magic Jewel.
+- Removed Magic Jewel's direct compile-only dependency on the patched `ui-graphics` jar; the app no longer needs to call the recorder API directly.
+- The report text-command signal now comes from normal `BasicText` labels rendered through CMP's paragraph path.
+
+Verification completed:
+
+- Magic Jewel `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew compileKotlin`.
+- Magic Jewel no-probe text-only report:
+  - report: `/tmp/magic-jewel-basictext-no-probe-text-smoke/report.md`
+  - screenshot: `/tmp/magic-jewel-basictext-no-probe-text-smoke/new-window.png`
+  - validation status: `passed`
+  - fallback markers: `0`
+  - CMP command recorder: `frames=869 fps=217.2 avg_commands=2419 max_commands=2419 unsupported_frames=0 avg_unsupported=0.0 max_unsupported=0 avg_text_commands=8.0 max_text_commands=8 avg_image_defines=0.0 max_image_defines=0 avg_image_refs=0.0 max_image_refs=0 reasons=none`
+  - Skiko/JBR command frames: `869` / `869`
+  - picture replay frames: `0`
+  - screenshot assertion: `passed`
+
+Next checkpoint:
+
+- Continue text coverage beyond the single-line ASCII fast path while preserving JBR-owned font/typeface ownership.
+- Add report assertions that can require a minimum text-command count for text-enabled strict command runs, so future regressions fail without manual report inspection.
+- Preserve SKP and cached-image fallback for styled/rich text until the JBR-owned paragraph/text shaping ABI exists.
+
 Use separate worktrees for every existing repo touched:
 
 - `JetBrainsRuntime` worktree: `jbr-skia-compose-poc`
