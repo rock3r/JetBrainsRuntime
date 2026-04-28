@@ -2270,6 +2270,39 @@ Next checkpoint:
 
 - Add a deliberate sample/test path that creates enough distinct fallback images to exercise `COMMAND_CLEAR_IMAGE_CACHE` through the full Magic Jewel report, or move directly into a JBR-owned shaped-text/paragraph command to reduce reliance on cached-image text fallback.
 
+### Checkpoint 57: End-To-End Image Cache Reset Churn
+
+Status: completed in CMP marker instrumentation and Magic Jewel report validation.
+
+- CMP's command recorder marker now includes `imageCacheClears=<count>`.
+- Magic Jewel has an opt-in `MAGIC_JEWEL_IMAGE_CACHE_CHURN` mode.
+- The churn mode draws 260 distinct tiny images per frame, forcing CMP to emit `COMMAND_CLEAR_IMAGE_CACHE` once the local image-key threshold is crossed.
+- The Magic Jewel report harness now supports `EXPECT_MIN_IMAGE_CACHE_CLEARS`.
+- Report validation tests cover both passing and failing minimum image-cache-clear assertions.
+
+Verification completed:
+
+- CMP `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest :compose:ui:ui-graphics:desktopJar :compose:ui:ui-text:desktopJar :compose:ui:ui:desktopJar`.
+- Magic Jewel `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew compileKotlin`.
+- Magic Jewel `./scripts/test-jbr-skia-report-validation.sh`.
+
+Image-cache churn strict command report:
+
+- report: `/tmp/magic-jewel-image-cache-clear-churn-smoke/report.md`
+- screenshot: `/tmp/magic-jewel-image-cache-clear-churn-smoke/new-window.png`
+- validation status: `passed`
+- fallback markers: `0`
+- picture replay frames: `0`
+- `EXPECT_MIN_TEXT_COMMANDS`: `8`
+- `EXPECT_MIN_IMAGE_CACHE_CLEARS`: `1`
+- CMP command recorder: `frames=461 fps=153.7 avg_commands=11584 max_commands=11587 unsupported_frames=0 avg_unsupported=0.0 max_unsupported=0 avg_text_commands=9.0 max_text_commands=9 avg_image_defines=260.0 max_image_defines=260 avg_image_refs=260.0 max_image_refs=260 avg_image_cache_clears=1.0 max_image_cache_clears=2 reasons=none`
+- Skiko/JBR command frames: `460` / `460`
+- screenshot assertion: `passed`
+
+Next checkpoint:
+
+- Start reducing reliance on image fallback by adding a JBR-owned shaped-text/paragraph command, or add narrower cache-reset tests around long-running rich-text/image workloads if shaped text is still too large for the next slice.
+
 Use separate worktrees for every existing repo touched:
 
 - `JetBrainsRuntime` worktree: `jbr-skia-compose-poc`
