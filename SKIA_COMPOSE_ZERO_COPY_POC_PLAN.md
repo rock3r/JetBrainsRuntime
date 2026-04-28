@@ -736,9 +736,50 @@ Important caveats:
 - The recorder currently mirrors draw operations while the normal Skia render still happens into an offscreen `PictureRecorder` canvas. The next slices should either widen the command coverage enough to skip the compatibility recording for supported scenes, or make the fallback boundary explicit per frame.
 - The temporary integer command ABI is still a PoC transport. Production should move to a tightly versioned native ABI or a validated display-list payload.
 
+### Checkpoint 24: Strict Command Coverage Telemetry
+
+Status: completed for the Magic Jewel no-text/vector scene.
+
+- Added per-frame CMP recorder telemetry:
+  - `CMP_JBR_COMMAND_RECORDER_FRAME commands=<n> unsupported=<n> [reason=<count>...]`
+  - The marker records unsupported draw-operation reasons while keeping command replay active.
+- Magic Jewel's report now summarizes recorder coverage:
+  - recorder frame count/FPS
+  - average/max command count
+  - unsupported frame count
+  - average/max unsupported operation count
+  - aggregated unsupported reasons.
+- The first telemetry run identified only two blockers in the Magic Jewel command scene:
+  - stroked round-rects, approximated through the current line-based command ABI
+  - one `BlendMode.Clear` operation per frame.
+- Added `COMMAND_CLEAR_RECT = 6` across the temporary command ABI:
+  - JBR private API
+  - public Runtime API mirror
+  - Java2D fallback renderer
+  - native JBR-owned Skia renderer
+  - CMP sidecar command recorder.
+- Command mode now enables `-Dcompose.jbr.skia.command.strict=true` in Magic Jewel. Under strict mode, CMP returns no command frame if unsupported operations remain, and Skiko falls back to SKP picture replay for that frame.
+- Verification completed:
+  - JBR patched `java.desktop` class rebuild into `/tmp/jbr-skia-run/desktop`
+  - native `libjbrskiainterop.dylib` rebuild at `/tmp/jbr-skia-native/libjbrskiainterop.dylib`
+  - Runtime API `bash tools/build.sh process`
+  - Skiko `./gradlew :skiko:compileKotlinAwt :skiko:publishToMavenLocal`
+  - CMP `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew :compose:ui:ui-graphics:compileKotlinDesktop :compose:ui:ui:compileKotlinDesktop :compose:ui:ui:desktopJar`
+  - Magic Jewel `OUT_DIR=/tmp/magic-jewel-command-strict-gate DURATION_SECONDS=6 SAMPLE_INTERVAL_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT JBR_SKIA_RENDER_MODE=commands ./scripts/jbr-skia-interop-report.sh`
+- Strict command-mode report highlights, recorded on a noisy development machine:
+  - report: `/tmp/magic-jewel-command-strict-gate/report.md`
+  - screenshot: `/tmp/magic-jewel-command-strict-gate/new-window.png`
+  - fallback markers: old `0`, new `0`
+  - picture frames: `0`
+  - CMP command recorder: `frames=1003 fps=167.2 avg_commands=791 max_commands=791 unsupported_frames=0 avg_unsupported=0.0 max_unsupported=0 reasons=none`
+  - Skiko command frames: `frames=1003 fps=167.2 avg_commands=791 max_commands=791`
+  - JBR command frames: `frames=1003 fps=167.2 avg_commands=791 max_commands=791`
+  - screenshot assertion: `passed`
+  - screenshot counts: `green=570602 blue=1062179 purple=31321 yellow=35877 orange=18899 white=969726`
+
 Next checkpoint:
 
-- Widen the sidecar recorder enough for a richer no-text Compose/Jewel scene, then add an explicit per-frame fallback decision: command replay when every operation is supported, SKP replay when unsupported operations appear.
+- Widen the sidecar recorder beyond the Magic Jewel no-text/vector scene and keep the strict per-frame fallback decision: command replay when every operation is supported, SKP replay when unsupported operations appear.
 - Keep text/images on the SKP path until the JBR-owned font/typeface story is implemented.
 - Preserve `JBR_SKIA_RENDER_MODE=picture` and SKP byte/frame markers for meaningful benchmark runs when the machine is quieter.
 

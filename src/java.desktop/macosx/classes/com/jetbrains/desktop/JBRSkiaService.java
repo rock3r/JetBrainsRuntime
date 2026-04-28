@@ -32,6 +32,8 @@ import sun.java2d.metal.MTLRenderQueue;
 import sun.java2d.pipe.hw.AccelSurface;
 
 import java.awt.Color;
+import java.awt.AlphaComposite;
+import java.awt.Composite;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
@@ -249,6 +251,16 @@ public class JBRSkiaService extends JBRSkia {
                         return false;
                     }
                     g.fillRect(clip.x, clip.y, clip.width, clip.height);
+                } else if (op == COMMAND_CLEAR_RECT) {
+                    if (offset + 4 > commands.length) return false;
+                    int x = commands[offset++];
+                    int y = commands[offset++];
+                    int width = commands[offset++];
+                    int height = commands[offset++];
+                    Composite previousComposite = g.getComposite();
+                    g.setComposite(AlphaComposite.Clear);
+                    g.fillRect(x, y, width, height);
+                    g.setComposite(previousComposite);
                 } else if (op == COMMAND_FILL_RECT) {
                     if (offset + 6 > commands.length) return false;
                     g.setColor(new Color(commands[offset++], true));

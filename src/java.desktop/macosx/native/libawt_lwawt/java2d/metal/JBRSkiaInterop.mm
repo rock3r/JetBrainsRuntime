@@ -30,6 +30,7 @@
 #include <mutex>
 #include <unordered_map>
 
+#include "SkBlendMode.h"
 #include "SkCanvas.h"
 #include "SkColor.h"
 #include "SkColorSpace.h"
@@ -53,6 +54,7 @@ static constexpr jint COMMAND_FILL_RECT = 2;
 static constexpr jint COMMAND_STROKE_LINE = 3;
 static constexpr jint COMMAND_FILL_OVAL = 4;
 static constexpr jint COMMAND_STROKE_OVAL = 5;
+static constexpr jint COMMAND_CLEAR_RECT = 6;
 
 static std::mutex gDirectContextMutex;
 static std::unordered_map<void*, sk_sp<GrDirectContext>> gDirectContextsByMtlContext;
@@ -175,6 +177,23 @@ static bool drawCommandList(SkCanvas* canvas, const jint* commands, jsize comman
                 } else {
                     canvas->drawRect(rect, paint);
                 }
+                break;
+            }
+            case COMMAND_CLEAR_RECT: {
+                if (offset + 4 > commandCount) {
+                    return false;
+                }
+                jint x = commands[offset++];
+                jint y = commands[offset++];
+                jint rectWidth = commands[offset++];
+                jint rectHeight = commands[offset++];
+                SkPaint paint;
+                paint.setBlendMode(SkBlendMode::kClear);
+                canvas->drawRect(SkRect::MakeXYWH(static_cast<SkScalar>(x),
+                                                  static_cast<SkScalar>(y),
+                                                  static_cast<SkScalar>(rectWidth),
+                                                  static_cast<SkScalar>(rectHeight)),
+                                 paint);
                 break;
             }
             case COMMAND_STROKE_LINE: {
