@@ -1818,6 +1818,68 @@ Next checkpoint:
 - Image content is now the only expected fallback reason in the all-probe command run.
 - Decide whether to add a minimal image payload command for small raster content or keep image content on SKP until the final native ABI replaces the toy int-array command transport.
 
+### Checkpoint 46: Inline ARGB Image Command And ABI 13
+
+Status: completed as the first raster-image command expansion.
+
+- Bumped the PoC command ABI to `ABI_ID = 13`.
+- Added `COMMAND_CAP_DRAW_IMAGE_ARGB = 16384` to the JBR private API, public Runtime API mirror, and Skiko compatibility gate.
+- Added an inline raster image command:
+  - `COMMAND_DRAW_IMAGE_ARGB`: `[op, 64 + pixelCount * 4, flags, srcLeft1000, srcTop1000, srcRight1000, srcBottom1000, dstLeft1000, dstTop1000, dstRight1000, dstBottom1000, imageWidth, imageHeight, alpha1000, filterQuality, pixelCount, argb0, ...]`
+  - pixels are copied from Compose `ImageBitmap.readPixels(...)` as ARGB ints.
+  - image dimensions are capped in CMP at `512x512` for this int-array PoC transport, and JBR rejects dimensions larger than `4096x4096`.
+- CMP now records simple image draws into the command stream when the paint is `BlendMode.SrcOver` with no shader, color filter, or path effect.
+- JBR native Skia replay copies the inline ARGB payload into a temporary raster `SkImage` via `SkImages::RasterFromPixmapCopy(...)` and draws it with the recorded source/destination rect, alpha, and sampling hint.
+- JBR Java2D fallback replay builds a temporary `BufferedImage(TYPE_INT_ARGB)` from the payload and draws it with source/destination rects and an alpha composite.
+- This is intentionally not the final image ABI. It is a correctness and coverage step for small raster content; a production ABI should avoid per-frame inline pixel payloads for stable images/textures.
+
+Verification completed:
+
+- Runtime API `bash tools/build.sh process`.
+- Runtime API `bash tools/build.sh dev` and `/tmp/jbr-api-shim.jar` refresh from `out/classes/8`.
+- Skiko `./gradlew :skiko:compileKotlinAwt :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`.
+- Skiko `./gradlew :skiko:publishToMavenLocal`.
+- CMP `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest`.
+- CMP `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-configuration-cache :compose:ui:ui-graphics:desktopJar :compose:ui:ui:desktopJar`.
+- JBR isolated patched-class compile and `JBRSkiaApiTest` run against `/tmp/jbr-skia-abi13-compile`, using a temporary `JBRApi` compile stub for the isolated test harness only.
+- JBR native dylib rebuild into `/tmp/jbr-skia-native/libjbrskiainterop.dylib`.
+- Magic Jewel `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew compileKotlin`.
+
+ABI 13 image command smoke report:
+
+- report: `/tmp/magic-jewel-command-image-abi13-smoke/report.md`
+- validation status: `passed`
+- fallback markers: `0`
+- CMP command recorder: `frames=1653 fps=275.5 avg_commands=7328 max_commands=7328 unsupported_frames=0 avg_unsupported=0.0 max_unsupported=0 reasons=none`
+- Skiko/JBR command frames: `1652` / `1652`
+- picture replay frames: `0`
+- screenshot assertion: `passed`
+
+ABI 13 all-probe command report:
+
+- report: `/tmp/magic-jewel-command-probe-abi13-all/report.md`
+- validation status: `passed`
+- fallback markers: `0`
+- unsupported reasons: `none`
+- CMP command recorder: `frames=982 fps=163.7 avg_commands=7423 max_commands=7423 unsupported_frames=0 avg_unsupported=0.0 max_unsupported=0 reasons=none`
+- Skiko/JBR command frames: `981` / `981`
+- picture replay frames: `0`
+- screenshot assertion: `passed`
+
+ABI 13 invalid-stream fallback report:
+
+- report: `/tmp/magic-jewel-command-image-abi13-invalid/report.md`
+- validation status: `passed`
+- fallback markers: `1`
+- CMP/Skiko command frames: `1362` / `1362`
+- JBR command frames: `0`
+- screenshot assertion: `passed`
+
+Next checkpoint:
+
+- Text remains intentionally outside the command subset until the JBR-owned font/typeface story is implemented.
+- The command transport now covers the current non-text Magic Jewel probe without SKP fallback; the next valuable slice is either a stricter image cache/handle strategy or beginning the text/font bridge design.
+
 Use separate worktrees for every existing repo touched:
 
 - `JetBrainsRuntime` worktree: `jbr-skia-compose-poc`

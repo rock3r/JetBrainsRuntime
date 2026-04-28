@@ -29,15 +29,20 @@
 #include <cstdio>
 #include <mutex>
 #include <unordered_map>
+#include <vector>
 
 #include "SkBlendMode.h"
 #include "SkCanvas.h"
 #include "SkColor.h"
 #include "SkColorSpace.h"
 #include "SkData.h"
+#include "SkImage.h"
+#include "SkImageInfo.h"
 #include "SkPaint.h"
 #include "SkPicture.h"
+#include "SkPixmap.h"
 #include "SkRRect.h"
+#include "SkSamplingOptions.h"
 #include "SkSurface.h"
 #include "ganesh/GrBackendSurface.h"
 #include "ganesh/GrDirectContext.h"
@@ -49,7 +54,7 @@
 
 #include "MTLSurfaceDataBase.h"
 
-static constexpr jint ABI_ID = 12;
+static constexpr jint ABI_ID = 13;
 static constexpr jint COMMAND_STREAM_MAGIC = 1246972723;
 static constexpr jint COMMAND_STREAM_HEADER_SIZE = 6;
 static constexpr jint COMMAND_STREAM_FLAGS_NONE = 0;
@@ -73,6 +78,7 @@ static constexpr jint COMMAND_TRANSLATE = 10;
 static constexpr jint COMMAND_SCALE = 11;
 static constexpr jint COMMAND_ROTATE = 12;
 static constexpr jint COMMAND_SAVE_LAYER = 13;
+static constexpr jint COMMAND_DRAW_IMAGE_ARGB = 14;
 
 static std::mutex gDirectContextMutex;
 static std::unordered_map<void*, sk_sp<GrDirectContext>> gDirectContextsByMtlContext;
@@ -311,6 +317,57 @@ static bool drawCommandList(SkCanvas* canvas, CommandWords commands, jsize comma
                                                  static_cast<SkScalar>(layerWidth),
                                                  static_cast<SkScalar>(layerHeight));
                 canvas->saveLayerAlphaf(&bounds, static_cast<float>(alpha1000) / 1000.0f);
+                break;
+            }
+            case COMMAND_DRAW_IMAGE_ARGB: {
+                if ((recordFlags & ~COMMAND_RECORD_FLAG_ANTIALIAS) != 0 || offset + 13 > recordEnd) {
+                    return false;
+                }
+                const SkScalar srcLeft = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkScalar srcTop = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkScalar srcRight = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkScalar srcBottom = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkScalar dstLeft = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkScalar dstTop = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkScalar dstRight = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkScalar dstBottom = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const jint imageWidth = commands[offset++];
+                const jint imageHeight = commands[offset++];
+                const jint alpha1000 = commands[offset++];
+                const jint filterQuality = commands[offset++];
+                const jint pixelCount = commands[offset++];
+                if (imageWidth <= 0 || imageHeight <= 0 || imageWidth > 4096 || imageHeight > 4096 ||
+                        pixelCount != imageWidth * imageHeight || offset + pixelCount != recordEnd ||
+                        alpha1000 < 0 || alpha1000 > 1000 || filterQuality < 0 || filterQuality > 3) {
+                    return false;
+                }
+                SkImageInfo imageInfo = SkImageInfo::Make(
+                        imageWidth,
+                        imageHeight,
+                        kN32_SkColorType,
+                        kUnpremul_SkAlphaType,
+                        SkColorSpace::MakeSRGB());
+                std::vector<jint> pixels(static_cast<size_t>(pixelCount));
+                for (jint pixelIndex = 0; pixelIndex < pixelCount; pixelIndex++) {
+                    pixels[static_cast<size_t>(pixelIndex)] = commands[offset + pixelIndex];
+                }
+                SkPixmap pixmap(imageInfo, pixels.data(), static_cast<size_t>(imageWidth) * sizeof(jint));
+                sk_sp<SkImage> image = SkImages::RasterFromPixmapCopy(pixmap);
+                offset += pixelCount;
+                if (image == nullptr) {
+                    return false;
+                }
+                SkPaint imagePaint;
+                imagePaint.setAlphaf(static_cast<float>(alpha1000) / 1000.0f);
+                SkSamplingOptions sampling = (recordFlags & COMMAND_RECORD_FLAG_ANTIALIAS) != 0
+                        ? SkSamplingOptions(SkFilterMode::kLinear, SkMipmapMode::kNone)
+                        : SkSamplingOptions(SkFilterMode::kNearest, SkMipmapMode::kNone);
+                canvas->drawImageRect(image,
+                                      SkRect::MakeLTRB(srcLeft, srcTop, srcRight, srcBottom),
+                                      SkRect::MakeLTRB(dstLeft, dstTop, dstRight, dstBottom),
+                                      sampling,
+                                      &imagePaint,
+                                      SkCanvas::kStrict_SrcRectConstraint);
                 break;
             }
             case COMMAND_CLEAR: {

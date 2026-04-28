@@ -51,11 +51,11 @@ public class JBRSkiaApiTest {
     }
 
     public static void main(String[] args) throws Exception {
-        assertEquals(12, JBRSkia.ABI_ID, "ABI_ID");
-        assertEquals("skia-interop-poc:12", JBRSkia.BUILD_ID, "BUILD_ID");
+        assertEquals(13, JBRSkia.ABI_ID, "ABI_ID");
+        assertEquals("skia-interop-poc:13", JBRSkia.BUILD_ID, "BUILD_ID");
 
-        assertReflectiveStaticEquals(12, JBRSkia.class.getDeclaredField("ABI_ID"));
-        assertReflectiveStaticEquals("skia-interop-poc:12", JBRSkia.class.getDeclaredField("BUILD_ID"));
+        assertReflectiveStaticEquals(13, JBRSkia.class.getDeclaredField("ABI_ID"));
+        assertReflectiveStaticEquals("skia-interop-poc:13", JBRSkia.class.getDeclaredField("BUILD_ID"));
 
         if (TestJBRSkia.INSTANCE != null) {
             throw new AssertionError("JBRSkia service must be unavailable before native runtime is wired");
@@ -119,7 +119,8 @@ public class JBRSkiaApiTest {
                 | JBRSkia.COMMAND_CAP_STROKE_METADATA
                 | JBRSkia.COMMAND_CAP_BASIC_TRANSFORMS
                 | JBRSkia.COMMAND_CAP_CLIP_RECT_OP
-                | JBRSkia.COMMAND_CAP_SAVE_LAYER;
+                | JBRSkia.COMMAND_CAP_SAVE_LAYER
+                | JBRSkia.COMMAND_CAP_DRAW_IMAGE_ARGB;
     }
 
     private static void assertCommandStreamValidation() {
@@ -133,6 +134,7 @@ public class JBRSkiaApiTest {
         assertValidCommandStream(validTransformStream(), "valid transform stream");
         assertValidCommandStream(validClipOpStream(), "valid clip operation stream");
         assertValidCommandStream(validSaveLayerStream(), "valid saveLayer stream");
+        assertValidCommandStream(validImageArgbStream(), "valid ARGB image stream");
         assertInvalidCommandStream(new int[] { JBRSkia.COMMAND_CLEAR, 0xff000000 }, "missing header");
         assertInvalidCommandStream(new int[] {
                 0, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 0,
@@ -199,6 +201,13 @@ public class JBRSkiaApiTest {
                 JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
                 JBRSkia.COMMAND_SAVE_LAYER, 32, JBRSkia.COMMAND_RECORD_FLAGS_NONE, 1, 2, 10, 10, 1001
         }, "invalid saveLayer alpha");
+        assertInvalidCommandStream(new int[] {
+                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 20,
+                JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
+                JBRSkia.COMMAND_DRAW_IMAGE_ARGB, 80, JBRSkia.COMMAND_RECORD_FLAGS_NONE,
+                0, 0, 2000, 2000, 10000, 20000, 30000, 40000, 2, 2, 1001, 1, 4,
+                0xffff0000, 0xff00ff00, 0xff0000ff, 0xffffffff
+        }, "invalid image alpha");
     }
 
     private static void assertValidCommandStream(int[] commands, String name) {
@@ -251,6 +260,16 @@ public class JBRSkiaApiTest {
                 JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
                 JBRSkia.COMMAND_SAVE_LAYER, 32, JBRSkia.COMMAND_RECORD_FLAGS_NONE, 1, 2, 10, 10, 600,
                 JBRSkia.COMMAND_RESTORE, 12, JBRSkia.COMMAND_RECORD_FLAGS_NONE
+        };
+    }
+
+    private static int[] validImageArgbStream() {
+        return new int[] {
+                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 20,
+                JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
+                JBRSkia.COMMAND_DRAW_IMAGE_ARGB, 80, JBRSkia.COMMAND_RECORD_FLAG_ANTIALIAS,
+                0, 0, 2000, 2000, 10000, 20000, 30000, 40000, 2, 2, 600, 1, 4,
+                0xffff0000, 0xff00ff00, 0xff0000ff, 0xffffffff
         };
     }
 

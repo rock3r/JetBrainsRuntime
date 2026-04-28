@@ -39,6 +39,7 @@ import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.Shape;
 import java.awt.geom.Area;
+import java.awt.image.BufferedImage;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.ArrayDeque;
@@ -65,7 +66,8 @@ public class JBRSkiaService extends JBRSkia {
                     | COMMAND_CAP_STROKE_METADATA
                     | COMMAND_CAP_BASIC_TRANSFORMS
                     | COMMAND_CAP_CLIP_RECT_OP
-                    | COMMAND_CAP_SAVE_LAYER;
+                    | COMMAND_CAP_SAVE_LAYER
+                    | COMMAND_CAP_DRAW_IMAGE_ARGB;
     private static final boolean NATIVE_BRIDGE_AVAILABLE = loadNativeBridge();
     private static final AtomicLong NEXT_SCOPE_ID = new AtomicLong(1);
 
@@ -100,7 +102,7 @@ public class JBRSkiaService extends JBRSkia {
         while (offset < commandEnd) {
             CommandRecord record = readCommandRecord(commands, offset, commandEnd);
             if (record == null
-                    || expectedRecordLength(record.op()) != record.recordLength()
+                    || !hasExpectedRecordLength(record)
                     || !validateRecordArguments(commands, record)) {
                 return false;
             }
@@ -138,6 +140,7 @@ public class JBRSkiaService extends JBRSkia {
         if (op == COMMAND_ROTATE) return 4;
         if (op == COMMAND_TRANSLATE || op == COMMAND_SCALE) return 5;
         if (op == COMMAND_SAVE_LAYER) return 8;
+        if (op == COMMAND_DRAW_IMAGE_ARGB) return -2;
         if (op == COMMAND_CLEAR) return 4;
         if (op == COMMAND_CLEAR_RECT) return 7;
         if (op == COMMAND_CLIP_RECT) return 8;
@@ -145,6 +148,14 @@ public class JBRSkiaService extends JBRSkia {
         if (op == COMMAND_FILL_RECT) return 9;
         if (op == COMMAND_STROKE_LINE || op == COMMAND_STROKE_OVAL) return 12;
         return -1;
+    }
+
+    private static boolean hasExpectedRecordLength(CommandRecord record) {
+        int expectedLength = expectedRecordLength(record.op());
+        if (expectedLength == -2 && record.op() == COMMAND_DRAW_IMAGE_ARGB) {
+            return record.recordLength() >= 16;
+        }
+        return expectedLength == record.recordLength();
     }
 
     private static boolean validateRecordArguments(int[] commands, CommandRecord record) {
@@ -160,6 +171,27 @@ public class JBRSkiaService extends JBRSkia {
         if (record.op() == COMMAND_CLIP_RECT) {
             int clipOp = commands[record.recordEnd() - 1];
             return clipOp == COMMAND_CLIP_OP_INTERSECT || clipOp == COMMAND_CLIP_OP_DIFFERENCE;
+        }
+        if (record.op() == COMMAND_DRAW_IMAGE_ARGB) {
+            if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE
+                    && record.recordFlags() != COMMAND_RECORD_FLAG_ANTIALIAS) {
+                return false;
+            }
+            int imageWidth = commands[record.argsStart() + 8];
+            int imageHeight = commands[record.argsStart() + 9];
+            int alpha1000 = commands[record.argsStart() + 10];
+            int filterQuality = commands[record.argsStart() + 11];
+            int pixelCount = commands[record.argsStart() + 12];
+            return imageWidth > 0
+                    && imageHeight > 0
+                    && imageWidth <= 4096
+                    && imageHeight <= 4096
+                    && pixelCount == imageWidth * imageHeight
+                    && record.recordLength() == 16 + pixelCount
+                    && alpha1000 >= 0
+                    && alpha1000 <= 1000
+                    && filterQuality >= 0
+                    && filterQuality <= 3;
         }
         if (record.op() != COMMAND_STROKE_LINE && record.op() != COMMAND_STROKE_OVAL) {
             return true;
@@ -512,6 +544,53 @@ public class JBRSkiaService extends JBRSkia {
                         stack.addLast(current);
                         current = (Graphics2D) current.create();
                         current.clipRect(x, y, width, height);
+                    } else if (op == COMMAND_DRAW_IMAGE_ARGB) {
+                        if (offset + 13 > recordEnd) return false;
+                        boolean filtered = (record.recordFlags() & COMMAND_RECORD_FLAG_ANTIALIAS) != 0;
+                        int srcLeft1000 = commands[offset++];
+                        int srcTop1000 = commands[offset++];
+                        int srcRight1000 = commands[offset++];
+                        int srcBottom1000 = commands[offset++];
+                        int dstLeft1000 = commands[offset++];
+                        int dstTop1000 = commands[offset++];
+                        int dstRight1000 = commands[offset++];
+                        int dstBottom1000 = commands[offset++];
+                        int imageWidth = commands[offset++];
+                        int imageHeight = commands[offset++];
+                        int alpha1000 = commands[offset++];
+                        int filterQuality = commands[offset++];
+                        int pixelCount = commands[offset++];
+                        if (imageWidth <= 0 || imageHeight <= 0 || pixelCount != imageWidth * imageHeight
+                                || offset + pixelCount != recordEnd || alpha1000 < 0 || alpha1000 > 1000
+                                || filterQuality < 0 || filterQuality > 3) {
+                            return false;
+                        }
+                        BufferedImage image = new BufferedImage(imageWidth, imageHeight, BufferedImage.TYPE_INT_ARGB);
+                        image.setRGB(0, 0, imageWidth, imageHeight, commands, offset, imageWidth);
+                        offset += pixelCount;
+                        Composite previousComposite = current.getComposite();
+                        Object previousInterpolation = current.getRenderingHint(RenderingHints.KEY_INTERPOLATION);
+                        current.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha1000 / 1000.0f));
+                        current.setRenderingHint(
+                                RenderingHints.KEY_INTERPOLATION,
+                                filtered
+                                        ? RenderingHints.VALUE_INTERPOLATION_BILINEAR
+                                        : RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR
+                        );
+                        current.drawImage(
+                                image,
+                                Math.round(dstLeft1000 / 1000.0f),
+                                Math.round(dstTop1000 / 1000.0f),
+                                Math.round(dstRight1000 / 1000.0f),
+                                Math.round(dstBottom1000 / 1000.0f),
+                                Math.round(srcLeft1000 / 1000.0f),
+                                Math.round(srcTop1000 / 1000.0f),
+                                Math.round(srcRight1000 / 1000.0f),
+                                Math.round(srcBottom1000 / 1000.0f),
+                                null
+                        );
+                        current.setComposite(previousComposite);
+                        current.setRenderingHint(RenderingHints.KEY_INTERPOLATION, previousInterpolation);
                     } else if (op == COMMAND_CLEAR) {
                         if (offset + 1 != recordEnd) return false;
                         applyAntialiasing(current, antiAlias);
