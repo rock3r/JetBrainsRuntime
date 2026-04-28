@@ -81,6 +81,8 @@ public class JBRSkiaApiTest {
             assertEquals(0L, scope.getMetalTexturePtr(), "metal texture pointer for software test surface");
             assertEquals(1, scope.getSampleCount(), "sample count");
             assertEquals(new Rectangle(2, 3, 11, 13), scope.getUserSpaceClip(), "clip");
+            assertEquals(true, scope.renderCommandBufferFrame(32, 24, 1L, commandBuffer(validClearStream())), "command byte buffer");
+            assertEquals(false, scope.renderCommandBufferFrame(32, 24, 1L, new byte[] { 1, 2, 3 }), "unaligned command byte buffer");
             scope.flush();
             scope.close();
             try {
@@ -112,11 +114,7 @@ public class JBRSkiaApiTest {
     }
 
     private static void assertCommandStreamValidation() {
-        assertValidCommandStream(new int[] {
-                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 4,
-                JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
-                JBRSkia.COMMAND_CLEAR, 16, JBRSkia.COMMAND_RECORD_FLAGS_NONE, 0xff000000
-        }, "valid clear stream");
+        assertValidCommandStream(validClearStream(), "valid clear stream");
         assertInvalidCommandStream(new int[] { JBRSkia.COMMAND_CLEAR, 0xff000000 }, "missing header");
         assertInvalidCommandStream(new int[] {
                 0, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 0,
@@ -168,6 +166,27 @@ public class JBRSkiaApiTest {
         if (!JBRSkiaService.isValidCommandStreamForTesting(commands)) {
             throw new AssertionError(name + " should be valid");
         }
+    }
+
+    private static int[] validClearStream() {
+        return new int[] {
+                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 4,
+                JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
+                JBRSkia.COMMAND_CLEAR, 16, JBRSkia.COMMAND_RECORD_FLAGS_NONE, 0xff000000
+        };
+    }
+
+    private static byte[] commandBuffer(int[] commands) {
+        byte[] encoded = new byte[commands.length * Integer.BYTES];
+        for (int index = 0; index < commands.length; index++) {
+            int value = commands[index];
+            int offset = index * Integer.BYTES;
+            encoded[offset] = (byte) value;
+            encoded[offset + 1] = (byte) (value >>> 8);
+            encoded[offset + 2] = (byte) (value >>> 16);
+            encoded[offset + 3] = (byte) (value >>> 24);
+        }
+        return encoded;
     }
 
     private static void assertInvalidCommandStream(int[] commands, String name) {

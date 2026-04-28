@@ -96,6 +96,8 @@ public abstract class JBRSkia {
 
         public abstract boolean renderCommandFrame(int width, int height, long frameTimeNanos, int[] commands);
 
+        public abstract boolean renderCommandBufferFrame(int width, int height, long frameTimeNanos, byte[] commands);
+
         public abstract boolean renderPictureFrame(int width, int height, long frameTimeNanos, byte[] pictureData);
 
         public abstract void flush();

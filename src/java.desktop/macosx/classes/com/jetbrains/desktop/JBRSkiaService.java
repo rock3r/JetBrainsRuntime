@@ -290,6 +290,28 @@ public class JBRSkiaService extends JBRSkia {
         }
 
         @Override
+        public boolean renderCommandBufferFrame(int width, int height, long frameTimeNanos, byte[] commands) {
+            ensureOpen();
+            Objects.requireNonNull(commands, "commands");
+            if (commands.length == 0 || commands.length % Integer.BYTES != 0) {
+                return false;
+            }
+            return renderCommandFrame(width, height, frameTimeNanos, decodeCommandBuffer(commands));
+        }
+
+        private static int[] decodeCommandBuffer(byte[] commands) {
+            int[] decoded = new int[commands.length / Integer.BYTES];
+            for (int index = 0; index < decoded.length; index++) {
+                int offset = index * Integer.BYTES;
+                decoded[index] = (commands[offset] & 0xff)
+                        | ((commands[offset + 1] & 0xff) << 8)
+                        | ((commands[offset + 2] & 0xff) << 16)
+                        | (commands[offset + 3] << 24);
+            }
+            return decoded;
+        }
+
+        @Override
         public boolean renderPictureFrame(int width, int height, long frameTimeNanos, byte[] pictureData) {
             ensureOpen();
             Objects.requireNonNull(pictureData, "pictureData");

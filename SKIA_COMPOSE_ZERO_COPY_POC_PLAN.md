@@ -1355,6 +1355,57 @@ Next checkpoint:
 - Introduce an explicit command-stream byte-buffer carrier beside the existing `int[]` method, initially backed by equivalent data and the same parser semantics.
 - Use the helper boundary added here so call sites continue to emit commands without knowing the carrier shape.
 
+### Checkpoint 37: Command Byte-Buffer Carrier
+
+Status: completed as the first carrier-boundary slice beside the ABI 7 `int[]` stream.
+
+- Kept the command ABI at `ABI_ID = 7`; the stream layout and command records are unchanged.
+- Added `ScopedSkiaCanvas.renderCommandBufferFrame(width, height, frameTimeNanos, byte[] commands)` to the JBR private API and public Runtime API mirror.
+- The byte-buffer carrier is little-endian 32-bit words containing the same ABI 7 stream used by the existing `int[]` method.
+- JBR currently decodes the byte carrier back into the shared command parser/replayer. This is intentional for the slice:
+  - validates API shape and fallback behavior first
+  - keeps native Metal/Skia replay unchanged
+  - creates the call boundary needed to replace the decoder with a direct native memory-block reader later.
+- Skiko command mode now calls `renderCommandBufferFrame(...)` and encodes the command stream to little-endian bytes after the existing corruption-test hook.
+- Skiko tests exercise both the legacy `int[]` method and the new byte-buffer method on the fake scoped canvas.
+- JBR tests exercise a valid byte-buffer command frame and reject an unaligned byte buffer.
+
+Verification completed:
+
+- JBR patched class rebuild into `/tmp/jbr-skia-run/desktop`.
+- JBR `JBRSkiaApiTest` compiled and passed against the patched module.
+- Runtime API `bash tools/build.sh process`.
+- Runtime API `bash tools/build.sh dev` and `/tmp/jbr-api-shim.jar` refresh.
+- Skiko `./gradlew :skiko:compileKotlinAwt :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`.
+- Skiko `./gradlew :skiko:publishToMavenLocal`.
+- CMP `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew :compose:ui:ui-graphics:desktopJar :compose:ui:ui:desktopJar`.
+- Magic Jewel `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew compileKotlin`.
+
+Byte-carrier positive smoke report:
+
+- report: `/tmp/magic-jewel-command-byte-carrier-smoke-2/report.md`
+- validation status: `passed`
+- fallback markers: `0`
+- picture frames: `0`
+- CMP command recorder: `frames=1215 fps=243.0 avg_commands=1261 max_commands=1261 unsupported_frames=0 avg_unsupported=0.0 max_unsupported=0 reasons=none`
+- Skiko/JBR command frames: `1214` / `1214`
+- screenshot assertion: `passed`
+
+Byte-carrier invalid-stream fallback report:
+
+- report: `/tmp/magic-jewel-command-byte-carrier-invalid/report.md`
+- validation status: `passed`
+- fallback markers: `1`
+- expected fallback reason: `command-stream-invalid`
+- CMP command recorder: `frames=748 fps=149.6 avg_commands=1239 max_commands=1239 unsupported_frames=0 avg_unsupported=0.0 max_unsupported=0 reasons=none`
+- Skiko/JBR command frames: `748` / `0`
+- screenshot assertion: `passed` on the old Swing fallback renderer.
+
+Next checkpoint:
+
+- Move byte-buffer decoding down to the JBR native bridge so the Java service no longer reconstructs an `int[]` before native replay.
+- Once native byte parsing is in place, replace the `byte[]` with a direct buffer or memory segment and keep the Java byte-array method as a test-only adapter.
+
 Use separate worktrees for every existing repo touched:
 
 - `JetBrainsRuntime` worktree: `jbr-skia-compose-poc`
