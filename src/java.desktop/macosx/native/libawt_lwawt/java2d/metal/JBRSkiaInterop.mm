@@ -29,6 +29,7 @@
 #include <cstdio>
 #include <mutex>
 #include <unordered_map>
+#include <vector>
 
 #include "SkBlendMode.h"
 #include "SkCanvas.h"
@@ -155,6 +156,13 @@ static jsize recordLengthFromBytes(jint recordByteLength) {
         return -1;
     }
     return recordByteLength / static_cast<jint>(sizeof(jint));
+}
+
+static jint decodeLittleEndianInt(const jbyte* bytes, jsize offset) {
+    return static_cast<jint>(static_cast<unsigned char>(bytes[offset]))
+            | (static_cast<jint>(static_cast<unsigned char>(bytes[offset + 1])) << 8)
+            | (static_cast<jint>(static_cast<unsigned char>(bytes[offset + 2])) << 16)
+            | (static_cast<jint>(bytes[offset + 3]) << 24);
 }
 
 static bool drawCommandList(SkCanvas* canvas, const jint* commands, jsize commandCount, int width, int height) {
@@ -561,6 +569,81 @@ Java_com_jetbrains_desktop_JBRSkiaService_nativeRenderCommandFrame
                      width,
                      height,
                      commandCount);
+        return JNI_TRUE;
+    }
+}
+
+extern "C" JNIEXPORT jboolean JNICALL
+Java_com_jetbrains_desktop_JBRSkiaService_nativeRenderCommandBufferFrame
+        (JNIEnv* env, jclass cls, jlong nativeOpsPtr, jlong metalTexturePtr,
+         jint destinationX, jint destinationY, jint destinationWidth, jint destinationHeight,
+         jint width, jint height, jlong frameTimeNanos, jbyteArray commandArray) {
+    @autoreleasepool {
+        if (metalTexturePtr == 0 || destinationWidth <= 0 || destinationHeight <= 0 ||
+                width <= 0 || height <= 0 || commandArray == nullptr) {
+            return JNI_FALSE;
+        }
+
+        id<MTLTexture> texture = (__bridge id<MTLTexture>) reinterpret_cast<void*>(static_cast<uintptr_t>(metalTexturePtr));
+        if (texture == nil || texture.device == nil) {
+            return JNI_FALSE;
+        }
+
+        jsize commandByteCount = env->GetArrayLength(commandArray);
+        if (commandByteCount <= 0 || commandByteCount % static_cast<jsize>(sizeof(jint)) != 0) {
+            return JNI_FALSE;
+        }
+
+        jboolean isCopy = JNI_FALSE;
+        jbyte* commandBytes = env->GetByteArrayElements(commandArray, &isCopy);
+        if (commandBytes == nullptr) {
+            return JNI_FALSE;
+        }
+
+        std::vector<jint> commands(static_cast<size_t>(commandByteCount / static_cast<jsize>(sizeof(jint))));
+        for (jsize index = 0; index < static_cast<jsize>(commands.size()); index++) {
+            commands[static_cast<size_t>(index)] = decodeLittleEndianInt(commandBytes, index * static_cast<jsize>(sizeof(jint)));
+        }
+        env->ReleaseByteArrayElements(commandArray, commandBytes, JNI_ABORT);
+
+        sk_sp<GrDirectContext> directContext = makeDirectContextForSurface(nativeOpsPtr, texture);
+        if (directContext == nullptr) {
+            return JNI_FALSE;
+        }
+
+        sk_sp<SkSurface> surface = wrapTextureSurface(
+                directContext.get(),
+                texture,
+                static_cast<int>(texture.width),
+                static_cast<int>(texture.height));
+        if (surface == nullptr) {
+            return JNI_FALSE;
+        }
+
+        SkCanvas* canvas = surface->getCanvas();
+        canvas->save();
+        canvas->clipRect(SkRect::MakeXYWH(static_cast<SkScalar>(destinationX),
+                                          static_cast<SkScalar>(destinationY),
+                                          static_cast<SkScalar>(destinationWidth),
+                                          static_cast<SkScalar>(destinationHeight)));
+        canvas->translate(static_cast<SkScalar>(destinationX),
+                          static_cast<SkScalar>(destinationY));
+        bool rendered = drawCommandList(canvas, commands.data(), static_cast<jsize>(commands.size()), width, height);
+        canvas->restore();
+        if (!rendered) {
+            return JNI_FALSE;
+        }
+
+        directContext->flushAndSubmit(surface.get(), GrSyncCpu::kYes);
+        std::fprintf(stderr,
+                     "JBR_SKIA_INTEROP_COMMAND_FRAME destinationX=%d destinationY=%d destinationWidth=%d destinationHeight=%d width=%d height=%d commands=%d rendered=true\n",
+                     destinationX,
+                     destinationY,
+                     destinationWidth,
+                     destinationHeight,
+                     width,
+                     height,
+                     static_cast<int>(commands.size()));
         return JNI_TRUE;
     }
 }

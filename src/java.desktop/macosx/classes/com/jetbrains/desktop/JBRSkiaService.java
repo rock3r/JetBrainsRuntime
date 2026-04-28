@@ -296,7 +296,24 @@ public class JBRSkiaService extends JBRSkia {
             if (commands.length == 0 || commands.length % Integer.BYTES != 0) {
                 return false;
             }
-            return renderCommandFrame(width, height, frameTimeNanos, decodeCommandBuffer(commands));
+            if (NATIVE_BRIDGE_AVAILABLE
+                    && nativeOpsPtr != 0
+                    && metalTexturePtr != 0
+                    && nativeRenderCommandBufferFrame(nativeOpsPtr, metalTexturePtr,
+                            deviceSpaceClip.x, deviceSpaceClip.y, deviceSpaceClip.width, deviceSpaceClip.height,
+                            width, height, frameTimeNanos, commands)) {
+                return true;
+            }
+            if (width <= 0 || height <= 0) {
+                return false;
+            }
+            Graphics2D commandGraphics = (Graphics2D) graphics.create();
+            try {
+                commandGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                return renderJava2DCommands(commandGraphics, decodeCommandBuffer(commands));
+            } finally {
+                commandGraphics.dispose();
+            }
         }
 
         private static int[] decodeCommandBuffer(byte[] commands) {
@@ -519,6 +536,12 @@ public class JBRSkiaService extends JBRSkia {
                                                           int destinationWidth, int destinationHeight,
                                                           int width, int height, long frameTimeNanos,
                                                           int[] commands);
+
+    private static native boolean nativeRenderCommandBufferFrame(long nativeOpsPtr, long metalTexturePtr,
+                                                                int destinationX, int destinationY,
+                                                                int destinationWidth, int destinationHeight,
+                                                                int width, int height, long frameTimeNanos,
+                                                                byte[] commands);
 
     private static native boolean nativeRenderPictureFrame(long nativeOpsPtr, long metalTexturePtr,
                                                           int destinationX, int destinationY,

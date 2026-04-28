@@ -1406,6 +1406,51 @@ Next checkpoint:
 - Move byte-buffer decoding down to the JBR native bridge so the Java service no longer reconstructs an `int[]` before native replay.
 - Once native byte parsing is in place, replace the `byte[]` with a direct buffer or memory segment and keep the Java byte-array method as a test-only adapter.
 
+### Checkpoint 38: Native Command Byte Parsing
+
+Status: completed as the native-side byte-carrier parser slice.
+
+- Kept the command ABI at `ABI_ID = 7`; no stream-layout changes.
+- JBR Java now attempts `nativeRenderCommandBufferFrame(...)` before using the Java fallback renderer.
+- The Java fallback path still decodes the byte carrier for software/non-native surfaces, preserving testability.
+- JBR native bridge now accepts the byte-carrier method directly:
+  - validates the byte length is aligned to 32-bit words
+  - decodes little-endian words in native code
+  - reuses the existing command-list parser/replayer
+  - logs the same `JBR_SKIA_INTEROP_COMMAND_FRAME` marker as the int-array native path.
+- This removes Java `int[]` reconstruction from the native Metal/Skia hot path while still leaving one final copy into a native `std::vector<jint>`.
+
+Verification completed:
+
+- JBR patched class rebuild into `/tmp/jbr-skia-run/desktop`.
+- JBR `JBRSkiaApiTest` compiled and passed against the patched module.
+- JBR native dylib rebuild into `/tmp/jbr-skia-native/libjbrskiainterop.dylib`.
+
+Native-byte positive smoke report:
+
+- report: `/tmp/magic-jewel-command-native-byte-smoke/report.md`
+- validation status: `passed`
+- fallback markers: `0`
+- picture frames: `0`
+- CMP command recorder: `frames=1187 fps=237.4 avg_commands=1261 max_commands=1261 unsupported_frames=0 avg_unsupported=0.0 max_unsupported=0 reasons=none`
+- Skiko/JBR command frames: `1187` / `1187`
+- screenshot assertion: `passed`
+
+Native-byte invalid-stream fallback report:
+
+- report: `/tmp/magic-jewel-command-native-byte-invalid/report.md`
+- validation status: `passed`
+- fallback markers: `1`
+- expected fallback reason: `command-stream-invalid`
+- CMP command recorder: `frames=999 fps=199.8 avg_commands=1239 max_commands=1239 unsupported_frames=0 avg_unsupported=0.0 max_unsupported=0 reasons=none`
+- Skiko/JBR command frames: `999` / `0`
+- screenshot assertion: `passed` on the old Swing fallback renderer.
+
+Next checkpoint:
+
+- Replace the JNI `byte[]` handoff with a direct buffer or memory segment so native replay can parse without an additional Java-array pin/copy step.
+- After that, add real per-record paint payload expansion rather than continuing to encode all paint as solid ARGB integers.
+
 Use separate worktrees for every existing repo touched:
 
 - `JetBrainsRuntime` worktree: `jbr-skia-compose-poc`
