@@ -169,6 +169,44 @@ Next native checkpoint:
   - expose a narrow native C ABI entry point that can render a minimal Skia test pattern
   - only after that succeeds, map the Skiko/CMP renderer command surface onto the JBR-owned ABI.
 
+### Checkpoint 7: Native JBR Skia Diagnostic Render
+
+Status: completed as a local native probe; production build wiring and queue ownership cleanup are still pending.
+
+- Added `JBRSkiaInterop.mm`, a JBR-side Objective-C++ JNI bridge that:
+  - receives the current destination `MTLTexture*` from the Java paint scope
+  - creates a Skia Metal `GrDirectContext`
+  - wraps the destination texture with `GrBackendRenderTargets::MakeMtl`
+  - draws a minimal Skia pattern into the wrapped surface
+  - flushes/submits before returning to the Java paint scope.
+- `JBRSkiaService.renderDiagnosticFrame(...)` now optionally tries the native Skia renderer first when both properties are set:
+  - `-Dsun.java2d.skia.interop.nativeDiagnostic=true`
+  - `-Dsun.java2d.skia.interop.library=<absolute path to dylib>`
+- If the native bridge is absent or returns false, the existing Java2D diagnostic remains the fallback.
+- Local dylib build used Skiko's pinned m147 arm64 Skia archive set as a stand-in for the future JBR-vendored Skia build:
+  - include/archive root: `/Users/rock3r/src/skiko-jbr-skia-poc/skiko/dependencies/skia/m147-64a2414108/Skia-m147-64a2414108-macos-Release-arm64`
+  - output: `/tmp/jbr-skia-native/libjbrskiainterop.dylib`
+- Smoke command with patched `java.desktop`, temporary public API shim, local Skiko, and native JBR Skia dylib reached:
+  - `SKIKO_JBR_INTEROP_SCOPE_ACQUIRED abi=1 build=skia-interop-poc:1 metalTexture=0xc289d7200`
+- Screenshot captured at `/tmp/jbr-skia-native-diagnostic-render.png`.
+- Visual validation: the component body changed from the Java diagnostic pattern to the native Skia pattern: dark purple background, teal diagonal strokes, and magenta rounded rect.
+
+Important caveats:
+
+- This is still a diagnostic Skia pattern, not Compose UI rendering.
+- The local dylib is not yet wired into JBR `make/`; it is a manual build artifact for proving the native path.
+- The probe currently derives the Metal device from `texture.device` and creates a fresh command queue. This proves Skia can draw into the destination texture from a JBR-owned native bridge, but the production path still needs to use JBR's existing `MTLContext.commandQueue` for correct Java2D ordering.
+- The local dylib links Skia m147 from the Skiko worktree. The production path must vendor/pin the same Skia revision in JBR and expose its ABI/BUILD identity through the documented JBR/Skiko gate.
+
+Next native checkpoint:
+
+- Move from local probe to integrated JBR bridge:
+  - expose the destination `MTLContext`/command queue to `JBRSkiaInterop.mm`
+  - wire the native file into the JBR build behind `--with-skia-interop`
+  - cache/reuse the JBR-owned `GrDirectContext` per destination `MTLContext`
+  - preserve load-not-clear semantics and submit before subsequent Java2D commands
+  - then replace the hard-coded diagnostic pattern with the first Skiko/CMP command bridge.
+
 Use separate worktrees for every existing repo touched:
 
 - `JetBrainsRuntime` worktree: `jbr-skia-compose-poc`

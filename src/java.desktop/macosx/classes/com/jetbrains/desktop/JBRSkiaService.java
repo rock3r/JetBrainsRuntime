@@ -42,6 +42,9 @@ import java.util.concurrent.atomic.AtomicLong;
 @JBRApi.Provides("JBRSkia")
 public class JBRSkiaService extends JBRSkia {
     private static final String PROPERTY = "sun.java2d.skia.interop";
+    private static final String NATIVE_DIAGNOSTIC_PROPERTY = "sun.java2d.skia.interop.nativeDiagnostic";
+    private static final String NATIVE_LIBRARY_PROPERTY = "sun.java2d.skia.interop.library";
+    private static final boolean NATIVE_BRIDGE_AVAILABLE = loadNativeBridge();
     private static final AtomicLong NEXT_SCOPE_ID = new AtomicLong(1);
 
     public JBRSkiaService() {
@@ -127,6 +130,12 @@ public class JBRSkiaService extends JBRSkia {
             if (width <= 0 || height <= 0) {
                 return false;
             }
+            if (Boolean.getBoolean(NATIVE_DIAGNOSTIC_PROPERTY)
+                    && NATIVE_BRIDGE_AVAILABLE
+                    && metalTexturePtr != 0
+                    && nativeRenderDiagnosticFrame(metalTexturePtr, width, height, frameTimeNanos)) {
+                return true;
+            }
 
             Graphics2D diagnosticGraphics = (Graphics2D) graphics.create();
             try {
@@ -197,4 +206,20 @@ public class JBRSkiaService extends JBRSkia {
         }
         return texturePtr[0];
     }
+
+    private static boolean loadNativeBridge() {
+        String library = System.getProperty(NATIVE_LIBRARY_PROPERTY);
+        if (library == null || library.isBlank()) {
+            return false;
+        }
+        try {
+            System.load(library);
+            return true;
+        } catch (RuntimeException | UnsatisfiedLinkError e) {
+            System.err.println("JBR Skia interop native bridge unavailable: " + e.getMessage());
+            return false;
+        }
+    }
+
+    private static native boolean nativeRenderDiagnosticFrame(long metalTexturePtr, int width, int height, long frameTimeNanos);
 }
