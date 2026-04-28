@@ -944,6 +944,49 @@ Next checkpoint:
 - Choose the next positive command-coverage expansion: either native image blit, clip rect support, or a small save/restore/transform stack in the command ABI.
 - Keep expected-fallback tests for text/image/transform/saveLayer as guards while expanding the command subset.
 
+### Checkpoint 29: ClipRect Command Support And ABI 2
+
+Status: completed as the first stateful command-list expansion.
+
+- Bumped the PoC command ABI to `ABI_ID = 2` because the command layout changed.
+- Added three state commands to the temporary integer command ABI:
+  - `COMMAND_SAVE = 7`
+  - `COMMAND_RESTORE = 8`
+  - `COMMAND_CLIP_RECT = 9`
+- JBR now replays save/restore/clip in both command backends:
+  - Java2D fallback replay uses cloned `Graphics2D` state for save/restore and `clipRect(...)` for intersect clips.
+  - Native JBR-owned Skia replay calls `SkCanvas::save`, `SkCanvas::restore`, and `SkCanvas::clipRect(..., kIntersect, true)`.
+- CMP now emits save/restore commands and encodes intersecting clip rects instead of treating every `clipRect` as unsupported.
+- Skiko now expects ABI 2 and has a PoC-only internal provider fallback:
+  - It still reads `ABI_ID` / `BUILD_ID` reflectively before acquiring anything.
+  - If `com.jetbrains.JBR.getJBRSkia()` returns null under the patch-module setup, it tries `com.jetbrains.desktop.JBRSkiaService` directly.
+  - This bridges the local shim/provider binding gap and should be removed once the public JBR API jar and JBR provider are integrated normally.
+- Magic Jewel now has a positive clip probe:
+  - `MAGIC_JEWEL_COMPOSE_CLIP=true`
+  - The probe is disabled by default, and when enabled it must still pass strict command validation without SKP fallback.
+- Verification completed:
+  - JBR patched class rebuild into `/tmp/jbr-skia-run/desktop`
+  - JBR native dylib rebuild into `/tmp/jbr-skia-native/libjbrskiainterop.dylib`
+  - Runtime API `bash tools/build.sh process`
+  - Runtime API `bash tools/build.sh dev` and `/tmp/jbr-api-shim.jar` refresh
+  - Skiko `./gradlew :skiko:compileKotlinAwt :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest :skiko:publishToMavenLocal`
+  - CMP `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew :compose:ui:ui-graphics:desktopJar :compose:ui:ui:desktopJar`
+  - Magic Jewel `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew compileKotlin`
+  - Magic Jewel `OUT_DIR=/tmp/magic-jewel-command-clip-supported3 DURATION_SECONDS=5 SAMPLE_INTERVAL_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT JBR_SKIA_RENDER_MODE=commands MAGIC_JEWEL_COMPOSE_TEXT=false MAGIC_JEWEL_COMPOSE_CLIP=true ./scripts/jbr-skia-interop-report.sh`
+- Clip-positive strict report:
+  - report: `/tmp/magic-jewel-command-clip-supported3/report.md`
+  - validation status: `passed`
+  - CMP command recorder: `frames=644 fps=128.8 avg_commands=907 max_commands=907 unsupported_frames=0 avg_unsupported=0.0 max_unsupported=0 reasons=none`
+  - Skiko/JBR command frames: `643` / `643`
+  - picture frames: `0`
+  - screenshot assertion: `passed`
+
+Next checkpoint:
+
+- Remove the PoC internal-provider fallback once the public API shim binds the patched service correctly, or document it as local-only launch plumbing.
+- Add focused validation for clip-out / non-intersect clips to ensure they still fallback instead of replaying incorrectly.
+- Decide whether to add native image blit support or keep image content on SKP until the final ABI shape is clearer.
+
 Use separate worktrees for every existing repo touched:
 
 - `JetBrainsRuntime` worktree: `jbr-skia-compose-poc`

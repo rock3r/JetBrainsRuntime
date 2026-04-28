@@ -35,7 +35,7 @@ import java.awt.Rectangle;
  * so downstream compile-only clients cannot accidentally inline stale values.
  */
 public abstract class JBRSkia {
-    public static final int ABI_ID = Integer.parseInt("1");
+    public static final int ABI_ID = Integer.parseInt("2");
     public static final String BUILD_ID = buildId();
     public static final int COMMAND_CLEAR = Integer.parseInt("1");
     public static final int COMMAND_FILL_RECT = Integer.parseInt("2");
@@ -43,6 +43,9 @@ public abstract class JBRSkia {
     public static final int COMMAND_FILL_OVAL = Integer.parseInt("4");
     public static final int COMMAND_STROKE_OVAL = Integer.parseInt("5");
     public static final int COMMAND_CLEAR_RECT = Integer.parseInt("6");
+    public static final int COMMAND_SAVE = Integer.parseInt("7");
+    public static final int COMMAND_RESTORE = Integer.parseInt("8");
+    public static final int COMMAND_CLIP_RECT = Integer.parseInt("9");
 
     private static String buildId() {
         return "skia-interop-poc:" + ABI_ID;

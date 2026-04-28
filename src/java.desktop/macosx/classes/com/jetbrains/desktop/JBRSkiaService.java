@@ -38,6 +38,7 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.Shape;
+import java.util.ArrayDeque;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -240,83 +241,102 @@ public class JBRSkiaService extends JBRSkia {
         }
 
         private static boolean renderJava2DCommands(Graphics2D g, int[] commands) {
+            ArrayDeque<Graphics2D> stack = new ArrayDeque<>();
+            Graphics2D current = g;
             int offset = 0;
-            while (offset < commands.length) {
-                int op = commands[offset++];
-                if (op == COMMAND_CLEAR) {
-                    if (offset + 1 > commands.length) return false;
-                    g.setColor(new Color(commands[offset++], true));
-                    Rectangle clip = g.getClipBounds();
-                    if (clip == null) {
+            try {
+                while (offset < commands.length) {
+                    int op = commands[offset++];
+                    if (op == COMMAND_SAVE) {
+                        stack.addLast(current);
+                        current = (Graphics2D) current.create();
+                    } else if (op == COMMAND_RESTORE) {
+                        if (stack.isEmpty()) return false;
+                        current.dispose();
+                        current = stack.removeLast();
+                    } else if (op == COMMAND_CLIP_RECT) {
+                        if (offset + 4 > commands.length) return false;
+                        current.clipRect(commands[offset++], commands[offset++], commands[offset++], commands[offset++]);
+                    } else if (op == COMMAND_CLEAR) {
+                        if (offset + 1 > commands.length) return false;
+                        current.setColor(new Color(commands[offset++], true));
+                        Rectangle clip = current.getClipBounds();
+                        if (clip == null) {
+                            return false;
+                        }
+                        current.fillRect(clip.x, clip.y, clip.width, clip.height);
+                    } else if (op == COMMAND_CLEAR_RECT) {
+                        if (offset + 4 > commands.length) return false;
+                        int x = commands[offset++];
+                        int y = commands[offset++];
+                        int width = commands[offset++];
+                        int height = commands[offset++];
+                        Composite previousComposite = current.getComposite();
+                        current.setComposite(AlphaComposite.Clear);
+                        current.fillRect(x, y, width, height);
+                        current.setComposite(previousComposite);
+                    } else if (op == COMMAND_FILL_RECT) {
+                        if (offset + 6 > commands.length) return false;
+                        current.setColor(new Color(commands[offset++], true));
+                        int x = commands[offset++];
+                        int y = commands[offset++];
+                        int width = commands[offset++];
+                        int height = commands[offset++];
+                        int radius = commands[offset++];
+                        if (radius > 0) {
+                            current.fillRoundRect(x, y, width, height, radius, radius);
+                        } else {
+                            current.fillRect(x, y, width, height);
+                        }
+                    } else if (op == COMMAND_STROKE_LINE) {
+                        if (offset + 6 > commands.length) return false;
+                        current.setColor(new Color(commands[offset++], true));
+                        int x1 = commands[offset++];
+                        int y1 = commands[offset++];
+                        int x2 = commands[offset++];
+                        int y2 = commands[offset++];
+                        int strokeWidth = Math.max(1, commands[offset++]);
+                        java.awt.Stroke previous = current.getStroke();
+                        try {
+                            current.setStroke(new java.awt.BasicStroke(strokeWidth));
+                            current.drawLine(x1, y1, x2, y2);
+                        } finally {
+                            current.setStroke(previous);
+                        }
+                    } else if (op == COMMAND_FILL_OVAL) {
+                        if (offset + 5 > commands.length) return false;
+                        current.setColor(new Color(commands[offset++], true));
+                        int x = commands[offset++];
+                        int y = commands[offset++];
+                        int width = commands[offset++];
+                        int height = commands[offset++];
+                        current.fillOval(x, y, width, height);
+                    } else if (op == COMMAND_STROKE_OVAL) {
+                        if (offset + 6 > commands.length) return false;
+                        current.setColor(new Color(commands[offset++], true));
+                        int x = commands[offset++];
+                        int y = commands[offset++];
+                        int width = commands[offset++];
+                        int height = commands[offset++];
+                        int strokeWidth = Math.max(1, commands[offset++]);
+                        java.awt.Stroke previous = current.getStroke();
+                        try {
+                            current.setStroke(new java.awt.BasicStroke(strokeWidth));
+                            current.drawOval(x, y, width, height);
+                        } finally {
+                            current.setStroke(previous);
+                        }
+                    } else {
                         return false;
                     }
-                    g.fillRect(clip.x, clip.y, clip.width, clip.height);
-                } else if (op == COMMAND_CLEAR_RECT) {
-                    if (offset + 4 > commands.length) return false;
-                    int x = commands[offset++];
-                    int y = commands[offset++];
-                    int width = commands[offset++];
-                    int height = commands[offset++];
-                    Composite previousComposite = g.getComposite();
-                    g.setComposite(AlphaComposite.Clear);
-                    g.fillRect(x, y, width, height);
-                    g.setComposite(previousComposite);
-                } else if (op == COMMAND_FILL_RECT) {
-                    if (offset + 6 > commands.length) return false;
-                    g.setColor(new Color(commands[offset++], true));
-                    int x = commands[offset++];
-                    int y = commands[offset++];
-                    int width = commands[offset++];
-                    int height = commands[offset++];
-                    int radius = commands[offset++];
-                    if (radius > 0) {
-                        g.fillRoundRect(x, y, width, height, radius, radius);
-                    } else {
-                        g.fillRect(x, y, width, height);
-                    }
-                } else if (op == COMMAND_STROKE_LINE) {
-                    if (offset + 6 > commands.length) return false;
-                    g.setColor(new Color(commands[offset++], true));
-                    int x1 = commands[offset++];
-                    int y1 = commands[offset++];
-                    int x2 = commands[offset++];
-                    int y2 = commands[offset++];
-                    int strokeWidth = Math.max(1, commands[offset++]);
-                    java.awt.Stroke previous = g.getStroke();
-                    try {
-                        g.setStroke(new java.awt.BasicStroke(strokeWidth));
-                        g.drawLine(x1, y1, x2, y2);
-                    } finally {
-                        g.setStroke(previous);
-                    }
-                } else if (op == COMMAND_FILL_OVAL) {
-                    if (offset + 5 > commands.length) return false;
-                    g.setColor(new Color(commands[offset++], true));
-                    int x = commands[offset++];
-                    int y = commands[offset++];
-                    int width = commands[offset++];
-                    int height = commands[offset++];
-                    g.fillOval(x, y, width, height);
-                } else if (op == COMMAND_STROKE_OVAL) {
-                    if (offset + 6 > commands.length) return false;
-                    g.setColor(new Color(commands[offset++], true));
-                    int x = commands[offset++];
-                    int y = commands[offset++];
-                    int width = commands[offset++];
-                    int height = commands[offset++];
-                    int strokeWidth = Math.max(1, commands[offset++]);
-                    java.awt.Stroke previous = g.getStroke();
-                    try {
-                        g.setStroke(new java.awt.BasicStroke(strokeWidth));
-                        g.drawOval(x, y, width, height);
-                    } finally {
-                        g.setStroke(previous);
-                    }
-                } else {
-                    return false;
+                }
+                return stack.isEmpty();
+            } finally {
+                while (current != g) {
+                    current.dispose();
+                    current = stack.removeLast();
                 }
             }
-            return true;
         }
 
         private static Rectangle toDeviceSpaceClip(Graphics2D graphics, Rectangle userSpaceClip) {

@@ -55,6 +55,9 @@ static constexpr jint COMMAND_STROKE_LINE = 3;
 static constexpr jint COMMAND_FILL_OVAL = 4;
 static constexpr jint COMMAND_STROKE_OVAL = 5;
 static constexpr jint COMMAND_CLEAR_RECT = 6;
+static constexpr jint COMMAND_SAVE = 7;
+static constexpr jint COMMAND_RESTORE = 8;
+static constexpr jint COMMAND_CLIP_RECT = 9;
 
 static std::mutex gDirectContextMutex;
 static std::unordered_map<void*, sk_sp<GrDirectContext>> gDirectContextsByMtlContext;
@@ -144,6 +147,33 @@ static bool drawCommandList(SkCanvas* canvas, const jint* commands, jsize comman
     while (offset < commandCount) {
         jint op = commands[offset++];
         switch (op) {
+            case COMMAND_SAVE: {
+                canvas->save();
+                break;
+            }
+            case COMMAND_RESTORE: {
+                if (canvas->getSaveCount() <= 1) {
+                    return false;
+                }
+                canvas->restore();
+                break;
+            }
+            case COMMAND_CLIP_RECT: {
+                if (offset + 4 > commandCount) {
+                    return false;
+                }
+                jint x = commands[offset++];
+                jint y = commands[offset++];
+                jint rectWidth = commands[offset++];
+                jint rectHeight = commands[offset++];
+                canvas->clipRect(SkRect::MakeXYWH(static_cast<SkScalar>(x),
+                                                  static_cast<SkScalar>(y),
+                                                  static_cast<SkScalar>(rectWidth),
+                                                  static_cast<SkScalar>(rectHeight)),
+                                 SkClipOp::kIntersect,
+                                 true);
+                break;
+            }
             case COMMAND_CLEAR: {
                 if (offset + 1 > commandCount) {
                     return false;
