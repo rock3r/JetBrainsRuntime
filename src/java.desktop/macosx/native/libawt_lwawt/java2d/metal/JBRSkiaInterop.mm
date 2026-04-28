@@ -26,6 +26,7 @@
 #import <Metal/Metal.h>
 #include <jni.h>
 #include <algorithm>
+#include <cstdio>
 
 #include "SkCanvas.h"
 #include "SkColor.h"
@@ -321,6 +322,15 @@ Java_com_jetbrains_desktop_JBRSkiaService_nativeRenderPictureFrame
         picture->playback(canvas);
         canvas->restore();
         directContext->flushAndSubmit(surface.get(), GrSyncCpu::kYes);
+        std::fprintf(stderr,
+                     "JBR_SKIA_INTEROP_PICTURE_FRAME destinationX=%d destinationY=%d destinationWidth=%d destinationHeight=%d width=%d height=%d bytes=%d rendered=true\n",
+                     destinationX,
+                     destinationY,
+                     destinationWidth,
+                     destinationHeight,
+                     width,
+                     height,
+                     pictureSize);
         return JNI_TRUE;
     }
 }

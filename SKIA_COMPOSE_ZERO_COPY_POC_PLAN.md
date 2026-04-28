@@ -355,6 +355,43 @@ Next native checkpoint:
 - Cache/reuse the JBR-owned `GrDirectContext` per `MTLContext`.
 - Start the before/after CPU report against the old SwingGraphics path to determine whether SKP serialization is acceptable as an interim bridge.
 
+### Checkpoint 12: Picture Markers And First Visual Assertion
+
+Status: completed for marker plumbing and a coarse screenshot assertion; report integration is next.
+
+- Skiko now emits a parseable marker for every JBR picture replay attempt:
+  - `SKIKO_JBR_INTEROP_PICTURE_FRAME width=<px> height=<px> bytes=<n> rendered=<true|false>`
+- JBR native replay now emits a parseable destination marker after successful replay:
+  - `JBR_SKIA_INTEROP_PICTURE_FRAME destinationX=<px> destinationY=<px> destinationWidth=<px> destinationHeight=<px> width=<px> height=<px> bytes=<n> rendered=true`
+- Added a focused Skiko test that locks the `SKIKO_JBR_INTEROP_PICTURE_FRAME` marker format.
+- Added CMP sample helper:
+  - `compose/desktop/desktop/samples/scripts/assert-jbr-skia-window-screenshot.sh`
+  - It samples the captured PNG and emits `JBR_SKIA_SCREENSHOT_COUNTS green=<n> blue=<n> purple=<n> yellow=<n>`, then fails if expected color regions are missing.
+- Verification completed:
+  - Skiko `./gradlew :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`
+  - Skiko `./gradlew :skiko:publishToMavenLocal`
+  - JBR patched-module compile for `JBRSkia` / `JBRSkiaService`
+  - local native dylib rebuild at `/tmp/jbr-skia-native/libjbrskiainterop.dylib`
+  - CMP sample smoke with patched `java.desktop`, temporary public API shim, local Skiko, and `skiko.jbr.interop.renderPicture=true`
+  - window capture plus screenshot assertion:
+    - `/tmp/jbr-skia-picture-frame-markers-window.png`
+    - `JBR_SKIA_SCREENSHOT_COUNTS green=428783 blue=511362 purple=83318 yellow=26824`
+- Smoke markers included:
+  - `SKIKO_JBR_INTEROP_SCOPE_ACQUIRED abi=1 build=skia-interop-poc:1 metalTexture=0x85b550280`
+  - `SKIKO_JBR_INTEROP_PICTURE_FRAME width=1460 height=492 bytes=415432066 rendered=true`
+  - `JBR_SKIA_INTEROP_PICTURE_FRAME destinationX=140 destinationY=572 destinationWidth=1460 destinationHeight=492 width=1460 height=492 bytes=415432066 rendered=true`
+
+Important caveats:
+
+- The SKP payload can be extremely large: this run observed a 415 MB serialized picture for a `1460x492` top-level panel. Treat SKP replay as a correctness bridge, not the expected performance architecture.
+- The screenshot assertion is deliberately coarse. It catches blank/fallback/misplaced rendering, but it does not yet compare exact layout, text fidelity, or Swing interop child ordering.
+
+Next native checkpoint:
+
+- Wire these markers into `jbr-skia-interop-report.sh` so the report records frame count, bytes per frame, replay success, and screenshot assertion status.
+- Add a smaller deterministic no-text visual sample to reduce noise in screenshot assertions.
+- Start CPU comparison runs using the old SwingGraphics path versus the JBR picture path, with the SKP byte count called out prominently.
+
 Use separate worktrees for every existing repo touched:
 
 - `JetBrainsRuntime` worktree: `jbr-skia-compose-poc`
