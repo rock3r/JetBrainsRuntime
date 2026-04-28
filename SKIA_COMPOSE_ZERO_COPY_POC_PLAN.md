@@ -1986,7 +1986,7 @@ Status: completed as a narrow PoC text command for simple single-line ASCII runs
   - validation rejects non-positive font sizes, malformed lengths, and more than 4096 UTF-16 code units.
 - JBR Java2D fallback replays the record with derived `Graphics2D` font size and antialiasing.
 - JBR native replay creates the `SkFont` inside JBR's Skia runtime and uses `drawSimpleText`; no Skiko `SkTypeface*`, `SkFont*`, or paragraph object crosses the ABI boundary.
-- CMP records simple text only when it is single-line ASCII, uses a solid color, has no shadow/decoration/drawStyle/blend-mode override, and has a finite positive font size.
+- CMP records simple text only when it is single-line ASCII, uses a solid color, has no shadow/decoration/blend-mode override, uses normal fill drawing, and has a finite positive font size.
 - CMP still falls back to the cached ARGB image bridge for richer text, non-ASCII text, multiline paragraphs, brushes that are not `SolidColor`, and styled text effects.
 - First Magic Jewel strict run failed because Jewel `Text` was using the brush paint overload; the final CMP patch records `SolidColor` brush text through the same simple text command.
 
@@ -2061,6 +2061,54 @@ Next checkpoint:
 
 - Move the text command from the explicit Magic probe into real Compose text rendering by teaching the Skia paragraph path how to derive a solid text color and JBR-owned font choice safely.
 - Keep cached-image text as the fallback for styled/rich text until the JBR-owned paragraph/text shaping ABI exists.
+
+### Checkpoint 51: Real BasicText Uses The JBR Text Command
+
+Status: completed for simple filled Compose text.
+
+- CMP now treats the normalized `Fill` draw style from `TextPainter` as eligible for the simple JBR text command. This fixes the gap where ordinary `BasicText` labels were rejected because `TextPainter` passes `drawStyle = Fill` rather than `null`.
+- The simple text command eligibility remains conservative:
+  - single-line ASCII only
+  - solid color only
+  - no shadow or decoration
+  - `BlendMode.SrcOver`
+  - normal fill draw style only
+  - finite positive font size.
+- Cached-image text remains the fallback for richer text until the JBR-owned shaping/paragraph ABI exists.
+- Magic Jewel's normal `BasicText` labels now use `COMMAND_DRAW_TEXT_UTF16`; the explicit canvas text probe remains in place as a stable ABI probe.
+- Magic Jewel strict command validation now allows a one-frame Skiko/JBR marker count delta at teardown. The strict invariants remain: command frames must exist, picture fallback must be zero, unsupported command frames must be zero, and the screenshot assertion must pass.
+
+Verification completed:
+
+- CMP focused test:
+  - `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-configuration-cache :compose:ui:ui-text:desktopTest --tests androidx.compose.ui.text.DesktopParagraphTest.paint_withFillDrawStyle_recordsJbrSkiaSimpleText`
+- CMP patched jars:
+  - `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-configuration-cache :compose:ui:ui-text:desktopJar :compose:ui:ui:desktopJar`
+- Magic Jewel report-validation tests:
+  - `./scripts/test-jbr-skia-report-validation.sh`
+- Magic Jewel text-only report:
+  - report: `/tmp/magic-jewel-basictext-fill-textcommands/report.md`
+  - validation status: `passed`
+  - fallback markers: `0`
+  - CMP command recorder: `frames=959 fps=239.8 avg_commands=2389 max_commands=2389 unsupported_frames=0 avg_unsupported=0.0 max_unsupported=0 avg_text_commands=9.0 max_text_commands=9 avg_image_defines=0.0 max_image_defines=0 avg_image_refs=0.0 max_image_refs=0 reasons=none`
+  - Skiko/JBR command frames: `958` / `958`
+  - picture replay frames: `0`
+  - screenshot assertion: `passed`
+- Magic Jewel full mixed-content command report:
+  - report: `/tmp/magic-jewel-basictext-fill-full-smoke-2/report.md`
+  - screenshot: `/tmp/magic-jewel-basictext-fill-full-smoke-2/new-window.png`
+  - validation status: `passed`
+  - fallback markers: `0`
+  - CMP command recorder: `frames=1011 fps=252.8 avg_commands=2560 max_commands=7746 unsupported_frames=0 avg_unsupported=0.0 max_unsupported=0 avg_text_commands=9.0 max_text_commands=9 avg_image_defines=0.0 max_image_defines=1 avg_image_refs=1.0 max_image_refs=1 reasons=none`
+  - Skiko/JBR command frames: `1010` / `1010`
+  - picture replay frames: `0`
+  - screenshot assertion: `passed`
+
+Next checkpoint:
+
+- Remove or separately gate the explicit Magic Jewel text probe once ordinary Compose labels are enough for the text-command signal.
+- Start the next text slice: either wider Unicode coverage with safe JBR-owned font selection, or a shaped-glyph/paragraph command that keeps all font/typeface objects inside JBR Skia.
+- Preserve the cached-image text fallback and the SKP replay path as correctness oracles for styled text and future benchmark runs.
 
 Use separate worktrees for every existing repo touched:
 
