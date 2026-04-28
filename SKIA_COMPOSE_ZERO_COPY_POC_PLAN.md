@@ -1539,6 +1539,55 @@ Next checkpoint:
 - Start expanding command paint payloads beyond solid ARGB, with an ABI bump, so the command stream can carry per-record paint state instead of relying on implicit defaults.
 - Preserve the SKP path as the visual/correctness oracle for benchmark runs on a quieter machine.
 
+### Checkpoint 41: Per-Record Antialias Paint Flag And ABI 8
+
+Status: completed as the first paint-payload expansion for the command stream.
+
+- Bumped the PoC command ABI to `ABI_ID = 8`.
+- Added `COMMAND_RECORD_FLAG_ANTIALIAS = 1` and `COMMAND_CAP_RECORD_ANTIALIAS = 512` to the JBR private API, public Runtime API mirror, Skiko discovery requirements, and CMP command recorder.
+- Kept the stream header, byte-length record framing, and direct-buffer carrier unchanged.
+- JBR now validates command record flags with a strict mask instead of requiring every record to use `COMMAND_RECORD_FLAGS_NONE`.
+- JBR Java2D fallback replay applies each record's antialiasing flag before drawing paint-bearing records.
+- JBR native Skia replay applies each record's antialiasing flag to paints and rect clips.
+- CMP records `Paint.isAntiAlias` into each paint-bearing command record; clip-rect commands carry antialiasing because the Skiko canvas clip call is antialiased on this path.
+- Skiko's synthetic command scene emits ABI 8 streams and uses antialias flags on the rounded/oval/line primitives.
+
+Verification completed:
+
+- Runtime API `bash tools/build.sh process`.
+- Runtime API `bash tools/build.sh dev` and `/tmp/jbr-api-shim.jar` refresh from `out/classes/8`.
+- Skiko `./gradlew :skiko:compileKotlinAwt :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`.
+- Skiko `./gradlew :skiko:publishToMavenLocal`.
+- CMP `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest`.
+- CMP `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-configuration-cache :compose:ui:ui-graphics:desktopJar :compose:ui:ui:desktopJar`.
+- JBR isolated patched-class compile and `JBRSkiaApiTest` run against `/tmp/jbr-skia-abi8-compile`.
+- JBR native dylib rebuild into `/tmp/jbr-skia-native/libjbrskiainterop.dylib`.
+- Magic Jewel `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew compileKotlin`.
+
+ABI 8 positive command smoke report:
+
+- report: `/tmp/magic-jewel-command-aa-abi8-smoke-2/report.md`
+- validation status: `passed`
+- fallback markers: `0`
+- CMP command recorder: `frames=1010 fps=202.0 avg_commands=1239 max_commands=1239 unsupported_frames=0 avg_unsupported=0.0 max_unsupported=0 reasons=none`
+- Skiko/JBR command frames: `1010` / `1010`
+- screenshot assertion: `passed`
+
+ABI 8 invalid-stream fallback report:
+
+- report: `/tmp/magic-jewel-command-aa-abi8-invalid-2/report.md`
+- validation status: `passed`
+- fallback markers: `1`
+- expected fallback reason: `command-stream-invalid`
+- CMP command recorder: `frames=709 fps=141.8 avg_commands=1197 max_commands=1197 unsupported_frames=0 avg_unsupported=0.0 max_unsupported=0 reasons=none`
+- Skiko/JBR command frames: `709` / `0`
+- screenshot assertion: `passed` on the old Swing fallback renderer.
+
+Next checkpoint:
+
+- Add a second paint payload slice for stroke metadata, starting with cap/join/miter in record payload or flags.
+- Keep SKP replay available as the correctness oracle for benchmark and rendering-difference runs.
+
 Use separate worktrees for every existing repo touched:
 
 - `JetBrainsRuntime` worktree: `jbr-skia-compose-poc`

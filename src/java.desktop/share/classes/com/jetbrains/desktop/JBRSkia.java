@@ -36,7 +36,7 @@ import java.nio.ByteBuffer;
  * so downstream compile-only clients cannot accidentally inline stale values.
  */
 public abstract class JBRSkia {
-    public static final int ABI_ID = Integer.parseInt("7");
+    public static final int ABI_ID = Integer.parseInt("8");
     public static final String BUILD_ID = buildId();
     public static final int COMMAND_STREAM_MAGIC = Integer.parseInt("1246972723");
     public static final int COMMAND_STREAM_HEADER_SIZE = Integer.parseInt("6");
@@ -45,6 +45,7 @@ public abstract class JBRSkia {
     public static final int COMMAND_PAINT_FORMAT_SOLID_ARGB = Integer.parseInt("1");
     public static final int COMMAND_RECORD_HEADER_SIZE_BYTES = Integer.parseInt("12");
     public static final int COMMAND_RECORD_FLAGS_NONE = Integer.parseInt("0");
+    public static final int COMMAND_RECORD_FLAG_ANTIALIAS = Integer.parseInt("1");
     public static final int COMMAND_CAP_CLEAR = Integer.parseInt("1");
     public static final int COMMAND_CAP_FILL_RECT = Integer.parseInt("2");
     public static final int COMMAND_CAP_STROKE_LINE = Integer.parseInt("4");
@@ -54,6 +55,7 @@ public abstract class JBRSkia {
     public static final int COMMAND_CAP_SAVE_RESTORE = Integer.parseInt("64");
     public static final int COMMAND_CAP_CLIP_RECT = Integer.parseInt("128");
     public static final int COMMAND_CAP_USER_SPACE_COORDINATES = Integer.parseInt("256");
+    public static final int COMMAND_CAP_RECORD_ANTIALIAS = Integer.parseInt("512");
     public static final int COMMAND_CLEAR = Integer.parseInt("1");
     public static final int COMMAND_FILL_RECT = Integer.parseInt("2");
     public static final int COMMAND_STROKE_LINE = Integer.parseInt("3");

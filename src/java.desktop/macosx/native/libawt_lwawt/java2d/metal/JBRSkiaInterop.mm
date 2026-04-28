@@ -49,7 +49,7 @@
 
 #include "MTLSurfaceDataBase.h"
 
-static constexpr jint ABI_ID = 7;
+static constexpr jint ABI_ID = 8;
 static constexpr jint COMMAND_STREAM_MAGIC = 1246972723;
 static constexpr jint COMMAND_STREAM_HEADER_SIZE = 6;
 static constexpr jint COMMAND_STREAM_FLAGS_NONE = 0;
@@ -57,6 +57,7 @@ static constexpr jint COMMAND_COORDINATE_SPACE_SWING_USER = 1;
 static constexpr jint COMMAND_PAINT_FORMAT_SOLID_ARGB = 1;
 static constexpr jint COMMAND_RECORD_HEADER_SIZE_BYTES = 12;
 static constexpr jint COMMAND_RECORD_FLAGS_NONE = 0;
+static constexpr jint COMMAND_RECORD_FLAG_ANTIALIAS = 1;
 static constexpr jint COMMAND_CLEAR = 1;
 static constexpr jint COMMAND_FILL_RECT = 2;
 static constexpr jint COMMAND_STROKE_LINE = 3;
@@ -210,9 +211,10 @@ static bool drawCommandList(SkCanvas* canvas, CommandWords commands, jsize comma
         jint recordFlags = commands[offset++];
         jsize recordLength = recordLengthFromBytes(recordByteLength);
         jsize recordEnd = recordStart + recordLength;
-        if (recordFlags != COMMAND_RECORD_FLAGS_NONE || recordLength < 3 || recordEnd > commandEnd) {
+        if ((recordFlags & ~COMMAND_RECORD_FLAG_ANTIALIAS) != 0 || recordLength < 3 || recordEnd > commandEnd) {
             return false;
         }
+        bool antiAlias = (recordFlags & COMMAND_RECORD_FLAG_ANTIALIAS) != 0;
         switch (op) {
             case COMMAND_SAVE: {
                 if (offset != recordEnd) {
@@ -244,7 +246,7 @@ static bool drawCommandList(SkCanvas* canvas, CommandWords commands, jsize comma
                                                   static_cast<SkScalar>(rectWidth),
                                                   static_cast<SkScalar>(rectHeight)),
                                  SkClipOp::kIntersect,
-                                 true);
+                                 antiAlias);
                 break;
             }
             case COMMAND_CLEAR: {
@@ -252,6 +254,7 @@ static bool drawCommandList(SkCanvas* canvas, CommandWords commands, jsize comma
                     return false;
                 }
                 SkPaint paint;
+                paint.setAntiAlias(antiAlias);
                 paint.setColor(skColorFromArgb(commands[offset++]));
                 canvas->drawRect(SkRect::MakeWH(static_cast<SkScalar>(width), static_cast<SkScalar>(height)), paint);
                 break;
@@ -261,7 +264,7 @@ static bool drawCommandList(SkCanvas* canvas, CommandWords commands, jsize comma
                     return false;
                 }
                 SkPaint paint;
-                paint.setAntiAlias(true);
+                paint.setAntiAlias(antiAlias);
                 paint.setColor(skColorFromArgb(commands[offset++]));
                 jint x = commands[offset++];
                 jint y = commands[offset++];
@@ -291,6 +294,7 @@ static bool drawCommandList(SkCanvas* canvas, CommandWords commands, jsize comma
                 jint rectWidth = commands[offset++];
                 jint rectHeight = commands[offset++];
                 SkPaint paint;
+                paint.setAntiAlias(antiAlias);
                 paint.setBlendMode(SkBlendMode::kClear);
                 canvas->drawRect(SkRect::MakeXYWH(static_cast<SkScalar>(x),
                                                   static_cast<SkScalar>(y),
@@ -304,7 +308,7 @@ static bool drawCommandList(SkCanvas* canvas, CommandWords commands, jsize comma
                     return false;
                 }
                 SkPaint paint;
-                paint.setAntiAlias(true);
+                paint.setAntiAlias(antiAlias);
                 paint.setStyle(SkPaint::kStroke_Style);
                 paint.setColor(skColorFromArgb(commands[offset++]));
                 jint x1 = commands[offset++];
@@ -324,7 +328,7 @@ static bool drawCommandList(SkCanvas* canvas, CommandWords commands, jsize comma
                     return false;
                 }
                 SkPaint paint;
-                paint.setAntiAlias(true);
+                paint.setAntiAlias(antiAlias);
                 paint.setColor(skColorFromArgb(commands[offset++]));
                 jint x = commands[offset++];
                 jint y = commands[offset++];
@@ -342,7 +346,7 @@ static bool drawCommandList(SkCanvas* canvas, CommandWords commands, jsize comma
                     return false;
                 }
                 SkPaint paint;
-                paint.setAntiAlias(true);
+                paint.setAntiAlias(antiAlias);
                 paint.setStyle(SkPaint::kStroke_Style);
                 paint.setColor(skColorFromArgb(commands[offset++]));
                 jint x = commands[offset++];

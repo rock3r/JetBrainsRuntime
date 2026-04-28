@@ -59,7 +59,8 @@ public class JBRSkiaService extends JBRSkia {
                     | COMMAND_CAP_CLEAR_RECT
                     | COMMAND_CAP_SAVE_RESTORE
                     | COMMAND_CAP_CLIP_RECT
-                    | COMMAND_CAP_USER_SPACE_COORDINATES;
+                    | COMMAND_CAP_USER_SPACE_COORDINATES
+                    | COMMAND_CAP_RECORD_ANTIALIAS;
     private static final boolean NATIVE_BRIDGE_AVAILABLE = loadNativeBridge();
     private static final AtomicLong NEXT_SCOPE_ID = new AtomicLong(1);
 
@@ -147,13 +148,13 @@ public class JBRSkiaService extends JBRSkia {
         int recordFlags = commands[offset++];
         int recordLength = recordLengthFromBytes(recordByteLength);
         int recordEnd = recordStart + recordLength;
-        if (recordFlags != COMMAND_RECORD_FLAGS_NONE || recordLength < 3 || recordEnd > commandEnd) {
+        if ((recordFlags & ~COMMAND_RECORD_FLAG_ANTIALIAS) != 0 || recordLength < 3 || recordEnd > commandEnd) {
             return null;
         }
-        return new CommandRecord(op, offset, recordEnd, recordLength);
+        return new CommandRecord(op, offset, recordEnd, recordLength, recordFlags);
     }
 
-    private record CommandRecord(int op, int argsStart, int recordEnd, int recordLength) {
+    private record CommandRecord(int op, int argsStart, int recordEnd, int recordLength, int recordFlags) {
     }
 
     private record MetalSurfaceMetadata(long nativeOpsPtr, long texturePtr) {
@@ -421,6 +422,7 @@ public class JBRSkiaService extends JBRSkia {
                     if (record == null) return false;
                     int op = record.op();
                     int recordEnd = record.recordEnd();
+                    boolean antiAlias = (record.recordFlags() & COMMAND_RECORD_FLAG_ANTIALIAS) != 0;
                     offset = record.argsStart();
                     if (op == COMMAND_SAVE) {
                         if (offset != recordEnd) return false;
@@ -436,6 +438,7 @@ public class JBRSkiaService extends JBRSkia {
                         current.clipRect(commands[offset++], commands[offset++], commands[offset++], commands[offset++]);
                     } else if (op == COMMAND_CLEAR) {
                         if (offset + 1 != recordEnd) return false;
+                        applyAntialiasing(current, antiAlias);
                         current.setColor(new Color(commands[offset++], true));
                         Rectangle clip = current.getClipBounds();
                         if (clip == null) {
@@ -444,6 +447,7 @@ public class JBRSkiaService extends JBRSkia {
                         current.fillRect(clip.x, clip.y, clip.width, clip.height);
                     } else if (op == COMMAND_CLEAR_RECT) {
                         if (offset + 4 != recordEnd) return false;
+                        applyAntialiasing(current, antiAlias);
                         int x = commands[offset++];
                         int y = commands[offset++];
                         int width = commands[offset++];
@@ -454,6 +458,7 @@ public class JBRSkiaService extends JBRSkia {
                         current.setComposite(previousComposite);
                     } else if (op == COMMAND_FILL_RECT) {
                         if (offset + 6 != recordEnd) return false;
+                        applyAntialiasing(current, antiAlias);
                         current.setColor(new Color(commands[offset++], true));
                         int x = commands[offset++];
                         int y = commands[offset++];
@@ -467,6 +472,7 @@ public class JBRSkiaService extends JBRSkia {
                         }
                     } else if (op == COMMAND_STROKE_LINE) {
                         if (offset + 6 != recordEnd) return false;
+                        applyAntialiasing(current, antiAlias);
                         current.setColor(new Color(commands[offset++], true));
                         int x1 = commands[offset++];
                         int y1 = commands[offset++];
@@ -482,6 +488,7 @@ public class JBRSkiaService extends JBRSkia {
                         }
                     } else if (op == COMMAND_FILL_OVAL) {
                         if (offset + 5 != recordEnd) return false;
+                        applyAntialiasing(current, antiAlias);
                         current.setColor(new Color(commands[offset++], true));
                         int x = commands[offset++];
                         int y = commands[offset++];
@@ -490,6 +497,7 @@ public class JBRSkiaService extends JBRSkia {
                         current.fillOval(x, y, width, height);
                     } else if (op == COMMAND_STROKE_OVAL) {
                         if (offset + 6 != recordEnd) return false;
+                        applyAntialiasing(current, antiAlias);
                         current.setColor(new Color(commands[offset++], true));
                         int x = commands[offset++];
                         int y = commands[offset++];
@@ -515,6 +523,13 @@ public class JBRSkiaService extends JBRSkia {
                     current = stack.removeLast();
                 }
             }
+        }
+
+        private static void applyAntialiasing(Graphics2D g, boolean antiAlias) {
+            g.setRenderingHint(
+                    RenderingHints.KEY_ANTIALIASING,
+                    antiAlias ? RenderingHints.VALUE_ANTIALIAS_ON : RenderingHints.VALUE_ANTIALIAS_OFF
+            );
         }
 
         private static Rectangle toDeviceSpaceClip(Graphics2D graphics, Rectangle userSpaceClip) {
