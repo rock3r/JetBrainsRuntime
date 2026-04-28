@@ -790,6 +790,13 @@ Status: completed for the Magic Jewel no-text/vector scene.
   - Skiko/JBR command frames: `1297` / `1297`
   - picture frames: `0`
   - screenshot assertion: `passed`
+- The recorder now treats previously invisible clip/path/image/arc/points/vertices calls as unsupported for strict-mode accounting. A clip-aware validation run still passed for the current Magic Jewel vector scene:
+  - report: `/tmp/magic-jewel-command-strict-clip-aware/report.md`
+  - validation status: `passed`
+  - CMP command recorder: `frames=1423 fps=237.2 avg_commands=763 max_commands=791 unsupported_frames=0 avg_unsupported=0.0 max_unsupported=0 reasons=none`
+  - Skiko/JBR command frames: `1423` / `1423`
+  - picture frames: `0`
+  - screenshot assertion: `passed`
 
 Next checkpoint:
 
