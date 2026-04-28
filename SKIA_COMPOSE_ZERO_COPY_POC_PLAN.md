@@ -1202,6 +1202,64 @@ Next checkpoint:
   - explicit record alignment
   - reserved per-record extension flags.
 
+### Checkpoint 34: Byte-Length Command Records And ABI 6
+
+Status: completed as the first native-block-shaped command record slice.
+
+- Bumped the PoC command ABI to `ABI_ID = 6`.
+- Kept the temporary `int[]` transport, but changed every command record header to:
+  - `[op, recordByteLength, recordFlags, args...]`
+  - `recordByteLength` is the byte length of the whole aligned record, including the three-field header.
+  - `recordFlags` must be `COMMAND_RECORD_FLAGS_NONE`.
+- Added public/private constants for the record-level contract:
+  - `COMMAND_RECORD_HEADER_SIZE_BYTES = 12`
+  - `COMMAND_RECORD_FLAGS_NONE = 0`
+- JBR Java fallback replay and native Skia replay now both reject:
+  - record byte lengths smaller than the record header
+  - byte lengths that are not aligned to `sizeof(jint)` / `Integer.BYTES`
+  - unsupported record flags
+  - records whose byte length does not match the opcode-specific payload size.
+- Runtime API docs now describe byte lengths and record flags instead of integer record lengths.
+- CMP and Skiko command emitters now compute byte lengths with `(args.size + 3) * Int.SIZE_BYTES`.
+- JBR `JBRSkiaApiTest` now validates a good byte-length record and negative cases for wrong byte length and unsupported record flags.
+
+Verification completed:
+
+- JBR patched class rebuild into `/tmp/jbr-skia-run/desktop`.
+- JBR `JBRSkiaApiTest` compiled and passed against the patched module.
+- JBR native dylib rebuild into `/tmp/jbr-skia-native/libjbrskiainterop.dylib`.
+- Runtime API `bash tools/build.sh process`.
+- Runtime API `bash tools/build.sh dev` and `/tmp/jbr-api-shim.jar` refresh.
+- Skiko `./gradlew :skiko:compileKotlinAwt :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`.
+- Skiko `./gradlew :skiko:publishToMavenLocal`.
+- CMP `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew :compose:ui:ui-graphics:desktopJar :compose:ui:ui:desktopJar`.
+- Magic Jewel `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew compileKotlin`.
+
+Byte-length positive smoke report:
+
+- report: `/tmp/magic-jewel-command-record-byte-length-smoke/report.md`
+- validation status: `passed`
+- fallback markers: `0`
+- picture frames: `0`
+- CMP command recorder: `frames=1146 fps=229.2 avg_commands=1259 max_commands=1259 unsupported_frames=0 avg_unsupported=0.0 max_unsupported=0 reasons=none`
+- Skiko/JBR command frames: `1146` / `1146`
+- screenshot assertion: `passed`
+
+Byte-length invalid-stream fallback report:
+
+- report: `/tmp/magic-jewel-command-record-byte-length-invalid/report.md`
+- validation status: `passed`
+- fallback markers: `1`
+- expected fallback reason: `command-stream-invalid`
+- CMP command recorder: `frames=769 fps=153.8 avg_commands=1237 max_commands=1237 unsupported_frames=0 avg_unsupported=0.0 max_unsupported=0 reasons=none`
+- Skiko/JBR command frames: `769` / `0`
+- screenshot assertion: `passed` on the old Swing fallback renderer.
+
+Next checkpoint:
+
+- Start extracting the temporary `int[]` layout behind explicit encode/decode helpers so the next change can swap the carrier for a native memory block with less churn.
+- Add record-level coordinate-space and paint-format metadata before expanding beyond the current solid-color vector subset.
+
 Use separate worktrees for every existing repo touched:
 
 - `JetBrainsRuntime` worktree: `jbr-skia-compose-poc`

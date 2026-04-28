@@ -95,9 +95,14 @@ public class JBRSkiaService extends JBRSkia {
             if (offset >= commandEnd) {
                 return false;
             }
-            int recordLength = commands[offset++];
+            int recordByteLength = commands[offset++];
+            if (offset >= commandEnd) {
+                return false;
+            }
+            int recordFlags = commands[offset++];
+            int recordLength = recordLengthFromBytes(recordByteLength);
             int recordEnd = recordStart + recordLength;
-            if (recordLength < 2 || recordEnd > commandEnd || expectedRecordLength(op) != recordLength) {
+            if (recordFlags != COMMAND_RECORD_FLAGS_NONE || recordLength < 3 || recordEnd > commandEnd || expectedRecordLength(op) != recordLength) {
                 return false;
             }
             offset = recordEnd;
@@ -120,12 +125,19 @@ public class JBRSkiaService extends JBRSkia {
         return COMMAND_STREAM_HEADER_SIZE + payloadLength;
     }
 
+    private static int recordLengthFromBytes(int recordByteLength) {
+        if (recordByteLength < COMMAND_RECORD_HEADER_SIZE_BYTES || recordByteLength % Integer.BYTES != 0) {
+            return -1;
+        }
+        return recordByteLength / Integer.BYTES;
+    }
+
     private static int expectedRecordLength(int op) {
-        if (op == COMMAND_SAVE || op == COMMAND_RESTORE) return 2;
-        if (op == COMMAND_CLEAR) return 3;
-        if (op == COMMAND_CLEAR_RECT || op == COMMAND_CLIP_RECT) return 6;
-        if (op == COMMAND_FILL_OVAL) return 7;
-        if (op == COMMAND_FILL_RECT || op == COMMAND_STROKE_LINE || op == COMMAND_STROKE_OVAL) return 8;
+        if (op == COMMAND_SAVE || op == COMMAND_RESTORE) return 3;
+        if (op == COMMAND_CLEAR) return 4;
+        if (op == COMMAND_CLEAR_RECT || op == COMMAND_CLIP_RECT) return 7;
+        if (op == COMMAND_FILL_OVAL) return 8;
+        if (op == COMMAND_FILL_RECT || op == COMMAND_STROKE_LINE || op == COMMAND_STROKE_OVAL) return 9;
         return -1;
     }
 
@@ -315,9 +327,12 @@ public class JBRSkiaService extends JBRSkia {
                     int recordStart = offset;
                     int op = commands[offset++];
                     if (offset >= commandEnd) return false;
-                    int recordLength = commands[offset++];
+                    int recordByteLength = commands[offset++];
+                    if (offset >= commandEnd) return false;
+                    int recordFlags = commands[offset++];
+                    int recordLength = recordLengthFromBytes(recordByteLength);
                     int recordEnd = recordStart + recordLength;
-                    if (recordLength < 2 || recordEnd > commandEnd) return false;
+                    if (recordFlags != COMMAND_RECORD_FLAGS_NONE || recordLength < 3 || recordEnd > commandEnd) return false;
                     if (op == COMMAND_SAVE) {
                         if (offset != recordEnd) return false;
                         stack.addLast(current);

@@ -49,10 +49,12 @@
 
 #include "MTLSurfaceDataBase.h"
 
-static constexpr jint ABI_ID = 5;
+static constexpr jint ABI_ID = 6;
 static constexpr jint COMMAND_STREAM_MAGIC = 1246972723;
 static constexpr jint COMMAND_STREAM_HEADER_SIZE = 4;
 static constexpr jint COMMAND_STREAM_FLAGS_NONE = 0;
+static constexpr jint COMMAND_RECORD_HEADER_SIZE_BYTES = 12;
+static constexpr jint COMMAND_RECORD_FLAGS_NONE = 0;
 static constexpr jint COMMAND_CLEAR = 1;
 static constexpr jint COMMAND_FILL_RECT = 2;
 static constexpr jint COMMAND_STROKE_LINE = 3;
@@ -146,6 +148,13 @@ static SkColor skColorFromArgb(jint argb) {
                           static_cast<U8CPU>(argb & 0xff));
 }
 
+static jsize recordLengthFromBytes(jint recordByteLength) {
+    if (recordByteLength < COMMAND_RECORD_HEADER_SIZE_BYTES || recordByteLength % static_cast<jint>(sizeof(jint)) != 0) {
+        return -1;
+    }
+    return recordByteLength / static_cast<jint>(sizeof(jint));
+}
+
 static bool drawCommandList(SkCanvas* canvas, const jint* commands, jsize commandCount, int width, int height) {
     if (commandCount < COMMAND_STREAM_HEADER_SIZE ||
             commands[0] != COMMAND_STREAM_MAGIC ||
@@ -166,9 +175,14 @@ static bool drawCommandList(SkCanvas* canvas, const jint* commands, jsize comman
         if (offset >= commandEnd) {
             return false;
         }
-        jint recordLength = commands[offset++];
+        jint recordByteLength = commands[offset++];
+        if (offset >= commandEnd) {
+            return false;
+        }
+        jint recordFlags = commands[offset++];
+        jsize recordLength = recordLengthFromBytes(recordByteLength);
         jsize recordEnd = recordStart + recordLength;
-        if (recordLength < 2 || recordEnd > commandEnd) {
+        if (recordFlags != COMMAND_RECORD_FLAGS_NONE || recordLength < 3 || recordEnd > commandEnd) {
             return false;
         }
         switch (op) {
