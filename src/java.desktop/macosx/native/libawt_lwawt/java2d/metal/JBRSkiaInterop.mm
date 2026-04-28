@@ -55,7 +55,7 @@
 
 #include "MTLSurfaceDataBase.h"
 
-static constexpr jint ABI_ID = 16;
+static constexpr jint ABI_ID = 17;
 static constexpr jint COMMAND_STREAM_MAGIC = 1246972723;
 static constexpr jint COMMAND_STREAM_HEADER_SIZE = 6;
 static constexpr jint COMMAND_STREAM_FLAGS_NONE = 0;
@@ -196,6 +196,35 @@ static bool isValidStrokeMetadata(jint strokeWidth, jint strokeCap, jint strokeJ
 static uint64_t imageCacheKey(jint high, jint low) {
     return (static_cast<uint64_t>(static_cast<uint32_t>(high)) << 32)
             | static_cast<uint32_t>(low);
+}
+
+static bool appendUtf8CodePoint(std::string& text, uint32_t codePoint) {
+    if (codePoint <= 0x7f) {
+        text.push_back(static_cast<char>(codePoint));
+        return true;
+    }
+    if (codePoint <= 0x7ff) {
+        text.push_back(static_cast<char>(0xc0 | (codePoint >> 6)));
+        text.push_back(static_cast<char>(0x80 | (codePoint & 0x3f)));
+        return true;
+    }
+    if (codePoint >= 0xd800 && codePoint <= 0xdfff) {
+        return false;
+    }
+    if (codePoint <= 0xffff) {
+        text.push_back(static_cast<char>(0xe0 | (codePoint >> 12)));
+        text.push_back(static_cast<char>(0x80 | ((codePoint >> 6) & 0x3f)));
+        text.push_back(static_cast<char>(0x80 | (codePoint & 0x3f)));
+        return true;
+    }
+    if (codePoint <= 0x10ffff) {
+        text.push_back(static_cast<char>(0xf0 | (codePoint >> 18)));
+        text.push_back(static_cast<char>(0x80 | ((codePoint >> 12) & 0x3f)));
+        text.push_back(static_cast<char>(0x80 | ((codePoint >> 6) & 0x3f)));
+        text.push_back(static_cast<char>(0x80 | (codePoint & 0x3f)));
+        return true;
+    }
+    return false;
 }
 
 struct IntCommandWords {
@@ -492,13 +521,30 @@ static bool drawCommandList(SkCanvas* canvas, CommandWords commands, jsize comma
                     return false;
                 }
                 std::string text;
-                text.reserve(static_cast<size_t>(charCount));
+                text.reserve(static_cast<size_t>(charCount) * 3);
                 for (jint index = 0; index < charCount; index++) {
                     jint codeUnit = commands[offset++];
                     if (codeUnit < 0 || codeUnit > 0xffff) {
                         return false;
                     }
-                    text.push_back(codeUnit <= 0x7f ? static_cast<char>(codeUnit) : '?');
+                    if (codeUnit >= 0xd800 && codeUnit <= 0xdbff) {
+                        if (index + 1 >= charCount) {
+                            return false;
+                        }
+                        jint lowSurrogate = commands[offset++];
+                        index++;
+                        if (lowSurrogate < 0xdc00 || lowSurrogate > 0xdfff) {
+                            return false;
+                        }
+                        uint32_t codePoint = 0x10000
+                                + ((static_cast<uint32_t>(codeUnit) - 0xd800) << 10)
+                                + (static_cast<uint32_t>(lowSurrogate) - 0xdc00);
+                        if (!appendUtf8CodePoint(text, codePoint)) {
+                            return false;
+                        }
+                    } else if (!appendUtf8CodePoint(text, static_cast<uint32_t>(codeUnit))) {
+                        return false;
+                    }
                 }
                 SkFont font(nullptr, fontSize);
                 font.setEdging((recordFlags & COMMAND_RECORD_FLAG_ANTIALIAS) != 0

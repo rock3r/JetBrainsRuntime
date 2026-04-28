@@ -51,11 +51,11 @@ public class JBRSkiaApiTest {
     }
 
     public static void main(String[] args) throws Exception {
-        assertEquals(16, JBRSkia.ABI_ID, "ABI_ID");
-        assertEquals("skia-interop-poc:16", JBRSkia.BUILD_ID, "BUILD_ID");
+        assertEquals(17, JBRSkia.ABI_ID, "ABI_ID");
+        assertEquals("skia-interop-poc:17", JBRSkia.BUILD_ID, "BUILD_ID");
 
-        assertReflectiveStaticEquals(16, JBRSkia.class.getDeclaredField("ABI_ID"));
-        assertReflectiveStaticEquals("skia-interop-poc:16", JBRSkia.class.getDeclaredField("BUILD_ID"));
+        assertReflectiveStaticEquals(17, JBRSkia.class.getDeclaredField("ABI_ID"));
+        assertReflectiveStaticEquals("skia-interop-poc:17", JBRSkia.class.getDeclaredField("BUILD_ID"));
 
         if (TestJBRSkia.INSTANCE != null) {
             throw new AssertionError("JBRSkia service must be unavailable before native runtime is wired");
@@ -140,6 +140,7 @@ public class JBRSkiaApiTest {
         assertValidCommandStream(validImageArgbStream(), "valid ARGB image stream");
         assertValidCommandStream(validImageCacheStream(), "valid image cache stream");
         assertValidCommandStream(validTextStream(), "valid text stream");
+        assertValidCommandStream(validLatin1TextStream(), "valid Latin-1 text stream");
         assertValidCommandStream(new int[] {
                 JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 3,
                 JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
@@ -308,6 +309,15 @@ public class JBRSkiaApiTest {
                 JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
                 JBRSkia.COMMAND_DRAW_TEXT_UTF16, 40, JBRSkia.COMMAND_RECORD_FLAG_ANTIALIAS,
                 1250, 18500, 13000, 0xff000000, 2, 'H', 'i'
+        };
+    }
+
+    private static int[] validLatin1TextStream() {
+        return new int[] {
+                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 12,
+                JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
+                JBRSkia.COMMAND_DRAW_TEXT_UTF16, 48, JBRSkia.COMMAND_RECORD_FLAG_ANTIALIAS,
+                1250, 18500, 13000, 0xff000000, 4, 'C', 'a', 'f', '\u00e9'
         };
     }
 

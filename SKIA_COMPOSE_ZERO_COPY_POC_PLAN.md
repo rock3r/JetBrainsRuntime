@@ -2338,6 +2338,45 @@ Next checkpoint:
 
 - Begin the shaped-text/paragraph command slice with a deliberately small contract: JBR-owned font/typeface/paragraph state only, no Skiko text-object pointers crossing the ABI, and SKP/image fallback preserved for unsupported styling.
 
+### Checkpoint 59: UTF-16 Text Command Encodes Non-ASCII Correctly
+
+Status: completed for the existing simple text command.
+
+- Fixed the JBR native `COMMAND_DRAW_TEXT_UTF16` replay path so UTF-16 command code units are encoded to UTF-8 instead of replacing every non-ASCII code unit with `?`.
+- The native decoder now rejects malformed surrogate pairs and supports valid supplementary code points at the command decoding layer.
+- Bumped the PoC command ABI to `ABI_ID = 17` because the text-command rendering semantics changed.
+- Runtime API, Skiko, CMP, JBR Java, and JBR native replay were all moved to ABI 17 together.
+- Added JBR validation coverage for a Latin-1 text stream.
+- Added CMP recorder coverage for a Latin-1 text record.
+
+Verification completed:
+
+- Runtime API `bash tools/build.sh process`.
+- Runtime API `bash tools/build.sh dev $(/usr/libexec/java_home -v 21) /tmp/jbr-api-skia-dev`.
+- `/tmp/jbr-api-shim.jar` refreshed from `/tmp/jbr-api-skia-dev/jbr-api-SNAPSHOT.jar`.
+- Skiko `./gradlew :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`.
+- Skiko `./gradlew :skiko:publishToMavenLocal`.
+- CMP `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest :compose:ui:ui-graphics:desktopJar :compose:ui:ui-text:desktopJar :compose:ui:ui:desktopJar`.
+- JBR isolated patched-class compile and `JBRSkiaApiTest` run against `/tmp/jbr-skia-abi17-compile`.
+- JBR patched module refreshed at `/tmp/jbr-skia-run/desktop`.
+- JBR native dylib rebuild into `/tmp/jbr-skia-native/libjbrskiainterop.dylib`.
+
+ABI 17 Latin-1 strict command Magic Jewel report:
+
+- report: `/tmp/magic-jewel-latin1-utf8-abi17-smoke/report.md`
+- screenshot: `/tmp/magic-jewel-latin1-utf8-abi17-smoke/new-window.png`
+- validation status: `passed`
+- fallback markers: `0`
+- picture replay frames: `0`
+- `EXPECT_MIN_TEXT_COMMANDS`: `9`
+- CMP command recorder: `frames=1080 fps=360.0 avg_commands=2480 max_commands=2481 unsupported_frames=0 avg_unsupported=0.0 max_unsupported=0 avg_text_commands=9.0 max_text_commands=9 avg_image_defines=0.0 max_image_defines=0 avg_image_refs=0.0 max_image_refs=0 avg_image_cache_clears=0.0 max_image_cache_clears=0 reasons=none`
+- Skiko/JBR command frames: `1079` / `1079`
+- screenshot assertion: `passed`
+
+Next checkpoint:
+
+- Start the shaped-text/paragraph command design in earnest. The first implementation target should be a JBR-owned paragraph/text-run command that can render unsupported text without raster image fallback, while preserving the strict ABI/build gate and the SKP/image paths as correctness fallbacks.
+
 Use separate worktrees for every existing repo touched:
 
 - `JetBrainsRuntime` worktree: `jbr-skia-compose-poc`
