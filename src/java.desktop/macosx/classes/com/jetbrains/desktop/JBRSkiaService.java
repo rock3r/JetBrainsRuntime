@@ -72,7 +72,8 @@ public class JBRSkiaService extends JBRSkia {
                     | COMMAND_CAP_SAVE_LAYER
                     | COMMAND_CAP_DRAW_IMAGE_ARGB
                     | COMMAND_CAP_IMAGE_CACHE
-                    | COMMAND_CAP_DRAW_TEXT_UTF16;
+                    | COMMAND_CAP_DRAW_TEXT_UTF16
+                    | COMMAND_CAP_CLEAR_IMAGE_CACHE;
     private static final boolean NATIVE_BRIDGE_AVAILABLE = loadNativeBridge();
     private static final AtomicLong NEXT_SCOPE_ID = new AtomicLong(1);
     private static final int MAX_CACHED_IMAGES = 256;
@@ -150,6 +151,7 @@ public class JBRSkiaService extends JBRSkia {
 
     private static int expectedRecordLength(int op) {
         if (op == COMMAND_SAVE || op == COMMAND_RESTORE) return 3;
+        if (op == COMMAND_CLEAR_IMAGE_CACHE) return 3;
         if (op == COMMAND_ROTATE) return 4;
         if (op == COMMAND_TRANSLATE || op == COMMAND_SCALE) return 5;
         if (op == COMMAND_SAVE_LAYER) return 8;
@@ -184,6 +186,9 @@ public class JBRSkiaService extends JBRSkia {
         if ((record.op() == COMMAND_TRANSLATE || record.op() == COMMAND_SCALE || record.op() == COMMAND_ROTATE)
                 && record.recordFlags() != COMMAND_RECORD_FLAGS_NONE) {
             return false;
+        }
+        if (record.op() == COMMAND_CLEAR_IMAGE_CACHE) {
+            return record.recordFlags() == COMMAND_RECORD_FLAGS_NONE;
         }
         if (record.op() == COMMAND_SAVE_LAYER) {
             return record.recordFlags() == COMMAND_RECORD_FLAGS_NONE
@@ -610,6 +615,9 @@ public class JBRSkiaService extends JBRSkia {
                         stack.addLast(current);
                         current = (Graphics2D) current.create();
                         current.clipRect(x, y, width, height);
+                    } else if (op == COMMAND_CLEAR_IMAGE_CACHE) {
+                        if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE || offset != recordEnd) return false;
+                        IMAGE_CACHE.clear();
                     } else if (op == COMMAND_DEFINE_IMAGE_ARGB) {
                         if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE || offset + 5 > recordEnd) return false;
                         long cacheKey = cacheKey(commands[offset++], commands[offset++]);

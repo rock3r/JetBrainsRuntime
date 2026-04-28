@@ -55,7 +55,7 @@
 
 #include "MTLSurfaceDataBase.h"
 
-static constexpr jint ABI_ID = 15;
+static constexpr jint ABI_ID = 16;
 static constexpr jint COMMAND_STREAM_MAGIC = 1246972723;
 static constexpr jint COMMAND_STREAM_HEADER_SIZE = 6;
 static constexpr jint COMMAND_STREAM_FLAGS_NONE = 0;
@@ -83,6 +83,7 @@ static constexpr jint COMMAND_DRAW_IMAGE_ARGB = 14;
 static constexpr jint COMMAND_DEFINE_IMAGE_ARGB = 15;
 static constexpr jint COMMAND_DRAW_IMAGE_REF = 16;
 static constexpr jint COMMAND_DRAW_TEXT_UTF16 = 17;
+static constexpr jint COMMAND_CLEAR_IMAGE_CACHE = 18;
 
 static std::mutex gDirectContextMutex;
 static std::unordered_map<void*, sk_sp<GrDirectContext>> gDirectContextsByMtlContext;
@@ -308,6 +309,14 @@ static bool drawCommandList(SkCanvas* canvas, CommandWords commands, jsize comma
                     return false;
                 }
                 canvas->restore();
+                break;
+            }
+            case COMMAND_CLEAR_IMAGE_CACHE: {
+                if (recordFlags != COMMAND_RECORD_FLAGS_NONE || offset != recordEnd) {
+                    return false;
+                }
+                std::lock_guard<std::mutex> lock(gImageCacheMutex);
+                gImagesByKey.clear();
                 break;
             }
             case COMMAND_CLIP_RECT: {

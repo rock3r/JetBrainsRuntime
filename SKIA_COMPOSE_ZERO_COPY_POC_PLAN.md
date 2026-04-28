@@ -2227,6 +2227,49 @@ Next checkpoint:
 - Begin replacing text-as-image fallback with a real JBR-owned shaped text/paragraph command, or add a cache eviction/invalidation contract for image fallback if it remains in the PoC longer.
 - Preserve the SKP path as the correctness oracle for styled/rich text and future benchmark runs.
 
+### Checkpoint 56: Cached Image Reset Handshake
+
+Status: completed in source, unit validation, and Magic Jewel strict command validation.
+
+- Bump the PoC command ABI to `ABI_ID = 16`.
+- Add `COMMAND_CAP_CLEAR_IMAGE_CACHE` and `COMMAND_CLEAR_IMAGE_CACHE`.
+- CMP now bounds its process-local command image-key set and emits `COMMAND_CLEAR_IMAGE_CACHE` before redefining images after the local key threshold is reached.
+- JBR Java validation and native replay both accept the new clear-cache record.
+- JBR Java2D fallback replay clears its image cache when it sees the clear-cache record.
+- Native JBR command replay clears the JBR-owned image cache when it sees the clear-cache record.
+- Skiko compatibility now requires the clear-image-cache capability before selecting command mode.
+- This keeps the current cached-image fallback honest while unsupported/rich text still depends on image commands, and avoids an unbounded key/cache lifetime in long-running animated sessions.
+
+Verification completed:
+
+- Runtime API `bash tools/build.sh process`.
+- Runtime API `bash tools/build.sh dev $(/usr/libexec/java_home -v 21) /tmp/jbr-api-skia-dev`.
+- `/tmp/jbr-api-shim.jar` refreshed from `/tmp/jbr-api-skia-dev/jbr-api-SNAPSHOT.jar`.
+- Skiko `./gradlew :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`.
+- Skiko `./gradlew :skiko:publishToMavenLocal`.
+- CMP `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest :compose:ui:ui-graphics:desktopJar :compose:ui:ui-text:desktopJar :compose:ui:ui:desktopJar`.
+- JBR isolated patched-class compile and `JBRSkiaApiTest` run against `/tmp/jbr-skia-abi16-compile`.
+- JBR patched module refreshed at `/tmp/jbr-skia-run/desktop`.
+- JBR native dylib rebuild into `/tmp/jbr-skia-native/libjbrskiainterop.dylib`.
+- Magic Jewel `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew compileKotlin`.
+
+ABI 16 strict command Magic Jewel report:
+
+- report: `/tmp/magic-jewel-clear-cache-abi16-smoke-2/report.md`
+- screenshot: `/tmp/magic-jewel-clear-cache-abi16-smoke-2/new-window.png`
+- validation status: `passed`
+- fallback markers: `0`
+- picture replay frames: `0`
+- `EXPECT_MIN_TEXT_COMMANDS`: `9`
+- `EXPECT_MIN_IMAGE_REFS`: `1`
+- CMP command recorder: `frames=866 fps=216.5 avg_commands=2551 max_commands=17661 unsupported_frames=0 avg_unsupported=0.0 max_unsupported=0 avg_text_commands=9.0 max_text_commands=9 avg_image_defines=0.0 max_image_defines=1 avg_image_refs=1.0 max_image_refs=1 reasons=none`
+- Skiko/JBR command frames: `865` / `865`
+- screenshot assertion: `passed`
+
+Next checkpoint:
+
+- Add a deliberate sample/test path that creates enough distinct fallback images to exercise `COMMAND_CLEAR_IMAGE_CACHE` through the full Magic Jewel report, or move directly into a JBR-owned shaped-text/paragraph command to reduce reliance on cached-image text fallback.
+
 Use separate worktrees for every existing repo touched:
 
 - `JetBrainsRuntime` worktree: `jbr-skia-compose-poc`
@@ -2314,7 +2357,7 @@ Primary target: **macOS + Metal + direct canvas path**. JCEF, video/external sur
   - Do not call `JBRApi.internalService()` from Skiko; it is caller-sensitive and only works from the JBR-side `@JBRApi.Provided` interface.
   - The normal Skiko runtime must remain loadable on non-JBR and older-JBR runtimes.
 - Discovery order:
-  - `Class.forName("com.jetbrains.JBRSkia")` from the public JBR API jar and read static `ABI_ID` / `BUILD_ID`.
+  - `Class.forName("com.jetbrains.JBRSkia")` from the public JBR API jar and read static `ABI_ID` / `BUILD_ID`; the current local Skiko PoC also accepts `com.jetbrains.desktop.JBRSkia` as a patched-runtime fallback until the public API jar is wired normally.
   - read those static fields reflectively, for example `clazz.getDeclaredField("ABI_ID").get(null)`, never through direct compiled field references.
   - perform compatibility checks before acquiring the service.
   - only after compatibility passes, reflect on `com.jetbrains.JBR.getJBRSkia()` or the final public accessor name.
@@ -2401,7 +2444,7 @@ Primary target: **macOS + Metal + direct canvas path**. JCEF, video/external sur
   - smoke test Swing window paint with Metal enabled
   - verify `JBRSkiaService` is registered with `@JBRApi.Service` and `@JBRApi.Provides`
   - verify a synthetic test-only `@JBRApi.Provided("JBRSkia")` interface can resolve the provider through `JBRApi.internalService()`
-  - verify an external-client test reads static `ABI_ID` / `BUILD_ID` reflectively via `Class.forName("com.jetbrains.desktop.JBRSkia")`
+  - verify an external-client test reads static `ABI_ID` / `BUILD_ID` reflectively via `Class.forName("com.jetbrains.JBRSkia")`, with `com.jetbrains.desktop.JBRSkia` covered only as the local patched-runtime fallback
   - verify an external-client test acquires `JBRSkia` via reflection on `com.jetbrains.JBR.getJBRSkia()` or the final public accessor name and receives a non-null service when JBR is compatible
   - verify unavailable provider construction throws `JBRApi.ServiceNotAvailableException` and clients observe a null service
   - verify `acquireCanvas` returns non-null only in valid paint scope

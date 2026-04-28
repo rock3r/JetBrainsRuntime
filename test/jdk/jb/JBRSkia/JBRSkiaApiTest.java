@@ -51,11 +51,11 @@ public class JBRSkiaApiTest {
     }
 
     public static void main(String[] args) throws Exception {
-        assertEquals(15, JBRSkia.ABI_ID, "ABI_ID");
-        assertEquals("skia-interop-poc:15", JBRSkia.BUILD_ID, "BUILD_ID");
+        assertEquals(16, JBRSkia.ABI_ID, "ABI_ID");
+        assertEquals("skia-interop-poc:16", JBRSkia.BUILD_ID, "BUILD_ID");
 
-        assertReflectiveStaticEquals(15, JBRSkia.class.getDeclaredField("ABI_ID"));
-        assertReflectiveStaticEquals("skia-interop-poc:15", JBRSkia.class.getDeclaredField("BUILD_ID"));
+        assertReflectiveStaticEquals(16, JBRSkia.class.getDeclaredField("ABI_ID"));
+        assertReflectiveStaticEquals("skia-interop-poc:16", JBRSkia.class.getDeclaredField("BUILD_ID"));
 
         if (TestJBRSkia.INSTANCE != null) {
             throw new AssertionError("JBRSkia service must be unavailable before native runtime is wired");
@@ -122,7 +122,8 @@ public class JBRSkiaApiTest {
                 | JBRSkia.COMMAND_CAP_SAVE_LAYER
                 | JBRSkia.COMMAND_CAP_DRAW_IMAGE_ARGB
                 | JBRSkia.COMMAND_CAP_IMAGE_CACHE
-                | JBRSkia.COMMAND_CAP_DRAW_TEXT_UTF16;
+                | JBRSkia.COMMAND_CAP_DRAW_TEXT_UTF16
+                | JBRSkia.COMMAND_CAP_CLEAR_IMAGE_CACHE;
     }
 
     private static void assertCommandStreamValidation() {
@@ -139,6 +140,11 @@ public class JBRSkiaApiTest {
         assertValidCommandStream(validImageArgbStream(), "valid ARGB image stream");
         assertValidCommandStream(validImageCacheStream(), "valid image cache stream");
         assertValidCommandStream(validTextStream(), "valid text stream");
+        assertValidCommandStream(new int[] {
+                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 3,
+                JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
+                JBRSkia.COMMAND_CLEAR_IMAGE_CACHE, 12, JBRSkia.COMMAND_RECORD_FLAGS_NONE
+        }, "valid image cache clear stream");
         assertInvalidCommandStream(new int[] { JBRSkia.COMMAND_CLEAR, 0xff000000 }, "missing header");
         assertInvalidCommandStream(new int[] {
                 0, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 0,
