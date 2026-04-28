@@ -60,23 +60,30 @@ public class JBRSkiaService extends JBRSkia {
                 NEXT_SCOPE_ID.getAndIncrement(),
                 graphics,
                 graphics.getClipBounds(),
-                getMetalTexturePtr(graphics)
+                getMetalSurfaceMetadata(graphics)
         );
+    }
+
+    private record MetalSurfaceMetadata(long nativeOpsPtr, long texturePtr) {
+        private static final MetalSurfaceMetadata EMPTY = new MetalSurfaceMetadata(0, 0);
     }
 
     private static final class PocScopedSkiaCanvas extends ScopedSkiaCanvas {
         private final long scopeId;
         private final Graphics2D graphics;
         private final Rectangle userSpaceClip;
+        private final long nativeOpsPtr;
         private final long metalTexturePtr;
         private boolean closed;
         private boolean flushed;
 
-        private PocScopedSkiaCanvas(long scopeId, Graphics2D graphics, Rectangle userSpaceClip, long metalTexturePtr) {
+        private PocScopedSkiaCanvas(long scopeId, Graphics2D graphics, Rectangle userSpaceClip,
+                                    MetalSurfaceMetadata metadata) {
             this.scopeId = scopeId;
             this.graphics = graphics;
             this.userSpaceClip = userSpaceClip == null ? null : new Rectangle(userSpaceClip);
-            this.metalTexturePtr = metalTexturePtr;
+            this.nativeOpsPtr = metadata.nativeOpsPtr();
+            this.metalTexturePtr = metadata.texturePtr();
         }
 
         @Override
@@ -132,8 +139,9 @@ public class JBRSkiaService extends JBRSkia {
             }
             if (Boolean.getBoolean(NATIVE_DIAGNOSTIC_PROPERTY)
                     && NATIVE_BRIDGE_AVAILABLE
+                    && nativeOpsPtr != 0
                     && metalTexturePtr != 0
-                    && nativeRenderDiagnosticFrame(metalTexturePtr, width, height, frameTimeNanos)) {
+                    && nativeRenderDiagnosticFrame(nativeOpsPtr, metalTexturePtr, width, height, frameTimeNanos)) {
                 return true;
             }
 
@@ -187,24 +195,27 @@ public class JBRSkiaService extends JBRSkia {
         }
     }
 
-    private static long getMetalTexturePtr(Graphics2D graphics) {
+    private static MetalSurfaceMetadata getMetalSurfaceMetadata(Graphics2D graphics) {
         if (!(graphics instanceof SunGraphics2D sunGraphics)) {
-            return 0;
+            return MetalSurfaceMetadata.EMPTY;
         }
         SurfaceData surfaceData = sunGraphics.getSurfaceData();
         if (!(surfaceData instanceof AccelSurface accelSurface)) {
-            return 0;
+            return MetalSurfaceMetadata.EMPTY;
         }
 
-        long[] texturePtr = new long[1];
+        long[] metadata = new long[2];
         MTLRenderQueue rq = MTLRenderQueue.getInstance();
         rq.lock();
         try {
-            rq.flushAndInvokeNow(() -> texturePtr[0] = accelSurface.getNativeResource(AccelSurface.TEXTURE));
+            rq.flushAndInvokeNow(() -> {
+                metadata[0] = accelSurface.getNativeOps();
+                metadata[1] = accelSurface.getNativeResource(AccelSurface.TEXTURE);
+            });
         } finally {
             rq.unlock();
         }
-        return texturePtr[0];
+        return new MetalSurfaceMetadata(metadata[0], metadata[1]);
     }
 
     private static boolean loadNativeBridge() {
@@ -221,5 +232,6 @@ public class JBRSkiaService extends JBRSkia {
         }
     }
 
-    private static native boolean nativeRenderDiagnosticFrame(long metalTexturePtr, int width, int height, long frameTimeNanos);
+    private static native boolean nativeRenderDiagnosticFrame(long nativeOpsPtr, long metalTexturePtr,
+                                                             int width, int height, long frameTimeNanos);
 }

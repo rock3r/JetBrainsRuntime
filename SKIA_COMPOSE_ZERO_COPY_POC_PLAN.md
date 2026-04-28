@@ -207,6 +207,37 @@ Next native checkpoint:
   - preserve load-not-clear semantics and submit before subsequent Java2D commands
   - then replace the hard-coded diagnostic pattern with the first Skiko/CMP command bridge.
 
+### Checkpoint 8: Native Skia On JBR's Metal Queue
+
+Status: completed as a local native probe; build integration and context caching are still pending.
+
+- `JBRSkiaService` now captures both pieces of render-thread Metal metadata during scope acquisition:
+  - `AccelSurface.getNativeOps()`, giving the native `BMTLSDOps*`
+  - `AccelSurface.getNativeResource(AccelSurface.TEXTURE)`, giving the destination `MTLTexture*`
+- `JBRSkiaInterop.mm` now derives the destination `MTLContext` from the native surface ops and uses:
+  - `MTLContext.device`
+  - `MTLContext.commandQueue`
+  - `MTLContext.encoderManager.endEncoder()` before Skia encodes its work.
+- The native bridge rejects mismatched devices instead of silently drawing through an unrelated Metal context.
+- The local out-of-build dylib still links Skia m147 from the Skiko worktree and uses small temporary generated-header stand-ins under `/tmp/jbr-skia-native/generated` because a full JBR generated include tree is not available in this patched-module probe.
+- Smoke command with patched `java.desktop`, temporary public API shim, local Skiko, and rebuilt native bridge reached:
+  - `SKIKO_JBR_INTEROP_SCOPE_ACQUIRED abi=1 build=skia-interop-poc:1 metalTexture=0xc9a1b0280`
+- Screenshot captured at `/tmp/jbr-skia-jbr-queue-diagnostic-render.png`.
+- Visual validation: the component still shows the native Skia pattern, confirming that Skia drawing survived the move from a fresh command queue to JBR's destination Metal command queue.
+
+Important caveats:
+
+- This is still a diagnostic Skia pattern, not Compose UI rendering.
+- The bridge creates a fresh `GrDirectContext` per diagnostic call. Production needs a cache keyed by destination `MTLContext`/BUILD_ID and invalidated on screen migration, display changes, resize, or surface loss.
+- The Objective-C++ file currently forward-declares the small `MTLContext`/`EncoderManager` selector surface it needs and includes the real `MTLSurfaceDataBase.h` for `BMTLSDOps`. When wired into the JBR build, replace the temporary generated-header workaround with the normal generated include directory.
+- The bridge still does not expose a Skiko/CMP drawing command ABI; it only proves that JBR-owned native Skia can paint into Swing's current destination texture using Java2D's queue.
+
+Next native checkpoint:
+
+- Wire `JBRSkiaInterop.mm` into the JBR build behind `--with-skia-interop`.
+- Cache/reuse `GrDirectContext` per `MTLContext` and document/test invalidation.
+- Add a tiny command-list ABI from Skiko to JBR, starting with simple rect/line/fill commands, so CMP can paint recognizable Compose-owned content through the JBR-owned Skia surface.
+
 Use separate worktrees for every existing repo touched:
 
 - `JetBrainsRuntime` worktree: `jbr-skia-compose-poc`

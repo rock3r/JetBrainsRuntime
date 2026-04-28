@@ -41,6 +41,52 @@
 #include "ganesh/mtl/GrMtlTypes.h"
 #include "include/gpu/ganesh/SkSurfaceGanesh.h"
 
+#include "MTLSurfaceDataBase.h"
+
+@class AWTView;
+@class MTLLayer;
+@class MTLContext;
+@class EncoderManager;
+
+@interface EncoderManager : NSObject
+- (void)endEncoder;
+@end
+
+@interface MTLContext : NSObject
+@property (readonly, strong) id<MTLDevice> device;
+@property (strong) id<MTLCommandQueue> commandQueue;
+@property (readonly) EncoderManager* encoderManager;
+@end
+
+typedef struct _JBRSkiaMTLGraphicsConfigInfo {
+    MTLContext* context;
+    jint displayID;
+} JBRSkiaMTLGraphicsConfigInfo;
+
+typedef struct _JBRSkiaMTLSDOps {
+    AWTView* peerData;
+    MTLLayer* layer;
+    jint argb[4];
+    JBRSkiaMTLGraphicsConfigInfo* configInfo;
+} JBRSkiaMTLSDOps;
+
+static MTLContext* getContextFromNativeOps(jlong nativeOpsPtr) {
+    if (nativeOpsPtr == 0) {
+        return nil;
+    }
+
+    BMTLSDOps* baseOps = reinterpret_cast<BMTLSDOps*>(static_cast<uintptr_t>(nativeOpsPtr));
+    if (baseOps == nullptr || baseOps->privOps == nullptr) {
+        return nil;
+    }
+
+    JBRSkiaMTLSDOps* mtlOps = static_cast<JBRSkiaMTLSDOps*>(baseOps->privOps);
+    if (mtlOps->configInfo == nullptr) {
+        return nil;
+    }
+    return mtlOps->configInfo->context;
+}
+
 static void drawDiagnosticPattern(SkCanvas* canvas, int width, int height, jlong frameTimeNanos) {
     canvas->clear(SkColorSetARGB(255, 20, 12, 42));
 
@@ -72,7 +118,8 @@ static void drawDiagnosticPattern(SkCanvas* canvas, int width, int height, jlong
 
 extern "C" JNIEXPORT jboolean JNICALL
 Java_com_jetbrains_desktop_JBRSkiaService_nativeRenderDiagnosticFrame
-        (JNIEnv* env, jclass cls, jlong metalTexturePtr, jint width, jint height, jlong frameTimeNanos) {
+        (JNIEnv* env, jclass cls, jlong nativeOpsPtr, jlong metalTexturePtr,
+         jint width, jint height, jlong frameTimeNanos) {
     @autoreleasepool {
         if (metalTexturePtr == 0 || width <= 0 || height <= 0) {
             return JNI_FALSE;
@@ -83,16 +130,20 @@ Java_com_jetbrains_desktop_JBRSkiaService_nativeRenderDiagnosticFrame
             return JNI_FALSE;
         }
 
-        id<MTLCommandQueue> queue = [texture.device newCommandQueue];
-        if (queue == nil) {
+        MTLContext* mtlc = getContextFromNativeOps(nativeOpsPtr);
+        if (mtlc == nil || mtlc.device == nil || mtlc.commandQueue == nil) {
+            return JNI_FALSE;
+        }
+        if (mtlc.device != texture.device) {
             return JNI_FALSE;
         }
 
+        [mtlc.encoderManager endEncoder];
+
         GrMtlBackendContext backendContext = {};
-        backendContext.fDevice.retain((__bridge GrMTLHandle) texture.device);
-        backendContext.fQueue.retain((__bridge GrMTLHandle) queue);
+        backendContext.fDevice.retain((__bridge GrMTLHandle) mtlc.device);
+        backendContext.fQueue.retain((__bridge GrMTLHandle) mtlc.commandQueue);
         sk_sp<GrDirectContext> directContext = GrDirectContexts::MakeMetal(backendContext);
-        [queue release];
         if (directContext == nullptr) {
             return JNI_FALSE;
         }
