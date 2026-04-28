@@ -987,6 +987,37 @@ Next checkpoint:
 - Add focused validation for clip-out / non-intersect clips to ensure they still fallback instead of replaying incorrectly.
 - Decide whether to add native image blit support or keep image content on SKP until the final ABI shape is clearer.
 
+### Checkpoint 30: Clip-Out Strict Fallback
+
+Status: completed in Magic Jewel.
+
+- Added a Magic Jewel non-intersect clip probe:
+  - `MAGIC_JEWEL_COMPOSE_CLIP_OUT=true`
+  - The probe uses `ClipOp.Difference`, which the command ABI must not replay as an intersect clip.
+- The CMP recorder already rejects non-intersect clip rects as:
+  - `clipRect_Difference`
+  - It also marks the scope unsupported, so subsequent draws in that scope record `unsupportedScope`.
+- Magic Jewel report validation now records `MAGIC_JEWEL_COMPOSE_CLIP_OUT` in `report.md` and can require `EXPECT_COMMAND_FALLBACK_REASON=clipRect_Difference`.
+- Verification completed:
+  - Magic Jewel `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew compileKotlin`
+  - Magic Jewel `bash -n scripts/jbr-skia-interop-report.sh`
+  - Magic Jewel `git diff --check`
+  - Magic Jewel `OUT_DIR=/tmp/magic-jewel-command-clip-out-fallback DURATION_SECONDS=5 SAMPLE_INTERVAL_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT JBR_SKIA_RENDER_MODE=commands MAGIC_JEWEL_COMPOSE_TEXT=false MAGIC_JEWEL_COMPOSE_CLIP_OUT=true EXPECT_COMMAND_FALLBACK=true EXPECT_COMMAND_FALLBACK_REASON=clipRect_Difference ./scripts/jbr-skia-interop-report.sh`
+- Clip-out fallback report:
+  - report: `/tmp/magic-jewel-command-clip-out-fallback/report.md`
+  - validation status: `passed`
+  - CMP command recorder: `frames=1436 fps=287.2 avg_commands=895 max_commands=895 unsupported_frames=1436 avg_unsupported=2.0 max_unsupported=2 reasons=unsupportedScope:1436,clipRect_Difference:1436`
+  - Skiko/JBR command frames: `0` / `0`
+  - SKP picture frames: `1436` / `1436`
+  - screenshot assertion: `passed`
+
+Next checkpoint:
+
+- Decide image strategy:
+  - either add a minimal `COMMAND_DRAW_IMAGE_RECT` with tightly bounded payload semantics,
+  - or explicitly keep image content on SKP until the native ABI replaces the toy int-array transport.
+- Keep the clip-out fallback report as a guard when expanding clipping support.
+
 Use separate worktrees for every existing repo touched:
 
 - `JetBrainsRuntime` worktree: `jbr-skia-compose-poc`
