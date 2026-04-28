@@ -2167,6 +2167,35 @@ Next checkpoint:
 - Add a negative end-to-end report mode for text disabled or intentionally unsupported text if the harness needs stronger CI-style examples.
 - Preserve SKP and cached-image fallback for styled/rich text until the JBR-owned paragraph/text shaping ABI exists.
 
+### Checkpoint 54: Latin-1 Simple Text Coverage
+
+Status: completed as a conservative UTF-16 widening slice.
+
+- CMP now allows simple text commands for Latin-1 BMP code units (`<= 0xff`) while still rejecting surrogates and higher code points.
+- This intentionally does not claim full Unicode shaping, font fallback, emoji, CJK, bidi, or complex-script support. Those remain future JBR-owned paragraph/text-shaping work.
+- Magic Jewel now includes a normal `BasicText` label with `Caf\u00e9`, so the end-to-end report exercises a non-ASCII UTF-16 code unit through the real Compose text path.
+
+Verification completed:
+
+- CMP focused tests and patched jars:
+  - `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-configuration-cache :compose:ui:ui-text:desktopTest --tests androidx.compose.ui.text.DesktopParagraphTest.paint_withFillDrawStyle_recordsJbrSkiaSimpleText --tests androidx.compose.ui.text.DesktopParagraphTest.paint_withLatin1Text_recordsJbrSkiaSimpleText :compose:ui:ui-text:desktopJar :compose:ui:ui:desktopJar`
+- Magic Jewel `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew compileKotlin`.
+- Magic Jewel Latin-1 strict text-command report:
+  - report: `/tmp/magic-jewel-latin1-text-command-smoke/report.md`
+  - screenshot: `/tmp/magic-jewel-latin1-text-command-smoke/new-window.png`
+  - validation status: `passed`
+  - fallback markers: `0`
+  - `EXPECT_MIN_TEXT_COMMANDS`: `9`
+  - CMP command recorder: `frames=679 fps=169.8 avg_commands=2426 max_commands=2427 unsupported_frames=0 avg_unsupported=0.0 max_unsupported=0 avg_text_commands=9.0 max_text_commands=9 avg_image_defines=0.0 max_image_defines=0 avg_image_refs=0.0 max_image_refs=0 reasons=none`
+  - Skiko/JBR command frames: `679` / `679`
+  - picture replay frames: `0`
+  - screenshot assertion: `passed`
+
+Next checkpoint:
+
+- Add an intentional unsupported text case and validate that it uses the cached-image/SKP fallback path explicitly, or begin a more structured JBR-owned shaped-text command.
+- Preserve the current Latin-1 gate until the JBR-owned font fallback/shaping story is explicit.
+
 Use separate worktrees for every existing repo touched:
 
 - `JetBrainsRuntime` worktree: `jbr-skia-compose-poc`
