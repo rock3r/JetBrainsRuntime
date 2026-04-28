@@ -61,7 +61,8 @@ public class JBRSkiaService extends JBRSkia {
                     | COMMAND_CAP_CLIP_RECT
                     | COMMAND_CAP_USER_SPACE_COORDINATES
                     | COMMAND_CAP_RECORD_ANTIALIAS
-                    | COMMAND_CAP_STROKE_METADATA;
+                    | COMMAND_CAP_STROKE_METADATA
+                    | COMMAND_CAP_BASIC_TRANSFORMS;
     private static final boolean NATIVE_BRIDGE_AVAILABLE = loadNativeBridge();
     private static final AtomicLong NEXT_SCOPE_ID = new AtomicLong(1);
 
@@ -131,6 +132,8 @@ public class JBRSkiaService extends JBRSkia {
 
     private static int expectedRecordLength(int op) {
         if (op == COMMAND_SAVE || op == COMMAND_RESTORE) return 3;
+        if (op == COMMAND_ROTATE) return 4;
+        if (op == COMMAND_TRANSLATE || op == COMMAND_SCALE) return 5;
         if (op == COMMAND_CLEAR) return 4;
         if (op == COMMAND_CLEAR_RECT || op == COMMAND_CLIP_RECT) return 7;
         if (op == COMMAND_FILL_OVAL) return 8;
@@ -140,6 +143,10 @@ public class JBRSkiaService extends JBRSkia {
     }
 
     private static boolean validateRecordArguments(int[] commands, CommandRecord record) {
+        if ((record.op() == COMMAND_TRANSLATE || record.op() == COMMAND_SCALE || record.op() == COMMAND_ROTATE)
+                && record.recordFlags() != COMMAND_RECORD_FLAGS_NONE) {
+            return false;
+        }
         if (record.op() != COMMAND_STROKE_LINE && record.op() != COMMAND_STROKE_OVAL) {
             return true;
         }
@@ -456,6 +463,15 @@ public class JBRSkiaService extends JBRSkia {
                     } else if (op == COMMAND_CLIP_RECT) {
                         if (offset + 4 != recordEnd) return false;
                         current.clipRect(commands[offset++], commands[offset++], commands[offset++], commands[offset++]);
+                    } else if (op == COMMAND_TRANSLATE) {
+                        if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE || offset + 2 != recordEnd) return false;
+                        current.translate(commands[offset++] / 1000.0, commands[offset++] / 1000.0);
+                    } else if (op == COMMAND_SCALE) {
+                        if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE || offset + 2 != recordEnd) return false;
+                        current.scale(commands[offset++] / 1000.0, commands[offset++] / 1000.0);
+                    } else if (op == COMMAND_ROTATE) {
+                        if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE || offset + 1 != recordEnd) return false;
+                        current.rotate(Math.toRadians(commands[offset++] / 1000.0));
                     } else if (op == COMMAND_CLEAR) {
                         if (offset + 1 != recordEnd) return false;
                         applyAntialiasing(current, antiAlias);

@@ -1647,6 +1647,68 @@ Next checkpoint:
 - Continue broadening the command record surface toward common Compose vector output, likely with path/image or transform metadata depending on what the next unsupported SKP comparison shows.
 - Keep the SKP replay path around as the correctness oracle and benchmark reference for runs on a quieter machine.
 
+### Checkpoint 43: Basic Transform Commands And ABI 10
+
+Status: completed as the first canvas-state command expansion.
+
+- Bumped the PoC command ABI to `ABI_ID = 10`.
+- Added `COMMAND_CAP_BASIC_TRANSFORMS = 2048` to the JBR private API, public Runtime API mirror, and Skiko compatibility gate.
+- Added explicit transform records to the command stream:
+  - `COMMAND_TRANSLATE`: `[op, 20, 0, dx1000, dy1000]`
+  - `COMMAND_SCALE`: `[op, 20, 0, sx1000, sy1000]`
+  - `COMMAND_ROTATE`: `[op, 16, 0, degrees1000]`
+- CMP now records translate, scale, and rotate as canvas-state commands instead of pre-baking translate/scale into primitive coordinates.
+- JBR Java2D fallback replay maps these records to `Graphics2D.translate`, `Graphics2D.scale`, and `Graphics2D.rotate`.
+- JBR native Skia replay maps them to `SkCanvas::translate`, `SkCanvas::scale`, and `SkCanvas::rotate`.
+- Transform records reject non-zero record flags; paint-bearing records still carry antialias and stroke metadata as before.
+- Magic Jewel report harness now waits for draw/replay markers before starting the measurement window, avoiding false failures where short runs killed Gradle before first paint under load.
+
+Verification completed:
+
+- Runtime API `bash tools/build.sh process`.
+- Runtime API `bash tools/build.sh dev` and `/tmp/jbr-api-shim.jar` refresh from `out/classes/8`.
+- Skiko `./gradlew :skiko:compileKotlinAwt :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`.
+- Skiko `./gradlew :skiko:publishToMavenLocal`.
+- CMP `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest`.
+- CMP `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-configuration-cache :compose:ui:ui-graphics:desktopJar :compose:ui:ui:desktopJar`.
+- JBR isolated patched-class compile and `JBRSkiaApiTest` run against `/tmp/jbr-skia-abi10-compile`.
+- JBR native dylib rebuild into `/tmp/jbr-skia-native/libjbrskiainterop.dylib`.
+- Magic Jewel `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew compileKotlin`.
+- Magic Jewel report harness validation `./scripts/test-jbr-skia-report-validation.sh`.
+
+ABI 10 transform command smoke report:
+
+- report: `/tmp/magic-jewel-command-transform-abi10-smoke/report.md`
+- validation status: `passed`
+- fallback markers: `0`
+- CMP command recorder: `frames=551 fps=91.8 avg_commands=2157 max_commands=2157 unsupported_frames=0 avg_unsupported=0.0 max_unsupported=0 reasons=none`
+- Skiko/JBR command frames: `550` / `550`
+- screenshot assertion: `passed`
+
+ABI 10 all-probe fallback report:
+
+- report: `/tmp/magic-jewel-command-probe-abi10-all/report.md`
+- validation status: `passed`
+- unsupported reasons: `unsupportedScope`, `saveLayer`, `clipRect_Difference`, `image`
+- confirmed `transform` no longer appears in the unsupported-reason set.
+- Skiko/JBR picture replay frames: `1697` / `1697`
+- screenshot assertion: `passed`
+
+ABI 10 invalid-stream fallback report:
+
+- report: `/tmp/magic-jewel-command-transform-abi10-invalid/report.md`
+- validation status: `passed`
+- fallback markers: `1`
+- expected fallback reason: `command-stream-invalid`
+- CMP command recorder: `frames=1139 fps=189.8 avg_commands=2157 max_commands=2157 unsupported_frames=0 avg_unsupported=0.0 max_unsupported=0 reasons=none`
+- Skiko/JBR command frames: `1139` / `0`
+- screenshot assertion: `passed` on the old Swing fallback renderer.
+
+Next checkpoint:
+
+- Reduce fallback frequency from remaining common probes: `image`, `clipRect_Difference`, and `saveLayer` are the next obvious unsupported surfaces.
+- Path/image work should be weighed against keeping the ABI compact; the SKP replay path remains the correctness oracle while command coverage grows.
+
 Use separate worktrees for every existing repo touched:
 
 - `JetBrainsRuntime` worktree: `jbr-skia-compose-poc`

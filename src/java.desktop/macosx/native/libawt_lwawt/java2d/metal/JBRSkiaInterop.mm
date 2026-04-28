@@ -49,7 +49,7 @@
 
 #include "MTLSurfaceDataBase.h"
 
-static constexpr jint ABI_ID = 9;
+static constexpr jint ABI_ID = 10;
 static constexpr jint COMMAND_STREAM_MAGIC = 1246972723;
 static constexpr jint COMMAND_STREAM_HEADER_SIZE = 6;
 static constexpr jint COMMAND_STREAM_FLAGS_NONE = 0;
@@ -67,6 +67,9 @@ static constexpr jint COMMAND_CLEAR_RECT = 6;
 static constexpr jint COMMAND_SAVE = 7;
 static constexpr jint COMMAND_RESTORE = 8;
 static constexpr jint COMMAND_CLIP_RECT = 9;
+static constexpr jint COMMAND_TRANSLATE = 10;
+static constexpr jint COMMAND_SCALE = 11;
+static constexpr jint COMMAND_ROTATE = 12;
 
 static std::mutex gDirectContextMutex;
 static std::unordered_map<void*, sk_sp<GrDirectContext>> gDirectContextsByMtlContext;
@@ -256,6 +259,32 @@ static bool drawCommandList(SkCanvas* canvas, CommandWords commands, jsize comma
                                                   static_cast<SkScalar>(rectHeight)),
                                  SkClipOp::kIntersect,
                                  antiAlias);
+                break;
+            }
+            case COMMAND_TRANSLATE: {
+                if (recordFlags != COMMAND_RECORD_FLAGS_NONE || offset + 2 != recordEnd) {
+                    return false;
+                }
+                SkScalar dx = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                SkScalar dy = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                canvas->translate(dx, dy);
+                break;
+            }
+            case COMMAND_SCALE: {
+                if (recordFlags != COMMAND_RECORD_FLAGS_NONE || offset + 2 != recordEnd) {
+                    return false;
+                }
+                SkScalar sx = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                SkScalar sy = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                canvas->scale(sx, sy);
+                break;
+            }
+            case COMMAND_ROTATE: {
+                if (recordFlags != COMMAND_RECORD_FLAGS_NONE || offset + 1 != recordEnd) {
+                    return false;
+                }
+                SkScalar degrees = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                canvas->rotate(degrees);
                 break;
             }
             case COMMAND_CLEAR: {
