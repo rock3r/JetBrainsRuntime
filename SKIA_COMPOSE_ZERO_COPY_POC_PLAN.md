@@ -1759,6 +1759,65 @@ Next checkpoint:
 - Decide between image support and saveLayer support. Image is a single draw operation but needs pixel/texture payload design; saveLayer removes `unsupportedScope` for the current probe but needs compositing semantics.
 - Keep SKP replay as fallback/correctness oracle while command coverage remains incomplete.
 
+### Checkpoint 45: SaveLayer Command Records And ABI 12
+
+Status: completed as the third canvas-state command expansion.
+
+- Bumped the PoC command ABI to `ABI_ID = 12`.
+- Added `COMMAND_CAP_SAVE_LAYER = 8192` to the JBR private API, public Runtime API mirror, and Skiko compatibility gate.
+- Added a bounded save-layer command:
+  - `COMMAND_SAVE_LAYER`: `[op, 32, 0, x, y, width, height, alpha1000]`
+  - `alpha1000` is a fixed-point opacity value in the inclusive range `0..1000`.
+- CMP records `Canvas.saveLayer(bounds, paint)` when the layer paint is simple enough for the current command ABI: `BlendMode.SrcOver`, no shader, no color filter, no path effect, and alpha expressible as `alpha1000`.
+- CMP still falls back to the SKP replay path for unsupported layer paint shapes rather than silently dropping effects.
+- JBR native Skia replay maps the command to `SkCanvas::saveLayerAlphaf`.
+- JBR Java2D fallback replay creates a child `Graphics2D` and clips it to the layer bounds. Alpha is intentionally not modeled in the Java2D fallback because this path is only a validation/fallback oracle for the command parser.
+- JBR validates save-layer flags, payload length, and alpha range and rejects invalid streams.
+
+Verification completed:
+
+- Runtime API `bash tools/build.sh process`.
+- Runtime API `bash tools/build.sh dev` and `/tmp/jbr-api-shim.jar` refresh from `out/classes/8`.
+- Skiko `./gradlew :skiko:compileKotlinAwt :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`.
+- Skiko `./gradlew :skiko:publishToMavenLocal`.
+- CMP `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest`.
+- CMP `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-configuration-cache :compose:ui:ui-graphics:desktopJar :compose:ui:ui:desktopJar`.
+- JBR isolated patched-class compile and `JBRSkiaApiTest` run against `/tmp/jbr-skia-abi12-compile`, using a temporary `JBRApi` compile stub for the isolated test harness only.
+- JBR native dylib rebuild into `/tmp/jbr-skia-native/libjbrskiainterop.dylib`.
+- Magic Jewel `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew compileKotlin`.
+
+ABI 12 saveLayer command smoke report:
+
+- report: `/tmp/magic-jewel-command-savelayer-abi12-smoke/report.md`
+- validation status: `passed`
+- fallback markers: `0`
+- CMP command recorder: `frames=1827 fps=304.5 avg_commands=2094 max_commands=2148 unsupported_frames=0 avg_unsupported=0.0 max_unsupported=0 reasons=none`
+- Skiko/JBR command frames: `1827` / `1827`
+- screenshot assertion: `passed`
+
+ABI 12 all-probe fallback report:
+
+- report: `/tmp/magic-jewel-command-probe-abi12-all/report.md`
+- validation status: `passed`
+- unsupported reasons: `image`
+- confirmed `unsupportedScope` and `saveLayer` no longer appear in the unsupported-reason set.
+- Skiko/JBR picture replay frames: `761` / `761`
+- screenshot assertion: `passed`
+
+ABI 12 invalid-stream fallback report:
+
+- report: `/tmp/magic-jewel-command-savelayer-abi12-invalid/report.md`
+- validation status: `passed`
+- fallback markers: `1`
+- CMP/Skiko command frames: `1441` / `1441`
+- JBR command frames: `0`
+- screenshot assertion: `passed`
+
+Next checkpoint:
+
+- Image content is now the only expected fallback reason in the all-probe command run.
+- Decide whether to add a minimal image payload command for small raster content or keep image content on SKP until the final native ABI replaces the toy int-array command transport.
+
 Use separate worktrees for every existing repo touched:
 
 - `JetBrainsRuntime` worktree: `jbr-skia-compose-poc`

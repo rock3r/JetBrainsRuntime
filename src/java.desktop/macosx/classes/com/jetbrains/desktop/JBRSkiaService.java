@@ -64,7 +64,8 @@ public class JBRSkiaService extends JBRSkia {
                     | COMMAND_CAP_RECORD_ANTIALIAS
                     | COMMAND_CAP_STROKE_METADATA
                     | COMMAND_CAP_BASIC_TRANSFORMS
-                    | COMMAND_CAP_CLIP_RECT_OP;
+                    | COMMAND_CAP_CLIP_RECT_OP
+                    | COMMAND_CAP_SAVE_LAYER;
     private static final boolean NATIVE_BRIDGE_AVAILABLE = loadNativeBridge();
     private static final AtomicLong NEXT_SCOPE_ID = new AtomicLong(1);
 
@@ -136,6 +137,7 @@ public class JBRSkiaService extends JBRSkia {
         if (op == COMMAND_SAVE || op == COMMAND_RESTORE) return 3;
         if (op == COMMAND_ROTATE) return 4;
         if (op == COMMAND_TRANSLATE || op == COMMAND_SCALE) return 5;
+        if (op == COMMAND_SAVE_LAYER) return 8;
         if (op == COMMAND_CLEAR) return 4;
         if (op == COMMAND_CLEAR_RECT) return 7;
         if (op == COMMAND_CLIP_RECT) return 8;
@@ -149,6 +151,11 @@ public class JBRSkiaService extends JBRSkia {
         if ((record.op() == COMMAND_TRANSLATE || record.op() == COMMAND_SCALE || record.op() == COMMAND_ROTATE)
                 && record.recordFlags() != COMMAND_RECORD_FLAGS_NONE) {
             return false;
+        }
+        if (record.op() == COMMAND_SAVE_LAYER) {
+            return record.recordFlags() == COMMAND_RECORD_FLAGS_NONE
+                    && commands[record.recordEnd() - 1] >= 0
+                    && commands[record.recordEnd() - 1] <= 1000;
         }
         if (record.op() == COMMAND_CLIP_RECT) {
             int clipOp = commands[record.recordEnd() - 1];
@@ -494,6 +501,17 @@ public class JBRSkiaService extends JBRSkia {
                     } else if (op == COMMAND_ROTATE) {
                         if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE || offset + 1 != recordEnd) return false;
                         current.rotate(Math.toRadians(commands[offset++] / 1000.0));
+                    } else if (op == COMMAND_SAVE_LAYER) {
+                        if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE || offset + 5 != recordEnd) return false;
+                        int x = commands[offset++];
+                        int y = commands[offset++];
+                        int width = commands[offset++];
+                        int height = commands[offset++];
+                        int alpha1000 = commands[offset++];
+                        if (alpha1000 < 0 || alpha1000 > 1000) return false;
+                        stack.addLast(current);
+                        current = (Graphics2D) current.create();
+                        current.clipRect(x, y, width, height);
                     } else if (op == COMMAND_CLEAR) {
                         if (offset + 1 != recordEnd) return false;
                         applyAntialiasing(current, antiAlias);

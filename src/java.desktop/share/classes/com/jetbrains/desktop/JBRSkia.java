@@ -36,7 +36,7 @@ import java.nio.ByteBuffer;
  * so downstream compile-only clients cannot accidentally inline stale values.
  */
 public abstract class JBRSkia {
-    public static final int ABI_ID = Integer.parseInt("11");
+    public static final int ABI_ID = Integer.parseInt("12");
     public static final String BUILD_ID = buildId();
     public static final int COMMAND_STREAM_MAGIC = Integer.parseInt("1246972723");
     public static final int COMMAND_STREAM_HEADER_SIZE = Integer.parseInt("6");
@@ -59,6 +59,7 @@ public abstract class JBRSkia {
     public static final int COMMAND_CAP_STROKE_METADATA = Integer.parseInt("1024");
     public static final int COMMAND_CAP_BASIC_TRANSFORMS = Integer.parseInt("2048");
     public static final int COMMAND_CAP_CLIP_RECT_OP = Integer.parseInt("4096");
+    public static final int COMMAND_CAP_SAVE_LAYER = Integer.parseInt("8192");
     public static final int COMMAND_CLEAR = Integer.parseInt("1");
     public static final int COMMAND_FILL_RECT = Integer.parseInt("2");
     public static final int COMMAND_STROKE_LINE = Integer.parseInt("3");
@@ -73,6 +74,7 @@ public abstract class JBRSkia {
     public static final int COMMAND_TRANSLATE = Integer.parseInt("10");
     public static final int COMMAND_SCALE = Integer.parseInt("11");
     public static final int COMMAND_ROTATE = Integer.parseInt("12");
+    public static final int COMMAND_SAVE_LAYER = Integer.parseInt("13");
 
     private static String buildId() {
         return "skia-interop-poc:" + ABI_ID;

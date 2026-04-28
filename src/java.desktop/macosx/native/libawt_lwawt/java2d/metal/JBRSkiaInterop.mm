@@ -49,7 +49,7 @@
 
 #include "MTLSurfaceDataBase.h"
 
-static constexpr jint ABI_ID = 11;
+static constexpr jint ABI_ID = 12;
 static constexpr jint COMMAND_STREAM_MAGIC = 1246972723;
 static constexpr jint COMMAND_STREAM_HEADER_SIZE = 6;
 static constexpr jint COMMAND_STREAM_FLAGS_NONE = 0;
@@ -72,6 +72,7 @@ static constexpr jint COMMAND_CLIP_OP_DIFFERENCE = 1;
 static constexpr jint COMMAND_TRANSLATE = 10;
 static constexpr jint COMMAND_SCALE = 11;
 static constexpr jint COMMAND_ROTATE = 12;
+static constexpr jint COMMAND_SAVE_LAYER = 13;
 
 static std::mutex gDirectContextMutex;
 static std::unordered_map<void*, sk_sp<GrDirectContext>> gDirectContextsByMtlContext;
@@ -291,6 +292,25 @@ static bool drawCommandList(SkCanvas* canvas, CommandWords commands, jsize comma
                 }
                 SkScalar degrees = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
                 canvas->rotate(degrees);
+                break;
+            }
+            case COMMAND_SAVE_LAYER: {
+                if (recordFlags != COMMAND_RECORD_FLAGS_NONE || offset + 5 != recordEnd) {
+                    return false;
+                }
+                jint x = commands[offset++];
+                jint y = commands[offset++];
+                jint layerWidth = commands[offset++];
+                jint layerHeight = commands[offset++];
+                jint alpha1000 = commands[offset++];
+                if (alpha1000 < 0 || alpha1000 > 1000) {
+                    return false;
+                }
+                SkRect bounds = SkRect::MakeXYWH(static_cast<SkScalar>(x),
+                                                 static_cast<SkScalar>(y),
+                                                 static_cast<SkScalar>(layerWidth),
+                                                 static_cast<SkScalar>(layerHeight));
+                canvas->saveLayerAlphaf(&bounds, static_cast<float>(alpha1000) / 1000.0f);
                 break;
             }
             case COMMAND_CLEAR: {
