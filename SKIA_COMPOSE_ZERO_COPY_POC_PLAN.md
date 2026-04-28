@@ -453,7 +453,7 @@ Next native checkpoint:
 
 ### Checkpoint 15: Deterministic No-Text Smoke Sample
 
-Status: completed inside CMP samples; standalone Jewel sample is still pending.
+Status: completed inside CMP samples; standalone Jewel sample is covered by checkpoint 16.
 
 - Added a deterministic Compose/Swing smoke sample:
   - `androidx.compose.desktop.examples.jbrskiainterop.SimpleSmoke_jvmKt`
@@ -486,12 +486,47 @@ Next native checkpoint:
 - Add a steady animation to produce enough frames for a real CPU comparison.
 - Keep using the large Swing sample as a stress case for SKP payload growth.
 
+### Checkpoint 16: Standalone Magic Jewel Swing Sample
+
+Status: completed as a standalone validation harness; report automation is still pending.
+
+- Created a new standalone local project at `/Users/rock3r/src/magic-jewel` and initialized it as its own Git repository.
+- Bootstrapped the Gradle/Jewel setup from `compose-pi` conventions while keeping the app intentionally small:
+  - Kotlin `2.3.20`
+  - Compose plugin/dependencies `1.10.3` for compilation and transitive baseline dependencies
+  - Jewel `0.35.0-261.23567.138`
+  - local Skiko override through `SKIKO_VERSION=0.0.0-SNAPSHOT` and `mavenLocal()`
+- The app is hosted in a Swing `JFrame` with an `androidx.compose.ui.awt.ComposePanel`, not a Compose `Window`, so it exercises the SwingGraphics path.
+- Added `runJbrSkiaInterop`, which:
+  - enables `compose.swing.render.on.graphics=true` and `compose.swing.render.on.jbr.skia=true`
+  - enables `skiko.jbr.interop.debugOverlay=true` and `skiko.jbr.interop.renderPicture=true`
+  - accepts the same patched `java.desktop` / public API shim / native dylib JVM arguments used by the CMP smoke sample
+  - prepends patched CMP output jars from `/Users/rock3r/src/cmp-jbr-skia-poc/out/compose-multiplatform-core` so the standalone app uses the local interop-enabled CMP classes.
+- Added `scripts/run-jbr-skia.sh` as the runnable entry point for the patched local JBR/Skiko/CMP setup.
+- Because CMP desktop runtime publication is currently a redirection/stub setup, the sample forces `androidx.compose.runtime:*` to `1.11.0-beta02`, matching CMP's redirection version and avoiding a runtime mismatch with patched UI classes such as `HostDefaultProvider`.
+- Verification completed:
+  - `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew compileKotlin` in `/Users/rock3r/src/magic-jewel`
+  - `SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/run-jbr-skia.sh` in `/Users/rock3r/src/magic-jewel`
+- Runtime markers confirmed the standalone Jewel app is using the JBR picture replay path:
+  - `SKIKO_JBR_INTEROP_SCOPE_ACQUIRED abi=1 build=skia-interop-poc:1 ...`
+  - paired `SKIKO_JBR_INTEROP_PICTURE_FRAME ... rendered=true` and `JBR_SKIA_INTEROP_PICTURE_FRAME ... rendered=true` markers
+- Window-only screenshot captured at `/tmp/magic-jewel-jbr-skia-window.png`.
+
+Next checkpoint:
+
+- Add a Magic Jewel report script mirroring the CMP report harness:
+  - old path: stock SwingGraphics readback
+  - new path: patched JBR Skia picture replay path
+  - parse Skiko/JBR frame markers, fallback markers, CPU/RSS samples, and a window-only screenshot assertion.
+- Keep the standalone classpath override documented until the local CMP artifacts are published/consumed through a cleaner Maven-local or composite-build path.
+
 Use separate worktrees for every existing repo touched:
 
 - `JetBrainsRuntime` worktree: `jbr-skia-compose-poc`
 - `JetBrainsRuntimeApi` worktree: `jbr-api-skia-poc`
 - `skiko` worktree: `skiko-jbr-skia-poc`
 - `compose-multiplatform-core` worktree: `cmp-jbr-skia-poc`
+- standalone validation project: `/Users/rock3r/src/magic-jewel`
 
 Create a new local demo project at `~/src/magic-jewel` for the standalone Jewel app. This is the validation harness, not one of the three modified upstream repos.
 
