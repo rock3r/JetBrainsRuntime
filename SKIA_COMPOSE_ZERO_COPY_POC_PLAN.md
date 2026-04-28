@@ -923,6 +923,27 @@ Next checkpoint:
 - Add one or two focused unit tests around Magic Jewel report validation parsing so expected-fallback failures are caught without launching the app.
 - Then choose the next positive command-coverage expansion: either native image blit, clip rect support, or a small save/restore/transform stack in the command ABI.
 
+### Checkpoint 28: Report Validation Unit Harness
+
+Status: completed in Magic Jewel.
+
+- Magic Jewel's report script now supports:
+  - `scripts/jbr-skia-interop-report.sh --validate-only`
+  - This mode skips app launch/report generation and runs the existing `validate_report` logic against files already present in `OUT_DIR`.
+- Added `scripts/test-jbr-skia-report-validation.sh` to exercise validation without launching the app:
+  - strict command success with CMP/Skiko/JBR command markers
+  - expected image fallback success with CMP `image=<n>` plus Skiko/JBR picture markers
+  - expected fallback failure when the requested reason is missing.
+- Verification completed:
+  - Magic Jewel `bash -n scripts/jbr-skia-interop-report.sh scripts/test-jbr-skia-report-validation.sh`
+  - Magic Jewel `scripts/test-jbr-skia-report-validation.sh`
+  - output: `JBR_SKIA_REPORT_VALIDATION_TESTS passed`
+
+Next checkpoint:
+
+- Choose the next positive command-coverage expansion: either native image blit, clip rect support, or a small save/restore/transform stack in the command ABI.
+- Keep expected-fallback tests for text/image/transform/saveLayer as guards while expanding the command subset.
+
 Use separate worktrees for every existing repo touched:
 
 - `JetBrainsRuntime` worktree: `jbr-skia-compose-poc`
