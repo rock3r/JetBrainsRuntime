@@ -279,6 +279,48 @@ Next native checkpoint:
 - Cache/reuse the JBR-owned `GrDirectContext` per `MTLContext`.
 - Add automated screenshot/pixel assertions for the command-frame sample so future queue/context changes cannot silently fall back to Java2D.
 
+### Checkpoint 10: Serialized SkPicture Replay Probe
+
+Status: completed as a runnable probe; correctness, clipping, HiDPI, and font behavior need focused follow-up.
+
+- Added `ScopedSkiaCanvas.renderPictureFrame(width, height, frameTimeNanos, pictureData)` across:
+  - JBR private API
+  - JBR macOS service implementation
+  - `JetBrainsRuntimeApi`
+  - Skiko reflective interop wrapper.
+- Skiko now has a gated picture replay mode:
+  - `-Dskiko.jbr.interop.renderPicture=true`
+  - `JbrSkiaSwingLayer` records the real `SkikoRenderDelegate.onRender(...)` call into a Skiko `PictureRecorder`
+  - the resulting `Picture` is serialized to bytes and sent to JBR.
+- `JBRSkiaInterop.mm` now deserializes the byte payload with JBR-owned Skia (`SkPicture::MakeFromData`) and replays it into the Java2D destination texture using JBR's `MTLContext.commandQueue`.
+- This avoids sharing Skia object pointers across the Skiko/JBR boundary for this path. The payload is serialized data, not a raw `SkPicture*`, `SkCanvas*`, or `GrDirectContext*`.
+- Verification completed:
+  - JBR patched-module compile for `JBRSkia` / `JBRSkiaService`
+  - local native dylib rebuild at `/tmp/jbr-skia-native/libjbrskiainterop.dylib`
+  - Skiko `./gradlew :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`
+  - Skiko `./gradlew :skiko:publishToMavenLocal`
+  - Runtime API `bash tools/build.sh process`
+  - CMP sample smoke with patched `java.desktop`, temporary public API shim, local Skiko, and `skiko.jbr.interop.renderPicture=true`
+- Smoke reached:
+  - `SKIKO_JBR_INTEROP_SCOPE_ACQUIRED abi=1 build=skia-interop-poc:1 metalTexture=0x7cdaac280`
+- Window-id screenshot captured at `/tmp/jbr-skia-picture-frame-window.png`.
+- Visual validation: the Swing frame and surrounding Java2D controls remain visible, while the Compose/Skiko render delegate content is replayed by JBR-owned native Skia from serialized picture bytes.
+
+Important caveats:
+
+- The replayed content is visibly rough: clipping, HiDPI scaling, and text positioning are not yet correct.
+- SKP serialization is not the final ABI. It is useful as a bridge probe because it avoids pointer identity problems, but it must be evaluated carefully for fonts/typefaces, image payloads, version stability, and security/validation of serialized data.
+- The current code records and serializes every frame, which is expected to be expensive. The next slices need caching/invalidation and CPU cost measurements.
+
+Next native checkpoint:
+
+- Fix the picture replay coordinate contract:
+  - determine whether the recorded picture is in Swing user space or device pixels
+  - apply the same clip/transform on JBR replay that the old Skiko Swing path applies
+  - add screenshot/pixel assertions for a small no-text Compose scene.
+- Add logging/report markers for picture serialization size and replay success/failure.
+- Start measuring CPU overhead versus old SwingGraphics readback, since per-frame SKP serialization may trade GPU copies for CPU work.
+
 Use separate worktrees for every existing repo touched:
 
 - `JetBrainsRuntime` worktree: `jbr-skia-compose-poc`

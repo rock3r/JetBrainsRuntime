@@ -196,6 +196,19 @@ public class JBRSkiaService extends JBRSkia {
         }
 
         @Override
+        public boolean renderPictureFrame(int width, int height, long frameTimeNanos, byte[] pictureData) {
+            ensureOpen();
+            Objects.requireNonNull(pictureData, "pictureData");
+            return width > 0
+                    && height > 0
+                    && pictureData.length > 0
+                    && NATIVE_BRIDGE_AVAILABLE
+                    && nativeOpsPtr != 0
+                    && metalTexturePtr != 0
+                    && nativeRenderPictureFrame(nativeOpsPtr, metalTexturePtr, width, height, frameTimeNanos, pictureData);
+        }
+
+        @Override
         public void flush() {
             ensureOpen();
             flushed = true;
@@ -308,4 +321,8 @@ public class JBRSkiaService extends JBRSkia {
     private static native boolean nativeRenderCommandFrame(long nativeOpsPtr, long metalTexturePtr,
                                                           int width, int height, long frameTimeNanos,
                                                           int[] commands);
+
+    private static native boolean nativeRenderPictureFrame(long nativeOpsPtr, long metalTexturePtr,
+                                                          int width, int height, long frameTimeNanos,
+                                                          byte[] pictureData);
 }

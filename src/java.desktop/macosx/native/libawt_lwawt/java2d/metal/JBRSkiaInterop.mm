@@ -30,7 +30,9 @@
 #include "SkCanvas.h"
 #include "SkColor.h"
 #include "SkColorSpace.h"
+#include "SkData.h"
 #include "SkPaint.h"
+#include "SkPicture.h"
 #include "SkRRect.h"
 #include "SkSurface.h"
 #include "ganesh/GrBackendSurface.h"
@@ -252,6 +254,57 @@ Java_com_jetbrains_desktop_JBRSkiaService_nativeRenderDiagnosticFrame
         }
 
         drawDiagnosticPattern(surface->getCanvas(), width, height, frameTimeNanos);
+        directContext->flushAndSubmit(surface.get(), GrSyncCpu::kYes);
+        return JNI_TRUE;
+    }
+}
+
+extern "C" JNIEXPORT jboolean JNICALL
+Java_com_jetbrains_desktop_JBRSkiaService_nativeRenderPictureFrame
+        (JNIEnv* env, jclass cls, jlong nativeOpsPtr, jlong metalTexturePtr,
+         jint width, jint height, jlong frameTimeNanos, jbyteArray pictureArray) {
+    @autoreleasepool {
+        if (metalTexturePtr == 0 || width <= 0 || height <= 0 || pictureArray == nullptr) {
+            return JNI_FALSE;
+        }
+
+        id<MTLTexture> texture = (__bridge id<MTLTexture>) reinterpret_cast<void*>(static_cast<uintptr_t>(metalTexturePtr));
+        if (texture == nil || texture.device == nil) {
+            return JNI_FALSE;
+        }
+
+        jsize pictureSize = env->GetArrayLength(pictureArray);
+        if (pictureSize <= 0) {
+            return JNI_FALSE;
+        }
+
+        jboolean isCopy = JNI_FALSE;
+        jbyte* pictureBytes = env->GetByteArrayElements(pictureArray, &isCopy);
+        if (pictureBytes == nullptr) {
+            return JNI_FALSE;
+        }
+        sk_sp<SkData> pictureData = SkData::MakeWithCopy(pictureBytes, static_cast<size_t>(pictureSize));
+        env->ReleaseByteArrayElements(pictureArray, pictureBytes, JNI_ABORT);
+        if (pictureData == nullptr) {
+            return JNI_FALSE;
+        }
+
+        sk_sp<SkPicture> picture = SkPicture::MakeFromData(pictureData.get());
+        if (picture == nullptr) {
+            return JNI_FALSE;
+        }
+
+        sk_sp<GrDirectContext> directContext = makeDirectContextForSurface(nativeOpsPtr, texture);
+        if (directContext == nullptr) {
+            return JNI_FALSE;
+        }
+
+        sk_sp<SkSurface> surface = wrapTextureSurface(directContext.get(), texture, width, height);
+        if (surface == nullptr) {
+            return JNI_FALSE;
+        }
+
+        picture->playback(surface->getCanvas());
         directContext->flushAndSubmit(surface.get(), GrSyncCpu::kYes);
         return JNI_TRUE;
     }
