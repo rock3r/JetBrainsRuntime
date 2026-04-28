@@ -241,11 +241,23 @@ public class JBRSkiaService extends JBRSkia {
         }
 
         private static boolean renderJava2DCommands(Graphics2D g, int[] commands) {
+            if (commands.length < COMMAND_STREAM_HEADER_SIZE
+                    || commands[0] != COMMAND_STREAM_MAGIC
+                    || commands[1] != ABI_ID
+                    || commands[2] != COMMAND_STREAM_FLAGS_NONE) {
+                return false;
+            }
+            int payloadLength = commands[3];
+            if (payloadLength < 0 || payloadLength != commands.length - COMMAND_STREAM_HEADER_SIZE) {
+                return false;
+            }
+
             ArrayDeque<Graphics2D> stack = new ArrayDeque<>();
             Graphics2D current = g;
-            int offset = 0;
+            int offset = COMMAND_STREAM_HEADER_SIZE;
+            int commandEnd = COMMAND_STREAM_HEADER_SIZE + payloadLength;
             try {
-                while (offset < commands.length) {
+                while (offset < commandEnd) {
                     int op = commands[offset++];
                     if (op == COMMAND_SAVE) {
                         stack.addLast(current);
@@ -255,10 +267,10 @@ public class JBRSkiaService extends JBRSkia {
                         current.dispose();
                         current = stack.removeLast();
                     } else if (op == COMMAND_CLIP_RECT) {
-                        if (offset + 4 > commands.length) return false;
+                        if (offset + 4 > commandEnd) return false;
                         current.clipRect(commands[offset++], commands[offset++], commands[offset++], commands[offset++]);
                     } else if (op == COMMAND_CLEAR) {
-                        if (offset + 1 > commands.length) return false;
+                        if (offset + 1 > commandEnd) return false;
                         current.setColor(new Color(commands[offset++], true));
                         Rectangle clip = current.getClipBounds();
                         if (clip == null) {
@@ -266,7 +278,7 @@ public class JBRSkiaService extends JBRSkia {
                         }
                         current.fillRect(clip.x, clip.y, clip.width, clip.height);
                     } else if (op == COMMAND_CLEAR_RECT) {
-                        if (offset + 4 > commands.length) return false;
+                        if (offset + 4 > commandEnd) return false;
                         int x = commands[offset++];
                         int y = commands[offset++];
                         int width = commands[offset++];
@@ -276,7 +288,7 @@ public class JBRSkiaService extends JBRSkia {
                         current.fillRect(x, y, width, height);
                         current.setComposite(previousComposite);
                     } else if (op == COMMAND_FILL_RECT) {
-                        if (offset + 6 > commands.length) return false;
+                        if (offset + 6 > commandEnd) return false;
                         current.setColor(new Color(commands[offset++], true));
                         int x = commands[offset++];
                         int y = commands[offset++];
@@ -289,7 +301,7 @@ public class JBRSkiaService extends JBRSkia {
                             current.fillRect(x, y, width, height);
                         }
                     } else if (op == COMMAND_STROKE_LINE) {
-                        if (offset + 6 > commands.length) return false;
+                        if (offset + 6 > commandEnd) return false;
                         current.setColor(new Color(commands[offset++], true));
                         int x1 = commands[offset++];
                         int y1 = commands[offset++];
@@ -304,7 +316,7 @@ public class JBRSkiaService extends JBRSkia {
                             current.setStroke(previous);
                         }
                     } else if (op == COMMAND_FILL_OVAL) {
-                        if (offset + 5 > commands.length) return false;
+                        if (offset + 5 > commandEnd) return false;
                         current.setColor(new Color(commands[offset++], true));
                         int x = commands[offset++];
                         int y = commands[offset++];
@@ -312,7 +324,7 @@ public class JBRSkiaService extends JBRSkia {
                         int height = commands[offset++];
                         current.fillOval(x, y, width, height);
                     } else if (op == COMMAND_STROKE_OVAL) {
-                        if (offset + 6 > commands.length) return false;
+                        if (offset + 6 > commandEnd) return false;
                         current.setColor(new Color(commands[offset++], true));
                         int x = commands[offset++];
                         int y = commands[offset++];

@@ -1018,6 +1018,53 @@ Next checkpoint:
   - or explicitly keep image content on SKP until the native ABI replaces the toy int-array transport.
 - Keep the clip-out fallback report as a guard when expanding clipping support.
 
+### Checkpoint 31: Framed Command Stream And ABI 3
+
+Status: completed as the first structured framing step for the temporary int-array ABI.
+
+- Start replacing the raw temporary integer command list with a small framed command stream.
+- Bump the PoC command ABI to `ABI_ID = 3` because command payloads now require a header.
+- The command stream header is:
+  - `COMMAND_STREAM_MAGIC = 1246972723` (`JSK3`)
+  - `ABI_ID`
+  - `COMMAND_STREAM_FLAGS_NONE = 0`
+  - `payloadLength`, the number of integers after the header.
+- JBR validates the header before replaying either backend:
+  - Java2D fallback replay rejects missing headers, wrong magic, wrong ABI, unsupported flags, negative payload length, or mismatched payload length.
+  - Native JBR-owned Skia replay applies the same validation before touching the destination `SkCanvas`.
+- CMP emits the header around every strict command payload and logs the full stream length in `CMP_JBR_COMMAND_RECORDER_FRAME commands=...`.
+- Skiko synthetic command mode emits the same header, and Skiko expects ABI 3 during discovery.
+- This is still a transitional int-array ABI, not the final native struct ABI. The value is fail-closed framing and a concrete place for flags/versioning while command coverage continues to grow.
+
+Verification completed:
+
+- JBR patched class rebuild into `/tmp/jbr-skia-run/desktop`.
+- JBR native dylib rebuild into `/tmp/jbr-skia-native/libjbrskiainterop.dylib`.
+- Runtime API `bash tools/build.sh process`.
+- Runtime API `bash tools/build.sh dev` and `/tmp/jbr-api-shim.jar` refresh.
+- Skiko `./gradlew :skiko:compileKotlinAwt :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest :skiko:publishToMavenLocal`.
+- CMP `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew :compose:ui:ui-graphics:desktopJar :compose:ui:ui:desktopJar`.
+- Magic Jewel `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew compileKotlin`.
+- Magic Jewel `OUT_DIR=/tmp/magic-jewel-command-header-smoke DURATION_SECONDS=5 SAMPLE_INTERVAL_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT JBR_SKIA_RENDER_MODE=commands MAGIC_JEWEL_COMPOSE_TEXT=false MAGIC_JEWEL_COMPOSE_CLIP=true ./scripts/jbr-skia-interop-report.sh`.
+
+Framed-stream smoke report:
+
+- report: `/tmp/magic-jewel-command-header-smoke/report.md`
+- validation status: `passed`
+- fallback markers: `0`
+- picture frames: `0`
+- CMP command recorder: `frames=1160 fps=232.0 avg_commands=881 max_commands=881 unsupported_frames=0 avg_unsupported=0.0 max_unsupported=0 reasons=none`
+- Skiko/JBR command frames: `1160` / `1160`
+- screenshot assertion: `passed`
+
+Next checkpoint:
+
+- Decide whether to add a focused header-negative test fixture around JBR command replay, or move straight to the next ABI structuring step:
+  - named command payload metadata,
+  - backend capability flags,
+  - explicit coordinate-space units,
+  - or a native memory block layout that mirrors the eventual C ABI.
+
 Use separate worktrees for every existing repo touched:
 
 - `JetBrainsRuntime` worktree: `jbr-skia-compose-poc`

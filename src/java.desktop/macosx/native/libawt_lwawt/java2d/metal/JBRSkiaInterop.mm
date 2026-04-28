@@ -49,6 +49,10 @@
 
 #include "MTLSurfaceDataBase.h"
 
+static constexpr jint ABI_ID = 3;
+static constexpr jint COMMAND_STREAM_MAGIC = 1246972723;
+static constexpr jint COMMAND_STREAM_HEADER_SIZE = 4;
+static constexpr jint COMMAND_STREAM_FLAGS_NONE = 0;
 static constexpr jint COMMAND_CLEAR = 1;
 static constexpr jint COMMAND_FILL_RECT = 2;
 static constexpr jint COMMAND_STROKE_LINE = 3;
@@ -143,8 +147,20 @@ static SkColor skColorFromArgb(jint argb) {
 }
 
 static bool drawCommandList(SkCanvas* canvas, const jint* commands, jsize commandCount, int width, int height) {
-    jsize offset = 0;
-    while (offset < commandCount) {
+    if (commandCount < COMMAND_STREAM_HEADER_SIZE ||
+            commands[0] != COMMAND_STREAM_MAGIC ||
+            commands[1] != ABI_ID ||
+            commands[2] != COMMAND_STREAM_FLAGS_NONE) {
+        return false;
+    }
+    jint payloadLength = commands[3];
+    if (payloadLength < 0 || payloadLength != commandCount - COMMAND_STREAM_HEADER_SIZE) {
+        return false;
+    }
+
+    jsize offset = COMMAND_STREAM_HEADER_SIZE;
+    jsize commandEnd = COMMAND_STREAM_HEADER_SIZE + payloadLength;
+    while (offset < commandEnd) {
         jint op = commands[offset++];
         switch (op) {
             case COMMAND_SAVE: {
@@ -159,7 +175,7 @@ static bool drawCommandList(SkCanvas* canvas, const jint* commands, jsize comman
                 break;
             }
             case COMMAND_CLIP_RECT: {
-                if (offset + 4 > commandCount) {
+                if (offset + 4 > commandEnd) {
                     return false;
                 }
                 jint x = commands[offset++];
@@ -175,7 +191,7 @@ static bool drawCommandList(SkCanvas* canvas, const jint* commands, jsize comman
                 break;
             }
             case COMMAND_CLEAR: {
-                if (offset + 1 > commandCount) {
+                if (offset + 1 > commandEnd) {
                     return false;
                 }
                 SkPaint paint;
@@ -184,7 +200,7 @@ static bool drawCommandList(SkCanvas* canvas, const jint* commands, jsize comman
                 break;
             }
             case COMMAND_FILL_RECT: {
-                if (offset + 6 > commandCount) {
+                if (offset + 6 > commandEnd) {
                     return false;
                 }
                 SkPaint paint;
@@ -210,7 +226,7 @@ static bool drawCommandList(SkCanvas* canvas, const jint* commands, jsize comman
                 break;
             }
             case COMMAND_CLEAR_RECT: {
-                if (offset + 4 > commandCount) {
+                if (offset + 4 > commandEnd) {
                     return false;
                 }
                 jint x = commands[offset++];
@@ -227,7 +243,7 @@ static bool drawCommandList(SkCanvas* canvas, const jint* commands, jsize comman
                 break;
             }
             case COMMAND_STROKE_LINE: {
-                if (offset + 6 > commandCount) {
+                if (offset + 6 > commandEnd) {
                     return false;
                 }
                 SkPaint paint;
@@ -247,7 +263,7 @@ static bool drawCommandList(SkCanvas* canvas, const jint* commands, jsize comman
                 break;
             }
             case COMMAND_FILL_OVAL: {
-                if (offset + 5 > commandCount) {
+                if (offset + 5 > commandEnd) {
                     return false;
                 }
                 SkPaint paint;
@@ -265,7 +281,7 @@ static bool drawCommandList(SkCanvas* canvas, const jint* commands, jsize comman
                 break;
             }
             case COMMAND_STROKE_OVAL: {
-                if (offset + 6 > commandCount) {
+                if (offset + 6 > commandEnd) {
                     return false;
                 }
                 SkPaint paint;
