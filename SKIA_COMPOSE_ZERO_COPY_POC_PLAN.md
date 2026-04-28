@@ -804,6 +804,48 @@ Next checkpoint:
 - Keep text/images on the SKP path until the JBR-owned font/typeface story is implemented.
 - Preserve `JBR_SKIA_RENDER_MODE=picture` and SKP byte/frame markers for meaningful benchmark runs when the machine is quieter.
 
+### Checkpoint 25: Text-Aware Strict Command Fallback
+
+Status: completed as a strict compatibility validation slice.
+
+- CMP now marks Skiko paragraph painting as an unsupported command-recorder operation:
+  - `SkiaParagraph.paint(...)` calls `JbrSkiaCommandRecorder.markUnsupportedDraw("text")` before invoking `paragraph.paint(canvas.skiaCanvas, ...)`.
+  - This closes the previous blind spot where desktop text bypassed `SkiaBackedCanvas` and therefore could silently pass strict command validation.
+- Magic Jewel now supports a command-safe visual mode:
+  - `MAGIC_JEWEL_COMPOSE_TEXT=false` replaces Compose text labels with simple supported color bars.
+  - The report harness defaults to that mode for strict command validation so the command subset can still be regression-tested independently.
+- Magic Jewel also supports an expected text-fallback validation mode:
+  - `MAGIC_JEWEL_COMPOSE_TEXT=true EXPECT_COMMAND_FALLBACK=true JBR_SKIA_RENDER_MODE=commands`
+  - The report requires CMP recorder frames with `text=<n>`, zero Skiko/JBR command frames, positive SKP picture frames, and a passing mixed-content screenshot assertion.
+- Verification completed:
+  - CMP `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew :compose:ui:ui-graphics:compileKotlinDesktop :compose:ui:ui-text:compileKotlinDesktop`
+  - CMP `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew :compose:ui:ui-graphics:desktopJar :compose:ui:ui-text:desktopJar :compose:ui:ui:desktopJar`
+  - Magic Jewel `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew compileKotlin`
+  - Magic Jewel `./gradlew assemble`
+- Strict command-safe report:
+  - command: `OUT_DIR=/tmp/magic-jewel-command-strict-text-aware DURATION_SECONDS=5 SAMPLE_INTERVAL_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT JBR_SKIA_RENDER_MODE=commands ./scripts/jbr-skia-interop-report.sh`
+  - report: `/tmp/magic-jewel-command-strict-text-aware/report.md`
+  - validation status: `passed`
+  - `MAGIC_JEWEL_COMPOSE_TEXT: false`
+  - CMP command recorder: `frames=1208 fps=241.6 avg_commands=847 max_commands=847 unsupported_frames=0 avg_unsupported=0.0 max_unsupported=0 reasons=none`
+  - Skiko/JBR command frames: `1208` / `1208`
+  - picture frames: `0`
+  - screenshot assertion: `passed`
+- Text fallback report:
+  - command: `OUT_DIR=/tmp/magic-jewel-command-text-fallback DURATION_SECONDS=5 SAMPLE_INTERVAL_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT JBR_SKIA_RENDER_MODE=commands MAGIC_JEWEL_COMPOSE_TEXT=true EXPECT_COMMAND_FALLBACK=true ./scripts/jbr-skia-interop-report.sh`
+  - report: `/tmp/magic-jewel-command-text-fallback/report.md`
+  - validation status: `passed`
+  - CMP command recorder: `frames=709 fps=141.8 avg_commands=791 max_commands=791 unsupported_frames=709 avg_unsupported=8.0 max_unsupported=8 reasons=text:5672`
+  - Skiko/JBR command frames: `0` / `0`
+  - SKP picture frames: `709` / `709`
+  - screenshot assertion: `passed`
+
+Next checkpoint:
+
+- Add the first text-capable command/display-list slice only after the font/typeface ownership story is routed through JBR-owned Skia. Until then, strict command mode must fallback on text.
+- Add image unsupported validation using the same expected-fallback pattern.
+- Keep the SKP picture path and report schema intact for quiet-machine benchmark runs.
+
 Use separate worktrees for every existing repo touched:
 
 - `JetBrainsRuntime` worktree: `jbr-skia-compose-poc`
