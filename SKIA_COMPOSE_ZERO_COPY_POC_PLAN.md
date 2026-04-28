@@ -451,6 +451,41 @@ Next native checkpoint:
 - Keep the context cache, but add production invalidation only when the JBR build integration and lifecycle hooks are clearer.
 - Build the deterministic Jewel sample/report target so the old/new CPU report is meaningful and less dominated by startup and huge demo content.
 
+### Checkpoint 15: Deterministic No-Text Smoke Sample
+
+Status: completed inside CMP samples; standalone Jewel sample is still pending.
+
+- Added a deterministic Compose/Swing smoke sample:
+  - `androidx.compose.desktop.examples.jbrskiainterop.SimpleSmoke_jvmKt`
+  - window title: `JbrSkiaSmokeWindow`
+  - no text or Swing child components inside the Compose content
+  - fixed green/blue/purple geometry for screenshot assertions.
+- Added CMP sample tasks:
+  - `:compose:desktop:desktop:desktop-samples:runSwingJbrSkiaSmoke`
+  - `:compose:desktop:desktop:desktop-samples:runSwingJbrSkiaSmokeInterop`
+- Updated the report harness so `OLD_TASK` and `NEW_TASK` can point at the deterministic sample instead of the large Swing example.
+- Verification completed:
+  - CMP `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew :compose:desktop:desktop:desktop-samples:jvmJar`
+  - deterministic report smoke at `/tmp/jbr-skia-report-simple-smoke3/report.md`
+- Report highlights:
+  - old process samples: `samples=69 avg_cpu=26.29 max_cpu=468.90 avg_rss_kb=257419 max_rss_kb=764752`
+  - new process samples: `samples=67 avg_cpu=27.91 max_cpu=487.60 avg_rss_kb=257760 max_rss_kb=720560`
+  - fallback markers: old `0`, new `0`
+  - Skiko picture frames: `frames=1 avg_bytes=386 max_bytes=386`
+  - JBR picture replays: `frames=1 avg_bytes=386 max_bytes=386`
+  - screenshot counts: `green=525067 blue=532498 purple=92160 yellow=7000`
+- Visual screenshot captured at `/tmp/jbr-skia-report-simple-smoke3/new-window.png`.
+
+Key observation:
+
+- The previous 415 MB SKP payload was content/sample dependent. A simple no-text vector scene serializes to 386 bytes and keeps old/new RSS in the same broad range for this short smoke. This makes the SKP bridge more useful as a correctness oracle, but text/images/interop-heavy scenes still need explicit payload and CPU tracking.
+
+Next native checkpoint:
+
+- Port the deterministic scene into the requested standalone Jewel sample once the Jewel project exists.
+- Add a steady animation to produce enough frames for a real CPU comparison.
+- Keep using the large Swing sample as a stress case for SKP payload growth.
+
 Use separate worktrees for every existing repo touched:
 
 - `JetBrainsRuntime` worktree: `jbr-skia-compose-poc`
