@@ -749,6 +749,13 @@ Status: completed for the Magic Jewel no-text/vector scene.
   - unsupported frame count
   - average/max unsupported operation count
   - aggregated unsupported reasons.
+- Magic Jewel's command-mode report now fails validation when strict command mode is expected and:
+  - the CMP recorder emits no frames
+  - unsupported recorder operations are present
+  - Skiko or JBR command replay emits no frames
+  - Skiko/JBR command frame counts diverge
+  - SKP picture frames appear unexpectedly
+  - the screenshot assertion does not pass.
 - The first telemetry run identified only two blockers in the Magic Jewel command scene:
   - stroked round-rects, approximated through the current line-based command ABI
   - one `BlendMode.Clear` operation per frame.
@@ -776,6 +783,13 @@ Status: completed for the Magic Jewel no-text/vector scene.
   - JBR command frames: `frames=1003 fps=167.2 avg_commands=791 max_commands=791`
   - screenshot assertion: `passed`
   - screenshot counts: `green=570602 blue=1062179 purple=31321 yellow=35877 orange=18899 white=969726`
+- Follow-up harness validation run:
+  - report: `/tmp/magic-jewel-command-strict-validated/report.md`
+  - validation status: `passed`
+  - CMP command recorder: `frames=1297 fps=216.2 avg_commands=791 max_commands=791 unsupported_frames=0 avg_unsupported=0.0 max_unsupported=0 reasons=none`
+  - Skiko/JBR command frames: `1297` / `1297`
+  - picture frames: `0`
+  - screenshot assertion: `passed`
 
 Next checkpoint:
 
