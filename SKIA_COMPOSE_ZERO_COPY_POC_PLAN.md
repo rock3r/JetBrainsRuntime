@@ -547,6 +547,46 @@ Next checkpoint:
 - Keep the standalone classpath override documented until the local CMP artifacts are published/consumed through a cleaner Maven-local or composite-build path.
 - Start narrowing the bridge from SKP replay toward a lower-overhead command/display-list path while preserving the same fallback markers and report schema.
 
+### Checkpoint 18: Destination-Scoped Command Replay Smoke
+
+Status: completed as a lower-overhead command-list smoke path.
+
+- JBR command replay now mirrors the picture replay destination semantics:
+  - wraps the full Java2D destination `MTLTexture`
+  - clips to the current Compose/Swing paint destination rect
+  - translates command replay into that destination rect
+  - flushes through the JBR-owned Skia `GrDirectContext` on the Java2D Metal queue
+- JBR now emits a structured command marker:
+  - `JBR_SKIA_INTEROP_COMMAND_FRAME destinationX=<px> destinationY=<px> destinationWidth=<px> destinationHeight=<px> width=<px> height=<px> commands=<n> rendered=true`
+- Skiko now builds command frames in device pixels, routes them through `ScopedSkiaCanvas.renderCommandFrame(...)`, and emits:
+  - `SKIKO_JBR_INTEROP_COMMAND_FRAME width=<px> height=<px> commands=<n> rendered=<true|false>`
+- Magic Jewel can switch renderers with:
+  - `JBR_SKIA_RENDER_MODE=picture` for the default SKP replay correctness path
+  - `JBR_SKIA_RENDER_MODE=commands` for the lower-overhead command-list smoke path
+  - `JBR_SKIA_RENDER_MODE=diagnostic` for the JBR-owned diagnostic renderer
+- Magic Jewel's report harness now records both picture and command marker summaries.
+- Verification completed:
+  - JBR patched-module compile for `JBRSkia` / `JBRSkiaService`
+  - native dylib rebuild at `/tmp/jbr-skia-native/libjbrskiainterop.dylib`
+  - `./gradlew :skiko:compileKotlinAwt :skiko:compileTestKotlinAwt :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`
+  - `./gradlew :skiko:publishToMavenLocal`
+  - `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew compileKotlin` in `/Users/rock3r/src/magic-jewel`
+  - `OUT_DIR=/tmp/magic-jewel-jbr-skia-command-smoke DURATION_SECONDS=10 SAMPLE_INTERVAL_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT JBR_SKIA_RENDER_MODE=commands ./scripts/jbr-skia-interop-report.sh`
+- Command-mode smoke report highlights:
+  - old process samples: `samples=27 avg_cpu=50.94 max_cpu=263.20 avg_rss_kb=176480 max_rss_kb=597776`
+  - new process samples: `samples=24 avg_cpu=1.11 max_cpu=22.90 avg_rss_kb=38907 max_rss_kb=124864`
+  - fallback markers: old `0`, new `0`
+  - picture frames: `0`
+  - Skiko command frames: `frames=48 avg_commands=550 max_commands=555`
+  - JBR command frames: `frames=48 avg_commands=550 max_commands=555`
+  - screenshot: `/tmp/magic-jewel-jbr-skia-command-window.png`
+
+Next checkpoint:
+
+- Expand the command-list ABI beyond synthetic shapes toward a real subset of Compose vector drawing operations, while keeping SKP replay as the reference/fallback path.
+- Add a command-mode screenshot oracle instead of reusing the picture-mode color assertion.
+- Keep text/images on the SKP path until the JBR-owned font/typeface story is implemented.
+
 Use separate worktrees for every existing repo touched:
 
 - `JetBrainsRuntime` worktree: `jbr-skia-compose-poc`

@@ -185,7 +185,9 @@ public class JBRSkiaService extends JBRSkia {
             if (NATIVE_BRIDGE_AVAILABLE
                     && nativeOpsPtr != 0
                     && metalTexturePtr != 0
-                    && nativeRenderCommandFrame(nativeOpsPtr, metalTexturePtr, width, height, frameTimeNanos, commands)) {
+                    && nativeRenderCommandFrame(nativeOpsPtr, metalTexturePtr,
+                            deviceSpaceClip.x, deviceSpaceClip.y, deviceSpaceClip.width, deviceSpaceClip.height,
+                            width, height, frameTimeNanos, commands)) {
                 return true;
             }
 
@@ -338,6 +340,8 @@ public class JBRSkiaService extends JBRSkia {
                                                              int width, int height, long frameTimeNanos);
 
     private static native boolean nativeRenderCommandFrame(long nativeOpsPtr, long metalTexturePtr,
+                                                          int destinationX, int destinationY,
+                                                          int destinationWidth, int destinationHeight,
                                                           int width, int height, long frameTimeNanos,
                                                           int[] commands);
 

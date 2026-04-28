@@ -357,9 +357,11 @@ Java_com_jetbrains_desktop_JBRSkiaService_nativeRenderPictureFrame
 extern "C" JNIEXPORT jboolean JNICALL
 Java_com_jetbrains_desktop_JBRSkiaService_nativeRenderCommandFrame
         (JNIEnv* env, jclass cls, jlong nativeOpsPtr, jlong metalTexturePtr,
+         jint destinationX, jint destinationY, jint destinationWidth, jint destinationHeight,
          jint width, jint height, jlong frameTimeNanos, jintArray commandArray) {
     @autoreleasepool {
-        if (metalTexturePtr == 0 || width <= 0 || height <= 0 || commandArray == nullptr) {
+        if (metalTexturePtr == 0 || destinationWidth <= 0 || destinationHeight <= 0 ||
+                width <= 0 || height <= 0 || commandArray == nullptr) {
             return JNI_FALSE;
         }
 
@@ -378,7 +380,11 @@ Java_com_jetbrains_desktop_JBRSkiaService_nativeRenderCommandFrame
             return JNI_FALSE;
         }
 
-        sk_sp<SkSurface> surface = wrapTextureSurface(directContext.get(), texture, width, height);
+        sk_sp<SkSurface> surface = wrapTextureSurface(
+                directContext.get(),
+                texture,
+                static_cast<int>(texture.width),
+                static_cast<int>(texture.height));
         if (surface == nullptr) {
             return JNI_FALSE;
         }
@@ -389,13 +395,31 @@ Java_com_jetbrains_desktop_JBRSkiaService_nativeRenderCommandFrame
             return JNI_FALSE;
         }
 
-        bool rendered = drawCommandList(surface->getCanvas(), commands, commandCount, width, height);
+        SkCanvas* canvas = surface->getCanvas();
+        canvas->save();
+        canvas->clipRect(SkRect::MakeXYWH(static_cast<SkScalar>(destinationX),
+                                          static_cast<SkScalar>(destinationY),
+                                          static_cast<SkScalar>(destinationWidth),
+                                          static_cast<SkScalar>(destinationHeight)));
+        canvas->translate(static_cast<SkScalar>(destinationX),
+                          static_cast<SkScalar>(destinationY));
+        bool rendered = drawCommandList(canvas, commands, commandCount, width, height);
+        canvas->restore();
         env->ReleaseIntArrayElements(commandArray, commands, JNI_ABORT);
         if (!rendered) {
             return JNI_FALSE;
         }
 
         directContext->flushAndSubmit(surface.get(), GrSyncCpu::kYes);
+        std::fprintf(stderr,
+                     "JBR_SKIA_INTEROP_COMMAND_FRAME destinationX=%d destinationY=%d destinationWidth=%d destinationHeight=%d width=%d height=%d commands=%d rendered=true\n",
+                     destinationX,
+                     destinationY,
+                     destinationWidth,
+                     destinationHeight,
+                     width,
+                     height,
+                     commandCount);
         return JNI_TRUE;
     }
 }
