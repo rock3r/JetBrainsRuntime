@@ -1451,6 +1451,55 @@ Next checkpoint:
 - Replace the JNI `byte[]` handoff with a direct buffer or memory segment so native replay can parse without an additional Java-array pin/copy step.
 - After that, add real per-record paint payload expansion rather than continuing to encode all paint as solid ARGB integers.
 
+### Checkpoint 39: Direct Command Buffer Handoff
+
+Status: completed as the direct-memory carrier slice on top of ABI 7.
+
+- Kept the command ABI at `ABI_ID = 7`; no stream-layout changes.
+- Added `ScopedSkiaCanvas.renderCommandDirectFrame(width, height, frameTimeNanos, ByteBuffer commands)` to the JBR private API and public Runtime API mirror.
+- Skiko command mode now encodes the ABI 7 stream into a direct little-endian `ByteBuffer` and calls `renderCommandDirectFrame(...)`.
+- Skiko reflection now maps concrete direct-buffer implementations back to the public `ByteBuffer` parameter type.
+- JBR Java validates direct-buffer size/alignment, tries native direct replay first, and keeps a Java fallback decoder for software/non-native surfaces.
+- JBR native bridge now accepts a direct buffer with `GetDirectBufferAddress`, decodes little-endian words in native code, and reuses the existing command parser/replayer.
+- JBR tests cover valid direct-buffer replay and unaligned direct-buffer rejection. Skiko tests cover the reflective direct-buffer method on the fake scoped canvas.
+
+Verification completed:
+
+- JBR patched class rebuild into `/tmp/jbr-skia-run/desktop`.
+- JBR `JBRSkiaApiTest` compiled and passed against the patched module.
+- JBR native dylib rebuild into `/tmp/jbr-skia-native/libjbrskiainterop.dylib`.
+- Runtime API `bash tools/build.sh process`.
+- Runtime API `bash tools/build.sh dev` and `/tmp/jbr-api-shim.jar` refresh.
+- Skiko `./gradlew :skiko:compileKotlinAwt :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`.
+- Skiko `./gradlew :skiko:publishToMavenLocal`.
+- CMP `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-configuration-cache :compose:ui:ui-graphics:desktopJar :compose:ui:ui:desktopJar`.
+- Magic Jewel `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew compileKotlin`.
+
+Direct-buffer positive smoke report:
+
+- report: `/tmp/magic-jewel-command-direct-buffer-smoke/report.md`
+- validation status: `passed`
+- fallback markers: `0`
+- picture frames: `0`
+- CMP command recorder: `frames=994 fps=198.8 avg_commands=1261 max_commands=1261 unsupported_frames=0 avg_unsupported=0.0 max_unsupported=0 reasons=none`
+- Skiko/JBR command frames: `994` / `994`
+- screenshot assertion: `passed`
+
+Direct-buffer invalid-stream fallback report:
+
+- report: `/tmp/magic-jewel-command-direct-buffer-invalid/report.md`
+- validation status: `passed`
+- fallback markers: `1`
+- expected fallback reason: `command-stream-invalid`
+- CMP command recorder: `frames=1083 fps=216.6 avg_commands=1239 max_commands=1239 unsupported_frames=0 avg_unsupported=0.0 max_unsupported=0 reasons=none`
+- Skiko/JBR command frames: `1083` / `0`
+- screenshot assertion: `passed` on the old Swing fallback renderer.
+
+Next checkpoint:
+
+- Remove the remaining native copy from direct-buffer input into `std::vector<jint>` by teaching the parser to read little-endian words lazily from the direct byte span.
+- Then start expanding paint payloads beyond solid ARGB.
+
 Use separate worktrees for every existing repo touched:
 
 - `JetBrainsRuntime` worktree: `jbr-skia-compose-poc`

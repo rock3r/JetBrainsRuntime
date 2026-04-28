@@ -38,6 +38,8 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.Shape;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.util.ArrayDeque;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
@@ -316,6 +318,36 @@ public class JBRSkiaService extends JBRSkia {
             }
         }
 
+        @Override
+        public boolean renderCommandDirectFrame(int width, int height, long frameTimeNanos, ByteBuffer commands) {
+            ensureOpen();
+            Objects.requireNonNull(commands, "commands");
+            ByteBuffer commandBuffer = commands.slice().order(ByteOrder.LITTLE_ENDIAN);
+            int commandByteCount = commandBuffer.remaining();
+            if (commandByteCount == 0 || commandByteCount % Integer.BYTES != 0) {
+                return false;
+            }
+            if (NATIVE_BRIDGE_AVAILABLE
+                    && nativeOpsPtr != 0
+                    && metalTexturePtr != 0
+                    && commandBuffer.isDirect()
+                    && nativeRenderCommandDirectFrame(nativeOpsPtr, metalTexturePtr,
+                            deviceSpaceClip.x, deviceSpaceClip.y, deviceSpaceClip.width, deviceSpaceClip.height,
+                            width, height, frameTimeNanos, commandBuffer, commandByteCount)) {
+                return true;
+            }
+            if (width <= 0 || height <= 0) {
+                return false;
+            }
+            Graphics2D commandGraphics = (Graphics2D) graphics.create();
+            try {
+                commandGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                return renderJava2DCommands(commandGraphics, decodeCommandBuffer(commandBuffer));
+            } finally {
+                commandGraphics.dispose();
+            }
+        }
+
         private static int[] decodeCommandBuffer(byte[] commands) {
             int[] decoded = new int[commands.length / Integer.BYTES];
             for (int index = 0; index < decoded.length; index++) {
@@ -324,6 +356,15 @@ public class JBRSkiaService extends JBRSkia {
                         | ((commands[offset + 1] & 0xff) << 8)
                         | ((commands[offset + 2] & 0xff) << 16)
                         | (commands[offset + 3] << 24);
+            }
+            return decoded;
+        }
+
+        private static int[] decodeCommandBuffer(ByteBuffer commands) {
+            ByteBuffer duplicate = commands.slice().order(ByteOrder.LITTLE_ENDIAN);
+            int[] decoded = new int[duplicate.remaining() / Integer.BYTES];
+            for (int index = 0; index < decoded.length; index++) {
+                decoded[index] = duplicate.getInt();
             }
             return decoded;
         }
@@ -542,6 +583,12 @@ public class JBRSkiaService extends JBRSkia {
                                                                 int destinationWidth, int destinationHeight,
                                                                 int width, int height, long frameTimeNanos,
                                                                 byte[] commands);
+
+    private static native boolean nativeRenderCommandDirectFrame(long nativeOpsPtr, long metalTexturePtr,
+                                                                int destinationX, int destinationY,
+                                                                int destinationWidth, int destinationHeight,
+                                                                int width, int height, long frameTimeNanos,
+                                                                ByteBuffer commands, int commandByteCount);
 
     private static native boolean nativeRenderPictureFrame(long nativeOpsPtr, long metalTexturePtr,
                                                           int destinationX, int destinationY,

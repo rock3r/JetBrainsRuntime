@@ -647,3 +647,72 @@ Java_com_jetbrains_desktop_JBRSkiaService_nativeRenderCommandBufferFrame
         return JNI_TRUE;
     }
 }
+
+extern "C" JNIEXPORT jboolean JNICALL
+Java_com_jetbrains_desktop_JBRSkiaService_nativeRenderCommandDirectFrame
+        (JNIEnv* env, jclass cls, jlong nativeOpsPtr, jlong metalTexturePtr,
+         jint destinationX, jint destinationY, jint destinationWidth, jint destinationHeight,
+         jint width, jint height, jlong frameTimeNanos, jobject commandBuffer, jint commandByteCount) {
+    @autoreleasepool {
+        if (metalTexturePtr == 0 || destinationWidth <= 0 || destinationHeight <= 0 ||
+                width <= 0 || height <= 0 || commandBuffer == nullptr ||
+                commandByteCount <= 0 || commandByteCount % static_cast<jint>(sizeof(jint)) != 0) {
+            return JNI_FALSE;
+        }
+
+        jbyte* commandBytes = static_cast<jbyte*>(env->GetDirectBufferAddress(commandBuffer));
+        if (commandBytes == nullptr) {
+            return JNI_FALSE;
+        }
+
+        id<MTLTexture> texture = (__bridge id<MTLTexture>) reinterpret_cast<void*>(static_cast<uintptr_t>(metalTexturePtr));
+        if (texture == nil || texture.device == nil) {
+            return JNI_FALSE;
+        }
+
+        std::vector<jint> commands(static_cast<size_t>(commandByteCount / static_cast<jint>(sizeof(jint))));
+        for (jsize index = 0; index < static_cast<jsize>(commands.size()); index++) {
+            commands[static_cast<size_t>(index)] = decodeLittleEndianInt(commandBytes, index * static_cast<jsize>(sizeof(jint)));
+        }
+
+        sk_sp<GrDirectContext> directContext = makeDirectContextForSurface(nativeOpsPtr, texture);
+        if (directContext == nullptr) {
+            return JNI_FALSE;
+        }
+
+        sk_sp<SkSurface> surface = wrapTextureSurface(
+                directContext.get(),
+                texture,
+                static_cast<int>(texture.width),
+                static_cast<int>(texture.height));
+        if (surface == nullptr) {
+            return JNI_FALSE;
+        }
+
+        SkCanvas* canvas = surface->getCanvas();
+        canvas->save();
+        canvas->clipRect(SkRect::MakeXYWH(static_cast<SkScalar>(destinationX),
+                                          static_cast<SkScalar>(destinationY),
+                                          static_cast<SkScalar>(destinationWidth),
+                                          static_cast<SkScalar>(destinationHeight)));
+        canvas->translate(static_cast<SkScalar>(destinationX),
+                          static_cast<SkScalar>(destinationY));
+        bool rendered = drawCommandList(canvas, commands.data(), static_cast<jsize>(commands.size()), width, height);
+        canvas->restore();
+        if (!rendered) {
+            return JNI_FALSE;
+        }
+
+        directContext->flushAndSubmit(surface.get(), GrSyncCpu::kYes);
+        std::fprintf(stderr,
+                     "JBR_SKIA_INTEROP_COMMAND_FRAME destinationX=%d destinationY=%d destinationWidth=%d destinationHeight=%d width=%d height=%d commands=%d rendered=true\n",
+                     destinationX,
+                     destinationY,
+                     destinationWidth,
+                     destinationHeight,
+                     width,
+                     height,
+                     static_cast<int>(commands.size()));
+        return JNI_TRUE;
+    }
+}

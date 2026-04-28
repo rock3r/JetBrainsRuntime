@@ -41,6 +41,8 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.lang.reflect.Field;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 
 public class JBRSkiaApiTest {
     @JBRApi.Provided("JBRSkia")
@@ -82,7 +84,9 @@ public class JBRSkiaApiTest {
             assertEquals(1, scope.getSampleCount(), "sample count");
             assertEquals(new Rectangle(2, 3, 11, 13), scope.getUserSpaceClip(), "clip");
             assertEquals(true, scope.renderCommandBufferFrame(32, 24, 1L, commandBuffer(validClearStream())), "command byte buffer");
+            assertEquals(true, scope.renderCommandDirectFrame(32, 24, 1L, directCommandBuffer(validClearStream())), "direct command buffer");
             assertEquals(false, scope.renderCommandBufferFrame(32, 24, 1L, new byte[] { 1, 2, 3 }), "unaligned command byte buffer");
+            assertEquals(false, scope.renderCommandDirectFrame(32, 24, 1L, ByteBuffer.wrap(new byte[] { 1, 2, 3 })), "unaligned direct command buffer");
             scope.flush();
             scope.close();
             try {
@@ -187,6 +191,14 @@ public class JBRSkiaApiTest {
             encoded[offset + 3] = (byte) (value >>> 24);
         }
         return encoded;
+    }
+
+    private static ByteBuffer directCommandBuffer(int[] commands) {
+        ByteBuffer encoded = ByteBuffer.allocateDirect(commands.length * Integer.BYTES).order(ByteOrder.LITTLE_ENDIAN);
+        for (int command : commands) {
+            encoded.putInt(command);
+        }
+        return encoded.flip();
     }
 
     private static void assertInvalidCommandStream(int[] commands, String name) {
