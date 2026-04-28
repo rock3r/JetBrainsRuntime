@@ -49,10 +49,12 @@
 
 #include "MTLSurfaceDataBase.h"
 
-static constexpr jint ABI_ID = 6;
+static constexpr jint ABI_ID = 7;
 static constexpr jint COMMAND_STREAM_MAGIC = 1246972723;
-static constexpr jint COMMAND_STREAM_HEADER_SIZE = 4;
+static constexpr jint COMMAND_STREAM_HEADER_SIZE = 6;
 static constexpr jint COMMAND_STREAM_FLAGS_NONE = 0;
+static constexpr jint COMMAND_COORDINATE_SPACE_SWING_USER = 1;
+static constexpr jint COMMAND_PAINT_FORMAT_SOLID_ARGB = 1;
 static constexpr jint COMMAND_RECORD_HEADER_SIZE_BYTES = 12;
 static constexpr jint COMMAND_RECORD_FLAGS_NONE = 0;
 static constexpr jint COMMAND_CLEAR = 1;
@@ -159,7 +161,9 @@ static bool drawCommandList(SkCanvas* canvas, const jint* commands, jsize comman
     if (commandCount < COMMAND_STREAM_HEADER_SIZE ||
             commands[0] != COMMAND_STREAM_MAGIC ||
             commands[1] != ABI_ID ||
-            commands[2] != COMMAND_STREAM_FLAGS_NONE) {
+            commands[2] != COMMAND_STREAM_FLAGS_NONE ||
+            commands[4] != COMMAND_COORDINATE_SPACE_SWING_USER ||
+            commands[5] != COMMAND_PAINT_FORMAT_SOLID_ARGB) {
         return false;
     }
     jint payloadLength = commands[3];

@@ -35,11 +35,13 @@ import java.awt.Rectangle;
  * so downstream compile-only clients cannot accidentally inline stale values.
  */
 public abstract class JBRSkia {
-    public static final int ABI_ID = Integer.parseInt("6");
+    public static final int ABI_ID = Integer.parseInt("7");
     public static final String BUILD_ID = buildId();
     public static final int COMMAND_STREAM_MAGIC = Integer.parseInt("1246972723");
-    public static final int COMMAND_STREAM_HEADER_SIZE = Integer.parseInt("4");
+    public static final int COMMAND_STREAM_HEADER_SIZE = Integer.parseInt("6");
     public static final int COMMAND_STREAM_FLAGS_NONE = Integer.parseInt("0");
+    public static final int COMMAND_COORDINATE_SPACE_SWING_USER = Integer.parseInt("1");
+    public static final int COMMAND_PAINT_FORMAT_SOLID_ARGB = Integer.parseInt("1");
     public static final int COMMAND_RECORD_HEADER_SIZE_BYTES = Integer.parseInt("12");
     public static final int COMMAND_RECORD_FLAGS_NONE = Integer.parseInt("0");
     public static final int COMMAND_CAP_CLEAR = Integer.parseInt("1");

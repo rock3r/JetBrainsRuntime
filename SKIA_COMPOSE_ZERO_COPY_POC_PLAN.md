@@ -1260,6 +1260,63 @@ Next checkpoint:
 - Start extracting the temporary `int[]` layout behind explicit encode/decode helpers so the next change can swap the carrier for a native memory block with less churn.
 - Add record-level coordinate-space and paint-format metadata before expanding beyond the current solid-color vector subset.
 
+### Checkpoint 35: Command Header Metadata And ABI 7
+
+Status: completed as the stream-level metadata slice for the command ABI.
+
+- Bumped the PoC command ABI to `ABI_ID = 7`.
+- Extended the temporary stream header from four integers to six:
+  - `COMMAND_STREAM_MAGIC`
+  - `ABI_ID`
+  - stream flags
+  - payload length
+  - coordinate-space id
+  - paint-format id.
+- Added explicit public/private header metadata constants:
+  - `COMMAND_COORDINATE_SPACE_SWING_USER = 1`
+  - `COMMAND_PAINT_FORMAT_SOLID_ARGB = 1`
+- JBR Java fallback replay and native Skia replay now reject streams whose coordinate-space or paint-format metadata does not match the currently supported subset.
+- Runtime API docs now describe the six-field header, so consumers do not have to infer coordinate or paint semantics from capability bits alone.
+- CMP and Skiko emitters now populate the expanded header for both real and synthetic command streams.
+- JBR `JBRSkiaApiTest` now includes negative cases for unsupported coordinate space and unsupported paint format.
+
+Verification completed:
+
+- JBR patched class rebuild into `/tmp/jbr-skia-run/desktop`.
+- JBR `JBRSkiaApiTest` compiled and passed against the patched module.
+- JBR native dylib rebuild into `/tmp/jbr-skia-native/libjbrskiainterop.dylib`.
+- Runtime API `bash tools/build.sh process`.
+- Runtime API `bash tools/build.sh dev` and `/tmp/jbr-api-shim.jar` refresh.
+- Skiko `./gradlew :skiko:compileKotlinAwt :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`.
+- Skiko `./gradlew :skiko:publishToMavenLocal`.
+- CMP `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew :compose:ui:ui-graphics:desktopJar :compose:ui:ui:desktopJar`.
+- Magic Jewel `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew compileKotlin`.
+
+Header-metadata positive smoke report:
+
+- report: `/tmp/magic-jewel-command-header-metadata-smoke/report.md`
+- validation status: `passed`
+- fallback markers: `0`
+- picture frames: `0`
+- CMP command recorder: `frames=834 fps=166.8 avg_commands=1261 max_commands=1261 unsupported_frames=0 avg_unsupported=0.0 max_unsupported=0 reasons=none`
+- Skiko/JBR command frames: `834` / `834`
+- screenshot assertion: `passed`
+
+Header-metadata invalid-stream fallback report:
+
+- report: `/tmp/magic-jewel-command-header-metadata-invalid/report.md`
+- validation status: `passed`
+- fallback markers: `1`
+- expected fallback reason: `command-stream-invalid`
+- CMP command recorder: `frames=662 fps=132.4 avg_commands=1239 max_commands=1239 unsupported_frames=0 avg_unsupported=0.0 max_unsupported=0 reasons=none`
+- Skiko/JBR command frames: `662` / `0`
+- screenshot assertion: `passed` on the old Swing fallback renderer.
+
+Next checkpoint:
+
+- Extract shared stream writer/reader helpers in CMP/Skiko/JBR so the temporary `int[]` representation is isolated behind one encoder/decoder surface per repo.
+- Then replace the `int[]` carrier with a direct native byte buffer or memory segment without changing command-call sites again.
+
 Use separate worktrees for every existing repo touched:
 
 - `JetBrainsRuntime` worktree: `jbr-skia-compose-poc`

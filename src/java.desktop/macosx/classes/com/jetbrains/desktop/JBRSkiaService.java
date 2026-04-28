@@ -115,7 +115,9 @@ public class JBRSkiaService extends JBRSkia {
                 || commands.length < COMMAND_STREAM_HEADER_SIZE
                 || commands[0] != COMMAND_STREAM_MAGIC
                 || commands[1] != ABI_ID
-                || commands[2] != COMMAND_STREAM_FLAGS_NONE) {
+                || commands[2] != COMMAND_STREAM_FLAGS_NONE
+                || commands[4] != COMMAND_COORDINATE_SPACE_SWING_USER
+                || commands[5] != COMMAND_PAINT_FORMAT_SOLID_ARGB) {
             return -1;
         }
         int payloadLength = commands[3];

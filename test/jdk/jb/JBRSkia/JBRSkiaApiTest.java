@@ -49,11 +49,11 @@ public class JBRSkiaApiTest {
     }
 
     public static void main(String[] args) throws Exception {
-        assertEquals(6, JBRSkia.ABI_ID, "ABI_ID");
-        assertEquals("skia-interop-poc:6", JBRSkia.BUILD_ID, "BUILD_ID");
+        assertEquals(7, JBRSkia.ABI_ID, "ABI_ID");
+        assertEquals("skia-interop-poc:7", JBRSkia.BUILD_ID, "BUILD_ID");
 
-        assertReflectiveStaticEquals(6, JBRSkia.class.getDeclaredField("ABI_ID"));
-        assertReflectiveStaticEquals("skia-interop-poc:6", JBRSkia.class.getDeclaredField("BUILD_ID"));
+        assertReflectiveStaticEquals(7, JBRSkia.class.getDeclaredField("ABI_ID"));
+        assertReflectiveStaticEquals("skia-interop-poc:7", JBRSkia.class.getDeclaredField("BUILD_ID"));
 
         if (TestJBRSkia.INSTANCE != null) {
             throw new AssertionError("JBRSkia service must be unavailable before native runtime is wired");
@@ -114,35 +114,52 @@ public class JBRSkiaApiTest {
     private static void assertCommandStreamValidation() {
         assertValidCommandStream(new int[] {
                 JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 4,
+                JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
                 JBRSkia.COMMAND_CLEAR, 16, JBRSkia.COMMAND_RECORD_FLAGS_NONE, 0xff000000
         }, "valid clear stream");
         assertInvalidCommandStream(new int[] { JBRSkia.COMMAND_CLEAR, 0xff000000 }, "missing header");
         assertInvalidCommandStream(new int[] {
-                0, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 0
+                0, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 0,
+                JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB
         }, "wrong magic");
         assertInvalidCommandStream(new int[] {
-                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID - 1, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 0
+                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID - 1, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 0,
+                JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB
         }, "wrong abi");
         assertInvalidCommandStream(new int[] {
-                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, 1, 0
+                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, 1, 0,
+                JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB
         }, "unsupported flags");
         assertInvalidCommandStream(new int[] {
-                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, -1
+                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 0,
+                0, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB
+        }, "unsupported coordinate space");
+        assertInvalidCommandStream(new int[] {
+                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 0,
+                JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, 0
+        }, "unsupported paint format");
+        assertInvalidCommandStream(new int[] {
+                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, -1,
+                JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB
         }, "negative payload length");
         assertInvalidCommandStream(new int[] {
                 JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 2,
+                JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
                 JBRSkia.COMMAND_CLEAR
         }, "truncated payload");
         assertInvalidCommandStream(new int[] {
                 JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 1,
+                JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
                 JBRSkia.COMMAND_CLEAR, 0xff000000
         }, "extra payload");
         assertInvalidCommandStream(new int[] {
                 JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 3,
+                JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
                 JBRSkia.COMMAND_CLEAR, 12, JBRSkia.COMMAND_RECORD_FLAGS_NONE
         }, "wrong command record length");
         assertInvalidCommandStream(new int[] {
                 JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 4,
+                JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
                 JBRSkia.COMMAND_CLEAR, 16, 1, 0xff000000
         }, "unsupported command record flags");
     }
