@@ -29,7 +29,6 @@
 #include <cstdio>
 #include <mutex>
 #include <unordered_map>
-#include <vector>
 
 #include "SkBlendMode.h"
 #include "SkCanvas.h"
@@ -165,7 +164,24 @@ static jint decodeLittleEndianInt(const jbyte* bytes, jsize offset) {
             | (static_cast<jint>(bytes[offset + 3]) << 24);
 }
 
-static bool drawCommandList(SkCanvas* canvas, const jint* commands, jsize commandCount, int width, int height) {
+struct IntCommandWords {
+    const jint* words;
+
+    jint operator[](jsize index) const {
+        return words[index];
+    }
+};
+
+struct LittleEndianByteCommandWords {
+    const jbyte* bytes;
+
+    jint operator[](jsize index) const {
+        return decodeLittleEndianInt(bytes, index * static_cast<jsize>(sizeof(jint)));
+    }
+};
+
+template<typename CommandWords>
+static bool drawCommandList(SkCanvas* canvas, CommandWords commands, jsize commandCount, int width, int height) {
     if (commandCount < COMMAND_STREAM_HEADER_SIZE ||
             commands[0] != COMMAND_STREAM_MAGIC ||
             commands[1] != ABI_ID ||
@@ -552,7 +568,7 @@ Java_com_jetbrains_desktop_JBRSkiaService_nativeRenderCommandFrame
                                           static_cast<SkScalar>(destinationHeight)));
         canvas->translate(static_cast<SkScalar>(destinationX),
                           static_cast<SkScalar>(destinationY));
-        bool rendered = drawCommandList(canvas, commands, commandCount, width, height);
+        bool rendered = drawCommandList(canvas, IntCommandWords{commands}, commandCount, width, height);
         canvas->restore();
         env->ReleaseIntArrayElements(commandArray, commands, JNI_ABORT);
         if (!rendered) {
@@ -600,14 +616,11 @@ Java_com_jetbrains_desktop_JBRSkiaService_nativeRenderCommandBufferFrame
             return JNI_FALSE;
         }
 
-        std::vector<jint> commands(static_cast<size_t>(commandByteCount / static_cast<jsize>(sizeof(jint))));
-        for (jsize index = 0; index < static_cast<jsize>(commands.size()); index++) {
-            commands[static_cast<size_t>(index)] = decodeLittleEndianInt(commandBytes, index * static_cast<jsize>(sizeof(jint)));
-        }
-        env->ReleaseByteArrayElements(commandArray, commandBytes, JNI_ABORT);
+        jsize commandCount = commandByteCount / static_cast<jsize>(sizeof(jint));
 
         sk_sp<GrDirectContext> directContext = makeDirectContextForSurface(nativeOpsPtr, texture);
         if (directContext == nullptr) {
+            env->ReleaseByteArrayElements(commandArray, commandBytes, JNI_ABORT);
             return JNI_FALSE;
         }
 
@@ -617,6 +630,7 @@ Java_com_jetbrains_desktop_JBRSkiaService_nativeRenderCommandBufferFrame
                 static_cast<int>(texture.width),
                 static_cast<int>(texture.height));
         if (surface == nullptr) {
+            env->ReleaseByteArrayElements(commandArray, commandBytes, JNI_ABORT);
             return JNI_FALSE;
         }
 
@@ -628,8 +642,9 @@ Java_com_jetbrains_desktop_JBRSkiaService_nativeRenderCommandBufferFrame
                                           static_cast<SkScalar>(destinationHeight)));
         canvas->translate(static_cast<SkScalar>(destinationX),
                           static_cast<SkScalar>(destinationY));
-        bool rendered = drawCommandList(canvas, commands.data(), static_cast<jsize>(commands.size()), width, height);
+        bool rendered = drawCommandList(canvas, LittleEndianByteCommandWords{commandBytes}, commandCount, width, height);
         canvas->restore();
+        env->ReleaseByteArrayElements(commandArray, commandBytes, JNI_ABORT);
         if (!rendered) {
             return JNI_FALSE;
         }
@@ -643,7 +658,7 @@ Java_com_jetbrains_desktop_JBRSkiaService_nativeRenderCommandBufferFrame
                      destinationHeight,
                      width,
                      height,
-                     static_cast<int>(commands.size()));
+                     commandCount);
         return JNI_TRUE;
     }
 }
@@ -670,10 +685,7 @@ Java_com_jetbrains_desktop_JBRSkiaService_nativeRenderCommandDirectFrame
             return JNI_FALSE;
         }
 
-        std::vector<jint> commands(static_cast<size_t>(commandByteCount / static_cast<jint>(sizeof(jint))));
-        for (jsize index = 0; index < static_cast<jsize>(commands.size()); index++) {
-            commands[static_cast<size_t>(index)] = decodeLittleEndianInt(commandBytes, index * static_cast<jsize>(sizeof(jint)));
-        }
+        jsize commandCount = commandByteCount / static_cast<jint>(sizeof(jint));
 
         sk_sp<GrDirectContext> directContext = makeDirectContextForSurface(nativeOpsPtr, texture);
         if (directContext == nullptr) {
@@ -697,7 +709,7 @@ Java_com_jetbrains_desktop_JBRSkiaService_nativeRenderCommandDirectFrame
                                           static_cast<SkScalar>(destinationHeight)));
         canvas->translate(static_cast<SkScalar>(destinationX),
                           static_cast<SkScalar>(destinationY));
-        bool rendered = drawCommandList(canvas, commands.data(), static_cast<jsize>(commands.size()), width, height);
+        bool rendered = drawCommandList(canvas, LittleEndianByteCommandWords{commandBytes}, commandCount, width, height);
         canvas->restore();
         if (!rendered) {
             return JNI_FALSE;
@@ -712,7 +724,7 @@ Java_com_jetbrains_desktop_JBRSkiaService_nativeRenderCommandDirectFrame
                      destinationHeight,
                      width,
                      height,
-                     static_cast<int>(commands.size()));
+                     commandCount);
         return JNI_TRUE;
     }
 }

@@ -1500,6 +1500,45 @@ Next checkpoint:
 - Remove the remaining native copy from direct-buffer input into `std::vector<jint>` by teaching the parser to read little-endian words lazily from the direct byte span.
 - Then start expanding paint payloads beyond solid ARGB.
 
+### Checkpoint 40: Lazy Native Direct-Buffer Parsing
+
+Status: completed as a native hot-path cleanup on top of ABI 7.
+
+- Kept the command ABI at `ABI_ID = 7`; no stream-layout or carrier changes.
+- Replaced the native `std::vector<jint>` materialization step with small command-word readers:
+  - `IntCommandWords` for the legacy `int[]` path.
+  - `LittleEndianByteCommandWords` for both `byte[]` and direct `ByteBuffer` paths.
+- Templated the native command replayer so all three carriers use the same validated replay logic without requiring a copied `jint` buffer.
+- The direct-buffer path now parses little-endian command words directly from `GetDirectBufferAddress(...)`.
+- The `byte[]` path still has JNI array pin/copy semantics, but no longer allocates an additional native vector before replay.
+- The legacy `int[]` path remains intact as a compatibility and Java fallback path.
+
+Verification completed:
+
+- JBR patched class rebuild into `/tmp/jbr-skia-run/desktop`.
+- JBR `JBRSkiaApiTest` compiled and passed against the patched module.
+- JBR native dylib rebuild into `/tmp/jbr-skia-native/libjbrskiainterop.dylib`.
+- Magic Jewel direct-buffer lazy positive smoke report:
+  - report: `/tmp/magic-jewel-command-direct-lazy-smoke/report.md`
+  - validation status: `passed`
+  - fallback markers: `0`
+  - CMP command recorder: `frames=1118 fps=223.6 avg_commands=1261 max_commands=1261 unsupported_frames=0 avg_unsupported=0.0 max_unsupported=0 reasons=none`
+  - Skiko/JBR command frames: `1117` / `1117`
+  - screenshot assertion: `passed`
+- Magic Jewel direct-buffer lazy invalid-stream fallback report:
+  - report: `/tmp/magic-jewel-command-direct-lazy-invalid/report.md`
+  - validation status: `passed`
+  - fallback markers: `1`
+  - expected fallback reason: `command-stream-invalid`
+  - CMP command recorder: `frames=881 fps=176.2 avg_commands=1239 max_commands=1239 unsupported_frames=0 avg_unsupported=0.0 max_unsupported=0 reasons=none`
+  - Skiko/JBR command frames: `881` / `0`
+  - screenshot assertion: `passed` on the old Swing fallback renderer.
+
+Next checkpoint:
+
+- Start expanding command paint payloads beyond solid ARGB, with an ABI bump, so the command stream can carry per-record paint state instead of relying on implicit defaults.
+- Preserve the SKP path as the visual/correctness oracle for benchmark runs on a quieter machine.
+
 Use separate worktrees for every existing repo touched:
 
 - `JetBrainsRuntime` worktree: `jbr-skia-compose-poc`
