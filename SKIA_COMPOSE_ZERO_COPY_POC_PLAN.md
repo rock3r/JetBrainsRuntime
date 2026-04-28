@@ -2001,7 +2001,7 @@ Verification completed:
 - JBR isolated patched-class compile and `JBRSkiaApiTest` run against `/tmp/jbr-skia-abi15-compile`, using a temporary `JBRApi` compile stub for the isolated test harness only.
 - JBR native dylib rebuild into `/tmp/jbr-skia-native/libjbrskiainterop.dylib`.
 
-ABI 15 simple-text Magic Jewel report:
+ABI 15 command-mode Magic Jewel report before per-op metrics:
 
 - report: `/tmp/magic-jewel-command-simple-text-abi15-smoke-2/report.md`
 - screenshot: `/tmp/magic-jewel-command-simple-text-abi15-smoke-2/new-window.png`
@@ -2011,6 +2011,7 @@ ABI 15 simple-text Magic Jewel report:
 - Skiko/JBR command frames: `913` / `913`
 - picture replay frames: `0`
 - screenshot assertion: `passed`
+- note: this report proved ABI 15 compatibility and strict command-mode rendering, but did not expose per-operation record counts. Checkpoint 50 adds those counters and the explicit text-command probe.
 
 ABI 15 invalid-stream fallback report:
 
@@ -2025,6 +2026,41 @@ Next checkpoint:
 
 - Add command-stream diagnostics for per-op counts, especially text-vs-image records, so reports can prove which ABI records are carrying each visual feature without requiring ad hoc log inspection.
 - Continue the real text/font plan beyond this simple smoke command: JBR-owned font selection, shaping, paragraph layout, non-ASCII text, decoration, and richer style coverage.
+
+### Checkpoint 50: Per-Operation Command Metrics And Text Probe
+
+Status: completed as report/harness instrumentation.
+
+- CMP command-recorder frame markers now include parseable per-frame operation counters:
+  - `textCommands=<n>`
+  - `imageDefines=<n>`
+  - `imageRefs=<n>`
+- Magic Jewel report parsing now treats those fields as metrics rather than unsupported-operation reasons and reports:
+  - average/max text command count
+  - average/max image definition count
+  - average/max image reference count.
+- Magic Jewel now includes an explicit `JbrSkiaCommandRecorder.drawTextUtf16(...)` probe inside the Compose canvas so ABI 15 text commands are visible in the end-to-end report.
+- Magic Jewel keeps normal UI labels visible via `BasicText`; those labels still use the richer cached-image text bridge in this checkpoint.
+- The explicit text probe is intentionally a PoC harness probe, not the final Compose text integration. The remaining production text work is still JBR-owned font selection/shaping/paragraph layout for real Compose text.
+
+Verification completed:
+
+- CMP `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest :compose:ui:ui-graphics:desktopJar :compose:ui:ui-text:desktopJar :compose:ui:ui:desktopJar`.
+- Magic Jewel `./scripts/test-jbr-skia-report-validation.sh`.
+- Magic Jewel command report:
+  - report: `/tmp/magic-jewel-command-op-metrics-abi15-direct-text-smoke-2/report.md`
+  - screenshot: `/tmp/magic-jewel-command-op-metrics-abi15-direct-text-smoke-2/new-window.png`
+  - validation status: `passed`
+  - fallback markers: `0`
+  - CMP command recorder: `frames=1248 fps=208.0 avg_commands=2669 max_commands=125796 unsupported_frames=0 avg_unsupported=0.0 max_unsupported=0 avg_text_commands=1.0 max_text_commands=1 avg_image_defines=0.0 max_image_defines=9 avg_image_refs=9.0 max_image_refs=9 reasons=none`
+  - Skiko/JBR command frames: `1247` / `1247`
+  - picture replay frames: `0`
+  - screenshot assertion: `passed`
+
+Next checkpoint:
+
+- Move the text command from the explicit Magic probe into real Compose text rendering by teaching the Skia paragraph path how to derive a solid text color and JBR-owned font choice safely.
+- Keep cached-image text as the fallback for styled/rich text until the JBR-owned paragraph/text shaping ABI exists.
 
 Use separate worktrees for every existing repo touched:
 
