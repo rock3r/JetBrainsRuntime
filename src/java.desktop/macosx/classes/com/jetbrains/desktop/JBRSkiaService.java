@@ -90,22 +90,11 @@ public class JBRSkiaService extends JBRSkia {
         }
         int offset = COMMAND_STREAM_HEADER_SIZE;
         while (offset < commandEnd) {
-            int recordStart = offset;
-            int op = commands[offset++];
-            if (offset >= commandEnd) {
+            CommandRecord record = readCommandRecord(commands, offset, commandEnd);
+            if (record == null || expectedRecordLength(record.op()) != record.recordLength()) {
                 return false;
             }
-            int recordByteLength = commands[offset++];
-            if (offset >= commandEnd) {
-                return false;
-            }
-            int recordFlags = commands[offset++];
-            int recordLength = recordLengthFromBytes(recordByteLength);
-            int recordEnd = recordStart + recordLength;
-            if (recordFlags != COMMAND_RECORD_FLAGS_NONE || recordLength < 3 || recordEnd > commandEnd || expectedRecordLength(op) != recordLength) {
-                return false;
-            }
-            offset = recordEnd;
+            offset = record.recordEnd();
         }
         return offset == commandEnd;
     }
@@ -141,6 +130,28 @@ public class JBRSkiaService extends JBRSkia {
         if (op == COMMAND_FILL_OVAL) return 8;
         if (op == COMMAND_FILL_RECT || op == COMMAND_STROKE_LINE || op == COMMAND_STROKE_OVAL) return 9;
         return -1;
+    }
+
+    private static CommandRecord readCommandRecord(int[] commands, int offset, int commandEnd) {
+        int recordStart = offset;
+        int op = commands[offset++];
+        if (offset >= commandEnd) {
+            return null;
+        }
+        int recordByteLength = commands[offset++];
+        if (offset >= commandEnd) {
+            return null;
+        }
+        int recordFlags = commands[offset++];
+        int recordLength = recordLengthFromBytes(recordByteLength);
+        int recordEnd = recordStart + recordLength;
+        if (recordFlags != COMMAND_RECORD_FLAGS_NONE || recordLength < 3 || recordEnd > commandEnd) {
+            return null;
+        }
+        return new CommandRecord(op, offset, recordEnd, recordLength);
+    }
+
+    private record CommandRecord(int op, int argsStart, int recordEnd, int recordLength) {
     }
 
     private record MetalSurfaceMetadata(long nativeOpsPtr, long texturePtr) {
@@ -326,15 +337,11 @@ public class JBRSkiaService extends JBRSkia {
             int offset = COMMAND_STREAM_HEADER_SIZE;
             try {
                 while (offset < commandEnd) {
-                    int recordStart = offset;
-                    int op = commands[offset++];
-                    if (offset >= commandEnd) return false;
-                    int recordByteLength = commands[offset++];
-                    if (offset >= commandEnd) return false;
-                    int recordFlags = commands[offset++];
-                    int recordLength = recordLengthFromBytes(recordByteLength);
-                    int recordEnd = recordStart + recordLength;
-                    if (recordFlags != COMMAND_RECORD_FLAGS_NONE || recordLength < 3 || recordEnd > commandEnd) return false;
+                    CommandRecord record = readCommandRecord(commands, offset, commandEnd);
+                    if (record == null) return false;
+                    int op = record.op();
+                    int recordEnd = record.recordEnd();
+                    offset = record.argsStart();
                     if (op == COMMAND_SAVE) {
                         if (offset != recordEnd) return false;
                         stack.addLast(current);

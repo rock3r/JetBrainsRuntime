@@ -1317,6 +1317,44 @@ Next checkpoint:
 - Extract shared stream writer/reader helpers in CMP/Skiko/JBR so the temporary `int[]` representation is isolated behind one encoder/decoder surface per repo.
 - Then replace the `int[]` carrier with a direct native byte buffer or memory segment without changing command-call sites again.
 
+### Checkpoint 36: Command Stream Writer/Reader Helpers
+
+Status: completed as a behavior-preserving refactor on top of ABI 7.
+
+- Kept the command ABI at `ABI_ID = 7`; no wire-format changes.
+- CMP now routes command emission through a `CommandStreamWriter` helper:
+  - owns payload accumulation
+  - writes the six-field stream header
+  - writes byte-length command records with record flags
+  - reports total stream size for telemetry.
+- Skiko synthetic command mode now uses its own `CommandStreamWriter` helper instead of building the header and record fields inline.
+- JBR Java command validation/replay now uses a shared `readCommandRecord(...)` helper and `CommandRecord` record so the Java fallback path and validation hook agree on record parsing.
+- This deliberately leaves the native parser unchanged because it already has a narrow byte-length helper and will be replaced by the native memory-block reader in the next ABI-carrier slice.
+
+Verification completed:
+
+- JBR patched class rebuild into `/tmp/jbr-skia-run/desktop`.
+- JBR `JBRSkiaApiTest` compiled and passed against the patched module.
+- Skiko `./gradlew :skiko:compileKotlinAwt :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`.
+- Skiko `./gradlew :skiko:publishToMavenLocal`.
+- CMP `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew :compose:ui:ui-graphics:desktopJar :compose:ui:ui:desktopJar`.
+- Magic Jewel `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew compileKotlin`.
+
+Writer-helper smoke report:
+
+- report: `/tmp/magic-jewel-command-writer-helper-smoke/report.md`
+- validation status: `passed`
+- fallback markers: `0`
+- picture frames: `0`
+- CMP command recorder: `frames=913 fps=182.6 avg_commands=1261 max_commands=1261 unsupported_frames=0 avg_unsupported=0.0 max_unsupported=0 reasons=none`
+- Skiko/JBR command frames: `912` / `912`
+- screenshot assertion: `passed`
+
+Next checkpoint:
+
+- Introduce an explicit command-stream byte-buffer carrier beside the existing `int[]` method, initially backed by equivalent data and the same parser semantics.
+- Use the helper boundary added here so call sites continue to emit commands without knowing the carrier shape.
+
 Use separate worktrees for every existing repo touched:
 
 - `JetBrainsRuntime` worktree: `jbr-skia-compose-poc`
