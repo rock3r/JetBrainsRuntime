@@ -617,6 +617,7 @@ public class JBRSkiaService extends JBRSkia {
                         current.clipRect(x, y, width, height);
                     } else if (op == COMMAND_CLEAR_IMAGE_CACHE) {
                         if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE || offset != recordEnd) return false;
+                        System.err.println("JBR_SKIA_INTEROP_IMAGE_CACHE_CLEAR backend=java2d");
                         IMAGE_CACHE.clear();
                     } else if (op == COMMAND_DEFINE_IMAGE_ARGB) {
                         if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE || offset + 5 > recordEnd) return false;

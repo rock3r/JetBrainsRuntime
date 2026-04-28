@@ -2303,6 +2303,41 @@ Next checkpoint:
 
 - Start reducing reliance on image fallback by adding a JBR-owned shaped-text/paragraph command, or add narrower cache-reset tests around long-running rich-text/image workloads if shaped text is still too large for the next slice.
 
+### Checkpoint 58: JBR-Side Image Cache Reset Marker
+
+Status: completed in JBR replay logging and Magic Jewel report validation.
+
+- JBR Java2D fallback replay now emits `JBR_SKIA_INTEROP_IMAGE_CACHE_CLEAR backend=java2d` when it consumes `COMMAND_CLEAR_IMAGE_CACHE`.
+- JBR native Metal/Skia replay now emits `JBR_SKIA_INTEROP_IMAGE_CACHE_CLEAR backend=native` when it consumes `COMMAND_CLEAR_IMAGE_CACHE`.
+- Magic Jewel report parsing now includes JBR image-cache-clear marker counts.
+- The report harness now supports `EXPECT_MIN_JBR_IMAGE_CACHE_CLEARS`.
+- Report validation tests cover both passing and failing JBR-side cache-clear assertions.
+
+Verification completed:
+
+- JBR isolated patched-class compile and `JBRSkiaApiTest` run against `/tmp/jbr-skia-abi16-compile`.
+- JBR patched module refreshed at `/tmp/jbr-skia-run/desktop`.
+- JBR native dylib rebuild into `/tmp/jbr-skia-native/libjbrskiainterop.dylib`.
+- Magic Jewel `./scripts/test-jbr-skia-report-validation.sh`.
+
+JBR cache-clear marker strict command report:
+
+- report: `/tmp/magic-jewel-jbr-cache-clear-marker-smoke/report.md`
+- screenshot: `/tmp/magic-jewel-jbr-cache-clear-marker-smoke/new-window.png`
+- validation status: `passed`
+- fallback markers: `0`
+- picture replay frames: `0`
+- `EXPECT_MIN_IMAGE_CACHE_CLEARS`: `1`
+- `EXPECT_MIN_JBR_IMAGE_CACHE_CLEARS`: `1`
+- CMP command recorder: `frames=492 fps=164.0 avg_commands=11584 max_commands=11587 unsupported_frames=0 avg_unsupported=0.0 max_unsupported=0 avg_text_commands=9.0 max_text_commands=9 avg_image_defines=260.0 max_image_defines=260 avg_image_refs=260.0 max_image_refs=260 avg_image_cache_clears=1.0 max_image_cache_clears=2 reasons=none`
+- Skiko/JBR command frames: `492` / `492`
+- JBR image cache clear markers: `499`
+- screenshot assertion: `passed`
+
+Next checkpoint:
+
+- Begin the shaped-text/paragraph command slice with a deliberately small contract: JBR-owned font/typeface/paragraph state only, no Skiko text-object pointers crossing the ABI, and SKP/image fallback preserved for unsupported styling.
+
 Use separate worktrees for every existing repo touched:
 
 - `JetBrainsRuntime` worktree: `jbr-skia-compose-poc`

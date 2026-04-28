@@ -317,6 +317,7 @@ static bool drawCommandList(SkCanvas* canvas, CommandWords commands, jsize comma
                 }
                 std::lock_guard<std::mutex> lock(gImageCacheMutex);
                 gImagesByKey.clear();
+                std::fprintf(stderr, "JBR_SKIA_INTEROP_IMAGE_CACHE_CLEAR backend=native\n");
                 break;
             }
             case COMMAND_CLIP_RECT: {
