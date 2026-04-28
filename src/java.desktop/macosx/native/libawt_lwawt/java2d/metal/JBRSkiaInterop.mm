@@ -27,6 +27,8 @@
 #include <jni.h>
 #include <algorithm>
 #include <cstdio>
+#include <mutex>
+#include <unordered_map>
 
 #include "SkCanvas.h"
 #include "SkColor.h"
@@ -49,6 +51,9 @@
 static constexpr jint COMMAND_CLEAR = 1;
 static constexpr jint COMMAND_FILL_RECT = 2;
 static constexpr jint COMMAND_STROKE_LINE = 3;
+
+static std::mutex gDirectContextMutex;
+static std::unordered_map<void*, sk_sp<GrDirectContext>> gDirectContextsByMtlContext;
 
 @class AWTView;
 @class MTLLayer;
@@ -224,10 +229,24 @@ static sk_sp<GrDirectContext> makeDirectContextForSurface(jlong nativeOpsPtr, id
 
     [mtlc.encoderManager endEncoder];
 
+    void* contextKey = (__bridge void*) mtlc;
+    {
+        std::lock_guard<std::mutex> lock(gDirectContextMutex);
+        auto existing = gDirectContextsByMtlContext.find(contextKey);
+        if (existing != gDirectContextsByMtlContext.end()) {
+            return existing->second;
+        }
+    }
+
     GrMtlBackendContext backendContext = {};
     backendContext.fDevice.retain((__bridge GrMTLHandle) mtlc.device);
     backendContext.fQueue.retain((__bridge GrMTLHandle) mtlc.commandQueue);
-    return GrDirectContexts::MakeMetal(backendContext);
+    sk_sp<GrDirectContext> directContext = GrDirectContexts::MakeMetal(backendContext);
+    if (directContext != nullptr) {
+        std::lock_guard<std::mutex> lock(gDirectContextMutex);
+        gDirectContextsByMtlContext.emplace(contextKey, directContext);
+    }
+    return directContext;
 }
 
 extern "C" JNIEXPORT jboolean JNICALL

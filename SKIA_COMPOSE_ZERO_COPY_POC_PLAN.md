@@ -426,6 +426,31 @@ Next native checkpoint:
   - cache/reuse JBR `GrDirectContext` to reduce native setup overhead, or
   - move away from full SKP serialization toward a narrower command/display-list bridge because payload size is already too high.
 
+### Checkpoint 14: JBR DirectContext Cache Smoke
+
+Status: completed as a PoC cache; invalidation and lifecycle cleanup still need production design.
+
+- `JBRSkiaInterop.mm` now caches a JBR-owned Skia `GrDirectContext` per Java2D `MTLContext` pointer instead of recreating the context on every diagnostic/command/picture replay call.
+- The cache is deliberately native-side and keyed by the destination Java2D Metal context. This keeps Skiko out of Metal queue/context ownership while reducing repeated Skia context setup work.
+- Current limitations:
+  - no explicit invalidation on display migration, surface loss, or JBR Metal context disposal
+  - no cache size/resource pressure policy
+  - no BUILD_ID-aware teardown because the local dylib is still a manual PoC artifact.
+- CMP report harness screenshot capture now waits until at least one `SKIKO_JBR_INTEROP_PICTURE_FRAME` marker appears before capturing, and only treats screenshot capture as complete after the color assertion passes.
+- Cache smoke report generated at `/tmp/jbr-skia-report-picture-cache-smoke/report.md`.
+- Report highlights:
+  - fallback markers: old `0`, new `0`
+  - Skiko picture frames: `frames=32 avg_bytes=215626133 max_bytes=415432066`
+  - JBR picture replays: `frames=32 avg_bytes=215626133 max_bytes=415432066`
+  - screenshot counts: `green=428783 blue=511362 purple=83318 yellow=26824`
+  - new max RSS remained high at roughly 5.7 GB, so the dominant performance/memory issue is still serialized picture payload size rather than direct-context setup.
+
+Next native checkpoint:
+
+- Stop investing heavily in full-SKP replay as the likely final path; use it only as the correctness oracle while prototyping a narrower command/display-list ABI.
+- Keep the context cache, but add production invalidation only when the JBR build integration and lifecycle hooks are clearer.
+- Build the deterministic Jewel sample/report target so the old/new CPU report is meaningful and less dominated by startup and huge demo content.
+
 Use separate worktrees for every existing repo touched:
 
 - `JetBrainsRuntime` worktree: `jbr-skia-compose-poc`
