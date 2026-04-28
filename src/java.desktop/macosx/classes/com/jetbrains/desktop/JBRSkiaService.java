@@ -71,7 +71,8 @@ public class JBRSkiaService extends JBRSkia {
                     | COMMAND_CAP_CLIP_RECT_OP
                     | COMMAND_CAP_SAVE_LAYER
                     | COMMAND_CAP_DRAW_IMAGE_ARGB
-                    | COMMAND_CAP_IMAGE_CACHE;
+                    | COMMAND_CAP_IMAGE_CACHE
+                    | COMMAND_CAP_DRAW_TEXT_UTF16;
     private static final boolean NATIVE_BRIDGE_AVAILABLE = loadNativeBridge();
     private static final AtomicLong NEXT_SCOPE_ID = new AtomicLong(1);
     private static final int MAX_CACHED_IMAGES = 256;
@@ -154,6 +155,7 @@ public class JBRSkiaService extends JBRSkia {
         if (op == COMMAND_SAVE_LAYER) return 8;
         if (op == COMMAND_DRAW_IMAGE_ARGB) return -2;
         if (op == COMMAND_DEFINE_IMAGE_ARGB) return -3;
+        if (op == COMMAND_DRAW_TEXT_UTF16) return -4;
         if (op == COMMAND_DRAW_IMAGE_REF) return 17;
         if (op == COMMAND_CLEAR) return 4;
         if (op == COMMAND_CLEAR_RECT) return 7;
@@ -170,6 +172,9 @@ public class JBRSkiaService extends JBRSkia {
             return record.recordLength() >= 16;
         }
         if (expectedLength == -3 && record.op() == COMMAND_DEFINE_IMAGE_ARGB) {
+            return record.recordLength() >= 8;
+        }
+        if (expectedLength == -4 && record.op() == COMMAND_DRAW_TEXT_UTF16) {
             return record.recordLength() >= 8;
         }
         return expectedLength == record.recordLength();
@@ -241,6 +246,18 @@ public class JBRSkiaService extends JBRSkia {
                     && alpha1000 <= 1000
                     && filterQuality >= 0
                     && filterQuality <= 3;
+        }
+        if (record.op() == COMMAND_DRAW_TEXT_UTF16) {
+            if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE
+                    && record.recordFlags() != COMMAND_RECORD_FLAG_ANTIALIAS) {
+                return false;
+            }
+            int fontSize1000 = commands[record.argsStart() + 2];
+            int charCount = commands[record.argsStart() + 4];
+            return fontSize1000 > 0
+                    && charCount >= 0
+                    && charCount <= 4096
+                    && record.recordLength() == 8 + charCount;
         }
         if (record.op() != COMMAND_STROKE_LINE && record.op() != COMMAND_STROKE_OVAL) {
             return true;
@@ -656,6 +673,30 @@ public class JBRSkiaService extends JBRSkia {
                         offset += pixelCount;
                         drawImage(current, image, filtered, srcLeft1000, srcTop1000, srcRight1000, srcBottom1000,
                                 dstLeft1000, dstTop1000, dstRight1000, dstBottom1000, alpha1000);
+                    } else if (op == COMMAND_DRAW_TEXT_UTF16) {
+                        if (offset + 5 > recordEnd) return false;
+                        applyAntialiasing(current, antiAlias);
+                        int x1000 = commands[offset++];
+                        int baseline1000 = commands[offset++];
+                        int fontSize1000 = commands[offset++];
+                        int argb = commands[offset++];
+                        int charCount = commands[offset++];
+                        if (fontSize1000 <= 0 || charCount < 0 || charCount > 4096 || offset + charCount != recordEnd) {
+                            return false;
+                        }
+                        StringBuilder text = new StringBuilder(charCount);
+                        for (int index = 0; index < charCount; index++) {
+                            int codeUnit = commands[offset++];
+                            if (codeUnit < Character.MIN_VALUE || codeUnit > Character.MAX_VALUE) {
+                                return false;
+                            }
+                            text.append((char) codeUnit);
+                        }
+                        java.awt.Font previousFont = current.getFont();
+                        current.setColor(new Color(argb, true));
+                        current.setFont(previousFont.deriveFont(fontSize1000 / 1000f));
+                        current.drawString(text.toString(), x1000 / 1000f, baseline1000 / 1000f);
+                        current.setFont(previousFont);
                     } else if (op == COMMAND_CLEAR) {
                         if (offset + 1 != recordEnd) return false;
                         applyAntialiasing(current, antiAlias);

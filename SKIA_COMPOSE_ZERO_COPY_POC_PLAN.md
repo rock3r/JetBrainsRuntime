@@ -1974,6 +1974,58 @@ Next checkpoint:
 
 - Replace the temporary text-as-image bridge with a real text/font ABI design, or add cache invalidation/eviction handshakes if this image cache becomes more than a PoC transport optimization.
 
+### Checkpoint 49: Simple JBR-Owned UTF-16 Text Command And ABI 15
+
+Status: completed as a narrow PoC text command for simple single-line ASCII runs.
+
+- Bumped the PoC command ABI to `ABI_ID = 15`.
+- Added `COMMAND_CAP_DRAW_TEXT_UTF16 = 65536` to the JBR private API, public Runtime API mirror, and Skiko compatibility gate.
+- Added `COMMAND_DRAW_TEXT_UTF16`:
+  - layout: `[op, 32 + charCount * 4, flags, x1000, baseline1000, fontSize1000, argb, charCount, codeUnit0, ...]`
+  - supported flags: none and antialias.
+  - validation rejects non-positive font sizes, malformed lengths, and more than 4096 UTF-16 code units.
+- JBR Java2D fallback replays the record with derived `Graphics2D` font size and antialiasing.
+- JBR native replay creates the `SkFont` inside JBR's Skia runtime and uses `drawSimpleText`; no Skiko `SkTypeface*`, `SkFont*`, or paragraph object crosses the ABI boundary.
+- CMP records simple text only when it is single-line ASCII, uses a solid color, has no shadow/decoration/drawStyle/blend-mode override, and has a finite positive font size.
+- CMP still falls back to the cached ARGB image bridge for richer text, non-ASCII text, multiline paragraphs, brushes that are not `SolidColor`, and styled text effects.
+- First Magic Jewel strict run failed because Jewel `Text` was using the brush paint overload; the final CMP patch records `SolidColor` brush text through the same simple text command.
+
+Verification completed:
+
+- Runtime API `bash tools/build.sh process`.
+- Runtime API `bash tools/build.sh dev` and `/tmp/jbr-api-shim.jar` refresh from `out/classes/8`.
+- Skiko `./gradlew :skiko:compileKotlinAwt :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`.
+- Skiko `./gradlew :skiko:publishToMavenLocal`.
+- CMP `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest :compose:ui:ui-graphics:desktopJar :compose:ui:ui-text:desktopJar :compose:ui:ui:desktopJar`.
+- CMP follow-up `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-configuration-cache :compose:ui:ui-text:desktopJar :compose:ui:ui:desktopJar` after adding the `SolidColor` brush text path.
+- JBR isolated patched-class compile and `JBRSkiaApiTest` run against `/tmp/jbr-skia-abi15-compile`, using a temporary `JBRApi` compile stub for the isolated test harness only.
+- JBR native dylib rebuild into `/tmp/jbr-skia-native/libjbrskiainterop.dylib`.
+
+ABI 15 simple-text Magic Jewel report:
+
+- report: `/tmp/magic-jewel-command-simple-text-abi15-smoke-2/report.md`
+- screenshot: `/tmp/magic-jewel-command-simple-text-abi15-smoke-2/new-window.png`
+- validation status: `passed`
+- fallback markers: `0`
+- CMP command recorder: `frames=913 fps=152.2 avg_commands=2577 max_commands=85768 unsupported_frames=0 avg_unsupported=0.0 max_unsupported=0 reasons=none`
+- Skiko/JBR command frames: `913` / `913`
+- picture replay frames: `0`
+- screenshot assertion: `passed`
+
+ABI 15 invalid-stream fallback report:
+
+- report: `/tmp/magic-jewel-command-simple-text-abi15-invalid-2/report.md`
+- validation status: `passed`
+- fallback markers: `1`
+- CMP/Skiko command frames before rejection: `664` / `664`
+- JBR command frames: `0`
+- screenshot assertion: `passed`
+
+Next checkpoint:
+
+- Add command-stream diagnostics for per-op counts, especially text-vs-image records, so reports can prove which ABI records are carrying each visual feature without requiring ad hoc log inspection.
+- Continue the real text/font plan beyond this simple smoke command: JBR-owned font selection, shaping, paragraph layout, non-ASCII text, decoration, and richer style coverage.
+
 Use separate worktrees for every existing repo touched:
 
 - `JetBrainsRuntime` worktree: `jbr-skia-compose-poc`

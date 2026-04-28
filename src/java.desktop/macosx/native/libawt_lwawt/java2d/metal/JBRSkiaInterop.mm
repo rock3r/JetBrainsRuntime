@@ -38,6 +38,7 @@
 #include "SkData.h"
 #include "SkImage.h"
 #include "SkImageInfo.h"
+#include "SkFont.h"
 #include "SkPaint.h"
 #include "SkPicture.h"
 #include "SkPixmap.h"
@@ -54,7 +55,7 @@
 
 #include "MTLSurfaceDataBase.h"
 
-static constexpr jint ABI_ID = 14;
+static constexpr jint ABI_ID = 15;
 static constexpr jint COMMAND_STREAM_MAGIC = 1246972723;
 static constexpr jint COMMAND_STREAM_HEADER_SIZE = 6;
 static constexpr jint COMMAND_STREAM_FLAGS_NONE = 0;
@@ -81,6 +82,7 @@ static constexpr jint COMMAND_SAVE_LAYER = 13;
 static constexpr jint COMMAND_DRAW_IMAGE_ARGB = 14;
 static constexpr jint COMMAND_DEFINE_IMAGE_ARGB = 15;
 static constexpr jint COMMAND_DRAW_IMAGE_REF = 16;
+static constexpr jint COMMAND_DRAW_TEXT_UTF16 = 17;
 
 static std::mutex gDirectContextMutex;
 static std::unordered_map<void*, sk_sp<GrDirectContext>> gDirectContextsByMtlContext;
@@ -465,6 +467,37 @@ static bool drawCommandList(SkCanvas* canvas, CommandWords commands, jsize comma
                                dstLeft, dstTop, dstRight, dstBottom, alpha1000)) {
                     return false;
                 }
+                break;
+            }
+            case COMMAND_DRAW_TEXT_UTF16: {
+                if ((recordFlags & ~COMMAND_RECORD_FLAG_ANTIALIAS) != 0 || offset + 5 > recordEnd) {
+                    return false;
+                }
+                const SkScalar x = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkScalar baseline = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkScalar fontSize = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkColor color = skColorFromArgb(commands[offset++]);
+                const jint charCount = commands[offset++];
+                if (fontSize <= 0.0f || charCount < 0 || charCount > 4096 || offset + charCount != recordEnd) {
+                    return false;
+                }
+                std::string text;
+                text.reserve(static_cast<size_t>(charCount));
+                for (jint index = 0; index < charCount; index++) {
+                    jint codeUnit = commands[offset++];
+                    if (codeUnit < 0 || codeUnit > 0xffff) {
+                        return false;
+                    }
+                    text.push_back(codeUnit <= 0x7f ? static_cast<char>(codeUnit) : '?');
+                }
+                SkFont font(nullptr, fontSize);
+                font.setEdging((recordFlags & COMMAND_RECORD_FLAG_ANTIALIAS) != 0
+                        ? SkFont::Edging::kAntiAlias
+                        : SkFont::Edging::kAlias);
+                SkPaint paint;
+                paint.setAntiAlias((recordFlags & COMMAND_RECORD_FLAG_ANTIALIAS) != 0);
+                paint.setColor(color);
+                canvas->drawSimpleText(text.data(), text.size(), SkTextEncoding::kUTF8, x, baseline, font, paint);
                 break;
             }
             case COMMAND_CLEAR: {
