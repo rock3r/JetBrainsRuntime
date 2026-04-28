@@ -60,7 +60,8 @@ public class JBRSkiaService extends JBRSkia {
                     | COMMAND_CAP_SAVE_RESTORE
                     | COMMAND_CAP_CLIP_RECT
                     | COMMAND_CAP_USER_SPACE_COORDINATES
-                    | COMMAND_CAP_RECORD_ANTIALIAS;
+                    | COMMAND_CAP_RECORD_ANTIALIAS
+                    | COMMAND_CAP_STROKE_METADATA;
     private static final boolean NATIVE_BRIDGE_AVAILABLE = loadNativeBridge();
     private static final AtomicLong NEXT_SCOPE_ID = new AtomicLong(1);
 
@@ -94,7 +95,9 @@ public class JBRSkiaService extends JBRSkia {
         int offset = COMMAND_STREAM_HEADER_SIZE;
         while (offset < commandEnd) {
             CommandRecord record = readCommandRecord(commands, offset, commandEnd);
-            if (record == null || expectedRecordLength(record.op()) != record.recordLength()) {
+            if (record == null
+                    || expectedRecordLength(record.op()) != record.recordLength()
+                    || !validateRecordArguments(commands, record)) {
                 return false;
             }
             offset = record.recordEnd();
@@ -131,8 +134,25 @@ public class JBRSkiaService extends JBRSkia {
         if (op == COMMAND_CLEAR) return 4;
         if (op == COMMAND_CLEAR_RECT || op == COMMAND_CLIP_RECT) return 7;
         if (op == COMMAND_FILL_OVAL) return 8;
-        if (op == COMMAND_FILL_RECT || op == COMMAND_STROKE_LINE || op == COMMAND_STROKE_OVAL) return 9;
+        if (op == COMMAND_FILL_RECT) return 9;
+        if (op == COMMAND_STROKE_LINE || op == COMMAND_STROKE_OVAL) return 12;
         return -1;
+    }
+
+    private static boolean validateRecordArguments(int[] commands, CommandRecord record) {
+        if (record.op() != COMMAND_STROKE_LINE && record.op() != COMMAND_STROKE_OVAL) {
+            return true;
+        }
+        int strokeWidthIndex = record.recordEnd() - 4;
+        int strokeCapIndex = record.recordEnd() - 3;
+        int strokeJoinIndex = record.recordEnd() - 2;
+        int strokeMiterIndex = record.recordEnd() - 1;
+        return commands[strokeWidthIndex] >= 1
+                && commands[strokeCapIndex] >= 0
+                && commands[strokeCapIndex] <= 2
+                && commands[strokeJoinIndex] >= 0
+                && commands[strokeJoinIndex] <= 2
+                && commands[strokeMiterIndex] >= 0;
     }
 
     private static CommandRecord readCommandRecord(int[] commands, int offset, int commandEnd) {
@@ -471,7 +491,7 @@ public class JBRSkiaService extends JBRSkia {
                             current.fillRect(x, y, width, height);
                         }
                     } else if (op == COMMAND_STROKE_LINE) {
-                        if (offset + 6 != recordEnd) return false;
+                        if (offset + 9 != recordEnd) return false;
                         applyAntialiasing(current, antiAlias);
                         current.setColor(new Color(commands[offset++], true));
                         int x1 = commands[offset++];
@@ -479,9 +499,14 @@ public class JBRSkiaService extends JBRSkia {
                         int x2 = commands[offset++];
                         int y2 = commands[offset++];
                         int strokeWidth = Math.max(1, commands[offset++]);
+                        int strokeCap = commands[offset++];
+                        int strokeJoin = commands[offset++];
+                        float strokeMiter = commands[offset++] / 1000f;
                         java.awt.Stroke previous = current.getStroke();
+                        java.awt.BasicStroke stroke = basicStroke(strokeWidth, strokeCap, strokeJoin, strokeMiter);
+                        if (stroke == null) return false;
                         try {
-                            current.setStroke(new java.awt.BasicStroke(strokeWidth));
+                            current.setStroke(stroke);
                             current.drawLine(x1, y1, x2, y2);
                         } finally {
                             current.setStroke(previous);
@@ -496,7 +521,7 @@ public class JBRSkiaService extends JBRSkia {
                         int height = commands[offset++];
                         current.fillOval(x, y, width, height);
                     } else if (op == COMMAND_STROKE_OVAL) {
-                        if (offset + 6 != recordEnd) return false;
+                        if (offset + 9 != recordEnd) return false;
                         applyAntialiasing(current, antiAlias);
                         current.setColor(new Color(commands[offset++], true));
                         int x = commands[offset++];
@@ -504,9 +529,14 @@ public class JBRSkiaService extends JBRSkia {
                         int width = commands[offset++];
                         int height = commands[offset++];
                         int strokeWidth = Math.max(1, commands[offset++]);
+                        int strokeCap = commands[offset++];
+                        int strokeJoin = commands[offset++];
+                        float strokeMiter = commands[offset++] / 1000f;
                         java.awt.Stroke previous = current.getStroke();
+                        java.awt.BasicStroke stroke = basicStroke(strokeWidth, strokeCap, strokeJoin, strokeMiter);
+                        if (stroke == null) return false;
                         try {
-                            current.setStroke(new java.awt.BasicStroke(strokeWidth));
+                            current.setStroke(stroke);
                             current.drawOval(x, y, width, height);
                         } finally {
                             current.setStroke(previous);
@@ -530,6 +560,13 @@ public class JBRSkiaService extends JBRSkia {
                     RenderingHints.KEY_ANTIALIASING,
                     antiAlias ? RenderingHints.VALUE_ANTIALIAS_ON : RenderingHints.VALUE_ANTIALIAS_OFF
             );
+        }
+
+        private static java.awt.BasicStroke basicStroke(int width, int cap, int join, float miter) {
+            if (width < 1 || cap < 0 || cap > 2 || join < 0 || join > 2 || miter < 0) {
+                return null;
+            }
+            return new java.awt.BasicStroke(width, cap, join, Math.max(1f, miter));
         }
 
         private static Rectangle toDeviceSpaceClip(Graphics2D graphics, Rectangle userSpaceClip) {

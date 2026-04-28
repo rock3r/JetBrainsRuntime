@@ -49,7 +49,7 @@
 
 #include "MTLSurfaceDataBase.h"
 
-static constexpr jint ABI_ID = 8;
+static constexpr jint ABI_ID = 9;
 static constexpr jint COMMAND_STREAM_MAGIC = 1246972723;
 static constexpr jint COMMAND_STREAM_HEADER_SIZE = 6;
 static constexpr jint COMMAND_STREAM_FLAGS_NONE = 0;
@@ -163,6 +163,15 @@ static jint decodeLittleEndianInt(const jbyte* bytes, jsize offset) {
             | (static_cast<jint>(static_cast<unsigned char>(bytes[offset + 1])) << 8)
             | (static_cast<jint>(static_cast<unsigned char>(bytes[offset + 2])) << 16)
             | (static_cast<jint>(bytes[offset + 3]) << 24);
+}
+
+static bool isValidStrokeMetadata(jint strokeWidth, jint strokeCap, jint strokeJoin, jint strokeMiter1000) {
+    return strokeWidth >= 1
+            && strokeCap >= 0
+            && strokeCap <= 2
+            && strokeJoin >= 0
+            && strokeJoin <= 2
+            && strokeMiter1000 >= 0;
 }
 
 struct IntCommandWords {
@@ -304,7 +313,7 @@ static bool drawCommandList(SkCanvas* canvas, CommandWords commands, jsize comma
                 break;
             }
             case COMMAND_STROKE_LINE: {
-                if (offset + 6 != recordEnd) {
+                if (offset + 9 != recordEnd) {
                     return false;
                 }
                 SkPaint paint;
@@ -315,7 +324,17 @@ static bool drawCommandList(SkCanvas* canvas, CommandWords commands, jsize comma
                 jint y1 = commands[offset++];
                 jint x2 = commands[offset++];
                 jint y2 = commands[offset++];
-                paint.setStrokeWidth(static_cast<SkScalar>(std::max(1, commands[offset++])));
+                jint strokeWidth = commands[offset++];
+                jint strokeCap = commands[offset++];
+                jint strokeJoin = commands[offset++];
+                jint strokeMiter1000 = commands[offset++];
+                if (!isValidStrokeMetadata(strokeWidth, strokeCap, strokeJoin, strokeMiter1000)) {
+                    return false;
+                }
+                paint.setStrokeWidth(static_cast<SkScalar>(strokeWidth));
+                paint.setStrokeCap(static_cast<SkPaint::Cap>(strokeCap));
+                paint.setStrokeJoin(static_cast<SkPaint::Join>(strokeJoin));
+                paint.setStrokeMiter(static_cast<SkScalar>(strokeMiter1000) / 1000.0f);
                 canvas->drawLine(static_cast<SkScalar>(x1),
                                  static_cast<SkScalar>(y1),
                                  static_cast<SkScalar>(x2),
@@ -342,7 +361,7 @@ static bool drawCommandList(SkCanvas* canvas, CommandWords commands, jsize comma
                 break;
             }
             case COMMAND_STROKE_OVAL: {
-                if (offset + 6 != recordEnd) {
+                if (offset + 9 != recordEnd) {
                     return false;
                 }
                 SkPaint paint;
@@ -353,7 +372,17 @@ static bool drawCommandList(SkCanvas* canvas, CommandWords commands, jsize comma
                 jint y = commands[offset++];
                 jint ovalWidth = commands[offset++];
                 jint ovalHeight = commands[offset++];
-                paint.setStrokeWidth(static_cast<SkScalar>(std::max(1, commands[offset++])));
+                jint strokeWidth = commands[offset++];
+                jint strokeCap = commands[offset++];
+                jint strokeJoin = commands[offset++];
+                jint strokeMiter1000 = commands[offset++];
+                if (!isValidStrokeMetadata(strokeWidth, strokeCap, strokeJoin, strokeMiter1000)) {
+                    return false;
+                }
+                paint.setStrokeWidth(static_cast<SkScalar>(strokeWidth));
+                paint.setStrokeCap(static_cast<SkPaint::Cap>(strokeCap));
+                paint.setStrokeJoin(static_cast<SkPaint::Join>(strokeJoin));
+                paint.setStrokeMiter(static_cast<SkScalar>(strokeMiter1000) / 1000.0f);
                 SkRect rect = SkRect::MakeXYWH(static_cast<SkScalar>(x),
                                               static_cast<SkScalar>(y),
                                               static_cast<SkScalar>(ovalWidth),

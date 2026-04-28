@@ -1588,6 +1588,65 @@ Next checkpoint:
 - Add a second paint payload slice for stroke metadata, starting with cap/join/miter in record payload or flags.
 - Keep SKP replay available as the correctness oracle for benchmark and rendering-difference runs.
 
+### Checkpoint 42: Stroke Metadata Paint Payload And ABI 9
+
+Status: completed as the second paint-payload expansion for the command stream.
+
+- Bumped the PoC command ABI to `ABI_ID = 9`.
+- Added `COMMAND_CAP_STROKE_METADATA = 1024` to the JBR private API, public Runtime API mirror, Skiko compatibility gate, and command capability requirements.
+- Expanded stroke command records from implicit stroke defaults to explicit stroke metadata:
+  - `COMMAND_STROKE_LINE`: `[op, 48, flags, argb, x1, y1, x2, y2, strokeWidth, strokeCap, strokeJoin, strokeMiter1000]`
+  - `COMMAND_STROKE_OVAL`: `[op, 48, flags, argb, x, y, width, height, strokeWidth, strokeCap, strokeJoin, strokeMiter1000]`
+- The metadata encoding is shared across JBR, Skiko, and CMP:
+  - cap: `0=butt`, `1=round`, `2=square`
+  - join: `0=miter`, `1=round`, `2=bevel`
+  - miter: `strokeMiterLimit * 1000`, clamped to non-negative integer.
+- JBR validates stroke metadata before replaying command streams and rejects invalid cap/join/miter records as command-stream invalid.
+- JBR Java2D fallback replay maps stroke metadata into `BasicStroke(width, cap, join, miter)` so invalid-command fallback remains visually meaningful.
+- JBR native Skia replay maps the same payload into `SkPaint::setStrokeCap`, `setStrokeJoin`, and `setStrokeMiter`.
+- CMP records Compose `StrokeCap`, `StrokeJoin`, and `Paint.strokeMiterLimit` for line, rect-outline, and oval stroke records.
+- Skiko's synthetic command scene emits ABI 9 streams with explicit stroke metadata.
+
+Verification completed:
+
+- Runtime API `bash tools/build.sh process`.
+- Runtime API `bash tools/build.sh dev` and `/tmp/jbr-api-shim.jar` refresh from `out/classes/8`.
+- Skiko `./gradlew :skiko:compileKotlinAwt :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`.
+- Skiko `./gradlew :skiko:publishToMavenLocal`.
+- CMP `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest`.
+- CMP `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-configuration-cache :compose:ui:ui-graphics:desktopJar :compose:ui:ui:desktopJar`.
+- JBR isolated patched-class compile and `JBRSkiaApiTest` run against `/tmp/jbr-skia-abi9-compile`.
+- JBR native dylib rebuild into `/tmp/jbr-skia-native/libjbrskiainterop.dylib`.
+- Magic Jewel `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew compileKotlin`.
+
+ABI 9 positive command smoke report:
+
+- report: `/tmp/magic-jewel-command-stroke-abi9-smoke-2/report.md`
+- validation status: `passed`
+- fallback markers: `0`
+- CMP command recorder: `frames=721 fps=90.1 avg_commands=1458 max_commands=1488 unsupported_frames=0 avg_unsupported=0.0 max_unsupported=0 reasons=none`
+- Skiko/JBR command frames: `720` / `720`
+- screenshot assertion: `passed`
+
+ABI 9 invalid-stream fallback report:
+
+- report: `/tmp/magic-jewel-command-stroke-abi9-invalid/report.md`
+- validation status: `passed`
+- fallback markers: `1`
+- expected fallback reason: `command-stream-invalid`
+- CMP command recorder: `frames=936 fps=156.0 avg_commands=1488 max_commands=1488 unsupported_frames=0 avg_unsupported=0.0 max_unsupported=0 reasons=none`
+- Skiko/JBR command frames: `936` / `0`
+- screenshot assertion: `passed` on the old Swing fallback renderer.
+
+Harness note:
+
+- A first 5-second Magic smoke run at `/tmp/magic-jewel-command-stroke-abi9-smoke/report.md` failed before any draw markers appeared, while a manual run painted immediately. Re-running with an 8-second duration and 60-second startup timeout produced the passing report above, so command-path validation should keep a startup/duration margin when Gradle is launching the app under load.
+
+Next checkpoint:
+
+- Continue broadening the command record surface toward common Compose vector output, likely with path/image or transform metadata depending on what the next unsupported SKP comparison shows.
+- Keep the SKP replay path around as the correctness oracle and benchmark reference for runs on a quieter machine.
+
 Use separate worktrees for every existing repo touched:
 
 - `JetBrainsRuntime` worktree: `jbr-skia-compose-poc`
