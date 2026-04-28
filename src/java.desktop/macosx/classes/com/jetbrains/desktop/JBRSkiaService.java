@@ -277,6 +277,29 @@ public class JBRSkiaService extends JBRSkia {
                     } finally {
                         g.setStroke(previous);
                     }
+                } else if (op == COMMAND_FILL_OVAL) {
+                    if (offset + 5 > commands.length) return false;
+                    g.setColor(new Color(commands[offset++], true));
+                    int x = commands[offset++];
+                    int y = commands[offset++];
+                    int width = commands[offset++];
+                    int height = commands[offset++];
+                    g.fillOval(x, y, width, height);
+                } else if (op == COMMAND_STROKE_OVAL) {
+                    if (offset + 6 > commands.length) return false;
+                    g.setColor(new Color(commands[offset++], true));
+                    int x = commands[offset++];
+                    int y = commands[offset++];
+                    int width = commands[offset++];
+                    int height = commands[offset++];
+                    int strokeWidth = Math.max(1, commands[offset++]);
+                    java.awt.Stroke previous = g.getStroke();
+                    try {
+                        g.setStroke(new java.awt.BasicStroke(strokeWidth));
+                        g.drawOval(x, y, width, height);
+                    } finally {
+                        g.setStroke(previous);
+                    }
                 } else {
                     return false;
                 }

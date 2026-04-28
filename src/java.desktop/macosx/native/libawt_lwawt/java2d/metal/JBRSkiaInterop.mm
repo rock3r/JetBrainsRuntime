@@ -51,6 +51,8 @@
 static constexpr jint COMMAND_CLEAR = 1;
 static constexpr jint COMMAND_FILL_RECT = 2;
 static constexpr jint COMMAND_STROKE_LINE = 3;
+static constexpr jint COMMAND_FILL_OVAL = 4;
+static constexpr jint COMMAND_STROKE_OVAL = 5;
 
 static std::mutex gDirectContextMutex;
 static std::unordered_map<void*, sk_sp<GrDirectContext>> gDirectContextsByMtlContext;
@@ -193,6 +195,44 @@ static bool drawCommandList(SkCanvas* canvas, const jint* commands, jsize comman
                                  static_cast<SkScalar>(x2),
                                  static_cast<SkScalar>(y2),
                                  paint);
+                break;
+            }
+            case COMMAND_FILL_OVAL: {
+                if (offset + 5 > commandCount) {
+                    return false;
+                }
+                SkPaint paint;
+                paint.setAntiAlias(true);
+                paint.setColor(skColorFromArgb(commands[offset++]));
+                jint x = commands[offset++];
+                jint y = commands[offset++];
+                jint ovalWidth = commands[offset++];
+                jint ovalHeight = commands[offset++];
+                SkRect rect = SkRect::MakeXYWH(static_cast<SkScalar>(x),
+                                              static_cast<SkScalar>(y),
+                                              static_cast<SkScalar>(ovalWidth),
+                                              static_cast<SkScalar>(ovalHeight));
+                canvas->drawOval(rect, paint);
+                break;
+            }
+            case COMMAND_STROKE_OVAL: {
+                if (offset + 6 > commandCount) {
+                    return false;
+                }
+                SkPaint paint;
+                paint.setAntiAlias(true);
+                paint.setStyle(SkPaint::kStroke_Style);
+                paint.setColor(skColorFromArgb(commands[offset++]));
+                jint x = commands[offset++];
+                jint y = commands[offset++];
+                jint ovalWidth = commands[offset++];
+                jint ovalHeight = commands[offset++];
+                paint.setStrokeWidth(static_cast<SkScalar>(std::max(1, commands[offset++])));
+                SkRect rect = SkRect::MakeXYWH(static_cast<SkScalar>(x),
+                                              static_cast<SkScalar>(y),
+                                              static_cast<SkScalar>(ovalWidth),
+                                              static_cast<SkScalar>(ovalHeight));
+                canvas->drawOval(rect, paint);
                 break;
             }
             default:

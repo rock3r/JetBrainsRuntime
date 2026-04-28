@@ -648,9 +648,50 @@ Status: completed in Magic Jewel.
   - screenshot assertion: `passed`
   - screenshot: `/tmp/magic-jewel-swing-progress-smoke/new-window.png`
 
+### Checkpoint 22: Magic-Like Command Vector Scene
+
+Status: completed as a wider command-list stress slice; SKP picture replay remains the correctness/reference path for later benchmarks.
+
+- Preserved the existing SKP replay path:
+  - `JBR_SKIA_RENDER_MODE=picture` still selects serialized picture replay.
+  - `JBR_SKIA_RENDER_MODE=commands` remains an additive command-list experiment.
+- Expanded the temporary command ABI in JBR and the public Runtime API mirror with oval primitives:
+  - `COMMAND_FILL_OVAL = 4`
+  - `COMMAND_STROKE_OVAL = 5`
+  - Java2D fallback rendering and native JBR-owned Skia rendering both support the new operations.
+- Skiko command mode now paints a Magic-Jewel-like animated vector scene rather than the earlier toy dark/cyan card:
+  - green and blue fields
+  - purple block
+  - yellow filled circle
+  - orange moving progress strip
+  - moving translucent line field
+  - rotating spoke wheel with white dots and a stroked oval.
+- Skiko command mode explicitly schedules repaint after successful JBR command rendering. This is required for the command experiment because it bypasses the real Compose `renderDelegate` and therefore does not receive Compose animation invalidation.
+- Magic Jewel's command screenshot oracle now validates the Magic-like command palette and emits:
+  - `JBR_SKIA_COMMAND_SCREENSHOT_COUNTS green=<n> blue=<n> purple=<n> yellow=<n> orange=<n> white=<n>`
+- Verification completed:
+  - JBR patched `java.desktop` compile of `JBRSkia.java` and `JBRSkiaService.java`
+  - native `libjbrskiainterop.dylib` rebuild against the local Skiko Skia checkout
+  - Skiko `./gradlew :skiko:compileKotlinAwt :skiko:compileTestKotlinAwt :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`
+  - Skiko `./gradlew :skiko:publishToMavenLocal`
+  - Magic Jewel `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew compileKotlin`
+  - Magic Jewel `bash -n scripts/assert-jbr-skia-command-window-screenshot.sh scripts/jbr-skia-interop-report.sh`
+  - `OUT_DIR=/tmp/magic-jewel-command-vector-smoke DURATION_SECONDS=8 SAMPLE_INTERVAL_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT JBR_SKIA_RENDER_MODE=commands ./scripts/jbr-skia-interop-report.sh`
+- Command vector smoke highlights, recorded on a noisy development machine:
+  - report: `/tmp/magic-jewel-command-vector-smoke/report.md`
+  - screenshot: `/tmp/magic-jewel-command-vector-smoke/new-window.png`
+  - old process samples: `samples=7 avg_cpu=29.29 max_cpu=47.30 avg_rss_kb=927522 max_rss_kb=985184`
+  - new process samples: `samples=5 avg_cpu=76.68 max_cpu=136.70 avg_rss_kb=387894 max_rss_kb=497344`
+  - old Swing repaint markers: `frames=1 fps=0.1`
+  - new Swing repaint markers: `frames=124 fps=15.5`
+  - Skiko command frames: `frames=1741 fps=217.6 avg_commands=453 max_commands=464`
+  - JBR command frames: `frames=1741 fps=217.6 avg_commands=453 max_commands=464`
+  - screenshot assertion: `passed`
+  - screenshot counts: `green=847887 blue=1397277 purple=98490 yellow=96680 orange=71506 white=126156`
+
 Next checkpoint:
 
-- Expand the command-list ABI beyond synthetic shapes toward a real subset of Compose vector drawing operations, while keeping SKP replay as the reference/fallback path.
+- Start feeding command mode from real Compose draw-operation recording instead of the hand-built Magic-like command generator, while keeping SKP replay as the reference/fallback and benchmark path.
 - Keep text/images on the SKP path until the JBR-owned font/typeface story is implemented.
 
 Use separate worktrees for every existing repo touched:
@@ -827,7 +868,7 @@ Primary target: **macOS + Metal + direct canvas path**. JCEF, video/external sur
   - smoke test Swing window paint with Metal enabled
   - verify `JBRSkiaService` is registered with `@JBRApi.Service` and `@JBRApi.Provides`
   - verify a synthetic test-only `@JBRApi.Provided("JBRSkia")` interface can resolve the provider through `JBRApi.internalService()`
-  - verify an external-client test reads static `ABI_ID` / `BUILD_ID` reflectively via `Class.forName("com.jetbrains.JBRSkia")`
+  - verify an external-client test reads static `ABI_ID` / `BUILD_ID` reflectively via `Class.forName("com.jetbrains.desktop.JBRSkia")`
   - verify an external-client test acquires `JBRSkia` via reflection on `com.jetbrains.JBR.getJBRSkia()` or the final public accessor name and receives a non-null service when JBR is compatible
   - verify unavailable provider construction throws `JBRApi.ServiceNotAvailableException` and clients observe a null service
   - verify `acquireCanvas` returns non-null only in valid paint scope

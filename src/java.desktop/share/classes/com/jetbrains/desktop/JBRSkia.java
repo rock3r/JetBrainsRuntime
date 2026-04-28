@@ -40,6 +40,8 @@ public abstract class JBRSkia {
     public static final int COMMAND_CLEAR = Integer.parseInt("1");
     public static final int COMMAND_FILL_RECT = Integer.parseInt("2");
     public static final int COMMAND_STROKE_LINE = Integer.parseInt("3");
+    public static final int COMMAND_FILL_OVAL = Integer.parseInt("4");
+    public static final int COMMAND_STROKE_OVAL = Integer.parseInt("5");
 
     private static String buildId() {
         return "skia-interop-poc:" + ABI_ID;
