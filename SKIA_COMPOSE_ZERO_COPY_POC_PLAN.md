@@ -630,6 +630,24 @@ Status: completed as a Magic Jewel validation slice.
   - screenshot assertion: `passed`
   - screenshot counts: `green=525345 blue=1013838 purple=30057 yellow=37520 swingPanel=966940 overlayPurple=30269 orangeProgress=21406`
 
+### Checkpoint 21: Visible Swing Animation Signal
+
+Status: completed in Magic Jewel.
+
+- Replaced the stock Swing `JProgressBar` with a custom Swing component because the LAF indeterminate progress animation was too subtle/static inside the validation scene.
+- The custom Swing component paints a clearly moving orange block and repaints from a Swing `Timer`.
+- Magic Jewel now emits Swing-side repaint markers:
+  - `MAGIC_JEWEL_SWING_FRAME frame=<n>`
+- The report harness now records `Swing Repaint Markers` for old and new modes.
+- Verification completed:
+  - `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew compileKotlin`
+  - `OUT_DIR=/tmp/magic-jewel-swing-progress-smoke DURATION_SECONDS=8 SAMPLE_INTERVAL_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT JBR_SKIA_RENDER_MODE=picture ./scripts/jbr-skia-interop-report.sh`
+- Swing progress smoke highlights:
+  - old Swing repaint markers: `frames=144 fps=18.0`
+  - new Swing repaint markers: `frames=187 fps=23.4`
+  - screenshot assertion: `passed`
+  - screenshot: `/tmp/magic-jewel-swing-progress-smoke/new-window.png`
+
 Next checkpoint:
 
 - Expand the command-list ABI beyond synthetic shapes toward a real subset of Compose vector drawing operations, while keeping SKP replay as the reference/fallback path.
