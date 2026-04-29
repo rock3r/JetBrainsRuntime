@@ -4261,6 +4261,19 @@ Validation:
     - `jbr_image_cache_evict_frames=5980`
     - `screenshot_status=passed`
     - recorder summary: `avg_image_cache_clears=0.0 max_image_cache_clears=0 avg_image_cache_evicts=7.5 max_image_cache_evicts=260`
+  - combined resize + eviction smoke: `/tmp/magic-jewel-resize-image-cache-evict-abi42-smoke/report.md`
+    - `validation_status=passed`
+    - `fallback_new_count=0`
+    - `skiko_picture_frames=0`
+    - `jbr_picture_frames=0`
+    - `cmp_recorder_frames=454`
+    - `jbr_command_frames=454`
+    - `jbr_image_cache_clear_frames=0`
+    - `jbr_image_cache_evict_frames=4940`
+    - `skiko_surface_change_markers=1`
+    - `skiko_context_change_markers=0`
+    - `skiko_same_context_surface_change_markers=1`
+    - `screenshot_status=passed`
 
 Next checkpoint:
 

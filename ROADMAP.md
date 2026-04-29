@@ -51,6 +51,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [ ] Expand screenshot assertions to check newly added probe colors/regions explicitly.
 - [x] Improve Magic Jewel visual fidelity so labels use Jewel `Text` and `JewelTheme.defaultTextStyle`.
 - [ ] Add screenshot-level text/typography assertions once the harness can make stable OCR or pixel-region claims.
+- [ ] Investigate observed text alignment drift in Magic Jewel/Jewel labels on the command path.
 
 ## Validation Harness
 
