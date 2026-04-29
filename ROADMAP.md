@@ -90,7 +90,9 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Magic Jewel strict resize validation for `contextChanged=false surfaceChanged=true`.
 - [x] JBR image cache entries are scoped by destination context id.
 - [x] Magic Jewel report counts scoped JBR image-cache-clear markers.
-- [ ] Combined resize + image-cache churn smoke proving stable context-scoped cache ownership across same-context surface replacement.
+- [x] Combined resize + image-cache churn smoke proving stable context-scoped cache ownership across same-context surface replacement.
+- [x] Strict report assertion for scoped JBR image-cache-clear markers.
+- [ ] Reduce redundant image-cache clear/define churn for stable fallback images.
 
 ## Productionization Later
 

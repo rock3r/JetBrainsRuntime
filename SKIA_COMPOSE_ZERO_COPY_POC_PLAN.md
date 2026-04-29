@@ -4128,9 +4128,68 @@ Validation:
   - `jbr_scoped_image_cache_clear_frames=656`
   - `screenshot_status=passed`
 
+### Checkpoint: Combined Resize + Image-Cache Ownership Smoke
+
+Status: completed.
+
+- Ran the image-cache churn sample with automatic live resize enabled.
+- The run validates that same-context surface replacement is observed as `contextChanged=false surfaceChanged=true`.
+- The same run validates that JBR continues to emit context-scoped image-cache clear markers after resize.
+- This ties together the two production-shaped ownership rules:
+  - surface-bound wrappers are invalidated on texture/surface replacement
+  - context-bound cache namespaces survive same-context replacement and are isolated by context id
+
+Validation:
+
+- Magic Jewel combined resize/image-cache smoke: `/tmp/magic-jewel-resize-image-cache-policy-smoke/report.md`
+  - `validation_status=passed`
+  - `fallback_new_count=0`
+  - `skiko_picture_frames=0`
+  - `jbr_picture_frames=0`
+  - `cmp_recorder_frames=535`
+  - `jbr_command_frames=534`
+  - `jbr_image_cache_clear_frames=542`
+  - `jbr_scoped_image_cache_clear_frames=542`
+  - `skiko_surface_change_markers=1`
+  - `skiko_context_change_markers=0`
+  - `skiko_same_context_surface_change_markers=1`
+  - `screenshot_status=passed`
+- Observed marker:
+  - `SKIKO_JBR_INTEROP_SURFACE_CHANGED oldContextId=0x8c7749140 newContextId=0x8c7749140 contextChanged=false surfaceChanged=true ...`
+
+### Checkpoint: Strict Scoped Image-Cache Marker Gate
+
+Status: completed.
+
+- Magic Jewel gained `EXPECT_MIN_JBR_SCOPED_IMAGE_CACHE_CLEARS`.
+- The report harness now fails strict command runs when JBR emits only the old unscoped `JBR_SKIA_INTEROP_IMAGE_CACHE_CLEAR` marker shape.
+- Parser tests cover both passing scoped markers and failing unscoped-only markers.
+- The combined resize + image-cache churn smoke now requires:
+  - command recorder image-cache clears
+  - generic JBR image-cache clear markers
+  - scoped JBR image-cache clear markers with `contextId=0x`
+  - at least one same-context surface replacement marker
+
+Validation:
+
+- Magic Jewel parser tests: `bash scripts/test-jbr-skia-report-validation.sh`
+- Magic Jewel strict combined resize/image-cache smoke: `/tmp/magic-jewel-resize-image-cache-policy-strict-scoped-smoke/report.md`
+  - `validation_status=passed`
+  - `fallback_new_count=0`
+  - `skiko_picture_frames=0`
+  - `jbr_picture_frames=0`
+  - `cmp_recorder_frames=791`
+  - `jbr_command_frames=792`
+  - `jbr_image_cache_clear_frames=803`
+  - `jbr_scoped_image_cache_clear_frames=803`
+  - `skiko_surface_change_markers=1`
+  - `skiko_context_change_markers=0`
+  - `skiko_same_context_surface_change_markers=1`
+  - `screenshot_status=passed`
+
 Next checkpoint:
 
-- Add a stricter launch-level resize + image-cache churn run that proves same-context surface replacement keeps the context namespace stable while continuing to use context-scoped JBR image-cache clears.
+- Start reducing the remaining command-path hot spots now that cache ownership is fenced: likely target is avoiding redundant image-cache clear/define churn for stable fallback images, or moving another text/style case out of the image fallback.
 
 Use separate worktrees for every existing repo touched:
 
