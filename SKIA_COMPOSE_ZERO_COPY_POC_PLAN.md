@@ -3844,6 +3844,23 @@ Next checkpoint:
 
 - Keep quiet-machine benchmark collection open, and move to screen/context invalidation or packaged old/new artifact matrix work while the host remains noisy.
 
+### Checkpoint 105: Scope Identity Read By Skiko
+
+Status: completed in Skiko interop unit coverage.
+
+- JBR already exposes a monotonic `getScopeId()` on each scoped paint canvas.
+- Skiko now reads that scope id through the reflective `ScopedCanvas` wrapper.
+- The scope-acquired diagnostic marker now includes both `scopeId=...` and `metalTexture=...`, giving the report/log stream a stable place to hang future context/surface invalidation telemetry.
+- This checkpoint does not claim full screen-migration invalidation yet. It only wires the current scope identity across the JBR/Skiko Java boundary and keeps the production cache-invalidation work visible.
+
+Validation:
+
+- Skiko JBR interop unit test: `./gradlew --no-configuration-cache :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`
+
+Next checkpoint:
+
+- Add explicit old/new packaged-artifact fallback matrix coverage, then return to real context/surface invalidation once the JBR scope exposes a stable destination-context identity rather than only per-paint scope ids and Metal texture pointers.
+
 Use separate worktrees for every existing repo touched:
 
 - `JetBrainsRuntime` worktree: `jbr-skia-compose-poc`
