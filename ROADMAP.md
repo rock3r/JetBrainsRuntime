@@ -79,6 +79,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [ ] Replace local patched-class/dylib launch wiring with real JBR build integration.
 - [ ] Decide final Skiko artifact shape for Skia-less JBR interop.
 - [ ] Font/typeface ownership through the JBR Skia runtime.
+- [ ] JBR-owned generic shader factory and handles for non-serialized shader families.
 - [ ] Screen migration/context invalidation hardening.
 - [ ] Popup/menu and layered Swing/Compose stress tests.
 - [ ] JCEF/shared-texture exploration after Compose is solid.
