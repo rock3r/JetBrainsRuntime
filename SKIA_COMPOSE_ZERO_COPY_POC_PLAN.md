@@ -4600,3 +4600,26 @@ Validation:
 Next:
 - Keep the full packaged old/new artifact matrix open until we have named old/new bundles for JBR, Runtime API, Skiko, and CMP.
 - Continue macOS MVP hardening with quieter benchmark runs and remaining rendering edge cases.
+
+## Checkpoint: Transformed Shader Strict Fallback
+
+Date: 2026-04-29
+
+Status: completed as a focused CMP recorder guardrail.
+
+Why:
+- Serialized gradient commands are safe only while CMP still has the original known shader-family metadata.
+- `TransformShader` wraps the Skia shader with a local matrix and returns an opaque Compose `Shader` without the original serialized gradient metadata.
+- Strict command mode must therefore reject transformed gradients and fall back instead of sending a partial or raw-pointer shader representation across the Skiko/JBR Skia boundary.
+
+Change:
+- Added `JbrSkiaCommandRecorderTest.rejectsTransformedGradientShaderInStrictMode`.
+- The test builds a linear gradient, wraps it in `TransformShader` with a local translation matrix, draws it in strict mode, and asserts the command array is `null`.
+
+Validation:
+- Command: `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.rejectsTransformedGradientShaderInStrictMode`
+- Result: passed.
+
+Next:
+- Keep broader generic/nonserializable shader support behind the future JBR-owned shader factory design.
+- Continue with remaining macOS MVP hardening and benchmark/report work.

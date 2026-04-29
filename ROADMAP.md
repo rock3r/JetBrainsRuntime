@@ -47,7 +47,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   - [ ] Long term: revisit true generic shader support only after Skiko's fast path no longer creates Skia C++ objects in a separate bundled runtime.
 - [x] Strict recorder fallback for invalid gradient stops and excessive gradient color counts.
 - [x] Strict recorder fallback for invalid rounded-rectangle radii with gradient paints.
-- [ ] More strict shader fallback tests: transformed shaders, nonfinite shader geometry that survives shader construction, and broader generic shader cases.
+- [x] Strict recorder fallback for transformed gradient shaders.
+- [ ] More strict shader fallback tests: nonfinite shader geometry that survives shader construction and broader generic shader cases.
 - [ ] Expand screenshot assertions to check newly added probe colors/regions explicitly.
 - [x] Improve Magic Jewel visual fidelity so labels use Jewel `Text` and `JewelTheme.defaultTextStyle`.
 - [x] Prefer fidelity-first text image replay by default so command mode preserves resolved Jewel font/size/alignment until JBR-owned typefaces exist.
