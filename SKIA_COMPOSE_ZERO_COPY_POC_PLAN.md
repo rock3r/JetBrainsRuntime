@@ -4623,3 +4623,11 @@ Validation:
 Next:
 - Keep broader generic/nonserializable shader support behind the future JBR-owned shader factory design.
 - Continue with remaining macOS MVP hardening and benchmark/report work.
+
+Follow-up:
+- Added `JbrSkiaCommandRecorderTest.rejectsCompositeShaderInStrictMode`.
+- The test builds a `CompositeShader` from linear/radial gradients and confirms strict command recording returns `null`.
+- This protects the same boundary as transformed shaders: once Compose has an opaque shader wrapper rather than the original serialized family metadata, command replay must fall back instead of sharing raw Skia shader objects across runtimes.
+- Validation:
+  - command: `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.rejectsCompositeShaderInStrictMode --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.rejectsTransformedGradientShaderInStrictMode`
+  - result: passed.
