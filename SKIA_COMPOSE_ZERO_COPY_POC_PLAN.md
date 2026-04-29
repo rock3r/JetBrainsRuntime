@@ -3988,6 +3988,28 @@ Next checkpoint:
 
 - Turn the temporary Skiko cached-surface invalidation diagnostic into the next production-shaped cache boundary: cache only state that is safe across paints, key it by the exposed surface/context identity, and keep full-log lifecycle markers parseable.
 
+### Checkpoint 111: Unit-Tested Skiko Surface Identity Tracker
+
+Status: completed in Skiko.
+
+- Skiko's `JbrSkiaSwingLayer` no longer keeps surface identity comparison as paint-method-only local state.
+- Added a small internal `SurfaceIdentityTracker` that:
+  - ignores unknown `0/0` identities
+  - treats repeated identities as stable
+  - reports a structured change when either `surfaceId` or `metalTexturePtr` changes
+  - resets on `removeNotify()`
+- The existing layer still closes its temporary diagnostic `DirectContext` on identity change and emits the same parseable marker:
+  - `SKIKO_JBR_INTEROP_SURFACE_CHANGED oldSurfaceId=... newSurfaceId=... oldMetalTexture=... newMetalTexture=...`
+- Added focused Skiko tests for unknown, stable, changed, and cleared identity tracking.
+
+Validation:
+
+- Skiko focused test: `./gradlew --no-configuration-cache :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`
+
+Next checkpoint:
+
+- Decide whether the next production-shaped cache should live in Skiko only as command/replay-side bookkeeping or whether JBR should expose a stronger context id separate from `surfaceId` so Skiko can distinguish context migration from same-context texture replacement.
+
 Use separate worktrees for every existing repo touched:
 
 - `JetBrainsRuntime` worktree: `jbr-skia-compose-poc`

@@ -82,7 +82,9 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Skiko invalidates temporary cached surface state when scoped destination identity changes.
 - [x] Magic Jewel parser coverage for `SKIKO_JBR_INTEROP_SURFACE_CHANGED`.
 - [x] Magic Jewel launch-level resize validation for surface identity changes.
+- [x] Unit-tested Skiko surface identity tracker.
 - [ ] Full launch-level old/new packaged artifact matrix.
+- [ ] Stronger JBR context identity separate from per-surface identity, if needed for production cache keys.
 
 ## Productionization Later
 
