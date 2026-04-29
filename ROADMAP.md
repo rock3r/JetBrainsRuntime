@@ -69,6 +69,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] 64-bit command capability accessor and Skiko gate.
 - [x] Structured native C ABI version block beyond Java-level command constants.
 - [ ] BUILD_ID includes pinned Skia revision plus compile-flags hash.
+- [x] New Skiko / pre-native-metadata JBR fallback unit coverage.
 - [ ] Explicit tests for old Skiko/new JBR and new Skiko/old JBR fallback combinations.
 
 ## Productionization Later

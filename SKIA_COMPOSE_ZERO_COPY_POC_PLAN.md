@@ -3673,6 +3673,23 @@ Next checkpoint:
 
 - Add old/new compatibility matrix probes around the new native ABI gate, then continue into the remaining shader/fallback coverage and quiet-machine benchmark pass.
 
+### Checkpoint 98: Pre-Native-Metadata Service Fallback
+
+Status: completed as a Skiko compatibility-hardening test slice.
+
+- Skiko now treats a service that passes the public static `ABI_ID` / `BUILD_ID` check but does not expose native metadata getters as `native-abi-mismatch`.
+- This gives new Skiko an explicit marker when it runs against an older patched JBR/service shape instead of reporting a generic public API failure.
+- The focused Skiko test suite now includes a fake legacy service with command capabilities but no native metadata getters.
+- `ROADMAP.md` now records the new-Skiko/pre-native-metadata-JBR unit coverage separately from the remaining full launch matrix.
+
+Validation:
+
+- Skiko focused tests: `./gradlew --no-configuration-cache :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`
+
+Next checkpoint:
+
+- Build the full old/new launch matrix when we have packaged artifacts for both sides, and continue coverage on shader/fallback cases that are still outside the command subset.
+
 Use separate worktrees for every existing repo touched:
 
 - `JetBrainsRuntime` worktree: `jbr-skia-compose-poc`
