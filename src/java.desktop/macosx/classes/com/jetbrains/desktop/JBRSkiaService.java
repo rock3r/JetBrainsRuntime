@@ -62,38 +62,38 @@ public class JBRSkiaService extends JBRSkia {
     private static final String PROPERTY = "sun.java2d.skia.interop";
     private static final String NATIVE_DIAGNOSTIC_PROPERTY = "sun.java2d.skia.interop.nativeDiagnostic";
     private static final String NATIVE_LIBRARY_PROPERTY = "sun.java2d.skia.interop.library";
-    private static final int COMMAND_CAPABILITIES =
-            COMMAND_CAP_CLEAR
-                    | COMMAND_CAP_FILL_RECT
-                    | COMMAND_CAP_STROKE_LINE
-                    | COMMAND_CAP_FILL_OVAL
-                    | COMMAND_CAP_STROKE_OVAL
-                    | COMMAND_CAP_CLEAR_RECT
-                    | COMMAND_CAP_SAVE_RESTORE
-                    | COMMAND_CAP_CLIP_RECT
-                    | COMMAND_CAP_USER_SPACE_COORDINATES
-                    | COMMAND_CAP_RECORD_ANTIALIAS
-                    | COMMAND_CAP_STROKE_METADATA
-                    | COMMAND_CAP_BASIC_TRANSFORMS
-                    | COMMAND_CAP_CLIP_RECT_OP
-                    | COMMAND_CAP_SAVE_LAYER
-                    | COMMAND_CAP_DRAW_IMAGE_ARGB
-                    | COMMAND_CAP_IMAGE_CACHE
-                    | COMMAND_CAP_DRAW_TEXT_UTF16
-                    | COMMAND_CAP_CLEAR_IMAGE_CACHE
-                    | COMMAND_CAP_DRAW_PARAGRAPH_UTF16
-                    | COMMAND_CAP_PARAGRAPH_FONT_STYLE
-                    | COMMAND_CAP_PARAGRAPH_LAYOUT
-                    | COMMAND_CAP_PARAGRAPH_LINE_HEIGHT
-                    | COMMAND_CAP_PARAGRAPH_OVERFLOW
-                    | COMMAND_CAP_PARAGRAPH_DECORATION
-                    | COMMAND_CAP_PARAGRAPH_LETTER_SPACING
-                    | COMMAND_CAP_PARAGRAPH_BACKGROUND
-                    | COMMAND_CAP_CLIP_PATH
-                    | COMMAND_CAP_DRAW_PATH
-                    | COMMAND_CAP_DRAW_ARC
-                    | COMMAND_CAP_DRAW_ROUND_RECT
-                    | COMMAND_CAP_FILL_RECT_LINEAR_GRADIENT;
+    private static final long COMMAND_CAPABILITIES =
+            (long) COMMAND_CAP_CLEAR
+                    | (long) COMMAND_CAP_FILL_RECT
+                    | (long) COMMAND_CAP_STROKE_LINE
+                    | (long) COMMAND_CAP_FILL_OVAL
+                    | (long) COMMAND_CAP_STROKE_OVAL
+                    | (long) COMMAND_CAP_CLEAR_RECT
+                    | (long) COMMAND_CAP_SAVE_RESTORE
+                    | (long) COMMAND_CAP_CLIP_RECT
+                    | (long) COMMAND_CAP_USER_SPACE_COORDINATES
+                    | (long) COMMAND_CAP_RECORD_ANTIALIAS
+                    | (long) COMMAND_CAP_STROKE_METADATA
+                    | (long) COMMAND_CAP_BASIC_TRANSFORMS
+                    | (long) COMMAND_CAP_CLIP_RECT_OP
+                    | (long) COMMAND_CAP_SAVE_LAYER
+                    | (long) COMMAND_CAP_DRAW_IMAGE_ARGB
+                    | (long) COMMAND_CAP_IMAGE_CACHE
+                    | (long) COMMAND_CAP_DRAW_TEXT_UTF16
+                    | (long) COMMAND_CAP_CLEAR_IMAGE_CACHE
+                    | (long) COMMAND_CAP_DRAW_PARAGRAPH_UTF16
+                    | (long) COMMAND_CAP_PARAGRAPH_FONT_STYLE
+                    | (long) COMMAND_CAP_PARAGRAPH_LAYOUT
+                    | (long) COMMAND_CAP_PARAGRAPH_LINE_HEIGHT
+                    | (long) COMMAND_CAP_PARAGRAPH_OVERFLOW
+                    | (long) COMMAND_CAP_PARAGRAPH_DECORATION
+                    | (long) COMMAND_CAP_PARAGRAPH_LETTER_SPACING
+                    | (long) COMMAND_CAP_PARAGRAPH_BACKGROUND
+                    | (long) COMMAND_CAP_CLIP_PATH
+                    | (long) COMMAND_CAP_DRAW_PATH
+                    | (long) COMMAND_CAP_DRAW_ARC
+                    | (long) COMMAND_CAP_DRAW_ROUND_RECT
+                    | COMMAND_CAP64_FILL_RECT_LINEAR_GRADIENT;
     private static final boolean NATIVE_BRIDGE_AVAILABLE = loadNativeBridge();
     private static final AtomicLong NEXT_SCOPE_ID = new AtomicLong(1);
     private static final int MAX_CACHED_IMAGES = 256;
@@ -113,6 +113,11 @@ public class JBRSkiaService extends JBRSkia {
 
     @Override
     public int getCommandCapabilities() {
+        return (int) COMMAND_CAPABILITIES;
+    }
+
+    @Override
+    public long getCommandCapabilities64() {
         return COMMAND_CAPABILITIES;
     }
 

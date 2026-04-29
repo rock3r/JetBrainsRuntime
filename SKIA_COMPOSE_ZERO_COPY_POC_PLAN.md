@@ -3226,6 +3226,39 @@ Next checkpoint:
 
 - Add strict command-stream validation for gradient fallbacks/edge cases (unsupported shader transforms, non-linear shaders, too many stops) and start the next shader-backed paint shape once the fallback surface is pinned.
 
+### Checkpoint 85: 64-bit Command Capability Gate And ABI 31
+
+Status: completed for widening command capability compatibility checks before adding more drawing operations.
+
+- Bumped the command ABI to `31` across JBR, public JBR API, Skiko, and CMP.
+- Added `JBRSkia.getCommandCapabilities64()` while keeping the existing `getCommandCapabilities()` low-bit accessor for compatibility/documentation.
+- Skiko now performs the required command-capability gate against the 64-bit reflective accessor, avoiding the signed-`int` ceiling after ABI 30 consumed bit `1 << 30`.
+- CMP command streams now carry ABI `31`; existing strict recorder coverage still passes, including the linear-gradient rect command and the opaque-shader strict fallback test.
+- Magic Jewel linear-gradient command smoke still runs through strict command replay only, proving the widened gate did not change the runnable paint path.
+
+Validation:
+
+- Skiko focused interop test: `./gradlew :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`
+- CMP focused recorder test: `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest`
+- JBR Java service compile against patched stubs.
+- JBR native bridge compile against pinned Skia `m147-64a2414108`.
+- Public JBR API shim rebuild: `bash tools/build.sh process && bash tools/build.sh dev $(/usr/libexec/java_home -v 21) /tmp/jbr-api-skia-dev && cp /tmp/jbr-api-skia-dev/jbr-api-SNAPSHOT.jar /tmp/jbr-api-shim.jar`
+- Magic Jewel report: `/tmp/magic-jewel-linear-gradient-command-abi31-smoke/report.md`
+
+ABI 31 Magic Jewel report:
+
+- validation status: `passed`
+- fallback markers: `0`
+- Skiko/JBR picture replay frames: `0` / `0`
+- CMP command recorder: `frames=8155 fps=407.8 avg_commands=2461 max_commands=2461 unsupported_frames=0 avg_unsupported=0.0 max_unsupported=0 avg_text_commands=9.0 max_text_commands=9 avg_paragraph_text_commands=0.0 max_paragraph_text_commands=0 avg_image_defines=0.0 max_image_defines=0 avg_image_refs=0.0 max_image_refs=0 avg_image_cache_clears=0.0 max_image_cache_clears=0 reasons=none`
+- Skiko/JBR command frames: `8155` / `8155`
+- JBR command timing: `frames=8155 avg_total_ms=0.996 max_total_ms=4.273 avg_draw_ms=0.099 max_draw_ms=1.302 avg_flush_ms=0.880 max_flush_ms=4.172 avg_paragraph_ms=0.000 max_paragraph_ms=0.000 avg_paragraph_commands=0.0 max_paragraph_commands=0`
+- screenshot assertion: `passed`
+
+Next checkpoint:
+
+- Use the 64-bit capability gate for the next shader-backed paint shape, preferably a gradient rounded rectangle or path, without consuming the sign bit of the legacy `int` mask.
+
 Use separate worktrees for every existing repo touched:
 
 - `JetBrainsRuntime` worktree: `jbr-skia-compose-poc`
