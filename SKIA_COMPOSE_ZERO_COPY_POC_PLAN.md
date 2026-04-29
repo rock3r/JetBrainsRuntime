@@ -4992,3 +4992,41 @@ Validation:
 
 Next:
 - Investigate why short new-mode runs sometimes produce zero `ps` samples before relying on CPU columns for benchmark conclusions; async-profiler and FPS/command timing remain the stronger signals.
+
+## Checkpoint: Color Filter And Path Effect Fallback Probes
+
+Date: 2026-04-29
+
+Status: completed as live recorder-level fallback coverage.
+
+Why:
+- Color filters and path effects are common `Paint` features that currently require Skia-owned objects outside the command subset.
+- Strict command mode should reject them cleanly and fall back to picture replay rather than attempting a partial JBR command render.
+
+Changes:
+- Magic Jewel added two opt-in probes:
+  - `MAGIC_JEWEL_COMPOSE_COLOR_FILTER=true`
+  - `MAGIC_JEWEL_COMPOSE_PATH_EFFECT=true`.
+- The command-probe suite gained:
+  - `commands-color-filter-fallback`
+  - `commands-path-effect-fallback`.
+- README documents the new manual report commands and suite coverage.
+
+Validation:
+- Syntax check:
+  - command: `bash -n scripts/jbr-skia-interop-report.sh scripts/jbr-skia-command-probe-suite.sh`
+  - result: passed.
+- Compile:
+  - command: `./gradlew --no-daemon compileKotlin`
+  - result: passed.
+- Focused command-probe suite:
+  - command: `OUT_ROOT=/tmp/magic-jewel-paint-effect-fallback-suite-smoke CASES="commands-color-filter-fallback commands-path-effect-fallback" DURATION_SECONDS=3 WARMUP_SECONDS=1 SAMPLE_INTERVAL_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT bash scripts/jbr-skia-command-probe-suite.sh`
+  - result: `JBR_SKIA_COMMAND_PROBE_SUITE passed out_root=/tmp/magic-jewel-paint-effect-fallback-suite-smoke`
+  - `commands-color-filter-fallback`: `status=passed`, `fallback_new_count=0`, `unsupported=colorFilter:145`, `jbr_picture_frames=145`, `jbr_command_frames=0`.
+  - `commands-path-effect-fallback`: `status=passed`, `fallback_new_count=0`, `unsupported=pathEffect:227`, `jbr_picture_frames=227`, `jbr_command_frames=0`.
+
+Note:
+- These are recorder-level operation fallbacks, not compatibility-gate fallbacks. The expected machine-readable signal is `cmp_unsupported_reasons` plus picture replay and zero command frames, not `SKIKO_JBR_INTEROP_FALLBACK`.
+
+Next:
+- Keep generic shader factory work deferred; continue adding explicit fallback probes for unsupported paint/object families as they show up in real Jewel content.
