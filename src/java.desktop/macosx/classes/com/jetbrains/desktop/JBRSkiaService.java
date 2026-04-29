@@ -31,6 +31,7 @@ import sun.java2d.SurfaceData;
 import sun.java2d.metal.MTLRenderQueue;
 import sun.java2d.pipe.hw.AccelSurface;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.AlphaComposite;
 import java.awt.Composite;
@@ -83,7 +84,8 @@ public class JBRSkiaService extends JBRSkia {
                     | COMMAND_CAP_PARAGRAPH_DECORATION
                     | COMMAND_CAP_PARAGRAPH_LETTER_SPACING
                     | COMMAND_CAP_PARAGRAPH_BACKGROUND
-                    | COMMAND_CAP_CLIP_PATH;
+                    | COMMAND_CAP_CLIP_PATH
+                    | COMMAND_CAP_DRAW_PATH;
     private static final boolean NATIVE_BRIDGE_AVAILABLE = loadNativeBridge();
     private static final AtomicLong NEXT_SCOPE_ID = new AtomicLong(1);
     private static final int MAX_CACHED_IMAGES = 256;
@@ -170,6 +172,7 @@ public class JBRSkiaService extends JBRSkia {
         if (op == COMMAND_DRAW_TEXT_UTF16) return -4;
         if (op == COMMAND_DRAW_PARAGRAPH_UTF16) return -5;
         if (op == COMMAND_CLIP_PATH) return -6;
+        if (op == COMMAND_DRAW_PATH) return -7;
         if (op == COMMAND_DRAW_IMAGE_REF) return 17;
         if (op == COMMAND_CLEAR) return 4;
         if (op == COMMAND_CLEAR_RECT) return 7;
@@ -196,6 +199,9 @@ public class JBRSkiaService extends JBRSkia {
         }
         if (expectedLength == -6 && record.op() == COMMAND_CLIP_PATH) {
             return record.recordLength() >= 6;
+        }
+        if (expectedLength == -7 && record.op() == COMMAND_DRAW_PATH) {
+            return record.recordLength() >= 11;
         }
         return expectedLength == record.recordLength();
     }
@@ -231,6 +237,26 @@ public class JBRSkiaService extends JBRSkia {
                     && pathDataLength <= 4096
                     && record.argsStart() + 3 + pathDataLength == record.recordEnd()
                     && validatePathData(commands, record.argsStart() + 3, record.recordEnd());
+        }
+        if (record.op() == COMMAND_DRAW_PATH) {
+            if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE
+                    && record.recordFlags() != COMMAND_RECORD_FLAG_ANTIALIAS) {
+                return false;
+            }
+            int paintStyle = commands[record.argsStart()];
+            int strokeWidth = commands[record.argsStart() + 2];
+            int strokeCap = commands[record.argsStart() + 3];
+            int strokeJoin = commands[record.argsStart() + 4];
+            int strokeMiter = commands[record.argsStart() + 5];
+            int fillType = commands[record.argsStart() + 6];
+            int pathDataLength = commands[record.argsStart() + 7];
+            return (paintStyle == COMMAND_PAINT_STYLE_FILL || paintStyle == COMMAND_PAINT_STYLE_STROKE)
+                    && (paintStyle == COMMAND_PAINT_STYLE_FILL || isValidStrokeMetadata(strokeWidth, strokeCap, strokeJoin, strokeMiter))
+                    && (fillType == COMMAND_PATH_FILL_NON_ZERO || fillType == COMMAND_PATH_FILL_EVEN_ODD)
+                    && pathDataLength >= 0
+                    && pathDataLength <= 4096
+                    && record.argsStart() + 8 + pathDataLength == record.recordEnd()
+                    && validatePathData(commands, record.argsStart() + 8, record.recordEnd());
         }
         if (record.op() == COMMAND_DRAW_IMAGE_ARGB) {
             if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE
@@ -376,6 +402,15 @@ public class JBRSkiaService extends JBRSkia {
             }
         }
         return offset == recordEnd;
+    }
+
+    private static boolean isValidStrokeMetadata(int strokeWidth, int strokeCap, int strokeJoin, int strokeMiter1000) {
+        return strokeWidth >= 1
+                && strokeCap >= 0
+                && strokeCap <= 2
+                && strokeJoin >= 0
+                && strokeJoin <= 2
+                && strokeMiter1000 >= 0;
     }
 
     private static CommandRecord readCommandRecord(int[] commands, int offset, int commandEnd) {
@@ -716,6 +751,39 @@ public class JBRSkiaService extends JBRSkia {
                             Area clip = new Area(previousClip);
                             clip.subtract(new Area(path));
                             current.setClip(clip);
+                        }
+                    } else if (op == COMMAND_DRAW_PATH) {
+                        if (offset + 8 > recordEnd) return false;
+                        int paintStyle = commands[offset++];
+                        int argb = commands[offset++];
+                        int strokeWidth = commands[offset++];
+                        int strokeCap = commands[offset++];
+                        int strokeJoin = commands[offset++];
+                        int strokeMiter = commands[offset++];
+                        int fillType = commands[offset++];
+                        int pathDataLength = commands[offset++];
+                        if ((paintStyle != COMMAND_PAINT_STYLE_FILL && paintStyle != COMMAND_PAINT_STYLE_STROKE)
+                                || (paintStyle == COMMAND_PAINT_STYLE_STROKE && !isValidStrokeMetadata(strokeWidth, strokeCap, strokeJoin, strokeMiter))
+                                || (fillType != COMMAND_PATH_FILL_NON_ZERO && fillType != COMMAND_PATH_FILL_EVEN_ODD)
+                                || pathDataLength < 0
+                                || offset + pathDataLength != recordEnd) {
+                            return false;
+                        }
+                        Path2D path = pathFromCommandData(commands, offset, recordEnd, fillType);
+                        if (path == null) return false;
+                        offset = recordEnd;
+                        applyAntialiasing(current, antiAlias);
+                        current.setColor(new Color(argb, true));
+                        if (paintStyle == COMMAND_PAINT_STYLE_FILL) {
+                            current.fill(path);
+                        } else {
+                            current.setStroke(new BasicStroke(
+                                    strokeWidth,
+                                    strokeCap == 1 ? BasicStroke.CAP_ROUND : strokeCap == 2 ? BasicStroke.CAP_SQUARE : BasicStroke.CAP_BUTT,
+                                    strokeJoin == 1 ? BasicStroke.JOIN_ROUND : strokeJoin == 2 ? BasicStroke.JOIN_BEVEL : BasicStroke.JOIN_MITER,
+                                    Math.max(1f, strokeMiter / 1000f)
+                            ));
+                            current.draw(path);
                         }
                     } else if (op == COMMAND_TRANSLATE) {
                         if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE || offset + 2 != recordEnd) return false;

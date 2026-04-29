@@ -66,7 +66,7 @@
 
 #include "MTLSurfaceDataBase.h"
 
-static constexpr jint ABI_ID = 26;
+static constexpr jint ABI_ID = 27;
 static constexpr jint COMMAND_STREAM_MAGIC = 1246972723;
 static constexpr jint COMMAND_STREAM_HEADER_SIZE = 6;
 static constexpr jint COMMAND_STREAM_FLAGS_NONE = 0;
@@ -97,6 +97,9 @@ static constexpr jint COMMAND_DRAW_TEXT_UTF16 = 17;
 static constexpr jint COMMAND_CLEAR_IMAGE_CACHE = 18;
 static constexpr jint COMMAND_DRAW_PARAGRAPH_UTF16 = 19;
 static constexpr jint COMMAND_CLIP_PATH = 20;
+static constexpr jint COMMAND_DRAW_PATH = 21;
+static constexpr jint COMMAND_PAINT_STYLE_FILL = 0;
+static constexpr jint COMMAND_PAINT_STYLE_STROKE = 1;
 static constexpr jint COMMAND_PATH_FILL_NON_ZERO = 0;
 static constexpr jint COMMAND_PATH_FILL_EVEN_ODD = 1;
 static constexpr jint COMMAND_PATH_VERB_MOVE = 0;
@@ -520,6 +523,43 @@ static bool drawCommandList(SkCanvas* canvas,
                 canvas->clipPath(path,
                                  clipOp == COMMAND_CLIP_OP_DIFFERENCE ? SkClipOp::kDifference : SkClipOp::kIntersect,
                                  antiAlias);
+                break;
+            }
+            case COMMAND_DRAW_PATH: {
+                if (offset + 8 > recordEnd) {
+                    return false;
+                }
+                const jint paintStyle = commands[offset++];
+                const jint argb = commands[offset++];
+                const jint strokeWidth = commands[offset++];
+                const jint strokeCap = commands[offset++];
+                const jint strokeJoin = commands[offset++];
+                const jint strokeMiter1000 = commands[offset++];
+                const jint fillType = commands[offset++];
+                const jint pathDataLength = commands[offset++];
+                if ((paintStyle != COMMAND_PAINT_STYLE_FILL && paintStyle != COMMAND_PAINT_STYLE_STROKE) ||
+                        (paintStyle == COMMAND_PAINT_STYLE_STROKE && !isValidStrokeMetadata(strokeWidth, strokeCap, strokeJoin, strokeMiter1000)) ||
+                        (fillType != COMMAND_PATH_FILL_NON_ZERO && fillType != COMMAND_PATH_FILL_EVEN_ODD) ||
+                        pathDataLength < 0 ||
+                        offset + pathDataLength != recordEnd) {
+                    return false;
+                }
+                SkPath path;
+                if (!pathFromCommandData(commands, offset, recordEnd, fillType, &path)) {
+                    return false;
+                }
+                offset = recordEnd;
+                SkPaint paint;
+                paint.setAntiAlias(antiAlias);
+                paint.setColor(skColorFromArgb(argb));
+                if (paintStyle == COMMAND_PAINT_STYLE_STROKE) {
+                    paint.setStyle(SkPaint::kStroke_Style);
+                    paint.setStrokeWidth(static_cast<SkScalar>(strokeWidth));
+                    paint.setStrokeCap(static_cast<SkPaint::Cap>(strokeCap));
+                    paint.setStrokeJoin(static_cast<SkPaint::Join>(strokeJoin));
+                    paint.setStrokeMiter(static_cast<SkScalar>(strokeMiter1000) / 1000.0f);
+                }
+                canvas->drawPath(path, paint);
                 break;
             }
             case COMMAND_TRANSLATE: {

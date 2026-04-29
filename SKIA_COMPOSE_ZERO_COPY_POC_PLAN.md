@@ -3115,9 +3115,33 @@ Status: completed for Compose `clipPath` command recording and JBR/Skia replay.
 - JBR command timing: `frames=426 avg_total_ms=1.087 max_total_ms=3.252 avg_draw_ms=0.103 max_draw_ms=0.340 avg_flush_ms=0.964 max_flush_ms=3.136 avg_paragraph_ms=0.000 max_paragraph_ms=0.000 avg_paragraph_commands=0.0 max_paragraph_commands=0`
 - screenshot assertion: `passed`
 
+### Checkpoint 81: Path Drawing Command Support And ABI 27
+
+Status: completed for solid-color Compose path fill/stroke command recording and JBR/Skia replay.
+
+- Bumped the command ABI to `27` across JBR, public JBR API, Skiko, and CMP.
+- Added command capability `COMMAND_CAP_DRAW_PATH` and command opcode `COMMAND_DRAW_PATH`.
+- Reused the ABI 26 serialized path verb payload for draw-path records.
+- CMP records solid-color path fills and strokes with style, ARGB, stroke width/cap/join/miter, fill type, and path verbs; unsupported paint features still fall back through the existing strict-command guard.
+- JBR validates the variable-length path payload before replay, supports Java2D fallback drawing, and replays native Skia `drawPath`.
+- Magic Jewel now has `MAGIC_JEWEL_COMPOSE_DRAW_PATH=true`, drawing an orange filled path with a white stroke as an explicit strict-command probe.
+
+Path drawing command Magic Jewel report:
+
+- report: `/tmp/magic-jewel-drawpath-command-abi27-smoke/report.md`
+- screenshot: `/tmp/magic-jewel-drawpath-command-abi27-smoke/new-window.png`
+- sampled log: `/tmp/magic-jewel-drawpath-command-abi27-smoke/new-sampled.log`
+- validation status: `passed`
+- fallback markers: `0`
+- Skiko/JBR picture replay frames: `0` / `0`
+- CMP command recorder: `frames=591 fps=197.0 avg_commands=2535 max_commands=2535 unsupported_frames=0 avg_unsupported=0.0 max_unsupported=0 avg_text_commands=9.0 max_text_commands=9 avg_paragraph_text_commands=0.0 max_paragraph_text_commands=0 avg_image_defines=0.0 max_image_defines=0 avg_image_refs=0.0 max_image_refs=0 avg_image_cache_clears=0.0 max_image_cache_clears=0 reasons=none`
+- Skiko/JBR command frames: `592` / `592`
+- JBR command timing: `frames=592 avg_total_ms=1.232 max_total_ms=4.279 avg_draw_ms=0.136 max_draw_ms=0.655 avg_flush_ms=1.066 max_flush_ms=4.132 avg_paragraph_ms=0.000 max_paragraph_ms=0.000 avg_paragraph_commands=0.0 max_paragraph_commands=0`
+- screenshot assertion: `passed`
+
 Next checkpoint:
 
-- Add command support for another high-value vector primitive, likely path drawing/filling, so the command path can cover more non-rectangular Compose UI without falling back.
+- Add command support for arc/round-rect fidelity or shader-backed fills. Arc support is the smaller geometry slice; shader-backed fills are higher impact but require a more careful paint ABI.
 
 Use separate worktrees for every existing repo touched:
 
