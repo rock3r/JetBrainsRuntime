@@ -4038,6 +4038,38 @@ Next checkpoint:
 
 - Use `contextId` to split Skiko/JBR cache policy: same-context surface replacement should invalidate surface-bound wrappers only; changed-context migration should invalidate context-bound caches too.
 
+### Checkpoint 113: Same-Context Surface Replacement Policy
+
+Status: completed in Skiko and Magic Jewel validation.
+
+- Skiko's `SurfaceIdentityChange` now exposes:
+  - `contextChanged`
+  - `surfaceChanged`
+- `JbrSkiaSwingLayer` keeps context-bound diagnostic state on same-context surface replacement, and only closes the cached diagnostic `DirectContext` when `contextChanged=true`.
+- The surface-change marker now includes both booleans:
+  - `SKIKO_JBR_INTEROP_SURFACE_CHANGED oldContextId=... newContextId=... contextChanged=... surfaceChanged=... oldSurfaceId=... newSurfaceId=... oldMetalTexture=... newMetalTexture=...`
+- Added a focused Skiko test proving resize-shaped changes are `contextChanged=false surfaceChanged=true`.
+- Magic Jewel docs and parser fixtures now use the context-aware marker shape.
+- Live Magic Jewel resize smoke passed and showed:
+  - `contextChanged=false`
+  - `surfaceChanged=true`
+  - `skiko_surface_change_markers=1`
+  - `fallback_new_count=0`
+  - `skiko_picture_frames=0`
+  - `jbr_picture_frames=0`
+  - `screenshot_status=passed`
+
+Validation:
+
+- Skiko focused test: `./gradlew --no-configuration-cache :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`
+- Skiko Maven-local publish after marker update.
+- Magic Jewel report parser tests: `bash scripts/test-jbr-skia-report-validation.sh`
+- Magic Jewel context/surface policy smoke: `/tmp/magic-jewel-context-surface-policy-smoke/report.md`
+
+Next checkpoint:
+
+- Add a report parser assertion for `contextChanged=false surfaceChanged=true` in resize smoke mode, then decide the next cacheable object to move from diagnostic bookkeeping toward production JBR-owned state.
+
 Use separate worktrees for every existing repo touched:
 
 - `JetBrainsRuntime` worktree: `jbr-skia-compose-poc`
