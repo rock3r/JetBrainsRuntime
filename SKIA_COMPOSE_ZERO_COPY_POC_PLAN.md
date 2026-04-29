@@ -3495,6 +3495,47 @@ Next checkpoint:
 
 - Continue sweep-gradient coverage with rounded rectangles or paths, then add stricter shader fallback tests for transformed gradients, invalid stops, invalid radii, and excessive color counts.
 
+### Checkpoint 92: Sweep-Gradient Round-Rect Command Support And ABI 38
+
+Status: completed for serialized Compose sweep-gradient rounded-rectangle fills.
+
+- Bumped the command ABI to `38` across JBR, public JBR API, Skiko, and CMP.
+- Added 64-bit-only command capability `COMMAND_CAP64_FILL_ROUND_RECT_SWEEP_GRADIENT = 137438953472L`.
+- Added command opcode `COMMAND_FILL_ROUND_RECT_SWEEP_GRADIENT = 31`.
+- CMP records fill-style `drawRoundRect(brush = Brush.sweepGradient(...))` when the sweep payload is serializable under the strict command ABI.
+- The serialized payload contains rounded-rectangle bounds, corner radii, sweep center, 2..16 ARGB colors, and monotonic stops in fixed-point units scaled by 1000.
+- JBR validates bounds, nonnegative radii, color-count limits, monotonic stops, and exact variable-length record sizing before replay.
+- JBR native replay draws through `SkShaders::SweepGradient` plus `drawRRect`; the Java service fallback uses the JBR-owned `SweepGradientPaint` with `RoundRectangle2D`.
+- Skiko requires ABI `38` and the new 64-bit capability bit before command replay starts.
+- Magic Jewel now has `MAGIC_JEWEL_COMPOSE_SWEEP_GRADIENT_ROUND_RECT=true`, drawing a rounded sweep-gradient Compose probe.
+- Follow-up visual-fidelity note: Magic Jewel's current text is still probe/default typography, not a full Jewel theme fidelity sample. Track a separate pass to make the validation app exercise real Jewel typography and components.
+
+Validation:
+
+- CMP focused recorder test: `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest`
+- Skiko focused interop test: `./gradlew --no-configuration-cache :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`
+- Public JBR API process/dev rebuild: `bash tools/build.sh process && bash tools/build.sh dev $(/usr/libexec/java_home -v 21) /tmp/jbr-api-skia-dev && cp /tmp/jbr-api-skia-dev/jbr-api-SNAPSHOT.jar /tmp/jbr-api-shim.jar`
+- JBR Java service compile against patched stubs and refresh of `/tmp/jbr-skia-run/desktop`.
+- JBR native bridge compile against pinned Skia `m147-64a2414108`.
+- Skiko snapshot publish: `./gradlew --no-configuration-cache :skiko:publishToMavenLocal`
+- CMP patched UI desktop jars: `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-configuration-cache :compose:ui:ui-graphics:desktopJar :compose:ui:ui:desktopJar`
+- Magic Jewel compile: `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew compileKotlin`
+- Magic Jewel report: `/tmp/magic-jewel-sweep-gradient-roundrect-command-abi38-smoke/report.md`
+
+ABI 38 Magic Jewel report:
+
+- validation status: `passed`
+- fallback markers: `0`
+- Skiko/JBR picture replay frames: `0` / `0`
+- CMP command recorder: `frames=6121 fps=306.1 avg_commands=2429 max_commands=2429 unsupported_frames=0 avg_unsupported=0.0 max_unsupported=0 avg_text_commands=9.0 max_text_commands=9 avg_paragraph_text_commands=0.0 max_paragraph_text_commands=0 avg_image_defines=0.0 max_image_defines=0 avg_image_refs=0.0 max_image_refs=0 avg_image_cache_clears=0.0 max_image_cache_clears=0 reasons=none`
+- Skiko/JBR command frames: `6121` / `6121`
+- JBR command timing: `frames=6121 avg_total_ms=1.151 max_total_ms=24.048 avg_draw_ms=0.111 max_draw_ms=0.442 avg_flush_ms=1.017 max_flush_ms=23.900 avg_paragraph_ms=0.000 max_paragraph_ms=0.000 avg_paragraph_commands=0.0 max_paragraph_commands=0`
+- screenshot assertion: `passed`
+
+Next checkpoint:
+
+- Continue sweep-gradient coverage with path fills, then add stricter shader fallback tests for transformed gradients, invalid stops, invalid radii, excessive color counts, and nonserializable/generic shaders.
+
 Use separate worktrees for every existing repo touched:
 
 - `JetBrainsRuntime` worktree: `jbr-skia-compose-poc`

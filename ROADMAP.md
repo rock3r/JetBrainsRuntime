@@ -33,16 +33,18 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] ABI 35: linear-gradient path fill.
 - [x] ABI 36: radial-gradient path fill.
 - [x] ABI 37: sweep-gradient rectangle fill.
+- [x] ABI 38: sweep-gradient rounded-rectangle fill.
 
 ## Near-Term Rendering Work
 
-- [ ] Continue sweep-gradient payloads for rounded rectangles and paths.
+- [ ] Continue sweep-gradient payloads for paths.
 - [ ] Generic shader strategy:
   - [ ] Short term: keep rejecting opaque/unknown shader pointers and add serialized command payloads for known shader families.
   - [ ] Medium term: design a JBR-owned shader factory ABI so Skiko can request shader construction inside JBR's Skia runtime.
   - [ ] Long term: revisit true generic shader support only after Skiko's fast path no longer creates Skia C++ objects in a separate bundled runtime.
 - [ ] More strict shader fallback tests: transformed shaders, invalid stops, invalid radii, too many colors.
 - [ ] Expand screenshot assertions to check newly added probe colors/regions explicitly.
+- [ ] Improve Magic Jewel visual fidelity so the validation app uses real Jewel typography/theme components, not only plain Compose/Swing probe text.
 
 ## Validation Harness
 
