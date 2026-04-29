@@ -3820,6 +3820,30 @@ Next checkpoint:
 
 - Add async-profiler hooks to the report harness, then defer quiet-machine benchmark collection until the host load is predictable.
 
+### Checkpoint 104: Optional Async-Profiler Report Hooks
+
+Status: completed in Magic Jewel report harness.
+
+- `scripts/jbr-skia-interop-report.sh` now accepts:
+  - `ENABLE_ASPROF=true`
+  - `ASPROF=/path/to/asprof`
+  - `ASPROF_EVENT=cpu` or another async-profiler event
+- Profiling starts after warmup for each mode and stops before process teardown.
+- If profiling is disabled or `asprof` is unavailable, the report records that status and continues.
+- `report.md` now has an `Async Profiler` section.
+- `summary.properties` now includes `asprof_old_status` and `asprof_new_status`.
+- Magic Jewel README documents the optional profiler mode.
+- `ROADMAP.md` marks async-profiler integration complete; quiet-machine benchmark collection remains open.
+
+Validation:
+
+- Magic Jewel report parser tests: `bash scripts/test-jbr-skia-report-validation.sh`
+- Dry-run report generation with profiler env enabled but unavailable: `DRY_RUN=true OUT_DIR=/tmp/magic-jewel-asprof-dry-run ENABLE_ASPROF=true ASPROF=/tmp/not-asprof SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-interop-report.sh`
+
+Next checkpoint:
+
+- Keep quiet-machine benchmark collection open, and move to screen/context invalidation or packaged old/new artifact matrix work while the host remains noisy.
+
 Use separate worktrees for every existing repo touched:
 
 - `JetBrainsRuntime` worktree: `jbr-skia-compose-poc`

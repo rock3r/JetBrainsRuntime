@@ -59,7 +59,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Runtime API shim rebuild.
 - [x] Magic Jewel report smoke for each ABI checkpoint.
 - [ ] Quiet-machine benchmark pass using existing SKP/report paths.
-- [ ] Async-profiler integration in Magic Jewel report.
+- [x] Async-profiler integration in Magic Jewel report.
 - [x] CI-friendly parser for Magic Jewel report summary.
 
 ## Compatibility And ABI Hardening
