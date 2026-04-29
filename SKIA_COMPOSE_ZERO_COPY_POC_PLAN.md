@@ -2420,6 +2420,47 @@ Next checkpoint:
 
 - Tighten paragraph fidelity: pass font family/style/weight and paragraph alignment/line metrics through the command ABI, then add a screenshot/report probe that compares the paragraph-command path against the existing Skiko paragraph output for representative Jewel labels.
 
+### Checkpoint 61: Paragraph Font-Style Metadata And ABI 19
+
+Status: completed for scalar font-style metadata.
+
+- Bumped the command ABI to `ABI_ID = 19` across Runtime API, Skiko, CMP, JBR Java replay, and JBR native replay.
+- Added `COMMAND_CAP_PARAGRAPH_FONT_STYLE` so Skiko can require runtimes where paragraph commands carry font metadata.
+- Extended `COMMAND_DRAW_PARAGRAPH_UTF16` with `fontWeight`, `fontWidth`, and `fontSlant` scalar fields before `charCount`.
+- CMP now derives those scalars from the resolved paragraph default font and passes only integers across the ABI. No Skiko `SkTypeface`/`SkFont` pointer crosses into JBR.
+- JBR native replay reconstructs a JBR-owned `SkFontStyle` and applies it to the JBR-owned Skia Paragraph `TextStyle`.
+- JBR Java validation and Java2D fallback replay validate the new font-style fields.
+
+Verification completed:
+
+- Runtime API `bash tools/build.sh process`.
+- Runtime API `bash tools/build.sh dev $(/usr/libexec/java_home -v 21) /tmp/jbr-api-skia-dev`.
+- `/tmp/jbr-api-shim.jar` refreshed from `/tmp/jbr-api-skia-dev/jbr-api-SNAPSHOT.jar`.
+- Skiko `./gradlew :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`.
+- Skiko `./gradlew :skiko:publishToMavenLocal`.
+- CMP `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest`.
+- CMP desktop jars rebuilt with `SKIKO_VERSION=0.0.0-SNAPSHOT`.
+- JBR isolated patched-class compile into `/tmp/jbr-skia-abi19-compile`.
+- JBR patched module refreshed at `/tmp/jbr-skia-run/desktop`.
+- JBR native dylib rebuild into `/tmp/jbr-skia-native/libjbrskiainterop.dylib`.
+
+ABI 19 paragraph font-style strict command Magic Jewel report:
+
+- report: `/tmp/magic-jewel-paragraph-fontstyle-abi19-smoke/report.md`
+- screenshot: `/tmp/magic-jewel-paragraph-fontstyle-abi19-smoke/new-window.png`
+- validation status: `passed`
+- fallback markers: `0`
+- picture replay frames: `0`
+- `EXPECT_MIN_TEXT_COMMANDS`: `8`
+- `EXPECT_MIN_PARAGRAPH_TEXT_COMMANDS`: `1`
+- CMP command recorder: `frames=101 fps=33.7 avg_commands=2548 max_commands=2549 unsupported_frames=0 avg_unsupported=0.0 max_unsupported=0 avg_text_commands=9.0 max_text_commands=9 avg_paragraph_text_commands=1.0 max_paragraph_text_commands=1 avg_image_defines=0.0 max_image_defines=0 avg_image_refs=0.0 max_image_refs=0 avg_image_cache_clears=0.0 max_image_cache_clears=0 reasons=none`
+- Skiko/JBR command frames: `100` / `100`
+- screenshot assertion: `passed`
+
+Next checkpoint:
+
+- Add paragraph alignment/direction/line-height metadata, then add a Magic Jewel probe that exercises at least one bold/italic or aligned label and keeps the strict no-picture/no-image-ref assertion.
+
 Use separate worktrees for every existing repo touched:
 
 - `JetBrainsRuntime` worktree: `jbr-skia-compose-poc`

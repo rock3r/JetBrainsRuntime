@@ -62,7 +62,7 @@
 
 #include "MTLSurfaceDataBase.h"
 
-static constexpr jint ABI_ID = 18;
+static constexpr jint ABI_ID = 19;
 static constexpr jint COMMAND_STREAM_MAGIC = 1246972723;
 static constexpr jint COMMAND_STREAM_HEADER_SIZE = 6;
 static constexpr jint COMMAND_STREAM_FLAGS_NONE = 0;
@@ -581,8 +581,14 @@ static bool drawCommandList(SkCanvas* canvas, CommandWords commands, jsize comma
                 const SkScalar paragraphWidth = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
                 const SkScalar fontSize = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
                 const SkColor color = skColorFromArgb(commands[offset++]);
+                const jint fontWeight = commands[offset++];
+                const jint fontWidth = commands[offset++];
+                const jint fontSlant = commands[offset++];
                 const jint charCount = commands[offset++];
                 if (paragraphWidth <= 0.0f || fontSize <= 0.0f ||
+                        fontWeight < 1 || fontWeight > 1000 ||
+                        fontWidth < 1 || fontWidth > 9 ||
+                        fontSlant < 0 || fontSlant > 2 ||
                         charCount < 0 || charCount > 4096 || offset + charCount != recordEnd) {
                     return false;
                 }
@@ -594,6 +600,10 @@ static bool drawCommandList(SkCanvas* canvas, CommandWords commands, jsize comma
                 skia::textlayout::TextStyle textStyle;
                 textStyle.setColor(color);
                 textStyle.setFontSize(fontSize);
+                textStyle.setFontStyle(SkFontStyle(
+                        fontWeight,
+                        fontWidth,
+                        static_cast<SkFontStyle::Slant>(fontSlant)));
                 auto fontCollection = sk_make_sp<skia::textlayout::FontCollection>();
                 fontCollection->setDefaultFontManager(SkFontMgr_New_CoreText(nullptr));
                 auto builder = skia::textlayout::ParagraphBuilder::make(
