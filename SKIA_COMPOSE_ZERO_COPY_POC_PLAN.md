@@ -3576,6 +3576,39 @@ Next checkpoint:
 
 - Add stricter shader fallback tests for transformed gradients, invalid stops, invalid radii, excessive color counts, and nonserializable/generic shaders before expanding into more complex shader constructs.
 
+### Checkpoint 94: Strict Invalid-Gradient Fallback Tests
+
+Status: completed for recorder-side gradient stop and color-count guardrails.
+
+- CMP now rejects gradient stops unless they are finite, in `[0, 1]`, match the color count, and are strictly increasing. This aligns recorder behavior with JBR's stricter command validator and avoids producing command frames JBR would reject.
+- CMP focused tests now cover:
+  - non-monotonic linear-gradient stops,
+  - excessive radial-gradient color counts,
+  - duplicate sweep-gradient stops on path drawing.
+- Magic Jewel now has `MAGIC_JEWEL_INVALID_SWEEP_GRADIENT=true`, a deliberate duplicate-stop sweep-gradient probe.
+- Magic Jewel README/report plumbing documents the fallback smoke command:
+  `JBR_SKIA_RENDER_MODE=commands MAGIC_JEWEL_INVALID_SWEEP_GRADIENT=true EXPECT_COMMAND_FALLBACK=true EXPECT_COMMAND_FALLBACK_REASON=sweepGradientStops SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-interop-report.sh`
+
+Validation:
+
+- CMP focused recorder test: `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest`
+- CMP patched UI desktop jars: `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-configuration-cache :compose:ui:ui-graphics:desktopJar :compose:ui:ui:desktopJar`
+- Magic Jewel compile: `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew compileKotlin`
+- Magic Jewel report: `/tmp/magic-jewel-invalid-sweep-gradient-fallback-smoke/report.md`
+
+Invalid sweep-gradient fallback report:
+
+- validation status: `passed`
+- expected fallback reason: `sweepGradientStops`
+- Skiko/JBR picture replay frames: `894` / `894`
+- CMP command recorder: `frames=894 fps=44.7 avg_commands=2373 max_commands=2373 unsupported_frames=894 avg_unsupported=1.0 max_unsupported=1 avg_text_commands=9.0 max_text_commands=9 avg_paragraph_text_commands=0.0 max_paragraph_text_commands=0 avg_image_defines=0.0 max_image_defines=0 avg_image_refs=0.0 max_image_refs=0 avg_image_cache_clears=0.0 max_image_cache_clears=0 reasons=sweepGradientStops:894`
+- Skiko/JBR command frames: `0` / `0`
+- screenshot assertion: `passed`
+
+Next checkpoint:
+
+- Continue strict fallback coverage for invalid radii/nonfinite gradient geometry and transformed/nonserializable shader cases, then start the higher-level shader factory design if those guardrails stay stable.
+
 Use separate worktrees for every existing repo touched:
 
 - `JetBrainsRuntime` worktree: `jbr-skia-compose-poc`

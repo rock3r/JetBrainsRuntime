@@ -43,7 +43,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   - [ ] Short term: keep rejecting opaque/unknown shader pointers and add serialized command payloads for known shader families.
   - [ ] Medium term: design a JBR-owned shader factory ABI so Skiko can request shader construction inside JBR's Skia runtime.
   - [ ] Long term: revisit true generic shader support only after Skiko's fast path no longer creates Skia C++ objects in a separate bundled runtime.
-- [ ] More strict shader fallback tests: transformed shaders, invalid stops, invalid radii, too many colors.
+- [x] Strict recorder fallback for invalid gradient stops and excessive gradient color counts.
+- [ ] More strict shader fallback tests: transformed shaders, invalid radii, nonfinite geometry, and broader generic shader cases.
 - [ ] Expand screenshot assertions to check newly added probe colors/regions explicitly.
 - [ ] Improve Magic Jewel visual fidelity so the validation app uses real Jewel typography/theme components, not only plain Compose/Swing probe text.
 
