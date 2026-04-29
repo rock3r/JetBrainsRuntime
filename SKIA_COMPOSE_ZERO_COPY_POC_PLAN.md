@@ -3259,6 +3259,45 @@ Next checkpoint:
 
 - Use the 64-bit capability gate for the next shader-backed paint shape, preferably a gradient rounded rectangle or path, without consuming the sign bit of the legacy `int` mask.
 
+### Checkpoint 86: Linear-Gradient Round-Rect Command Support And ABI 32
+
+Status: completed for serialized Compose linear-gradient rounded-rectangle fills.
+
+- Bumped the command ABI to `32` across JBR, public JBR API, Skiko, and CMP.
+- Added 64-bit-only command capability `COMMAND_CAP64_FILL_ROUND_RECT_LINEAR_GRADIENT = 2147483648L`, proving the widened capability mask is now required for new commands past the signed `int` ceiling.
+- Added command opcode `COMMAND_FILL_ROUND_RECT_LINEAR_GRADIENT = 25`.
+- CMP now records `drawRoundRect(brush = Brush.linearGradient(...))` as command data when the paint is a supported fill-style linear gradient.
+- The serialized payload contains rounded-rect bounds, independent X/Y radii, gradient start/end points, tile mode, 2..16 ARGB colors, and monotonic stops in fixed-point units scaled by 1000.
+- JBR validates the variable-length payload, replays native Skia rounded gradients through `SkShaders::LinearGradient` plus `drawRRect`, and keeps a Java2D fallback via `LinearGradientPaint` plus `RoundRectangle2D`.
+- Skiko requires ABI `32` and the new 64-bit capability bit before command replay starts, preserving strict fallback behavior on older JBR builds.
+- Magic Jewel now has `MAGIC_JEWEL_COMPOSE_LINEAR_GRADIENT_ROUND_RECT=true`, drawing an orange/pink/cyan rounded gradient as the explicit post-`int`-capability shader-backed paint probe.
+
+Validation:
+
+- CMP focused recorder test: `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest`
+- Skiko focused interop test: `./gradlew --no-configuration-cache :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`
+- Public JBR API process/dev rebuild: `bash tools/build.sh process && bash tools/build.sh dev $(/usr/libexec/java_home -v 21) /tmp/jbr-api-skia-dev && cp /tmp/jbr-api-skia-dev/jbr-api-SNAPSHOT.jar /tmp/jbr-api-shim.jar`
+- JBR Java service compile against patched stubs and refresh of `/tmp/jbr-skia-run/desktop`.
+- JBR native bridge compile against pinned Skia `m147-64a2414108`.
+- Skiko snapshot publish: `./gradlew --no-configuration-cache :skiko:publishToMavenLocal`
+- CMP patched UI desktop jars: `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-configuration-cache :compose:ui:ui-graphics:desktopJar :compose:ui:ui:desktopJar`
+- Magic Jewel compile: `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew compileKotlin`
+- Magic Jewel report: `/tmp/magic-jewel-linear-gradient-roundrect-command-abi32-smoke/report.md`
+
+ABI 32 Magic Jewel report:
+
+- validation status: `passed`
+- fallback markers: `0`
+- Skiko/JBR picture replay frames: `0` / `0`
+- CMP command recorder: `frames=7002 fps=350.1 avg_commands=2430 max_commands=2430 unsupported_frames=0 avg_unsupported=0.0 max_unsupported=0 avg_text_commands=9.0 max_text_commands=9 avg_paragraph_text_commands=0.0 max_paragraph_text_commands=0 avg_image_defines=0.0 max_image_defines=0 avg_image_refs=0.0 max_image_refs=0 avg_image_cache_clears=0.0 max_image_cache_clears=0 reasons=none`
+- Skiko/JBR command frames: `7002` / `7002`
+- JBR command timing: `frames=7002 avg_total_ms=1.082 max_total_ms=19.656 avg_draw_ms=0.114 max_draw_ms=1.751 avg_flush_ms=0.945 max_flush_ms=19.512 avg_paragraph_ms=0.000 max_paragraph_ms=0.000 avg_paragraph_commands=0.0 max_paragraph_commands=0`
+- screenshot assertion: `passed`
+
+Next checkpoint:
+
+- Continue expanding shader-backed paint coverage now that the 64-bit gate is exercised; likely next candidates are gradient path fill or radial/sweep gradient payloads.
+
 Use separate worktrees for every existing repo touched:
 
 - `JetBrainsRuntime` worktree: `jbr-skia-compose-poc`

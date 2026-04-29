@@ -36,7 +36,7 @@ import java.nio.ByteBuffer;
  * so downstream compile-only clients cannot accidentally inline stale values.
  */
 public abstract class JBRSkia {
-    public static final int ABI_ID = Integer.parseInt("31");
+    public static final int ABI_ID = Integer.parseInt("32");
     public static final String BUILD_ID = buildId();
     public static final int COMMAND_STREAM_MAGIC = Integer.parseInt("1246972723");
     public static final int COMMAND_STREAM_HEADER_SIZE = Integer.parseInt("6");
@@ -78,6 +78,7 @@ public abstract class JBRSkia {
     public static final int COMMAND_CAP_DRAW_ROUND_RECT = Integer.parseInt("536870912");
     public static final int COMMAND_CAP_FILL_RECT_LINEAR_GRADIENT = Integer.parseInt("1073741824");
     public static final long COMMAND_CAP64_FILL_RECT_LINEAR_GRADIENT = Long.parseLong("1073741824");
+    public static final long COMMAND_CAP64_FILL_ROUND_RECT_LINEAR_GRADIENT = Long.parseLong("2147483648");
     public static final int COMMAND_CLEAR = Integer.parseInt("1");
     public static final int COMMAND_FILL_RECT = Integer.parseInt("2");
     public static final int COMMAND_STROKE_LINE = Integer.parseInt("3");
@@ -104,6 +105,7 @@ public abstract class JBRSkia {
     public static final int COMMAND_DRAW_ARC = Integer.parseInt("22");
     public static final int COMMAND_DRAW_ROUND_RECT = Integer.parseInt("23");
     public static final int COMMAND_FILL_RECT_LINEAR_GRADIENT = Integer.parseInt("24");
+    public static final int COMMAND_FILL_ROUND_RECT_LINEAR_GRADIENT = Integer.parseInt("25");
     public static final int COMMAND_PAINT_STYLE_FILL = Integer.parseInt("0");
     public static final int COMMAND_PAINT_STYLE_STROKE = Integer.parseInt("1");
     public static final int COMMAND_PATH_FILL_NON_ZERO = Integer.parseInt("0");
