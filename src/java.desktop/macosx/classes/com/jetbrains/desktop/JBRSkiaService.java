@@ -38,16 +38,22 @@ import java.awt.Composite;
 import java.awt.Graphics2D;
 import java.awt.LinearGradientPaint;
 import java.awt.MultipleGradientPaint;
+import java.awt.Paint;
+import java.awt.PaintContext;
 import java.awt.Rectangle;
 import java.awt.RadialGradientPaint;
 import java.awt.RenderingHints;
 import java.awt.Shape;
+import java.awt.Transparency;
 import java.awt.geom.Area;
 import java.awt.geom.Arc2D;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
+import java.awt.image.WritableRaster;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.ArrayDeque;
@@ -99,7 +105,8 @@ public class JBRSkiaService extends JBRSkia {
                     | COMMAND_CAP64_FILL_RECT_RADIAL_GRADIENT
                     | COMMAND_CAP64_FILL_ROUND_RECT_RADIAL_GRADIENT
                     | COMMAND_CAP64_FILL_PATH_LINEAR_GRADIENT
-                    | COMMAND_CAP64_FILL_PATH_RADIAL_GRADIENT;
+                    | COMMAND_CAP64_FILL_PATH_RADIAL_GRADIENT
+                    | COMMAND_CAP64_FILL_RECT_SWEEP_GRADIENT;
     private static final boolean NATIVE_BRIDGE_AVAILABLE = loadNativeBridge();
     private static final AtomicLong NEXT_SCOPE_ID = new AtomicLong(1);
     private static final int MAX_CACHED_IMAGES = 256;
@@ -201,6 +208,7 @@ public class JBRSkiaService extends JBRSkia {
         if (op == COMMAND_FILL_ROUND_RECT_RADIAL_GRADIENT) return -11;
         if (op == COMMAND_FILL_PATH_LINEAR_GRADIENT) return -12;
         if (op == COMMAND_FILL_PATH_RADIAL_GRADIENT) return -13;
+        if (op == COMMAND_FILL_RECT_SWEEP_GRADIENT) return -14;
         if (op == COMMAND_CLEAR) return 4;
         if (op == COMMAND_CLEAR_RECT) return 7;
         if (op == COMMAND_CLIP_RECT) return 8;
@@ -246,6 +254,9 @@ public class JBRSkiaService extends JBRSkia {
             return record.recordLength() >= 15;
         }
         if (expectedLength == -13 && record.op() == COMMAND_FILL_PATH_RADIAL_GRADIENT) {
+            return record.recordLength() >= 14;
+        }
+        if (expectedLength == -14 && record.op() == COMMAND_FILL_RECT_SWEEP_GRADIENT) {
             return record.recordLength() >= 14;
         }
         return expectedLength == record.recordLength();
@@ -522,6 +533,31 @@ public class JBRSkiaService extends JBRSkia {
             int previousStop = -1;
             for (int i = 0; i < colorCount; i++) {
                 int stop1000 = commands[gradientStart + 6 + i * 2];
+                if (stop1000 < 0 || stop1000 > 1000 || stop1000 <= previousStop) {
+                    return false;
+                }
+                previousStop = stop1000;
+            }
+            return true;
+        }
+        if (record.op() == COMMAND_FILL_RECT_SWEEP_GRADIENT) {
+            if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE
+                    && record.recordFlags() != COMMAND_RECORD_FLAG_ANTIALIAS) {
+                return false;
+            }
+            int left1000 = commands[record.argsStart()];
+            int top1000 = commands[record.argsStart() + 1];
+            int right1000 = commands[record.argsStart() + 2];
+            int bottom1000 = commands[record.argsStart() + 3];
+            int colorCount = commands[record.argsStart() + 6];
+            if (right1000 < left1000 || bottom1000 < top1000
+                    || colorCount < 2 || colorCount > 16
+                    || record.argsStart() + 7 + colorCount * 2 != record.recordEnd()) {
+                return false;
+            }
+            int previousStop = -1;
+            for (int i = 0; i < colorCount; i++) {
+                int stop1000 = commands[record.argsStart() + 8 + i * 2];
                 if (stop1000 < 0 || stop1000 > 1000 || stop1000 <= previousStop) {
                     return false;
                 }
@@ -1377,6 +1413,43 @@ public class JBRSkiaService extends JBRSkia {
                                 (right1000 - left1000) / 1000f,
                                 (bottom1000 - top1000) / 1000f
                         ));
+                    } else if (op == COMMAND_FILL_RECT_SWEEP_GRADIENT) {
+                        if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE
+                                && record.recordFlags() != COMMAND_RECORD_FLAG_ANTIALIAS) {
+                            return false;
+                        }
+                        if (offset + 7 > recordEnd) return false;
+                        int left1000 = commands[offset++];
+                        int top1000 = commands[offset++];
+                        int right1000 = commands[offset++];
+                        int bottom1000 = commands[offset++];
+                        int centerX1000 = commands[offset++];
+                        int centerY1000 = commands[offset++];
+                        int colorCount = commands[offset++];
+                        if (right1000 < left1000 || bottom1000 < top1000
+                                || colorCount < 2 || colorCount > 16 || offset + colorCount * 2 != recordEnd) {
+                            return false;
+                        }
+                        Color[] colors = new Color[colorCount];
+                        float[] fractions = new float[colorCount];
+                        int previousStop = -1;
+                        for (int i = 0; i < colorCount; i++) {
+                            colors[i] = new Color(commands[offset++], true);
+                            int stop1000 = commands[offset++];
+                            if (stop1000 < 0 || stop1000 > 1000 || stop1000 <= previousStop) {
+                                return false;
+                            }
+                            previousStop = stop1000;
+                            fractions[i] = stop1000 / 1000f;
+                        }
+                        applyAntialiasing(current, antiAlias);
+                        current.setPaint(new SweepGradientPaint(centerX1000 / 1000f, centerY1000 / 1000f, fractions, colors));
+                        current.fill(new java.awt.geom.Rectangle2D.Float(
+                                left1000 / 1000f,
+                                top1000 / 1000f,
+                                (right1000 - left1000) / 1000f,
+                                (bottom1000 - top1000) / 1000f
+                        ));
                     } else if (op == COMMAND_FILL_ROUND_RECT_RADIAL_GRADIENT) {
                         if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE
                                 && record.recordFlags() != COMMAND_RECORD_FLAG_ANTIALIAS) {
@@ -1792,6 +1865,109 @@ public class JBRSkiaService extends JBRSkia {
                     Math.max(1, bounds.width),
                     Math.max(1, bounds.height)
             );
+        }
+    }
+
+    private static final class SweepGradientPaint implements Paint {
+        private final float centerX;
+        private final float centerY;
+        private final float[] stops;
+        private final Color[] colors;
+
+        private SweepGradientPaint(float centerX, float centerY, float[] stops, Color[] colors) {
+            this.centerX = centerX;
+            this.centerY = centerY;
+            this.stops = stops.clone();
+            this.colors = colors.clone();
+        }
+
+        @Override
+        public PaintContext createContext(ColorModel cm, Rectangle deviceBounds, java.awt.geom.Rectangle2D userBounds,
+                                          AffineTransform xform, RenderingHints hints) {
+            Point2D center = xform.transform(new Point2D.Float(centerX, centerY), null);
+            return new SweepGradientPaintContext(center.getX(), center.getY(), stops, colors);
+        }
+
+        @Override
+        public int getTransparency() {
+            for (Color color : colors) {
+                if (color.getAlpha() != 255) {
+                    return Transparency.TRANSLUCENT;
+                }
+            }
+            return Transparency.OPAQUE;
+        }
+    }
+
+    private static final class SweepGradientPaintContext implements PaintContext {
+        private final double centerX;
+        private final double centerY;
+        private final float[] stops;
+        private final int[] argb;
+        private final ColorModel colorModel = ColorModel.getRGBdefault();
+
+        private SweepGradientPaintContext(double centerX, double centerY, float[] stops, Color[] colors) {
+            this.centerX = centerX;
+            this.centerY = centerY;
+            this.stops = stops.clone();
+            this.argb = new int[colors.length];
+            for (int i = 0; i < colors.length; i++) {
+                argb[i] = colors[i].getRGB();
+            }
+        }
+
+        @Override
+        public void dispose() {
+        }
+
+        @Override
+        public ColorModel getColorModel() {
+            return colorModel;
+        }
+
+        @Override
+        public java.awt.image.Raster getRaster(int x, int y, int w, int h) {
+            WritableRaster raster = colorModel.createCompatibleWritableRaster(w, h);
+            int[] data = new int[w * h * 4];
+            int index = 0;
+            for (int row = 0; row < h; row++) {
+                for (int col = 0; col < w; col++) {
+                    int color = colorAt(x + col + 0.5, y + row + 0.5);
+                    data[index++] = (color >> 16) & 0xff;
+                    data[index++] = (color >> 8) & 0xff;
+                    data[index++] = color & 0xff;
+                    data[index++] = (color >>> 24) & 0xff;
+                }
+            }
+            raster.setPixels(0, 0, w, h, data);
+            return raster;
+        }
+
+        private int colorAt(double x, double y) {
+            double angle = Math.atan2(y - centerY, x - centerX);
+            float position = (float) ((angle < 0 ? angle + Math.PI * 2 : angle) / (Math.PI * 2));
+            if (position <= stops[0]) {
+                return argb[0];
+            }
+            for (int i = 1; i < stops.length; i++) {
+                if (position <= stops[i]) {
+                    float t = (position - stops[i - 1]) / Math.max(0.000001f, stops[i] - stops[i - 1]);
+                    return interpolate(argb[i - 1], argb[i], t);
+                }
+            }
+            return argb[argb.length - 1];
+        }
+
+        private static int interpolate(int start, int end, float t) {
+            int a = lerp((start >>> 24) & 0xff, (end >>> 24) & 0xff, t);
+            int r = lerp((start >> 16) & 0xff, (end >> 16) & 0xff, t);
+            int g = lerp((start >> 8) & 0xff, (end >> 8) & 0xff, t);
+            int b = lerp(start & 0xff, end & 0xff, t);
+            return (a << 24) | (r << 16) | (g << 8) | b;
+        }
+
+        private static int lerp(int start, int end, float t) {
+            return Math.round(start + (end - start) * t);
         }
     }
 
