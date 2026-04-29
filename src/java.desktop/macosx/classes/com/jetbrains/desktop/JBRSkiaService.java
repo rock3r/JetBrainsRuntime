@@ -855,6 +855,11 @@ public class JBRSkiaService extends JBRSkia {
         }
 
         @Override
+        public long getSurfaceId() {
+            return nativeOpsPtr;
+        }
+
+        @Override
         public int getBackend() {
             return BACKEND_METAL;
         }

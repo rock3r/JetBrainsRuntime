@@ -35,6 +35,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] ABI 37: sweep-gradient rectangle fill.
 - [x] ABI 38: sweep-gradient rounded-rectangle fill.
 - [x] ABI 39: sweep-gradient path fill.
+- [x] ABI 40/native 2: scoped destination surface identity.
 
 ## Near-Term Rendering Work
 
@@ -75,6 +76,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] CI-style parser coverage for ABI/capability/native/public-API handshake fallbacks.
 - [x] Skiko reads JBR scoped paint ids and includes them in acquisition diagnostics.
 - [x] Parser-level tests for old Skiko/new JBR and new Skiko/old JBR fallback combinations.
+- [x] Skiko invalidates temporary cached surface state when scoped destination identity changes.
 - [ ] Full launch-level old/new packaged artifact matrix.
 
 ## Productionization Later

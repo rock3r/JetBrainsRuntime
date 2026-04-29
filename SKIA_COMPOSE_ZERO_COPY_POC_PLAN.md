@@ -3879,6 +3879,29 @@ Next checkpoint:
 
 - Add the stable destination-context identity needed for true cache invalidation on resize/surface migration, then wire Skiko cache invalidation to that identity rather than per-paint scope ids.
 
+### Checkpoint 107: Stable Surface Identity Hook
+
+Status: completed across JBR, Runtime API, Skiko, and CMP command-stream constants.
+
+- ABI moved from `39/native=1` to `40/native=2` because the scoped canvas contract now exposes a new destination identity method.
+- Runtime API and JBR `ScopedSkiaCanvas` now expose `getSurfaceId()`.
+- JBR's macOS service currently returns the Java2D accelerated surface native-ops pointer as the surface id, or `0` for software/non-Metal test surfaces.
+- Skiko reads `surfaceId` reflectively, includes it in `SKIKO_JBR_INTEROP_SCOPE_ACQUIRED`, and compares it at `acquireCanvas` time.
+- When Skiko sees the destination identity change, it logs `SKIKO_JBR_INTEROP_SURFACE_CHANGED ...` and drops the temporary diagnostic `DirectContext` cache.
+- CMP and Skiko command-stream constants/tests were bumped to ABI `40` so recorder output remains accepted by JBR validation.
+
+Validation:
+
+- Runtime API processing: `bash tools/build.sh process`
+- Skiko JBR interop unit test: `./gradlew --no-configuration-cache :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`
+- CMP recorder compile check: `./gradlew --no-configuration-cache :compose:ui:ui-graphics:compileKotlinDesktop`
+- Attempted CMP recorder desktop test: `./gradlew --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest`; this reached `ui-graphics` compilation but failed later in downstream `compose:ui:ui:compileKotlinDesktop` on existing unresolved Skiko JBR delegate imports.
+- Attempted standalone JBR `javac` patch-module compile of `JBRSkiaApiTest`; this is not a valid lightweight check for this tree because patching `java.desktop` alone pulls broader JBR sources requiring `java.base/com.jetbrains.exported`, preview APIs, and additional platform modules.
+
+Next checkpoint:
+
+- Re-publish the ABI 40 Runtime API/Skiko/CMP artifacts locally, refresh the Magic Jewel launch wiring, and run the command-mode smoke so the screenshot/report path proves the new surface identity in a real paint.
+
 Use separate worktrees for every existing repo touched:
 
 - `JetBrainsRuntime` worktree: `jbr-skia-compose-poc`
