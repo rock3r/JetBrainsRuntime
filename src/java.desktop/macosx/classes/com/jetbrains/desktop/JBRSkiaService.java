@@ -75,7 +75,8 @@ public class JBRSkiaService extends JBRSkia {
                     | COMMAND_CAP_DRAW_TEXT_UTF16
                     | COMMAND_CAP_CLEAR_IMAGE_CACHE
                     | COMMAND_CAP_DRAW_PARAGRAPH_UTF16
-                    | COMMAND_CAP_PARAGRAPH_FONT_STYLE;
+                    | COMMAND_CAP_PARAGRAPH_FONT_STYLE
+                    | COMMAND_CAP_PARAGRAPH_LAYOUT;
     private static final boolean NATIVE_BRIDGE_AVAILABLE = loadNativeBridge();
     private static final AtomicLong NEXT_SCOPE_ID = new AtomicLong(1);
     private static final int MAX_CACHED_IMAGES = 256;
@@ -183,7 +184,7 @@ public class JBRSkiaService extends JBRSkia {
             return record.recordLength() >= 8;
         }
         if (expectedLength == -5 && record.op() == COMMAND_DRAW_PARAGRAPH_UTF16) {
-            return record.recordLength() >= 12;
+            return record.recordLength() >= 14;
         }
         return expectedLength == record.recordLength();
     }
@@ -280,7 +281,9 @@ public class JBRSkiaService extends JBRSkia {
             int fontWeight = commands[record.argsStart() + 5];
             int fontWidth = commands[record.argsStart() + 6];
             int fontSlant = commands[record.argsStart() + 7];
-            int charCount = commands[record.argsStart() + 8];
+            int textAlign = commands[record.argsStart() + 8];
+            int textDirection = commands[record.argsStart() + 9];
+            int charCount = commands[record.argsStart() + 10];
             return width1000 > 0
                     && fontSize1000 > 0
                     && fontWeight >= 1
@@ -289,9 +292,13 @@ public class JBRSkiaService extends JBRSkia {
                     && fontWidth <= 9
                     && fontSlant >= 0
                     && fontSlant <= 2
+                    && textAlign >= 0
+                    && textAlign <= 5
+                    && textDirection >= 0
+                    && textDirection <= 1
                     && charCount >= 0
                     && charCount <= 4096
-                    && record.recordLength() == 12 + charCount;
+                    && record.recordLength() == 14 + charCount;
         }
         if (record.op() != COMMAND_STROKE_LINE && record.op() != COMMAND_STROKE_OVAL) {
             return true;
@@ -746,11 +753,15 @@ public class JBRSkiaService extends JBRSkia {
                         int fontWeight = commands[offset++];
                         int fontWidth = commands[offset++];
                         int fontSlant = commands[offset++];
+                        int textAlign = commands[offset++];
+                        int textDirection = commands[offset++];
                         int charCount = commands[offset++];
                         if (width1000 <= 0 || fontSize1000 <= 0
                                 || fontWeight < 1 || fontWeight > 1000
                                 || fontWidth < 1 || fontWidth > 9
                                 || fontSlant < 0 || fontSlant > 2
+                                || textAlign < 0 || textAlign > 5
+                                || textDirection < 0 || textDirection > 1
                                 || charCount < 0 || charCount > 4096
                                 || offset + charCount != recordEnd) {
                             return false;

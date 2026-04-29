@@ -2461,6 +2461,49 @@ Next checkpoint:
 
 - Add paragraph alignment/direction/line-height metadata, then add a Magic Jewel probe that exercises at least one bold/italic or aligned label and keeps the strict no-picture/no-image-ref assertion.
 
+### Checkpoint 62: Paragraph Layout Metadata And ABI 20
+
+Status: completed for scalar paragraph alignment and direction metadata.
+
+- Bumped the command ABI to `ABI_ID = 20` across Runtime API, Skiko, CMP, JBR Java replay, and JBR native replay.
+- Added `COMMAND_CAP_PARAGRAPH_LAYOUT` so Skiko can require runtimes where paragraph commands carry layout metadata.
+- Extended `COMMAND_DRAW_PARAGRAPH_UTF16` with `textAlign` and `textDirection` scalar fields before `charCount`.
+- The ABI 20 paragraph payload is `[op, 56 + charCount * 4, flags, x1000, y1000, width1000, fontSize1000, argb, fontWeight, fontWidth, fontSlant, textAlign, textDirection, charCount, codeUnit0, ...]`.
+- `textAlign` follows Skia paragraph ordinals: `Left=0`, `Right=1`, `Center=2`, `Justify=3`, `Start=4`, `End=5`.
+- `textDirection` follows Skia paragraph ordinals: `Rtl=0`, `Ltr=1`.
+- CMP maps Compose paragraph alignment and resolved text direction to these scalars and still sends no Skiko-owned text, font, or paragraph pointer across the ABI.
+- JBR native replay applies the metadata to JBR-owned Skia Paragraph `ParagraphStyle`; Java validation and Java2D fallback replay validate the fields.
+
+Verification completed:
+
+- Runtime API `bash tools/build.sh process`.
+- Runtime API `bash tools/build.sh dev $(/usr/libexec/java_home -v 21) /tmp/jbr-api-skia-dev`.
+- `/tmp/jbr-api-shim.jar` refreshed from `/tmp/jbr-api-skia-dev/jbr-api-SNAPSHOT.jar`.
+- Skiko `./gradlew :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`.
+- Skiko `./gradlew :skiko:publishToMavenLocal`.
+- CMP `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest`.
+- CMP desktop jars rebuilt with `SKIKO_VERSION=0.0.0-SNAPSHOT`.
+- JBR isolated patched-class compile into `/tmp/jbr-skia-abi20-compile`.
+- JBR patched module refreshed at `/tmp/jbr-skia-run/desktop`.
+- JBR native dylib rebuild into `/tmp/jbr-skia-native/libjbrskiainterop.dylib`.
+
+ABI 20 paragraph layout strict command Magic Jewel report:
+
+- report: `/tmp/magic-jewel-paragraph-layout-abi20-smoke/report.md`
+- screenshot: `/tmp/magic-jewel-paragraph-layout-abi20-smoke/new-window.png`
+- validation status: `passed`
+- fallback markers: `0`
+- picture replay frames: `0`
+- `EXPECT_MIN_TEXT_COMMANDS`: `8`
+- `EXPECT_MIN_PARAGRAPH_TEXT_COMMANDS`: `1`
+- CMP command recorder: `frames=103 fps=34.3 avg_commands=2550 max_commands=2551 unsupported_frames=0 avg_unsupported=0.0 max_unsupported=0 avg_text_commands=9.0 max_text_commands=9 avg_paragraph_text_commands=1.0 max_paragraph_text_commands=1 avg_image_defines=0.0 max_image_defines=0 avg_image_refs=0.0 max_image_refs=0 avg_image_cache_clears=0.0 max_image_cache_clears=0 reasons=none`
+- Skiko/JBR command frames: `102` / `102`
+- screenshot assertion: `passed`
+
+Next checkpoint:
+
+- Add a Magic Jewel visual probe with centered/bold/italic and RTL text so paragraph layout metadata is validated by visible content, not only by command-stream acceptance.
+
 Use separate worktrees for every existing repo touched:
 
 - `JetBrainsRuntime` worktree: `jbr-skia-compose-poc`
