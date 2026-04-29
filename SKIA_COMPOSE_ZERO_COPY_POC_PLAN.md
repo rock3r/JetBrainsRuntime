@@ -3377,6 +3377,46 @@ Next checkpoint:
 
 - Move from rect-family shader fills to gradient path fills, starting with linear-gradient path fill because the path payload and linear shader payload are already independently proven.
 
+### Checkpoint 89: Linear-Gradient Path Command Support And ABI 35
+
+Status: completed for serialized Compose linear-gradient path fills.
+
+- Bumped the command ABI to `35` across JBR, public JBR API, Skiko, and CMP.
+- Added 64-bit-only command capability `COMMAND_CAP64_FILL_PATH_LINEAR_GRADIENT = 17179869184L`.
+- Added command opcode `COMMAND_FILL_PATH_LINEAR_GRADIENT = 28`.
+- CMP now records fill-style `drawPath(path, brush = Brush.linearGradient(...))` when the path and linear-gradient payloads are serializable under the strict command ABI.
+- The serialized payload combines path fill type, path verb data, linear-gradient endpoints, tile mode, 2..16 ARGB colors, and monotonic stops in fixed-point units scaled by 1000.
+- JBR validates the variable-length path-plus-gradient payload, replays native Skia linear-gradient paths through `SkShaders::LinearGradient` plus `drawPath`, and keeps a Java2D fallback via `LinearGradientPaint` plus `Path2D`.
+- Skiko requires ABI `35` and the new 64-bit capability bit before command replay starts.
+- Magic Jewel now has `MAGIC_JEWEL_COMPOSE_LINEAR_GRADIENT_PATH=true`, drawing a teal/yellow/pink Compose gradient path probe.
+- `ROADMAP.md` now records ABI 35 and keeps generic shaders as a later JBR-owned shader-factory strategy rather than raw `SkShader*` pointer sharing.
+
+Validation:
+
+- CMP focused recorder test: `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest`
+- Skiko focused interop test: `./gradlew --no-configuration-cache :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`
+- Public JBR API process/dev rebuild: `bash tools/build.sh process && bash tools/build.sh dev $(/usr/libexec/java_home -v 21) /tmp/jbr-api-skia-dev && cp /tmp/jbr-api-skia-dev/jbr-api-SNAPSHOT.jar /tmp/jbr-api-shim.jar`
+- JBR Java service compile against patched stubs and refresh of `/tmp/jbr-skia-run/desktop`.
+- JBR native bridge compile against pinned Skia `m147-64a2414108`.
+- Skiko snapshot publish: `./gradlew --no-configuration-cache :skiko:publishToMavenLocal`
+- CMP patched UI desktop jars: `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-configuration-cache :compose:ui:ui-graphics:desktopJar :compose:ui:ui:desktopJar`
+- Magic Jewel compile: `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew compileKotlin`
+- Magic Jewel report: `/tmp/magic-jewel-linear-gradient-path-command-abi35-smoke/report.md`
+
+ABI 35 Magic Jewel report:
+
+- validation status: `passed`
+- fallback markers: `0`
+- Skiko/JBR picture replay frames: `0` / `0`
+- CMP command recorder: `frames=2642 fps=132.1 avg_commands=2441 max_commands=2441 unsupported_frames=0 avg_unsupported=0.0 max_unsupported=0 avg_text_commands=9.0 max_text_commands=9 avg_paragraph_text_commands=0.0 max_paragraph_text_commands=0 avg_image_defines=0.0 max_image_defines=0 avg_image_refs=0.0 max_image_refs=0 avg_image_cache_clears=0.0 max_image_cache_clears=0 reasons=none`
+- Skiko/JBR command frames: `2643` / `2643`
+- JBR command timing: `frames=2643 avg_total_ms=1.524 max_total_ms=12.069 avg_draw_ms=0.188 max_draw_ms=3.604 avg_flush_ms=1.298 max_flush_ms=11.888 avg_paragraph_ms=0.000 max_paragraph_ms=0.000 avg_paragraph_commands=0.0 max_paragraph_commands=0`
+- screenshot assertion: `passed`
+
+Next checkpoint:
+
+- Continue shader-backed path coverage with radial-gradient path fill, then sweep-gradient payloads and stricter shader fallback tests.
+
 Use separate worktrees for every existing repo touched:
 
 - `JetBrainsRuntime` worktree: `jbr-skia-compose-poc`

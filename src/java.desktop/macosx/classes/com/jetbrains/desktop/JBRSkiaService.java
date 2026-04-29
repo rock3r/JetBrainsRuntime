@@ -97,7 +97,8 @@ public class JBRSkiaService extends JBRSkia {
                     | COMMAND_CAP64_FILL_RECT_LINEAR_GRADIENT
                     | COMMAND_CAP64_FILL_ROUND_RECT_LINEAR_GRADIENT
                     | COMMAND_CAP64_FILL_RECT_RADIAL_GRADIENT
-                    | COMMAND_CAP64_FILL_ROUND_RECT_RADIAL_GRADIENT;
+                    | COMMAND_CAP64_FILL_ROUND_RECT_RADIAL_GRADIENT
+                    | COMMAND_CAP64_FILL_PATH_LINEAR_GRADIENT;
     private static final boolean NATIVE_BRIDGE_AVAILABLE = loadNativeBridge();
     private static final AtomicLong NEXT_SCOPE_ID = new AtomicLong(1);
     private static final int MAX_CACHED_IMAGES = 256;
@@ -197,6 +198,7 @@ public class JBRSkiaService extends JBRSkia {
         if (op == COMMAND_FILL_ROUND_RECT_LINEAR_GRADIENT) return -9;
         if (op == COMMAND_FILL_RECT_RADIAL_GRADIENT) return -10;
         if (op == COMMAND_FILL_ROUND_RECT_RADIAL_GRADIENT) return -11;
+        if (op == COMMAND_FILL_PATH_LINEAR_GRADIENT) return -12;
         if (op == COMMAND_CLEAR) return 4;
         if (op == COMMAND_CLEAR_RECT) return 7;
         if (op == COMMAND_CLIP_RECT) return 8;
@@ -237,6 +239,9 @@ public class JBRSkiaService extends JBRSkia {
         }
         if (expectedLength == -11 && record.op() == COMMAND_FILL_ROUND_RECT_RADIAL_GRADIENT) {
             return record.recordLength() >= 18;
+        }
+        if (expectedLength == -12 && record.op() == COMMAND_FILL_PATH_LINEAR_GRADIENT) {
+            return record.recordLength() >= 15;
         }
         return expectedLength == record.recordLength();
     }
@@ -446,6 +451,38 @@ public class JBRSkiaService extends JBRSkia {
             int previousStop = -1;
             for (int i = 0; i < colorCount; i++) {
                 int stop1000 = commands[record.argsStart() + 12 + i * 2];
+                if (stop1000 < 0 || stop1000 > 1000 || stop1000 <= previousStop) {
+                    return false;
+                }
+                previousStop = stop1000;
+            }
+            return true;
+        }
+        if (record.op() == COMMAND_FILL_PATH_LINEAR_GRADIENT) {
+            if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE
+                    && record.recordFlags() != COMMAND_RECORD_FLAG_ANTIALIAS) {
+                return false;
+            }
+            int fillType = commands[record.argsStart()];
+            int pathDataLength = commands[record.argsStart() + 1];
+            int gradientStart = record.argsStart() + 2 + pathDataLength;
+            if ((fillType != COMMAND_PATH_FILL_NON_ZERO && fillType != COMMAND_PATH_FILL_EVEN_ODD)
+                    || pathDataLength < 0
+                    || pathDataLength > 4096
+                    || gradientStart + 10 > record.recordEnd()
+                    || !validatePathData(commands, record.argsStart() + 2, gradientStart)) {
+                return false;
+            }
+            int tileMode = commands[gradientStart + 4];
+            int colorCount = commands[gradientStart + 5];
+            if (tileMode < 0 || tileMode > 3
+                    || colorCount < 2 || colorCount > 16
+                    || gradientStart + 6 + colorCount * 2 != record.recordEnd()) {
+                return false;
+            }
+            int previousStop = -1;
+            for (int i = 0; i < colorCount; i++) {
+                int stop1000 = commands[gradientStart + 7 + i * 2];
                 if (stop1000 < 0 || stop1000 > 1000 || stop1000 <= previousStop) {
                     return false;
                 }
@@ -980,6 +1017,51 @@ public class JBRSkiaService extends JBRSkia {
                             ));
                             current.draw(path);
                         }
+                    } else if (op == COMMAND_FILL_PATH_LINEAR_GRADIENT) {
+                        if (offset + 2 > recordEnd) return false;
+                        int fillType = commands[offset++];
+                        int pathDataLength = commands[offset++];
+                        int pathEnd = offset + pathDataLength;
+                        if ((fillType != COMMAND_PATH_FILL_NON_ZERO && fillType != COMMAND_PATH_FILL_EVEN_ODD)
+                                || pathDataLength < 0
+                                || pathDataLength > 4096
+                                || pathEnd + 10 > recordEnd) {
+                            return false;
+                        }
+                        Path2D path = pathFromCommandData(commands, offset, pathEnd, fillType);
+                        if (path == null) return false;
+                        offset = pathEnd;
+                        int fromX1000 = commands[offset++];
+                        int fromY1000 = commands[offset++];
+                        int toX1000 = commands[offset++];
+                        int toY1000 = commands[offset++];
+                        int tileMode = commands[offset++];
+                        int colorCount = commands[offset++];
+                        if (tileMode < 0 || tileMode > 3 || colorCount < 2 || colorCount > 16
+                                || offset + colorCount * 2 != recordEnd) {
+                            return false;
+                        }
+                        Color[] colors = new Color[colorCount];
+                        float[] fractions = new float[colorCount];
+                        int previousStop = -1;
+                        for (int i = 0; i < colorCount; i++) {
+                            colors[i] = new Color(commands[offset++], true);
+                            int stop1000 = commands[offset++];
+                            if (stop1000 < 0 || stop1000 > 1000 || stop1000 <= previousStop) {
+                                return false;
+                            }
+                            previousStop = stop1000;
+                            fractions[i] = stop1000 / 1000f;
+                        }
+                        applyAntialiasing(current, antiAlias);
+                        current.setPaint(new LinearGradientPaint(
+                                new Point2D.Float(fromX1000 / 1000f, fromY1000 / 1000f),
+                                new Point2D.Float(toX1000 / 1000f, toY1000 / 1000f),
+                                fractions,
+                                colors,
+                                gradientCycleMethod(tileMode)
+                        ));
+                        current.fill(path);
                     } else if (op == COMMAND_DRAW_ARC) {
                         if (offset + 13 != recordEnd) return false;
                         int paintStyle = commands[offset++];

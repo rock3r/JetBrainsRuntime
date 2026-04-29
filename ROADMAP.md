@@ -30,10 +30,11 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] ABI 32: linear-gradient rounded-rectangle fill.
 - [x] ABI 33: radial-gradient rectangle fill.
 - [x] ABI 34: radial-gradient rounded-rectangle fill.
+- [x] ABI 35: linear-gradient path fill.
 
 ## Near-Term Rendering Work
 
-- [ ] Gradient path fills, starting with linear gradient path fill.
+- [ ] Continue gradient path fills after the first linear-gradient path checkpoint.
 - [ ] Sweep-gradient payloads.
 - [ ] Generic shader strategy:
   - [ ] Short term: keep rejecting opaque/unknown shader pointers and add serialized command payloads for known shader families.
