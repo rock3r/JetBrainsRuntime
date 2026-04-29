@@ -2504,6 +2504,38 @@ Next checkpoint:
 
 - Add a Magic Jewel visual probe with centered/bold/italic and RTL text so paragraph layout metadata is validated by visible content, not only by command-stream acceptance.
 
+### Checkpoint 63: Magic Jewel Paragraph Layout Visual Probe
+
+Status: completed for an opt-in Magic Jewel visual probe that exercises paragraph layout metadata.
+
+- Added `MAGIC_JEWEL_PARAGRAPH_LAYOUT_TEXT` / `magic.jewel.paragraphLayoutText` to Magic Jewel.
+- The probe renders centered bold text, right-aligned italic text, and explicit RTL text through Compose `BasicText`.
+- The centered and right-aligned labels intentionally include surrogate-pair text so they take the JBR-owned paragraph command path instead of the simple text command.
+- The report harness records the new flag in `report.md`, exports it to old/new runs, and documents it in `--help`.
+- README now includes a strict command-mode invocation that requires at least four paragraph text commands.
+
+Verification completed:
+
+- Magic Jewel `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew compileKotlin`.
+- Magic Jewel strict command report with `MAGIC_JEWEL_UNSUPPORTED_TEXT=true`, `MAGIC_JEWEL_PARAGRAPH_LAYOUT_TEXT=true`, and `EXPECT_MIN_PARAGRAPH_TEXT_COMMANDS=4`.
+
+Magic Jewel paragraph layout visual report:
+
+- report: `/tmp/magic-jewel-paragraph-layout-visual-smoke-2/report.md`
+- screenshot: `/tmp/magic-jewel-paragraph-layout-visual-smoke-2/new-window.png`
+- validation status: `passed`
+- fallback markers: `0`
+- picture replay frames: `0`
+- `EXPECT_MIN_TEXT_COMMANDS`: `8`
+- `EXPECT_MIN_PARAGRAPH_TEXT_COMMANDS`: `4`
+- CMP command recorder: `frames=20 fps=6.7 avg_commands=2767 max_commands=2767 unsupported_frames=0 avg_unsupported=0.0 max_unsupported=0 avg_text_commands=9.0 max_text_commands=9 avg_paragraph_text_commands=4.0 max_paragraph_text_commands=4 avg_image_defines=0.0 max_image_defines=0 avg_image_refs=0.0 max_image_refs=0 avg_image_cache_clears=0.0 max_image_cache_clears=0 reasons=none`
+- Skiko/JBR command frames: `19` / `19`
+- screenshot assertion: `passed`
+
+Next checkpoint:
+
+- Start tightening paragraph fidelity beyond scalar layout: line-height/max-lines/ellipsis/decorations, with each addition guarded by a command-stream capability bit and an opt-in Magic Jewel probe.
+
 Use separate worktrees for every existing repo touched:
 
 - `JetBrainsRuntime` worktree: `jbr-skia-compose-poc`
