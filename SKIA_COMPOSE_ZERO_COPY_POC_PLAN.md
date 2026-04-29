@@ -3609,6 +3609,22 @@ Next checkpoint:
 
 - Continue strict fallback coverage for invalid radii/nonfinite gradient geometry and transformed/nonserializable shader cases, then start the higher-level shader factory design if those guardrails stay stable.
 
+### Checkpoint 95: Strict Invalid Gradient Geometry Tests
+
+Status: completed for recorder-owned gradient geometry guardrails.
+
+- CMP focused tests now cover invalid rounded-rectangle radii when the paint uses linear, radial, and sweep gradients.
+- This pins the existing recorder behavior that rejects those commands before they reach JBR replay.
+- Attempted nonfinite shader-coordinate coverage showed Skia can fail during shader construction (`Can't wrap nullptr`) before CMP has a `Shader` object to record. That case is below the recorder boundary and should be covered separately if we add a wrapper/factory around shader construction.
+
+Validation:
+
+- CMP focused recorder test: `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest`
+
+Next checkpoint:
+
+- Keep hardening fallback around shader cases that do produce Compose `Shader` objects, then move toward a documented JBR-owned shader factory design for anything beyond serialized known shader families.
+
 Use separate worktrees for every existing repo touched:
 
 - `JetBrainsRuntime` worktree: `jbr-skia-compose-poc`
