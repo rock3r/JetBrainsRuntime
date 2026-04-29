@@ -87,6 +87,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [ ] Full launch-level old/new packaged artifact matrix.
 - [x] Stronger JBR context identity separate from per-surface identity for production cache keys.
 - [x] Skiko distinguishes same-context surface replacement from context migration.
+- [x] Magic Jewel strict resize validation for `contextChanged=false surfaceChanged=true`.
 
 ## Productionization Later
 

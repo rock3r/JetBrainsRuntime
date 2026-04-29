@@ -4070,6 +4070,39 @@ Next checkpoint:
 
 - Add a report parser assertion for `contextChanged=false surfaceChanged=true` in resize smoke mode, then decide the next cacheable object to move from diagnostic bookkeeping toward production JBR-owned state.
 
+### Checkpoint 114: Strict Resize Surface-Policy Validation
+
+Status: completed in Magic Jewel report validation.
+
+- Magic Jewel report validation now supports:
+  - `EXPECT_SURFACE_CONTEXT_CHANGED=true|false`
+  - `EXPECT_SURFACE_CHANGED=true|false`
+- `summary.properties` now includes:
+  - `skiko_context_change_markers`
+  - `skiko_same_context_surface_change_markers`
+- Added parser fixtures proving the report passes for resize-shaped markers and fails for context-migration-shaped markers when resize semantics are expected.
+- The README resize smoke now requires:
+  - `EXPECT_MIN_SURFACE_CHANGES=1`
+  - `EXPECT_SURFACE_CONTEXT_CHANGED=false`
+  - `EXPECT_SURFACE_CHANGED=true`
+- Live strict resize smoke passed with:
+  - `skiko_surface_change_markers=1`
+  - `skiko_context_change_markers=0`
+  - `skiko_same_context_surface_change_markers=1`
+  - `fallback_new_count=0`
+  - `skiko_picture_frames=0`
+  - `jbr_picture_frames=0`
+  - `screenshot_status=passed`
+
+Validation:
+
+- Magic Jewel parser tests: `bash scripts/test-jbr-skia-report-validation.sh`
+- Magic Jewel strict resize smoke: `/tmp/magic-jewel-context-surface-policy-strict-smoke/report.md`
+
+Next checkpoint:
+
+- Move from lifecycle telemetry to a production-shaped cached resource decision. The likely next target is JBR-side image cache ownership because it is already command-stream visible, has parser coverage, and needs clear invalidation boundaries before we benchmark quieter-machine runs.
+
 Use separate worktrees for every existing repo touched:
 
 - `JetBrainsRuntime` worktree: `jbr-skia-compose-poc`
