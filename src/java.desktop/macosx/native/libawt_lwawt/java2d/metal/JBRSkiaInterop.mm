@@ -45,6 +45,7 @@
 #include "SkPixmap.h"
 #include "SkRRect.h"
 #include "SkSamplingOptions.h"
+#include "SkString.h"
 #include "SkSurface.h"
 #include "ganesh/GrBackendSurface.h"
 #include "ganesh/GrDirectContext.h"
@@ -63,7 +64,7 @@
 
 #include "MTLSurfaceDataBase.h"
 
-static constexpr jint ABI_ID = 21;
+static constexpr jint ABI_ID = 22;
 static constexpr jint COMMAND_STREAM_MAGIC = 1246972723;
 static constexpr jint COMMAND_STREAM_HEADER_SIZE = 6;
 static constexpr jint COMMAND_STREAM_FLAGS_NONE = 0;
@@ -624,6 +625,8 @@ static bool drawCommandList(SkCanvas* canvas,
                 const jint textAlign = commands[offset++];
                 const jint textDirection = commands[offset++];
                 const jint lineHeightMultiplier1000 = commands[offset++];
+                const jint maxLines = commands[offset++];
+                const jint ellipsisMode = commands[offset++];
                 const jint charCount = commands[offset++];
                 if (paragraphWidth <= 0.0f || fontSize <= 0.0f ||
                         fontWeight < 1 || fontWeight > 1000 ||
@@ -632,6 +635,8 @@ static bool drawCommandList(SkCanvas* canvas,
                         textAlign < 0 || textAlign > 5 ||
                         textDirection < 0 || textDirection > 1 ||
                         lineHeightMultiplier1000 < 0 || lineHeightMultiplier1000 > 100000 ||
+                        maxLines < 0 || maxLines > 4096 ||
+                        ellipsisMode < 0 || ellipsisMode > 1 ||
                         charCount < 0 || charCount > 4096 || offset + charCount != recordEnd) {
                     return false;
                 }
@@ -643,6 +648,12 @@ static bool drawCommandList(SkCanvas* canvas,
                 skia::textlayout::ParagraphStyle paragraphStyle;
                 paragraphStyle.setTextAlign(static_cast<skia::textlayout::TextAlign>(textAlign));
                 paragraphStyle.setTextDirection(static_cast<skia::textlayout::TextDirection>(textDirection));
+                if (maxLines > 0) {
+                    paragraphStyle.setMaxLines(static_cast<size_t>(maxLines));
+                    if (ellipsisMode == 1) {
+                        paragraphStyle.setEllipsis(SkString("..."));
+                    }
+                }
                 skia::textlayout::TextStyle textStyle;
                 textStyle.setColor(color);
                 textStyle.setFontSize(fontSize);

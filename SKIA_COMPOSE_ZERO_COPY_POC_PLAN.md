@@ -2677,6 +2677,52 @@ Next checkpoint:
 
 - Add paragraph overflow metadata (`maxLines` and end ellipsis) as the next scalar text-fidelity capability, then gate it with a Magic Jewel probe that deliberately clips a one-line label.
 
+### Checkpoint 68: Paragraph Overflow Metadata And ABI 22
+
+Status: completed for scalar paragraph overflow metadata.
+
+- Bumped the command ABI to `ABI_ID = 22` across Runtime API, Skiko, CMP, JBR Java replay, and JBR native replay.
+- Added `COMMAND_CAP_PARAGRAPH_OVERFLOW` so Skiko can require runtimes where paragraph commands carry max-lines and ellipsis metadata.
+- Extended `COMMAND_DRAW_PARAGRAPH_UTF16` with `maxLines` and `ellipsisMode` before `charCount`.
+- The ABI 22 paragraph payload is `[op, 68 + charCount * 4, flags, x1000, y1000, width1000, fontSize1000, argb, fontWeight, fontWidth, fontSlant, textAlign, textDirection, lineHeightMultiplier1000, maxLines, ellipsisMode, charCount, codeUnit0, ...]`.
+- `maxLines = 0` means default/unlimited. Positive values are bounded to `1..4096`.
+- `ellipsisMode = 0` means none; `ellipsisMode = 1` means end ellipsis. The ABI intentionally sends a scalar mode rather than any Skiko-owned string or pointer. The current native PoC maps mode `1` to `SkString("...")` inside the JBR-owned Skia runtime.
+- CMP derives the fields from Compose paragraph state and clamps `Int.MAX_VALUE` to `0` for the default/unlimited case.
+- Magic Jewel's paragraph layout probe now includes a constrained one-line ellipsis label so the strict command smoke exercises the new fields.
+
+Verification completed:
+
+- Runtime API `bash tools/build.sh process`.
+- Runtime API `bash tools/build.sh dev $(/usr/libexec/java_home -v 21) /tmp/jbr-api-skia-dev`.
+- `/tmp/jbr-api-shim.jar` refreshed from `/tmp/jbr-api-skia-dev/jbr-api-SNAPSHOT.jar`.
+- Skiko `./gradlew :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`.
+- Skiko `./gradlew :skiko:publishToMavenLocal`.
+- CMP `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest`.
+- CMP desktop jars rebuilt with `SKIKO_VERSION=0.0.0-SNAPSHOT`.
+- Magic Jewel `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew compileKotlin`.
+- JBR isolated patched-class compile into `/tmp/jbr-skia-abi22-compile`.
+- JBR patched module refreshed at `/tmp/jbr-skia-run/desktop`.
+- JBR native dylib rebuild into `/tmp/jbr-skia-native/libjbrskiainterop.dylib`.
+
+ABI 22 paragraph overflow strict command Magic Jewel report:
+
+- report: `/tmp/magic-jewel-paragraph-overflow-abi22-smoke/report.md`
+- screenshot: `/tmp/magic-jewel-paragraph-overflow-abi22-smoke/new-window.png`
+- sampled log: `/tmp/magic-jewel-paragraph-overflow-abi22-smoke/new-sampled.log`
+- validation status: `passed`
+- fallback markers: `0`
+- picture replay frames: `0`
+- `EXPECT_MIN_TEXT_COMMANDS`: `8`
+- `EXPECT_MIN_PARAGRAPH_TEXT_COMMANDS`: `5`
+- CMP command recorder: `frames=473 fps=157.7 avg_commands=2891 max_commands=2891 unsupported_frames=0 avg_unsupported=0.0 max_unsupported=0 avg_text_commands=9.0 max_text_commands=9 avg_paragraph_text_commands=5.0 max_paragraph_text_commands=5 avg_image_defines=0.0 max_image_defines=0 avg_image_refs=0.0 max_image_refs=0 avg_image_cache_clears=0.0 max_image_cache_clears=0 reasons=none`
+- Skiko/JBR command frames: `473` / `473`
+- JBR command timing: `frames=473 avg_total_ms=1.161 max_total_ms=2.892 avg_draw_ms=0.183 max_draw_ms=0.342 avg_flush_ms=0.959 max_flush_ms=2.750 avg_paragraph_ms=0.080 max_paragraph_ms=0.205 avg_paragraph_commands=5.0 max_paragraph_commands=5`
+- screenshot assertion: `passed`
+
+Next checkpoint:
+
+- Add another text-fidelity scalar field, likely paragraph decoration metadata (`underline` / `lineThrough`) if confirmed by CMP/Skia code ground truth, and keep the strict Magic Jewel probe path as the acceptance gate.
+
 Use separate worktrees for every existing repo touched:
 
 - `JetBrainsRuntime` worktree: `jbr-skia-compose-poc`
