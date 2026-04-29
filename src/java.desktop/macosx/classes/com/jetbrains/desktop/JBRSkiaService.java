@@ -39,6 +39,7 @@ import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.Shape;
 import java.awt.geom.Area;
+import java.awt.geom.Path2D;
 import java.awt.image.BufferedImage;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -81,7 +82,8 @@ public class JBRSkiaService extends JBRSkia {
                     | COMMAND_CAP_PARAGRAPH_OVERFLOW
                     | COMMAND_CAP_PARAGRAPH_DECORATION
                     | COMMAND_CAP_PARAGRAPH_LETTER_SPACING
-                    | COMMAND_CAP_PARAGRAPH_BACKGROUND;
+                    | COMMAND_CAP_PARAGRAPH_BACKGROUND
+                    | COMMAND_CAP_CLIP_PATH;
     private static final boolean NATIVE_BRIDGE_AVAILABLE = loadNativeBridge();
     private static final AtomicLong NEXT_SCOPE_ID = new AtomicLong(1);
     private static final int MAX_CACHED_IMAGES = 256;
@@ -167,6 +169,7 @@ public class JBRSkiaService extends JBRSkia {
         if (op == COMMAND_DEFINE_IMAGE_ARGB) return -3;
         if (op == COMMAND_DRAW_TEXT_UTF16) return -4;
         if (op == COMMAND_DRAW_PARAGRAPH_UTF16) return -5;
+        if (op == COMMAND_CLIP_PATH) return -6;
         if (op == COMMAND_DRAW_IMAGE_REF) return 17;
         if (op == COMMAND_CLEAR) return 4;
         if (op == COMMAND_CLEAR_RECT) return 7;
@@ -191,6 +194,9 @@ public class JBRSkiaService extends JBRSkia {
         if (expectedLength == -5 && record.op() == COMMAND_DRAW_PARAGRAPH_UTF16) {
             return record.recordLength() >= 21;
         }
+        if (expectedLength == -6 && record.op() == COMMAND_CLIP_PATH) {
+            return record.recordLength() >= 6;
+        }
         return expectedLength == record.recordLength();
     }
 
@@ -210,6 +216,21 @@ public class JBRSkiaService extends JBRSkia {
         if (record.op() == COMMAND_CLIP_RECT) {
             int clipOp = commands[record.recordEnd() - 1];
             return clipOp == COMMAND_CLIP_OP_INTERSECT || clipOp == COMMAND_CLIP_OP_DIFFERENCE;
+        }
+        if (record.op() == COMMAND_CLIP_PATH) {
+            if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE
+                    && record.recordFlags() != COMMAND_RECORD_FLAG_ANTIALIAS) {
+                return false;
+            }
+            int clipOp = commands[record.argsStart()];
+            int fillType = commands[record.argsStart() + 1];
+            int pathDataLength = commands[record.argsStart() + 2];
+            return (clipOp == COMMAND_CLIP_OP_INTERSECT || clipOp == COMMAND_CLIP_OP_DIFFERENCE)
+                    && (fillType == COMMAND_PATH_FILL_NON_ZERO || fillType == COMMAND_PATH_FILL_EVEN_ODD)
+                    && pathDataLength >= 0
+                    && pathDataLength <= 4096
+                    && record.argsStart() + 3 + pathDataLength == record.recordEnd()
+                    && validatePathData(commands, record.argsStart() + 3, record.recordEnd());
         }
         if (record.op() == COMMAND_DRAW_IMAGE_ARGB) {
             if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE
@@ -336,6 +357,25 @@ public class JBRSkiaService extends JBRSkia {
                 && commands[strokeJoinIndex] >= 0
                 && commands[strokeJoinIndex] <= 2
                 && commands[strokeMiterIndex] >= 0;
+    }
+
+    private static boolean validatePathData(int[] commands, int offset, int recordEnd) {
+        while (offset < recordEnd) {
+            int verb = commands[offset++];
+            if (verb == COMMAND_PATH_VERB_MOVE || verb == COMMAND_PATH_VERB_LINE) {
+                offset += 2;
+            } else if (verb == COMMAND_PATH_VERB_QUAD) {
+                offset += 4;
+            } else if (verb == COMMAND_PATH_VERB_CUBIC) {
+                offset += 6;
+            } else if (verb != COMMAND_PATH_VERB_CLOSE) {
+                return false;
+            }
+            if (offset > recordEnd) {
+                return false;
+            }
+        }
+        return offset == recordEnd;
     }
 
     private static CommandRecord readCommandRecord(int[] commands, int offset, int commandEnd) {
@@ -654,6 +694,29 @@ public class JBRSkiaService extends JBRSkia {
                         } else {
                             return false;
                         }
+                    } else if (op == COMMAND_CLIP_PATH) {
+                        if (offset + 3 > recordEnd) return false;
+                        int clipOp = commands[offset++];
+                        int fillType = commands[offset++];
+                        int pathDataLength = commands[offset++];
+                        if ((clipOp != COMMAND_CLIP_OP_INTERSECT && clipOp != COMMAND_CLIP_OP_DIFFERENCE)
+                                || (fillType != COMMAND_PATH_FILL_NON_ZERO && fillType != COMMAND_PATH_FILL_EVEN_ODD)
+                                || pathDataLength < 0
+                                || offset + pathDataLength != recordEnd) {
+                            return false;
+                        }
+                        Path2D path = pathFromCommandData(commands, offset, recordEnd, fillType);
+                        if (path == null) return false;
+                        offset = recordEnd;
+                        if (clipOp == COMMAND_CLIP_OP_INTERSECT) {
+                            current.clip(path);
+                        } else {
+                            Shape previousClip = current.getClip();
+                            if (previousClip == null) return false;
+                            Area clip = new Area(previousClip);
+                            clip.subtract(new Area(path));
+                            current.setClip(clip);
+                        }
                     } else if (op == COMMAND_TRANSLATE) {
                         if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE || offset + 2 != recordEnd) return false;
                         current.translate(commands[offset++] / 1000.0, commands[offset++] / 1000.0);
@@ -945,6 +1008,45 @@ public class JBRSkiaService extends JBRSkia {
             );
             current.setComposite(previousComposite);
             current.setRenderingHint(RenderingHints.KEY_INTERPOLATION, previousInterpolation);
+        }
+
+        private static Path2D pathFromCommandData(int[] commands, int offset, int recordEnd, int fillType) {
+            Path2D.Float path = new Path2D.Float(
+                    fillType == COMMAND_PATH_FILL_EVEN_ODD ? Path2D.WIND_EVEN_ODD : Path2D.WIND_NON_ZERO
+            );
+            while (offset < recordEnd) {
+                int verb = commands[offset++];
+                if (verb == COMMAND_PATH_VERB_MOVE) {
+                    if (offset + 2 > recordEnd) return null;
+                    path.moveTo(commands[offset++] / 1000f, commands[offset++] / 1000f);
+                } else if (verb == COMMAND_PATH_VERB_LINE) {
+                    if (offset + 2 > recordEnd) return null;
+                    path.lineTo(commands[offset++] / 1000f, commands[offset++] / 1000f);
+                } else if (verb == COMMAND_PATH_VERB_QUAD) {
+                    if (offset + 4 > recordEnd) return null;
+                    path.quadTo(
+                            commands[offset++] / 1000f,
+                            commands[offset++] / 1000f,
+                            commands[offset++] / 1000f,
+                            commands[offset++] / 1000f
+                    );
+                } else if (verb == COMMAND_PATH_VERB_CUBIC) {
+                    if (offset + 6 > recordEnd) return null;
+                    path.curveTo(
+                            commands[offset++] / 1000f,
+                            commands[offset++] / 1000f,
+                            commands[offset++] / 1000f,
+                            commands[offset++] / 1000f,
+                            commands[offset++] / 1000f,
+                            commands[offset++] / 1000f
+                    );
+                } else if (verb == COMMAND_PATH_VERB_CLOSE) {
+                    path.closePath();
+                } else {
+                    return null;
+                }
+            }
+            return offset == recordEnd ? path : null;
         }
 
         private static void applyAntialiasing(Graphics2D g, boolean antiAlias) {

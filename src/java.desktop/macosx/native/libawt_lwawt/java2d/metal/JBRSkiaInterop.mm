@@ -41,6 +41,8 @@
 #include "SkImageInfo.h"
 #include "SkFont.h"
 #include "SkPaint.h"
+#include "SkPath.h"
+#include "SkPathBuilder.h"
 #include "SkPicture.h"
 #include "SkPixmap.h"
 #include "SkRRect.h"
@@ -64,7 +66,7 @@
 
 #include "MTLSurfaceDataBase.h"
 
-static constexpr jint ABI_ID = 25;
+static constexpr jint ABI_ID = 26;
 static constexpr jint COMMAND_STREAM_MAGIC = 1246972723;
 static constexpr jint COMMAND_STREAM_HEADER_SIZE = 6;
 static constexpr jint COMMAND_STREAM_FLAGS_NONE = 0;
@@ -94,6 +96,14 @@ static constexpr jint COMMAND_DRAW_IMAGE_REF = 16;
 static constexpr jint COMMAND_DRAW_TEXT_UTF16 = 17;
 static constexpr jint COMMAND_CLEAR_IMAGE_CACHE = 18;
 static constexpr jint COMMAND_DRAW_PARAGRAPH_UTF16 = 19;
+static constexpr jint COMMAND_CLIP_PATH = 20;
+static constexpr jint COMMAND_PATH_FILL_NON_ZERO = 0;
+static constexpr jint COMMAND_PATH_FILL_EVEN_ODD = 1;
+static constexpr jint COMMAND_PATH_VERB_MOVE = 0;
+static constexpr jint COMMAND_PATH_VERB_LINE = 1;
+static constexpr jint COMMAND_PATH_VERB_QUAD = 2;
+static constexpr jint COMMAND_PATH_VERB_CUBIC = 3;
+static constexpr jint COMMAND_PATH_VERB_CLOSE = 4;
 
 static std::mutex gDirectContextMutex;
 static std::unordered_map<void*, sk_sp<GrDirectContext>> gDirectContextsByMtlContext;
@@ -211,6 +221,50 @@ static jsize recordLengthFromBytes(jint recordByteLength) {
         return -1;
     }
     return recordByteLength / static_cast<jint>(sizeof(jint));
+}
+
+template <typename CommandWords>
+static bool pathFromCommandData(CommandWords commands, jsize offset, jsize recordEnd, jint fillType, SkPath* path) {
+    SkPathBuilder builder(fillType == COMMAND_PATH_FILL_EVEN_ODD ? SkPathFillType::kEvenOdd : SkPathFillType::kWinding);
+    while (offset < recordEnd) {
+        jint verb = commands[offset++];
+        if (verb == COMMAND_PATH_VERB_MOVE) {
+            if (offset + 2 > recordEnd) return false;
+            SkScalar x = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+            SkScalar y = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+            builder.moveTo(x, y);
+        } else if (verb == COMMAND_PATH_VERB_LINE) {
+            if (offset + 2 > recordEnd) return false;
+            SkScalar x = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+            SkScalar y = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+            builder.lineTo(x, y);
+        } else if (verb == COMMAND_PATH_VERB_QUAD) {
+            if (offset + 4 > recordEnd) return false;
+            SkScalar x1 = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+            SkScalar y1 = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+            SkScalar x2 = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+            SkScalar y2 = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+            builder.quadTo(x1, y1, x2, y2);
+        } else if (verb == COMMAND_PATH_VERB_CUBIC) {
+            if (offset + 6 > recordEnd) return false;
+            SkScalar x1 = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+            SkScalar y1 = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+            SkScalar x2 = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+            SkScalar y2 = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+            SkScalar x3 = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+            SkScalar y3 = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+            builder.cubicTo(x1, y1, x2, y2, x3, y3);
+        } else if (verb == COMMAND_PATH_VERB_CLOSE) {
+            builder.close();
+        } else {
+            return false;
+        }
+    }
+    if (offset != recordEnd) {
+        return false;
+    }
+    *path = builder.detach();
+    return true;
 }
 
 static jint decodeLittleEndianInt(const jbyte* bytes, jsize offset) {
@@ -441,6 +495,29 @@ static bool drawCommandList(SkCanvas* canvas,
                                                   static_cast<SkScalar>(y),
                                                   static_cast<SkScalar>(rectWidth),
                                                   static_cast<SkScalar>(rectHeight)),
+                                 clipOp == COMMAND_CLIP_OP_DIFFERENCE ? SkClipOp::kDifference : SkClipOp::kIntersect,
+                                 antiAlias);
+                break;
+            }
+            case COMMAND_CLIP_PATH: {
+                if (offset + 3 > recordEnd) {
+                    return false;
+                }
+                jint clipOp = commands[offset++];
+                jint fillType = commands[offset++];
+                jint pathDataLength = commands[offset++];
+                if ((clipOp != COMMAND_CLIP_OP_INTERSECT && clipOp != COMMAND_CLIP_OP_DIFFERENCE) ||
+                        (fillType != COMMAND_PATH_FILL_NON_ZERO && fillType != COMMAND_PATH_FILL_EVEN_ODD) ||
+                        pathDataLength < 0 ||
+                        offset + pathDataLength != recordEnd) {
+                    return false;
+                }
+                SkPath path;
+                if (!pathFromCommandData(commands, offset, recordEnd, fillType, &path)) {
+                    return false;
+                }
+                offset = recordEnd;
+                canvas->clipPath(path,
                                  clipOp == COMMAND_CLIP_OP_DIFFERENCE ? SkClipOp::kDifference : SkClipOp::kIntersect,
                                  antiAlias);
                 break;

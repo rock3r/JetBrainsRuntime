@@ -3089,7 +3089,35 @@ Status: completed for recorder-level unsupported-operation fallback validation.
 
 Next checkpoint:
 
-- Choose between adding command support for a common remaining primitive (`clipPath`, shader-backed fills, or path drawing) or tightening the report to distinguish command fallback kinds in the summary section.
+- Add command support for `clipPath` so the operation-level fallback probe becomes a strict command replay probe, and keep the fallback report as historical coverage for pre-ABI-26 behavior.
+
+### Checkpoint 80: `clipPath` Command Support And ABI 26
+
+Status: completed for Compose `clipPath` command recording and JBR/Skia replay.
+
+- Bumped the command ABI to `26` across JBR, public JBR API, Skiko, and CMP.
+- Added command capability `COMMAND_CAP_CLIP_PATH` and command opcode `COMMAND_CLIP_PATH`.
+- CMP serializes Compose paths into fixed-point path verb payloads using move/line/quad/cubic/close verbs and NonZero/EvenOdd fill metadata.
+- Skiko requires the new clip-path capability for strict command mode compatibility, so older JBR builds fall back instead of accepting a partial renderer.
+- JBR validates the variable-length path payload before replay, supports Java2D fallback clipping, and replays native Skia `clipPath` with intersect/difference clip operations.
+- The previous Magic Jewel `MAGIC_JEWEL_COMPOSE_CLIP_PATH=true` unsupported-operation probe is now a strict command replay probe.
+
+`clipPath` command Magic Jewel report:
+
+- report: `/tmp/magic-jewel-clippath-command-abi26-smoke/report.md`
+- screenshot: `/tmp/magic-jewel-clippath-command-abi26-smoke/new-window.png`
+- sampled log: `/tmp/magic-jewel-clippath-command-abi26-smoke/new-sampled.log`
+- validation status: `passed`
+- fallback markers: `0`
+- Skiko/JBR picture replay frames: `0` / `0`
+- CMP command recorder: `frames=425 fps=141.7 avg_commands=2518 max_commands=2518 unsupported_frames=0 avg_unsupported=0.0 max_unsupported=0 avg_text_commands=9.0 max_text_commands=9 avg_paragraph_text_commands=0.0 max_paragraph_text_commands=0 avg_image_defines=0.0 max_image_defines=0 avg_image_refs=0.0 max_image_refs=0 avg_image_cache_clears=0.0 max_image_cache_clears=0 reasons=none`
+- Skiko/JBR command frames: `426` / `426`
+- JBR command timing: `frames=426 avg_total_ms=1.087 max_total_ms=3.252 avg_draw_ms=0.103 max_draw_ms=0.340 avg_flush_ms=0.964 max_flush_ms=3.136 avg_paragraph_ms=0.000 max_paragraph_ms=0.000 avg_paragraph_commands=0.0 max_paragraph_commands=0`
+- screenshot assertion: `passed`
+
+Next checkpoint:
+
+- Add command support for another high-value vector primitive, likely path drawing/filling, so the command path can cover more non-rectangular Compose UI without falling back.
 
 Use separate worktrees for every existing repo touched:
 
