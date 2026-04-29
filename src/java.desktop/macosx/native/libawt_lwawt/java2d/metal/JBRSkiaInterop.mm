@@ -64,7 +64,7 @@
 
 #include "MTLSurfaceDataBase.h"
 
-static constexpr jint ABI_ID = 22;
+static constexpr jint ABI_ID = 23;
 static constexpr jint COMMAND_STREAM_MAGIC = 1246972723;
 static constexpr jint COMMAND_STREAM_HEADER_SIZE = 6;
 static constexpr jint COMMAND_STREAM_FLAGS_NONE = 0;
@@ -627,6 +627,7 @@ static bool drawCommandList(SkCanvas* canvas,
                 const jint lineHeightMultiplier1000 = commands[offset++];
                 const jint maxLines = commands[offset++];
                 const jint ellipsisMode = commands[offset++];
+                const jint decorationMask = commands[offset++];
                 const jint charCount = commands[offset++];
                 if (paragraphWidth <= 0.0f || fontSize <= 0.0f ||
                         fontWeight < 1 || fontWeight > 1000 ||
@@ -637,6 +638,7 @@ static bool drawCommandList(SkCanvas* canvas,
                         lineHeightMultiplier1000 < 0 || lineHeightMultiplier1000 > 100000 ||
                         maxLines < 0 || maxLines > 4096 ||
                         ellipsisMode < 0 || ellipsisMode > 1 ||
+                        decorationMask < 0 || decorationMask > 3 ||
                         charCount < 0 || charCount > 4096 || offset + charCount != recordEnd) {
                     return false;
                 }
@@ -664,6 +666,21 @@ static bool drawCommandList(SkCanvas* canvas,
                 if (lineHeightMultiplier1000 > 0) {
                     textStyle.setHeight(static_cast<SkScalar>(lineHeightMultiplier1000) / 1000.0f);
                     textStyle.setHeightOverride(true);
+                }
+                skia::textlayout::TextDecoration decoration = skia::textlayout::TextDecoration::kNoDecoration;
+                if ((decorationMask & 1) != 0) {
+                    decoration = static_cast<skia::textlayout::TextDecoration>(
+                            decoration | skia::textlayout::TextDecoration::kUnderline);
+                }
+                if ((decorationMask & 2) != 0) {
+                    decoration = static_cast<skia::textlayout::TextDecoration>(
+                            decoration | skia::textlayout::TextDecoration::kLineThrough);
+                }
+                if (decoration != skia::textlayout::TextDecoration::kNoDecoration) {
+                    textStyle.setDecoration(decoration);
+                    textStyle.setDecorationColor(color);
+                    textStyle.setDecorationStyle(skia::textlayout::TextDecorationStyle::kSolid);
+                    textStyle.setDecorationThicknessMultiplier(1.0f);
                 }
                 auto builder = skia::textlayout::ParagraphBuilder::make(
                         paragraphStyle,

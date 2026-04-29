@@ -36,7 +36,7 @@ import java.nio.ByteBuffer;
  * so downstream compile-only clients cannot accidentally inline stale values.
  */
 public abstract class JBRSkia {
-    public static final int ABI_ID = Integer.parseInt("22");
+    public static final int ABI_ID = Integer.parseInt("23");
     public static final String BUILD_ID = buildId();
     public static final int COMMAND_STREAM_MAGIC = Integer.parseInt("1246972723");
     public static final int COMMAND_STREAM_HEADER_SIZE = Integer.parseInt("6");
@@ -69,6 +69,7 @@ public abstract class JBRSkia {
     public static final int COMMAND_CAP_PARAGRAPH_LAYOUT = Integer.parseInt("1048576");
     public static final int COMMAND_CAP_PARAGRAPH_LINE_HEIGHT = Integer.parseInt("2097152");
     public static final int COMMAND_CAP_PARAGRAPH_OVERFLOW = Integer.parseInt("4194304");
+    public static final int COMMAND_CAP_PARAGRAPH_DECORATION = Integer.parseInt("8388608");
     public static final int COMMAND_CLEAR = Integer.parseInt("1");
     public static final int COMMAND_FILL_RECT = Integer.parseInt("2");
     public static final int COMMAND_STROKE_LINE = Integer.parseInt("3");
