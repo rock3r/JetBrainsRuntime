@@ -28,6 +28,7 @@
 #include <algorithm>
 #include <chrono>
 #include <cstdio>
+#include <functional>
 #include <mutex>
 #include <unordered_map>
 #include <vector>
@@ -123,8 +124,26 @@ static constexpr jint COMMAND_PATH_VERB_CLOSE = 4;
 
 static std::mutex gDirectContextMutex;
 static std::unordered_map<void*, sk_sp<GrDirectContext>> gDirectContextsByMtlContext;
+
+struct ImageCacheScopedKey {
+    void* context;
+    uint64_t image;
+
+    bool operator==(const ImageCacheScopedKey& other) const {
+        return context == other.context && image == other.image;
+    }
+};
+
+struct ImageCacheScopedKeyHash {
+    size_t operator()(const ImageCacheScopedKey& key) const {
+        size_t contextHash = std::hash<void*>{}(key.context);
+        size_t imageHash = std::hash<uint64_t>{}(key.image);
+        return contextHash ^ (imageHash + 0x9e3779b97f4a7c15ULL + (contextHash << 6) + (contextHash >> 2));
+    }
+};
+
 static std::mutex gImageCacheMutex;
-static std::unordered_map<uint64_t, sk_sp<SkImage>> gImagesByKey;
+static std::unordered_map<ImageCacheScopedKey, sk_sp<SkImage>, ImageCacheScopedKeyHash> gImagesByKey;
 static std::mutex gParagraphDependenciesMutex;
 static sk_sp<skia::textlayout::FontCollection> gParagraphFontCollection;
 static sk_sp<SkUnicode> gParagraphUnicode;
@@ -311,6 +330,19 @@ static uint64_t imageCacheKey(jint high, jint low) {
             | static_cast<uint32_t>(low);
 }
 
+static int clearImageCacheForContext(void* contextKey) {
+    int cleared = 0;
+    for (auto it = gImagesByKey.begin(); it != gImagesByKey.end();) {
+        if (it->first.context == contextKey) {
+            it = gImagesByKey.erase(it);
+            cleared++;
+        } else {
+            ++it;
+        }
+    }
+    return cleared;
+}
+
 static bool appendUtf8CodePoint(std::string& text, uint32_t codePoint) {
     if (codePoint <= 0x7f) {
         text.push_back(static_cast<char>(codePoint));
@@ -442,6 +474,7 @@ static bool drawCommandList(SkCanvas* canvas,
                             jsize commandCount,
                             int width,
                             int height,
+                            void* imageCacheContextKey,
                             CommandReplayMetrics* metrics = nullptr) {
     if (commandCount < COMMAND_STREAM_HEADER_SIZE ||
             commands[0] != COMMAND_STREAM_MAGIC ||
@@ -498,8 +531,11 @@ static bool drawCommandList(SkCanvas* canvas,
                     return false;
                 }
                 std::lock_guard<std::mutex> lock(gImageCacheMutex);
-                gImagesByKey.clear();
-                std::fprintf(stderr, "JBR_SKIA_INTEROP_IMAGE_CACHE_CLEAR backend=native\n");
+                int cleared = clearImageCacheForContext(imageCacheContextKey);
+                std::fprintf(stderr,
+                             "JBR_SKIA_INTEROP_IMAGE_CACHE_CLEAR backend=native contextId=%p cleared=%d\n",
+                             imageCacheContextKey,
+                             cleared);
                 break;
             }
             case COMMAND_CLIP_RECT: {
@@ -1196,7 +1232,7 @@ static bool drawCommandList(SkCanvas* canvas,
                 }
                 {
                     std::lock_guard<std::mutex> lock(gImageCacheMutex);
-                    gImagesByKey[key] = image;
+                    gImagesByKey[ImageCacheScopedKey{imageCacheContextKey, key}] = image;
                 }
                 break;
             }
@@ -1225,7 +1261,7 @@ static bool drawCommandList(SkCanvas* canvas,
                 sk_sp<SkImage> image;
                 {
                     std::lock_guard<std::mutex> lock(gImageCacheMutex);
-                    auto found = gImagesByKey.find(key);
+                    auto found = gImagesByKey.find(ImageCacheScopedKey{imageCacheContextKey, key});
                     if (found == gImagesByKey.end()) {
                         return false;
                     }
@@ -1752,7 +1788,8 @@ Java_com_jetbrains_desktop_JBRSkiaService_nativeRenderCommandFrame
                                           static_cast<SkScalar>(destinationHeight)));
         canvas->translate(static_cast<SkScalar>(destinationX),
                           static_cast<SkScalar>(destinationY));
-        bool rendered = drawCommandList(canvas, IntCommandWords{commands}, commandCount, width, height, &metrics);
+        bool rendered = drawCommandList(canvas, IntCommandWords{commands}, commandCount, width, height,
+                                        getContextFromNativeOps(nativeOpsPtr), &metrics);
         canvas->restore();
         const long long drawNanos = monotonicNanos() - drawStartNanos;
         env->ReleaseIntArrayElements(commandArray, commands, JNI_ABORT);
@@ -1839,7 +1876,8 @@ Java_com_jetbrains_desktop_JBRSkiaService_nativeRenderCommandBufferFrame
                                           static_cast<SkScalar>(destinationHeight)));
         canvas->translate(static_cast<SkScalar>(destinationX),
                           static_cast<SkScalar>(destinationY));
-        bool rendered = drawCommandList(canvas, LittleEndianByteCommandWords{commandBytes}, commandCount, width, height, &metrics);
+        bool rendered = drawCommandList(canvas, LittleEndianByteCommandWords{commandBytes}, commandCount,
+                                        width, height, getContextFromNativeOps(nativeOpsPtr), &metrics);
         canvas->restore();
         const long long drawNanos = monotonicNanos() - drawStartNanos;
         env->ReleaseByteArrayElements(commandArray, commandBytes, JNI_ABORT);
@@ -1919,7 +1957,8 @@ Java_com_jetbrains_desktop_JBRSkiaService_nativeRenderCommandDirectFrame
                                           static_cast<SkScalar>(destinationHeight)));
         canvas->translate(static_cast<SkScalar>(destinationX),
                           static_cast<SkScalar>(destinationY));
-        bool rendered = drawCommandList(canvas, LittleEndianByteCommandWords{commandBytes}, commandCount, width, height, &metrics);
+        bool rendered = drawCommandList(canvas, LittleEndianByteCommandWords{commandBytes}, commandCount,
+                                        width, height, getContextFromNativeOps(nativeOpsPtr), &metrics);
         canvas->restore();
         const long long drawNanos = monotonicNanos() - drawStartNanos;
         if (!rendered) {

@@ -88,6 +88,9 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Stronger JBR context identity separate from per-surface identity for production cache keys.
 - [x] Skiko distinguishes same-context surface replacement from context migration.
 - [x] Magic Jewel strict resize validation for `contextChanged=false surfaceChanged=true`.
+- [x] JBR image cache entries are scoped by destination context id.
+- [x] Magic Jewel report counts scoped JBR image-cache-clear markers.
+- [ ] Combined resize + image-cache churn smoke proving stable context-scoped cache ownership across same-context surface replacement.
 
 ## Productionization Later
 

@@ -4099,9 +4099,38 @@ Validation:
 - Magic Jewel parser tests: `bash scripts/test-jbr-skia-report-validation.sh`
 - Magic Jewel strict resize smoke: `/tmp/magic-jewel-context-surface-policy-strict-smoke/report.md`
 
+### Checkpoint: Context-Scoped JBR Image Cache
+
+Status: completed for the PoC command-stream image cache.
+
+- JBR native command replay no longer stores `SkImage` entries in one process-global namespace keyed only by image id.
+- Native image entries are keyed by `(MTLContext*, imageKey)`, so a future destination context migration cannot reuse images created for a different Java2D/Metal context.
+- Java2D fallback replay mirrors the same ownership rule with `(contextId, imageKey)` `BufferedImage` entries.
+- `COMMAND_CLEAR_IMAGE_CACHE` now clears only the current context namespace and emits parseable markers:
+  - native: `JBR_SKIA_INTEROP_IMAGE_CACHE_CLEAR backend=native contextId=0x... cleared=N`
+  - Java2D fallback: `JBR_SKIA_INTEROP_IMAGE_CACHE_CLEAR backend=java2d contextId=0x... cleared=N`
+- Magic Jewel reports now count scoped JBR image-cache-clear markers separately from generic clear markers.
+- Same-context surface replacement remains compatible with cached image reuse; context changes get isolated cache namespaces.
+
+Validation:
+
+- JBR patched Java service compile: `javac ... JBRSkia.java JBRSkiaService.java`
+- JBR native dylib compile: `clang++ ... JBRSkiaInterop.mm ...`
+- Magic Jewel parser tests: `bash scripts/test-jbr-skia-report-validation.sh`
+- Magic Jewel scoped image-cache churn smoke: `/tmp/magic-jewel-context-image-cache-smoke/report.md`
+  - `validation_status=passed`
+  - `fallback_new_count=0`
+  - `skiko_picture_frames=0`
+  - `jbr_picture_frames=0`
+  - `cmp_recorder_frames=646`
+  - `jbr_command_frames=646`
+  - `jbr_image_cache_clear_frames=656`
+  - `jbr_scoped_image_cache_clear_frames=656`
+  - `screenshot_status=passed`
+
 Next checkpoint:
 
-- Move from lifecycle telemetry to a production-shaped cached resource decision. The likely next target is JBR-side image cache ownership because it is already command-stream visible, has parser coverage, and needs clear invalidation boundaries before we benchmark quieter-machine runs.
+- Add a stricter launch-level resize + image-cache churn run that proves same-context surface replacement keeps the context namespace stable while continuing to use context-scoped JBR image-cache clears.
 
 Use separate worktrees for every existing repo touched:
 

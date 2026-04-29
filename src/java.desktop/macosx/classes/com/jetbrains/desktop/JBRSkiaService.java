@@ -58,6 +58,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.ArrayDeque;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -112,10 +113,10 @@ public class JBRSkiaService extends JBRSkia {
     private static final boolean NATIVE_BRIDGE_AVAILABLE = loadNativeBridge();
     private static final AtomicLong NEXT_SCOPE_ID = new AtomicLong(1);
     private static final int MAX_CACHED_IMAGES = 256;
-    private static final Map<Long, BufferedImage> IMAGE_CACHE = Collections.synchronizedMap(
-            new LinkedHashMap<Long, BufferedImage>(MAX_CACHED_IMAGES, 0.75f, true) {
+    private static final Map<ImageCacheKey, BufferedImage> IMAGE_CACHE = Collections.synchronizedMap(
+            new LinkedHashMap<ImageCacheKey, BufferedImage>(MAX_CACHED_IMAGES, 0.75f, true) {
                 @Override
-                protected boolean removeEldestEntry(Map.Entry<Long, BufferedImage> eldest) {
+                protected boolean removeEldestEntry(Map.Entry<ImageCacheKey, BufferedImage> eldest) {
                     return size() > MAX_CACHED_IMAGES;
                 }
             });
@@ -829,6 +830,9 @@ public class JBRSkiaService extends JBRSkia {
         private static final MetalSurfaceMetadata EMPTY = new MetalSurfaceMetadata(0, 0, 0);
     }
 
+    private record ImageCacheKey(long contextId, long imageId) {
+    }
+
     private static final class PocScopedSkiaCanvas extends ScopedSkiaCanvas {
         private final long scopeId;
         private final Graphics2D graphics;
@@ -966,7 +970,7 @@ public class JBRSkiaService extends JBRSkia {
             Graphics2D commandGraphics = (Graphics2D) graphics.create();
             try {
                 commandGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                return renderJava2DCommands(commandGraphics, commands);
+                return renderJava2DCommands(commandGraphics, commands, contextPtr);
             } finally {
                 commandGraphics.dispose();
             }
@@ -993,7 +997,7 @@ public class JBRSkiaService extends JBRSkia {
             Graphics2D commandGraphics = (Graphics2D) graphics.create();
             try {
                 commandGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                return renderJava2DCommands(commandGraphics, decodeCommandBuffer(commands));
+                return renderJava2DCommands(commandGraphics, decodeCommandBuffer(commands), contextPtr);
             } finally {
                 commandGraphics.dispose();
             }
@@ -1023,7 +1027,7 @@ public class JBRSkiaService extends JBRSkia {
             Graphics2D commandGraphics = (Graphics2D) graphics.create();
             try {
                 commandGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                return renderJava2DCommands(commandGraphics, decodeCommandBuffer(commandBuffer));
+                return renderJava2DCommands(commandGraphics, decodeCommandBuffer(commandBuffer), contextPtr);
             } finally {
                 commandGraphics.dispose();
             }
@@ -1087,7 +1091,7 @@ public class JBRSkiaService extends JBRSkia {
             }
         }
 
-        private static boolean renderJava2DCommands(Graphics2D g, int[] commands) {
+        private static boolean renderJava2DCommands(Graphics2D g, int[] commands, long contextPtr) {
             int commandEnd = commandPayloadEnd(commands);
             if (commandEnd < 0) {
                 return false;
@@ -1700,8 +1704,9 @@ public class JBRSkiaService extends JBRSkia {
                         current.clipRect(x, y, width, height);
                     } else if (op == COMMAND_CLEAR_IMAGE_CACHE) {
                         if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE || offset != recordEnd) return false;
-                        System.err.println("JBR_SKIA_INTEROP_IMAGE_CACHE_CLEAR backend=java2d");
-                        IMAGE_CACHE.clear();
+                        int cleared = clearImageCacheForContext(contextPtr);
+                        System.err.println("JBR_SKIA_INTEROP_IMAGE_CACHE_CLEAR backend=java2d contextId=0x"
+                                + Long.toHexString(contextPtr) + " cleared=" + cleared);
                     } else if (op == COMMAND_DEFINE_IMAGE_ARGB) {
                         if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE || offset + 5 > recordEnd) return false;
                         long cacheKey = cacheKey(commands[offset++], commands[offset++]);
@@ -1715,7 +1720,7 @@ public class JBRSkiaService extends JBRSkia {
                         BufferedImage image = new BufferedImage(imageWidth, imageHeight, BufferedImage.TYPE_INT_ARGB);
                         image.setRGB(0, 0, imageWidth, imageHeight, commands, offset, imageWidth);
                         offset += pixelCount;
-                        IMAGE_CACHE.put(cacheKey, image);
+                        IMAGE_CACHE.put(new ImageCacheKey(contextPtr, cacheKey), image);
                     } else if (op == COMMAND_DRAW_IMAGE_REF) {
                         if (offset + 14 != recordEnd) return false;
                         boolean filtered = (record.recordFlags() & COMMAND_RECORD_FLAG_ANTIALIAS) != 0;
@@ -1732,7 +1737,7 @@ public class JBRSkiaService extends JBRSkia {
                         int imageHeight = commands[offset++];
                         int alpha1000 = commands[offset++];
                         int filterQuality = commands[offset++];
-                        BufferedImage image = IMAGE_CACHE.get(cacheKey);
+                        BufferedImage image = IMAGE_CACHE.get(new ImageCacheKey(contextPtr, cacheKey));
                         if (image == null || image.getWidth() != imageWidth || image.getHeight() != imageHeight
                                 || alpha1000 < 0 || alpha1000 > 1000 || filterQuality < 0 || filterQuality > 3) {
                             return false;
@@ -1940,6 +1945,20 @@ public class JBRSkiaService extends JBRSkia {
 
         private static long cacheKey(int high, int low) {
             return ((long) high << 32) ^ (low & 0xffffffffL);
+        }
+
+        private static int clearImageCacheForContext(long contextId) {
+            int cleared = 0;
+            synchronized (IMAGE_CACHE) {
+                Iterator<ImageCacheKey> iterator = IMAGE_CACHE.keySet().iterator();
+                while (iterator.hasNext()) {
+                    if (iterator.next().contextId() == contextId) {
+                        iterator.remove();
+                        cleared++;
+                    }
+                }
+            }
+            return cleared;
         }
 
         private static void drawImage(Graphics2D current, BufferedImage image, boolean filtered,
