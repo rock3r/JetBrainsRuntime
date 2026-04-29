@@ -3690,6 +3690,25 @@ Next checkpoint:
 
 - Build the full old/new launch matrix when we have packaged artifacts for both sides, and continue coverage on shader/fallback cases that are still outside the command subset.
 
+### Checkpoint 99: Build Identity Carries Skia Revision And Flags
+
+Status: completed as a strict-versioning cleanup.
+
+- Runtime API and JBR now expose `SKIA_REVISION = m147-64a2414108` and `SKIA_FLAGS_HASH = macos-release-metal-poc:1`.
+- `BUILD_ID` is now structured as `skia=<revision>;flags=<fingerprint>;abi=<commandAbi>;native=<nativeAbi>`.
+- The initializer remains non-constant, so Skiko must still read it reflectively and compile-only consumers cannot safely inline stale compatibility values.
+- The roadmap now marks the pinned Skia revision plus compile-flags hash item complete for the PoC configuration.
+
+Validation:
+
+- Runtime API processor: `bash tools/build.sh process`
+- Runtime API dev jar: `bash tools/build.sh dev $(/usr/libexec/java_home -v 21) /tmp/jbr-api-skia-build-id-dev`
+- JBR service compile check: `javac --add-exports ... -cp /tmp/jbr-api-shim.jar ... JBRSkia.java JBRSkiaService.java`
+
+Next checkpoint:
+
+- Re-run the Magic Jewel command-mode smoke with the structured build id in the launch patch set, then continue shader/fallback coverage.
+
 Use separate worktrees for every existing repo touched:
 
 - `JetBrainsRuntime` worktree: `jbr-skia-compose-poc`

@@ -37,8 +37,10 @@ import java.nio.ByteBuffer;
  */
 public abstract class JBRSkia {
     public static final int ABI_ID = Integer.parseInt("39");
-    public static final String BUILD_ID = buildId();
     public static final int NATIVE_ABI_VERSION = Integer.parseInt("1");
+    public static final String SKIA_REVISION = "m147-" + "64a2414108";
+    public static final String SKIA_FLAGS_HASH = "macos-release-metal-poc:" + Integer.parseInt("1");
+    public static final String BUILD_ID = buildId();
     public static final int COMMAND_STREAM_MAGIC = Integer.parseInt("1246972723");
     public static final int COMMAND_STREAM_HEADER_SIZE = Integer.parseInt("6");
     public static final int COMMAND_STREAM_FLAGS_NONE = Integer.parseInt("0");
@@ -132,7 +134,10 @@ public abstract class JBRSkia {
     public static final int COMMAND_PATH_VERB_CLOSE = Integer.parseInt("4");
 
     private static String buildId() {
-        return "skia-interop-poc:" + ABI_ID;
+        return "skia=" + SKIA_REVISION
+                + ";flags=" + SKIA_FLAGS_HASH
+                + ";abi=" + ABI_ID
+                + ";native=" + NATIVE_ABI_VERSION;
     }
 
     public abstract int getCommandCapabilities();
