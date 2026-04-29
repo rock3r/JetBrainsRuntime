@@ -63,7 +63,7 @@
 
 #include "MTLSurfaceDataBase.h"
 
-static constexpr jint ABI_ID = 20;
+static constexpr jint ABI_ID = 21;
 static constexpr jint COMMAND_STREAM_MAGIC = 1246972723;
 static constexpr jint COMMAND_STREAM_HEADER_SIZE = 6;
 static constexpr jint COMMAND_STREAM_FLAGS_NONE = 0;
@@ -623,6 +623,7 @@ static bool drawCommandList(SkCanvas* canvas,
                 const jint fontSlant = commands[offset++];
                 const jint textAlign = commands[offset++];
                 const jint textDirection = commands[offset++];
+                const jint lineHeightMultiplier1000 = commands[offset++];
                 const jint charCount = commands[offset++];
                 if (paragraphWidth <= 0.0f || fontSize <= 0.0f ||
                         fontWeight < 1 || fontWeight > 1000 ||
@@ -630,6 +631,7 @@ static bool drawCommandList(SkCanvas* canvas,
                         fontSlant < 0 || fontSlant > 2 ||
                         textAlign < 0 || textAlign > 5 ||
                         textDirection < 0 || textDirection > 1 ||
+                        lineHeightMultiplier1000 < 0 || lineHeightMultiplier1000 > 100000 ||
                         charCount < 0 || charCount > 4096 || offset + charCount != recordEnd) {
                     return false;
                 }
@@ -648,6 +650,10 @@ static bool drawCommandList(SkCanvas* canvas,
                         fontWeight,
                         fontWidth,
                         static_cast<SkFontStyle::Slant>(fontSlant)));
+                if (lineHeightMultiplier1000 > 0) {
+                    textStyle.setHeight(static_cast<SkScalar>(lineHeightMultiplier1000) / 1000.0f);
+                    textStyle.setHeightOverride(true);
+                }
                 auto builder = skia::textlayout::ParagraphBuilder::make(
                         paragraphStyle,
                         paragraphFontCollection(),

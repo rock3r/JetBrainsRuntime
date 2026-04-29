@@ -2631,6 +2631,52 @@ Next checkpoint:
 
 - Use the warmup mode for a longer quiet-machine comparison of old path vs command path, keeping the SKP/picture path available as a baseline and recording CPU/FPS/timing in the report.
 
+### Checkpoint 67: Paragraph Line-Height Metadata And ABI 21
+
+Status: completed for scalar paragraph line-height metadata.
+
+- Bumped the command ABI to `ABI_ID = 21` across Runtime API, Skiko, CMP, JBR Java replay, and JBR native replay.
+- Added `COMMAND_CAP_PARAGRAPH_LINE_HEIGHT` so Skiko can require runtimes where paragraph commands carry line-height metadata.
+- Extended `COMMAND_DRAW_PARAGRAPH_UTF16` with `lineHeightMultiplier1000` before `charCount`.
+- The ABI 21 paragraph payload is `[op, 60 + charCount * 4, flags, x1000, y1000, width1000, fontSize1000, argb, fontWeight, fontWidth, fontSlant, textAlign, textDirection, lineHeightMultiplier1000, charCount, codeUnit0, ...]`.
+- `lineHeightMultiplier1000 = 0` means the JBR Skia paragraph text style keeps Skia's default height behavior; positive values encode `lineHeightPx / fontSizePx * 1000`.
+- CMP derives the multiplier from Compose `TextStyle.lineHeight` for `sp` and `em` units and sends only the scalar across the ABI.
+- JBR native replay applies the multiplier with JBR-owned Skia `TextStyle.setHeight()` / `setHeightOverride(true)`.
+- Magic Jewel's paragraph layout probe now includes an explicit line-height label so the end-to-end smoke exercises the new field.
+
+Verification completed:
+
+- Runtime API `bash tools/build.sh process`.
+- Runtime API `bash tools/build.sh dev $(/usr/libexec/java_home -v 21) /tmp/jbr-api-skia-dev`.
+- `/tmp/jbr-api-shim.jar` refreshed from `/tmp/jbr-api-skia-dev/jbr-api-SNAPSHOT.jar`.
+- Skiko `./gradlew :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`.
+- Skiko `./gradlew :skiko:publishToMavenLocal`.
+- CMP `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest`.
+- CMP desktop jars rebuilt with `SKIKO_VERSION=0.0.0-SNAPSHOT`.
+- Magic Jewel `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew compileKotlin`.
+- JBR isolated patched-class compile into `/tmp/jbr-skia-abi21-compile`.
+- JBR patched module refreshed at `/tmp/jbr-skia-run/desktop`.
+- JBR native dylib rebuild into `/tmp/jbr-skia-native/libjbrskiainterop.dylib`.
+
+ABI 21 paragraph line-height strict command Magic Jewel report:
+
+- report: `/tmp/magic-jewel-paragraph-lineheight-abi21-smoke/report.md`
+- screenshot: `/tmp/magic-jewel-paragraph-lineheight-abi21-smoke/new-window.png`
+- sampled log: `/tmp/magic-jewel-paragraph-lineheight-abi21-smoke/new-sampled.log`
+- validation status: `passed`
+- fallback markers: `0`
+- picture replay frames: `0`
+- `EXPECT_MIN_TEXT_COMMANDS`: `8`
+- `EXPECT_MIN_PARAGRAPH_TEXT_COMMANDS`: `4`
+- CMP command recorder: `frames=469 fps=156.3 avg_commands=2772 max_commands=2772 unsupported_frames=0 avg_unsupported=0.0 max_unsupported=0 avg_text_commands=9.0 max_text_commands=9 avg_paragraph_text_commands=4.0 max_paragraph_text_commands=4 avg_image_defines=0.0 max_image_defines=0 avg_image_refs=0.0 max_image_refs=0 avg_image_cache_clears=0.0 max_image_cache_clears=0 reasons=none`
+- Skiko/JBR command frames: `469` / `469`
+- JBR command timing: `frames=469 avg_total_ms=1.237 max_total_ms=3.142 avg_draw_ms=0.149 max_draw_ms=0.354 avg_flush_ms=1.069 max_flush_ms=2.815 avg_paragraph_ms=0.048 max_paragraph_ms=0.243 avg_paragraph_commands=4.0 max_paragraph_commands=4`
+- screenshot assertion: `passed`
+
+Next checkpoint:
+
+- Add paragraph overflow metadata (`maxLines` and end ellipsis) as the next scalar text-fidelity capability, then gate it with a Magic Jewel probe that deliberately clips a one-line label.
+
 Use separate worktrees for every existing repo touched:
 
 - `JetBrainsRuntime` worktree: `jbr-skia-compose-poc`
