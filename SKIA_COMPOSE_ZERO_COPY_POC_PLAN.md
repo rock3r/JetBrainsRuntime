@@ -2536,6 +2536,37 @@ Next checkpoint:
 
 - Start tightening paragraph fidelity beyond scalar layout: line-height/max-lines/ellipsis/decorations, with each addition guarded by a command-stream capability bit and an opt-in Magic Jewel probe.
 
+### Checkpoint 64: Cached JBR Paragraph Dependencies
+
+Status: completed for the first paragraph-command performance cleanup.
+
+- JBR native replay now reuses a JBR-owned Skia Paragraph `FontCollection`, CoreText font manager, and ICU Unicode object instead of rebuilding them for every `COMMAND_DRAW_PARAGRAPH_UTF16`.
+- This does not change `ABI_ID`, `BUILD_ID`, command payload shape, or any cross-repo compatibility contract.
+- The cache still preserves the core ownership rule: all paragraph/font/unicode objects used by the fast path are created inside JBR's Skia runtime.
+
+Verification completed:
+
+- JBR native dylib rebuild into `/tmp/jbr-skia-native/libjbrskiainterop.dylib`.
+- Magic Jewel strict command report with `MAGIC_JEWEL_UNSUPPORTED_TEXT=true`, `MAGIC_JEWEL_PARAGRAPH_LAYOUT_TEXT=true`, and `EXPECT_MIN_PARAGRAPH_TEXT_COMMANDS=4`.
+
+Magic Jewel cached paragraph dependency report:
+
+- report: `/tmp/magic-jewel-paragraph-deps-cache-smoke/report.md`
+- screenshot: `/tmp/magic-jewel-paragraph-deps-cache-smoke/new-window.png`
+- validation status: `passed`
+- fallback markers: `0`
+- picture replay frames: `0`
+- `EXPECT_MIN_TEXT_COMMANDS`: `8`
+- `EXPECT_MIN_PARAGRAPH_TEXT_COMMANDS`: `4`
+- CMP command recorder: `frames=766 fps=255.3 avg_commands=2713 max_commands=2714 unsupported_frames=0 avg_unsupported=0.0 max_unsupported=0 avg_text_commands=9.0 max_text_commands=9 avg_paragraph_text_commands=4.0 max_paragraph_text_commands=4 avg_image_defines=0.0 max_image_defines=0 avg_image_refs=0.0 max_image_refs=0 avg_image_cache_clears=0.0 max_image_cache_clears=0 reasons=none`
+- Skiko/JBR command frames: `765` / `765`
+- screenshot assertion: `passed`
+- note: the prior visual-probe smoke on the same machine reported `frames=20 fps=6.7`; this large jump is a useful smoke signal, but benchmark-grade numbers still require a quiet-machine run with longer duration and stable profiling.
+
+Next checkpoint:
+
+- Add per-stage timing markers around command replay and paragraph replay so future slowdowns can be attributed to CMP recording, Skiko handoff, JBR command parsing, paragraph build/layout, or Metal submission.
+
 Use separate worktrees for every existing repo touched:
 
 - `JetBrainsRuntime` worktree: `jbr-skia-compose-poc`

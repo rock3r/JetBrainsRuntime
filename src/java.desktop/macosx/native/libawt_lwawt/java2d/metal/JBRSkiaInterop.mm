@@ -97,6 +97,9 @@ static std::mutex gDirectContextMutex;
 static std::unordered_map<void*, sk_sp<GrDirectContext>> gDirectContextsByMtlContext;
 static std::mutex gImageCacheMutex;
 static std::unordered_map<uint64_t, sk_sp<SkImage>> gImagesByKey;
+static std::mutex gParagraphDependenciesMutex;
+static sk_sp<skia::textlayout::FontCollection> gParagraphFontCollection;
+static sk_sp<SkUnicode> gParagraphUnicode;
 
 @class AWTView;
 @class MTLLayer;
@@ -117,6 +120,24 @@ typedef struct _JBRSkiaMTLGraphicsConfigInfo {
     MTLContext* context;
     jint displayID;
 } JBRSkiaMTLGraphicsConfigInfo;
+
+static sk_sp<skia::textlayout::FontCollection> paragraphFontCollection() {
+    std::scoped_lock lock(gParagraphDependenciesMutex);
+    if (gParagraphFontCollection == nullptr) {
+        auto fontCollection = sk_make_sp<skia::textlayout::FontCollection>();
+        fontCollection->setDefaultFontManager(SkFontMgr_New_CoreText(nullptr));
+        gParagraphFontCollection = fontCollection;
+    }
+    return gParagraphFontCollection;
+}
+
+static sk_sp<SkUnicode> paragraphUnicode() {
+    std::scoped_lock lock(gParagraphDependenciesMutex);
+    if (gParagraphUnicode == nullptr) {
+        gParagraphUnicode = SkUnicodes::ICU::Make();
+    }
+    return gParagraphUnicode;
+}
 
 typedef struct _JBRSkiaMTLSDOps {
     AWTView* peerData;
@@ -610,12 +631,10 @@ static bool drawCommandList(SkCanvas* canvas, CommandWords commands, jsize comma
                         fontWeight,
                         fontWidth,
                         static_cast<SkFontStyle::Slant>(fontSlant)));
-                auto fontCollection = sk_make_sp<skia::textlayout::FontCollection>();
-                fontCollection->setDefaultFontManager(SkFontMgr_New_CoreText(nullptr));
                 auto builder = skia::textlayout::ParagraphBuilder::make(
                         paragraphStyle,
-                        fontCollection,
-                        SkUnicodes::ICU::Make());
+                        paragraphFontCollection(),
+                        paragraphUnicode());
                 builder->pushStyle(textStyle);
                 builder->addText(text.data(), text.size());
                 std::unique_ptr<skia::textlayout::Paragraph> paragraph = builder->Build();
