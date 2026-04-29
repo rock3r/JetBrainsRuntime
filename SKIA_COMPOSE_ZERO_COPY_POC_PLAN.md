@@ -2861,6 +2861,39 @@ Next checkpoint:
 
 - Pause scalar text expansion and review the remaining unsupported text causes in sampled logs/source before choosing the next ABI field. The likely next step is not another blind scalar bump, but a small compatibility report that lists why text still falls back when strict command mode is enabled on broader Magic Jewel content.
 
+### Checkpoint 72: Broad Strict Command Coverage Smoke
+
+Status: completed as a broader no-fallback validation run.
+
+- Ran Magic Jewel strict command mode with the richer scene enabled:
+  - Compose text, including paragraph layout / decoration / letter-spacing / background probes.
+  - Compose image probe.
+  - Transform probe.
+  - SaveLayer probe.
+  - Clip intersect and clip difference probes.
+- The existing per-frame recorder telemetry was sufficient for this checkpoint; no new telemetry code was required.
+- Result: all enabled probes stayed on the strict command path with `unsupported_frames=0`, `reasons=none`, no picture replay, no fallback marker, and a passing screenshot oracle.
+
+Broad strict command Magic Jewel report:
+
+- report: `/tmp/magic-jewel-broad-strict-abi25-smoke/report.md`
+- screenshot: `/tmp/magic-jewel-broad-strict-abi25-smoke/new-window.png`
+- sampled log: `/tmp/magic-jewel-broad-strict-abi25-smoke/new-sampled.log`
+- validation status: `passed`
+- fallback markers: `0`
+- picture replay frames: `0`
+- `EXPECT_MIN_TEXT_COMMANDS`: `8`
+- `EXPECT_MIN_PARAGRAPH_TEXT_COMMANDS`: `6`
+- `EXPECT_MIN_IMAGE_REFS`: `1`
+- CMP command recorder: `frames=156 fps=52.0 avg_commands=3107 max_commands=3107 unsupported_frames=0 avg_unsupported=0.0 max_unsupported=0 avg_text_commands=9.0 max_text_commands=9 avg_paragraph_text_commands=6.0 max_paragraph_text_commands=6 avg_image_defines=0.0 max_image_defines=0 avg_image_refs=1.0 max_image_refs=1 avg_image_cache_clears=0.0 max_image_cache_clears=0 reasons=none`
+- Skiko/JBR command frames: `156` / `156`
+- JBR command timing: `frames=156 avg_total_ms=2.107 max_total_ms=3.401 avg_draw_ms=0.255 max_draw_ms=0.349 avg_flush_ms=1.828 max_flush_ms=3.154 avg_paragraph_ms=0.115 max_paragraph_ms=0.193 avg_paragraph_commands=6.0 max_paragraph_commands=6`
+- screenshot assertion: `passed`
+
+Next checkpoint:
+
+- Run an intentionally wider incompatibility/fallback matrix with strict command mode disabled/enabled to confirm the fallback story is still disciplined after the ABI 25 text expansion. Include at least ABI mismatch, command-stream corruption, and unsupported text effect cases, with parseable markers for each.
+
 Use separate worktrees for every existing repo touched:
 
 - `JetBrainsRuntime` worktree: `jbr-skia-compose-poc`
