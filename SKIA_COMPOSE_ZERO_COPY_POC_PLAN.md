@@ -4555,3 +4555,17 @@ Validation so far:
 
 Next:
 - Add screenshot-level text/typography assertions if we can make a stable enough pixel oracle, then continue macOS MVP hardening with compatibility matrix packaging and quiet-machine benchmark runs.
+
+Follow-up:
+- Magic Jewel command screenshot assertion now counts dark text pixels in two known light-background regions:
+  - top text band for header/buttons/counters
+  - bottom text band for the canvas labels.
+- This is intentionally a text-presence/placement guardrail rather than OCR. It catches disappeared or wildly shifted command-path text without pretending to verify exact glyph metrics.
+- Validation:
+  - direct assertion on `/tmp/magic-jewel-text-image-fidelity-smoke/new-window.png`: `topText=5335 bottomText=7341`
+  - full report command: `OUT_DIR=/tmp/magic-jewel-text-image-assertion-smoke DURATION_SECONDS=5 WARMUP_SECONDS=2 SAMPLE_INTERVAL_SECONDS=1 JBR_SKIA_RENDER_MODE=commands EXPECT_MIN_IMAGE_REFS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-interop-report.sh`
+  - report: `/tmp/magic-jewel-text-image-assertion-smoke/report.md`
+  - validation: passed
+  - CMP command recorder: `frames=461 fps=92.2 avg_commands=2498 max_commands=8049 unsupported_frames=0 avg_unsupported=0.0 max_unsupported=0 avg_text_commands=0.0 max_text_commands=0 avg_paragraph_text_commands=0.0 max_paragraph_text_commands=0 avg_image_defines=0.0 max_image_defines=1 avg_image_refs=9.0 max_image_refs=9 avg_image_cache_clears=0.0 max_image_cache_clears=0 avg_image_cache_evicts=0.0 max_image_cache_evicts=0 reasons=none`
+  - Skiko/JBR command frames: `461` / `461`
+  - screenshot assertion: `JBR_SKIA_COMMAND_SCREENSHOT_COUNTS green=570210 blue=1053509 purple=31352 yellow=35545 orange=18828 white=963664 topText=5334 bottomText=7341`
