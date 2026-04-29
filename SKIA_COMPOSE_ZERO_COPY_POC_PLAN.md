@@ -4751,3 +4751,33 @@ Validation:
 
 Next:
 - Keep using live Magic Jewel smoke for screenshot/layering confidence and parser fixtures for cheap CI-style marker regression coverage.
+
+## Checkpoint: Command Probe Suite Wrapper
+
+Date: 2026-04-29
+
+Status: completed as a selectable Magic Jewel command-mode suite.
+
+Changes:
+- Added `scripts/jbr-skia-command-probe-suite.sh`.
+- The suite wraps existing report cases for:
+  - `commands-core-primitives`
+  - `commands-gradient-surfaces`
+  - `commands-gradient-paths`
+  - `commands-popup`
+  - `commands-text-image`
+  - `commands-native-text`
+  - `commands-shader-fallback`
+  - `commands-invalid-gradient-fallback`.
+- `CASES="..."` can select a subset, which keeps local smoke runs small while still making the full matrix easy to launch.
+
+Validation:
+- Syntax check: `bash -n scripts/jbr-skia-command-probe-suite.sh`
+- Result: passed.
+- Smoke command: `OUT_ROOT=/tmp/magic-jewel-command-probe-suite-smoke CASES=commands-core-primitives DURATION_SECONDS=2 WARMUP_SECONDS=1 SAMPLE_INTERVAL_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT bash scripts/jbr-skia-command-probe-suite.sh`
+- Result: `JBR_SKIA_COMMAND_PROBE_SUITE passed out_root=/tmp/magic-jewel-command-probe-suite-smoke`
+- Case summary:
+  - `commands-core-primitives`: `status=passed fallback_new_count=0 unsupported=none jbr_picture_frames=0 jbr_command_frames=967`.
+
+Next:
+- Run the full suite on a quieter machine or before a larger handoff; use targeted `CASES=...` locally while the host is busy.
