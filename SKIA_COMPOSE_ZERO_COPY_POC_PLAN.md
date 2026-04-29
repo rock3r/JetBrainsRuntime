@@ -3298,6 +3298,46 @@ Next checkpoint:
 
 - Continue expanding shader-backed paint coverage now that the 64-bit gate is exercised; likely next candidates are gradient path fill or radial/sweep gradient payloads.
 
+### Checkpoint 87: Radial-Gradient Rect Command Support And ABI 33
+
+Status: completed for serialized Compose radial-gradient rectangle fills.
+
+- Bumped the command ABI to `33` across JBR, public JBR API, Skiko, and CMP.
+- Added 64-bit-only command capability `COMMAND_CAP64_FILL_RECT_RADIAL_GRADIENT = 4294967296L`.
+- Added command opcode `COMMAND_FILL_RECT_RADIAL_GRADIENT = 26`.
+- CMP now preserves serializable metadata on Skiko-backed `RadialGradientShader` instances and records `drawRect(brush = Brush.radialGradient(...))` as command data.
+- The serialized payload contains rect bounds, radial center, radius, tile mode, 2..16 ARGB colors, and monotonic stops in fixed-point units scaled by 1000.
+- JBR validates the variable-length payload, replays native Skia radial gradients through `SkShaders::RadialGradient`, and keeps a Java2D fallback via `RadialGradientPaint`.
+- Skiko requires ABI `33` and the new 64-bit capability bit before command replay starts.
+- Magic Jewel now has `MAGIC_JEWEL_COMPOSE_RADIAL_GRADIENT=true`, drawing a cream/orange/purple radial-gradient rectangle as the explicit radial paint probe.
+- Added `ROADMAP.md` as a quick-open checklist and documented why generic/opaque shader pointers remain out of scope until shader construction happens inside the JBR-owned Skia runtime.
+
+Validation:
+
+- CMP focused recorder test: `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest`
+- Skiko focused interop test: `./gradlew --no-configuration-cache :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`
+- Public JBR API process/dev rebuild: `bash tools/build.sh process && bash tools/build.sh dev $(/usr/libexec/java_home -v 21) /tmp/jbr-api-skia-dev && cp /tmp/jbr-api-skia-dev/jbr-api-SNAPSHOT.jar /tmp/jbr-api-shim.jar`
+- JBR Java service compile against patched stubs and refresh of `/tmp/jbr-skia-run/desktop`.
+- JBR native bridge compile against pinned Skia `m147-64a2414108`.
+- Skiko snapshot publish: `./gradlew --no-configuration-cache :skiko:publishToMavenLocal`
+- CMP patched UI desktop jars: `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-configuration-cache :compose:ui:ui-graphics:desktopJar :compose:ui:ui:desktopJar`
+- Magic Jewel compile: `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew compileKotlin`
+- Magic Jewel report: `/tmp/magic-jewel-radial-gradient-command-abi33-smoke/report.md`
+
+ABI 33 Magic Jewel report:
+
+- validation status: `passed`
+- fallback markers: `0`
+- Skiko/JBR picture replay frames: `0` / `0`
+- CMP command recorder: `frames=8383 fps=419.1 avg_commands=2460 max_commands=2460 unsupported_frames=0 avg_unsupported=0.0 max_unsupported=0 avg_text_commands=9.0 max_text_commands=9 avg_paragraph_text_commands=0.0 max_paragraph_text_commands=0 avg_image_defines=0.0 max_image_defines=0 avg_image_refs=0.0 max_image_refs=0 avg_image_cache_clears=0.0 max_image_cache_clears=0 reasons=none`
+- Skiko/JBR command frames: `8382` / `8382`
+- JBR command timing: `frames=8382 avg_total_ms=0.869 max_total_ms=47.415 avg_draw_ms=0.099 max_draw_ms=8.547 avg_flush_ms=0.753 max_flush_ms=38.842 avg_paragraph_ms=0.000 max_paragraph_ms=0.000 avg_paragraph_commands=0.0 max_paragraph_commands=0`
+- screenshot assertion: `passed`
+
+Next checkpoint:
+
+- Add radial-gradient rounded-rectangle fills, then gradient path fills once the second radial shape proves the payload is reusable.
+
 Use separate worktrees for every existing repo touched:
 
 - `JetBrainsRuntime` worktree: `jbr-skia-compose-poc`

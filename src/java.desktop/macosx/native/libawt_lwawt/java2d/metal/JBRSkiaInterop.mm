@@ -68,7 +68,7 @@
 
 #include "MTLSurfaceDataBase.h"
 
-static constexpr jint ABI_ID = 32;
+static constexpr jint ABI_ID = 33;
 static constexpr jint COMMAND_STREAM_MAGIC = 1246972723;
 static constexpr jint COMMAND_STREAM_HEADER_SIZE = 6;
 static constexpr jint COMMAND_STREAM_FLAGS_NONE = 0;
@@ -104,6 +104,7 @@ static constexpr jint COMMAND_DRAW_ARC = 22;
 static constexpr jint COMMAND_DRAW_ROUND_RECT = 23;
 static constexpr jint COMMAND_FILL_RECT_LINEAR_GRADIENT = 24;
 static constexpr jint COMMAND_FILL_ROUND_RECT_LINEAR_GRADIENT = 25;
+static constexpr jint COMMAND_FILL_RECT_RADIAL_GRADIENT = 26;
 static constexpr jint COMMAND_PAINT_STYLE_FILL = 0;
 static constexpr jint COMMAND_PAINT_STYLE_STROKE = 1;
 static constexpr jint COMMAND_PATH_FILL_NON_ZERO = 0;
@@ -756,6 +757,54 @@ static bool drawCommandList(SkCanvas* canvas,
                                                       radiusX,
                                                       radiusY),
                                   paint);
+                break;
+            }
+            case COMMAND_FILL_RECT_RADIAL_GRADIENT: {
+                if (offset + 9 > recordEnd) {
+                    return false;
+                }
+                const SkScalar left = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkScalar top = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkScalar right = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkScalar bottom = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkPoint center = {
+                        static_cast<SkScalar>(commands[offset++]) / 1000.0f,
+                        static_cast<SkScalar>(commands[offset++]) / 1000.0f
+                };
+                const SkScalar radius = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const jint tileMode = commands[offset++];
+                const jint colorCount = commands[offset++];
+                if (right < left || bottom < top || radius <= 0 ||
+                        tileMode < 0 || tileMode > 3 ||
+                        colorCount < 2 || colorCount > 16 ||
+                        offset + colorCount * 2 != recordEnd) {
+                    return false;
+                }
+                SkColor4f colors[16];
+                float positions[16];
+                jint previousStop = -1;
+                for (jint i = 0; i < colorCount; i++) {
+                    colors[i] = SkColor4f::FromColor(skColorFromArgb(commands[offset++]));
+                    const jint stop1000 = commands[offset++];
+                    if (stop1000 < 0 || stop1000 > 1000 || stop1000 <= previousStop) {
+                        return false;
+                    }
+                    previousStop = stop1000;
+                    positions[i] = static_cast<float>(stop1000) / 1000.0f;
+                }
+                SkPaint paint;
+                paint.setAntiAlias(antiAlias);
+                SkGradient gradient(
+                        SkGradient::Colors(
+                                SkSpan<const SkColor4f>(colors, colorCount),
+                                SkSpan<const float>(positions, colorCount),
+                                skTileModeFromCommand(tileMode)),
+                        SkGradient::Interpolation{SkGradient::Interpolation::InPremul::kYes});
+                paint.setShader(SkShaders::RadialGradient(center, radius, gradient));
+                if (paint.getShader() == nullptr) {
+                    return false;
+                }
+                canvas->drawRect(SkRect::MakeLTRB(left, top, right, bottom), paint);
                 break;
             }
             case COMMAND_TRANSLATE: {
