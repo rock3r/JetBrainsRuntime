@@ -3720,6 +3720,34 @@ Next checkpoint:
 
 - Re-run the Magic Jewel command-mode smoke with the structured build id in the launch patch set, then continue shader/fallback coverage.
 
+### Checkpoint 100: Native ABI Mismatch Launch Validation
+
+Status: completed in Magic Jewel after publishing the refreshed Skiko snapshot to Maven local.
+
+- Magic Jewel's launcher now forwards `SKIKO_EXPECTED_NATIVE_ABI_VERSION_FOR_TEST` to `-Dskiko.jbr.interop.expectedNativeAbiVersionForTest`.
+- The report harness records the native-ABI override in generated reports.
+- Strict fallback validation now knows `native-abi-mismatch` as a handshake fallback: it requires zero Skiko/JBR command frames and a structured fallback marker, but does not require a screenshot oracle.
+- Report parser tests cover the native-ABI mismatch branch.
+- The README now includes a native-ABI mismatch smoke command next to the command ABI/capability/public-API fallback probes.
+
+Validation:
+
+- Magic Jewel report parser tests: `bash scripts/test-jbr-skia-report-validation.sh`
+- Skiko local publish refresh: `./gradlew :skiko:publishAwtPublicationToMavenLocal :skiko:publishAwtRuntimeElementsPublicationToMavenLocal :skiko:publishSkikoJvmRuntimeMacosArm64PublicationToMavenLocal`
+- Magic Jewel native-ABI mismatch report: `/tmp/magic-jewel-native-abi-mismatch-smoke-2/report.md`
+
+Native-ABI mismatch report:
+
+- validation status: `passed`
+- fallback markers: `1`
+- Skiko/JBR command frames: `0` / `0`
+- Skiko/JBR picture replay frames: `0` / `0`
+- screenshot assertion: `not run`
+
+Next checkpoint:
+
+- Continue shader/fallback coverage, especially explicit non-gradient shader probes and eventual JBR-owned shader factory design notes.
+
 Use separate worktrees for every existing repo touched:
 
 - `JetBrainsRuntime` worktree: `jbr-skia-compose-poc`

@@ -70,6 +70,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Structured native C ABI version block beyond Java-level command constants.
 - [x] BUILD_ID includes pinned Skia revision plus compile-flags hash.
 - [x] New Skiko / pre-native-metadata JBR fallback unit coverage.
+- [x] Native ABI mismatch Magic Jewel launch/report validation.
 - [ ] Explicit tests for old Skiko/new JBR and new Skiko/old JBR fallback combinations.
 
 ## Productionization Later
