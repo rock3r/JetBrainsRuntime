@@ -76,6 +76,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Popup/layered Swing-over-Compose Magic Jewel smoke with screenshot pixels and popup paint markers.
 - [x] Parser-level coverage for popup paint marker thresholds and machine-summary fields.
 - [x] Selectable Magic Jewel command-probe suite for core primitives, gradients, text, popup, and fallback cases.
+- [x] Real undecorated Swing popup-window smoke captured separately by window id.
 
 ## Compatibility And ABI Hardening
 
@@ -115,6 +116,6 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [ ] Font/typeface ownership through the JBR Skia runtime.
 - [ ] JBR-owned generic shader factory and handles for non-serialized shader families.
 - [ ] Screen migration/context invalidation hardening.
-- [ ] Real popup/menu stress tests beyond the current glass-pane layered Swing overlay.
+- [ ] Real menu stress tests beyond popup-window coverage.
 - [ ] JCEF/shared-texture exploration after Compose is solid.
 - [ ] Windows/Linux backend adapter investigation after macOS MVP.

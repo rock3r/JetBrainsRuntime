@@ -4781,3 +4781,47 @@ Validation:
 
 Next:
 - Run the full suite on a quieter machine or before a larger handoff; use targeted `CASES=...` locally while the host is busy.
+
+## Checkpoint: Real Popup Window Capture
+
+Date: 2026-04-29
+
+Status: completed for an undecorated Swing popup-window smoke.
+
+Why:
+- The glass-pane popup validates layered Swing-over-Compose inside the main window, but real popups/menus often exist as separate native windows on macOS.
+- The screenshot harness must preserve the window-capture constraint: capture the main app window by id and capture the popup window separately by id, without screen capture plus crop.
+
+Changes:
+- Magic Jewel added `MAGIC_JEWEL_POPUP_WINDOW_STRESS=true`.
+- The sample opens an undecorated `JDialog` titled `MagicJewelPopupWindow` over the ComposePanel.
+- The report script now supports:
+  - `CAPTURE_POPUP_WINDOW_QUERY`
+  - `POPUP_WINDOW_ASSERT_SCRIPT`
+  - `popup_window_new_shown`
+  - `popup_window_screenshot_status`.
+- Added `scripts/assert-jbr-skia-popup-window-screenshot.sh`, which checks popup-window white/pink/cyan/text pixels.
+- The command-probe suite gained a `commands-popup-window` case.
+- Parser fixtures cover popup-window marker/screenshot success and missing-screenshot failure.
+
+Validation:
+- Command: `./gradlew --no-daemon compileKotlin`
+- Result: passed.
+- Command: `OUT_DIR=/tmp/magic-jewel-popup-window-smoke-2 DURATION_SECONDS=4 WARMUP_SECONDS=1 SAMPLE_INTERVAL_SECONDS=1 MAGIC_JEWEL_POPUP_WINDOW_STRESS=true EXPECT_MIN_POPUP_FRAMES=5 JBR_SKIA_RENDER_MODE=commands SKIKO_VERSION=0.0.0-SNAPSHOT bash scripts/jbr-skia-interop-report.sh`
+- Result: passed.
+- Summary:
+  - `validation_status=passed`
+  - `fallback_new_count=0`
+  - `skiko_picture_frames=0`
+  - `jbr_picture_frames=0`
+  - `skiko_command_frames=319`
+  - `jbr_command_frames=319`
+  - `popup_window_new_shown=1`
+  - `popup_window_screenshot_status=passed`
+  - popup screenshot assertion: `white=55373 popupPink=6748 popupCyan=2368 darkText=73611 width=612 height=256`.
+- Parser validation:
+  - command: `bash scripts/test-jbr-skia-report-validation.sh`
+  - result: `JBR_SKIA_REPORT_VALIDATION_TESTS passed`.
+
+Next:
+- Menu-specific stress remains open; this checkpoint covers real popup-window capture and repaint behavior.
