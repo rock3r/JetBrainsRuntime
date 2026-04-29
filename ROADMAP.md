@@ -93,7 +93,9 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Combined resize + image-cache churn smoke proving stable context-scoped cache ownership across same-context surface replacement.
 - [x] Strict report assertion for scoped JBR image-cache-clear markers.
 - [x] Reduce redundant image-cache clear/define churn for stable fallback images.
-- [ ] Replace temporary global image-key budget with an explicit production eviction protocol.
+- [x] ABI 42: single-key image cache eviction.
+- [x] Replace whole-cache churn with oldest-entry eviction in CMP recorder.
+- [ ] Add long-running quiet-machine benchmark pass for stable/dynamic image-cache workloads.
 
 ## Productionization Later
 

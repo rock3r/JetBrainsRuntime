@@ -109,7 +109,8 @@ public class JBRSkiaService extends JBRSkia {
                     | COMMAND_CAP64_FILL_PATH_RADIAL_GRADIENT
                     | COMMAND_CAP64_FILL_RECT_SWEEP_GRADIENT
                     | COMMAND_CAP64_FILL_ROUND_RECT_SWEEP_GRADIENT
-                    | COMMAND_CAP64_FILL_PATH_SWEEP_GRADIENT;
+                    | COMMAND_CAP64_FILL_PATH_SWEEP_GRADIENT
+                    | COMMAND_CAP64_EVICT_IMAGE_CACHE_KEY;
     private static final boolean NATIVE_BRIDGE_AVAILABLE = loadNativeBridge();
     private static final AtomicLong NEXT_SCOPE_ID = new AtomicLong(1);
     private static final int MAX_CACHED_IMAGES = 256;
@@ -208,6 +209,7 @@ public class JBRSkiaService extends JBRSkia {
     private static int expectedRecordLength(int op) {
         if (op == COMMAND_SAVE || op == COMMAND_RESTORE) return 3;
         if (op == COMMAND_CLEAR_IMAGE_CACHE) return 3;
+        if (op == COMMAND_EVICT_IMAGE_CACHE_KEY) return 5;
         if (op == COMMAND_ROTATE) return 4;
         if (op == COMMAND_TRANSLATE || op == COMMAND_SCALE) return 5;
         if (op == COMMAND_SAVE_LAYER) return 8;
@@ -293,7 +295,7 @@ public class JBRSkiaService extends JBRSkia {
                 && record.recordFlags() != COMMAND_RECORD_FLAGS_NONE) {
             return false;
         }
-        if (record.op() == COMMAND_CLEAR_IMAGE_CACHE) {
+        if (record.op() == COMMAND_CLEAR_IMAGE_CACHE || record.op() == COMMAND_EVICT_IMAGE_CACHE_KEY) {
             return record.recordFlags() == COMMAND_RECORD_FLAGS_NONE;
         }
         if (record.op() == COMMAND_SAVE_LAYER) {
@@ -1707,6 +1709,13 @@ public class JBRSkiaService extends JBRSkia {
                         int cleared = clearImageCacheForContext(contextPtr);
                         System.err.println("JBR_SKIA_INTEROP_IMAGE_CACHE_CLEAR backend=java2d contextId=0x"
                                 + Long.toHexString(contextPtr) + " cleared=" + cleared);
+                    } else if (op == COMMAND_EVICT_IMAGE_CACHE_KEY) {
+                        if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE || offset + 2 != recordEnd) return false;
+                        long cacheKey = cacheKey(commands[offset++], commands[offset++]);
+                        BufferedImage removed = IMAGE_CACHE.remove(new ImageCacheKey(contextPtr, cacheKey));
+                        System.err.println("JBR_SKIA_INTEROP_IMAGE_CACHE_EVICT backend=java2d contextId=0x"
+                                + Long.toHexString(contextPtr) + " key=0x" + Long.toHexString(cacheKey)
+                                + " removed=" + (removed != null));
                     } else if (op == COMMAND_DEFINE_IMAGE_ARGB) {
                         if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE || offset + 5 > recordEnd) return false;
                         long cacheKey = cacheKey(commands[offset++], commands[offset++]);

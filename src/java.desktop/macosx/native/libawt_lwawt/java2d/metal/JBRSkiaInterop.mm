@@ -69,7 +69,7 @@
 
 #include "MTLSurfaceDataBase.h"
 
-static constexpr jint ABI_ID = 41;
+static constexpr jint ABI_ID = 42;
 static constexpr jint COMMAND_STREAM_MAGIC = 1246972723;
 static constexpr jint COMMAND_STREAM_HEADER_SIZE = 6;
 static constexpr jint COMMAND_STREAM_FLAGS_NONE = 0;
@@ -112,6 +112,7 @@ static constexpr jint COMMAND_FILL_PATH_RADIAL_GRADIENT = 29;
 static constexpr jint COMMAND_FILL_RECT_SWEEP_GRADIENT = 30;
 static constexpr jint COMMAND_FILL_ROUND_RECT_SWEEP_GRADIENT = 31;
 static constexpr jint COMMAND_FILL_PATH_SWEEP_GRADIENT = 32;
+static constexpr jint COMMAND_EVICT_IMAGE_CACHE_KEY = 33;
 static constexpr jint COMMAND_PAINT_STYLE_FILL = 0;
 static constexpr jint COMMAND_PAINT_STYLE_STROKE = 1;
 static constexpr jint COMMAND_PATH_FILL_NON_ZERO = 0;
@@ -536,6 +537,24 @@ static bool drawCommandList(SkCanvas* canvas,
                              "JBR_SKIA_INTEROP_IMAGE_CACHE_CLEAR backend=native contextId=%p cleared=%d\n",
                              imageCacheContextKey,
                              cleared);
+                break;
+            }
+            case COMMAND_EVICT_IMAGE_CACHE_KEY: {
+                if (recordFlags != COMMAND_RECORD_FLAGS_NONE || offset + 2 != recordEnd) {
+                    return false;
+                }
+                const uint64_t key = imageCacheKey(commands[offset], commands[offset + 1]);
+                offset += 2;
+                size_t removed;
+                {
+                    std::lock_guard<std::mutex> lock(gImageCacheMutex);
+                    removed = gImagesByKey.erase(ImageCacheScopedKey{imageCacheContextKey, key});
+                }
+                std::fprintf(stderr,
+                             "JBR_SKIA_INTEROP_IMAGE_CACHE_EVICT backend=native contextId=%p key=0x%016llx removed=%s\n",
+                             imageCacheContextKey,
+                             static_cast<unsigned long long>(key),
+                             removed > 0 ? "true" : "false");
                 break;
             }
             case COMMAND_CLIP_RECT: {

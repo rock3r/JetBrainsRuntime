@@ -4220,9 +4220,51 @@ Validation:
   - `screenshot_status=passed`
   - recorder summary: `avg_image_defines=0.0 max_image_defines=0 avg_image_refs=260.0 max_image_refs=260 avg_image_cache_clears=0.0 max_image_cache_clears=0`
 
+### Checkpoint: ABI 42 Single-Key Image Cache Eviction
+
+Status: completed.
+
+- Added ABI 42 / command capability `COMMAND_CAP64_EVICT_IMAGE_CACHE_KEY`.
+- Added command `COMMAND_EVICT_IMAGE_CACHE_KEY = 33` with payload `[op, 20, 0, cacheKeyHigh, cacheKeyLow]`.
+- JBR native replay evicts only the keyed `SkImage` from the current destination context namespace and logs:
+  - `JBR_SKIA_INTEROP_IMAGE_CACHE_EVICT backend=native contextId=... key=... removed=...`
+- JBR Java2D fallback replay mirrors the same keyed eviction against `(contextId, imageKey)` `BufferedImage` entries.
+- CMP recorder now keeps an access-ordered image-key map. When the budget is full it emits one eviction for the eldest key, then defines the new image, instead of emitting `COMMAND_CLEAR_IMAGE_CACHE`.
+- Skiko requires the ABI 42 eviction capability before selecting command mode, so old JBR builds fall back instead of accepting streams that may contain command 33.
+- Magic Jewel report parsing now treats `imageCacheEvicts` as a first-class recorder metric and counts JBR eviction markers.
+
+Validation:
+
+- Runtime API:
+  - `bash tools/build.sh process`
+  - `bash tools/build.sh dev $(/usr/libexec/java_home -v 21) /tmp/jbr-api-skia-abi42-dev`
+  - refreshed `/tmp/jbr-api-shim.jar`
+- JBR:
+  - patched Java service compile
+  - native `libjbrskiainterop.dylib` compile
+- Skiko:
+  - `./gradlew --no-configuration-cache :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`
+  - published ABI 42 Skiko artifacts to Maven local
+- CMP:
+  - `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest`
+  - `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-configuration-cache :compose:ui:ui-graphics:desktopJar :compose:ui:ui:desktopJar`
+- Magic Jewel:
+  - parser tests: `bash scripts/test-jbr-skia-report-validation.sh`
+  - eviction smoke: `/tmp/magic-jewel-image-cache-evict-abi42-smoke/report.md`
+    - `validation_status=passed`
+    - `fallback_new_count=0`
+    - `skiko_picture_frames=0`
+    - `jbr_picture_frames=0`
+    - `cmp_recorder_frames=799`
+    - `jbr_command_frames=799`
+    - `jbr_image_cache_clear_frames=0`
+    - `jbr_image_cache_evict_frames=5980`
+    - `screenshot_status=passed`
+    - recorder summary: `avg_image_cache_clears=0.0 max_image_cache_clears=0 avg_image_cache_evicts=7.5 max_image_cache_evicts=260`
+
 Next checkpoint:
 
-- Replace the temporary global image-key budget with an explicit production eviction protocol, or move another remaining fallback-heavy text/style case into native JBR-owned commands.
+- Add a long-running quiet-machine benchmark pass for stable and dynamic image-cache workloads, then decide whether to continue reducing image fallback or move another remaining text/style case into native JBR-owned commands.
 
 Use separate worktrees for every existing repo touched:
 
