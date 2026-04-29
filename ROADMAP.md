@@ -64,7 +64,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Async-profiler integration in Magic Jewel report.
 - [x] CI-friendly parser for Magic Jewel report summary.
 - [x] Machine-readable Skiko surface-change marker count in Magic Jewel reports.
-- [ ] Live resize/surface-change Magic Jewel smoke requiring at least one Skiko surface-change marker.
+- [x] Live resize/surface-change Magic Jewel smoke requiring at least one Skiko surface-change marker.
 
 ## Compatibility And ABI Hardening
 
@@ -81,6 +81,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Parser-level tests for old Skiko/new JBR and new Skiko/old JBR fallback combinations.
 - [x] Skiko invalidates temporary cached surface state when scoped destination identity changes.
 - [x] Magic Jewel parser coverage for `SKIKO_JBR_INTEROP_SURFACE_CHANGED`.
+- [x] Magic Jewel launch-level resize validation for surface identity changes.
 - [ ] Full launch-level old/new packaged artifact matrix.
 
 ## Productionization Later

@@ -3955,6 +3955,39 @@ Next checkpoint:
 
 - Add a live resize/surface-change smoke that deliberately changes the JFrame size during the new-mode measurement window and requires `skiko_surface_change_markers > 0`.
 
+### Checkpoint 110: Live Resize Surface-Change Smoke
+
+Status: completed in Magic Jewel command-mode report.
+
+- Magic Jewel now has an opt-in resize probe:
+  - `MAGIC_JEWEL_AUTO_RESIZE=true`
+  - app property: `magic.jewel.autoResize=true`
+  - marker: `MAGIC_JEWEL_WINDOW_RESIZE width=... height=...`
+- The report harness now supports:
+  - `EXPECT_MIN_SURFACE_CHANGES=<n>`
+  - full-log counting for `SKIKO_JBR_INTEROP_SURFACE_CHANGED`, because resize/surface lifecycle events can happen before the sampled performance window starts.
+- The live resize smoke passed with one Skiko surface-change marker:
+  - `validation_status=passed`
+  - `fallback_new_count=0`
+  - `skiko_picture_frames=0`
+  - `jbr_picture_frames=0`
+  - `skiko_command_frames=2180`
+  - `jbr_command_frames=2180`
+  - `skiko_surface_change_markers=1`
+  - `screenshot_status=passed`
+- The live marker showed the surface and destination texture changing after the app resize:
+  - `SKIKO_JBR_INTEROP_SURFACE_CHANGED oldSurfaceId=0xbea0987e0 newSurfaceId=0xbea8d3640 oldMetalTexture=0xbe66e2a80 newMetalTexture=0xbe324c780`
+
+Validation:
+
+- Magic Jewel report parser tests: `bash scripts/test-jbr-skia-report-validation.sh`
+- Magic Jewel compile: `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew compileKotlin`
+- Magic Jewel resize smoke: `OUT_DIR=/tmp/magic-jewel-surface-change-resize-smoke-2 DURATION_SECONDS=7 WARMUP_SECONDS=1 SAMPLE_INTERVAL_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT JBR_SKIA_RENDER_MODE=commands MAGIC_JEWEL_AUTO_RESIZE=true EXPECT_MIN_SURFACE_CHANGES=1 ./scripts/jbr-skia-interop-report.sh`
+
+Next checkpoint:
+
+- Turn the temporary Skiko cached-surface invalidation diagnostic into the next production-shaped cache boundary: cache only state that is safe across paints, key it by the exposed surface/context identity, and keep full-log lifecycle markers parseable.
+
 Use separate worktrees for every existing repo touched:
 
 - `JetBrainsRuntime` worktree: `jbr-skia-compose-poc`
