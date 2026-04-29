@@ -2599,6 +2599,38 @@ Next checkpoint:
 
 - Add warmup-aware benchmark/report mode so smoke reports can keep catching regressions while benchmark runs can discard cold frames and collect longer, quieter timing windows.
 
+### Checkpoint 66: Warmup-Aware Magic Jewel Report Mode
+
+Status: completed for sampled-window reporting after warmup.
+
+- Added `WARMUP_SECONDS` to the Magic Jewel report harness.
+- The harness now waits for the normal startup marker, optionally waits the warmup period, then records the measured window.
+- The harness writes `old-sampled.log` and `new-sampled.log`; marker summaries and strict validation use those sampled logs when present.
+- Reports include `Warmup per mode` and list both raw logs and sampled logs.
+- This keeps correctness smokes at `WARMUP_SECONDS=0` while allowing benchmark-style runs to drop cold startup, JIT, and first-use font/paragraph costs.
+
+Verification completed:
+
+- Magic Jewel `bash -n scripts/jbr-skia-interop-report.sh`.
+- Magic Jewel strict command report with `WARMUP_SECONDS=2`, `MAGIC_JEWEL_UNSUPPORTED_TEXT=true`, `MAGIC_JEWEL_PARAGRAPH_LAYOUT_TEXT=true`, and `EXPECT_MIN_PARAGRAPH_TEXT_COMMANDS=4`.
+
+Magic Jewel warmup command timing report:
+
+- report: `/tmp/magic-jewel-warmup-command-timing-smoke-2/report.md`
+- screenshot: `/tmp/magic-jewel-warmup-command-timing-smoke-2/new-window.png`
+- sampled log: `/tmp/magic-jewel-warmup-command-timing-smoke-2/new-sampled.log`
+- validation status: `passed`
+- fallback markers: `0`
+- picture replay frames: `0`
+- CMP command recorder: `frames=1117 fps=372.3 avg_commands=2768 max_commands=2768 unsupported_frames=0 avg_unsupported=0.0 max_unsupported=0 avg_text_commands=9.0 max_text_commands=9 avg_paragraph_text_commands=4.0 max_paragraph_text_commands=4 avg_image_defines=0.0 max_image_defines=0 avg_image_refs=0.0 max_image_refs=0 avg_image_cache_clears=0.0 max_image_cache_clears=0 reasons=none`
+- Skiko/JBR command frames: `1117` / `1117`
+- JBR command timing: `frames=1117 avg_total_ms=0.891 max_total_ms=2.593 avg_draw_ms=0.136 max_draw_ms=0.273 avg_flush_ms=0.739 max_flush_ms=2.477 avg_paragraph_ms=0.042 max_paragraph_ms=0.107 avg_paragraph_commands=4.0 max_paragraph_commands=4`
+- screenshot assertion: `passed`
+
+Next checkpoint:
+
+- Use the warmup mode for a longer quiet-machine comparison of old path vs command path, keeping the SKP/picture path available as a baseline and recording CPU/FPS/timing in the report.
+
 Use separate worktrees for every existing repo touched:
 
 - `JetBrainsRuntime` worktree: `jbr-skia-compose-poc`
