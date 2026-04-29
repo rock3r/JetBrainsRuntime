@@ -68,7 +68,7 @@
 
 #include "MTLSurfaceDataBase.h"
 
-static constexpr jint ABI_ID = 38;
+static constexpr jint ABI_ID = 39;
 static constexpr jint COMMAND_STREAM_MAGIC = 1246972723;
 static constexpr jint COMMAND_STREAM_HEADER_SIZE = 6;
 static constexpr jint COMMAND_STREAM_FLAGS_NONE = 0;
@@ -110,6 +110,7 @@ static constexpr jint COMMAND_FILL_PATH_LINEAR_GRADIENT = 28;
 static constexpr jint COMMAND_FILL_PATH_RADIAL_GRADIENT = 29;
 static constexpr jint COMMAND_FILL_RECT_SWEEP_GRADIENT = 30;
 static constexpr jint COMMAND_FILL_ROUND_RECT_SWEEP_GRADIENT = 31;
+static constexpr jint COMMAND_FILL_PATH_SWEEP_GRADIENT = 32;
 static constexpr jint COMMAND_PAINT_STYLE_FILL = 0;
 static constexpr jint COMMAND_PAINT_STYLE_STROKE = 1;
 static constexpr jint COMMAND_PATH_FILL_NON_ZERO = 0;
@@ -691,6 +692,60 @@ static bool drawCommandList(SkCanvas* canvas,
                                 skTileModeFromCommand(tileMode)),
                         SkGradient::Interpolation{SkGradient::Interpolation::InPremul::kYes});
                 paint.setShader(SkShaders::RadialGradient(center, radius, gradient));
+                if (paint.getShader() == nullptr) {
+                    return false;
+                }
+                canvas->drawPath(path, paint);
+                break;
+            }
+            case COMMAND_FILL_PATH_SWEEP_GRADIENT: {
+                if (offset + 2 > recordEnd) {
+                    return false;
+                }
+                const jint fillType = commands[offset++];
+                const jint pathDataLength = commands[offset++];
+                const jsize pathEnd = offset + pathDataLength;
+                if ((fillType != COMMAND_PATH_FILL_NON_ZERO && fillType != COMMAND_PATH_FILL_EVEN_ODD) ||
+                        pathDataLength < 0 ||
+                        pathDataLength > 4096 ||
+                        pathEnd + 7 > recordEnd) {
+                    return false;
+                }
+                SkPath path;
+                if (!pathFromCommandData(commands, offset, pathEnd, fillType, &path)) {
+                    return false;
+                }
+                offset = pathEnd;
+                const SkPoint center = {
+                        static_cast<SkScalar>(commands[offset++]) / 1000.0f,
+                        static_cast<SkScalar>(commands[offset++]) / 1000.0f
+                };
+                const jint colorCount = commands[offset++];
+                if (colorCount < 2 || colorCount > 16 ||
+                        offset + colorCount * 2 != recordEnd) {
+                    return false;
+                }
+                SkColor4f colors[16];
+                float positions[16];
+                jint previousStop = -1;
+                for (jint i = 0; i < colorCount; i++) {
+                    colors[i] = SkColor4f::FromColor(skColorFromArgb(commands[offset++]));
+                    const jint stop1000 = commands[offset++];
+                    if (stop1000 < 0 || stop1000 > 1000 || stop1000 <= previousStop) {
+                        return false;
+                    }
+                    previousStop = stop1000;
+                    positions[i] = static_cast<float>(stop1000) / 1000.0f;
+                }
+                SkPaint paint;
+                paint.setAntiAlias(antiAlias);
+                SkGradient gradient(
+                        SkGradient::Colors(
+                                SkSpan<const SkColor4f>(colors, colorCount),
+                                SkSpan<const float>(positions, colorCount),
+                                SkTileMode::kClamp),
+                        SkGradient::Interpolation{SkGradient::Interpolation::InPremul::kYes});
+                paint.setShader(SkShaders::SweepGradient(center, 0.0f, 360.0f, gradient));
                 if (paint.getShader() == nullptr) {
                     return false;
                 }

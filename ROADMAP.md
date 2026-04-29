@@ -34,10 +34,11 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] ABI 36: radial-gradient path fill.
 - [x] ABI 37: sweep-gradient rectangle fill.
 - [x] ABI 38: sweep-gradient rounded-rectangle fill.
+- [x] ABI 39: sweep-gradient path fill.
 
 ## Near-Term Rendering Work
 
-- [ ] Continue sweep-gradient payloads for paths.
+- [x] Complete serialized sweep-gradient payloads for rectangles, rounded rectangles, and paths.
 - [ ] Generic shader strategy:
   - [ ] Short term: keep rejecting opaque/unknown shader pointers and add serialized command payloads for known shader families.
   - [ ] Medium term: design a JBR-owned shader factory ABI so Skiko can request shader construction inside JBR's Skia runtime.
