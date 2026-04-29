@@ -4948,3 +4948,47 @@ Validation:
 
 Next:
 - Use these summary keys in quiet-machine benchmark runs instead of scraping human Markdown.
+
+## Checkpoint: Benchmark Suite TSV Summary
+
+Date: 2026-04-29
+
+Status: completed as benchmark harness hardening.
+
+Why:
+- The benchmark suite already runs the right scenarios, but comparing results required opening each case's `summary.properties`.
+- Short smoke runs also revealed that `ps` sampling can legitimately miss one side of a run; a suite-level table should expose sample counts and avoid treating missing samples as zero CPU.
+
+Changes:
+- Magic Jewel `summary.properties` now includes coarse `ps` sample fields:
+  - `old_samples`, `old_avg_cpu`, `old_max_cpu`, `old_avg_rss_kb`, `old_max_rss_kb`
+  - `new_samples`, `new_avg_cpu`, `new_max_cpu`, `new_avg_rss_kb`, `new_max_rss_kb`.
+- `scripts/jbr-skia-benchmark-suite.sh` now writes `suite.tsv` with:
+  - case name
+  - validation status
+  - fallback count
+  - old/new sample counts
+  - old/new average CPU (`na` when sample count is zero)
+  - app FPS
+  - JBR picture/command FPS
+  - JBR command frame count
+  - report path.
+- Magic Jewel README documents the `suite.tsv` structure and the `na` CPU value for missing samples.
+
+Validation:
+- Syntax check:
+  - command: `bash -n scripts/jbr-skia-benchmark-suite.sh scripts/jbr-skia-interop-report.sh scripts/test-jbr-skia-report-validation.sh`
+  - result: passed.
+- Parser fixtures:
+  - command: `bash scripts/test-jbr-skia-report-validation.sh`
+  - result: `JBR_SKIA_REPORT_VALIDATION_TESTS passed`.
+- Short suite smoke:
+  - command: `OUT_ROOT=/tmp/magic-jewel-benchmark-suite-tsv-smoke-2 DURATION_SECONDS=2 WARMUP_SECONDS=1 SAMPLE_INTERVAL_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT bash scripts/jbr-skia-benchmark-suite.sh`
+  - result: `JBR_SKIA_BENCHMARK_SUITE passed out_root=/tmp/magic-jewel-benchmark-suite-tsv-smoke-2`
+  - `suite.tsv` rows all passed.
+  - sample handling examples:
+    - `picture`: `old_samples=2`, `new_samples=0`, `new_avg_cpu=na`
+    - `commands-dynamic-images`: `old_samples=2`, `new_samples=1`, `new_avg_cpu=120.90`
+
+Next:
+- Investigate why short new-mode runs sometimes produce zero `ps` samples before relying on CPU columns for benchmark conclusions; async-profiler and FPS/command timing remain the stronger signals.
