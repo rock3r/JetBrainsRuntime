@@ -825,8 +825,8 @@ public class JBRSkiaService extends JBRSkia {
     private record CommandRecord(int op, int argsStart, int recordEnd, int recordLength, int recordFlags) {
     }
 
-    private record MetalSurfaceMetadata(long nativeOpsPtr, long texturePtr) {
-        private static final MetalSurfaceMetadata EMPTY = new MetalSurfaceMetadata(0, 0);
+    private record MetalSurfaceMetadata(long nativeOpsPtr, long contextPtr, long texturePtr) {
+        private static final MetalSurfaceMetadata EMPTY = new MetalSurfaceMetadata(0, 0, 0);
     }
 
     private static final class PocScopedSkiaCanvas extends ScopedSkiaCanvas {
@@ -835,6 +835,7 @@ public class JBRSkiaService extends JBRSkia {
         private final Rectangle userSpaceClip;
         private final Rectangle deviceSpaceClip;
         private final long nativeOpsPtr;
+        private final long contextPtr;
         private final long metalTexturePtr;
         private boolean closed;
         private boolean flushed;
@@ -846,6 +847,7 @@ public class JBRSkiaService extends JBRSkia {
             this.userSpaceClip = userSpaceClip == null ? null : new Rectangle(userSpaceClip);
             this.deviceSpaceClip = toDeviceSpaceClip(graphics, userSpaceClip);
             this.nativeOpsPtr = metadata.nativeOpsPtr();
+            this.contextPtr = metadata.contextPtr();
             this.metalTexturePtr = metadata.texturePtr();
         }
 
@@ -857,6 +859,11 @@ public class JBRSkiaService extends JBRSkia {
         @Override
         public long getSurfaceId() {
             return nativeOpsPtr;
+        }
+
+        @Override
+        public long getContextId() {
+            return contextPtr;
         }
 
         @Override
@@ -2150,18 +2157,19 @@ public class JBRSkiaService extends JBRSkia {
             return MetalSurfaceMetadata.EMPTY;
         }
 
-        long[] metadata = new long[2];
+        long[] metadata = new long[3];
         MTLRenderQueue rq = MTLRenderQueue.getInstance();
         rq.lock();
         try {
             rq.flushAndInvokeNow(() -> {
                 metadata[0] = accelSurface.getNativeOps();
-                metadata[1] = accelSurface.getNativeResource(AccelSurface.TEXTURE);
+                metadata[1] = NATIVE_BRIDGE_AVAILABLE ? nativeGetContextId(metadata[0]) : 0;
+                metadata[2] = accelSurface.getNativeResource(AccelSurface.TEXTURE);
             });
         } finally {
             rq.unlock();
         }
-        return new MetalSurfaceMetadata(metadata[0], metadata[1]);
+        return new MetalSurfaceMetadata(metadata[0], metadata[1], metadata[2]);
     }
 
     private static boolean loadNativeBridge() {
@@ -2180,6 +2188,8 @@ public class JBRSkiaService extends JBRSkia {
 
     private static native boolean nativeRenderDiagnosticFrame(long nativeOpsPtr, long metalTexturePtr,
                                                              int width, int height, long frameTimeNanos);
+
+    private static native long nativeGetContextId(long nativeOpsPtr);
 
     private static native boolean nativeRenderCommandFrame(long nativeOpsPtr, long metalTexturePtr,
                                                           int destinationX, int destinationY,

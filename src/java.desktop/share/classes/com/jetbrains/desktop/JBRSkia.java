@@ -36,8 +36,8 @@ import java.nio.ByteBuffer;
  * so downstream compile-only clients cannot accidentally inline stale values.
  */
 public abstract class JBRSkia {
-    public static final int ABI_ID = Integer.parseInt("40");
-    public static final int NATIVE_ABI_VERSION = Integer.parseInt("2");
+    public static final int ABI_ID = Integer.parseInt("41");
+    public static final int NATIVE_ABI_VERSION = Integer.parseInt("3");
     public static final String SKIA_REVISION = "m147-" + "64a2414108";
     public static final String SKIA_FLAGS_HASH = "macos-release-metal-poc:" + Integer.parseInt("1");
     public static final String BUILD_ID = buildId();
@@ -158,6 +158,8 @@ public abstract class JBRSkia {
         public abstract long getScopeId();
 
         public abstract long getSurfaceId();
+
+        public abstract long getContextId();
 
         public abstract int getBackend();
 

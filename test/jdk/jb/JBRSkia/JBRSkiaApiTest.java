@@ -51,13 +51,13 @@ public class JBRSkiaApiTest {
     }
 
     public static void main(String[] args) throws Exception {
-        assertEquals(40, JBRSkia.ABI_ID, "ABI_ID");
-        assertEquals(2, JBRSkia.NATIVE_ABI_VERSION, "NATIVE_ABI_VERSION");
-        assertEquals("skia=m147-64a2414108;flags=macos-release-metal-poc:1;abi=40;native=2", JBRSkia.BUILD_ID, "BUILD_ID");
+        assertEquals(41, JBRSkia.ABI_ID, "ABI_ID");
+        assertEquals(3, JBRSkia.NATIVE_ABI_VERSION, "NATIVE_ABI_VERSION");
+        assertEquals("skia=m147-64a2414108;flags=macos-release-metal-poc:1;abi=41;native=3", JBRSkia.BUILD_ID, "BUILD_ID");
 
-        assertReflectiveStaticEquals(40, JBRSkia.class.getDeclaredField("ABI_ID"));
-        assertReflectiveStaticEquals(2, JBRSkia.class.getDeclaredField("NATIVE_ABI_VERSION"));
-        assertReflectiveStaticEquals("skia=m147-64a2414108;flags=macos-release-metal-poc:1;abi=40;native=2", JBRSkia.class.getDeclaredField("BUILD_ID"));
+        assertReflectiveStaticEquals(41, JBRSkia.class.getDeclaredField("ABI_ID"));
+        assertReflectiveStaticEquals(3, JBRSkia.class.getDeclaredField("NATIVE_ABI_VERSION"));
+        assertReflectiveStaticEquals("skia=m147-64a2414108;flags=macos-release-metal-poc:1;abi=41;native=3", JBRSkia.class.getDeclaredField("BUILD_ID"));
 
         if (TestJBRSkia.INSTANCE != null) {
             throw new AssertionError("JBRSkia service must be unavailable before native runtime is wired");
@@ -83,6 +83,7 @@ public class JBRSkiaApiTest {
             assertEquals(0L, scope.getCanvasPtr(), "canvas pointer placeholder");
             assertEquals(0L, scope.getDirectContextPtr(), "direct context pointer placeholder");
             assertEquals(0L, scope.getSurfaceId(), "surface id for software test surface");
+            assertEquals(0L, scope.getContextId(), "context id for software test surface");
             assertEquals(0L, scope.getMetalTexturePtr(), "metal texture pointer for software test surface");
             assertEquals(1, scope.getSampleCount(), "sample count");
             assertEquals(new Rectangle(2, 3, 11, 13), scope.getUserSpaceClip(), "clip");

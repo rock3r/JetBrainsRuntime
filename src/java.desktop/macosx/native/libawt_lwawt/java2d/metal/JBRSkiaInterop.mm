@@ -68,7 +68,7 @@
 
 #include "MTLSurfaceDataBase.h"
 
-static constexpr jint ABI_ID = 40;
+static constexpr jint ABI_ID = 41;
 static constexpr jint COMMAND_STREAM_MAGIC = 1246972723;
 static constexpr jint COMMAND_STREAM_HEADER_SIZE = 6;
 static constexpr jint COMMAND_STREAM_FLAGS_NONE = 0;
@@ -1586,6 +1586,13 @@ static sk_sp<GrDirectContext> makeDirectContextForSurface(jlong nativeOpsPtr, id
         gDirectContextsByMtlContext.emplace(contextKey, directContext);
     }
     return directContext;
+}
+
+extern "C" JNIEXPORT jlong JNICALL
+Java_com_jetbrains_desktop_JBRSkiaService_nativeGetContextId
+        (JNIEnv* env, jclass cls, jlong nativeOpsPtr) {
+    MTLContext* mtlc = getContextFromNativeOps(nativeOpsPtr);
+    return mtlc == nil ? 0 : static_cast<jlong>(reinterpret_cast<uintptr_t>((__bridge void*) mtlc));
 }
 
 extern "C" JNIEXPORT jboolean JNICALL
