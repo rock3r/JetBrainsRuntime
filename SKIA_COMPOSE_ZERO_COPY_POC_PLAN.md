@@ -3625,6 +3625,33 @@ Next checkpoint:
 
 - Keep hardening fallback around shader cases that do produce Compose `Shader` objects, then move toward a documented JBR-owned shader factory design for anything beyond serialized known shader families.
 
+### Checkpoint 96: Magic Jewel Uses Jewel Text Styling
+
+Status: completed for the validation app typography correction.
+
+- Magic Jewel labels now use Jewel's `Text` component instead of raw `BasicText`.
+- Label styles now merge into `JewelTheme.defaultTextStyle`, so default font family and size come from the active Jewel theme while custom probe styles still override only the fields they need.
+- This addresses the visual-fidelity issue where the sample looked like oversized default Compose/Swing typography instead of a Jewel-themed standalone app.
+
+Validation:
+
+- Magic Jewel compile: `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew compileKotlin`
+- Magic Jewel command-mode report: `/tmp/magic-jewel-jewel-text-command-smoke/report.md`
+
+Jewel text command-mode report:
+
+- validation status: `passed`
+- fallback markers: `0`
+- Skiko/JBR picture replay frames: `0` / `0`
+- CMP command recorder: `frames=7264 fps=363.2 avg_commands=2465 max_commands=2465 unsupported_frames=0 avg_unsupported=0.0 max_unsupported=0 avg_text_commands=9.0 max_text_commands=9 avg_paragraph_text_commands=0.0 max_paragraph_text_commands=0 avg_image_defines=0.0 max_image_defines=0 avg_image_refs=0.0 max_image_refs=0 avg_image_cache_clears=0.0 max_image_cache_clears=0 reasons=none`
+- Skiko/JBR command frames: `7264` / `7264`
+- JBR command timing: `frames=7264 avg_total_ms=0.852 max_total_ms=2.787 avg_draw_ms=0.100 max_draw_ms=0.581 avg_flush_ms=0.736 max_flush_ms=2.679 avg_paragraph_ms=0.000 max_paragraph_ms=0.000 avg_paragraph_commands=0.0 max_paragraph_commands=0`
+- screenshot assertion: `passed`
+
+Next checkpoint:
+
+- Continue from visual smoke toward stable screenshot/text fidelity assertions, or return to rendering coverage with transformed/nonserializable shader fallback cases.
+
 Use separate worktrees for every existing repo touched:
 
 - `JetBrainsRuntime` worktree: `jbr-skia-compose-poc`

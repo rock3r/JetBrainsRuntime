@@ -47,7 +47,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Strict recorder fallback for invalid rounded-rectangle radii with gradient paints.
 - [ ] More strict shader fallback tests: transformed shaders, nonfinite shader geometry that survives shader construction, and broader generic shader cases.
 - [ ] Expand screenshot assertions to check newly added probe colors/regions explicitly.
-- [ ] Improve Magic Jewel visual fidelity so the validation app uses real Jewel typography/theme components, not only plain Compose/Swing probe text.
+- [x] Improve Magic Jewel visual fidelity so labels use Jewel `Text` and `JewelTheme.defaultTextStyle`.
+- [ ] Add screenshot-level text/typography assertions once the harness can make stable OCR or pixel-region claims.
 
 ## Validation Harness
 
