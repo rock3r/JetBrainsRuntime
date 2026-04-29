@@ -80,7 +80,8 @@ public class JBRSkiaService extends JBRSkia {
                     | COMMAND_CAP_PARAGRAPH_LINE_HEIGHT
                     | COMMAND_CAP_PARAGRAPH_OVERFLOW
                     | COMMAND_CAP_PARAGRAPH_DECORATION
-                    | COMMAND_CAP_PARAGRAPH_LETTER_SPACING;
+                    | COMMAND_CAP_PARAGRAPH_LETTER_SPACING
+                    | COMMAND_CAP_PARAGRAPH_BACKGROUND;
     private static final boolean NATIVE_BRIDGE_AVAILABLE = loadNativeBridge();
     private static final AtomicLong NEXT_SCOPE_ID = new AtomicLong(1);
     private static final int MAX_CACHED_IMAGES = 256;
@@ -188,7 +189,7 @@ public class JBRSkiaService extends JBRSkia {
             return record.recordLength() >= 8;
         }
         if (expectedLength == -5 && record.op() == COMMAND_DRAW_PARAGRAPH_UTF16) {
-            return record.recordLength() >= 19;
+            return record.recordLength() >= 21;
         }
         return expectedLength == record.recordLength();
     }
@@ -292,7 +293,8 @@ public class JBRSkiaService extends JBRSkia {
             int ellipsisMode = commands[record.argsStart() + 12];
             int decorationMask = commands[record.argsStart() + 13];
             int letterSpacing1000 = commands[record.argsStart() + 14];
-            int charCount = commands[record.argsStart() + 15];
+            int backgroundSpecified = commands[record.argsStart() + 15];
+            int charCount = commands[record.argsStart() + 17];
             return width1000 > 0
                     && fontSize1000 > 0
                     && fontWeight >= 1
@@ -315,9 +317,11 @@ public class JBRSkiaService extends JBRSkia {
                     && decorationMask <= 3
                     && letterSpacing1000 >= -100000
                     && letterSpacing1000 <= 100000
+                    && backgroundSpecified >= 0
+                    && backgroundSpecified <= 1
                     && charCount >= 0
                     && charCount <= 4096
-                    && record.recordLength() == 19 + charCount;
+                    && record.recordLength() == 21 + charCount;
         }
         if (record.op() != COMMAND_STROKE_LINE && record.op() != COMMAND_STROKE_OVAL) {
             return true;
@@ -779,6 +783,8 @@ public class JBRSkiaService extends JBRSkia {
                         int ellipsisMode = commands[offset++];
                         int decorationMask = commands[offset++];
                         int letterSpacing1000 = commands[offset++];
+                        int backgroundSpecified = commands[offset++];
+                        int backgroundArgb = commands[offset++];
                         int charCount = commands[offset++];
                         if (width1000 <= 0 || fontSize1000 <= 0
                                 || fontWeight < 1 || fontWeight > 1000
@@ -791,6 +797,7 @@ public class JBRSkiaService extends JBRSkia {
                                 || ellipsisMode < 0 || ellipsisMode > 1
                                 || decorationMask < 0 || decorationMask > 3
                                 || letterSpacing1000 < -100000 || letterSpacing1000 > 100000
+                                || backgroundSpecified < 0 || backgroundSpecified > 1
                                 || charCount < 0 || charCount > 4096
                                 || offset + charCount != recordEnd) {
                             return false;

@@ -64,7 +64,7 @@
 
 #include "MTLSurfaceDataBase.h"
 
-static constexpr jint ABI_ID = 24;
+static constexpr jint ABI_ID = 25;
 static constexpr jint COMMAND_STREAM_MAGIC = 1246972723;
 static constexpr jint COMMAND_STREAM_HEADER_SIZE = 6;
 static constexpr jint COMMAND_STREAM_FLAGS_NONE = 0;
@@ -629,6 +629,8 @@ static bool drawCommandList(SkCanvas* canvas,
                 const jint ellipsisMode = commands[offset++];
                 const jint decorationMask = commands[offset++];
                 const jint letterSpacing1000 = commands[offset++];
+                const jint backgroundSpecified = commands[offset++];
+                const SkColor backgroundColor = skColorFromArgb(commands[offset++]);
                 const jint charCount = commands[offset++];
                 if (paragraphWidth <= 0.0f || fontSize <= 0.0f ||
                         fontWeight < 1 || fontWeight > 1000 ||
@@ -641,6 +643,7 @@ static bool drawCommandList(SkCanvas* canvas,
                         ellipsisMode < 0 || ellipsisMode > 1 ||
                         decorationMask < 0 || decorationMask > 3 ||
                         letterSpacing1000 < -100000 || letterSpacing1000 > 100000 ||
+                        backgroundSpecified < 0 || backgroundSpecified > 1 ||
                         charCount < 0 || charCount > 4096 || offset + charCount != recordEnd) {
                     return false;
                 }
@@ -661,6 +664,11 @@ static bool drawCommandList(SkCanvas* canvas,
                 skia::textlayout::TextStyle textStyle;
                 textStyle.setColor(color);
                 textStyle.setFontSize(fontSize);
+                if (backgroundSpecified == 1) {
+                    SkPaint backgroundPaint;
+                    backgroundPaint.setColor(backgroundColor);
+                    textStyle.setBackgroundPaint(backgroundPaint);
+                }
                 textStyle.setFontStyle(SkFontStyle(
                         fontWeight,
                         fontWidth,

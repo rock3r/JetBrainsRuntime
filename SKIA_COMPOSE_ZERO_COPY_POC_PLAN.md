@@ -2815,6 +2815,52 @@ Next checkpoint:
 
 - Inspect remaining text effects against CMP/Skia code ground truth. Foreground alpha/color is already carried for solid-color paths; font feature settings, locale, baseline shift, and geometric transform need stricter review before becoming ABI fields because they may require strings, locale objects, or transform semantics rather than simple scalars.
 
+### Checkpoint 71: Paragraph Background Metadata And ABI 25
+
+Status: completed for scalar paragraph background-paint metadata.
+
+- Bumped the command ABI to `ABI_ID = 25` across Runtime API, Skiko, CMP, JBR Java replay, and JBR native replay.
+- Added `COMMAND_CAP_PARAGRAPH_BACKGROUND` so Skiko can require runtimes where paragraph commands carry background paint metadata.
+- Extended `COMMAND_DRAW_PARAGRAPH_UTF16` with `backgroundSpecified` and `backgroundArgb` before `charCount`.
+- The ABI 25 paragraph payload is `[op, 84 + charCount * 4, flags, x1000, y1000, width1000, fontSize1000, argb, fontWeight, fontWidth, fontSlant, textAlign, textDirection, lineHeightMultiplier1000, maxLines, ellipsisMode, decorationMask, letterSpacing1000, backgroundSpecified, backgroundArgb, charCount, codeUnit0, ...]`.
+- `backgroundSpecified` is `0` or `1`, so a specified transparent ARGB value remains representable without using a sentinel color.
+- CMP derives the fields from Compose `TextStyle.background`.
+- JBR native replay applies the value through JBR-owned Skia `TextStyle.setBackgroundPaint()`.
+- Magic Jewel's decorated paragraph probe now includes a translucent background so the strict command smoke exercises the new fields.
+
+Verification completed:
+
+- Runtime API `bash tools/build.sh process`.
+- Runtime API `bash tools/build.sh dev $(/usr/libexec/java_home -v 21) /tmp/jbr-api-skia-dev`.
+- `/tmp/jbr-api-shim.jar` refreshed from `/tmp/jbr-api-skia-dev/jbr-api-SNAPSHOT.jar`.
+- Skiko `./gradlew :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`.
+- Skiko `./gradlew :skiko:publishToMavenLocal`.
+- CMP `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest`.
+- CMP desktop jars rebuilt with `SKIKO_VERSION=0.0.0-SNAPSHOT`.
+- Magic Jewel `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew compileKotlin`.
+- JBR isolated patched-class compile into `/tmp/jbr-skia-abi25-compile`.
+- JBR patched module refreshed at `/tmp/jbr-skia-run/desktop`.
+- JBR native dylib rebuild into `/tmp/jbr-skia-native/libjbrskiainterop.dylib`.
+
+ABI 25 paragraph background strict command Magic Jewel report:
+
+- report: `/tmp/magic-jewel-paragraph-background-abi25-smoke/report.md`
+- screenshot: `/tmp/magic-jewel-paragraph-background-abi25-smoke/new-window.png`
+- sampled log: `/tmp/magic-jewel-paragraph-background-abi25-smoke/new-sampled.log`
+- validation status: `passed`
+- fallback markers: `0`
+- picture replay frames: `0`
+- `EXPECT_MIN_TEXT_COMMANDS`: `8`
+- `EXPECT_MIN_PARAGRAPH_TEXT_COMMANDS`: `6`
+- CMP command recorder: `frames=362 fps=120.7 avg_commands=2995 max_commands=2995 unsupported_frames=0 avg_unsupported=0.0 max_unsupported=0 avg_text_commands=9.0 max_text_commands=9 avg_paragraph_text_commands=6.0 max_paragraph_text_commands=6 avg_image_defines=0.0 max_image_defines=0 avg_image_refs=0.0 max_image_refs=0 avg_image_cache_clears=0.0 max_image_cache_clears=0 reasons=none`
+- Skiko/JBR command frames: `362` / `362`
+- JBR command timing: `frames=362 avg_total_ms=1.467 max_total_ms=3.708 avg_draw_ms=0.244 max_draw_ms=1.160 avg_flush_ms=1.198 max_flush_ms=3.412 avg_paragraph_ms=0.122 max_paragraph_ms=1.004 avg_paragraph_commands=6.0 max_paragraph_commands=6`
+- screenshot assertion: `passed`
+
+Next checkpoint:
+
+- Pause scalar text expansion and review the remaining unsupported text causes in sampled logs/source before choosing the next ABI field. The likely next step is not another blind scalar bump, but a small compatibility report that lists why text still falls back when strict command mode is enabled on broader Magic Jewel content.
+
 Use separate worktrees for every existing repo touched:
 
 - `JetBrainsRuntime` worktree: `jbr-skia-compose-poc`
