@@ -4731,3 +4731,23 @@ Validation:
 
 Next:
 - Keep remaining generic shader families behind explicit fallback tests or future JBR-owned shader factory design.
+
+## Checkpoint: Popup Marker Parser Coverage
+
+Date: 2026-04-29
+
+Status: completed as a Magic Jewel report-parser fixture.
+
+Change:
+- Added parser-level tests for the popup stress markers in `scripts/test-jbr-skia-report-validation.sh`.
+- The passing fixture writes `MAGIC_JEWEL_POPUP_SHOWN` plus two `MAGIC_JEWEL_POPUP_FRAME` markers, runs with `MAGIC_JEWEL_POPUP_STRESS=true EXPECT_MIN_POPUP_FRAMES=2`, and verifies:
+  - `popup_new_shown=1`
+  - `popup_new_frames=2`.
+- The failing fixture verifies that `EXPECT_MIN_POPUP_FRAMES=2` rejects a log with only one popup paint marker.
+
+Validation:
+- Command: `bash scripts/test-jbr-skia-report-validation.sh`
+- Result: `JBR_SKIA_REPORT_VALIDATION_TESTS passed`.
+
+Next:
+- Keep using live Magic Jewel smoke for screenshot/layering confidence and parser fixtures for cheap CI-style marker regression coverage.

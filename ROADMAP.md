@@ -74,6 +74,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Machine-readable Skiko surface-change marker count in Magic Jewel reports.
 - [x] Live resize/surface-change Magic Jewel smoke requiring at least one Skiko surface-change marker.
 - [x] Popup/layered Swing-over-Compose Magic Jewel smoke with screenshot pixels and popup paint markers.
+- [x] Parser-level coverage for popup paint marker thresholds and machine-summary fields.
 
 ## Compatibility And ABI Hardening
 
