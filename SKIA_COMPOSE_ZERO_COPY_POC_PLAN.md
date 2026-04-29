@@ -2769,6 +2769,52 @@ Next checkpoint:
 
 - Continue text-fidelity expansion from code ground truth. Likely candidates are paragraph letter-spacing or foreground alpha/style, but the next slice should first inspect Compose's Skia paragraph builder and only add scalar metadata that Skia paragraph can consume without crossing object-pointer ownership boundaries.
 
+### Checkpoint 70: Paragraph Letter-Spacing Metadata And ABI 24
+
+Status: completed for scalar paragraph letter-spacing metadata.
+
+- Bumped the command ABI to `ABI_ID = 24` across Runtime API, Skiko, CMP, JBR Java replay, and JBR native replay.
+- Added `COMMAND_CAP_PARAGRAPH_LETTER_SPACING` so Skiko can require runtimes where paragraph commands carry letter-spacing metadata.
+- Extended `COMMAND_DRAW_PARAGRAPH_UTF16` with `letterSpacing1000` before `charCount`.
+- The ABI 24 paragraph payload is `[op, 76 + charCount * 4, flags, x1000, y1000, width1000, fontSize1000, argb, fontWeight, fontWidth, fontSlant, textAlign, textDirection, lineHeightMultiplier1000, maxLines, ellipsisMode, decorationMask, letterSpacing1000, charCount, codeUnit0, ...]`.
+- `letterSpacing1000` is letter spacing in user-space pixels multiplied by `1000`; the accepted range is `-100000..100000`, allowing negative tracking while bounding malformed streams.
+- CMP resolves Compose `sp` and `em` letter spacing to pixels before writing the command stream.
+- JBR native replay applies the value through JBR-owned Skia `TextStyle.setLetterSpacing()`.
+- Magic Jewel's decorated paragraph probe now includes non-default letter spacing so the strict command smoke exercises the new field.
+
+Verification completed:
+
+- Runtime API `bash tools/build.sh process`.
+- Runtime API `bash tools/build.sh dev $(/usr/libexec/java_home -v 21) /tmp/jbr-api-skia-dev`.
+- `/tmp/jbr-api-shim.jar` refreshed from `/tmp/jbr-api-skia-dev/jbr-api-SNAPSHOT.jar`.
+- Skiko `./gradlew :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`.
+- Skiko `./gradlew :skiko:publishToMavenLocal`.
+- CMP `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest`.
+- CMP desktop jars rebuilt with `SKIKO_VERSION=0.0.0-SNAPSHOT`.
+- Magic Jewel `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew compileKotlin`.
+- JBR isolated patched-class compile into `/tmp/jbr-skia-abi24-compile`.
+- JBR patched module refreshed at `/tmp/jbr-skia-run/desktop`.
+- JBR native dylib rebuild into `/tmp/jbr-skia-native/libjbrskiainterop.dylib`.
+
+ABI 24 paragraph letter-spacing strict command Magic Jewel report:
+
+- report: `/tmp/magic-jewel-paragraph-letterspacing-abi24-smoke/report.md`
+- screenshot: `/tmp/magic-jewel-paragraph-letterspacing-abi24-smoke/new-window.png`
+- sampled log: `/tmp/magic-jewel-paragraph-letterspacing-abi24-smoke/new-sampled.log`
+- validation status: `passed`
+- fallback markers: `0`
+- picture replay frames: `0`
+- `EXPECT_MIN_TEXT_COMMANDS`: `8`
+- `EXPECT_MIN_PARAGRAPH_TEXT_COMMANDS`: `6`
+- CMP command recorder: `frames=579 fps=193.0 avg_commands=2983 max_commands=2983 unsupported_frames=0 avg_unsupported=0.0 max_unsupported=0 avg_text_commands=9.0 max_text_commands=9 avg_paragraph_text_commands=6.0 max_paragraph_text_commands=6 avg_image_defines=0.0 max_image_defines=0 avg_image_refs=0.0 max_image_refs=0 avg_image_cache_clears=0.0 max_image_cache_clears=0 reasons=none`
+- Skiko/JBR command frames: `578` / `578`
+- JBR command timing: `frames=578 avg_total_ms=1.513 max_total_ms=7.306 avg_draw_ms=0.247 max_draw_ms=4.000 avg_flush_ms=1.241 max_flush_ms=7.050 avg_paragraph_ms=0.126 max_paragraph_ms=3.762 avg_paragraph_commands=6.0 max_paragraph_commands=6`
+- screenshot assertion: `passed`
+
+Next checkpoint:
+
+- Inspect remaining text effects against CMP/Skia code ground truth. Foreground alpha/color is already carried for solid-color paths; font feature settings, locale, baseline shift, and geometric transform need stricter review before becoming ABI fields because they may require strings, locale objects, or transform semantics rather than simple scalars.
+
 Use separate worktrees for every existing repo touched:
 
 - `JetBrainsRuntime` worktree: `jbr-skia-compose-poc`
