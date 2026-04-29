@@ -4515,3 +4515,43 @@ Primary target: **macOS + Metal + direct canvas path**. JCEF, video/external sur
   - document setup using local JBR, Skiko, and CMP builds.
   - document old/new launch modes, profiler scripts, report interpretation, known noise in `ps` CPU data, and expected fallback warnings.
   - document the report file structure and `SKIKO_JBR_INTEROP_FALLBACK reason=...` marker format so CI/jobs can parse it stably.
+
+## Checkpoint: Text Fidelity Default
+
+Date: 2026-04-29
+
+Status: in progress as a Magic Jewel visual-fidelity cleanup after the screenshot showed command-path text using the wrong Jewel font/size/alignment.
+
+Changes:
+- CMP now records desktop text through the fidelity-first text image bridge by default in command mode.
+  - The bridge rasterizes the already-laid-out Skia Paragraph into an ARGB `ImageBitmap` and sends it through the existing image-ref/image-cache command path.
+  - This keeps Magic Jewel on JBR command replay while preserving Compose/Jewel's resolved typeface, font size, alignment, decorations, fallback glyphs, and paragraph layout.
+- The experimental native text commands remain available behind `-Dcompose.jbr.skia.command.nativeText=true`.
+  - This keeps ABI 17/18-25 tests and future JBR-owned typeface experiments alive.
+  - It is not the default because those commands currently cannot carry the resolved Jewel/Compose typeface and therefore can visibly drift from real Compose text.
+- Magic Jewel scripts now expose `JBR_SKIA_NATIVE_TEXT=true` as the opt-in switch for that native text command path.
+- Magic Jewel README examples now validate default text through `EXPECT_MIN_IMAGE_REFS` and reserve `EXPECT_MIN_PARAGRAPH_TEXT_COMMANDS` for explicit native-text probes.
+
+Validation so far:
+- Red/green CMP focused tests:
+  - `paint_withFillDrawStyle_recordsJbrSkiaTextImageByDefault`
+  - `paint_withFillDrawStyle_recordsJbrSkiaSimpleTextWhenNativeTextIsEnabled`
+  - `paint_withLatin1Text_recordsJbrSkiaSimpleText`
+- Command:
+  - `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-configuration-cache :compose:ui:ui-text:desktopTest --tests androidx.compose.ui.text.DesktopParagraphTest.paint_withFillDrawStyle_recordsJbrSkiaTextImageByDefault --tests androidx.compose.ui.text.DesktopParagraphTest.paint_withFillDrawStyle_recordsJbrSkiaSimpleTextWhenNativeTextIsEnabled --tests androidx.compose.ui.text.DesktopParagraphTest.paint_withLatin1Text_recordsJbrSkiaSimpleText`
+- Magic Jewel report parser:
+  - `bash scripts/test-jbr-skia-report-validation.sh`
+- Patched CMP jars:
+  - `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-configuration-cache :compose:ui:ui-text:desktopJar :compose:ui:ui:desktopJar`
+- Magic Jewel command-mode smoke:
+  - command: `OUT_DIR=/tmp/magic-jewel-text-image-fidelity-smoke DURATION_SECONDS=6 WARMUP_SECONDS=2 SAMPLE_INTERVAL_SECONDS=1 JBR_SKIA_RENDER_MODE=commands EXPECT_MIN_IMAGE_REFS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-interop-report.sh`
+  - report: `/tmp/magic-jewel-text-image-fidelity-smoke/report.md`
+  - validation: passed
+  - fallback markers: `0`
+  - picture frames: `0`
+  - CMP command recorder: `frames=1049 fps=174.8 avg_commands=2413 max_commands=8049 unsupported_frames=0 avg_unsupported=0.0 max_unsupported=0 avg_text_commands=0.0 max_text_commands=0 avg_paragraph_text_commands=0.0 max_paragraph_text_commands=0 avg_image_defines=0.0 max_image_defines=1 avg_image_refs=9.0 max_image_refs=9 avg_image_cache_clears=0.0 max_image_cache_clears=0 avg_image_cache_evicts=0.0 max_image_cache_evicts=0 reasons=none`
+  - Skiko/JBR command frames: `1048` / `1048`
+  - screenshot: `/tmp/magic-jewel-text-image-fidelity-smoke/new-window.png`
+
+Next:
+- Add screenshot-level text/typography assertions if we can make a stable enough pixel oracle, then continue macOS MVP hardening with compatibility matrix packaging and quiet-machine benchmark runs.
