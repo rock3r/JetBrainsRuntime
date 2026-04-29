@@ -26,6 +26,7 @@
 #import <Metal/Metal.h>
 #include <jni.h>
 #include <algorithm>
+#include <chrono>
 #include <cstdio>
 #include <mutex>
 #include <unordered_map>
@@ -137,6 +138,11 @@ static sk_sp<SkUnicode> paragraphUnicode() {
         gParagraphUnicode = SkUnicodes::ICU::Make();
     }
     return gParagraphUnicode;
+}
+
+static long long monotonicNanos() {
+    return std::chrono::duration_cast<std::chrono::nanoseconds>(
+            std::chrono::steady_clock::now().time_since_epoch()).count();
 }
 
 typedef struct _JBRSkiaMTLSDOps {
@@ -347,8 +353,18 @@ static bool drawImage(SkCanvas* canvas,
     return true;
 }
 
+struct CommandReplayMetrics {
+    int paragraphCommands = 0;
+    long long paragraphNanos = 0;
+};
+
 template<typename CommandWords>
-static bool drawCommandList(SkCanvas* canvas, CommandWords commands, jsize commandCount, int width, int height) {
+static bool drawCommandList(SkCanvas* canvas,
+                            CommandWords commands,
+                            jsize commandCount,
+                            int width,
+                            int height,
+                            CommandReplayMetrics* metrics = nullptr) {
     if (commandCount < COMMAND_STREAM_HEADER_SIZE ||
             commands[0] != COMMAND_STREAM_MAGIC ||
             commands[1] != ABI_ID ||
@@ -621,6 +637,7 @@ static bool drawCommandList(SkCanvas* canvas, CommandWords commands, jsize comma
                 if (!appendUtf16CommandText(text, commands, offset, charCount)) {
                     return false;
                 }
+                const long long paragraphStartNanos = metrics != nullptr ? monotonicNanos() : 0;
                 skia::textlayout::ParagraphStyle paragraphStyle;
                 paragraphStyle.setTextAlign(static_cast<skia::textlayout::TextAlign>(textAlign));
                 paragraphStyle.setTextDirection(static_cast<skia::textlayout::TextDirection>(textDirection));
@@ -643,6 +660,10 @@ static bool drawCommandList(SkCanvas* canvas, CommandWords commands, jsize comma
                 }
                 paragraph->layout(paragraphWidth);
                 paragraph->paint(canvas, x, y);
+                if (metrics != nullptr) {
+                    metrics->paragraphCommands++;
+                    metrics->paragraphNanos += monotonicNanos() - paragraphStartNanos;
+                }
                 break;
             }
             case COMMAND_CLEAR: {
@@ -959,6 +980,7 @@ Java_com_jetbrains_desktop_JBRSkiaService_nativeRenderCommandFrame
         if (commandCount <= 0) {
             return JNI_FALSE;
         }
+        const long long frameStartNanos = monotonicNanos();
 
         sk_sp<GrDirectContext> directContext = makeDirectContextForSurface(nativeOpsPtr, texture);
         if (directContext == nullptr) {
@@ -981,6 +1003,8 @@ Java_com_jetbrains_desktop_JBRSkiaService_nativeRenderCommandFrame
         }
 
         SkCanvas* canvas = surface->getCanvas();
+        CommandReplayMetrics metrics;
+        const long long drawStartNanos = monotonicNanos();
         canvas->save();
         canvas->clipRect(SkRect::MakeXYWH(static_cast<SkScalar>(destinationX),
                                           static_cast<SkScalar>(destinationY),
@@ -988,14 +1012,17 @@ Java_com_jetbrains_desktop_JBRSkiaService_nativeRenderCommandFrame
                                           static_cast<SkScalar>(destinationHeight)));
         canvas->translate(static_cast<SkScalar>(destinationX),
                           static_cast<SkScalar>(destinationY));
-        bool rendered = drawCommandList(canvas, IntCommandWords{commands}, commandCount, width, height);
+        bool rendered = drawCommandList(canvas, IntCommandWords{commands}, commandCount, width, height, &metrics);
         canvas->restore();
+        const long long drawNanos = monotonicNanos() - drawStartNanos;
         env->ReleaseIntArrayElements(commandArray, commands, JNI_ABORT);
         if (!rendered) {
             return JNI_FALSE;
         }
 
+        const long long flushStartNanos = monotonicNanos();
         directContext->flushAndSubmit(surface.get(), GrSyncCpu::kYes);
+        const long long flushNanos = monotonicNanos() - flushStartNanos;
         std::fprintf(stderr,
                      "JBR_SKIA_INTEROP_COMMAND_FRAME destinationX=%d destinationY=%d destinationWidth=%d destinationHeight=%d width=%d height=%d commands=%d rendered=true\n",
                      destinationX,
@@ -1005,6 +1032,13 @@ Java_com_jetbrains_desktop_JBRSkiaService_nativeRenderCommandFrame
                      width,
                      height,
                      commandCount);
+        std::fprintf(stderr,
+                     "JBR_SKIA_INTEROP_COMMAND_TIMING totalNanos=%lld drawNanos=%lld flushNanos=%lld paragraphCommands=%d paragraphNanos=%lld\n",
+                     monotonicNanos() - frameStartNanos,
+                     drawNanos,
+                     flushNanos,
+                     metrics.paragraphCommands,
+                     metrics.paragraphNanos);
         return JNI_TRUE;
     }
 }
@@ -1037,6 +1071,7 @@ Java_com_jetbrains_desktop_JBRSkiaService_nativeRenderCommandBufferFrame
         }
 
         jsize commandCount = commandByteCount / static_cast<jsize>(sizeof(jint));
+        const long long frameStartNanos = monotonicNanos();
 
         sk_sp<GrDirectContext> directContext = makeDirectContextForSurface(nativeOpsPtr, texture);
         if (directContext == nullptr) {
@@ -1055,6 +1090,8 @@ Java_com_jetbrains_desktop_JBRSkiaService_nativeRenderCommandBufferFrame
         }
 
         SkCanvas* canvas = surface->getCanvas();
+        CommandReplayMetrics metrics;
+        const long long drawStartNanos = monotonicNanos();
         canvas->save();
         canvas->clipRect(SkRect::MakeXYWH(static_cast<SkScalar>(destinationX),
                                           static_cast<SkScalar>(destinationY),
@@ -1062,14 +1099,17 @@ Java_com_jetbrains_desktop_JBRSkiaService_nativeRenderCommandBufferFrame
                                           static_cast<SkScalar>(destinationHeight)));
         canvas->translate(static_cast<SkScalar>(destinationX),
                           static_cast<SkScalar>(destinationY));
-        bool rendered = drawCommandList(canvas, LittleEndianByteCommandWords{commandBytes}, commandCount, width, height);
+        bool rendered = drawCommandList(canvas, LittleEndianByteCommandWords{commandBytes}, commandCount, width, height, &metrics);
         canvas->restore();
+        const long long drawNanos = monotonicNanos() - drawStartNanos;
         env->ReleaseByteArrayElements(commandArray, commandBytes, JNI_ABORT);
         if (!rendered) {
             return JNI_FALSE;
         }
 
+        const long long flushStartNanos = monotonicNanos();
         directContext->flushAndSubmit(surface.get(), GrSyncCpu::kYes);
+        const long long flushNanos = monotonicNanos() - flushStartNanos;
         std::fprintf(stderr,
                      "JBR_SKIA_INTEROP_COMMAND_FRAME destinationX=%d destinationY=%d destinationWidth=%d destinationHeight=%d width=%d height=%d commands=%d rendered=true\n",
                      destinationX,
@@ -1079,6 +1119,13 @@ Java_com_jetbrains_desktop_JBRSkiaService_nativeRenderCommandBufferFrame
                      width,
                      height,
                      commandCount);
+        std::fprintf(stderr,
+                     "JBR_SKIA_INTEROP_COMMAND_TIMING totalNanos=%lld drawNanos=%lld flushNanos=%lld paragraphCommands=%d paragraphNanos=%lld\n",
+                     monotonicNanos() - frameStartNanos,
+                     drawNanos,
+                     flushNanos,
+                     metrics.paragraphCommands,
+                     metrics.paragraphNanos);
         return JNI_TRUE;
     }
 }
@@ -1106,6 +1153,7 @@ Java_com_jetbrains_desktop_JBRSkiaService_nativeRenderCommandDirectFrame
         }
 
         jsize commandCount = commandByteCount / static_cast<jint>(sizeof(jint));
+        const long long frameStartNanos = monotonicNanos();
 
         sk_sp<GrDirectContext> directContext = makeDirectContextForSurface(nativeOpsPtr, texture);
         if (directContext == nullptr) {
@@ -1122,6 +1170,8 @@ Java_com_jetbrains_desktop_JBRSkiaService_nativeRenderCommandDirectFrame
         }
 
         SkCanvas* canvas = surface->getCanvas();
+        CommandReplayMetrics metrics;
+        const long long drawStartNanos = monotonicNanos();
         canvas->save();
         canvas->clipRect(SkRect::MakeXYWH(static_cast<SkScalar>(destinationX),
                                           static_cast<SkScalar>(destinationY),
@@ -1129,13 +1179,16 @@ Java_com_jetbrains_desktop_JBRSkiaService_nativeRenderCommandDirectFrame
                                           static_cast<SkScalar>(destinationHeight)));
         canvas->translate(static_cast<SkScalar>(destinationX),
                           static_cast<SkScalar>(destinationY));
-        bool rendered = drawCommandList(canvas, LittleEndianByteCommandWords{commandBytes}, commandCount, width, height);
+        bool rendered = drawCommandList(canvas, LittleEndianByteCommandWords{commandBytes}, commandCount, width, height, &metrics);
         canvas->restore();
+        const long long drawNanos = monotonicNanos() - drawStartNanos;
         if (!rendered) {
             return JNI_FALSE;
         }
 
+        const long long flushStartNanos = monotonicNanos();
         directContext->flushAndSubmit(surface.get(), GrSyncCpu::kYes);
+        const long long flushNanos = monotonicNanos() - flushStartNanos;
         std::fprintf(stderr,
                      "JBR_SKIA_INTEROP_COMMAND_FRAME destinationX=%d destinationY=%d destinationWidth=%d destinationHeight=%d width=%d height=%d commands=%d rendered=true\n",
                      destinationX,
@@ -1145,6 +1198,13 @@ Java_com_jetbrains_desktop_JBRSkiaService_nativeRenderCommandDirectFrame
                      width,
                      height,
                      commandCount);
+        std::fprintf(stderr,
+                     "JBR_SKIA_INTEROP_COMMAND_TIMING totalNanos=%lld drawNanos=%lld flushNanos=%lld paragraphCommands=%d paragraphNanos=%lld\n",
+                     monotonicNanos() - frameStartNanos,
+                     drawNanos,
+                     flushNanos,
+                     metrics.paragraphCommands,
+                     metrics.paragraphNanos);
         return JNI_TRUE;
     }
 }

@@ -2567,6 +2567,38 @@ Next checkpoint:
 
 - Add per-stage timing markers around command replay and paragraph replay so future slowdowns can be attributed to CMP recording, Skiko handoff, JBR command parsing, paragraph build/layout, or Metal submission.
 
+### Checkpoint 65: JBR Command Replay Timing Markers
+
+Status: completed for native command replay timing telemetry.
+
+- Added `JBR_SKIA_INTEROP_COMMAND_TIMING` stderr markers from JBR native command replay.
+- The marker reports `totalNanos`, `drawNanos`, `flushNanos`, `paragraphCommands`, and `paragraphNanos`.
+- The marker is emitted for int-array, byte-array, and direct-byte-buffer command replay entry points.
+- Magic Jewel report parsing now summarizes the timing marker as average/max total, draw, flush, paragraph time, and paragraph command count.
+- This is diagnostic-only and does not change `ABI_ID`, `BUILD_ID`, or the command-stream shape.
+
+Verification completed:
+
+- JBR native dylib rebuild into `/tmp/jbr-skia-native/libjbrskiainterop.dylib`.
+- Magic Jewel strict command report with `MAGIC_JEWEL_UNSUPPORTED_TEXT=true`, `MAGIC_JEWEL_PARAGRAPH_LAYOUT_TEXT=true`, and `EXPECT_MIN_PARAGRAPH_TEXT_COMMANDS=4`.
+
+Magic Jewel command timing report:
+
+- report: `/tmp/magic-jewel-command-timing-smoke/report.md`
+- screenshot: `/tmp/magic-jewel-command-timing-smoke/new-window.png`
+- validation status: `passed`
+- fallback markers: `0`
+- picture replay frames: `0`
+- CMP command recorder: `frames=435 fps=145.0 avg_commands=2767 max_commands=2768 unsupported_frames=0 avg_unsupported=0.0 max_unsupported=0 avg_text_commands=9.0 max_text_commands=9 avg_paragraph_text_commands=4.0 max_paragraph_text_commands=4 avg_image_defines=0.0 max_image_defines=0 avg_image_refs=0.0 max_image_refs=0 avg_image_cache_clears=0.0 max_image_cache_clears=0 reasons=none`
+- Skiko/JBR command frames: `434` / `434`
+- JBR command timing: `frames=434 avg_total_ms=1.938 max_total_ms=82.658 avg_draw_ms=0.353 max_draw_ms=73.038 avg_flush_ms=1.557 max_flush_ms=8.792 avg_paragraph_ms=0.229 max_paragraph_ms=72.360 avg_paragraph_commands=4.0 max_paragraph_commands=4`
+- screenshot assertion: `passed`
+- note: the timing marker exposes the cold first-frame paragraph outlier directly; steady-state paragraph cost after dependency caching is much lower and Metal flush currently dominates average native replay time in this smoke.
+
+Next checkpoint:
+
+- Add warmup-aware benchmark/report mode so smoke reports can keep catching regressions while benchmark runs can discard cold frames and collect longer, quieter timing windows.
+
 Use separate worktrees for every existing repo touched:
 
 - `JetBrainsRuntime` worktree: `jbr-skia-compose-poc`
