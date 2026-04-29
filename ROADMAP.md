@@ -72,6 +72,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] CI-friendly parser for Magic Jewel report summary.
 - [x] Machine-readable Skiko surface-change marker count in Magic Jewel reports.
 - [x] Live resize/surface-change Magic Jewel smoke requiring at least one Skiko surface-change marker.
+- [x] Popup/layered Swing-over-Compose Magic Jewel smoke with screenshot pixels and popup paint markers.
 
 ## Compatibility And ABI Hardening
 
@@ -111,6 +112,6 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [ ] Font/typeface ownership through the JBR Skia runtime.
 - [ ] JBR-owned generic shader factory and handles for non-serialized shader families.
 - [ ] Screen migration/context invalidation hardening.
-- [ ] Popup/menu and layered Swing/Compose stress tests.
+- [ ] Real popup/menu stress tests beyond the current glass-pane layered Swing overlay.
 - [ ] JCEF/shared-texture exploration after Compose is solid.
 - [ ] Windows/Linux backend adapter investigation after macOS MVP.

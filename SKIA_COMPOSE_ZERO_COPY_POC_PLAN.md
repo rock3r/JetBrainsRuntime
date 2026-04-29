@@ -4662,3 +4662,44 @@ Validation:
 
 Next:
 - Use this suite with longer durations and optionally `ENABLE_ASPROF=true` when the host is quiet enough for meaningful numbers.
+
+## Checkpoint: Layered Swing Popup Stress
+
+Date: 2026-04-29
+
+Status: completed as a Magic Jewel glass-pane overlay stress.
+
+Why:
+- IDE UIs commonly combine Compose content, embedded Swing islands, overlays, and popup-like surfaces.
+- A strict command-mode smoke should prove that an animated Swing overlay can repaint over the ComposePanel without making CMP/Skiko fall back to picture replay.
+- The existing title-based window capture intentionally captures the app window only, not separate OS popup windows. For this harness slice the popup-like surface is therefore hosted in the JFrame glass pane so screenshot assertions can validate the layering in the same captured window.
+
+Changes:
+- Magic Jewel added `MAGIC_JEWEL_POPUP_STRESS=true`.
+- The flag installs an animated Swing glass-pane popup card over the ComposePanel and emits:
+  - `MAGIC_JEWEL_POPUP_SHOWN`
+  - `MAGIC_JEWEL_POPUP_FRAME`.
+- The report script records `popup_old_frames`, `popup_new_frames`, and `popup_new_shown` in `summary.properties`.
+- `EXPECT_MIN_POPUP_FRAMES` makes strict command validation require popup repaint activity.
+- Command and mixed screenshot assertion scripts count `popupPink` and `popupCyan` pixels when `MAGIC_JEWEL_POPUP_STRESS=true`.
+- The screenshot capture waits for `MAGIC_JEWEL_POPUP_SHOWN` before capturing when popup stress is enabled.
+
+Validation:
+- Command: `./gradlew --no-daemon compileKotlin`
+- Result: passed.
+- Command: `OUT_DIR=/tmp/magic-jewel-popup-stress-smoke-4 DURATION_SECONDS=4 WARMUP_SECONDS=1 SAMPLE_INTERVAL_SECONDS=1 MAGIC_JEWEL_POPUP_STRESS=true EXPECT_MIN_POPUP_FRAMES=5 JBR_SKIA_RENDER_MODE=commands SKIKO_VERSION=0.0.0-SNAPSHOT bash scripts/jbr-skia-interop-report.sh`
+- Result: passed.
+- Summary:
+  - `validation_status=passed`
+  - `fallback_new_count=0`
+  - `skiko_picture_frames=0`
+  - `jbr_picture_frames=0`
+  - `skiko_command_frames=622`
+  - `jbr_command_frames=622`
+  - `popup_new_frames=692`
+  - `popup_new_shown=1`
+  - `screenshot_status=passed`
+  - screenshot assertion: `popupPink=8460 popupCyan=2368`.
+
+Next:
+- Keep real OS popup/menu windows as a later productionization test, since they are not captured by the current window-only screenshot helper.
