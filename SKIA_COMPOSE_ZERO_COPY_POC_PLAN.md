@@ -4631,3 +4631,34 @@ Follow-up:
 - Validation:
   - command: `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.rejectsCompositeShaderInStrictMode --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.rejectsTransformedGradientShaderInStrictMode`
   - result: passed.
+
+## Checkpoint: Benchmark Suite Wrapper
+
+Date: 2026-04-29
+
+Status: completed as a repeatable collection wrapper for later quiet-machine runs.
+
+Changes:
+- Magic Jewel now has `scripts/jbr-skia-benchmark-suite.sh`.
+- The suite runs consistent old/new reports for:
+  - SKP picture replay
+  - command replay
+  - command replay with stable image-cache workload
+  - command replay with dynamic image-cache workload
+  - command replay with resize plus dynamic image-cache workload.
+- `ENABLE_ASPROF=true` is forwarded so a quiet-machine run can collect async-profiler outputs for every scenario.
+- The stable-image benchmark records cache behavior but does not enforce zero `imageDefines` during short warmups. The stricter zero-define invariant remains covered by the dedicated stable-image-cache smoke.
+
+Validation:
+- First short run exposed that `EXPECT_MAX_IMAGE_DEFINES=0` was too strict for very short warmups, because image definitions can still occur inside the sampled window.
+- After relaxing that benchmark-suite-only assertion:
+  - command: `OUT_ROOT=/tmp/magic-jewel-benchmark-suite-smoke-2 DURATION_SECONDS=2 WARMUP_SECONDS=1 SAMPLE_INTERVAL_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT bash scripts/jbr-skia-benchmark-suite.sh`
+  - result: `JBR_SKIA_BENCHMARK_SUITE passed out_root=/tmp/magic-jewel-benchmark-suite-smoke-2`
+  - `picture`: `status=passed fallback_new_count=0 jbr_picture_frames=508 jbr_command_frames=0`
+  - `commands`: `status=passed fallback_new_count=0 jbr_picture_frames=0 jbr_command_frames=322`
+  - `commands-stable-images`: `status=passed fallback_new_count=0 jbr_picture_frames=0 jbr_command_frames=484`
+  - `commands-dynamic-images`: `status=passed fallback_new_count=0 jbr_picture_frames=0 jbr_command_frames=472`
+  - `commands-resize-dynamic-images`: `status=passed fallback_new_count=0 jbr_picture_frames=0 jbr_command_frames=478`
+
+Next:
+- Use this suite with longer durations and optionally `ENABLE_ASPROF=true` when the host is quiet enough for meaningful numbers.

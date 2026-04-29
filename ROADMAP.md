@@ -67,6 +67,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Magic Jewel report smoke for each ABI checkpoint.
 - [x] Magic Jewel command-mode smoke for ABI 40 surface identity.
 - [ ] Quiet-machine benchmark pass using existing SKP/report paths.
+- [x] Magic Jewel benchmark-suite wrapper for SKP picture, command, stable-image, dynamic-image, and resize workloads.
 - [x] Async-profiler integration in Magic Jewel report.
 - [x] CI-friendly parser for Magic Jewel report summary.
 - [x] Machine-readable Skiko surface-change marker count in Magic Jewel reports.
