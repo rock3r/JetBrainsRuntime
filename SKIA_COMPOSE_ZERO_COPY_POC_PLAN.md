@@ -4569,3 +4569,34 @@ Follow-up:
   - CMP command recorder: `frames=461 fps=92.2 avg_commands=2498 max_commands=8049 unsupported_frames=0 avg_unsupported=0.0 max_unsupported=0 avg_text_commands=0.0 max_text_commands=0 avg_paragraph_text_commands=0.0 max_paragraph_text_commands=0 avg_image_defines=0.0 max_image_defines=1 avg_image_refs=9.0 max_image_refs=9 avg_image_cache_clears=0.0 max_image_cache_clears=0 avg_image_cache_evicts=0.0 max_image_cache_evicts=0 reasons=none`
   - Skiko/JBR command frames: `461` / `461`
   - screenshot assertion: `JBR_SKIA_COMMAND_SCREENSHOT_COUNTS green=570210 blue=1053509 purple=31352 yellow=35545 orange=18828 white=963664 topText=5334 bottomText=7341`
+
+## Checkpoint: Launch-Level Forced Compatibility Matrix
+
+Date: 2026-04-29
+
+Status: completed as a repeatable launch-level smoke for the current forced compatibility scenarios. This is not the final packaged old/new artifact matrix; it uses the current local artifacts plus explicit test properties/missing API shim to force each fallback reason.
+
+Changes:
+- Magic Jewel now has `scripts/jbr-skia-compatibility-matrix.sh`.
+- The matrix runs:
+  - happy command-mode path with text image refs required
+  - forced `abi-mismatch`
+  - forced `native-abi-mismatch`
+  - forced `command-capability-mismatch`
+  - forced `public-api-missing`.
+- For the happy path it requires a passing report with JBR command frames.
+- For forced mismatch paths it requires a passing report with one structured fallback marker and zero JBR command frames.
+
+Validation:
+- Command: `OUT_ROOT=/tmp/magic-jewel-compatibility-matrix-smoke DURATION_SECONDS=3 WARMUP_SECONDS=1 SAMPLE_INTERVAL_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT bash scripts/jbr-skia-compatibility-matrix.sh`
+- Result: `JBR_SKIA_COMPATIBILITY_MATRIX passed out_root=/tmp/magic-jewel-compatibility-matrix-smoke`
+- Cases:
+  - `happy`: `status=passed fallback_new_count=0 jbr_command_frames=343`
+  - `abi-mismatch`: `status=passed fallback_new_count=1 jbr_command_frames=0`
+  - `native-abi-mismatch`: `status=passed fallback_new_count=1 jbr_command_frames=0`
+  - `command-capability-mismatch`: `status=passed fallback_new_count=1 jbr_command_frames=0`
+  - `public-api-missing`: `status=passed fallback_new_count=1 jbr_command_frames=0`
+
+Next:
+- Keep the full packaged old/new artifact matrix open until we have named old/new bundles for JBR, Runtime API, Skiko, and CMP.
+- Continue macOS MVP hardening with quieter benchmark runs and remaining rendering edge cases.
