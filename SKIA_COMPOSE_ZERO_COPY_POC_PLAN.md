@@ -3861,6 +3861,24 @@ Next checkpoint:
 
 - Add explicit old/new packaged-artifact fallback matrix coverage, then return to real context/surface invalidation once the JBR scope exposes a stable destination-context identity rather than only per-paint scope ids and Metal texture pointers.
 
+### Checkpoint 106: Compatibility Matrix Report Fixtures
+
+Status: completed in Magic Jewel report validation.
+
+- `scripts/test-jbr-skia-report-validation.sh` now has explicit fixtures for the two high-risk version skew stories:
+  - new Skiko against old/pre-native-metadata JBR accepts only a structured `SKIKO_JBR_INTEROP_FALLBACK reason=native-abi-mismatch` marker and zero command frames.
+  - old or otherwise uninstrumented Skiko-style logs, with neither command frames nor a structured fallback marker, fail validation instead of being treated as a clean fallback.
+- Magic Jewel README documents the matrix behavior beside the report/summary schema.
+- This is parser-level coverage. Full launch-level artifact matrix coverage still needs real packaged old/new JBR and Skiko artifacts.
+
+Validation:
+
+- Magic Jewel report parser tests: `bash scripts/test-jbr-skia-report-validation.sh`
+
+Next checkpoint:
+
+- Add the stable destination-context identity needed for true cache invalidation on resize/surface migration, then wire Skiko cache invalidation to that identity rather than per-paint scope ids.
+
 Use separate worktrees for every existing repo touched:
 
 - `JetBrainsRuntime` worktree: `jbr-skia-compose-poc`
