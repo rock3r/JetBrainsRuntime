@@ -3902,6 +3902,40 @@ Next checkpoint:
 
 - Re-publish the ABI 40 Runtime API/Skiko/CMP artifacts locally, refresh the Magic Jewel launch wiring, and run the command-mode smoke so the screenshot/report path proves the new surface identity in a real paint.
 
+### Checkpoint 108: ABI 40 Magic Jewel Smoke
+
+Status: completed in Magic Jewel command-mode report.
+
+- Runtime API dev jar was rebuilt and `/tmp/jbr-api-shim.jar` refreshed.
+- JBR patched classes were refreshed under `/tmp/jbr-skia-run/desktop` using the temp-only `JBRApi` compile stub.
+- JBR native `libjbrskiainterop.dylib` was rebuilt with native command ABI `40`; the native bridge had its hardcoded command ABI updated from `39` to `40`.
+- Skiko ABI 40 artifacts were published to Maven local.
+- CMP `ui-graphics` desktop jar was refreshed with command-stream ABI `40`.
+- Magic Jewel command-mode smoke passed at `/tmp/magic-jewel-abi40-surface-identity-smoke/report.md`.
+- The smoke recorded:
+  - `validation_status=passed`
+  - `fallback_new_count=0`
+  - `cmp_recorder_frames=806`
+  - `skiko_command_frames=805`
+  - `jbr_command_frames=805`
+  - `screenshot_status=passed`
+- The first live acquisition marker included the new stable destination identity:
+  - `SKIKO_JBR_INTEROP_SCOPE_ACQUIRED abi=40 build=skia=m147-64a2414108;flags=macos-release-metal-poc:1;abi=40;native=2 scopeId=1 surfaceId=0xa35a48000 metalTexture=0xa35484500`
+
+Validation:
+
+- Runtime API dev jar: `bash tools/build.sh dev $(/usr/libexec/java_home -v 21) /tmp/jbr-api-skia-abi40-dev`
+- JBR patched class refresh into `/tmp/jbr-skia-run/desktop`
+- JBR native dylib rebuild into `/tmp/jbr-skia-native/libjbrskiainterop.dylib`
+- Skiko Maven-local publish: `./gradlew --no-configuration-cache :skiko:publishAwtPublicationToMavenLocal :skiko:publishAwtRuntimeElementsPublicationToMavenLocal :skiko:publishSkikoJvmRuntimeMacosArm64PublicationToMavenLocal`
+- CMP jar refresh: `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-configuration-cache :compose:ui:ui-graphics:desktopJar`
+- Magic Jewel compile: `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew compileKotlin`
+- Magic Jewel smoke: `OUT_DIR=/tmp/magic-jewel-abi40-surface-identity-smoke DURATION_SECONDS=5 WARMUP_SECONDS=1 SAMPLE_INTERVAL_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT JBR_SKIA_RENDER_MODE=commands ./scripts/jbr-skia-interop-report.sh`
+
+Next checkpoint:
+
+- Make the surface-change marker parseable in Magic Jewel reports, then add a resize/surface-change smoke that proves Skiko notices identity changes and invalidates cached surface state.
+
 Use separate worktrees for every existing repo touched:
 
 - `JetBrainsRuntime` worktree: `jbr-skia-compose-poc`

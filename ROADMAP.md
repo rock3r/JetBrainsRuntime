@@ -59,6 +59,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] JBR native dylib compile smoke.
 - [x] Runtime API shim rebuild.
 - [x] Magic Jewel report smoke for each ABI checkpoint.
+- [x] Magic Jewel command-mode smoke for ABI 40 surface identity.
 - [ ] Quiet-machine benchmark pass using existing SKP/report paths.
 - [x] Async-profiler integration in Magic Jewel report.
 - [x] CI-friendly parser for Magic Jewel report summary.
