@@ -36,12 +36,15 @@ import java.awt.Color;
 import java.awt.AlphaComposite;
 import java.awt.Composite;
 import java.awt.Graphics2D;
+import java.awt.LinearGradientPaint;
+import java.awt.MultipleGradientPaint;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.Shape;
 import java.awt.geom.Area;
 import java.awt.geom.Arc2D;
 import java.awt.geom.Path2D;
+import java.awt.geom.Point2D;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
 import java.nio.ByteBuffer;
@@ -89,7 +92,8 @@ public class JBRSkiaService extends JBRSkia {
                     | COMMAND_CAP_CLIP_PATH
                     | COMMAND_CAP_DRAW_PATH
                     | COMMAND_CAP_DRAW_ARC
-                    | COMMAND_CAP_DRAW_ROUND_RECT;
+                    | COMMAND_CAP_DRAW_ROUND_RECT
+                    | COMMAND_CAP_FILL_RECT_LINEAR_GRADIENT;
     private static final boolean NATIVE_BRIDGE_AVAILABLE = loadNativeBridge();
     private static final AtomicLong NEXT_SCOPE_ID = new AtomicLong(1);
     private static final int MAX_CACHED_IMAGES = 256;
@@ -180,6 +184,7 @@ public class JBRSkiaService extends JBRSkia {
         if (op == COMMAND_DRAW_IMAGE_REF) return 17;
         if (op == COMMAND_DRAW_ARC) return 16;
         if (op == COMMAND_DRAW_ROUND_RECT) return 15;
+        if (op == COMMAND_FILL_RECT_LINEAR_GRADIENT) return -8;
         if (op == COMMAND_CLEAR) return 4;
         if (op == COMMAND_CLEAR_RECT) return 7;
         if (op == COMMAND_CLIP_RECT) return 8;
@@ -208,6 +213,9 @@ public class JBRSkiaService extends JBRSkia {
         }
         if (expectedLength == -7 && record.op() == COMMAND_DRAW_PATH) {
             return record.recordLength() >= 11;
+        }
+        if (expectedLength == -8 && record.op() == COMMAND_FILL_RECT_LINEAR_GRADIENT) {
+            return record.recordLength() >= 17;
         }
         return expectedLength == record.recordLength();
     }
@@ -307,6 +315,32 @@ public class JBRSkiaService extends JBRSkia {
                     && radiusX1000 >= 0
                     && radiusY1000 >= 0
                     && (paintStyle == COMMAND_PAINT_STYLE_FILL || isValidStrokeMetadata(strokeWidth, strokeCap, strokeJoin, strokeMiter));
+        }
+        if (record.op() == COMMAND_FILL_RECT_LINEAR_GRADIENT) {
+            if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE
+                    && record.recordFlags() != COMMAND_RECORD_FLAG_ANTIALIAS) {
+                return false;
+            }
+            int left1000 = commands[record.argsStart()];
+            int top1000 = commands[record.argsStart() + 1];
+            int right1000 = commands[record.argsStart() + 2];
+            int bottom1000 = commands[record.argsStart() + 3];
+            int tileMode = commands[record.argsStart() + 8];
+            int colorCount = commands[record.argsStart() + 9];
+            if (right1000 < left1000 || bottom1000 < top1000 || tileMode < 0 || tileMode > 3
+                    || colorCount < 2 || colorCount > 16
+                    || record.argsStart() + 10 + colorCount * 2 != record.recordEnd()) {
+                return false;
+            }
+            int previousStop = -1;
+            for (int i = 0; i < colorCount; i++) {
+                int stop1000 = commands[record.argsStart() + 11 + i * 2];
+                if (stop1000 < 0 || stop1000 > 1000 || stop1000 <= previousStop) {
+                    return false;
+                }
+                previousStop = stop1000;
+            }
+            return true;
         }
         if (record.op() == COMMAND_DRAW_IMAGE_ARGB) {
             if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE
@@ -922,6 +956,52 @@ public class JBRSkiaService extends JBRSkia {
                             ));
                             current.draw(roundRect);
                         }
+                    } else if (op == COMMAND_FILL_RECT_LINEAR_GRADIENT) {
+                        if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE
+                                && record.recordFlags() != COMMAND_RECORD_FLAG_ANTIALIAS) {
+                            return false;
+                        }
+                        if (offset + 10 > recordEnd) return false;
+                        int left1000 = commands[offset++];
+                        int top1000 = commands[offset++];
+                        int right1000 = commands[offset++];
+                        int bottom1000 = commands[offset++];
+                        int fromX1000 = commands[offset++];
+                        int fromY1000 = commands[offset++];
+                        int toX1000 = commands[offset++];
+                        int toY1000 = commands[offset++];
+                        int tileMode = commands[offset++];
+                        int colorCount = commands[offset++];
+                        if (right1000 < left1000 || bottom1000 < top1000 || tileMode < 0 || tileMode > 3
+                                || colorCount < 2 || colorCount > 16 || offset + colorCount * 2 != recordEnd) {
+                            return false;
+                        }
+                        Color[] colors = new Color[colorCount];
+                        float[] fractions = new float[colorCount];
+                        int previousStop = -1;
+                        for (int i = 0; i < colorCount; i++) {
+                            colors[i] = new Color(commands[offset++], true);
+                            int stop1000 = commands[offset++];
+                            if (stop1000 < 0 || stop1000 > 1000 || stop1000 <= previousStop) {
+                                return false;
+                            }
+                            previousStop = stop1000;
+                            fractions[i] = stop1000 / 1000f;
+                        }
+                        applyAntialiasing(current, antiAlias);
+                        current.setPaint(new LinearGradientPaint(
+                                new Point2D.Float(fromX1000 / 1000f, fromY1000 / 1000f),
+                                new Point2D.Float(toX1000 / 1000f, toY1000 / 1000f),
+                                fractions,
+                                colors,
+                                gradientCycleMethod(tileMode)
+                        ));
+                        current.fill(new java.awt.geom.Rectangle2D.Float(
+                                left1000 / 1000f,
+                                top1000 / 1000f,
+                                (right1000 - left1000) / 1000f,
+                                (bottom1000 - top1000) / 1000f
+                        ));
                     } else if (op == COMMAND_TRANSLATE) {
                         if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE || offset + 2 != recordEnd) return false;
                         current.translate(commands[offset++] / 1000.0, commands[offset++] / 1000.0);
@@ -1259,6 +1339,12 @@ public class JBRSkiaService extends JBRSkia {
                     RenderingHints.KEY_ANTIALIASING,
                     antiAlias ? RenderingHints.VALUE_ANTIALIAS_ON : RenderingHints.VALUE_ANTIALIAS_OFF
             );
+        }
+
+        private static MultipleGradientPaint.CycleMethod gradientCycleMethod(int tileMode) {
+            if (tileMode == 1) return MultipleGradientPaint.CycleMethod.REPEAT;
+            if (tileMode == 2) return MultipleGradientPaint.CycleMethod.REFLECT;
+            return MultipleGradientPaint.CycleMethod.NO_CYCLE;
         }
 
         private static java.awt.BasicStroke basicStroke(int width, int cap, int join, float miter) {

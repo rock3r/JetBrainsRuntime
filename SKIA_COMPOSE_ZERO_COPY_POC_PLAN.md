@@ -3187,7 +3187,44 @@ Round-rect drawing command Magic Jewel report:
 
 Next checkpoint:
 
-- Start the higher-risk shader-backed paint ABI, likely with a narrow linear-gradient fill first, or add command telemetry counters for these newly supported vector operations.
+- Validate the higher-risk shader-backed paint ABI with a narrow linear-gradient fill first.
+
+### Checkpoint 84: Linear-Gradient Rect Command Support And ABI 30
+
+Status: completed for serialized Compose linear-gradient rectangle fills.
+
+- Bumped the command ABI to `30` across JBR, public JBR API, Skiko, and CMP.
+- Added command capability `COMMAND_CAP_FILL_RECT_LINEAR_GRADIENT` and command opcode `COMMAND_FILL_RECT_LINEAR_GRADIENT`.
+- CMP now preserves serializable metadata on Skiko-backed `LinearGradientShader` instances and records `drawRect(brush = Brush.linearGradient(...))` as command data instead of passing a Skiko `SkShader` pointer across runtimes.
+- The serialized paint payload contains rect bounds, gradient start/end points, tile mode, 2..16 ARGB colors, and monotonic stops in fixed-point units scaled by 1000.
+- JBR validates the variable-length payload, replays native Skia gradients through the m147 `SkGradient` / `SkShaders::LinearGradient` API, and keeps a Java2D fallback via `LinearGradientPaint`.
+- Skiko requires ABI `30` plus the new command capability, preserving the strict mismatch fallback behavior before command replay starts.
+- Magic Jewel now has `MAGIC_JEWEL_COMPOSE_LINEAR_GRADIENT=true`, drawing a green/blue/purple Compose gradient rectangle as the explicit shader-backed paint probe.
+
+Validation completed so far:
+
+- CMP focused recorder test: `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest`
+- Skiko focused interop test: `./gradlew :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`
+- JBR Java service compile against the patched API stubs.
+- JBR native bridge compile against pinned Skia `m147-64a2414108`.
+- Magic Jewel strict command report: `OUT_DIR=/tmp/magic-jewel-linear-gradient-command-abi30-smoke JBR_SKIA_RENDER_MODE=commands MAGIC_JEWEL_COMPOSE_LINEAR_GRADIENT=true SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-interop-report.sh`
+
+Linear-gradient command Magic Jewel report:
+
+- report: `/tmp/magic-jewel-linear-gradient-command-abi30-smoke/report.md`
+- screenshot: `/tmp/magic-jewel-linear-gradient-command-abi30-smoke/new-window.png`
+- sampled log: `/tmp/magic-jewel-linear-gradient-command-abi30-smoke/new-sampled.log`
+- validation status: `passed`
+- fallback markers: `0`
+- Skiko/JBR picture replay frames: `0` / `0`
+- CMP command recorder: `frames=8367 fps=418.4 avg_commands=2461 max_commands=2461 unsupported_frames=0 avg_unsupported=0.0 max_unsupported=0 avg_text_commands=9.0 max_text_commands=9 avg_paragraph_text_commands=0.0 max_paragraph_text_commands=0 avg_image_defines=0.0 max_image_defines=0 avg_image_refs=0.0 max_image_refs=0 avg_image_cache_clears=0.0 max_image_cache_clears=0 reasons=none`
+- Skiko/JBR command frames: `8368` / `8368`
+- JBR command timing: `frames=8368 avg_total_ms=0.860 max_total_ms=2.685 avg_draw_ms=0.095 max_draw_ms=0.303 avg_flush_ms=0.749 max_flush_ms=2.566 avg_paragraph_ms=0.000 max_paragraph_ms=0.000 avg_paragraph_commands=0.0 max_paragraph_commands=0`
+- screenshot assertion: `passed`
+
+Next checkpoint:
+
+- Add strict command-stream validation for gradient fallbacks/edge cases (unsupported shader transforms, non-linear shaders, too many stops) and start the next shader-backed paint shape once the fallback surface is pinned.
 
 Use separate worktrees for every existing repo touched:
 
