@@ -3795,6 +3795,31 @@ Next checkpoint:
 
 - Convert the synthetic/parser compatibility coverage into a full packaged artifact matrix once we have named local old/new Skiko and JBR API/JBR patch bundles.
 
+### Checkpoint 103: Machine-Readable Report Summary
+
+Status: completed in Magic Jewel report validation.
+
+- `scripts/jbr-skia-interop-report.sh` now writes `summary.properties` beside `report.md`.
+- The summary uses stable `key=value` entries for automation:
+  - `validation_status`
+  - `validation_failures`
+  - `fallback_new_count`
+  - `cmp_unsupported_reasons`
+  - `skiko_picture_frames` / `jbr_picture_frames`
+  - `skiko_command_frames` / `jbr_command_frames`
+  - `screenshot_status`
+- Parser tests now assert the machine-readable summary for passing strict command reports, failed validation reports, picture fallback reports, and handshake fallback reports.
+- Magic Jewel README documents the summary artifact.
+- `ROADMAP.md` marks the CI-friendly report summary complete.
+
+Validation:
+
+- Magic Jewel report parser tests: `bash scripts/test-jbr-skia-report-validation.sh`
+
+Next checkpoint:
+
+- Add async-profiler hooks to the report harness, then defer quiet-machine benchmark collection until the host load is predictable.
+
 Use separate worktrees for every existing repo touched:
 
 - `JetBrainsRuntime` worktree: `jbr-skia-compose-poc`
