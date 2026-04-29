@@ -3067,6 +3067,30 @@ Next checkpoint:
 
 - Add an explicit unsupported-operation fallback probe for `clipPath` or shader-backed paint, so the matrix includes both compatibility fallback and recorder-level operation fallback.
 
+### Checkpoint 79: `clipPath` Unsupported-Operation Fallback
+
+Status: completed for recorder-level unsupported-operation fallback validation.
+
+- Added a Magic Jewel `MAGIC_JEWEL_COMPOSE_CLIP_PATH=true` probe that draws through Compose `clipPath`.
+- CMP's existing command recorder marks `clipPath` unsupported and marks subsequent drawing in that scope as `unsupportedScope`.
+- In strict command mode, Skiko receives no command stream for that frame and falls back to the existing picture replay path.
+- The Magic Jewel validator already covers this operation-level fallback shape via `EXPECT_COMMAND_FALLBACK_REASON=clipPath`: zero Skiko/JBR command frames, positive Skiko/JBR picture replay frames, the expected CMP unsupported reason, and a passing mixed screenshot assertion.
+
+`clipPath` fallback Magic Jewel report:
+
+- report: `/tmp/magic-jewel-clippath-fallback-smoke/report.md`
+- screenshot: `/tmp/magic-jewel-clippath-fallback-smoke/new-window.png`
+- sampled log: `/tmp/magic-jewel-clippath-fallback-smoke/new-sampled.log`
+- validation status: `passed`
+- CMP command recorder: `frames=164 fps=54.7 avg_commands=2486 max_commands=2487 unsupported_frames=164 avg_unsupported=2.0 max_unsupported=2 avg_text_commands=9.0 max_text_commands=9 avg_paragraph_text_commands=0.0 max_paragraph_text_commands=0 avg_image_defines=0.0 max_image_defines=0 avg_image_refs=0.0 max_image_refs=0 avg_image_cache_clears=0.0 max_image_cache_clears=0 reasons=unsupportedScope:164,clipPath:164`
+- Skiko/JBR command frames: `0` / `0`
+- Skiko/JBR picture replay frames: `164` / `164`
+- screenshot assertion: `passed`
+
+Next checkpoint:
+
+- Choose between adding command support for a common remaining primitive (`clipPath`, shader-backed fills, or path drawing) or tightening the report to distinguish command fallback kinds in the summary section.
+
 Use separate worktrees for every existing repo touched:
 
 - `JetBrainsRuntime` worktree: `jbr-skia-compose-poc`
