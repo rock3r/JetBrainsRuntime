@@ -3039,6 +3039,34 @@ Next checkpoint:
 
 - Continue expanding strict command support or fallback coverage based on the next missing operation observed in CMP.
 
+### Checkpoint 78: Public-API-Missing Fallback Validation
+
+Status: completed for deterministic missing-public-accessor fallback validation.
+
+- Added a Magic Jewel smoke path that points `JBR_API_SHIM` at a missing jar, leaving the patched `java.desktop` mirror visible while removing the public `com.jetbrains.JBR` accessor from Skiko's discovery path.
+- Updated the Magic Jewel validator so `EXPECT_COMMAND_FALLBACK_REASON=public-api-missing` requires:
+  - a structured `public-api-missing` fallback marker in the full new-mode log,
+  - zero Skiko command frames,
+  - zero JBR command frames,
+  - a passing mixed Swing/Compose screenshot assertion.
+- This complements the ABI mismatch and command-capability mismatch smokes: all three compatibility gates now have deterministic Magic Jewel coverage with parseable markers.
+
+Public-API-missing fallback Magic Jewel report:
+
+- report: `/tmp/magic-jewel-public-api-missing-fallback-smoke/report.md`
+- screenshot: `/tmp/magic-jewel-public-api-missing-fallback-smoke/new-window.png`
+- sampled log: `/tmp/magic-jewel-public-api-missing-fallback-smoke/new-sampled.log`
+- validation status: `passed`
+- fallback markers: `1`
+- CMP command recorder: `frames=938 fps=312.7 avg_commands=2481 max_commands=2481 unsupported_frames=0 avg_unsupported=0.0 max_unsupported=0 avg_text_commands=9.0 max_text_commands=9 avg_paragraph_text_commands=0.0 max_paragraph_text_commands=0 avg_image_defines=0.0 max_image_defines=0 avg_image_refs=0.0 max_image_refs=0 avg_image_cache_clears=0.0 max_image_cache_clears=0 reasons=none`
+- Skiko command frames: `0`
+- JBR command frames: `0`
+- screenshot assertion: `passed`
+
+Next checkpoint:
+
+- Add an explicit unsupported-operation fallback probe for `clipPath` or shader-backed paint, so the matrix includes both compatibility fallback and recorder-level operation fallback.
+
 Use separate worktrees for every existing repo touched:
 
 - `JetBrainsRuntime` worktree: `jbr-skia-compose-poc`
