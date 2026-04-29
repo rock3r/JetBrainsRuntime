@@ -2377,6 +2377,49 @@ Next checkpoint:
 
 - Start the shaped-text/paragraph command design in earnest. The first implementation target should be a JBR-owned paragraph/text-run command that can render unsupported text without raster image fallback, while preserving the strict ABI/build gate and the SKP/image paths as correctness fallbacks.
 
+### Checkpoint 60: JBR-Owned Paragraph Text Command And ABI 18
+
+Status: completed for a first single-style paragraph command that keeps text objects JBR-owned.
+
+- Added `COMMAND_CAP_DRAW_PARAGRAPH_UTF16` and `COMMAND_DRAW_PARAGRAPH_UTF16` to the JBR private API and public Runtime API mirror.
+- Bumped the command ABI to `ABI_ID = 18` across Runtime API, Skiko, CMP, JBR Java replay, and JBR native replay.
+- Added Java validation and Java2D fallback replay for the paragraph record shape: `x1000`, `y1000`, `width1000`, `fontSize1000`, `argb`, `charCount`, and UTF-16 code units.
+- Added native JBR replay for the paragraph command using JBR-owned Skia Paragraph, CoreText font manager, and ICU Unicode support. No Skiko `SkTypeface`, `SkFont`, or paragraph pointer crosses the ABI.
+- Added CMP recorder support and a distinct `paragraphTextCommands` marker so the report can prove paragraph-text usage separately from simple text and image refs.
+- Changed `SkiaParagraph` command recording to try simple text first, then the JBR-owned paragraph command, then the existing text-as-image fallback.
+- Added Magic Jewel strict report support for `EXPECT_MIN_PARAGRAPH_TEXT_COMMANDS`.
+
+Verification completed:
+
+- Runtime API `bash tools/build.sh process`.
+- Runtime API `bash tools/build.sh dev $(/usr/libexec/java_home -v 21) /tmp/jbr-api-skia-dev`.
+- `/tmp/jbr-api-shim.jar` refreshed from `/tmp/jbr-api-skia-dev/jbr-api-SNAPSHOT.jar`.
+- Skiko `./gradlew :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`.
+- Skiko `./gradlew :skiko:publishToMavenLocal`.
+- CMP `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest`.
+- CMP desktop jars rebuilt with `SKIKO_VERSION=0.0.0-SNAPSHOT`.
+- Magic Jewel `./scripts/test-jbr-skia-report-validation.sh`.
+- JBR isolated patched-class compile into `/tmp/jbr-skia-abi18-compile`.
+- JBR patched module refreshed at `/tmp/jbr-skia-run/desktop`.
+- JBR native dylib rebuild into `/tmp/jbr-skia-native/libjbrskiainterop.dylib`.
+
+ABI 18 paragraph-text strict command Magic Jewel report:
+
+- report: `/tmp/magic-jewel-paragraph-text-abi18-smoke/report.md`
+- screenshot: `/tmp/magic-jewel-paragraph-text-abi18-smoke/new-window.png`
+- validation status: `passed`
+- fallback markers: `0`
+- picture replay frames: `0`
+- `EXPECT_MIN_TEXT_COMMANDS`: `8`
+- `EXPECT_MIN_PARAGRAPH_TEXT_COMMANDS`: `1`
+- CMP command recorder: `frames=110 fps=36.7 avg_commands=2545 max_commands=2546 unsupported_frames=0 avg_unsupported=0.0 max_unsupported=0 avg_text_commands=9.0 max_text_commands=9 avg_paragraph_text_commands=1.0 max_paragraph_text_commands=1 avg_image_defines=0.0 max_image_defines=0 avg_image_refs=0.0 max_image_refs=0 avg_image_cache_clears=0.0 max_image_cache_clears=0 reasons=none`
+- Skiko/JBR command frames: `109` / `109`
+- screenshot assertion: `passed`
+
+Next checkpoint:
+
+- Tighten paragraph fidelity: pass font family/style/weight and paragraph alignment/line metrics through the command ABI, then add a screenshot/report probe that compares the paragraph-command path against the existing Skiko paragraph output for representative Jewel labels.
+
 Use separate worktrees for every existing repo touched:
 
 - `JetBrainsRuntime` worktree: `jbr-skia-compose-poc`
@@ -2551,7 +2594,7 @@ Primary target: **macOS + Metal + direct canvas path**. JCEF, video/external sur
   - smoke test Swing window paint with Metal enabled
   - verify `JBRSkiaService` is registered with `@JBRApi.Service` and `@JBRApi.Provides`
   - verify a synthetic test-only `@JBRApi.Provided("JBRSkia")` interface can resolve the provider through `JBRApi.internalService()`
-  - verify an external-client test reads static `ABI_ID` / `BUILD_ID` reflectively via `Class.forName("com.jetbrains.JBRSkia")`, with `com.jetbrains.desktop.JBRSkia` covered only as the local patched-runtime fallback
+  - verify an external-client test reads static `ABI_ID` / `BUILD_ID` reflectively via `Class.forName("com.jetbrains.desktop.JBRSkia")`
   - verify an external-client test acquires `JBRSkia` via reflection on `com.jetbrains.JBR.getJBRSkia()` or the final public accessor name and receives a non-null service when JBR is compatible
   - verify unavailable provider construction throws `JBRApi.ServiceNotAvailableException` and clients observe a null service
   - verify `acquireCanvas` returns non-null only in valid paint scope
@@ -2587,7 +2630,7 @@ Primary target: **macOS + Metal + direct canvas path**. JCEF, video/external sur
 - macOS/Metal is the only required PoC platform.
 - Direct canvas is v1 and productionization candidate.
 - Shared texture, JCEF, and video/external surfaces are v2 nice-to-haves.
-- ABI id `1` covers pointer types exposed, native C ABI layout, scope layout, lifecycle rules, threading rules, and Metal object contract; Skia revision and Skia compile flags hash are tracked separately in `BUILD_ID`.
+- `ABI_ID` covers pointer types exposed, native C ABI layout, scope layout, lifecycle rules, threading rules, and Metal object contract; Skia revision and Skia compile flags hash are tracked separately in `BUILD_ID`.
 - On any incompatibility, the user gets one clear warning and Compose falls back to old behavior.
 - Magic Jewel is a new local project at `~/src/magic-jewel`, not a fourth upstream repo.
 

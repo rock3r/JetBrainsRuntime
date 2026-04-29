@@ -52,10 +52,17 @@
 #include "ganesh/mtl/GrMtlDirectContext.h"
 #include "ganesh/mtl/GrMtlTypes.h"
 #include "include/gpu/ganesh/SkSurfaceGanesh.h"
+#include "modules/skparagraph/include/FontCollection.h"
+#include "modules/skparagraph/include/Paragraph.h"
+#include "modules/skparagraph/include/ParagraphBuilder.h"
+#include "modules/skparagraph/include/ParagraphStyle.h"
+#include "modules/skparagraph/include/TextStyle.h"
+#include "modules/skunicode/include/SkUnicode_icu.h"
+#include "ports/SkFontMgr_mac_ct.h"
 
 #include "MTLSurfaceDataBase.h"
 
-static constexpr jint ABI_ID = 17;
+static constexpr jint ABI_ID = 18;
 static constexpr jint COMMAND_STREAM_MAGIC = 1246972723;
 static constexpr jint COMMAND_STREAM_HEADER_SIZE = 6;
 static constexpr jint COMMAND_STREAM_FLAGS_NONE = 0;
@@ -84,6 +91,7 @@ static constexpr jint COMMAND_DEFINE_IMAGE_ARGB = 15;
 static constexpr jint COMMAND_DRAW_IMAGE_REF = 16;
 static constexpr jint COMMAND_DRAW_TEXT_UTF16 = 17;
 static constexpr jint COMMAND_CLEAR_IMAGE_CACHE = 18;
+static constexpr jint COMMAND_DRAW_PARAGRAPH_UTF16 = 19;
 
 static std::mutex gDirectContextMutex;
 static std::unordered_map<void*, sk_sp<GrDirectContext>> gDirectContextsByMtlContext;
@@ -225,6 +233,36 @@ static bool appendUtf8CodePoint(std::string& text, uint32_t codePoint) {
         return true;
     }
     return false;
+}
+
+template<typename CommandWords>
+static bool appendUtf16CommandText(std::string& text, CommandWords commands, jsize& offset, jint charCount) {
+    text.reserve(static_cast<size_t>(charCount) * 3);
+    for (jint index = 0; index < charCount; index++) {
+        jint codeUnit = commands[offset++];
+        if (codeUnit < 0 || codeUnit > 0xffff) {
+            return false;
+        }
+        if (codeUnit >= 0xd800 && codeUnit <= 0xdbff) {
+            if (index + 1 >= charCount) {
+                return false;
+            }
+            jint lowSurrogate = commands[offset++];
+            index++;
+            if (lowSurrogate < 0xdc00 || lowSurrogate > 0xdfff) {
+                return false;
+            }
+            uint32_t codePoint = 0x10000
+                    + ((static_cast<uint32_t>(codeUnit) - 0xd800) << 10)
+                    + (static_cast<uint32_t>(lowSurrogate) - 0xdc00);
+            if (!appendUtf8CodePoint(text, codePoint)) {
+                return false;
+            }
+        } else if (!appendUtf8CodePoint(text, static_cast<uint32_t>(codeUnit))) {
+            return false;
+        }
+    }
+    return true;
 }
 
 struct IntCommandWords {
@@ -521,30 +559,8 @@ static bool drawCommandList(SkCanvas* canvas, CommandWords commands, jsize comma
                     return false;
                 }
                 std::string text;
-                text.reserve(static_cast<size_t>(charCount) * 3);
-                for (jint index = 0; index < charCount; index++) {
-                    jint codeUnit = commands[offset++];
-                    if (codeUnit < 0 || codeUnit > 0xffff) {
-                        return false;
-                    }
-                    if (codeUnit >= 0xd800 && codeUnit <= 0xdbff) {
-                        if (index + 1 >= charCount) {
-                            return false;
-                        }
-                        jint lowSurrogate = commands[offset++];
-                        index++;
-                        if (lowSurrogate < 0xdc00 || lowSurrogate > 0xdfff) {
-                            return false;
-                        }
-                        uint32_t codePoint = 0x10000
-                                + ((static_cast<uint32_t>(codeUnit) - 0xd800) << 10)
-                                + (static_cast<uint32_t>(lowSurrogate) - 0xdc00);
-                        if (!appendUtf8CodePoint(text, codePoint)) {
-                            return false;
-                        }
-                    } else if (!appendUtf8CodePoint(text, static_cast<uint32_t>(codeUnit))) {
-                        return false;
-                    }
+                if (!appendUtf16CommandText(text, commands, offset, charCount)) {
+                    return false;
                 }
                 SkFont font(nullptr, fontSize);
                 font.setEdging((recordFlags & COMMAND_RECORD_FLAG_ANTIALIAS) != 0
@@ -554,6 +570,44 @@ static bool drawCommandList(SkCanvas* canvas, CommandWords commands, jsize comma
                 paint.setAntiAlias((recordFlags & COMMAND_RECORD_FLAG_ANTIALIAS) != 0);
                 paint.setColor(color);
                 canvas->drawSimpleText(text.data(), text.size(), SkTextEncoding::kUTF8, x, baseline, font, paint);
+                break;
+            }
+            case COMMAND_DRAW_PARAGRAPH_UTF16: {
+                if ((recordFlags & ~COMMAND_RECORD_FLAG_ANTIALIAS) != 0 || offset + 6 > recordEnd) {
+                    return false;
+                }
+                const SkScalar x = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkScalar y = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkScalar paragraphWidth = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkScalar fontSize = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkColor color = skColorFromArgb(commands[offset++]);
+                const jint charCount = commands[offset++];
+                if (paragraphWidth <= 0.0f || fontSize <= 0.0f ||
+                        charCount < 0 || charCount > 4096 || offset + charCount != recordEnd) {
+                    return false;
+                }
+                std::string text;
+                if (!appendUtf16CommandText(text, commands, offset, charCount)) {
+                    return false;
+                }
+                skia::textlayout::ParagraphStyle paragraphStyle;
+                skia::textlayout::TextStyle textStyle;
+                textStyle.setColor(color);
+                textStyle.setFontSize(fontSize);
+                auto fontCollection = sk_make_sp<skia::textlayout::FontCollection>();
+                fontCollection->setDefaultFontManager(SkFontMgr_New_CoreText(nullptr));
+                auto builder = skia::textlayout::ParagraphBuilder::make(
+                        paragraphStyle,
+                        fontCollection,
+                        SkUnicodes::ICU::Make());
+                builder->pushStyle(textStyle);
+                builder->addText(text.data(), text.size());
+                std::unique_ptr<skia::textlayout::Paragraph> paragraph = builder->Build();
+                if (paragraph == nullptr) {
+                    return false;
+                }
+                paragraph->layout(paragraphWidth);
+                paragraph->paint(canvas, x, y);
                 break;
             }
             case COMMAND_CLEAR: {
