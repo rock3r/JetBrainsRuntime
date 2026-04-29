@@ -117,6 +117,6 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [ ] Font/typeface ownership through the JBR Skia runtime.
 - [ ] JBR-owned generic shader factory and handles for non-serialized shader families.
 - [ ] Screen migration/context invalidation hardening.
-- [ ] Real menu stress tests beyond popup-window coverage.
+- [x] Real menu stress tests beyond popup-window coverage.
 - [ ] JCEF/shared-texture exploration after Compose is solid.
 - [ ] Windows/Linux backend adapter investigation after macOS MVP.

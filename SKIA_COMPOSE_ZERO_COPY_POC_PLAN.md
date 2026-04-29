@@ -4869,3 +4869,47 @@ Validation:
 
 Next:
 - Feed this scaffold with real old JBR API, JBR native, Skiko, desktop-patch, and CMP bundles when they are available, then close the full packaged old/new matrix item.
+
+## Checkpoint: Swing Menu Popup Stress
+
+Date: 2026-04-29
+
+Status: completed as a Magic Jewel menu-layering stress slice.
+
+Why:
+- The glass-pane popup and undecorated popup-window checks cover two important layering shapes, but real Swing/Jewel apps lean heavily on menu popups.
+- A menu check should prove the command-mode Compose surface can coexist with an animated Swing `JPopupMenu` without falling back to picture replay.
+
+Changes:
+- Magic Jewel added `MAGIC_JEWEL_MENU_STRESS=true`.
+- The sample opens a `JPopupMenu` over the `ComposePanel`, containing the same animated Swing popup panel used by the glass-pane smoke.
+- The app emits `MAGIC_JEWEL_MENU_SHOWN` plus the existing `MAGIC_JEWEL_POPUP_FRAME` paint markers.
+- The report parser records `menu_new_shown` and fails strict validation if menu stress is enabled but the menu-shown marker is missing.
+- The main-window screenshot assertions now have menu-specific pixel checks (`menuWhite`, `menuYellow`) instead of reusing the glass-pane popup's pink/cyan signature.
+- `scripts/jbr-skia-command-probe-suite.sh` now includes a `commands-menu` case.
+- Magic Jewel README documents the new menu stress command.
+
+Validation:
+- Syntax checks:
+  - `bash -n scripts/jbr-skia-interop-report.sh`
+  - `bash -n scripts/jbr-skia-command-probe-suite.sh`
+  - `bash -n scripts/test-jbr-skia-report-validation.sh`
+  - result: passed.
+- Parser fixtures:
+  - command: `bash scripts/test-jbr-skia-report-validation.sh`
+  - result: `JBR_SKIA_REPORT_VALIDATION_TESTS passed`.
+- Compile:
+  - command: `./gradlew --no-daemon compileKotlin`
+  - result: passed.
+- Live menu smoke:
+  - command: `OUT_DIR=/tmp/magic-jewel-menu-stress-smoke-2 DURATION_SECONDS=4 WARMUP_SECONDS=1 SAMPLE_INTERVAL_SECONDS=1 MAGIC_JEWEL_MENU_STRESS=true EXPECT_MIN_POPUP_FRAMES=5 JBR_SKIA_RENDER_MODE=commands SKIKO_VERSION=0.0.0-SNAPSHOT bash scripts/jbr-skia-interop-report.sh`
+  - result: passed.
+  - summary: `fallback_new_count=0`, `skiko_picture_frames=0`, `jbr_picture_frames=0`, `skiko_command_frames=601`, `jbr_command_frames=601`, `menu_new_shown=1`, `popup_new_frames=69`, `screenshot_status=passed`.
+  - screenshot assertion: `menuWhite=150652`, `menuYellow=16182`.
+- Command-probe suite case:
+  - command: `OUT_ROOT=/tmp/magic-jewel-command-menu-suite-smoke CASES=commands-menu DURATION_SECONDS=4 WARMUP_SECONDS=1 SAMPLE_INTERVAL_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT bash scripts/jbr-skia-command-probe-suite.sh`
+  - result: `JBR_SKIA_COMMAND_PROBE_SUITE passed out_root=/tmp/magic-jewel-command-menu-suite-smoke`
+  - case summary: `status=passed`, `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, `jbr_command_frames=599`.
+
+Next:
+- Continue macOS MVP hardening with either old-artifact bundles for the artifact matrix or remaining rendering edge cases; quiet-machine benchmark collection remains deferred until host load is stable.
