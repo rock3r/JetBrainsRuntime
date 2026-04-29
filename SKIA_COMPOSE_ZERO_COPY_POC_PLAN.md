@@ -2921,6 +2921,36 @@ Next checkpoint:
 
 - Add an ABI mismatch smoke that deliberately runs Skiko/CMP against an incompatible JBRSkia `ABI_ID` and validates a structured compatibility fallback before service/native work is attempted.
 
+### Checkpoint 74: ABI-Mismatch Fallback Validation
+
+Status: completed for deterministic compatibility-gate fallback validation.
+
+- Added a Skiko test-only expected-ABI override (`skiko.jbr.interop.expectedAbiIdForTest`) so the runtime can exercise the real reflective discovery path against an intentionally incompatible expected ABI without rebuilding JBR.
+- Verified the Skiko unit test path rejects a compatible ABI 25 JBR when the test override expects ABI 999 and emits `SKIKO_JBR_INTEROP_FALLBACK reason=abi-mismatch`.
+- Wired the override through Magic Jewel's `run-jbr-skia.sh` and report harness.
+- Updated the Magic Jewel validator so `EXPECT_COMMAND_FALLBACK_REASON=abi-mismatch` requires:
+  - a structured `abi-mismatch` fallback marker in the full new-mode log,
+  - zero Skiko command frames,
+  - zero JBR command frames,
+  - a passing mixed Swing/Compose screenshot assertion.
+- Kept fallback marker counts based on the full log rather than only the sampled log so one-shot compatibility warnings emitted before the measurement window remain visible in the report.
+
+ABI-mismatch fallback Magic Jewel report:
+
+- report: `/tmp/magic-jewel-abi-mismatch-fallback-smoke-2/report.md`
+- screenshot: `/tmp/magic-jewel-abi-mismatch-fallback-smoke-2/new-window.png`
+- sampled log: `/tmp/magic-jewel-abi-mismatch-fallback-smoke-2/new-sampled.log`
+- validation status: `passed`
+- fallback markers: `1`
+- CMP command recorder: `frames=689 fps=229.7 avg_commands=2480 max_commands=2481 unsupported_frames=0 avg_unsupported=0.0 max_unsupported=0 avg_text_commands=9.0 max_text_commands=9 avg_paragraph_text_commands=0.0 max_paragraph_text_commands=0 avg_image_defines=0.0 max_image_defines=0 avg_image_refs=0.0 max_image_refs=0 avg_image_cache_clears=0.0 max_image_cache_clears=0 reasons=none`
+- Skiko command frames: `0`
+- JBR command frames: `0`
+- screenshot assertion: `passed`
+
+Next checkpoint:
+
+- Add the remaining fallback-matrix smoke for command capability mismatch or public API absence, then revisit the visually observed low-FPS case with a focused report that separates app draw markers, Swing repaint markers, and JBR command timing.
+
 Use separate worktrees for every existing repo touched:
 
 - `JetBrainsRuntime` worktree: `jbr-skia-compose-poc`
