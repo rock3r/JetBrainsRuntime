@@ -5030,3 +5030,34 @@ Note:
 
 Next:
 - Keep generic shader factory work deferred; continue adding explicit fallback probes for unsupported paint/object families as they show up in real Jewel content.
+
+## Checkpoint: Command Probe Suite TSV Summary
+
+Date: 2026-04-29
+
+Status: completed as command-probe harness hardening.
+
+Change:
+- Magic Jewel `scripts/jbr-skia-command-probe-suite.sh` now writes `suite.tsv`.
+- Each row records:
+  - case name
+  - validation status
+  - compatibility fallback count
+  - recorder unsupported reasons
+  - JBR picture frame count
+  - JBR command frame count
+  - JBR command FPS
+  - report path.
+- README documents the suite summary file.
+
+Validation:
+- Syntax check:
+  - command: `bash -n scripts/jbr-skia-command-probe-suite.sh`
+  - result: passed.
+- Focused suite smoke:
+  - command: `OUT_ROOT=/tmp/magic-jewel-command-suite-tsv-smoke CASES=commands-color-filter-fallback DURATION_SECONDS=2 WARMUP_SECONDS=1 SAMPLE_INTERVAL_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT bash scripts/jbr-skia-command-probe-suite.sh`
+  - result: `JBR_SKIA_COMMAND_PROBE_SUITE passed out_root=/tmp/magic-jewel-command-suite-tsv-smoke`
+  - `suite.tsv`: `commands-color-filter-fallback passed 0 colorFilter:396 396 0 0.0 .../report.md`.
+
+Next:
+- Use the command-probe `suite.tsv` alongside the benchmark and artifact matrix summaries for handoff/CI jobs.
