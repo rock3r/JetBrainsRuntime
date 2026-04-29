@@ -42,6 +42,7 @@ import java.awt.Shape;
 import java.awt.geom.Area;
 import java.awt.geom.Arc2D;
 import java.awt.geom.Path2D;
+import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -87,7 +88,8 @@ public class JBRSkiaService extends JBRSkia {
                     | COMMAND_CAP_PARAGRAPH_BACKGROUND
                     | COMMAND_CAP_CLIP_PATH
                     | COMMAND_CAP_DRAW_PATH
-                    | COMMAND_CAP_DRAW_ARC;
+                    | COMMAND_CAP_DRAW_ARC
+                    | COMMAND_CAP_DRAW_ROUND_RECT;
     private static final boolean NATIVE_BRIDGE_AVAILABLE = loadNativeBridge();
     private static final AtomicLong NEXT_SCOPE_ID = new AtomicLong(1);
     private static final int MAX_CACHED_IMAGES = 256;
@@ -177,6 +179,7 @@ public class JBRSkiaService extends JBRSkia {
         if (op == COMMAND_DRAW_PATH) return -7;
         if (op == COMMAND_DRAW_IMAGE_REF) return 17;
         if (op == COMMAND_DRAW_ARC) return 16;
+        if (op == COMMAND_DRAW_ROUND_RECT) return 15;
         if (op == COMMAND_CLEAR) return 4;
         if (op == COMMAND_CLEAR_RECT) return 7;
         if (op == COMMAND_CLIP_RECT) return 8;
@@ -280,6 +283,29 @@ public class JBRSkiaService extends JBRSkia {
                     && right1000 >= left1000
                     && bottom1000 >= top1000
                     && (useCenter == 0 || useCenter == 1)
+                    && (paintStyle == COMMAND_PAINT_STYLE_FILL || isValidStrokeMetadata(strokeWidth, strokeCap, strokeJoin, strokeMiter));
+        }
+        if (record.op() == COMMAND_DRAW_ROUND_RECT) {
+            if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE
+                    && record.recordFlags() != COMMAND_RECORD_FLAG_ANTIALIAS) {
+                return false;
+            }
+            int paintStyle = commands[record.argsStart()];
+            int left1000 = commands[record.argsStart() + 2];
+            int top1000 = commands[record.argsStart() + 3];
+            int right1000 = commands[record.argsStart() + 4];
+            int bottom1000 = commands[record.argsStart() + 5];
+            int radiusX1000 = commands[record.argsStart() + 6];
+            int radiusY1000 = commands[record.argsStart() + 7];
+            int strokeWidth = commands[record.argsStart() + 8];
+            int strokeCap = commands[record.argsStart() + 9];
+            int strokeJoin = commands[record.argsStart() + 10];
+            int strokeMiter = commands[record.argsStart() + 11];
+            return (paintStyle == COMMAND_PAINT_STYLE_FILL || paintStyle == COMMAND_PAINT_STYLE_STROKE)
+                    && right1000 >= left1000
+                    && bottom1000 >= top1000
+                    && radiusX1000 >= 0
+                    && radiusY1000 >= 0
                     && (paintStyle == COMMAND_PAINT_STYLE_FILL || isValidStrokeMetadata(strokeWidth, strokeCap, strokeJoin, strokeMiter));
         }
         if (record.op() == COMMAND_DRAW_IMAGE_ARGB) {
@@ -852,6 +878,49 @@ public class JBRSkiaService extends JBRSkia {
                                     Math.max(1f, strokeMiter / 1000f)
                             ));
                             current.draw(arc);
+                        }
+                    } else if (op == COMMAND_DRAW_ROUND_RECT) {
+                        if (offset + 12 != recordEnd) return false;
+                        int paintStyle = commands[offset++];
+                        int argb = commands[offset++];
+                        int left1000 = commands[offset++];
+                        int top1000 = commands[offset++];
+                        int right1000 = commands[offset++];
+                        int bottom1000 = commands[offset++];
+                        int radiusX1000 = commands[offset++];
+                        int radiusY1000 = commands[offset++];
+                        int strokeWidth = commands[offset++];
+                        int strokeCap = commands[offset++];
+                        int strokeJoin = commands[offset++];
+                        int strokeMiter = commands[offset++];
+                        if ((paintStyle != COMMAND_PAINT_STYLE_FILL && paintStyle != COMMAND_PAINT_STYLE_STROKE)
+                                || right1000 < left1000
+                                || bottom1000 < top1000
+                                || radiusX1000 < 0
+                                || radiusY1000 < 0
+                                || (paintStyle == COMMAND_PAINT_STYLE_STROKE && !isValidStrokeMetadata(strokeWidth, strokeCap, strokeJoin, strokeMiter))) {
+                            return false;
+                        }
+                        RoundRectangle2D.Float roundRect = new RoundRectangle2D.Float(
+                                left1000 / 1000f,
+                                top1000 / 1000f,
+                                (right1000 - left1000) / 1000f,
+                                (bottom1000 - top1000) / 1000f,
+                                radiusX1000 / 1000f,
+                                radiusY1000 / 1000f
+                        );
+                        applyAntialiasing(current, antiAlias);
+                        current.setColor(new Color(argb, true));
+                        if (paintStyle == COMMAND_PAINT_STYLE_FILL) {
+                            current.fill(roundRect);
+                        } else {
+                            current.setStroke(new BasicStroke(
+                                    strokeWidth,
+                                    strokeCap == 1 ? BasicStroke.CAP_ROUND : strokeCap == 2 ? BasicStroke.CAP_SQUARE : BasicStroke.CAP_BUTT,
+                                    strokeJoin == 1 ? BasicStroke.JOIN_ROUND : strokeJoin == 2 ? BasicStroke.JOIN_BEVEL : BasicStroke.JOIN_MITER,
+                                    Math.max(1f, strokeMiter / 1000f)
+                            ));
+                            current.draw(roundRect);
                         }
                     } else if (op == COMMAND_TRANSLATE) {
                         if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE || offset + 2 != recordEnd) return false;

@@ -3162,9 +3162,32 @@ Arc drawing command Magic Jewel report:
 - JBR command timing: `frames=778 avg_total_ms=1.207 max_total_ms=2.891 avg_draw_ms=0.119 max_draw_ms=0.245 avg_flush_ms=1.067 max_flush_ms=2.747 avg_paragraph_ms=0.000 max_paragraph_ms=0.000 avg_paragraph_commands=0.0 max_paragraph_commands=0`
 - screenshot assertion: `passed`
 
+### Checkpoint 83: Round-Rect Drawing Command Support And ABI 29
+
+Status: completed for solid-color Compose round-rect fill/stroke command recording and JBR/Skia replay.
+
+- Bumped the command ABI to `29` across JBR, public JBR API, Skiko, and CMP.
+- Added command capability `COMMAND_CAP_DRAW_ROUND_RECT` and command opcode `COMMAND_DRAW_ROUND_RECT`.
+- CMP now records Compose `drawRoundRect` calls with paint style, ARGB, bounds, independent X/Y radii, and stroke metadata instead of approximating stroked round-rects as four straight lines.
+- JBR validates the fixed-length round-rect payload, supports Java2D fallback drawing with `RoundRectangle2D`, and replays native Skia `drawRRect`.
+- Magic Jewel now has `MAGIC_JEWEL_COMPOSE_DRAW_ROUND_RECT=true`, drawing a purple rounded rectangle with a white stroke as an explicit strict-command probe.
+
+Round-rect drawing command Magic Jewel report:
+
+- report: `/tmp/magic-jewel-roundrect-command-abi29-smoke/report.md`
+- screenshot: `/tmp/magic-jewel-roundrect-command-abi29-smoke/new-window.png`
+- sampled log: `/tmp/magic-jewel-roundrect-command-abi29-smoke/new-sampled.log`
+- validation status: `passed`
+- fallback markers: `0`
+- Skiko/JBR picture replay frames: `0` / `0`
+- CMP command recorder: `frames=229 fps=76.3 avg_commands=2424 max_commands=2424 unsupported_frames=0 avg_unsupported=0.0 max_unsupported=0 avg_text_commands=9.0 max_text_commands=9 avg_paragraph_text_commands=0.0 max_paragraph_text_commands=0 avg_image_defines=0.0 max_image_defines=0 avg_image_refs=0.0 max_image_refs=0 avg_image_cache_clears=0.0 max_image_cache_clears=0 reasons=none`
+- Skiko/JBR command frames: `229` / `229`
+- JBR command timing: `frames=229 avg_total_ms=1.225 max_total_ms=7.800 avg_draw_ms=0.112 max_draw_ms=0.787 avg_flush_ms=1.087 max_flush_ms=7.527 avg_paragraph_ms=0.000 max_paragraph_ms=0.000 avg_paragraph_commands=0.0 max_paragraph_commands=0`
+- screenshot assertion: `passed`
+
 Next checkpoint:
 
-- Revisit round-rect fidelity, especially stroked round-rects, or start the higher-risk shader-backed paint ABI.
+- Start the higher-risk shader-backed paint ABI, likely with a narrow linear-gradient fill first, or add command telemetry counters for these newly supported vector operations.
 
 Use separate worktrees for every existing repo touched:
 
