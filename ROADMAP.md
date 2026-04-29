@@ -11,6 +11,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Skiko discovery/fallback path added with structured `SKIKO_JBR_INTEROP_FALLBACK reason=...` markers.
 - [x] CMP routes ComposePanel to the JBR Skia command path when the strict compatibility gate passes.
 - [x] Magic Jewel report compares old/new modes and records command/picture/fallback counters.
+- [x] Magic Jewel summary exposes machine-readable FPS fields for app, Swing, popup, picture, and command markers.
 - [x] Command mode validated with zero picture replay and zero fallback markers.
 
 ## Command ABI Coverage

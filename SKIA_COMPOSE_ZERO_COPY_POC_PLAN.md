@@ -4913,3 +4913,38 @@ Validation:
 
 Next:
 - Continue macOS MVP hardening with either old-artifact bundles for the artifact matrix or remaining rendering edge cases; quiet-machine benchmark collection remains deferred until host load is stable.
+
+## Checkpoint: Machine-Readable FPS Summary Fields
+
+Date: 2026-04-29
+
+Status: completed as report-schema hardening.
+
+Why:
+- `report.md` already prints FPS-style marker summaries, but automation had to parse prose to compare frame rates.
+- The noisy-host caveat still applies, but the summary file should expose the figures directly so quiet-machine benchmark runs can be consumed by scripts.
+
+Changes:
+- Magic Jewel `summary.properties` now records FPS fields for:
+  - app frame markers: `app_old_fps`, `app_new_fps`
+  - Swing frame markers: `swing_old_fps`, `swing_new_fps`
+  - popup frame markers: `popup_old_fps`, `popup_new_fps`
+  - Skiko/JBR picture markers: `skiko_picture_fps`, `jbr_picture_fps`
+  - Skiko/JBR command markers: `skiko_command_fps`, `jbr_command_fps`.
+- README documents the new machine-readable FPS keys.
+- Parser fixtures assert the command FPS keys are emitted.
+
+Validation:
+- Syntax check:
+  - command: `bash -n scripts/jbr-skia-interop-report.sh scripts/test-jbr-skia-report-validation.sh`
+  - result: passed.
+- Parser fixtures:
+  - command: `bash scripts/test-jbr-skia-report-validation.sh`
+  - result: `JBR_SKIA_REPORT_VALIDATION_TESTS passed`.
+- Existing menu-smoke summary regenerated with `--validate-only`:
+  - command: `OUT_DIR=/tmp/magic-jewel-menu-stress-smoke-2 JBR_SKIA_RENDER_MODE=commands EXPECT_STRICT_COMMANDS=true MAGIC_JEWEL_MENU_STRESS=true EXPECT_MIN_POPUP_FRAMES=5 bash scripts/jbr-skia-interop-report.sh --validate-only`
+  - result: passed.
+  - FPS keys: `app_new_fps=30.1`, `swing_new_fps=33.2`, `popup_new_fps=3.5`, `skiko_picture_fps=0.0`, `jbr_picture_fps=0.0`, `skiko_command_fps=30.1`, `jbr_command_fps=30.1`.
+
+Next:
+- Use these summary keys in quiet-machine benchmark runs instead of scraping human Markdown.
