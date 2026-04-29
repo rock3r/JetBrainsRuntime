@@ -3748,6 +3748,32 @@ Next checkpoint:
 
 - Continue shader/fallback coverage, especially explicit non-gradient shader probes and eventual JBR-owned shader factory design notes.
 
+### Checkpoint 101: Shader Boundary Fallback Probe
+
+Status: completed in Magic Jewel as an explicit command-subset boundary validation.
+
+- Magic Jewel now has `MAGIC_JEWEL_COMPOSE_IMAGE_SHADER=true` / `magic.jewel.compose.imageShader`.
+- The probe draws a visible image placeholder and marks `shader` unsupported through the active command recorder. This is intentionally synthetic: a direct Compose `ImageShader` call hit mixed-runtime ABI drift in the current local jar set before the recorder could observe it.
+- Strict command mode falls back to picture replay when the shader boundary marker is present.
+- The README includes the shader fallback smoke command.
+
+Validation:
+
+- Magic Jewel compile: `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew compileKotlin`
+- Magic Jewel shader fallback report: `/tmp/magic-jewel-image-shader-fallback-smoke-3/report.md`
+
+Shader fallback report:
+
+- validation status: `passed`
+- CMP command recorder: `frames=437 fps=87.4 avg_commands=2482 max_commands=2482 unsupported_frames=437 avg_unsupported=1.0 max_unsupported=1 avg_text_commands=9.0 max_text_commands=9 avg_paragraph_text_commands=0.0 max_paragraph_text_commands=0 avg_image_defines=0.0 max_image_defines=0 avg_image_refs=1.0 max_image_refs=1 avg_image_cache_clears=0.0 max_image_cache_clears=0 reasons=shader:437`
+- Skiko/JBR command frames: `0` / `0`
+- Skiko/JBR picture replay frames: `437` / `437`
+- screenshot assertion: `passed`
+
+Next checkpoint:
+
+- Keep generic shader support as a later JBR-owned shader factory design task; continue macOS MVP hardening with full compatibility matrix packaging and quieter benchmark/report runs.
+
 Use separate worktrees for every existing repo touched:
 
 - `JetBrainsRuntime` worktree: `jbr-skia-compose-poc`
