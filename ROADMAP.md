@@ -92,11 +92,12 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Skiko reads JBR scoped paint ids and includes them in acquisition diagnostics.
 - [x] Parser-level tests for old Skiko/new JBR and new Skiko/old JBR fallback combinations.
 - [x] Launch-level forced compatibility matrix runner for happy path plus ABI/native-ABI/capability/public-API fallbacks.
+- [x] Launch-level artifact matrix scaffold for named current/old JBR API, JBR native, desktop patch, Skiko, and CMP artifacts.
 - [x] Skiko invalidates temporary cached surface state when scoped destination identity changes.
 - [x] Magic Jewel parser coverage for `SKIKO_JBR_INTEROP_SURFACE_CHANGED`.
 - [x] Magic Jewel launch-level resize validation for surface identity changes.
 - [x] Unit-tested Skiko surface identity tracker.
-- [ ] Full launch-level old/new packaged artifact matrix.
+- [ ] Full launch-level old/new packaged artifact matrix with real old bundles supplied for every optional row.
 - [x] Stronger JBR context identity separate from per-surface identity for production cache keys.
 - [x] Skiko distinguishes same-context surface replacement from context migration.
 - [x] Magic Jewel strict resize validation for `contextChanged=false surfaceChanged=true`.

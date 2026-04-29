@@ -4825,3 +4825,47 @@ Validation:
 
 Next:
 - Menu-specific stress remains open; this checkpoint covers real popup-window capture and repaint behavior.
+
+## Checkpoint: Launch Artifact Matrix Scaffold
+
+Date: 2026-04-29
+
+Status: completed as a launch-level artifact-matrix scaffold. The full old/new matrix remains open until named old bundles are available.
+
+Why:
+- The forced compatibility matrix proves the fallback machinery, but it does so with test-only mismatch properties.
+- We also need a launcher that names the actual artifact surfaces: patched `java.desktop`, public JBR API shim, native JBR Skia dylib, Skiko Maven version, and patched CMP output root.
+- Old/new combinations should be explicit and parseable even when a local machine only has the current artifact set.
+
+Changes:
+- Magic Jewel added `scripts/jbr-skia-artifact-matrix.sh`.
+- The required rows are:
+  - `current-all`: current desktop patch + public API shim + native dylib + Skiko version + CMP output root; expects no fallback and JBR command frames.
+  - `missing-public-api`: current runtime artifacts with a missing public API shim; expects `SKIKO_JBR_INTEROP_FALLBACK reason=public-api-missing` and zero JBR command frames.
+- Optional rows are recorded as skipped unless their corresponding artifact variable is supplied:
+  - `OLD_JBR_API_SHIM`
+  - `OLD_JBR_SKIA_LIB`
+  - `OLD_DESKTOP_PATCH`
+  - `OLD_SKIKO_VERSION`
+  - `OLD_CMP_OUT`.
+- The script writes `matrix.tsv` with stable columns: case, status, expected fallback, actual fallback count, command frames, report path, and note.
+- Magic Jewel's Gradle/run wrapper now accepts `LOCAL_CMP_OUT`, so artifact rows can swap CMP output roots without editing `build.gradle.kts`.
+- Magic Jewel README documents the artifact-matrix runner and the `LOCAL_CMP_OUT` override.
+
+Validation:
+- Syntax checks:
+  - `bash -n scripts/jbr-skia-artifact-matrix.sh`
+  - `bash -n scripts/run-jbr-skia.sh`
+  - result: passed.
+- Dry run:
+  - command: `DRY_RUN=true OUT_ROOT=/tmp/magic-jewel-artifact-matrix-dry-run bash scripts/jbr-skia-artifact-matrix.sh`
+  - result: passed and recorded current rows plus skipped optional rows.
+- Live smoke:
+  - command: `OUT_ROOT=/tmp/magic-jewel-artifact-matrix-smoke DURATION_SECONDS=2 WARMUP_SECONDS=1 SAMPLE_INTERVAL_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT bash scripts/jbr-skia-artifact-matrix.sh`
+  - result: `JBR_SKIA_ARTIFACT_MATRIX passed out_root=/tmp/magic-jewel-artifact-matrix-smoke`
+  - `current-all`: `status=passed`, `fallback_new_count=0`, `jbr_command_frames=918`.
+  - `missing-public-api`: `status=passed`, `fallback_new_count=1`, `jbr_command_frames=0`.
+  - old artifact rows skipped because no old bundles were provided.
+
+Next:
+- Feed this scaffold with real old JBR API, JBR native, Skiko, desktop-patch, and CMP bundles when they are available, then close the full packaged old/new matrix item.
