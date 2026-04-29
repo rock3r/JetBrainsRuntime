@@ -137,6 +137,21 @@ public class JBRSkiaService extends JBRSkia {
     }
 
     @Override
+    public int getNativeAbiVersion() {
+        return NATIVE_ABI_VERSION;
+    }
+
+    @Override
+    public int getNativeCommandStreamAbiId() {
+        return ABI_ID;
+    }
+
+    @Override
+    public String getNativeBuildId() {
+        return BUILD_ID;
+    }
+
+    @Override
     public ScopedSkiaCanvas acquireCanvas(Graphics2D graphics) {
         Objects.requireNonNull(graphics, "graphics");
         return new PocScopedSkiaCanvas(

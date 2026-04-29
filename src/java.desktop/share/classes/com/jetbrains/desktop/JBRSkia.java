@@ -38,6 +38,7 @@ import java.nio.ByteBuffer;
 public abstract class JBRSkia {
     public static final int ABI_ID = Integer.parseInt("39");
     public static final String BUILD_ID = buildId();
+    public static final int NATIVE_ABI_VERSION = Integer.parseInt("1");
     public static final int COMMAND_STREAM_MAGIC = Integer.parseInt("1246972723");
     public static final int COMMAND_STREAM_HEADER_SIZE = Integer.parseInt("6");
     public static final int COMMAND_STREAM_FLAGS_NONE = Integer.parseInt("0");
@@ -137,6 +138,12 @@ public abstract class JBRSkia {
     public abstract int getCommandCapabilities();
 
     public abstract long getCommandCapabilities64();
+
+    public abstract int getNativeAbiVersion();
+
+    public abstract int getNativeCommandStreamAbiId();
+
+    public abstract String getNativeBuildId();
 
     public abstract ScopedSkiaCanvas acquireCanvas(Graphics2D graphics);
 

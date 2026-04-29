@@ -3652,6 +3652,27 @@ Next checkpoint:
 
 - Continue from visual smoke toward stable screenshot/text fidelity assertions, or return to rendering coverage with transformed/nonserializable shader fallback cases.
 
+### Checkpoint 97: Native ABI Metadata Gate
+
+Status: completed as a compatibility-hardening slice after ABI 39.
+
+- Runtime API and JBR now expose `NATIVE_ABI_VERSION = 1` alongside the command-stream `ABI_ID` / `BUILD_ID`.
+- The JBR service now reports runtime native metadata through `getNativeAbiVersion()`, `getNativeCommandStreamAbiId()`, and `getNativeBuildId()`.
+- Skiko discovery now treats the public static command ABI and the service-reported native metadata as separate compatibility gates. A mismatch emits `SKIKO_JBR_INTEROP_FALLBACK reason=native-abi-mismatch` and falls back to the old Swing path before command acquisition.
+- Skiko tests cover native ABI version mismatch, native command-stream ABI mismatch, native build id mismatch, and the test-only expected-native-ABI override.
+- `ROADMAP.md` now marks the structured native C ABI version block complete.
+
+Validation:
+
+- Runtime API processor: `bash tools/build.sh process`
+- Runtime API dev jar: `bash tools/build.sh dev $(/usr/libexec/java_home -v 21) /tmp/jbr-api-skia-native-abi-dev`
+- JBR service compile check: `javac --add-exports ... -cp /tmp/jbr-api-shim.jar ... JBRSkia.java JBRSkiaService.java`
+- Skiko focused tests: `./gradlew --no-configuration-cache :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`
+
+Next checkpoint:
+
+- Add old/new compatibility matrix probes around the new native ABI gate, then continue into the remaining shader/fallback coverage and quiet-machine benchmark pass.
+
 Use separate worktrees for every existing repo touched:
 
 - `JetBrainsRuntime` worktree: `jbr-skia-compose-poc`
