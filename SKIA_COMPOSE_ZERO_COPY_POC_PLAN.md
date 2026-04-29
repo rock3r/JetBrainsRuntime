@@ -3704,6 +3704,17 @@ Validation:
 - Runtime API processor: `bash tools/build.sh process`
 - Runtime API dev jar: `bash tools/build.sh dev $(/usr/libexec/java_home -v 21) /tmp/jbr-api-skia-build-id-dev`
 - JBR service compile check: `javac --add-exports ... -cp /tmp/jbr-api-shim.jar ... JBRSkia.java JBRSkiaService.java`
+- Magic Jewel structured-build-id report: `/tmp/magic-jewel-structured-build-id-smoke/report.md`
+
+Structured-build-id command-mode report:
+
+- validation status: `passed`
+- fallback markers: `0`
+- Skiko/JBR picture replay frames: `0` / `0`
+- CMP command recorder: `frames=1821 fps=227.6 avg_commands=2465 max_commands=2465 unsupported_frames=0 avg_unsupported=0.0 max_unsupported=0 avg_text_commands=9.0 max_text_commands=9 avg_paragraph_text_commands=0.0 max_paragraph_text_commands=0 avg_image_defines=0.0 max_image_defines=0 avg_image_refs=0.0 max_image_refs=0 avg_image_cache_clears=0.0 max_image_cache_clears=0 reasons=none`
+- Skiko/JBR command frames: `1821` / `1821`
+- JBR command timing: `frames=1821 avg_total_ms=1.111 max_total_ms=7.382 avg_draw_ms=0.114 max_draw_ms=0.802 avg_flush_ms=0.972 max_flush_ms=7.116 avg_paragraph_ms=0.000 max_paragraph_ms=0.000 avg_paragraph_commands=0.0 max_paragraph_commands=0`
+- screenshot assertion: `passed`
 
 Next checkpoint:
 
