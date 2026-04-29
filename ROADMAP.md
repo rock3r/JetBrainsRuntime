@@ -36,6 +36,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] ABI 38: sweep-gradient rounded-rectangle fill.
 - [x] ABI 39: sweep-gradient path fill.
 - [x] ABI 40/native 2: scoped destination surface identity.
+- [x] ABI 41/native 3: scoped destination context identity.
 
 ## Near-Term Rendering Work
 
@@ -84,7 +85,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Magic Jewel launch-level resize validation for surface identity changes.
 - [x] Unit-tested Skiko surface identity tracker.
 - [ ] Full launch-level old/new packaged artifact matrix.
-- [ ] Stronger JBR context identity separate from per-surface identity, if needed for production cache keys.
+- [x] Stronger JBR context identity separate from per-surface identity for production cache keys.
 
 ## Productionization Later
 

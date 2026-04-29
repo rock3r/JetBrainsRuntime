@@ -3975,8 +3975,7 @@ Status: completed in Magic Jewel command-mode report.
   - `jbr_command_frames=2180`
   - `skiko_surface_change_markers=1`
   - `screenshot_status=passed`
-- The live marker showed the surface and destination texture changing after the app resize:
-  - `SKIKO_JBR_INTEROP_SURFACE_CHANGED oldSurfaceId=0xbea0987e0 newSurfaceId=0xbea8d3640 oldMetalTexture=0xbe66e2a80 newMetalTexture=0xbe324c780`
+- The live marker showed the surface and destination texture changing after the app resize.
 
 Validation:
 
@@ -3994,12 +3993,11 @@ Status: completed in Skiko.
 
 - Skiko's `JbrSkiaSwingLayer` no longer keeps surface identity comparison as paint-method-only local state.
 - Added a small internal `SurfaceIdentityTracker` that:
-  - ignores unknown `0/0` identities
+  - ignores unknown `0/0/0` identities
   - treats repeated identities as stable
   - reports a structured change when either `surfaceId` or `metalTexturePtr` changes
   - resets on `removeNotify()`
-- The existing layer still closes its temporary diagnostic `DirectContext` on identity change and emits the same parseable marker:
-  - `SKIKO_JBR_INTEROP_SURFACE_CHANGED oldSurfaceId=... newSurfaceId=... oldMetalTexture=... newMetalTexture=...`
+- The existing layer still closes its temporary diagnostic `DirectContext` on identity change and emits the same parseable marker.
 - Added focused Skiko tests for unknown, stable, changed, and cleared identity tracking.
 
 Validation:
@@ -4009,6 +4007,36 @@ Validation:
 Next checkpoint:
 
 - Decide whether the next production-shaped cache should live in Skiko only as command/replay-side bookkeeping or whether JBR should expose a stronger context id separate from `surfaceId` so Skiko can distinguish context migration from same-context texture replacement.
+
+### Checkpoint 112: Scoped Destination Context Identity
+
+Status: completed across Runtime API, JBR, Skiko, CMP, and Magic Jewel.
+
+- Runtime API and JBR now expose `ScopedSkiaCanvas.getContextId()`.
+- JBR's macOS service derives `contextId` from the destination `MTLContext*` via a native `nativeGetContextId(nativeOpsPtr)` helper.
+- ABI bumped to `41`; native metadata bumped to `3`; `BUILD_ID` is now `skia=m147-64a2414108;flags=macos-release-metal-poc:1;abi=41;native=3`.
+- Skiko now requires ABI `41` / native metadata `3`, reads `contextId` reflectively, includes it in `SKIKO_JBR_INTEROP_SCOPE_ACQUIRED`, and tracks `contextId + surfaceId + metalTexturePtr`.
+- Surface-change markers now include context ids:
+  - `SKIKO_JBR_INTEROP_SURFACE_CHANGED oldContextId=... newContextId=... oldSurfaceId=... newSurfaceId=... oldMetalTexture=... newMetalTexture=...`
+- CMP's command recorder emits command-stream ABI `41`.
+- Magic Jewel README/test fixtures were updated for the context-aware surface-change marker.
+- ABI 41 resize smoke showed the key distinction we wanted: same context id, changed surface id, changed texture id after window resize.
+
+Validation:
+
+- Runtime API process/dev build: `bash tools/build.sh process`; `bash tools/build.sh dev $(/usr/libexec/java_home -v 21) /tmp/jbr-api-skia-abi41-dev`
+- Public shim refreshed: `/tmp/jbr-api-shim.jar`
+- JBR patched Java compile into `/tmp/jbr-skia-run/desktop`
+- JBR native dylib rebuild into `/tmp/jbr-skia-native/libjbrskiainterop.dylib`
+- Skiko focused test: `./gradlew --no-configuration-cache :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`
+- Skiko Maven-local publish: `./gradlew --no-configuration-cache :skiko:publishAwtPublicationToMavenLocal :skiko:publishAwtRuntimeElementsPublicationToMavenLocal :skiko:publishSkikoJvmRuntimeMacosArm64PublicationToMavenLocal`
+- CMP compile/jar: `./gradlew --no-configuration-cache :compose:ui:ui-graphics:compileKotlinDesktop`; `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-configuration-cache :compose:ui:ui-graphics:desktopJar`
+- Magic Jewel compile and parser tests: `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew compileKotlin`; `bash scripts/test-jbr-skia-report-validation.sh`
+- Magic Jewel ABI 41 resize smoke: `/tmp/magic-jewel-abi41-context-id-resize-smoke/report.md`
+
+Next checkpoint:
+
+- Use `contextId` to split Skiko/JBR cache policy: same-context surface replacement should invalidate surface-bound wrappers only; changed-context migration should invalidate context-bound caches too.
 
 Use separate worktrees for every existing repo touched:
 
