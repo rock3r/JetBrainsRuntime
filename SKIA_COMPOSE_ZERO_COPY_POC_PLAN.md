@@ -3013,6 +3013,32 @@ Next checkpoint:
 
 - Improve the app-side animation cadence story so the visible Jewel progress probes are paced by a stable animation clock instead of relying on accidental over-invalidation; then rerun the strict command smoke and compare visual cadence to the marker counts.
 
+### Checkpoint 77: Magic Jewel Progress Cadence
+
+Status: completed for app-side progress cadence cleanup.
+
+- Moved the Magic Jewel `MAGIC_JEWEL_SWING_FRAME` marker from the Swing timer callback into `MovingSwingProgressBar.paintComponent`, so the report measures actual Swing progress-bar paints rather than timer firings.
+- Changed the Swing progress position to derive from `System.nanoTime()` instead of an incremented timer counter. If timer callbacks are delayed or coalesced, the progress bar now advances according to wall-clock time on the next paint instead of appearing stuck at a stale phase.
+- The Swing timer now repaints both the progress component and its parent panel, making the Swing island more robust inside the Compose-hosted `SwingPanel`.
+- Renamed the report section to "Swing Progress Paint Markers" so future readers do not confuse these counts with generic Swing repaint scheduling.
+
+Progress-cadence Magic Jewel report:
+
+- report: `/tmp/magic-jewel-progress-cadence-command-smoke/report.md`
+- screenshot: `/tmp/magic-jewel-progress-cadence-command-smoke/new-window.png`
+- sampled log: `/tmp/magic-jewel-progress-cadence-command-smoke/new-sampled.log`
+- validation status: `passed`
+- app draw markers: `old frames=1236 fps=247.2`, `new frames=1132 fps=226.4`
+- Swing progress paint markers: `old frames=1361 fps=272.2`, `new frames=1249 fps=249.8`
+- CMP command recorder: `frames=1132 fps=226.4 avg_commands=3107 max_commands=3107 unsupported_frames=0 avg_unsupported=0.0 max_unsupported=0 avg_text_commands=9.0 max_text_commands=9 avg_paragraph_text_commands=6.0 max_paragraph_text_commands=6 avg_image_defines=0.0 max_image_defines=0 avg_image_refs=1.0 max_image_refs=1 avg_image_cache_clears=0.0 max_image_cache_clears=0 reasons=none`
+- Skiko/JBR command frames: `1133` / `1132`
+- JBR command timing: `frames=1132 avg_total_ms=1.478 max_total_ms=11.722 avg_draw_ms=0.298 max_draw_ms=4.039 avg_flush_ms=1.153 max_flush_ms=10.969 avg_paragraph_ms=0.136 max_paragraph_ms=1.993 avg_paragraph_commands=6.0 max_paragraph_commands=6`
+- screenshot assertion: `passed`
+
+Next checkpoint:
+
+- Continue expanding strict command support or fallback coverage based on the next missing operation observed in CMP.
+
 Use separate worktrees for every existing repo touched:
 
 - `JetBrainsRuntime` worktree: `jbr-skia-compose-poc`
