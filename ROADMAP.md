@@ -49,7 +49,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Strict recorder fallback for invalid rounded-rectangle radii with gradient paints.
 - [x] Strict recorder fallback for transformed gradient shaders.
 - [x] Strict recorder fallback for composite/opaque shader wrappers.
-- [ ] More strict shader fallback tests: nonfinite shader geometry that survives shader construction and any remaining generic shader cases.
+- [x] More strict shader fallback tests for nonfinite gradient metadata that survives shader construction.
+- [ ] Remaining generic shader edge cases beyond transformed/composite/opaque shader wrappers.
 - [ ] Expand screenshot assertions to check newly added probe colors/regions explicitly.
 - [x] Improve Magic Jewel visual fidelity so labels use Jewel `Text` and `JewelTheme.defaultTextStyle`.
 - [x] Prefer fidelity-first text image replay by default so command mode preserves resolved Jewel font/size/alignment until JBR-owned typefaces exist.

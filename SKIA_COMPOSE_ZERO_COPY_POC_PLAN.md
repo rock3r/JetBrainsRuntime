@@ -4703,3 +4703,31 @@ Validation:
 
 Next:
 - Keep real OS popup/menu windows as a later productionization test, since they are not captured by the current window-only screenshot helper.
+
+## Checkpoint: Non-Finite Gradient Metadata Fallback
+
+Date: 2026-04-29
+
+Status: completed as a focused CMP recorder test.
+
+Why:
+- The command ABI serializes gradient coordinates and radii as fixed-point integers.
+- NaN or infinity must never cross the CMP/Skiko to JBR boundary as encoded command payload.
+- Local code-ground-truth check showed that constructing a real Skia gradient shader with NaN fails before the recorder can see it (`Can't wrap nullptr`). The meaningful guardrail is therefore a valid native Skia shader backing with corrupted/non-finite JBR gradient metadata, which is the metadata the command recorder serializes.
+
+Change:
+- Added `JbrSkiaCommandRecorderTest.rejectsNonFiniteGradientGeometryInStrictMode`.
+- The test creates valid native shader backing and intentionally non-finite JBR metadata for:
+  - linear gradient endpoint metadata
+  - radial gradient radius metadata
+  - sweep gradient center metadata.
+- Strict command recording must return `null` for all three cases.
+
+Validation:
+- Initial direct-NaN shader-construction test failed before recorder entry with `Can't wrap nullptr`, confirming that it did not exercise the intended boundary.
+- Adjusted the test to inject non-finite command metadata over valid shader backing.
+- Command: `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.rejectsNonFiniteGradientGeometryInStrictMode`
+- Result: passed.
+
+Next:
+- Keep remaining generic shader families behind explicit fallback tests or future JBR-owned shader factory design.
