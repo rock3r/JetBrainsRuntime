@@ -92,7 +92,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Magic Jewel report counts scoped JBR image-cache-clear markers.
 - [x] Combined resize + image-cache churn smoke proving stable context-scoped cache ownership across same-context surface replacement.
 - [x] Strict report assertion for scoped JBR image-cache-clear markers.
-- [ ] Reduce redundant image-cache clear/define churn for stable fallback images.
+- [x] Reduce redundant image-cache clear/define churn for stable fallback images.
+- [ ] Replace temporary global image-key budget with an explicit production eviction protocol.
 
 ## Productionization Later
 

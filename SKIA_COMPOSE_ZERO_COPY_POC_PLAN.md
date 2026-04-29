@@ -4187,9 +4187,42 @@ Validation:
   - `skiko_same_context_surface_change_markers=1`
   - `screenshot_status=passed`
 
+### Checkpoint: Stable Image-Cache Reuse
+
+Status: completed for the PoC recorder policy.
+
+- CMP's command recorder image-key budget increased from 256 to 1024 entries.
+- The previous 256-entry budget caused the 260-image Magic Jewel cache stress case to clear/redefine the JBR image cache every frame, even when image content was stable.
+- Added a focused CMP test proving that 260 stable images are defined on the first frame and then reused as `COMMAND_DRAW_IMAGE_REF` records with no new `COMMAND_DEFINE_IMAGE_ARGB` and no `COMMAND_CLEAR_IMAGE_CACHE`.
+- Kept the overflow path covered by moving the threshold test from 257 images to 1025 images.
+- Magic Jewel gained `MAGIC_JEWEL_STABLE_IMAGE_CACHE_CHURN=true` so launch-level reports can use stable image content instead of per-frame-changing image content.
+- Magic Jewel report validation gained `EXPECT_MAX_IMAGE_DEFINES` and `EXPECT_MAX_IMAGE_CACHE_CLEARS`.
+
+Validation:
+
+- CMP pre-fix TDD check failed as expected:
+  - `JbrSkiaCommandRecorderTest.reusesStableImageCacheEntriesAcrossFrames` saw one cache clear before the budget change.
+- CMP focused recorder tests:
+  - `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.reusesStableImageCacheEntriesAcrossFrames --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.clearsImageCacheBeforeRedefiningAfterThreshold`
+- CMP jar refresh:
+  - `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-configuration-cache :compose:ui:ui-graphics:desktopJar :compose:ui:ui:desktopJar`
+- Magic Jewel parser tests:
+  - `bash scripts/test-jbr-skia-report-validation.sh`
+- Magic Jewel stable image-cache reuse smoke: `/tmp/magic-jewel-stable-image-cache-reuse-smoke/report.md`
+  - `validation_status=passed`
+  - `fallback_new_count=0`
+  - `skiko_picture_frames=0`
+  - `jbr_picture_frames=0`
+  - `cmp_recorder_frames=1156`
+  - `jbr_command_frames=1155`
+  - `jbr_image_cache_clear_frames=0`
+  - `jbr_scoped_image_cache_clear_frames=0`
+  - `screenshot_status=passed`
+  - recorder summary: `avg_image_defines=0.0 max_image_defines=0 avg_image_refs=260.0 max_image_refs=260 avg_image_cache_clears=0.0 max_image_cache_clears=0`
+
 Next checkpoint:
 
-- Start reducing the remaining command-path hot spots now that cache ownership is fenced: likely target is avoiding redundant image-cache clear/define churn for stable fallback images, or moving another text/style case out of the image fallback.
+- Replace the temporary global image-key budget with an explicit production eviction protocol, or move another remaining fallback-heavy text/style case into native JBR-owned commands.
 
 Use separate worktrees for every existing repo touched:
 
