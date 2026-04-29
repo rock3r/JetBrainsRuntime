@@ -3936,6 +3936,25 @@ Next checkpoint:
 
 - Make the surface-change marker parseable in Magic Jewel reports, then add a resize/surface-change smoke that proves Skiko notices identity changes and invalidates cached surface state.
 
+### Checkpoint 109: Surface-Change Report Marker Parsing
+
+Status: completed in Magic Jewel report validation.
+
+- Magic Jewel report parsing now recognizes Skiko's surface identity invalidation marker:
+  - `SKIKO_JBR_INTEROP_SURFACE_CHANGED oldSurfaceId=... newSurfaceId=... oldMetalTexture=... newMetalTexture=...`
+- `summary.properties` now includes:
+  - `skiko_surface_change_markers=<count>`
+- `report.md` now has a dedicated "Surface Identity Markers" section and explains that the marker means Skiko observed a different JBR destination surface and discarded cached surface-bound state.
+- Magic Jewel README documents the marker and the new machine-readable summary key.
+
+Validation:
+
+- Magic Jewel report parser tests: `bash scripts/test-jbr-skia-report-validation.sh`
+
+Next checkpoint:
+
+- Add a live resize/surface-change smoke that deliberately changes the JFrame size during the new-mode measurement window and requires `skiko_surface_change_markers > 0`.
+
 Use separate worktrees for every existing repo touched:
 
 - `JetBrainsRuntime` worktree: `jbr-skia-compose-poc`
