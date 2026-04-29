@@ -2894,6 +2894,33 @@ Next checkpoint:
 
 - Run an intentionally wider incompatibility/fallback matrix with strict command mode disabled/enabled to confirm the fallback story is still disciplined after the ABI 25 text expansion. Include at least ABI mismatch, command-stream corruption, and unsupported text effect cases, with parseable markers for each.
 
+### Checkpoint 73: Command-Corruption Fallback Validation
+
+Status: completed for deterministic invalid-command fallback validation.
+
+- Re-ran the existing Magic Jewel command-stream corruption path after ABI 25.
+- The observed runtime behavior is:
+  - CMP records a valid command stream before Skiko corruption mutates it.
+  - Skiko emits command-frame markers with `rendered=false`.
+  - JBR emits no command replay markers.
+  - The mixed/picture fallback screenshot oracle passes.
+- Updated the Magic Jewel report validator so `EXPECT_COMMAND_FALLBACK_REASON=command-stream-invalid` accepts the current parseable signal: `SKIKO_JBR_INTEROP_COMMAND_FRAME ... rendered=false` with zero JBR command frames. The older explicit fallback marker is still accepted if a future implementation emits it.
+
+Command-corruption fallback Magic Jewel report:
+
+- report: `/tmp/magic-jewel-command-corruption-fallback-smoke-2/report.md`
+- screenshot: `/tmp/magic-jewel-command-corruption-fallback-smoke-2/new-window.png`
+- sampled log: `/tmp/magic-jewel-command-corruption-fallback-smoke-2/new-sampled.log`
+- validation status: `passed`
+- fallback markers: `0`
+- Skiko command frames: `553`, all invalid/corrupted frames reported as not rendered.
+- JBR command frames: `0`
+- screenshot assertion: `passed`
+
+Next checkpoint:
+
+- Add an ABI mismatch smoke that deliberately runs Skiko/CMP against an incompatible JBRSkia `ABI_ID` and validates a structured compatibility fallback before service/native work is attempted.
+
 Use separate worktrees for every existing repo touched:
 
 - `JetBrainsRuntime` worktree: `jbr-skia-compose-poc`
