@@ -72,6 +72,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] New Skiko / pre-native-metadata JBR fallback unit coverage.
 - [x] Native ABI mismatch Magic Jewel launch/report validation.
 - [x] Explicit Magic Jewel shader-boundary fallback validation.
+- [x] CI-style parser coverage for ABI/capability/native/public-API handshake fallbacks.
 - [ ] Explicit tests for old Skiko/new JBR and new Skiko/old JBR fallback combinations.
 
 ## Productionization Later

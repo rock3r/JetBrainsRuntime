@@ -3774,6 +3774,27 @@ Next checkpoint:
 
 - Keep generic shader support as a later JBR-owned shader factory design task; continue macOS MVP hardening with full compatibility matrix packaging and quieter benchmark/report runs.
 
+### Checkpoint 102: Handshake Fallback Parser Matrix
+
+Status: completed in Magic Jewel report validation.
+
+- `scripts/test-jbr-skia-report-validation.sh` now covers every handshake-style fallback branch that the report harness validates specially:
+  - `abi-mismatch`
+  - `native-abi-mismatch`
+  - `command-capability-mismatch`
+  - `public-api-missing`
+  - `command-stream-invalid`
+- The parser tests also reject a bogus handshake fallback report if Skiko/JBR command replay frames are present during an expected ABI mismatch.
+- This keeps launch-report validation honest for old/new local artifact mixes where the correct result is "clear marker, no replay".
+
+Validation:
+
+- Magic Jewel report parser tests: `bash scripts/test-jbr-skia-report-validation.sh`
+
+Next checkpoint:
+
+- Convert the synthetic/parser compatibility coverage into a full packaged artifact matrix once we have named local old/new Skiko and JBR API/JBR patch bundles.
+
 Use separate worktrees for every existing repo touched:
 
 - `JetBrainsRuntime` worktree: `jbr-skia-compose-poc`
