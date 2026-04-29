@@ -66,7 +66,7 @@
 
 #include "MTLSurfaceDataBase.h"
 
-static constexpr jint ABI_ID = 27;
+static constexpr jint ABI_ID = 28;
 static constexpr jint COMMAND_STREAM_MAGIC = 1246972723;
 static constexpr jint COMMAND_STREAM_HEADER_SIZE = 6;
 static constexpr jint COMMAND_STREAM_FLAGS_NONE = 0;
@@ -98,6 +98,7 @@ static constexpr jint COMMAND_CLEAR_IMAGE_CACHE = 18;
 static constexpr jint COMMAND_DRAW_PARAGRAPH_UTF16 = 19;
 static constexpr jint COMMAND_CLIP_PATH = 20;
 static constexpr jint COMMAND_DRAW_PATH = 21;
+static constexpr jint COMMAND_DRAW_ARC = 22;
 static constexpr jint COMMAND_PAINT_STYLE_FILL = 0;
 static constexpr jint COMMAND_PAINT_STYLE_STROKE = 1;
 static constexpr jint COMMAND_PATH_FILL_NON_ZERO = 0;
@@ -560,6 +561,47 @@ static bool drawCommandList(SkCanvas* canvas,
                     paint.setStrokeMiter(static_cast<SkScalar>(strokeMiter1000) / 1000.0f);
                 }
                 canvas->drawPath(path, paint);
+                break;
+            }
+            case COMMAND_DRAW_ARC: {
+                if (offset + 13 != recordEnd) {
+                    return false;
+                }
+                const jint paintStyle = commands[offset++];
+                const jint argb = commands[offset++];
+                const SkScalar left = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkScalar top = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkScalar right = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkScalar bottom = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkScalar startAngle = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkScalar sweepAngle = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const jint useCenter = commands[offset++];
+                const jint strokeWidth = commands[offset++];
+                const jint strokeCap = commands[offset++];
+                const jint strokeJoin = commands[offset++];
+                const jint strokeMiter1000 = commands[offset++];
+                if ((paintStyle != COMMAND_PAINT_STYLE_FILL && paintStyle != COMMAND_PAINT_STYLE_STROKE) ||
+                        right < left ||
+                        bottom < top ||
+                        (useCenter != 0 && useCenter != 1) ||
+                        (paintStyle == COMMAND_PAINT_STYLE_STROKE && !isValidStrokeMetadata(strokeWidth, strokeCap, strokeJoin, strokeMiter1000))) {
+                    return false;
+                }
+                SkPaint paint;
+                paint.setAntiAlias(antiAlias);
+                paint.setColor(skColorFromArgb(argb));
+                if (paintStyle == COMMAND_PAINT_STYLE_STROKE) {
+                    paint.setStyle(SkPaint::kStroke_Style);
+                    paint.setStrokeWidth(static_cast<SkScalar>(strokeWidth));
+                    paint.setStrokeCap(static_cast<SkPaint::Cap>(strokeCap));
+                    paint.setStrokeJoin(static_cast<SkPaint::Join>(strokeJoin));
+                    paint.setStrokeMiter(static_cast<SkScalar>(strokeMiter1000) / 1000.0f);
+                }
+                canvas->drawArc(SkRect::MakeLTRB(left, top, right, bottom),
+                                startAngle,
+                                sweepAngle,
+                                useCenter == 1,
+                                paint);
                 break;
             }
             case COMMAND_TRANSLATE: {

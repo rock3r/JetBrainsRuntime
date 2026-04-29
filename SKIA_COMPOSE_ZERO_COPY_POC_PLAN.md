@@ -3139,9 +3139,32 @@ Path drawing command Magic Jewel report:
 - JBR command timing: `frames=592 avg_total_ms=1.232 max_total_ms=4.279 avg_draw_ms=0.136 max_draw_ms=0.655 avg_flush_ms=1.066 max_flush_ms=4.132 avg_paragraph_ms=0.000 max_paragraph_ms=0.000 avg_paragraph_commands=0.0 max_paragraph_commands=0`
 - screenshot assertion: `passed`
 
+### Checkpoint 82: Arc Drawing Command Support And ABI 28
+
+Status: completed for solid-color Compose arc fill/stroke command recording and JBR/Skia replay.
+
+- Bumped the command ABI to `28` across JBR, public JBR API, Skiko, and CMP.
+- Added command capability `COMMAND_CAP_DRAW_ARC` and command opcode `COMMAND_DRAW_ARC`.
+- CMP records Compose `drawArc` calls with paint style, ARGB, bounds, start/sweep angles, `useCenter`, and stroke metadata.
+- JBR validates the fixed-length arc payload, supports Java2D fallback drawing with `Arc2D`, and replays native Skia `drawArc`.
+- Magic Jewel now has `MAGIC_JEWEL_COMPOSE_DRAW_ARC=true`, drawing a cyan pie arc with a white stroke as an explicit strict-command probe.
+
+Arc drawing command Magic Jewel report:
+
+- report: `/tmp/magic-jewel-drawarc-command-abi28-smoke/report.md`
+- screenshot: `/tmp/magic-jewel-drawarc-command-abi28-smoke/new-window.png`
+- sampled log: `/tmp/magic-jewel-drawarc-command-abi28-smoke/new-sampled.log`
+- validation status: `passed`
+- fallback markers: `0`
+- Skiko/JBR picture replay frames: `0` / `0`
+- CMP command recorder: `frames=778 fps=259.3 avg_commands=2513 max_commands=2513 unsupported_frames=0 avg_unsupported=0.0 max_unsupported=0 avg_text_commands=9.0 max_text_commands=9 avg_paragraph_text_commands=0.0 max_paragraph_text_commands=0 avg_image_defines=0.0 max_image_defines=0 avg_image_refs=0.0 max_image_refs=0 avg_image_cache_clears=0.0 max_image_cache_clears=0 reasons=none`
+- Skiko/JBR command frames: `778` / `778`
+- JBR command timing: `frames=778 avg_total_ms=1.207 max_total_ms=2.891 avg_draw_ms=0.119 max_draw_ms=0.245 avg_flush_ms=1.067 max_flush_ms=2.747 avg_paragraph_ms=0.000 max_paragraph_ms=0.000 avg_paragraph_commands=0.0 max_paragraph_commands=0`
+- screenshot assertion: `passed`
+
 Next checkpoint:
 
-- Add command support for arc/round-rect fidelity or shader-backed fills. Arc support is the smaller geometry slice; shader-backed fills are higher impact but require a more careful paint ABI.
+- Revisit round-rect fidelity, especially stroked round-rects, or start the higher-risk shader-backed paint ABI.
 
 Use separate worktrees for every existing repo touched:
 
