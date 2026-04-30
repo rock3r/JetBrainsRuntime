@@ -7210,4 +7210,35 @@ Known notes:
 
 Next:
 
-- Continue layer coverage only where semantics are explicit: generic path outline clips are the nearest shape follow-up; non-SrcOver layer paints, color filters, and render effects should wait for the JBR-owned effect/shader handle path.
+- Continue layer coverage only where semantics are explicit: non-SrcOver layer paints, color filters, and render effects should wait for the JBR-owned effect/shader handle path.
+
+## Checkpoint: Generic Path Graphics-Layer Clip Replay
+
+Status: completed as a follow-up graphics-layer semantics slice.
+
+What changed:
+
+- CMP `GraphicsLayer` now treats `clip=true` with `Outline.Generic` as command-replayable when the path can be serialized by the existing path command ABI.
+- Generic path layer outlines are replayed through the same parent-scope `COMMAND_CLIP_PATH` used by rounded outlines, before the nested child command stream is spliced into the frame.
+- Magic Jewel gained `MAGIC_JEWEL_COMPOSE_GRAPHICS_LAYER_PATH_CLIP`, which uses a non-rectangular `GenericShape` with overflowing cyan content to validate path-outline clipping.
+- Magic Jewel report/help output, command probe suite, README, and screenshot assertion now surface and validate the generic-path clipped graphics-layer probe.
+
+Verification:
+
+- Focused CMP tests passed:
+  - `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.nestedRecordingReplaysLayerClipPath --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesClipPathRecord`
+- Magic Jewel compiled after the new probe wiring:
+  - `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon --no-configuration-cache compileKotlin`
+- Magic Jewel generic-path clipped graphics-layer suite case passed:
+  - `/tmp/magic-jewel-command-suite-graphics-layer-path-clip/suite.tsv`
+  - `status=passed fallback_new_count=0 unsupported=none jbr_picture_frames=0 jbr_command_frames=365`
+  - report: `/tmp/magic-jewel-command-suite-graphics-layer-path-clip/commands-graphics-layer-path-clip/report.md`
+
+Known notes:
+
+- This does not broaden arbitrary graphics-layer effects. It only allows path outlines that lower to the already-supported move/line/quad/cubic/close path command stream.
+- The full `JbrSkiaCommandRecorderTest` class still has unrelated exact-array expectation failures in three older gradient/image-shader tests (`writesSweepGradientStrokeRectRecord`, `writesRadialGradientRoundRectRecord`, `writesImageShaderRectRecord`). Focused graphics-layer/path tests pass.
+
+Next:
+
+- Continue layer coverage only where semantics are explicit: non-SrcOver layer paints, color filters, and render effects should wait for the JBR-owned effect/shader handle path. The nearest small rendering slice is likely polishing animation/screenshot stability or choosing one directly mappable layer blend mode with a strict old/new screenshot gate.
