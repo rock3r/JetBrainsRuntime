@@ -132,7 +132,8 @@ public class JBRSkiaService extends JBRSkia {
                     | COMMAND_CAP64_EVICT_COLOR_FILTER_HANDLE
                     | COMMAND_CAP64_DEFINE_EFFECT_DESCRIPTOR
                     | COMMAND_CAP64_SAVE_LAYER_BLEND_MODE
-                    | COMMAND_CAP64_SAVE_LAYER_BLEND_COLOR_FILTER;
+                    | COMMAND_CAP64_SAVE_LAYER_BLEND_COLOR_FILTER
+                    | COMMAND_CAP64_EFFECT_DESCRIPTOR_COLOR_MATRIX_FILTER;
     private static final boolean NATIVE_BRIDGE_AVAILABLE = loadNativeBridge();
     private static final AtomicLong NEXT_SCOPE_ID = new AtomicLong(1);
     private static final int MAX_CACHED_IMAGES = 256;
@@ -144,10 +145,10 @@ public class JBRSkiaService extends JBRSkia {
                     return size() > MAX_CACHED_IMAGES;
                 }
             });
-    private static final Map<ColorFilterCacheKey, TintColorFilterDescriptor> COLOR_FILTER_CACHE = Collections.synchronizedMap(
-            new LinkedHashMap<ColorFilterCacheKey, TintColorFilterDescriptor>(MAX_CACHED_COLOR_FILTERS, 0.75f, true) {
+    private static final Map<ColorFilterCacheKey, ColorFilterDescriptor> COLOR_FILTER_CACHE = Collections.synchronizedMap(
+            new LinkedHashMap<ColorFilterCacheKey, ColorFilterDescriptor>(MAX_CACHED_COLOR_FILTERS, 0.75f, true) {
                 @Override
-                protected boolean removeEldestEntry(Map.Entry<ColorFilterCacheKey, TintColorFilterDescriptor> eldest) {
+                protected boolean removeEldestEntry(Map.Entry<ColorFilterCacheKey, ColorFilterDescriptor> eldest) {
                     return size() > MAX_CACHED_COLOR_FILTERS;
                 }
             });
@@ -446,14 +447,25 @@ public class JBRSkiaService extends JBRSkia {
             int descriptorVersion = commands[record.argsStart() + 3];
             int payloadIntCount = commands[record.argsStart() + 4];
             if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE
-                    || descriptorType != COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER
                     || descriptorVersion != COMMAND_EFFECT_DESCRIPTOR_VERSION_1
-                    || payloadIntCount != 2
                     || record.recordLength() != 8 + payloadIntCount) {
                 return false;
             }
-            int colorFilterBlendMode = commands[record.argsStart() + 6];
-            return colorFilterBlendMode == COMMAND_BLEND_MODE_SRC_IN;
+            if (descriptorType == COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER) {
+                if (payloadIntCount != 2) return false;
+                int colorFilterBlendMode = commands[record.argsStart() + 6];
+                return colorFilterBlendMode == COMMAND_BLEND_MODE_SRC_IN;
+            }
+            if (descriptorType == COMMAND_EFFECT_DESCRIPTOR_COLOR_MATRIX_FILTER) {
+                if (payloadIntCount != 20) return false;
+                for (int index = 0; index < payloadIntCount; index++) {
+                    if (!Float.isFinite(Float.intBitsToFloat(commands[record.argsStart() + 5 + index]))) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+            return false;
         }
         if (record.op() == COMMAND_FILL_RECT_COLOR_FILTER_REF) {
             int width = commands[record.argsStart() + 5];
@@ -1300,7 +1312,35 @@ public class JBRSkiaService extends JBRSkia {
     private record ColorFilterCacheKey(long contextId, long filterId) {
     }
 
-    private record TintColorFilterDescriptor(int argb, int blendMode) {
+    private record ColorFilterDescriptor(int type, int argb, int blendMode, int[] matrixBits) {
+        static ColorFilterDescriptor tint(int argb, int blendMode) {
+            return new ColorFilterDescriptor(COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER, argb, blendMode, null);
+        }
+
+        static ColorFilterDescriptor colorMatrix(int[] matrixBits) {
+            return new ColorFilterDescriptor(COMMAND_EFFECT_DESCRIPTOR_COLOR_MATRIX_FILTER, 0, 0, matrixBits.clone());
+        }
+    }
+
+    private static int applyColorMatrix(int argb, int[] matrixBits) {
+        float r = ((argb >>> 16) & 0xff) / 255f;
+        float g = ((argb >>> 8) & 0xff) / 255f;
+        float b = (argb & 0xff) / 255f;
+        float a = ((argb >>> 24) & 0xff) / 255f;
+        int outR = colorMatrixChannel(matrixBits, 0, r, g, b, a);
+        int outG = colorMatrixChannel(matrixBits, 5, r, g, b, a);
+        int outB = colorMatrixChannel(matrixBits, 10, r, g, b, a);
+        int outA = colorMatrixChannel(matrixBits, 15, r, g, b, a);
+        return (outA << 24) | (outR << 16) | (outG << 8) | outB;
+    }
+
+    private static int colorMatrixChannel(int[] matrixBits, int offset, float r, float g, float b, float a) {
+        float value = Float.intBitsToFloat(matrixBits[offset]) * r
+                + Float.intBitsToFloat(matrixBits[offset + 1]) * g
+                + Float.intBitsToFloat(matrixBits[offset + 2]) * b
+                + Float.intBitsToFloat(matrixBits[offset + 3]) * a
+                + Float.intBitsToFloat(matrixBits[offset + 4]);
+        return Math.max(0, Math.min(255, Math.round(value * 255f)));
     }
 
     private static final class PocScopedSkiaCanvas extends ScopedSkiaCanvas {
@@ -2855,7 +2895,7 @@ public class JBRSkiaService extends JBRSkia {
                         if (filterBlendMode != COMMAND_BLEND_MODE_SRC_IN) return false;
                         COLOR_FILTER_CACHE.put(
                                 new ColorFilterCacheKey(contextPtr, handle),
-                                new TintColorFilterDescriptor(filterArgb, filterBlendMode)
+                                ColorFilterDescriptor.tint(filterArgb, filterBlendMode)
                         );
                     } else if (op == COMMAND_DEFINE_EFFECT_DESCRIPTOR) {
                         if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE || offset + 5 > recordEnd) return false;
@@ -2863,17 +2903,32 @@ public class JBRSkiaService extends JBRSkia {
                         int descriptorType = commands[offset++];
                         int descriptorVersion = commands[offset++];
                         int payloadIntCount = commands[offset++];
-                        if (descriptorType != COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER
-                                || descriptorVersion != COMMAND_EFFECT_DESCRIPTOR_VERSION_1
-                                || payloadIntCount != 2
+                        if (descriptorVersion != COMMAND_EFFECT_DESCRIPTOR_VERSION_1
                                 || offset + payloadIntCount != recordEnd) return false;
-                        int filterArgb = commands[offset++];
-                        int filterBlendMode = commands[offset++];
-                        if (filterBlendMode != COMMAND_BLEND_MODE_SRC_IN) return false;
-                        COLOR_FILTER_CACHE.put(
-                                new ColorFilterCacheKey(contextPtr, handle),
-                                new TintColorFilterDescriptor(filterArgb, filterBlendMode)
-                        );
+                        if (descriptorType == COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER) {
+                            if (payloadIntCount != 2) return false;
+                            int filterArgb = commands[offset++];
+                            int filterBlendMode = commands[offset++];
+                            if (filterBlendMode != COMMAND_BLEND_MODE_SRC_IN) return false;
+                            COLOR_FILTER_CACHE.put(
+                                    new ColorFilterCacheKey(contextPtr, handle),
+                                    ColorFilterDescriptor.tint(filterArgb, filterBlendMode)
+                            );
+                        } else if (descriptorType == COMMAND_EFFECT_DESCRIPTOR_COLOR_MATRIX_FILTER) {
+                            if (payloadIntCount != 20) return false;
+                            int[] matrixBits = new int[20];
+                            for (int index = 0; index < matrixBits.length; index++) {
+                                int bits = commands[offset++];
+                                if (!Float.isFinite(Float.intBitsToFloat(bits))) return false;
+                                matrixBits[index] = bits;
+                            }
+                            COLOR_FILTER_CACHE.put(
+                                    new ColorFilterCacheKey(contextPtr, handle),
+                                    ColorFilterDescriptor.colorMatrix(matrixBits)
+                            );
+                        } else {
+                            return false;
+                        }
                     } else if (op == COMMAND_FILL_RECT_COLOR_FILTER_REF) {
                         if (offset + 7 != recordEnd) return false;
                         applyAntialiasing(current, antiAlias);
@@ -2883,13 +2938,19 @@ public class JBRSkiaService extends JBRSkia {
                         int y = commands[offset++];
                         int width = commands[offset++];
                         int height = commands[offset++];
-                        TintColorFilterDescriptor descriptor = COLOR_FILTER_CACHE.get(new ColorFilterCacheKey(contextPtr, handle));
-                        if (descriptor == null || descriptor.blendMode() != COMMAND_BLEND_MODE_SRC_IN
-                                || width < 0 || height < 0) return false;
-                        int sourceAlpha = (argb >>> 24) & 0xff;
-                        int filterAlpha = (descriptor.argb() >>> 24) & 0xff;
-                        int combinedAlpha = (sourceAlpha * filterAlpha + 127) / 255;
-                        current.setColor(new Color((combinedAlpha << 24) | (descriptor.argb() & 0x00ffffff), true));
+                        ColorFilterDescriptor descriptor = COLOR_FILTER_CACHE.get(new ColorFilterCacheKey(contextPtr, handle));
+                        if (descriptor == null || width < 0 || height < 0) return false;
+                        if (descriptor.type() == COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER) {
+                            if (descriptor.blendMode() != COMMAND_BLEND_MODE_SRC_IN) return false;
+                            int sourceAlpha = (argb >>> 24) & 0xff;
+                            int filterAlpha = (descriptor.argb() >>> 24) & 0xff;
+                            int combinedAlpha = (sourceAlpha * filterAlpha + 127) / 255;
+                            current.setColor(new Color((combinedAlpha << 24) | (descriptor.argb() & 0x00ffffff), true));
+                        } else if (descriptor.type() == COMMAND_EFFECT_DESCRIPTOR_COLOR_MATRIX_FILTER) {
+                            current.setColor(new Color(applyColorMatrix(argb, descriptor.matrixBits()), true));
+                        } else {
+                            return false;
+                        }
                         current.fillRect(x, y, width, height);
                     } else if (op == COMMAND_STROKE_LINE) {
                         if (offset + 9 != recordEnd) return false;

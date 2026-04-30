@@ -26,8 +26,11 @@
 #import <Metal/Metal.h>
 #include <jni.h>
 #include <algorithm>
+#include <array>
 #include <chrono>
+#include <cmath>
 #include <cstdio>
+#include <cstring>
 #include <functional>
 #include <mutex>
 #include <unordered_map>
@@ -60,8 +63,8 @@
 #include "ganesh/mtl/GrMtlDirectContext.h"
 #include "ganesh/mtl/GrMtlTypes.h"
 #include "include/gpu/ganesh/SkSurfaceGanesh.h"
-#include "include/effects/SkGradient.h"
 #include "include/effects/SkDashPathEffect.h"
+#include "include/effects/SkGradient.h"
 #include "modules/skparagraph/include/FontCollection.h"
 #include "modules/skparagraph/include/Paragraph.h"
 #include "modules/skparagraph/include/ParagraphBuilder.h"
@@ -72,7 +75,7 @@
 
 #include "MTLSurfaceDataBase.h"
 
-static constexpr jint ABI_ID = 75;
+static constexpr jint ABI_ID = 76;
 static constexpr jint COMMAND_STREAM_MAGIC = 1246972723;
 static constexpr jint COMMAND_STREAM_HEADER_SIZE = 6;
 static constexpr jint COMMAND_STREAM_FLAGS_NONE = 0;
@@ -135,6 +138,7 @@ static constexpr jint COMMAND_DEFINE_EFFECT_DESCRIPTOR = 49;
 static constexpr jint COMMAND_SAVE_LAYER_BLEND_MODE = 50;
 static constexpr jint COMMAND_SAVE_LAYER_BLEND_COLOR_FILTER = 51;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER = 1;
+static constexpr jint COMMAND_EFFECT_DESCRIPTOR_COLOR_MATRIX_FILTER = 2;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_VERSION_1 = 1;
 static constexpr jint COMMAND_BLEND_MODE_PLUS = 1;
 static constexpr jint COMMAND_BLEND_MODE_SRC_IN = 2;
@@ -183,9 +187,11 @@ struct ImageCacheScopedKeyHash {
     }
 };
 
-struct TintColorFilterDescriptor {
+struct ColorFilterDescriptor {
+    jint type = 0;
     SkColor argb;
     jint blendMode;
+    std::array<SkScalar, 20> matrix;
 };
 
 struct ColorFilterScopedKey {
@@ -208,7 +214,7 @@ struct ColorFilterScopedKeyHash {
 static std::mutex gImageCacheMutex;
 static std::unordered_map<ImageCacheScopedKey, sk_sp<SkImage>, ImageCacheScopedKeyHash> gImagesByKey;
 static std::mutex gColorFilterCacheMutex;
-static std::unordered_map<ColorFilterScopedKey, TintColorFilterDescriptor, ColorFilterScopedKeyHash> gColorFiltersByKey;
+static std::unordered_map<ColorFilterScopedKey, ColorFilterDescriptor, ColorFilterScopedKeyHash> gColorFiltersByKey;
 static std::mutex gParagraphDependenciesMutex;
 static sk_sp<skia::textlayout::FontCollection> gParagraphFontCollection;
 static sk_sp<SkUnicode> gParagraphUnicode;
@@ -324,6 +330,13 @@ static SkColor skColorFromArgb(jint argb) {
                           static_cast<U8CPU>((argb >> 16) & 0xff),
                           static_cast<U8CPU>((argb >> 8) & 0xff),
                           static_cast<U8CPU>(argb & 0xff));
+}
+
+static SkScalar skScalarFromRawBits(jint bits) {
+    float value;
+    static_assert(sizeof(value) == sizeof(bits));
+    std::memcpy(&value, &bits, sizeof(value));
+    return static_cast<SkScalar>(value);
 }
 
 static SkTileMode skTileModeFromCommand(jint tileMode) {
@@ -2261,7 +2274,12 @@ static bool drawCommandList(SkCanvas* canvas,
                 {
                     std::lock_guard<std::mutex> lock(gColorFilterCacheMutex);
                     gColorFiltersByKey[ColorFilterScopedKey{imageCacheContextKey, handle}] =
-                            TintColorFilterDescriptor{filterColor, filterBlendMode};
+                            ColorFilterDescriptor{
+                                    COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER,
+                                    filterColor,
+                                    filterBlendMode,
+                                    {}
+                            };
                 }
                 break;
             }
@@ -2274,21 +2292,38 @@ static bool drawCommandList(SkCanvas* canvas,
                 const jint descriptorType = commands[offset++];
                 const jint descriptorVersion = commands[offset++];
                 const jint payloadIntCount = commands[offset++];
-                if (descriptorType != COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER ||
-                        descriptorVersion != COMMAND_EFFECT_DESCRIPTOR_VERSION_1 ||
-                        payloadIntCount != 2 ||
+                if (descriptorVersion != COMMAND_EFFECT_DESCRIPTOR_VERSION_1 ||
                         offset + payloadIntCount != recordEnd) {
                     return false;
                 }
-                const SkColor filterColor = skColorFromArgb(commands[offset++]);
-                const jint filterBlendMode = commands[offset++];
-                if (filterBlendMode != COMMAND_BLEND_MODE_SRC_IN) {
+                ColorFilterDescriptor descriptor{};
+                descriptor.type = descriptorType;
+                if (descriptorType == COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER) {
+                    if (payloadIntCount != 2) {
+                        return false;
+                    }
+                    descriptor.argb = skColorFromArgb(commands[offset++]);
+                    descriptor.blendMode = commands[offset++];
+                    if (descriptor.blendMode != COMMAND_BLEND_MODE_SRC_IN) {
+                        return false;
+                    }
+                } else if (descriptorType == COMMAND_EFFECT_DESCRIPTOR_COLOR_MATRIX_FILTER) {
+                    if (payloadIntCount != 20) {
+                        return false;
+                    }
+                    for (size_t i = 0; i < descriptor.matrix.size(); i++) {
+                        const SkScalar value = skScalarFromRawBits(commands[offset++]);
+                        if (!std::isfinite(value)) {
+                            return false;
+                        }
+                        descriptor.matrix[i] = value;
+                    }
+                } else {
                     return false;
                 }
                 {
                     std::lock_guard<std::mutex> lock(gColorFilterCacheMutex);
-                    gColorFiltersByKey[ColorFilterScopedKey{imageCacheContextKey, handle}] =
-                            TintColorFilterDescriptor{filterColor, filterBlendMode};
+                    gColorFiltersByKey[ColorFilterScopedKey{imageCacheContextKey, handle}] = descriptor;
                 }
                 break;
             }
@@ -2305,7 +2340,7 @@ static bool drawCommandList(SkCanvas* canvas,
                 jint y = commands[offset++];
                 jint rectWidth = commands[offset++];
                 jint rectHeight = commands[offset++];
-                TintColorFilterDescriptor descriptor;
+                ColorFilterDescriptor descriptor;
                 {
                     std::lock_guard<std::mutex> lock(gColorFilterCacheMutex);
                     auto cached = gColorFiltersByKey.find(ColorFilterScopedKey{imageCacheContextKey, handle});
@@ -2314,10 +2349,19 @@ static bool drawCommandList(SkCanvas* canvas,
                     }
                     descriptor = cached->second;
                 }
-                if (descriptor.blendMode != COMMAND_BLEND_MODE_SRC_IN || rectWidth < 0 || rectHeight < 0) {
+                if (rectWidth < 0 || rectHeight < 0) {
                     return false;
                 }
-                paint.setColorFilter(SkColorFilters::Blend(descriptor.argb, SkBlendMode::kSrcIn));
+                if (descriptor.type == COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER) {
+                    if (descriptor.blendMode != COMMAND_BLEND_MODE_SRC_IN) {
+                        return false;
+                    }
+                    paint.setColorFilter(SkColorFilters::Blend(descriptor.argb, SkBlendMode::kSrcIn));
+                } else if (descriptor.type == COMMAND_EFFECT_DESCRIPTOR_COLOR_MATRIX_FILTER) {
+                    paint.setColorFilter(SkColorFilters::Matrix(descriptor.matrix.data()));
+                } else {
+                    return false;
+                }
                 canvas->drawRect(SkRect::MakeXYWH(static_cast<SkScalar>(x),
                                                   static_cast<SkScalar>(y),
                                                   static_cast<SkScalar>(rectWidth),

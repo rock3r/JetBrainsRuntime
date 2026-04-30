@@ -7342,3 +7342,30 @@ Known notes:
 
 - This does not broaden color-filter support beyond tint/SrcIn. It only removes the artificial fallback when a supported graphics-layer blend mode and supported graphics-layer tint filter are used together.
 - JBR native test and live `commands-graphics-layer-blend-color-filter` validation should run after the local JBR native build is unblocked.
+
+## Checkpoint: ABI 76 Color-Matrix Effect Descriptor
+
+Status: source and JVM-side validation are in progress; native JBR/live Magic Jewel validation remains blocked on local Xcode license acceptance.
+
+What changed:
+
+- JBR private API, public Runtime API, Skiko compatibility gate, and CMP command recorder now use command ABI 76.
+- Added capability `COMMAND_CAP64_EFFECT_DESCRIPTOR_COLOR_MATRIX_FILTER` and descriptor type `COMMAND_EFFECT_DESCRIPTOR_COLOR_MATRIX_FILTER = 2`.
+- The generic `COMMAND_DEFINE_EFFECT_DESCRIPTOR` envelope now accepts version-1 color-matrix descriptors with a 20-int payload containing `Float.floatToRawIntBits(...)` for the row-major 4x5 Skia color matrix.
+- CMP remaps Compose color-matrix translation entries from Compose 0..255 units to Skia normalized units before serializing the descriptor, matching the existing Skiko `ColorFilter.makeMatrix` path.
+- JBR Java validation rejects malformed/nonfinite color-matrix descriptor payloads. Java2D fallback replay applies the matrix approximately for solid fill colors, and native replay reconstructs `SkColorFilters::Matrix(...)` inside JBR-owned Skia.
+- Skiko now requires the ABI 76 capability so older JBR builds fall back before command replay.
+- Magic Jewel gained `MAGIC_JEWEL_COMPOSE_COLOR_MATRIX_FILTER` and a `commands-color-matrix-filter` command-probe row.
+
+Verification so far:
+
+- Skiko interop tests passed:
+  - `./gradlew --no-daemon --no-configuration-cache :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`
+- CMP `ui-graphics` desktop sources compile:
+  - `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:compileKotlinDesktop`
+- Focused CMP desktop test execution is currently blocked by a broader `compose:ui` desktop compile issue resolving the Skiko JBR command-frame bridge package, before the new recorder test runs.
+
+Known notes:
+
+- This slice covers solid fill rectangles with `ColorFilter.colorMatrix(...)`; it does not yet cover color matrices on images, saveLayer paints, graphics layers, or arbitrary shaders/runtime effects.
+- Native JBR test and live `commands-color-matrix-filter` validation should run after the local JBR native build is unblocked.
