@@ -72,7 +72,7 @@
 
 #include "MTLSurfaceDataBase.h"
 
-static constexpr jint ABI_ID = 56;
+static constexpr jint ABI_ID = 57;
 static constexpr jint COMMAND_STREAM_MAGIC = 1246972723;
 static constexpr jint COMMAND_STREAM_HEADER_SIZE = 6;
 static constexpr jint COMMAND_STREAM_FLAGS_NONE = 0;
@@ -130,6 +130,7 @@ static constexpr jint COMMAND_SAVE_LAYER_COLOR_FILTER = 44;
 static constexpr jint COMMAND_DRAW_IMAGE_REF_COLOR_FILTER = 45;
 static constexpr jint COMMAND_DEFINE_COLOR_FILTER_TINT = 46;
 static constexpr jint COMMAND_FILL_RECT_COLOR_FILTER_REF = 47;
+static constexpr jint COMMAND_EVICT_COLOR_FILTER_HANDLE = 48;
 static constexpr jint COMMAND_BLEND_MODE_PLUS = 1;
 static constexpr jint COMMAND_BLEND_MODE_SRC_IN = 2;
 static constexpr jint COMMAND_PAINT_STYLE_FILL = 0;
@@ -167,8 +168,27 @@ struct TintColorFilterDescriptor {
     jint blendMode;
 };
 
+struct ColorFilterScopedKey {
+    void* context;
+    uint64_t filter;
+
+    bool operator==(const ColorFilterScopedKey& other) const {
+        return context == other.context && filter == other.filter;
+    }
+};
+
+struct ColorFilterScopedKeyHash {
+    size_t operator()(const ColorFilterScopedKey& key) const {
+        size_t contextHash = std::hash<void*>{}(key.context);
+        size_t filterHash = std::hash<uint64_t>{}(key.filter);
+        return contextHash ^ (filterHash + 0x9e3779b97f4a7c15ULL + (contextHash << 6) + (contextHash >> 2));
+    }
+};
+
 static std::mutex gImageCacheMutex;
 static std::unordered_map<ImageCacheScopedKey, sk_sp<SkImage>, ImageCacheScopedKeyHash> gImagesByKey;
+static std::mutex gColorFilterCacheMutex;
+static std::unordered_map<ColorFilterScopedKey, TintColorFilterDescriptor, ColorFilterScopedKeyHash> gColorFiltersByKey;
 static std::mutex gParagraphDependenciesMutex;
 static sk_sp<skia::textlayout::FontCollection> gParagraphFontCollection;
 static sk_sp<SkUnicode> gParagraphUnicode;
@@ -534,7 +554,6 @@ static bool drawCommandList(SkCanvas* canvas,
 
     jsize offset = COMMAND_STREAM_HEADER_SIZE;
     jsize commandEnd = COMMAND_STREAM_HEADER_SIZE + payloadLength;
-    std::unordered_map<uint64_t, TintColorFilterDescriptor> colorFilterDescriptors;
     while (offset < commandEnd) {
         jsize recordStart = offset;
         jint op = commands[offset++];
@@ -598,6 +617,16 @@ static bool drawCommandList(SkCanvas* canvas,
                              imageCacheContextKey,
                              static_cast<unsigned long long>(key),
                              removed > 0 ? "true" : "false");
+                break;
+            }
+            case COMMAND_EVICT_COLOR_FILTER_HANDLE: {
+                if (recordFlags != COMMAND_RECORD_FLAGS_NONE || offset + 2 != recordEnd) {
+                    return false;
+                }
+                const uint64_t key = imageCacheKey(commands[offset], commands[offset + 1]);
+                offset += 2;
+                std::lock_guard<std::mutex> lock(gColorFilterCacheMutex);
+                gColorFiltersByKey.erase(ColorFilterScopedKey{imageCacheContextKey, key});
                 break;
             }
             case COMMAND_CLIP_RECT: {
@@ -2099,7 +2128,11 @@ static bool drawCommandList(SkCanvas* canvas,
                 if (filterBlendMode != COMMAND_BLEND_MODE_SRC_IN) {
                     return false;
                 }
-                colorFilterDescriptors[handle] = TintColorFilterDescriptor{filterColor, filterBlendMode};
+                {
+                    std::lock_guard<std::mutex> lock(gColorFilterCacheMutex);
+                    gColorFiltersByKey[ColorFilterScopedKey{imageCacheContextKey, handle}] =
+                            TintColorFilterDescriptor{filterColor, filterBlendMode};
+                }
                 break;
             }
             case COMMAND_FILL_RECT_COLOR_FILTER_REF: {
@@ -2115,13 +2148,19 @@ static bool drawCommandList(SkCanvas* canvas,
                 jint y = commands[offset++];
                 jint rectWidth = commands[offset++];
                 jint rectHeight = commands[offset++];
-                auto descriptor = colorFilterDescriptors.find(handle);
-                if (descriptor == colorFilterDescriptors.end() ||
-                        descriptor->second.blendMode != COMMAND_BLEND_MODE_SRC_IN ||
-                        rectWidth < 0 || rectHeight < 0) {
+                TintColorFilterDescriptor descriptor;
+                {
+                    std::lock_guard<std::mutex> lock(gColorFilterCacheMutex);
+                    auto cached = gColorFiltersByKey.find(ColorFilterScopedKey{imageCacheContextKey, handle});
+                    if (cached == gColorFiltersByKey.end()) {
+                        return false;
+                    }
+                    descriptor = cached->second;
+                }
+                if (descriptor.blendMode != COMMAND_BLEND_MODE_SRC_IN || rectWidth < 0 || rectHeight < 0) {
                     return false;
                 }
-                paint.setColorFilter(SkColorFilters::Blend(descriptor->second.argb, SkBlendMode::kSrcIn));
+                paint.setColorFilter(SkColorFilters::Blend(descriptor.argb, SkBlendMode::kSrcIn));
                 canvas->drawRect(SkRect::MakeXYWH(static_cast<SkScalar>(x),
                                                   static_cast<SkScalar>(y),
                                                   static_cast<SkScalar>(rectWidth),

@@ -6503,3 +6503,26 @@ Validation:
 Next:
 - Generalize this descriptor pattern beyond tint handles: add stable descriptor type ids, explicit create/reuse/evict semantics, and then use the same mechanism for image filters/runtime effects and eventually SKSL runtime shaders.
 - Build the old/new rich-content screenshot parity harness so descriptor/effect work is judged by visual equivalence for Compose/Jewel content, with separate tolerances for Swing text that may intentionally change once Swing itself is Skia-backed.
+
+## Checkpoint: ABI 57 Persistent Color-Filter Handles
+
+Status: completed for destination-context-scoped descriptor reuse and explicit eviction.
+
+What changed:
+- CMP now caches tint color-filter handles when `compose.jbr.skia.command.colorFilterHandles=true`, emitting `COMMAND_DEFINE_COLOR_FILTER_TINT` only once for stable descriptors and reusing `COMMAND_FILL_RECT_COLOR_FILTER_REF` across later frames.
+- Runtime API and JBR private API now expose ABI 57, capability `COMMAND_CAP64_EVICT_COLOR_FILTER_HANDLE = 36028797018963968L`, and opcode `COMMAND_EVICT_COLOR_FILTER_HANDLE = 48`.
+- Skiko compatibility now requires ABI 57 and the eviction capability before enabling command mode.
+- JBR Java and native replay keep color-filter descriptor caches scoped by destination context id, so handles never cross Java2D destination contexts.
+- JBR validates in-frame define/use/evict order for static API tests and rejects undefined handles; runtime replay can also resolve handles cached by previous frames in the same destination context.
+
+Validation:
+- CMP focused tests `writesFillRectTintColorFilterHandleRecord` and `reusesTintColorFilterHandleAcrossFrames` passed.
+- Runtime API compile passed for ABI 57.
+- Skiko `JbrSkiaInteropTest` passed with ABI 57 discovery and capability mask.
+- JBR API/validator smoke passed with valid color-filter define/use/evict streams and undefined-handle rejection.
+- Native `JBRSkiaInterop.mm` standalone build passed with command-stream ABI 57.
+- Magic Jewel command-probe row passed: `/tmp/magic-jewel-command-probe-abi57-color-filter-handle/suite.tsv`, with `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, and `jbr_command_frames=366`.
+
+Next:
+- Replace the tint-specific handle payload with a generalized descriptor envelope: descriptor kind, version, payload length, stable hash, create/use/evict commands, and parseable fallback reasons.
+- Use that envelope for the first non-tint effect descriptor, likely blur/image-filter or a small runtime-effect/SKSL probe depending on what Compose exposes cleanly without raw Skia pointer transfer.
