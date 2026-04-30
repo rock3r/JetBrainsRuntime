@@ -6275,3 +6275,72 @@ Roadmap update:
 
 Next:
 - Continue filling the paint-semantics gaps with small command slices while keeping broader generic shader/effect work behind a structured JBR-owned handle ABI.
+
+## Checkpoint: ABI 52 Tint Color-Filter Fill Rect
+
+Date: 2026-04-30
+
+Status: completed for the narrow `ColorFilter.tint(..., BlendMode.SrcIn)` solid fill-rectangle command path.
+
+Why:
+- The previous color-filter probe intentionally proved that unsupported color filters fell back cleanly to picture replay.
+- A tint color filter with `BlendMode.SrcIn` over a solid fill rectangle is serializable as data: source ARGB, tint ARGB, tint blend mode, and rectangle geometry.
+- This is not generic color-filter support yet; arbitrary color matrices, lighting filters, image filters, path effects, and effect graphs still need descriptor/handle work owned by JBR's Skia runtime.
+
+Changes:
+- JBR command ABI bumped to `ABI_ID=52`; `BUILD_ID` now includes `abi=52`.
+- Added 64-bit command capability `COMMAND_CAP64_FILL_RECT_COLOR_FILTER = 562949953421312L`.
+- Added command opcode `COMMAND_FILL_RECT_COLOR_FILTER = 42`.
+- Added blend payload value `COMMAND_BLEND_MODE_SRC_IN = 2`.
+- CMP records `drawRect` with a `BlendModeColorFilter` whose blend mode is `BlendMode.SrcIn`, solid color, fill style, and otherwise supported paint as a command payload instead of marking the frame unsupported.
+- Skiko compatibility now requires ABI 52 and the tint color-filter fill-rect capability bit before enabling command mode.
+- JBR validates the command payload; native replay reconstructs the color filter inside JBR's Skia runtime through `SkColorFilters::Blend(filterColor, SkBlendMode::kSrcIn)`.
+- The Java2D fallback replay approximates the same solid-fill case by applying the source/tint alpha and filling with the tint RGB.
+- Magic Jewel's color-filter probe now expects command replay instead of picture fallback; the historical case name `commands-color-filter-fallback` currently remains as the row identifier while its expected result has changed.
+
+Validation:
+- CMP TDD/focused recorder tests:
+  - first run failed before implementation with ABI 51/header-only output for `writesFillRectTintColorFilterRecord`.
+  - command: `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesFillRectTintColorFilterRecord --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesFillRectPlusBlendModeRecord`
+  - result: passed after the recorder implementation.
+- Runtime API compile:
+  - command: `javac -d /tmp/jbr-api-skia-abi52-compile src/com/jetbrains/Provided.java src/com/jetbrains/Service.java src/com/jetbrains/JBRSkia.java`
+  - result: passed.
+- JBR private API/service/test compile and runtime smoke:
+  - result: passed for `JBRSkia.java`, `JBRSkiaService.java`, and `JBRSkiaApiTest`; `/tmp/jbr-skia-run/desktop` refreshed with ABI 52 service classes.
+- JBR native dylib compile smoke:
+  - result: passed; `/tmp/jbr-skia-native/libjbrskiainterop.dylib` rebuilt with ABI 52.
+- Runtime API shim rebuild:
+  - command: `bash tools/build.sh process && bash tools/build.sh dev $(/usr/libexec/java_home -v 21) /tmp/jbr-api-skia-abi52-dev`
+  - result: passed; copied to `/tmp/jbr-api-shim.jar`.
+- Skiko compatibility tests:
+  - first ABI52 run failed because the fake native metadata fixture still advertised command-stream ABI 51, causing `native-abi-mismatch` before capability validation.
+  - command: `./gradlew --no-daemon :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`
+  - result: passed after updating the fixture to ABI 52.
+- Skiko local publish:
+  - command: `./gradlew --no-daemon :skiko:publishToMavenLocal`
+  - result: passed.
+- CMP desktop jars refresh:
+  - command: `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon :compose:ui:ui-graphics:desktopJar :compose:ui:ui-text:desktopJar :compose:ui:ui:desktopJar`
+  - result: passed.
+- Magic Jewel compile:
+  - command: `./gradlew --no-daemon compileKotlin && bash -n scripts/assert-jbr-skia-command-window-screenshot.sh && bash -n scripts/jbr-skia-command-probe-suite.sh`
+  - result: passed.
+- Focused Magic Jewel tint color-filter smoke:
+  - command: `OUT_DIR=/tmp/magic-jewel-abi52-tint-color-filter-smoke DURATION_SECONDS=6 WARMUP_SECONDS=1 SAMPLE_INTERVAL_SECONDS=1 JBR_SKIA_RENDER_MODE=commands MAGIC_JEWEL_COMPOSE_COLOR_FILTER=true SKIKO_VERSION=0.0.0-SNAPSHOT bash scripts/jbr-skia-interop-report.sh`
+  - result: passed.
+  - report: `/tmp/magic-jewel-abi52-tint-color-filter-smoke/report.md`.
+  - command replay: `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, `jbr_command_frames=1398` in the report summary.
+- Focused Magic Jewel command-probe row:
+  - command: `CASES=commands-color-filter-fallback OUT_ROOT=/tmp/magic-jewel-command-probe-abi52-color-filter DURATION_SECONDS=6 WARMUP_SECONDS=1 SAMPLE_INTERVAL_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT bash scripts/jbr-skia-command-probe-suite.sh`
+  - result: passed.
+  - suite: `/tmp/magic-jewel-command-probe-abi52-color-filter/suite.tsv`.
+  - row: `commands-color-filter-fallback`, `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, `jbr_command_frames=641`.
+
+Roadmap update:
+- Recorded ABI 52 command coverage.
+- Recorded the focused tint color-filter smoke and command-probe row paths.
+- Kept broader color-filter/effect support tied to the JBR-owned descriptor/handle ABI rather than raw Skiko runtime pointers.
+
+Next:
+- Continue shrinking the fallback matrix; path effects and image filters remain intentionally harder because they require effect descriptors or handles, not just paint scalar metadata.

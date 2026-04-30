@@ -36,6 +36,7 @@
 #include "SkBlendMode.h"
 #include "SkCanvas.h"
 #include "SkColor.h"
+#include "SkColorFilter.h"
 #include "SkColorSpace.h"
 #include "SkData.h"
 #include "SkImage.h"
@@ -70,7 +71,7 @@
 
 #include "MTLSurfaceDataBase.h"
 
-static constexpr jint ABI_ID = 51;
+static constexpr jint ABI_ID = 52;
 static constexpr jint COMMAND_STREAM_MAGIC = 1246972723;
 static constexpr jint COMMAND_STREAM_HEADER_SIZE = 6;
 static constexpr jint COMMAND_STREAM_FLAGS_NONE = 0;
@@ -122,7 +123,9 @@ static constexpr jint COMMAND_STROKE_ROUND_RECT_RADIAL_GRADIENT = 38;
 static constexpr jint COMMAND_STROKE_RECT_SWEEP_GRADIENT = 39;
 static constexpr jint COMMAND_STROKE_ROUND_RECT_SWEEP_GRADIENT = 40;
 static constexpr jint COMMAND_FILL_RECT_BLEND_MODE = 41;
+static constexpr jint COMMAND_FILL_RECT_COLOR_FILTER = 42;
 static constexpr jint COMMAND_BLEND_MODE_PLUS = 1;
+static constexpr jint COMMAND_BLEND_MODE_SRC_IN = 2;
 static constexpr jint COMMAND_PAINT_STYLE_FILL = 0;
 static constexpr jint COMMAND_PAINT_STYLE_STROKE = 1;
 static constexpr jint COMMAND_PATH_FILL_NON_ZERO = 0;
@@ -1966,6 +1969,30 @@ static bool drawCommandList(SkCanvas* canvas,
                     return false;
                 }
                 paint.setBlendMode(SkBlendMode::kPlus);
+                canvas->drawRect(SkRect::MakeXYWH(static_cast<SkScalar>(x),
+                                                  static_cast<SkScalar>(y),
+                                                  static_cast<SkScalar>(rectWidth),
+                                                  static_cast<SkScalar>(rectHeight)),
+                                 paint);
+                break;
+            }
+            case COMMAND_FILL_RECT_COLOR_FILTER: {
+                if (offset + 7 != recordEnd) {
+                    return false;
+                }
+                SkPaint paint;
+                paint.setAntiAlias(antiAlias);
+                paint.setColor(skColorFromArgb(commands[offset++]));
+                SkColor filterColor = skColorFromArgb(commands[offset++]);
+                jint filterBlendMode = commands[offset++];
+                jint x = commands[offset++];
+                jint y = commands[offset++];
+                jint rectWidth = commands[offset++];
+                jint rectHeight = commands[offset++];
+                if (filterBlendMode != COMMAND_BLEND_MODE_SRC_IN || rectWidth < 0 || rectHeight < 0) {
+                    return false;
+                }
+                paint.setColorFilter(SkColorFilters::Blend(filterColor, SkBlendMode::kSrcIn));
                 canvas->drawRect(SkRect::MakeXYWH(static_cast<SkScalar>(x),
                                                   static_cast<SkScalar>(y),
                                                   static_cast<SkScalar>(rectWidth),

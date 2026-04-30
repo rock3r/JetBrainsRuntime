@@ -48,6 +48,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] ABI 49: sweep-gradient stroked rectangles use serialized gradient and stroke metadata.
 - [x] ABI 50: sweep-gradient stroked rounded rectangles use serialized gradient, radii, and stroke metadata.
 - [x] ABI 51: `BlendMode.Plus` solid fill rectangles use an explicit blend-mode fill command.
+- [x] ABI 52: `ColorFilter.tint(..., BlendMode.SrcIn)` solid fill rectangles use an explicit color-filter fill command.
 
 ## Near-Term Rendering Work
 
@@ -85,6 +86,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Add narrow sweep-gradient stroked rounded-rectangle support without sharing raw `SkShader*` pointers.
 - [x] Add narrow `BlendMode.Plus` solid fill-rectangle support through a versioned command instead of picture fallback.
 - [ ] Expand blend-mode command coverage beyond `Plus` fill rectangles only after each mode has exact Skia-vs-Java2D semantics documented.
+- [x] Add narrow tint color-filter solid fill-rectangle support through a versioned command instead of picture fallback.
+- [ ] Expand color-filter command coverage beyond tint/SrcIn fill rectangles only through serialized descriptors or JBR-owned effect handles.
 - [x] Add screenshot-level text-presence assertions using stable pixel regions for top/bottom Magic Jewel labels.
 - [x] Add screenshot-level text placement assertions using stable dark-pixel bounding boxes.
 - [x] Add paragraph-row screenshot assertions for native-text layout probes.
@@ -140,6 +143,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] ABI 50 gradient-surfaces command-probe row: `/tmp/magic-jewel-command-probe-abi50-gradient-surfaces/suite.tsv`.
 - [x] ABI 51 Plus blend-mode fill-rect smoke: `/tmp/magic-jewel-abi51-fill-rect-plus-blend-smoke/report.md`.
 - [x] ABI 51 blend-mode command-probe row: `/tmp/magic-jewel-command-probe-abi51-blend-mode/suite.tsv`.
+- [x] ABI 52 tint color-filter fill-rect smoke: `/tmp/magic-jewel-abi52-tint-color-filter-smoke/report.md`.
+- [x] ABI 52 color-filter command-probe row: `/tmp/magic-jewel-command-probe-abi52-color-filter/suite.tsv`.
 - [x] Real undecorated Swing popup-window smoke captured separately by window id.
 
 ## Compatibility And ABI Hardening
