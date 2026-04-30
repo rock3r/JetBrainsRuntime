@@ -51,13 +51,13 @@ public class JBRSkiaApiTest {
     }
 
     public static void main(String[] args) throws Exception {
-        assertEquals(49, JBRSkia.ABI_ID, "ABI_ID");
+        assertEquals(50, JBRSkia.ABI_ID, "ABI_ID");
         assertEquals(3, JBRSkia.NATIVE_ABI_VERSION, "NATIVE_ABI_VERSION");
-        assertEquals("skia=m147-64a2414108;flags=macos-release-metal-poc:1;abi=49;native=3", JBRSkia.BUILD_ID, "BUILD_ID");
+        assertEquals("skia=m147-64a2414108;flags=macos-release-metal-poc:1;abi=50;native=3", JBRSkia.BUILD_ID, "BUILD_ID");
 
-        assertReflectiveStaticEquals(49, JBRSkia.class.getDeclaredField("ABI_ID"));
+        assertReflectiveStaticEquals(50, JBRSkia.class.getDeclaredField("ABI_ID"));
         assertReflectiveStaticEquals(3, JBRSkia.class.getDeclaredField("NATIVE_ABI_VERSION"));
-        assertReflectiveStaticEquals("skia=m147-64a2414108;flags=macos-release-metal-poc:1;abi=49;native=3", JBRSkia.class.getDeclaredField("BUILD_ID"));
+        assertReflectiveStaticEquals("skia=m147-64a2414108;flags=macos-release-metal-poc:1;abi=50;native=3", JBRSkia.class.getDeclaredField("BUILD_ID"));
 
         if (TestJBRSkia.INSTANCE != null) {
             throw new AssertionError("JBRSkia service must be unavailable before native runtime is wired");
@@ -161,7 +161,8 @@ public class JBRSkiaApiTest {
                 | JBRSkia.COMMAND_CAP64_STROKE_ROUND_RECT_LINEAR_GRADIENT
                 | JBRSkia.COMMAND_CAP64_STROKE_RECT_RADIAL_GRADIENT
                 | JBRSkia.COMMAND_CAP64_STROKE_ROUND_RECT_RADIAL_GRADIENT
-                | JBRSkia.COMMAND_CAP64_STROKE_RECT_SWEEP_GRADIENT;
+                | JBRSkia.COMMAND_CAP64_STROKE_RECT_SWEEP_GRADIENT
+                | JBRSkia.COMMAND_CAP64_STROKE_ROUND_RECT_SWEEP_GRADIENT;
     }
 
     private static void assertCommandStreamValidation() {
@@ -184,6 +185,7 @@ public class JBRSkiaApiTest {
         assertValidCommandStream(validRadialGradientStrokeStream(), "valid radial-gradient stroke stream");
         assertValidCommandStream(validRadialGradientStrokeRoundRectStream(), "valid radial-gradient stroke round-rect stream");
         assertValidCommandStream(validSweepGradientStrokeStream(), "valid sweep-gradient stroke stream");
+        assertValidCommandStream(validSweepGradientStrokeRoundRectStream(), "valid sweep-gradient stroke round-rect stream");
         assertValidCommandStream(new int[] {
                 JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 3,
                 JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
@@ -417,6 +419,16 @@ public class JBRSkiaApiTest {
                 JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
                 JBRSkia.COMMAND_STROKE_RECT_SWEEP_GRADIENT, 72, JBRSkia.COMMAND_RECORD_FLAG_ANTIALIAS,
                 1, 2, 11, 12, 12000, 1, 0, 4000,
+                6, 7, 2, 0xff22d3ee, 0, 0xfff97316, 1000
+        };
+    }
+
+    private static int[] validSweepGradientStrokeRoundRectStream() {
+        return new int[] {
+                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 20,
+                JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
+                JBRSkia.COMMAND_STROKE_ROUND_RECT_SWEEP_GRADIENT, 80, JBRSkia.COMMAND_RECORD_FLAG_ANTIALIAS,
+                1, 2, 11, 12, 3000, 4000, 12000, 1, 0, 4000,
                 6, 7, 2, 0xff22d3ee, 0, 0xfff97316, 1000
         };
     }

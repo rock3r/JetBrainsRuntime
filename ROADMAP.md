@@ -46,6 +46,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] ABI 47: radial-gradient stroked rectangles use serialized gradient and stroke metadata.
 - [x] ABI 48: radial-gradient stroked rounded rectangles use serialized gradient, radii, and stroke metadata.
 - [x] ABI 49: sweep-gradient stroked rectangles use serialized gradient and stroke metadata.
+- [x] ABI 50: sweep-gradient stroked rounded rectangles use serialized gradient, radii, and stroke metadata.
 
 ## Near-Term Rendering Work
 
@@ -76,6 +77,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Add narrow radial-gradient stroked-rectangle support without sharing raw `SkShader*` pointers.
 - [x] Add narrow radial-gradient stroked rounded-rectangle support without sharing raw `SkShader*` pointers.
 - [x] Add narrow sweep-gradient stroked-rectangle support without sharing raw `SkShader*` pointers.
+- [x] Add narrow sweep-gradient stroked rounded-rectangle support without sharing raw `SkShader*` pointers.
 - [x] Add screenshot-level text-presence assertions using stable pixel regions for top/bottom Magic Jewel labels.
 - [x] Add screenshot-level text placement assertions using stable dark-pixel bounding boxes.
 - [x] Add paragraph-row screenshot assertions for native-text layout probes.
@@ -123,6 +125,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] ABI 48 gradient-surfaces command-probe row: `/tmp/magic-jewel-command-probe-abi48-gradient-surfaces/suite.tsv`.
 - [x] ABI 49 sweep-gradient stroke smoke: `/tmp/magic-jewel-abi49-sweep-gradient-stroke-smoke-2/report.md`.
 - [x] ABI 49 gradient-surfaces command-probe row: `/tmp/magic-jewel-command-probe-abi49-gradient-surfaces/suite.tsv`.
+- [x] ABI 50 sweep-gradient stroke rounded-rectangle smoke: `/tmp/magic-jewel-abi50-sweep-gradient-stroke-round-rect-smoke-2/report.md`.
+- [x] ABI 50 gradient-surfaces command-probe row: `/tmp/magic-jewel-command-probe-abi50-gradient-surfaces/suite.tsv`.
 - [x] Real undecorated Swing popup-window smoke captured separately by window id.
 
 ## Compatibility And ABI Hardening
