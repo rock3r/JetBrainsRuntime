@@ -6913,4 +6913,33 @@ Verification:
 
 Next:
 
-- Continue the component blend family with `Saturation`, `Color`, and `Luminosity`, or spend a slice on the old/new screenshot parity harness before adding more modes.
+- Continue the component blend family with `Color` and `Luminosity`, or spend a slice on the old/new screenshot parity harness before adding more modes.
+
+## Checkpoint: ABI 71 Saturation Blend-Mode Fill Rectangles
+
+Status: completed as another exact direct-mapping blend-mode slice across JBR, public Runtime API, Skiko, CMP, and Magic Jewel.
+
+What changed:
+
+- Runtime API and JBR private API expose ABI 71 and the Saturation blend-mode payload constant.
+- JBR Java validation accepts Saturation wherever the fill-rect blend-mode command is valid.
+- Native `JBRSkiaInterop.mm` gates command streams on ABI 71 and maps the payload to `SkBlendMode::kSaturation` inside JBR's Skia runtime.
+- Skiko compatibility requires ABI 71 before enabling command mode.
+- CMP records `BlendMode.Saturation` solid fill rectangles through the structured blend-mode command when the paint has no shader, color filter, or path effect.
+- Magic Jewel extends the blend-mode visual probe and screenshot assertion with a visible far-right lower Saturation region.
+- `ROADMAP.md` marks ABI 71 complete and records the live probe path.
+
+Verification:
+
+- Runtime API compile passed for ABI 71.
+- JBR API validator passed with ABI 71 and the Saturation payload.
+- Native `JBRSkiaInterop.mm` standalone build passed at `/tmp/jbr-skia-native/libjbrskiainterop.dylib` with the Saturation mapping.
+- CMP focused recorder tests passed for Saturation and Hue blend-mode records.
+- Skiko interop tests passed with ABI 71 fixture expectations.
+- Magic Jewel compile passed.
+- Magic Jewel ABI 71 Saturation live command probe passed: `/tmp/magic-jewel-command-probe-abi71-saturation-blend/suite.tsv`, with `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, and `jbr_command_frames=485`.
+- The window screenshot assertion passed with `blendModeSaturation=6518`.
+
+Next:
+
+- Continue the component blend family with `Color` and `Luminosity`, then reassess whether the old/new screenshot parity harness should become the next priority checkpoint.
