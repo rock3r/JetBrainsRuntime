@@ -6740,3 +6740,32 @@ Verification:
 Next:
 
 - Continue exact blend-mode slices for remaining direct Skia mappings, or pause the blend series to implement the window-only old/new screenshot parity harness now that the command path has enough rich content to compare.
+
+## Checkpoint: ABI 65 Exclusion Blend-Mode Fill Rectangles
+
+Status: completed as another exact direct-mapping blend-mode slice across JBR, public Runtime API, Skiko, CMP, and Magic Jewel.
+
+What changed:
+
+- Runtime API and JBR private API expose ABI 65 and the Exclusion blend-mode payload constant.
+- JBR Java validation accepts Exclusion wherever the fill-rect blend-mode command is valid.
+- Native `JBRSkiaInterop.mm` gates command streams on ABI 65 and maps the payload to `SkBlendMode::kExclusion` inside JBR's Skia runtime.
+- Skiko compatibility requires ABI 65 before enabling command mode.
+- CMP records `BlendMode.Exclusion` solid fill rectangles through the structured blend-mode command when the paint has no shader, color filter, or path effect.
+- Magic Jewel extends the blend-mode visual probe and screenshot assertion with a visible Exclusion region.
+- `ROADMAP.md` marks ABI 65 complete and keeps the screenshot-parity and generic-shader implementation tracks as active follow-up work.
+
+Verification:
+
+- Runtime API compile passed for ABI 65.
+- JBR API validator passed with ABI 65 and the Exclusion payload.
+- Native `JBRSkiaInterop.mm` standalone build passed at `/tmp/jbr-skia-native/libjbrskiainterop.dylib` with the Exclusion mapping.
+- CMP focused recorder tests passed for Exclusion and Difference blend-mode records.
+- Skiko interop tests passed with ABI 65 fixture expectations.
+- Magic Jewel compile passed.
+- Magic Jewel ABI 65 Exclusion live command probe passed: `/tmp/magic-jewel-command-probe-abi65-exclusion-blend/suite.tsv`, with `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, and `jbr_command_frames=570`.
+- The window screenshot assertion passed with `blendModeExclusion=3202`.
+
+Next:
+
+- Continue exact direct-mapping blend-mode slices if we want more paint coverage quickly; otherwise the richer next validation slice is the window-only old/new screenshot parity harness.
