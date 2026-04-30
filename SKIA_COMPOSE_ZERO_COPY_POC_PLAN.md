@@ -5061,3 +5061,35 @@ Validation:
 
 Next:
 - Use the command-probe `suite.tsv` alongside the benchmark and artifact matrix summaries for handoff/CI jobs.
+
+## Checkpoint: Core Primitive Screenshot Region Assertions
+
+Date: 2026-04-30
+
+Status: completed as screenshot-oracle hardening for the command core-primitives probe.
+
+Why:
+- The command screenshot assertion already checked broad scene colors, text presence, popup/menu pixels, and zero-picture command-mode report counters.
+- The core-primitives probe enables several extra draw operations, but a missing optional probe could still pass if the base scene had enough similar colors elsewhere.
+
+Changes:
+- `scripts/assert-jbr-skia-command-window-screenshot.sh` now records env-gated region counts for:
+  - top-left cyan probe area: clip/clip-out
+  - bottom-left cyan probe area: transform
+  - right-side purple probe area: rounded rectangle
+  - right-side orange probe area: draw path
+  - right-side cyan probe area: clip path / draw arc.
+- The checks only run when the corresponding `MAGIC_JEWEL_COMPOSE_*` probe environment variable is enabled, so normal command-mode screenshots remain broad-scene checks.
+
+Validation:
+- Calibrated against an existing core-primitives screenshot:
+  - command: `MAGIC_JEWEL_COMPOSE_IMAGE=true MAGIC_JEWEL_COMPOSE_TRANSFORM=true MAGIC_JEWEL_COMPOSE_SAVELAYER=true MAGIC_JEWEL_COMPOSE_CLIP=true MAGIC_JEWEL_COMPOSE_CLIP_OUT=true MAGIC_JEWEL_COMPOSE_CLIP_PATH=true MAGIC_JEWEL_COMPOSE_DRAW_PATH=true MAGIC_JEWEL_COMPOSE_DRAW_ARC=true MAGIC_JEWEL_COMPOSE_DRAW_ROUND_RECT=true scripts/assert-jbr-skia-command-window-screenshot.sh /tmp/magic-jewel-core-primitives-probe-region-smoke/commands-core-primitives/new-window.png`
+  - result: passed.
+  - counts: `probeTopLeftCyan=7564`, `probeBottomLeftCyan=4417`, `probeRightPurple=5428`, `probeRightOrange=2592`, `probeRightCyan=12606`.
+- Live command-probe suite:
+  - command: `OUT_ROOT=/tmp/magic-jewel-core-primitives-region-suite-smoke CASES=commands-core-primitives DURATION_SECONDS=3 WARMUP_SECONDS=1 SAMPLE_INTERVAL_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT bash scripts/jbr-skia-command-probe-suite.sh`
+  - result: `JBR_SKIA_COMMAND_PROBE_SUITE passed out_root=/tmp/magic-jewel-core-primitives-region-suite-smoke`
+  - case summary: `status=passed`, `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, `jbr_command_frames=289`.
+
+Next:
+- Add similarly targeted region checks for gradient probe cases if their colors prove stable enough across captures.
