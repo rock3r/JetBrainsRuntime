@@ -103,6 +103,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Parser-level tests for old Skiko/new JBR and new Skiko/old JBR fallback combinations.
 - [x] Launch-level forced compatibility matrix runner for happy path plus ABI/native-ABI/capability/public-API fallbacks.
 - [x] Launch-level artifact matrix scaffold for named current/old JBR API, JBR native, desktop patch, Skiko, and CMP artifacts.
+- [x] Artifact matrix can require old-artifact rows in CI and fail if optional bundles are missing.
 - [x] Skiko invalidates temporary cached surface state when scoped destination identity changes.
 - [x] Magic Jewel parser coverage for `SKIKO_JBR_INTEROP_SURFACE_CHANGED`.
 - [x] Magic Jewel launch-level resize validation for surface identity changes.

@@ -5352,3 +5352,27 @@ Validation:
 
 Note:
 - This remains a placement guardrail, not a glyph-metric or OCR assertion.
+
+## Checkpoint: Artifact Matrix Required-Old Guard
+
+Date: 2026-04-30
+
+Status: completed as artifact-matrix CI ergonomics.
+
+Why:
+- The artifact matrix can only run full old/new rows when old bundles are supplied locally.
+- For local development, skipped optional rows are useful; for CI jobs that promise old bundles, skipped rows should fail loudly.
+
+Change:
+- `scripts/jbr-skia-artifact-matrix.sh` added `REQUIRE_OLD_ARTIFACT_ROWS=true`.
+- When enabled, the script fails if any optional old-artifact row is skipped.
+- `README.md` documents the guard.
+- `ROADMAP.md` records this as complete while keeping the real old-bundle matrix pass open until artifacts are supplied.
+
+Validation:
+- Default dry-run:
+  - command: `DRY_RUN=true OUT_ROOT=/tmp/magic-jewel-artifact-matrix-dry bash scripts/jbr-skia-artifact-matrix.sh --dry-run`
+  - result: passed with five optional old rows skipped.
+- Required-old dry-run:
+  - command: `DRY_RUN=true REQUIRE_OLD_ARTIFACT_ROWS=true OUT_ROOT=/tmp/magic-jewel-artifact-matrix-required-dry bash scripts/jbr-skia-artifact-matrix.sh --dry-run`
+  - result: failed as expected with `JBR_SKIA_ARTIFACT_MATRIX failed: 5 optional old-artifact rows were skipped`.
