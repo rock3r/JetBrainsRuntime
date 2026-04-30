@@ -116,7 +116,8 @@ public class JBRSkiaService extends JBRSkia {
                     | COMMAND_CAP64_FILL_RECT_IMAGE_SHADER
                     | COMMAND_CAP64_STROKE_RECT_LINEAR_GRADIENT
                     | COMMAND_CAP64_STROKE_ROUND_RECT_LINEAR_GRADIENT
-                    | COMMAND_CAP64_STROKE_RECT_RADIAL_GRADIENT;
+                    | COMMAND_CAP64_STROKE_RECT_RADIAL_GRADIENT
+                    | COMMAND_CAP64_STROKE_ROUND_RECT_RADIAL_GRADIENT;
     private static final boolean NATIVE_BRIDGE_AVAILABLE = loadNativeBridge();
     private static final AtomicLong NEXT_SCOPE_ID = new AtomicLong(1);
     private static final int MAX_CACHED_IMAGES = 256;
@@ -240,6 +241,7 @@ public class JBRSkiaService extends JBRSkia {
         if (op == COMMAND_STROKE_RECT_LINEAR_GRADIENT) return -17;
         if (op == COMMAND_STROKE_ROUND_RECT_LINEAR_GRADIENT) return -18;
         if (op == COMMAND_STROKE_RECT_RADIAL_GRADIENT) return -19;
+        if (op == COMMAND_STROKE_ROUND_RECT_RADIAL_GRADIENT) return -20;
         if (op == COMMAND_FILL_RECT_IMAGE_SHADER) return 14;
         if (op == COMMAND_CLEAR) return 4;
         if (op == COMMAND_CLEAR_RECT) return 7;
@@ -305,6 +307,9 @@ public class JBRSkiaService extends JBRSkia {
         }
         if (expectedLength == -19 && record.op() == COMMAND_STROKE_RECT_RADIAL_GRADIENT) {
             return record.recordLength() >= 20;
+        }
+        if (expectedLength == -20 && record.op() == COMMAND_STROKE_ROUND_RECT_RADIAL_GRADIENT) {
+            return record.recordLength() >= 22;
         }
         return expectedLength == record.recordLength();
     }
@@ -614,6 +619,44 @@ public class JBRSkiaService extends JBRSkia {
             int previousStop = -1;
             for (int i = 0; i < colorCount; i++) {
                 int stop1000 = commands[record.argsStart() + 14 + i * 2];
+                if (stop1000 < 0 || stop1000 > 1000 || stop1000 <= previousStop) {
+                    return false;
+                }
+                previousStop = stop1000;
+            }
+            return true;
+        }
+        if (record.op() == COMMAND_STROKE_ROUND_RECT_RADIAL_GRADIENT) {
+            if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE
+                    && record.recordFlags() != COMMAND_RECORD_FLAG_ANTIALIAS) {
+                return false;
+            }
+            int left1000 = commands[record.argsStart()];
+            int top1000 = commands[record.argsStart() + 1];
+            int right1000 = commands[record.argsStart() + 2];
+            int bottom1000 = commands[record.argsStart() + 3];
+            int radiusX1000 = commands[record.argsStart() + 4];
+            int radiusY1000 = commands[record.argsStart() + 5];
+            int strokeWidth1000 = commands[record.argsStart() + 6];
+            int strokeCap = commands[record.argsStart() + 7];
+            int strokeJoin = commands[record.argsStart() + 8];
+            int strokeMiter1000 = commands[record.argsStart() + 9];
+            int radius1000 = commands[record.argsStart() + 12];
+            int tileMode = commands[record.argsStart() + 13];
+            int colorCount = commands[record.argsStart() + 14];
+            if (right1000 < left1000 || bottom1000 < top1000
+                    || radiusX1000 < 0 || radiusY1000 < 0
+                    || strokeWidth1000 <= 0 || strokeCap < 0 || strokeCap > 2
+                    || strokeJoin < 0 || strokeJoin > 2 || strokeMiter1000 < 0
+                    || radius1000 <= 0
+                    || tileMode < 0 || tileMode > 3
+                    || colorCount < 2 || colorCount > 16
+                    || record.argsStart() + 15 + colorCount * 2 != record.recordEnd()) {
+                return false;
+            }
+            int previousStop = -1;
+            for (int i = 0; i < colorCount; i++) {
+                int stop1000 = commands[record.argsStart() + 16 + i * 2];
                 if (stop1000 < 0 || stop1000 > 1000 || stop1000 <= previousStop) {
                     return false;
                 }
@@ -1896,6 +1939,70 @@ public class JBRSkiaService extends JBRSkia {
                                 top1000 / 1000f,
                                 (right1000 - left1000) / 1000f,
                                 (bottom1000 - top1000) / 1000f
+                        ));
+                    } else if (op == COMMAND_STROKE_ROUND_RECT_RADIAL_GRADIENT) {
+                        if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE
+                                && record.recordFlags() != COMMAND_RECORD_FLAG_ANTIALIAS) {
+                            return false;
+                        }
+                        if (offset + 15 > recordEnd) return false;
+                        int left1000 = commands[offset++];
+                        int top1000 = commands[offset++];
+                        int right1000 = commands[offset++];
+                        int bottom1000 = commands[offset++];
+                        int radiusX1000 = commands[offset++];
+                        int radiusY1000 = commands[offset++];
+                        int strokeWidth1000 = commands[offset++];
+                        int strokeCap = commands[offset++];
+                        int strokeJoin = commands[offset++];
+                        int strokeMiter1000 = commands[offset++];
+                        int centerX1000 = commands[offset++];
+                        int centerY1000 = commands[offset++];
+                        int radius1000 = commands[offset++];
+                        int tileMode = commands[offset++];
+                        int colorCount = commands[offset++];
+                        if (right1000 < left1000 || bottom1000 < top1000
+                                || radiusX1000 < 0 || radiusY1000 < 0
+                                || strokeWidth1000 <= 0 || strokeCap < 0 || strokeCap > 2
+                                || strokeJoin < 0 || strokeJoin > 2 || strokeMiter1000 < 0
+                                || radius1000 <= 0
+                                || tileMode < 0 || tileMode > 3
+                                || colorCount < 2 || colorCount > 16 || offset + colorCount * 2 != recordEnd) {
+                            return false;
+                        }
+                        Color[] colors = new Color[colorCount];
+                        float[] fractions = new float[colorCount];
+                        int previousStop = -1;
+                        for (int i = 0; i < colorCount; i++) {
+                            colors[i] = new Color(commands[offset++], true);
+                            int stop1000 = commands[offset++];
+                            if (stop1000 < 0 || stop1000 > 1000 || stop1000 <= previousStop) {
+                                return false;
+                            }
+                            previousStop = stop1000;
+                            fractions[i] = stop1000 / 1000f;
+                        }
+                        applyAntialiasing(current, antiAlias);
+                        current.setPaint(new RadialGradientPaint(
+                                new Point2D.Float(centerX1000 / 1000f, centerY1000 / 1000f),
+                                radius1000 / 1000f,
+                                fractions,
+                                colors,
+                                gradientCycleMethod(tileMode)
+                        ));
+                        current.setStroke(new BasicStroke(
+                                strokeWidth1000 / 1000f,
+                                strokeCap == 1 ? BasicStroke.CAP_ROUND : strokeCap == 2 ? BasicStroke.CAP_SQUARE : BasicStroke.CAP_BUTT,
+                                strokeJoin == 1 ? BasicStroke.JOIN_ROUND : strokeJoin == 2 ? BasicStroke.JOIN_BEVEL : BasicStroke.JOIN_MITER,
+                                Math.max(1f, strokeMiter1000 / 1000f)
+                        ));
+                        current.draw(new java.awt.geom.RoundRectangle2D.Float(
+                                left1000 / 1000f,
+                                top1000 / 1000f,
+                                (right1000 - left1000) / 1000f,
+                                (bottom1000 - top1000) / 1000f,
+                                radiusX1000 * 2f / 1000f,
+                                radiusY1000 * 2f / 1000f
                         ));
                     } else if (op == COMMAND_FILL_RECT_SWEEP_GRADIENT) {
                         if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE

@@ -6014,3 +6014,67 @@ Roadmap update:
 
 Next:
 - Continue the same known-family stroke expansion with radial-gradient stroked rounded rectangles, or move laterally into sweep-gradient stroke support.
+
+## Checkpoint: ABI 48 Radial-Gradient Stroke Round Rect
+
+Date: 2026-04-30
+
+Status: completed for Compose radial-gradient stroked rounded-rectangle command recording and JBR/Skia replay.
+
+Why:
+- ABI 47 covered radial-gradient stroked rectangles; rounded rectangles needed the same radial stroke payload plus independent X/Y radii.
+- This completes radial-gradient stroke support for the same rect/round-rect shape pair already covered by linear gradients.
+
+Changes:
+- JBR command ABI bumped to `ABI_ID=48`; `BUILD_ID` now includes `abi=48`.
+- Added 64-bit command capability `COMMAND_CAP64_STROKE_ROUND_RECT_RADIAL_GRADIENT = 35184372088832L`.
+- Added command opcode `COMMAND_STROKE_ROUND_RECT_RADIAL_GRADIENT = 38`.
+- The new payload carries rect bounds, independent X/Y radii, stroke width/cap/join/miter metadata, radial-gradient center/radius/tile mode, and ARGB colors/stops.
+- CMP records `drawRoundRect(brush = Brush.radialGradient(...), style = Stroke(...))` when the paint is otherwise strict-command-compatible.
+- JBR Java validation/replay and native Skia replay mirror the ABI 47 radial stroke path with rounded-rectangle geometry.
+- Skiko compatibility now requires ABI 48 and the radial-gradient stroked rounded-rectangle capability bit before enabling command mode.
+- Magic Jewel's `MAGIC_JEWEL_COMPOSE_RADIAL_GRADIENT_ROUND_RECT=true` probe now includes a cyan/orange radial-gradient stroke over the existing radial-gradient rounded-rectangle fill.
+
+Validation:
+- CMP TDD/focused recorder tests:
+  - first run failed before implementation with `expected:<48> but was:<47>` and only the command header emitted.
+  - command: `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesRadialGradientStrokeRoundRectRecord --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesRadialGradientRoundRectRecord`
+  - result: passed after the recorder implementation.
+- Runtime API compile:
+  - command: `javac -d /tmp/jbr-api-skia-abi48-compile src/com/jetbrains/Provided.java src/com/jetbrains/Service.java src/com/jetbrains/JBRSkia.java`
+  - result: passed.
+- JBR private API/service/test compile smoke:
+  - result: passed for `JBRSkia.java`, `JBRSkiaService.java`, and the updated `JBRSkiaApiTest.java`; `/tmp/jbr-skia-run/desktop` refreshed with ABI 48 service classes.
+- JBR native dylib compile smoke:
+  - result: passed; `/tmp/jbr-skia-native/libjbrskiainterop.dylib` rebuilt with ABI 48.
+- Runtime API shim rebuild:
+  - command: `bash tools/build.sh process && bash tools/build.sh dev $(/usr/libexec/java_home -v 21) /tmp/jbr-api-skia-abi48-dev`
+  - result: passed; copied to `/tmp/jbr-api-shim.jar`.
+- Skiko compatibility tests:
+  - command: `./gradlew --no-daemon :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`
+  - result: passed.
+- Skiko local publish:
+  - command: `./gradlew --no-daemon :skiko:publishToMavenLocal`
+  - result: passed.
+- CMP desktop jars refresh:
+  - command: `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon :compose:ui:ui-graphics:desktopJar :compose:ui:ui-text:desktopJar :compose:ui:ui:desktopJar`
+  - result: passed.
+- Magic Jewel compile:
+  - command: `./gradlew --no-daemon compileKotlin`
+  - result: passed.
+- Focused Magic Jewel radial-gradient stroke rounded-rectangle smoke:
+  - command: `OUT_DIR=/tmp/magic-jewel-abi48-radial-gradient-stroke-round-rect-smoke-2 DURATION_SECONDS=6 WARMUP_SECONDS=1 SAMPLE_INTERVAL_SECONDS=1 JBR_SKIA_RENDER_MODE=commands MAGIC_JEWEL_COMPOSE_RADIAL_GRADIENT_ROUND_RECT=true SKIKO_VERSION=0.0.0-SNAPSHOT bash scripts/jbr-skia-interop-report.sh`
+  - result: passed.
+  - report: `/tmp/magic-jewel-abi48-radial-gradient-stroke-round-rect-smoke-2/report.md`.
+- Focused Magic Jewel command-probe row:
+  - command: `CASES=commands-gradient-surfaces OUT_ROOT=/tmp/magic-jewel-command-probe-abi48-gradient-surfaces DURATION_SECONDS=6 WARMUP_SECONDS=1 SAMPLE_INTERVAL_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT bash scripts/jbr-skia-command-probe-suite.sh`
+  - result: passed.
+  - suite: `/tmp/magic-jewel-command-probe-abi48-gradient-surfaces/suite.tsv`.
+  - row: `commands-gradient-surfaces`, `fallbacks=0`, `unsupported=none`, `jbr_picture_frames=0`, `jbr_command_frames=559`.
+
+Roadmap update:
+- Recorded ABI 48 command coverage.
+- Recorded the focused smoke and focused command-probe row paths.
+
+Next:
+- Continue the known-family stroke expansion with sweep-gradient stroked rectangles, then sweep-gradient stroked rounded rectangles.
