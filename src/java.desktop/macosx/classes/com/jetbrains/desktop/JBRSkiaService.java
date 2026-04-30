@@ -1220,7 +1220,8 @@ public class JBRSkiaService extends JBRSkia {
                 || blendMode == COMMAND_BLEND_MODE_MULTIPLY
                 || blendMode == COMMAND_BLEND_MODE_SCREEN
                 || blendMode == COMMAND_BLEND_MODE_OVERLAY
-                || blendMode == COMMAND_BLEND_MODE_DARKEN;
+                || blendMode == COMMAND_BLEND_MODE_DARKEN
+                || blendMode == COMMAND_BLEND_MODE_LIGHTEN;
     }
 
     private static CommandRecord readCommandRecord(int[] commands, int offset, int commandEnd) {

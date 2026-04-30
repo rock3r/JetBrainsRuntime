@@ -6683,3 +6683,29 @@ Validation:
 
 Next:
 - Continue blend-mode expansion one value at a time only for modes with direct Skia mappings, or pivot to screenshot parity/generic shader handles if rich-content drift becomes the larger risk.
+
+## Checkpoint: ABI 63 Lighten Blend-Mode Fill Rectangles
+
+Status: completed for `BlendMode.Lighten` on solid fill rectangles.
+
+Changes:
+- CMP records solid fill rectangles using `BlendMode.Lighten` as `COMMAND_FILL_RECT_BLEND_MODE` with payload value `COMMAND_BLEND_MODE_LIGHTEN = 7`.
+- Runtime API and JBR private API expose ABI 63 and the Lighten blend-mode payload constant.
+- JBR Java validation accepts Lighten wherever the fill-rect blend-mode command is valid.
+- Native `JBRSkiaInterop.mm` gates command streams on ABI 63 and maps the payload to `SkBlendMode::kLighten` inside JBR's Skia runtime.
+- Skiko compatibility requires ABI 63 before enabling command mode.
+- Magic Jewel extends the blend-mode visual probe and screenshot assertion with a Lighten region.
+
+Validation:
+- Runtime API compile passed for ABI 63.
+- JBR API validator passed with ABI 63 and the Lighten payload.
+- Native `JBRSkiaInterop.mm` standalone build passed with the Lighten mapping.
+- CMP focused recorder tests passed for Lighten and Darken blend-mode records.
+- Skiko interop tests passed with ABI 63 fixture expectations.
+- Magic Jewel Kotlin compile passed after adding the Lighten probe.
+- Runtime API shim, Skiko Maven-local artifact, and CMP desktop jars were rebuilt for the live run.
+- Magic Jewel ABI 63 Lighten live command probe passed: `/tmp/magic-jewel-command-probe-abi63-lighten-blend/suite.tsv`, with `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, and `jbr_command_frames=448`.
+- Screenshot assertion passed with `blendModeLighten=86070`.
+
+Next:
+- Continue exact blend-mode slices for direct Skia mappings, then pivot to the screenshot parity harness or JBR-owned shader/effect handles when the simple fill-rect blend family stops being the largest coverage gap.
