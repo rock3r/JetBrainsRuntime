@@ -60,6 +60,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] ABI 61: solid fill rectangles support `BlendMode.Overlay` through the structured blend-mode command.
 - [x] ABI 62: solid fill rectangles support `BlendMode.Darken` through the structured blend-mode command.
 - [x] ABI 63: solid fill rectangles support `BlendMode.Lighten` through the structured blend-mode command.
+- [x] ABI 64: solid fill rectangles support `BlendMode.Difference` through the structured blend-mode command.
 
 ## Near-Term Rendering Work
 
@@ -110,6 +111,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Add `BlendMode.Overlay` fill-rectangle command replay and screenshot-region validation.
 - [x] Add `BlendMode.Darken` fill-rectangle command replay and screenshot-region validation.
 - [x] Add `BlendMode.Lighten` fill-rectangle command replay and screenshot-region validation.
+- [x] Add `BlendMode.Difference` fill-rectangle command replay and screenshot-region validation.
 - [ ] Continue blend-mode command coverage mode-by-mode only after each mode has exact Skia-vs-Java2D semantics documented.
 - [ ] Command-recorded graphics layers:
   - [x] Mark Skiko `GraphicsLayer`/`RenderNode` draws as an explicit strict fallback while command replay cannot encode layer contents/effects.
@@ -136,6 +138,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [ ] Add screenshot parity jobs that run both old and new renderers for the same rich scene, emit old/new/diff images, and fail on unexpected Compose/Jewel geometry/color drift. Expected Swing text rendering differences must be isolated to Swing-owned regions and documented in the report.
 - [ ] Add a rich-content old/new parity suite with Jewel controls/text, Compose primitives/text/images/effects, Swing islands, popups/menus, and always-on animation sampled at deterministic phases.
 - [ ] Persist old/new screenshots, diff images, per-region metrics, and pass/fail thresholds in the Magic Jewel report and `summary.properties`.
+- [ ] Make the parity suite window-only end to end: launch old/new renderers, capture the Magic Jewel window by id/title, crop no whole-screen screenshots, and keep the capture metadata in the report.
+- [ ] Add deterministic animation-phase controls for parity runs so animated progress, blend probes, gradients, and Swing islands can be compared at repeatable frame phases.
 - [x] Focused CMP recorder tests for unsupported saveLayer layer-paint fallback.
 - [x] Focused CMP recorder tests for unsupported image paint fallback.
 - [x] Focused Skiko compatibility/fallback tests.
@@ -192,6 +196,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] ABI 61 Overlay blend-mode command-probe row: `/tmp/magic-jewel-command-probe-abi61-overlay-blend-4/suite.tsv`.
 - [x] ABI 62 Darken blend-mode command-probe row: `/tmp/magic-jewel-command-probe-abi62-darken-blend/suite.tsv`.
 - [x] ABI 63 Lighten blend-mode command-probe row: `/tmp/magic-jewel-command-probe-abi63-lighten-blend/suite.tsv`.
+- [x] ABI 64 Difference blend-mode command-probe row: `/tmp/magic-jewel-command-probe-abi64-difference-blend-2/suite.tsv`.
 - [x] Explicit graphics-layer fallback command-probe row after narrowing benign layer fallback: `/tmp/magic-jewel-command-probe-graphics-layer-fallback-2/suite.tsv`.
 - [x] Real undecorated Swing popup-window smoke captured separately by window id.
 

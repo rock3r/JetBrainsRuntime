@@ -6709,3 +6709,34 @@ Validation:
 
 Next:
 - Continue exact blend-mode slices for direct Skia mappings, then pivot to the screenshot parity harness or JBR-owned shader/effect handles when the simple fill-rect blend family stops being the largest coverage gap.
+
+## Checkpoint: ABI 64 Difference Blend-Mode Fill Rectangles
+
+Status: completed as another exact direct-mapping blend-mode slice across JBR, public Runtime API, Skiko, CMP, and Magic Jewel.
+
+What changed:
+
+- Runtime API and JBR private API expose ABI 64 and the Difference blend-mode payload constant.
+- JBR Java validation accepts Difference wherever the fill-rect blend-mode command is valid.
+- Native `JBRSkiaInterop.mm` gates command streams on ABI 64 and maps the payload to `SkBlendMode::kDifference` inside JBR's Skia runtime.
+- Skiko compatibility requires ABI 64 before enabling command mode.
+- CMP records `BlendMode.Difference` solid fill rectangles through the structured blend-mode command when the paint has no shader, color filter, or path effect.
+- Magic Jewel extends the blend-mode visual probe and screenshot assertion with a visible Difference region.
+- `ROADMAP.md` now marks ABI 64 complete and keeps the two review-driven action tracks concrete:
+  - window-only old/new screenshot parity with deterministic rich Swing/CMP/Jewel content and region-specific tolerances.
+  - real generic shader/effect implementation through JBR-owned handles/descriptors, including RuntimeEffect/SKSL payloads, not raw Skiko Skia pointers.
+
+Verification:
+
+- Runtime API compile passed for ABI 64.
+- JBR API validator passed with ABI 64 and the Difference payload.
+- JBR native dylib compile passed at `/tmp/jbr-skia-native/libjbrskiainterop.dylib`.
+- CMP focused recorder tests passed for Difference and Lighten blend-mode records.
+- Skiko interop tests passed with ABI 64 fixture expectations.
+- Magic Jewel compile passed.
+- Magic Jewel ABI 64 Difference live command probe passed: `/tmp/magic-jewel-command-probe-abi64-difference-blend-2/suite.tsv`, with `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, and `jbr_command_frames=833`.
+- The window screenshot assertion passed with `blendModeDifference=924`; the first run correctly caught that the new visual probe was hidden behind the Swing island, so the probe was moved into a visible top-row strip before accepting the slice.
+
+Next:
+
+- Continue exact blend-mode slices for remaining direct Skia mappings, or pause the blend series to implement the window-only old/new screenshot parity harness now that the command path has enough rich content to compare.
