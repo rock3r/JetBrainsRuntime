@@ -110,6 +110,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Add screenshot-level text placement assertions using stable dark-pixel bounding boxes.
 - [x] Add paragraph-row screenshot assertions for native-text layout probes.
 - [x] Investigate observed text alignment drift in Magic Jewel/Jewel labels on the command path.
+- [x] Add screenshot-region assertions for the Plus/Multiply blend-mode probe.
 
 ## Validation Harness
 

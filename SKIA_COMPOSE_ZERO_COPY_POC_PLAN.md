@@ -6591,3 +6591,19 @@ Validation:
 Next:
 - Add screenshot-region assertions for the Plus/Multiply blend probe so the live harness proves color semantics, not only no-fallback replay.
 - Continue blend-mode expansion one value at a time, likely `Screen` or `Overlay`, only after pinning exact Skia mapping and fallback behavior.
+
+## Checkpoint: Blend-Mode Screenshot Assertions
+
+Status: completed for Magic Jewel window-only screenshot validation of the Plus/Multiply blend-mode probe.
+
+What changed:
+- Magic Jewel screenshot assertions now count `blendModeYellow` pixels for the base rectangle and `blendModeMultiply` pixels for the multiplied overlap when `MAGIC_JEWEL_COMPOSE_BLEND_MODE=true`.
+- The assertion remains window-only and records the new counters in the existing `JBR_SKIA_COMMAND_SCREENSHOT_COUNTS` marker for report parsing.
+- `ROADMAP.md` records screenshot-region assertions for the Plus/Multiply blend-mode probe as complete.
+
+Validation:
+- Magic Jewel command-probe row passed: `/tmp/magic-jewel-command-probe-abi59-blend-screenshot/suite.tsv`, with `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, and `jbr_command_frames=941`.
+
+Next:
+- Feed the blend counters into `summary.properties` if we want CI dashboards to compare them without opening the report log.
+- Continue mode-by-mode blend expansion or start the first non-tint descriptor implementation.
