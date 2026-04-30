@@ -5713,3 +5713,36 @@ Validation:
 
 Next:
 - Use the new summary keys in later quiet benchmark comparisons and native-text parity tracking.
+
+## Checkpoint: ABI 44 Quiet Benchmark Refresh
+
+Date: 2026-04-30
+
+Status: completed against the committed ABI 44 artifacts.
+
+Why:
+- ABI 44 changed the command capability gate and added image-shader command replay, so the earlier ABI 43 benchmark was no longer the best reference for the current local state.
+- The machine was quiet enough to collect a more useful coarse CPU/FPS checkpoint, while still treating `ps` CPU as noisy smoke data.
+
+Command:
+- `OUT_ROOT=/tmp/magic-jewel-quiet-benchmark-abi44-20260430-122457 DURATION_SECONDS=30 WARMUP_SECONDS=5 SAMPLE_INTERVAL_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ENABLE_ASPROF=false bash scripts/jbr-skia-benchmark-suite.sh`
+
+Results:
+- suite: `/tmp/magic-jewel-quiet-benchmark-abi44-20260430-122457/suite.tsv`.
+- picture: passed, 0 fallbacks, old avg CPU 72.27, new avg CPU 95.53, old app FPS 322.3, new app/JBR picture FPS 228.1.
+- commands: passed, 0 fallbacks, old avg CPU 86.92, new avg CPU 88.08, old app FPS 393.4, new app/JBR command FPS 311.3, 9,340 JBR command frames.
+- commands-stable-images: passed, 0 fallbacks, old avg CPU 132.82, new avg CPU 110.89, old app FPS 172.9, new app/JBR command FPS 171.3, 5,138 JBR command frames.
+- commands-dynamic-images: passed, 0 fallbacks, old avg CPU 130.23, new avg CPU 110.76, old app FPS 172.2, new app/JBR command FPS 166.4, 4,993 JBR command frames.
+- commands-resize-dynamic-images: passed, 0 fallbacks, old avg CPU 127.00, new avg CPU 116.88, old app FPS 172.6, new app/JBR command FPS 167.2, 5,016 JBR command frames.
+
+Interpretation:
+- All command rows stayed strict and fallback-free with zero picture replay.
+- The plain command row is roughly tied on coarse CPU in this pass.
+- Stable/dynamic image-cache rows show the command path lower on coarse CPU, while keeping FPS in the same range.
+- The SKP/picture row remains the useful retained picture artifact path for later profiler-backed comparisons.
+
+Roadmap update:
+- Recorded the ABI 44 quiet benchmark suite path.
+
+Next:
+- Continue native text parity work or move to a broader shader-factory/unsupported-family production slice, using the ABI 44 benchmark as the current local reference.
