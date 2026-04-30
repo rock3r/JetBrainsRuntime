@@ -142,7 +142,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   - [x] Support rounded graphics-layer clips by serializing rounded/conic outline paths as quadratic path commands and replaying them through `COMMAND_CLIP_PATH`.
   - [x] Support generic path outline clips by replaying `Outline.Generic` through existing `COMMAND_CLIP_PATH`.
   - [x] Support directly mapped non-SrcOver graphics-layer blend modes through a bounded save-layer blend command.
-  - [ ] Extend graphics-layer command replay beyond the current 2D subset: color filters, shadows, 3D rotation/camera, and offscreen strategy semantics.
+  - [x] Support tint/SrcIn graphics-layer color filters by reusing the existing save-layer color-filter command.
+  - [ ] Extend graphics-layer command replay beyond the current 2D subset: non-tint color filters, shadows, 3D rotation/camera, and offscreen strategy semantics.
   - [ ] Add render-effect descriptors for graphics-layer `RenderEffect` once the JBR-owned effect-handle ABI can construct the needed Skia image filters.
 - [x] Add narrow tint color-filter solid fill-rectangle support through a versioned command instead of picture fallback.
 - [x] Add narrow tint color-filter `saveLayer` support through a versioned command instead of picture fallback.
@@ -170,6 +171,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Magic Jewel clipped graphics-layer command probe runs without fallback markers and validates clipped cyan/purple layer content.
 - [x] Magic Jewel rounded clipped graphics-layer command probe runs without fallback markers and validates clipped cyan/purple layer content.
 - [x] Magic Jewel generic-path clipped graphics-layer command probe runs without fallback markers and validates clipped cyan/purple layer content.
+- [x] Magic Jewel graphics-layer tint color-filter probe is wired into the command-probe suite and screenshot assertion; live execution waits for refreshed ABI 74 JBR/Skiko artifacts.
 - [x] Persist old/new screenshots and pass/fail thresholds in the Magic Jewel report.
 - [x] Make the parity suite window-only end to end: launch old/new renderers, capture the Magic Jewel window by id/title, crop no whole-screen screenshots, and keep the capture metadata in the report.
 - [x] Add deterministic animation-phase controls for parity runs so animated progress, blend probes, gradients, and Swing islands can be compared at repeatable frame phases.

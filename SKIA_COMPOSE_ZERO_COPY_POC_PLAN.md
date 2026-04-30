@@ -7282,3 +7282,29 @@ Known notes:
 Next:
 
 - Unblock JBR validation by accepting the local Xcode license or using a preconfigured JBR build environment, then run the JBR API test and `commands-graphics-layer-blend-mode` Magic Jewel probe with refreshed ABI 74 artifacts.
+
+## Checkpoint: Graphics-Layer Tint Color Filter
+
+Status: source and JVM-side validation are complete; this reuses ABI 74 and does not require a new JBR/native command. Live Magic Jewel validation remains blocked until ABI 74 JBR/Skiko artifacts can be refreshed together.
+
+What changed:
+
+- CMP graphics-layer command replay now accepts `ColorFilter.tint(..., BlendMode.SrcIn)` on a supported 2D graphics layer.
+- The layer replay emits the existing `COMMAND_SAVE_LAYER_COLOR_FILTER` opcode around the nested child command stream, so no raw Skiko `SkColorFilter*` crosses the ABI.
+- Graphics layers with a non-SrcOver blend mode and a color filter still fall back explicitly as `graphicsLayer:colorFilterBlendMode`.
+- Non-tint/non-SrcIn graphics-layer color filters still fall back explicitly as `graphicsLayer:colorFilter`.
+- Magic Jewel gained `MAGIC_JEWEL_COMPOSE_GRAPHICS_LAYER_COLOR_FILTER`, a command-probe suite row, report/help wiring, and a screenshot-region assertion for the tinted layer.
+
+Verification:
+
+- Focused CMP tests passed:
+  - `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.nestedRecordingReplaysLayerTintColorFilter --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesSaveLayerTintColorFilterRecord`
+- Full CMP command-recorder desktop test class passed:
+  - `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest`
+- Magic Jewel compiled with the new probe wiring:
+  - `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon --no-configuration-cache compileKotlin`
+
+Known notes:
+
+- This is narrow tint/SrcIn layer color-filter support only. General color matrices, lighting filters, image filters, and layer render effects still require the JBR-owned effect/shader handle path.
+- Live `commands-graphics-layer-color-filter` validation should run after the local JBR native build is unblocked.
