@@ -7090,3 +7090,30 @@ Open risks:
 Next:
 
 - Add diff-image and ownership-region output to the parity report, or start the graphics-layer nested command recording slice. Generic shader/effect handles remain the larger non-negotiable end-state track after the current macOS MVP hardening.
+
+## Checkpoint: Screenshot Parity Diff Artifacts
+
+Status: completed as a Magic Jewel validation-harness slice.
+
+What changed:
+
+- `scripts/compare-jbr-skia-window-screenshots.sh` now optionally writes a heatmap-style PNG diff image.
+- The comparator emits whole-window metrics plus coarse ownership-region metrics for `headerControls`, `composeCanvas`, `swingIsland`, and `rightProbeStrip`.
+- The comparator records original old/new capture sizes and a `dimensionsMatch` field. If macOS/JBR window chrome produces mismatched captures, the tool compares the common captured area and reports the mismatch explicitly instead of failing before diagnostics are emitted.
+- `scripts/jbr-skia-screenshot-parity.sh` now appends the parity log to `report.md`, writes `parity-diff.png`, and mirrors scalar parity metrics into `summary.properties` as `screenshot_parity_*` keys.
+- Magic Jewel README now documents the diff artifact and stable parity metric keys.
+- `ROADMAP.md` marks persisted diff images and per-region parity metrics complete.
+
+Verification:
+
+- Shell syntax checks passed for the updated scripts.
+- Comparator smoke against a dimension-mismatched old/new pair emitted `dimensionsMatch=false` and wrote a diff image instead of crashing.
+- Full window-only old/new parity passed after stopping the live sample app:
+  - `/tmp/magic-jewel-screenshot-parity-diff-2/summary.tsv`
+  - report: `/tmp/magic-jewel-screenshot-parity-diff-2/report/report.md`
+  - diff image: `/tmp/magic-jewel-screenshot-parity-diff-2/report/parity-diff.png`
+  - summary metrics include `screenshot_parity_avgDelta=1.646`, `screenshot_parity_badPixelRatio=0.03910`, and region-specific `screenshot_parity_region_*` keys.
+
+Next:
+
+- Continue macOS MVP hardening. Good next slices are graphics-layer nested command recording or the first real JBR-owned shader/effect handle implementation, with the parity diff artifact now available as a regression gate.

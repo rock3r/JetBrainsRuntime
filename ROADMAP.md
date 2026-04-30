@@ -157,7 +157,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [ ] Compare screenshot regions by ownership: tight tolerance for Compose/Jewel regions because CMP should match old Skia output, looser text-aware tolerance for Swing text after Java2D-to-Skia changes, and explicit occlusion/layer-boundary assertions for mixed content.
 - [x] Add screenshot parity jobs that run both old and new renderers for the same rich scene, emit old/new images, and fail on unexpected Compose/Jewel geometry/color drift. Expected Swing text rendering differences must be isolated to Swing-owned regions and documented in the report.
 - [x] Add a rich-content old/new parity suite with Jewel controls/text, Compose primitives/text/images/effects, Swing islands, popups/menus, and always-on animation sampled at deterministic phases.
-- [ ] Persist diff images and per-region parity metrics in the Magic Jewel report and `summary.properties`.
+- [x] Persist diff images and per-region parity metrics in the Magic Jewel report and `summary.properties`.
 - [x] Persist old/new screenshots and pass/fail thresholds in the Magic Jewel report.
 - [x] Make the parity suite window-only end to end: launch old/new renderers, capture the Magic Jewel window by id/title, crop no whole-screen screenshots, and keep the capture metadata in the report.
 - [x] Add deterministic animation-phase controls for parity runs so animated progress, blend probes, gradients, and Swing islands can be compared at repeatable frame phases.
