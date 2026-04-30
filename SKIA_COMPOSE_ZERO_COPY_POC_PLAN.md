@@ -7527,6 +7527,7 @@ What changed:
 - CMP serializes graphics-layer `BlurEffect` with no child effect into the generic effect-descriptor envelope as `[sigmaXBits, sigmaYBits, tileMode]`, then applies it through a saveLayer image-filter reference command.
 - CMP still rejects nested/opaque render effects, or render effects combined with non-SrcOver blend/color-filter layer paints, instead of passing raw Skiko `SkImageFilter*` pointers across the ABI.
 - JBR Java validation rejects malformed blur descriptors, non-finite/negative sigmas, invalid tile modes, undefined handles, bad dimensions, and bad alpha. Java2D fallback replay validates the scope; native Metal replay reconstructs `SkImageFilters::Blur(...)` inside JBR-owned Skia.
+- Magic Jewel gained `MAGIC_JEWEL_COMPOSE_GRAPHICS_LAYER_RENDER_EFFECT` and a `commands-graphics-layer-render-effect` command-probe suite row for live validation once ABI 82 artifacts are refreshed.
 
 Verification:
 
@@ -7534,6 +7535,10 @@ Verification:
   - `./gradlew --no-daemon --no-configuration-cache :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`
 - CMP `ui-graphics` desktop sources compile:
   - `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:compileKotlinDesktop`
+- Magic Jewel compiled:
+  - `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon --no-configuration-cache compileKotlin`
+- Magic Jewel script syntax checks passed:
+  - `bash -n scripts/jbr-skia-interop-report.sh && bash -n scripts/jbr-skia-command-probe-suite.sh && bash -n scripts/assert-jbr-skia-command-window-screenshot.sh`
 
 Known notes:
 
