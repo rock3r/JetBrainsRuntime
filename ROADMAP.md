@@ -53,7 +53,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] More strict shader fallback tests for nonfinite gradient metadata that survives shader construction.
 - [x] Live Magic Jewel recorder-level fallback probes for color filters and path effects.
 - [ ] Remaining generic shader edge cases beyond transformed/composite/opaque shader wrappers.
-- [x] Expand screenshot assertions to check core primitive probe colors/regions explicitly.
+- [x] Expand screenshot assertions to check core primitive and gradient probe colors/regions explicitly.
 - [x] Improve Magic Jewel visual fidelity so labels use Jewel `Text` and `JewelTheme.defaultTextStyle`.
 - [x] Prefer fidelity-first text image replay by default so command mode preserves resolved Jewel font/size/alignment until JBR-owned typefaces exist.
 - [x] Add screenshot-level text-presence assertions using stable pixel regions for top/bottom Magic Jewel labels.

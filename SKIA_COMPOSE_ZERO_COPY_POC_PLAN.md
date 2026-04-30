@@ -5119,3 +5119,37 @@ Validation:
 
 Next:
 - Keep screenshot assertions focused on stable deterministic probes; avoid adding fragile pixel checks for typography until there is a stronger OCR or glyph-region oracle.
+
+## Checkpoint: Blend Mode Fallback Probe
+
+Date: 2026-04-30
+
+Status: completed as live recorder-level fallback coverage.
+
+Why:
+- Command mode supports `SrcOver` and the special clear-rect case, but arbitrary blend modes need Skia paint semantics that are outside the current command subset.
+- Like color filters and path effects, unsupported blend modes should fall back to picture replay cleanly.
+
+Changes:
+- Magic Jewel added `MAGIC_JEWEL_COMPOSE_BLEND_MODE=true`.
+- The probe draws a rectangle with `BlendMode.Plus`.
+- The command-probe suite gained `commands-blend-mode-fallback`.
+- README documents the manual command and suite coverage.
+
+Validation:
+- Syntax check:
+  - command: `bash -n scripts/jbr-skia-interop-report.sh scripts/jbr-skia-command-probe-suite.sh`
+  - result: passed.
+- Compile:
+  - command: `./gradlew --no-daemon compileKotlin`
+  - result: passed.
+- Focused command-probe suite:
+  - command: `OUT_ROOT=/tmp/magic-jewel-blend-mode-fallback-suite-smoke CASES=commands-blend-mode-fallback DURATION_SECONDS=3 WARMUP_SECONDS=1 SAMPLE_INTERVAL_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT bash scripts/jbr-skia-command-probe-suite.sh`
+  - result: `JBR_SKIA_COMMAND_PROBE_SUITE passed out_root=/tmp/magic-jewel-blend-mode-fallback-suite-smoke`
+  - case summary: `status=passed`, `fallback_new_count=0`, `unsupported=blendMode_Plus:230`, `jbr_picture_frames=230`, `jbr_command_frames=0`.
+
+Note:
+- This is another recorder-level fallback, so the expected signal is `cmp_unsupported_reasons=blendMode_Plus:...`, picture replay, and zero JBR command frames.
+
+Next:
+- Remaining generic shader work is now mostly design/production work rather than missing fallback coverage for the obvious paint-object boundaries.
