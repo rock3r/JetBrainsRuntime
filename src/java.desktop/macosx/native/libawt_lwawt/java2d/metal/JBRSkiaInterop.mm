@@ -75,7 +75,7 @@
 
 #include "MTLSurfaceDataBase.h"
 
-static constexpr jint ABI_ID = 78;
+static constexpr jint ABI_ID = 79;
 static constexpr jint COMMAND_STREAM_MAGIC = 1246972723;
 static constexpr jint COMMAND_STREAM_HEADER_SIZE = 6;
 static constexpr jint COMMAND_STREAM_FLAGS_NONE = 0;
@@ -138,6 +138,7 @@ static constexpr jint COMMAND_DEFINE_EFFECT_DESCRIPTOR = 49;
 static constexpr jint COMMAND_SAVE_LAYER_BLEND_MODE = 50;
 static constexpr jint COMMAND_SAVE_LAYER_BLEND_COLOR_FILTER = 51;
 static constexpr jint COMMAND_SAVE_LAYER_COLOR_FILTER_REF = 52;
+static constexpr jint COMMAND_DRAW_IMAGE_REF_COLOR_FILTER_REF = 53;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER = 1;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_COLOR_MATRIX_FILTER = 2;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_LIGHTING_FILTER = 3;
@@ -622,6 +623,39 @@ static bool drawImage(SkCanvas* canvas,
             return false;
         }
         imagePaint.setColorFilter(SkColorFilters::Blend(colorFilter, SkBlendMode::kSrcIn));
+    }
+    SkSamplingOptions sampling = (recordFlags & COMMAND_RECORD_FLAG_ANTIALIAS) != 0
+            ? SkSamplingOptions(SkFilterMode::kLinear, SkMipmapMode::kNone)
+            : SkSamplingOptions(SkFilterMode::kNearest, SkMipmapMode::kNone);
+    canvas->drawImageRect(image,
+                          SkRect::MakeLTRB(srcLeft, srcTop, srcRight, srcBottom),
+                          SkRect::MakeLTRB(dstLeft, dstTop, dstRight, dstBottom),
+                          sampling,
+                          &imagePaint,
+                          SkCanvas::kStrict_SrcRectConstraint);
+    return true;
+}
+
+static bool drawImageWithDescriptorColorFilter(SkCanvas* canvas,
+                                               const sk_sp<SkImage>& image,
+                                               jint recordFlags,
+                                               SkScalar srcLeft,
+                                               SkScalar srcTop,
+                                               SkScalar srcRight,
+                                               SkScalar srcBottom,
+                                               SkScalar dstLeft,
+                                               SkScalar dstTop,
+                                               SkScalar dstRight,
+                                               SkScalar dstBottom,
+                                               jint alpha1000,
+                                               const ColorFilterDescriptor& descriptor) {
+    if (image == nullptr || alpha1000 < 0 || alpha1000 > 1000) {
+        return false;
+    }
+    SkPaint imagePaint;
+    imagePaint.setAlphaf(static_cast<float>(alpha1000) / 1000.0f);
+    if (!setDescriptorColorFilter(&imagePaint, descriptor)) {
+        return false;
     }
     SkSamplingOptions sampling = (recordFlags & COMMAND_RECORD_FLAG_ANTIALIAS) != 0
             ? SkSamplingOptions(SkFilterMode::kLinear, SkMipmapMode::kNone)
@@ -1997,6 +2031,57 @@ static bool drawCommandList(SkCanvas* canvas,
                 }
                 if (!drawImage(canvas, image, recordFlags, srcLeft, srcTop, srcRight, srcBottom,
                                dstLeft, dstTop, dstRight, dstBottom, alpha1000, filterColor, colorFilterBlendMode)) {
+                    return false;
+                }
+                break;
+            }
+            case COMMAND_DRAW_IMAGE_REF_COLOR_FILTER_REF: {
+                if ((recordFlags & ~COMMAND_RECORD_FLAG_ANTIALIAS) != 0 || offset + 16 != recordEnd) {
+                    return false;
+                }
+                const SkScalar srcLeft = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkScalar srcTop = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkScalar srcRight = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkScalar srcBottom = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkScalar dstLeft = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkScalar dstTop = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkScalar dstRight = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkScalar dstBottom = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const uint64_t key = imageCacheKey(commands[offset], commands[offset + 1]);
+                offset += 2;
+                const jint imageWidth = commands[offset++];
+                const jint imageHeight = commands[offset++];
+                const jint alpha1000 = commands[offset++];
+                const jint filterQuality = commands[offset++];
+                const uint64_t handle = imageCacheKey(commands[offset], commands[offset + 1]);
+                offset += 2;
+                if (imageWidth <= 0 || imageHeight <= 0 || imageWidth > 4096 || imageHeight > 4096 ||
+                        alpha1000 < 0 || alpha1000 > 1000 || filterQuality < 0 || filterQuality > 3) {
+                    return false;
+                }
+                sk_sp<SkImage> image;
+                {
+                    std::lock_guard<std::mutex> lock(gImageCacheMutex);
+                    auto found = gImagesByKey.find(ImageCacheScopedKey{imageCacheContextKey, key});
+                    if (found == gImagesByKey.end()) {
+                        return false;
+                    }
+                    image = found->second;
+                }
+                ColorFilterDescriptor descriptor;
+                {
+                    std::lock_guard<std::mutex> lock(gColorFilterCacheMutex);
+                    auto cached = gColorFiltersByKey.find(ColorFilterScopedKey{imageCacheContextKey, handle});
+                    if (cached == gColorFiltersByKey.end()) {
+                        return false;
+                    }
+                    descriptor = cached->second;
+                }
+                if (image->width() != imageWidth || image->height() != imageHeight) {
+                    return false;
+                }
+                if (!drawImageWithDescriptorColorFilter(canvas, image, recordFlags, srcLeft, srcTop, srcRight, srcBottom,
+                                                        dstLeft, dstTop, dstRight, dstBottom, alpha1000, descriptor)) {
                     return false;
                 }
                 break;

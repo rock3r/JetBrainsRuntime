@@ -135,7 +135,8 @@ public class JBRSkiaService extends JBRSkia {
                     | COMMAND_CAP64_SAVE_LAYER_BLEND_COLOR_FILTER
                     | COMMAND_CAP64_EFFECT_DESCRIPTOR_COLOR_MATRIX_FILTER
                     | COMMAND_CAP64_EFFECT_DESCRIPTOR_LIGHTING_FILTER
-                    | COMMAND_CAP64_SAVE_LAYER_COLOR_FILTER_REF;
+                    | COMMAND_CAP64_SAVE_LAYER_COLOR_FILTER_REF
+                    | COMMAND_CAP64_DRAW_IMAGE_REF_COLOR_FILTER_REF;
     private static final boolean NATIVE_BRIDGE_AVAILABLE = loadNativeBridge();
     private static final AtomicLong NEXT_SCOPE_ID = new AtomicLong(1);
     private static final int MAX_CACHED_IMAGES = 256;
@@ -221,6 +222,9 @@ public class JBRSkiaService extends JBRSkia {
             } else if (record.op() == COMMAND_SAVE_LAYER_COLOR_FILTER_REF
                     && !colorFilterHandles.contains(commandHandle(commands[record.argsStart() + 5], commands[record.argsStart() + 6]))) {
                 return false;
+            } else if (record.op() == COMMAND_DRAW_IMAGE_REF_COLOR_FILTER_REF
+                    && !colorFilterHandles.contains(commandHandle(commands[record.argsStart() + 14], commands[record.argsStart() + 15]))) {
+                return false;
             }
             offset = record.recordEnd();
         }
@@ -270,6 +274,7 @@ public class JBRSkiaService extends JBRSkia {
         if (op == COMMAND_DRAW_PATH) return -7;
         if (op == COMMAND_DRAW_IMAGE_REF) return 17;
         if (op == COMMAND_DRAW_IMAGE_REF_COLOR_FILTER) return 19;
+        if (op == COMMAND_DRAW_IMAGE_REF_COLOR_FILTER_REF) return 19;
         if (op == COMMAND_DRAW_ARC) return 16;
         if (op == COMMAND_DRAW_ROUND_RECT) return 15;
         if (op == COMMAND_FILL_RECT_LINEAR_GRADIENT) return -8;
@@ -1162,6 +1167,24 @@ public class JBRSkiaService extends JBRSkia {
                     && filterQuality >= 0
                     && filterQuality <= 3
                     && colorFilterBlendMode == COMMAND_BLEND_MODE_SRC_IN;
+        }
+        if (record.op() == COMMAND_DRAW_IMAGE_REF_COLOR_FILTER_REF) {
+            if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE
+                    && record.recordFlags() != COMMAND_RECORD_FLAG_ANTIALIAS) {
+                return false;
+            }
+            int imageWidth = commands[record.argsStart() + 10];
+            int imageHeight = commands[record.argsStart() + 11];
+            int alpha1000 = commands[record.argsStart() + 12];
+            int filterQuality = commands[record.argsStart() + 13];
+            return imageWidth > 0
+                    && imageHeight > 0
+                    && imageWidth <= 4096
+                    && imageHeight <= 4096
+                    && alpha1000 >= 0
+                    && alpha1000 <= 1000
+                    && filterQuality >= 0
+                    && filterQuality <= 3;
         }
         if (record.op() == COMMAND_DRAW_TEXT_UTF16) {
             if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE
@@ -2732,6 +2755,34 @@ public class JBRSkiaService extends JBRSkia {
                         drawImage(current, tintImageSrcIn(image, filterColor), filtered,
                                 srcLeft1000, srcTop1000, srcRight1000, srcBottom1000,
                                 dstLeft1000, dstTop1000, dstRight1000, dstBottom1000, alpha1000);
+                    } else if (op == COMMAND_DRAW_IMAGE_REF_COLOR_FILTER_REF) {
+                        if (offset + 16 != recordEnd) return false;
+                        boolean filtered = (record.recordFlags() & COMMAND_RECORD_FLAG_ANTIALIAS) != 0;
+                        int srcLeft1000 = commands[offset++];
+                        int srcTop1000 = commands[offset++];
+                        int srcRight1000 = commands[offset++];
+                        int srcBottom1000 = commands[offset++];
+                        int dstLeft1000 = commands[offset++];
+                        int dstTop1000 = commands[offset++];
+                        int dstRight1000 = commands[offset++];
+                        int dstBottom1000 = commands[offset++];
+                        long cacheKey = cacheKey(commands[offset++], commands[offset++]);
+                        int imageWidth = commands[offset++];
+                        int imageHeight = commands[offset++];
+                        int alpha1000 = commands[offset++];
+                        int filterQuality = commands[offset++];
+                        long handle = cacheKey(commands[offset++], commands[offset++]);
+                        BufferedImage image = IMAGE_CACHE.get(new ImageCacheKey(contextPtr, cacheKey));
+                        ColorFilterDescriptor descriptor = COLOR_FILTER_CACHE.get(new ColorFilterCacheKey(contextPtr, handle));
+                        if (image == null || descriptor == null || image.getWidth() != imageWidth || image.getHeight() != imageHeight
+                                || alpha1000 < 0 || alpha1000 > 1000 || filterQuality < 0 || filterQuality > 3) {
+                            return false;
+                        }
+                        BufferedImage filteredImage = applyColorFilter(image, descriptor);
+                        if (filteredImage == null) return false;
+                        drawImage(current, filteredImage, filtered,
+                                srcLeft1000, srcTop1000, srcRight1000, srcBottom1000,
+                                dstLeft1000, dstTop1000, dstRight1000, dstBottom1000, alpha1000);
                     } else if (op == COMMAND_FILL_RECT_IMAGE_SHADER) {
                         if (offset + 11 != recordEnd) return false;
                         applyAntialiasing(current, antiAlias);
@@ -3196,6 +3247,27 @@ public class JBRSkiaService extends JBRSkia {
                 }
             }
             return tinted;
+        }
+
+        private static BufferedImage applyColorFilter(BufferedImage image, ColorFilterDescriptor descriptor) {
+            if (descriptor.type() == COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER) {
+                if (descriptor.blendMode() != COMMAND_BLEND_MODE_SRC_IN) return null;
+                return tintImageSrcIn(image, descriptor.argb());
+            }
+            BufferedImage filtered = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
+            for (int y = 0; y < image.getHeight(); y++) {
+                for (int x = 0; x < image.getWidth(); x++) {
+                    int argb = image.getRGB(x, y);
+                    if (descriptor.type() == COMMAND_EFFECT_DESCRIPTOR_COLOR_MATRIX_FILTER) {
+                        filtered.setRGB(x, y, applyColorMatrix(argb, descriptor.matrixBits()));
+                    } else if (descriptor.type() == COMMAND_EFFECT_DESCRIPTOR_LIGHTING_FILTER) {
+                        filtered.setRGB(x, y, applyLightingFilter(argb, descriptor.argb(), descriptor.blendMode()));
+                    } else {
+                        return null;
+                    }
+                }
+            }
+            return filtered;
         }
 
         private static Path2D pathFromCommandData(int[] commands, int offset, int recordEnd, int fillType) {

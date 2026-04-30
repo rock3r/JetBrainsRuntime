@@ -51,13 +51,13 @@ public class JBRSkiaApiTest {
     }
 
     public static void main(String[] args) throws Exception {
-        assertEquals(78, JBRSkia.ABI_ID, "ABI_ID");
+        assertEquals(79, JBRSkia.ABI_ID, "ABI_ID");
         assertEquals(3, JBRSkia.NATIVE_ABI_VERSION, "NATIVE_ABI_VERSION");
-        assertEquals("skia=m147-64a2414108;flags=macos-release-metal-poc:1;abi=78;native=3", JBRSkia.BUILD_ID, "BUILD_ID");
+        assertEquals("skia=m147-64a2414108;flags=macos-release-metal-poc:1;abi=79;native=3", JBRSkia.BUILD_ID, "BUILD_ID");
 
-        assertReflectiveStaticEquals(78, JBRSkia.class.getDeclaredField("ABI_ID"));
+        assertReflectiveStaticEquals(79, JBRSkia.class.getDeclaredField("ABI_ID"));
         assertReflectiveStaticEquals(3, JBRSkia.class.getDeclaredField("NATIVE_ABI_VERSION"));
-        assertReflectiveStaticEquals("skia=m147-64a2414108;flags=macos-release-metal-poc:1;abi=78;native=3", JBRSkia.class.getDeclaredField("BUILD_ID"));
+        assertReflectiveStaticEquals("skia=m147-64a2414108;flags=macos-release-metal-poc:1;abi=79;native=3", JBRSkia.class.getDeclaredField("BUILD_ID"));
 
         if (TestJBRSkia.INSTANCE != null) {
             throw new AssertionError("JBRSkia service must be unavailable before native runtime is wired");
@@ -176,7 +176,8 @@ public class JBRSkiaApiTest {
                 | JBRSkia.COMMAND_CAP64_SAVE_LAYER_BLEND_COLOR_FILTER
                 | JBRSkia.COMMAND_CAP64_EFFECT_DESCRIPTOR_COLOR_MATRIX_FILTER
                 | JBRSkia.COMMAND_CAP64_EFFECT_DESCRIPTOR_LIGHTING_FILTER
-                | JBRSkia.COMMAND_CAP64_SAVE_LAYER_COLOR_FILTER_REF;
+                | JBRSkia.COMMAND_CAP64_SAVE_LAYER_COLOR_FILTER_REF
+                | JBRSkia.COMMAND_CAP64_DRAW_IMAGE_REF_COLOR_FILTER_REF;
     }
 
     private static void assertCommandStreamValidation() {
@@ -227,6 +228,7 @@ public class JBRSkiaApiTest {
         assertValidCommandStream(validDashedStrokeLineStream(), "valid dashed stroke line stream");
         assertValidCommandStream(validSaveLayerTintColorFilterStream(), "valid saveLayer tint color-filter stream");
         assertValidCommandStream(validImageRefTintColorFilterStream(), "valid image-ref tint color-filter stream");
+        assertValidCommandStream(validImageRefColorMatrixFilterHandleStream(), "valid image-ref color-matrix filter handle stream");
         assertValidCommandStream(new int[] {
                 JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 3,
                 JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
@@ -328,6 +330,15 @@ public class JBRSkiaApiTest {
                 JBRSkia.COMMAND_SAVE_LAYER_COLOR_FILTER_REF, 40, JBRSkia.COMMAND_RECORD_FLAGS_NONE,
                 1, 2, 10, 10, 600, 0x00000001, 0x00000002
         }, "undefined saveLayer color-filter handle");
+        assertInvalidCommandStream(new int[] {
+                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 31,
+                JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
+                JBRSkia.COMMAND_DEFINE_IMAGE_ARGB, 36, JBRSkia.COMMAND_RECORD_FLAGS_NONE,
+                1, 2, 1, 1, 1, 0xffffffff,
+                JBRSkia.COMMAND_DRAW_IMAGE_REF_COLOR_FILTER_REF, 76, JBRSkia.COMMAND_RECORD_FLAG_ANTIALIAS,
+                0, 0, 1000, 1000, 10, 20, 30, 40, 1, 2, 1, 1, 600, 1,
+                0x00000001, 0x00000002
+        }, "undefined image-ref color-filter handle");
         assertInvalidCommandStream(new int[] {
                 JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 10,
                 JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
@@ -860,6 +871,27 @@ public class JBRSkiaApiTest {
                 JBRSkia.COMMAND_DRAW_IMAGE_REF_COLOR_FILTER, 76, JBRSkia.COMMAND_RECORD_FLAG_ANTIALIAS,
                 0, 0, 1000, 1000, 10, 20, 30, 40, 1, 2, 1, 1, 600, 1,
                 0xff00ffff, JBRSkia.COMMAND_BLEND_MODE_SRC_IN
+        };
+    }
+
+    private static int[] validImageRefColorMatrixFilterHandleStream() {
+        return new int[] {
+                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 59,
+                JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
+                JBRSkia.COMMAND_DEFINE_EFFECT_DESCRIPTOR, 112, JBRSkia.COMMAND_RECORD_FLAGS_NONE,
+                0x00000007, 0x00000008,
+                JBRSkia.COMMAND_EFFECT_DESCRIPTOR_COLOR_MATRIX_FILTER,
+                JBRSkia.COMMAND_EFFECT_DESCRIPTOR_VERSION_1,
+                20,
+                f(1f), f(0f), f(0f), f(0f), f(0.125f),
+                f(0f), f(1f), f(0f), f(0f), f(0f),
+                f(0f), f(0f), f(1f), f(0f), f(0f),
+                f(0f), f(0f), f(0f), f(1f), f(0f),
+                JBRSkia.COMMAND_DEFINE_IMAGE_ARGB, 36, JBRSkia.COMMAND_RECORD_FLAGS_NONE,
+                1, 2, 1, 1, 1, 0xffffffff,
+                JBRSkia.COMMAND_DRAW_IMAGE_REF_COLOR_FILTER_REF, 76, JBRSkia.COMMAND_RECORD_FLAG_ANTIALIAS,
+                0, 0, 1000, 1000, 10, 20, 30, 40, 1, 2, 1, 1, 600, 1,
+                0x00000007, 0x00000008
         };
     }
 
