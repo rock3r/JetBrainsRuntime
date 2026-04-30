@@ -5650,3 +5650,39 @@ Remaining caveat:
 
 Next:
 - Continue macOS MVP hardening with either native text baseline/style parity, productionizing JBR-owned shader factory design for broader shader families, or packaging a full old/new artifact matrix with real old bundles.
+
+## Checkpoint: Paragraph Text Screenshot Guardrails
+
+Date: 2026-04-30
+
+Status: completed as validation hardening for the native-text parity slice.
+
+Why:
+- Native text remains opt-in and visually close, but the existing screenshot assertion only checked broad top/bottom text presence.
+- The paragraph layout probe intentionally exercises centered bold text, right-aligned italic text, RTL text, ellipsis/overflow, and decorated text. Those rows should have their own stable pixel tripwires before native text becomes a serious default-candidate.
+
+Changes:
+- Magic Jewel command screenshot assertions now emit and validate paragraph-row dark-pixel counters when `MAGIC_JEWEL_PARAGRAPH_LAYOUT_TEXT=true`:
+  - `paragraphCentered`
+  - `paragraphItalicRight`
+  - `paragraphRtl`
+  - `paragraphOverflow`
+  - `paragraphDecorated`
+- `ROADMAP.md` now records paragraph-row screenshot assertions as complete.
+
+Validation:
+- Text parity probe run:
+  - command: `OUT_ROOT=/tmp/magic-jewel-text-parity-20260430-121318 CASES="commands-text-image commands-native-text" SKIKO_VERSION=0.0.0-SNAPSHOT bash scripts/jbr-skia-command-probe-suite.sh`
+  - result: passed.
+  - suite: `/tmp/magic-jewel-text-parity-20260430-121318/suite.tsv`.
+  - text-as-image row: 738 JBR command frames, 0 fallback markers, 0 picture replay frames.
+  - native-text row: 998 JBR command frames, 0 fallback markers, 0 picture replay frames, 9 simple text commands and 6 paragraph text commands per frame.
+- New assertion replay against captured reference screenshots:
+  - text-as-image screenshot passed with paragraph row counts `paragraphCentered=3601`, `paragraphItalicRight=2339`, `paragraphRtl=2410`, `paragraphOverflow=3538`, `paragraphDecorated=1745`.
+  - native-text screenshot passed with paragraph row counts `paragraphCentered=6693`, `paragraphItalicRight=1974`, `paragraphRtl=2573`, `paragraphOverflow=3781`, `paragraphDecorated=954`.
+- Magic Jewel report validation tests:
+  - command: `bash scripts/test-jbr-skia-report-validation.sh`
+  - result: passed.
+
+Next:
+- Use these stricter paragraph guardrails while investigating native text baseline/style parity or while deciding whether native text can replace text-as-image for a narrower subset of Jewel labels.

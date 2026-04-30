@@ -68,6 +68,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Add narrow image-shader rectangle support without sharing raw `SkShader*` pointers.
 - [x] Add screenshot-level text-presence assertions using stable pixel regions for top/bottom Magic Jewel labels.
 - [x] Add screenshot-level text placement assertions using stable dark-pixel bounding boxes.
+- [x] Add paragraph-row screenshot assertions for native-text layout probes.
 - [x] Investigate observed text alignment drift in Magic Jewel/Jewel labels on the command path.
 
 ## Validation Harness
