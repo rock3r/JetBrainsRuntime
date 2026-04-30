@@ -5192,3 +5192,42 @@ Validation:
 Note:
 - This is a recorder-level operation fallback, not a compatibility-gate fallback, so the expected signal is `cmp_unsupported_reasons=saveLayer:...`, picture replay, and zero JBR command frames.
 - The focused CMP unit test uses `BlendMode.Plus` as the unsupported layer-paint input because that boundary is deterministic in the recorder-only test harness; the Magic Jewel live probe keeps exercising the filtered layer-paint path.
+
+## Checkpoint: Image Paint Fallback Probe
+
+Date: 2026-04-30
+
+Status: completed as live recorder-level fallback coverage plus CMP unit coverage.
+
+Why:
+- Simple image replay is supported by the command ABI, but image draws with paint features like color filters still need Skia paint objects outside the current serialized subset.
+- The fallback harness should prove these image paint cases go to picture replay and do not emit partial JBR command frames.
+
+Changes:
+- Magic Jewel added `MAGIC_JEWEL_COMPOSE_IMAGE_FILTER=true`.
+- The probe draws the deterministic image with a Compose `ColorFilter.tint(...)`.
+- The command-probe suite gained `commands-image-filter-fallback`.
+- CMP added `JbrSkiaCommandRecorderTest.rejectsImageWithUnsupportedPaint`.
+- README documents the manual command and suite coverage.
+- `ROADMAP.md` records both the live Magic Jewel image-paint fallback probe and CMP recorder unit coverage.
+
+Validation:
+- Syntax check:
+  - command: `bash -n scripts/jbr-skia-interop-report.sh scripts/jbr-skia-command-probe-suite.sh`
+  - result: passed.
+- Magic Jewel compile:
+  - command: `./gradlew --no-daemon compileKotlin`
+  - result: passed.
+- CMP recorder unit test:
+  - command: `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.rejectsImageWithUnsupportedPaint`
+  - result: passed.
+- Report parser tests:
+  - command: `bash scripts/test-jbr-skia-report-validation.sh`
+  - result: `JBR_SKIA_REPORT_VALIDATION_TESTS passed`.
+- Focused command-probe suite:
+  - command: `OUT_ROOT=/tmp/magic-jewel-image-filter-suite CASES=commands-image-filter-fallback DURATION_SECONDS=3 WARMUP_SECONDS=1 SAMPLE_INTERVAL_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT bash scripts/jbr-skia-command-probe-suite.sh`
+  - result: `JBR_SKIA_COMMAND_PROBE_SUITE passed out_root=/tmp/magic-jewel-image-filter-suite`
+  - case summary: `status=passed`, `fallback_new_count=0`, `unsupported=image:238`, `jbr_picture_frames=238`, `jbr_command_frames=0`.
+
+Note:
+- This is another recorder-level operation fallback. The expected signal is `cmp_unsupported_reasons=image:...`, picture replay, and zero JBR command frames.

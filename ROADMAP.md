@@ -53,6 +53,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] More strict shader fallback tests for nonfinite gradient metadata that survives shader construction.
 - [x] Live Magic Jewel recorder-level fallback probes for color filters and path effects.
 - [x] Live Magic Jewel recorder-level fallback probe for unsupported saveLayer layer paint.
+- [x] Live Magic Jewel recorder-level fallback probe for unsupported image paint.
 - [ ] Remaining generic shader edge cases beyond transformed/composite/opaque shader wrappers.
 - [x] Expand screenshot assertions to check core primitive and gradient probe colors/regions explicitly.
 - [x] Improve Magic Jewel visual fidelity so labels use Jewel `Text` and `JewelTheme.defaultTextStyle`.
@@ -65,6 +66,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 
 - [x] Focused CMP recorder tests for command encodings.
 - [x] Focused CMP recorder tests for unsupported saveLayer layer-paint fallback.
+- [x] Focused CMP recorder tests for unsupported image paint fallback.
 - [x] Focused Skiko compatibility/fallback tests.
 - [x] JBR Java service compile smoke.
 - [x] JBR native dylib compile smoke.
