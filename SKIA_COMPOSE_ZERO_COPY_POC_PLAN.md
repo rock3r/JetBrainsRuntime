@@ -6943,3 +6943,32 @@ Verification:
 Next:
 
 - Continue the component blend family with `Color` and `Luminosity`, then reassess whether the old/new screenshot parity harness should become the next priority checkpoint.
+
+## Checkpoint: ABI 72 Color Blend-Mode Fill Rectangles
+
+Status: completed as another exact direct-mapping blend-mode slice across JBR, public Runtime API, Skiko, CMP, and Magic Jewel.
+
+What changed:
+
+- Runtime API and JBR private API expose ABI 72 and the Color blend-mode payload constant.
+- JBR Java validation accepts Color wherever the fill-rect blend-mode command is valid.
+- Native `JBRSkiaInterop.mm` gates command streams on ABI 72 and maps the payload to `SkBlendMode::kColor` inside JBR's Skia runtime.
+- Skiko compatibility requires ABI 72 before enabling command mode.
+- CMP records `BlendMode.Color` solid fill rectangles through the structured blend-mode command when the paint has no shader, color filter, or path effect.
+- Magic Jewel extends the blend-mode visual probe and screenshot assertion with a visible lower Color region.
+- `ROADMAP.md` marks ABI 72 complete and records the live probe path.
+
+Verification:
+
+- Runtime API compile passed for ABI 72.
+- JBR API validator passed with ABI 72 and the Color payload.
+- Native `JBRSkiaInterop.mm` standalone build passed at `/tmp/jbr-skia-native/libjbrskiainterop.dylib` with the Color mapping.
+- CMP focused recorder tests passed for Color and Saturation blend-mode records.
+- Skiko interop tests passed with ABI 72 fixture expectations.
+- Magic Jewel compile passed.
+- Magic Jewel ABI 72 Color live command probe passed: `/tmp/magic-jewel-command-probe-abi72-color-blend/suite.tsv`, with `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, and `jbr_command_frames=585`.
+- The window screenshot assertion passed with `blendModeColor=531786`.
+
+Next:
+
+- Finish the component blend family with `Luminosity`, then reassess whether the old/new screenshot parity harness should become the next priority checkpoint.
