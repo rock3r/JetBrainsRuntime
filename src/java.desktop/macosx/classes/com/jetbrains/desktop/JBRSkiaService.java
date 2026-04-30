@@ -1217,7 +1217,8 @@ public class JBRSkiaService extends JBRSkia {
 
     private static boolean isSupportedFillBlendMode(int blendMode) {
         return blendMode == COMMAND_BLEND_MODE_PLUS
-                || blendMode == COMMAND_BLEND_MODE_MULTIPLY;
+                || blendMode == COMMAND_BLEND_MODE_MULTIPLY
+                || blendMode == COMMAND_BLEND_MODE_SCREEN;
     }
 
     private static CommandRecord readCommandRecord(int[] commands, int offset, int commandEnd) {

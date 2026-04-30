@@ -6607,3 +6607,26 @@ Validation:
 Next:
 - Feed the blend counters into `summary.properties` if we want CI dashboards to compare them without opening the report log.
 - Continue mode-by-mode blend expansion or start the first non-tint descriptor implementation.
+
+## Checkpoint: ABI 60 Screen Blend-Mode Fill Rectangles
+
+Status: completed for `BlendMode.Screen` on solid fill rectangles.
+
+What changed:
+- CMP now records solid fill rectangles using `BlendMode.Screen` as `COMMAND_FILL_RECT_BLEND_MODE` with payload value `COMMAND_BLEND_MODE_SCREEN = 4`.
+- Runtime API and JBR private API expose ABI 60 and the new screen blend-mode payload constant.
+- Skiko compatibility now requires ABI 60 before enabling command mode.
+- JBR validation accepts screen for blend-mode fill rectangles; native replay maps it to `SkBlendMode::kScreen` inside the JBR-owned Skia runtime.
+- Magic Jewel now draws Plus, Multiply, and Screen blend-mode probes, and screenshot assertions count the Screen region through `blendModeScreen`.
+- `ROADMAP.md` records ABI 60 and keeps remaining blend modes as a mode-by-mode compatibility track.
+
+Validation:
+- CMP focused tests `writesFillRectPlusBlendModeRecord`, `writesFillRectMultiplyBlendModeRecord`, and `writesFillRectScreenBlendModeRecord` passed.
+- Runtime API compile passed for ABI 60.
+- Skiko `JbrSkiaInteropTest` passed with ABI 60 discovery and capability mask.
+- JBR API/validator smoke passed with valid Plus, Multiply, and Screen blend-mode streams.
+- Native `JBRSkiaInterop.mm` standalone build passed with command-stream ABI 60.
+- Magic Jewel command-probe row passed: `/tmp/magic-jewel-command-probe-abi60-screen-blend/suite.tsv`, with `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, and `jbr_command_frames=418`.
+
+Next:
+- Continue blend-mode expansion one value at a time or pivot to the first non-tint effect descriptor; render-effect/blur support needs graphics-layer plumbing rather than the simple paint recorder.
