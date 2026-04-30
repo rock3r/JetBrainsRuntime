@@ -90,6 +90,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Magic Jewel reports include host CPU count and load-average metadata for noisy-machine benchmark context.
 - [x] ABI 43 quiet-machine benchmark refresh: `/tmp/magic-jewel-quiet-benchmark-abi43-20260430-110714/suite.tsv`.
 - [x] ABI 44 quiet-machine benchmark refresh: `/tmp/magic-jewel-quiet-benchmark-abi44-20260430-122457/suite.tsv`.
+- [x] ABI 45 quiet-machine benchmark refresh: `/tmp/magic-jewel-quiet-benchmark-abi45-20260430-131201/suite.tsv`.
 - [x] Async-profiler integration in Magic Jewel report.
 - [x] CI-friendly parser for Magic Jewel report summary.
 - [x] Machine-readable Skiko surface-change marker count in Magic Jewel reports.

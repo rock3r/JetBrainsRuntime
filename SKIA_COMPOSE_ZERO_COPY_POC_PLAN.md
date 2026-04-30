@@ -5813,3 +5813,37 @@ Roadmap update:
 
 Next:
 - Continue macOS MVP hardening with either native text parity, packaged old/new artifact matrix bundles, or the next narrow known-family rendering slice.
+
+## Checkpoint: ABI 45 Quiet Benchmark Refresh
+
+Date: 2026-04-30
+
+Status: completed against the committed ABI 45 artifacts.
+
+Why:
+- ABI 45 changed the command capability gate and added gradient-stroke command replay, so the ABI 44 quiet benchmark is no longer the freshest local baseline.
+- The machine was reported quiet, making it a good moment to keep the SKP/picture path and command/image-cache rows around for later profiler-backed comparisons.
+
+Command:
+- `OUT_ROOT=/tmp/magic-jewel-quiet-benchmark-abi45-20260430-131201 DURATION_SECONDS=30 WARMUP_SECONDS=5 SAMPLE_INTERVAL_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ENABLE_ASPROF=false bash scripts/jbr-skia-benchmark-suite.sh`
+
+Results:
+- suite: `/tmp/magic-jewel-quiet-benchmark-abi45-20260430-131201/suite.tsv`.
+- picture: passed, 0 fallbacks, old avg CPU 67.80, new avg CPU 95.50, old app FPS 273.7, new app/JBR picture FPS 228.2.
+- commands: passed, 0 fallbacks, old avg CPU 86.54, new avg CPU 87.54, old app FPS 392.9, new app/JBR command FPS 311.2, 9,337 JBR command frames.
+- commands-stable-images: passed, 0 fallbacks, old avg CPU 112.50, new avg CPU 126.88, old app FPS 175.3, new app/JBR command FPS 172.7, 5,182 JBR command frames.
+- commands-dynamic-images: passed, 0 fallbacks, old avg CPU 126.88, new avg CPU 119.95, old app FPS 173.1, new app/JBR command FPS 168.1, 5,043 JBR command frames.
+- commands-resize-dynamic-images: passed, 0 fallbacks, old avg CPU 106.98, new avg CPU 120.02, old app FPS 159.2, new app/JBR command FPS 163.3, 4,898 JBR command frames.
+
+Interpretation:
+- All rows stayed strict and fallback-free.
+- The plain command row remains roughly tied on coarse CPU while avoiding picture replay.
+- Dynamic image-cache churn is lower on coarse CPU in the command path in this pass.
+- Stable-image and resize-dynamic rows are higher on coarse CPU in this pass, so they remain candidates for profiler-backed investigation instead of being treated as wins.
+- The SKP/picture row remains available as the retained picture baseline for later benchmark/profiler comparisons.
+
+Roadmap update:
+- Recorded the ABI 45 quiet benchmark suite path.
+
+Next:
+- Continue macOS MVP hardening. Good candidates are native text baseline/style parity, real old-artifact bundles for the artifact matrix, or a small profiler-backed look at the image-cache benchmark rows where coarse CPU regressed.
