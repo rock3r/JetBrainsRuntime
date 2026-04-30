@@ -14,6 +14,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Magic Jewel summary exposes machine-readable FPS fields for app, Swing, popup, picture, and command markers.
 - [x] Command mode validated with zero picture replay and zero fallback markers.
 - [x] Skiko command mode preserves the last meaningful Compose command stream across Swing-driven interop-only repaint passes, avoiding blank/flashing frames while real Compose animation frames still update.
+- [x] CMP now tags command frames as `FullScene` or `InteropOnly`, and Skiko uses that explicit frame kind for preservation replay instead of relying only on command-stream size.
 
 ## Command ABI Coverage
 
@@ -161,7 +162,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Make the parity suite window-only end to end: launch old/new renderers, capture the Magic Jewel window by id/title, crop no whole-screen screenshots, and keep the capture metadata in the report.
 - [x] Add deterministic animation-phase controls for parity runs so animated progress, blend probes, gradients, and Swing islands can be compared at repeatable frame phases.
 - [x] Add a live non-frozen command-mode animation smoke after the preservation guard so FPS and frame counters prove the sample still animates outside parity mode.
-- [ ] Replace the command-stream size heuristic for interop-only repaint preservation with an explicit CMP/Skiko frame-kind marker once the recorder can tag full-scene vs. interop-only paints.
+- [x] Replace the command-stream size heuristic for interop-only repaint preservation with an explicit CMP/Skiko frame-kind marker once the recorder can tag full-scene vs. interop-only paints.
+- [x] Magic Jewel reports summarize `CMP_JBR_COMMAND_FRAME_KIND` counts in `report.md` and `summary.properties`.
 - [x] Focused CMP recorder tests for unsupported saveLayer layer-paint fallback.
 - [x] Focused CMP recorder tests for unsupported image paint fallback.
 - [x] Focused Skiko compatibility/fallback tests.

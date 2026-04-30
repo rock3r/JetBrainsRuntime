@@ -7050,3 +7050,43 @@ Open risks:
 Next:
 
 - Replace the cache-size heuristic with an explicit frame-kind signal, then add diff-image/ownership-region output to the parity report. After that, the next feature slice should be graphics-layer nested command recording or the first real JBR-owned generic shader/effect handle.
+
+## Checkpoint: Explicit Command Frame Kinds For Interop Repaints
+
+Status: completed as a CMP/Skiko cleanup over the screenshot-preservation checkpoint.
+
+What changed:
+
+- Skiko `JbrSkiaCommandRenderDelegate` now supports `renderJbrSkiaCommandFrameInfo(...)`, returning a `JbrSkiaCommandFrame` with a `JbrSkiaCommandFrameKind` of `FullScene`, `InteropOnly`, or `Unknown`.
+- Skiko command replay preserves the previous meaningful command stream only when CMP explicitly reports an `InteropOnly` frame, with the old command-size heuristic retained only for legacy `Unknown` delegates.
+- CMP `JbrSkiaCommandRecorder.recordFrame(...)` now returns structured per-frame metadata: command word count, unsupported count, image define/ref/cache counters, and text/paragraph counters.
+- CMP `ComposeSceneMediator` classifies command recordings before handing them to Skiko and emits `CMP_JBR_COMMAND_FRAME_KIND kind=... commands=...` markers for report/debug tooling.
+- Magic Jewel reports now summarize frame-kind markers in `report.md` and `summary.properties` using stable keys including `cmp_frame_kind_full_scene`, `cmp_frame_kind_interop_only`, and `cmp_frame_kind_unknown`.
+- `ROADMAP.md` marks explicit frame-kind repaint preservation complete and keeps diff-image/per-region parity metrics as the next validation-harness gap.
+
+Verification:
+
+- Skiko focused interop tests passed and the updated Skiko snapshot was published locally:
+  - `./gradlew --no-daemon :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest :skiko:publishToMavenLocal`
+- CMP recorder metadata test passed:
+  - `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.recordsFrameMetadata`
+- CMP desktop jars rebuilt successfully for Magic Jewel:
+  - `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopJar :compose:ui:ui:desktopJar :compose:foundation:foundation:desktopJar :compose:material3:material3:desktopJar`
+- Magic Jewel non-frozen command-mode animation smoke passed:
+  - report: `/tmp/magic-jewel-command-animation-frame-kind/report.md`
+  - `app_new_fps=65.3`, `swing_new_fps=75.8`, `jbr_command_fps=65.5`
+  - screenshot assertion passed with zero picture replay and zero fallback markers.
+- Magic Jewel frozen old/new screenshot parity passed with explicit interop-only replay markers:
+  - `/tmp/magic-jewel-screenshot-parity-frame-kind-report/summary.tsv`
+  - report: `/tmp/magic-jewel-screenshot-parity-frame-kind-report/report/report.md`
+  - frame-kind summary: `FullScene=53`, `InteropOnly=478`, `Unknown=0` during the sampled window.
+  - logs show `CMP_JBR_COMMAND_FRAME_KIND kind=InteropOnly commands=26` followed by `SKIKO_JBR_INTEROP_COMMAND_REPLAY_CACHED kind=InteropOnly ...`.
+
+Open risks:
+
+- CMP's first classification rule is intentionally conservative: tiny command frames with no unsupported/text/image activity are treated as interop-only. This is now isolated to CMP and visible in report markers, but a production version should carry an even stronger paint-origin signal from the Swing/interop invalidation path if possible.
+- Magic Jewel still needs persisted diff images and per-region ownership metrics so old/new screenshot comparisons can distinguish Compose/Jewel drift from expected Swing/text-rendering differences.
+
+Next:
+
+- Add diff-image and ownership-region output to the parity report, or start the graphics-layer nested command recording slice. Generic shader/effect handles remain the larger non-negotiable end-state track after the current macOS MVP hardening.
