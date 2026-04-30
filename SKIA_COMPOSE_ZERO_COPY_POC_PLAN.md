@@ -5847,3 +5847,38 @@ Roadmap update:
 
 Next:
 - Continue macOS MVP hardening. Good candidates are native text baseline/style parity, real old-artifact bundles for the artifact matrix, or a small profiler-backed look at the image-cache benchmark rows where coarse CPU regressed.
+
+## Checkpoint: Targeted Benchmark Case Selection
+
+Date: 2026-04-30
+
+Status: completed as harness ergonomics for profiler-backed follow-up.
+
+Why:
+- The ABI 45 quiet benchmark kept the full SKP/command/image-cache suite, but later investigation should be able to rerun only suspicious rows with async-profiler or longer durations.
+- `asprof` was not on PATH in the current shell, so the immediate improvement is making targeted reruns cheap once a profiler path is supplied.
+
+Changes:
+- Magic Jewel `scripts/jbr-skia-benchmark-suite.sh` now accepts `CASES`, matching the command-probe suite pattern.
+- Supported benchmark case names:
+  - `picture`
+  - `commands`
+  - `commands-stable-images`
+  - `commands-dynamic-images`
+  - `commands-resize-dynamic-images`
+- Unknown benchmark case names fail fast.
+- Magic Jewel README documents subset usage, for example `CASES="commands-stable-images commands-resize-dynamic-images"`.
+- `ROADMAP.md` records benchmark case selection as complete.
+
+Validation:
+- Shell syntax check:
+  - command: `bash -n scripts/jbr-skia-benchmark-suite.sh`
+  - result: passed.
+- Focused one-row benchmark smoke:
+  - command: `OUT_ROOT=/tmp/magic-jewel-benchmark-cases-smoke-20260430-132120 CASES=commands DURATION_SECONDS=4 WARMUP_SECONDS=1 SAMPLE_INTERVAL_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ENABLE_ASPROF=false bash scripts/jbr-skia-benchmark-suite.sh`
+  - result: passed.
+  - suite: `/tmp/magic-jewel-benchmark-cases-smoke-20260430-132120/suite.tsv`.
+  - row: `commands`, `fallbacks=0`, `jbr_picture_frames=0`, `jbr_command_frames=543`.
+
+Next:
+- Use `CASES` for targeted profiler-backed reruns once `ASPROF=/path/to/asprof` is available, or continue with the next macOS MVP hardening slice.
