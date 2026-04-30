@@ -5686,3 +5686,30 @@ Validation:
 
 Next:
 - Use these stricter paragraph guardrails while investigating native text baseline/style parity or while deciding whether native text can replace text-as-image for a narrower subset of Jewel labels.
+
+## Checkpoint: Machine-Readable Screenshot Counters
+
+Date: 2026-04-30
+
+Status: completed as parser-level validation plumbing.
+
+Why:
+- Screenshot assertions already print useful pixel counters, including the new paragraph-row counters and image-shader probe counters.
+- CI and benchmark jobs should not have to scrape Markdown to compare those fields across runs.
+
+Changes:
+- Magic Jewel `summary.properties` now includes scalar screenshot count fields parsed from assertion logs:
+  - main-window fields use the `screenshot_` prefix, for example `screenshot_paragraphCentered` and `screenshot_probeRightDark`.
+  - popup-window fields use the `popup_window_screenshot_` prefix.
+- Bounding-box tuple fields such as `topTextBox=...` remain in the human report only because they are not scalar `key=value` counters.
+- Magic Jewel README documents the screenshot counter keys.
+- `ROADMAP.md` records parser-level screenshot count fields as complete.
+
+Validation:
+- Magic Jewel report validation tests:
+  - command: `bash scripts/test-jbr-skia-report-validation.sh`
+  - result: passed.
+- A real native-text report was revalidated with `--validate-only` to confirm the summary writer still accepts existing report directories.
+
+Next:
+- Use the new summary keys in later quiet benchmark comparisons and native-text parity tracking.

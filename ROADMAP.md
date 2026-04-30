@@ -93,6 +93,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Live resize/surface-change Magic Jewel smoke requiring at least one Skiko surface-change marker.
 - [x] Popup/layered Swing-over-Compose Magic Jewel smoke with screenshot pixels and popup paint markers.
 - [x] Parser-level coverage for popup paint marker thresholds and machine-summary fields.
+- [x] Parser-level screenshot count fields in `summary.properties`.
 - [x] Selectable Magic Jewel command-probe suite for core primitives, gradients, text, popup, and fallback cases.
 - [x] Command-probe suite writes a machine-readable `suite.tsv`.
 - [x] ABI 43 command-probe suite refresh: `/tmp/magic-jewel-command-probe-abi43-20260430-111549/suite.tsv`.
