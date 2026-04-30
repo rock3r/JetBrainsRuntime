@@ -5308,3 +5308,19 @@ Note:
 Roadmap update:
 - Marked the remaining near-term generic shader fallback probes complete after covering opaque image shaders, transformed gradients, composite shaders, invalid gradient metadata, image-filter paint, gradient stroke paint, color filters, path effects, blend modes, and unsupported saveLayer paints.
 - Kept the broader generic shader strategy open because true generic shader support still needs JBR-owned shader construction rather than raw `SkShader*` sharing across Skia runtimes.
+
+## Checkpoint: Shader Factory Strategy Doc
+
+Date: 2026-04-30
+
+Status: completed as design documentation, without changing the command ABI.
+
+Why:
+- The remaining generic shader work is production design, not missing fallback coverage.
+- Adding ABI constants before the ownership model is agreed would create compatibility churn without improving the current macOS MVP.
+
+Change:
+- Added `doc/skia-shader-factory.md`.
+- The doc commits to a JBR-owned shader factory/handle table instead of raw `SkShader*` sharing.
+- It scopes handles to the JBR destination context id, requires explicit capability gates, and lists candidate factory requests in priority order.
+- `ROADMAP.md` now marks the short-term shader fallback work and the medium-term design sketch complete, while leaving true generic shader support as a later production item.

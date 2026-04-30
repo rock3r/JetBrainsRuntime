@@ -43,8 +43,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 
 - [x] Complete serialized sweep-gradient payloads for rectangles, rounded rectangles, and paths.
 - [ ] Generic shader strategy:
-  - [ ] Short term: keep rejecting opaque/unknown shader pointers and add serialized command payloads for known shader families.
-  - [ ] Medium term: design a JBR-owned shader factory ABI so Skiko can request shader construction inside JBR's Skia runtime.
+  - [x] Short term: keep rejecting opaque/unknown shader pointers and add serialized command payloads for known shader families.
+  - [x] Medium term design sketch: document a JBR-owned shader factory ABI so Skiko can request shader construction inside JBR's Skia runtime. See `doc/skia-shader-factory.md`.
   - [ ] Long term: revisit true generic shader support only after Skiko's fast path no longer creates Skia C++ objects in a separate bundled runtime.
 - [x] Strict recorder fallback for invalid gradient stops and excessive gradient color counts.
 - [x] Strict recorder fallback for invalid rounded-rectangle radii with gradient paints.
