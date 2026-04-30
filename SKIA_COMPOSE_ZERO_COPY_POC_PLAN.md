@@ -5545,3 +5545,39 @@ Roadmap update:
 
 Next:
 - Move from measurement refresh back to rendering parity: either native text baseline/style parity or the next unsupported rendering family that still forces text/image fallback.
+
+## Checkpoint: ABI 43 Command Probe Suite Refresh
+
+Date: 2026-04-30
+
+Status: completed against the refreshed ABI 43 artifacts.
+
+Why:
+- After rebuilding local JBR classes/native dylib, public Runtime API shim, Skiko snapshot, and CMP jars, the broad command probe suite needed to prove that the text-family ABI change did not regress primitive, gradient, popup/layering, native-text, or expected-fallback behavior.
+
+Command:
+- `OUT_ROOT=/tmp/magic-jewel-command-probe-abi43-20260430-111549 SKIKO_VERSION=0.0.0-SNAPSHOT bash scripts/jbr-skia-command-probe-suite.sh`
+
+Results:
+- suite: `/tmp/magic-jewel-command-probe-abi43-20260430-111549/suite.tsv`.
+- strict command rows passed with zero fallbacks and zero picture replay:
+  - core primitives: 1787 JBR command frames.
+  - gradient surfaces: 1880 JBR command frames.
+  - gradient paths: 1900 JBR command frames.
+  - glass-pane popup: 1869 JBR command frames.
+  - popup window: 1663 JBR command frames.
+  - Swing menu popup: 1527 JBR command frames.
+  - text-as-image default: 1689 JBR command frames.
+  - native text opt-in: 900 JBR command frames.
+- deliberate fallback rows passed by producing picture replay and the expected unsupported reasons:
+  - shader, image filter, gradient stroke paint, color filter, path effect, plus blend mode, saveLayer filter, and invalid sweep-gradient stops.
+
+Interpretation:
+- ABI 43 native text is no longer only a focused smoke: it is covered by the broad command probe suite and remains strict/fallback-free.
+- The existing expected-fallback safety rails still work after the ABI refresh.
+
+Roadmap update:
+- Recorded the ABI 43 command-probe suite refresh and its report root.
+
+Next:
+- Start the next rendering parity slice. The most useful candidates are native text baseline/style parity, or a JBR-owned shader factory for unsupported shader families.
