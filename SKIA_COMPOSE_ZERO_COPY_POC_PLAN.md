@@ -6826,4 +6826,33 @@ Verification:
 
 Next:
 
-- Either continue with `Hardlight`/`Softlight` direct mappings, or start the window-only old/new screenshot parity harness. The latter is increasingly valuable because the current Magic Jewel scene now has enough blend/color/animation/layer content for meaningful visual-diff regions.
+- Either continue with `Softlight` direct mapping, or start the window-only old/new screenshot parity harness. The latter is increasingly valuable because the current Magic Jewel scene now has enough blend/color/animation/layer content for meaningful visual-diff regions.
+
+## Checkpoint: ABI 68 Hardlight Blend-Mode Fill Rectangles
+
+Status: completed as another exact direct-mapping blend-mode slice across JBR, public Runtime API, Skiko, CMP, and Magic Jewel.
+
+What changed:
+
+- Runtime API and JBR private API expose ABI 68 and the Hardlight blend-mode payload constant.
+- JBR Java validation accepts Hardlight wherever the fill-rect blend-mode command is valid.
+- Native `JBRSkiaInterop.mm` gates command streams on ABI 68 and maps the payload to `SkBlendMode::kHardLight` inside JBR's Skia runtime.
+- Skiko compatibility requires ABI 68 before enabling command mode.
+- CMP records `BlendMode.Hardlight` solid fill rectangles through the structured blend-mode command when the paint has no shader, color filter, or path effect.
+- Magic Jewel extends the blend-mode visual probe and screenshot assertion with a visible far-right lower Hardlight region.
+- `ROADMAP.md` marks ABI 68 complete and records the live probe path.
+
+Verification:
+
+- Runtime API compile passed for ABI 68.
+- JBR API validator passed with ABI 68 and the Hardlight payload.
+- Native `JBRSkiaInterop.mm` standalone build passed at `/tmp/jbr-skia-native/libjbrskiainterop.dylib` with the Hardlight mapping.
+- CMP focused recorder tests passed for Hardlight and ColorBurn blend-mode records.
+- Skiko interop tests passed with ABI 68 fixture expectations.
+- Magic Jewel compile passed.
+- Magic Jewel ABI 68 Hardlight live command probe passed: `/tmp/magic-jewel-command-probe-abi68-hardlight-blend/suite.tsv`, with `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, and `jbr_command_frames=820`.
+- The window screenshot assertion passed with `blendModeHardlight=2250`.
+
+Next:
+
+- Continue exact direct-mapping blend-mode coverage with `Softlight`, then decide whether to switch to the window-only old/new screenshot parity harness before less common blend/effect modes.
