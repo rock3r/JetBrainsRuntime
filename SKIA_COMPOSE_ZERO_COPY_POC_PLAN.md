@@ -6855,4 +6855,33 @@ Verification:
 
 Next:
 
-- Continue exact direct-mapping blend-mode coverage with `Softlight`, then decide whether to switch to the window-only old/new screenshot parity harness before less common blend/effect modes.
+- Continue exact direct-mapping blend-mode coverage, then decide whether to switch to the window-only old/new screenshot parity harness before less common blend/effect modes.
+
+## Checkpoint: ABI 69 Softlight Blend-Mode Fill Rectangles
+
+Status: completed as another exact direct-mapping blend-mode slice across JBR, public Runtime API, Skiko, CMP, and Magic Jewel.
+
+What changed:
+
+- Runtime API and JBR private API expose ABI 69 and the Softlight blend-mode payload constant.
+- JBR Java validation accepts Softlight wherever the fill-rect blend-mode command is valid.
+- Native `JBRSkiaInterop.mm` gates command streams on ABI 69 and maps the payload to `SkBlendMode::kSoftLight` inside JBR's Skia runtime.
+- Skiko compatibility requires ABI 69 before enabling command mode.
+- CMP records `BlendMode.Softlight` solid fill rectangles through the structured blend-mode command when the paint has no shader, color filter, or path effect.
+- Magic Jewel extends the blend-mode visual probe and screenshot assertion with a visible far-right lower Softlight region.
+- `ROADMAP.md` marks ABI 69 complete and records the live probe path.
+
+Verification:
+
+- Runtime API compile passed for ABI 69.
+- JBR API validator passed with ABI 69 and the Softlight payload.
+- Native `JBRSkiaInterop.mm` standalone build passed at `/tmp/jbr-skia-native/libjbrskiainterop.dylib` with the Softlight mapping.
+- CMP focused recorder tests passed for Softlight and Hardlight blend-mode records.
+- Skiko interop tests passed with ABI 69 fixture expectations.
+- Magic Jewel compile passed.
+- Magic Jewel ABI 69 Softlight live command probe passed: `/tmp/magic-jewel-command-probe-abi69-softlight-blend/suite.tsv`, with `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, and `jbr_command_frames=824`.
+- The window screenshot assertion passed with `blendModeSoftlight=4360`.
+
+Next:
+
+- Continue exact direct-mapping blend modes where Skia has a one-to-one `SkBlendMode`, or switch to the window-only old/new screenshot parity harness now that the blend probe has broad visible coverage.
