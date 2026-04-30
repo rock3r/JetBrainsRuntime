@@ -7245,7 +7245,7 @@ Next:
 
 ## Checkpoint: ABI 74 Save-Layer Blend Mode
 
-Status: in progress; source and focused JVM-side validation are complete, native JBR/live Magic Jewel validation is blocked on local Xcode license acceptance.
+Status: in progress; source, focused JVM-side validation, and the full CMP command-recorder regression gate are complete. Native JBR/live Magic Jewel validation is blocked on local Xcode license acceptance.
 
 What changed:
 
@@ -7261,6 +7261,8 @@ Verification:
 - Focused CMP tests passed:
   - `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesSaveLayerBlendModeRecord --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.nestedRecordingReplaysAtLayerDrawSite`
   - `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.nestedRecordingReplaysLayerBlendMode --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesSaveLayerBlendModeRecord`
+- The full CMP command-recorder desktop test class passed after refreshing stale exact-array expectations for the ABI 74 stream header/lengths:
+  - `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest`
 - Skiko AWT sources compiled after the ABI/capability gate bump:
   - `./gradlew --no-daemon --no-configuration-cache :skiko:compileKotlinAwt`
 - Skiko interop tests passed after adding explicit coverage that a JBR missing only `COMMAND_CAP64_SAVE_LAYER_BLEND_MODE` falls back with `command-capability-mismatch`:
@@ -7279,4 +7281,4 @@ Known notes:
 
 Next:
 
-- Unblock JBR validation by accepting the local Xcode license or using a preconfigured JBR build environment, then run the JBR API test and `commands-graphics-layer-blend-mode` Magic Jewel probe. After that, commit ABI 74 across JBR, Runtime API, Skiko, CMP, Magic Jewel, and docs.
+- Unblock JBR validation by accepting the local Xcode license or using a preconfigured JBR build environment, then run the JBR API test and `commands-graphics-layer-blend-mode` Magic Jewel probe with refreshed ABI 74 artifacts.

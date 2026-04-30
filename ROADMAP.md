@@ -15,6 +15,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Command mode validated with zero picture replay and zero fallback markers.
 - [x] Skiko command mode preserves the last meaningful Compose command stream across Swing-driven interop-only repaint passes, avoiding blank/flashing frames while real Compose animation frames still update.
 - [x] CMP now tags command frames as `FullScene` or `InteropOnly`, and Skiko uses that explicit frame kind for preservation replay instead of relying only on command-stream size.
+- [x] CMP's full `JbrSkiaCommandRecorderTest` desktop suite is green for ABI 74, so command-stream golden expectations are a usable regression gate again.
 
 ## Command ABI Coverage
 
@@ -158,6 +159,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 ## Validation Harness
 
 - [x] Focused CMP recorder tests for command encodings.
+- [x] Full CMP command-recorder regression gate: `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest` passed for ABI 74.
 - [x] Golden/diff screenshot harness for the full mixed Swing/Jewel/Compose Magic Jewel scene.
 - [x] Capture the app window only in old/new renderer modes, with deterministic sizing, theme, font inputs, animation phase, and seeded content.
 - [ ] Compare screenshot regions by ownership: tight tolerance for Compose/Jewel regions because CMP should match old Skia output, looser text-aware tolerance for Swing text after Java2D-to-Skia changes, and explicit occlusion/layer-boundary assertions for mixed content.
