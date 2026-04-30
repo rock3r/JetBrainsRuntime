@@ -5799,11 +5799,17 @@ Validation:
   - result: passed.
   - suite: `/tmp/magic-jewel-command-probe-abi45-gradient-stroke-20260430-125550/suite.tsv`.
   - row: `commands-gradient-stroke`, `fallbacks=0`, `unsupported=none`, `jbr_picture_frames=0`, `jbr_command_frames=1858`.
+- Full Magic Jewel command-probe suite refresh:
+  - command: `OUT_ROOT=/tmp/magic-jewel-command-probe-abi45-full-20260430-130148 SKIKO_VERSION=0.0.0-SNAPSHOT bash scripts/jbr-skia-command-probe-suite.sh`
+  - result: passed.
+  - suite: `/tmp/magic-jewel-command-probe-abi45-full-20260430-130148/suite.tsv`.
+  - strict command rows passed with zero fallback and zero picture replay, including `commands-gradient-stroke` with 1,994 JBR command frames.
+  - deliberate fallback rows still passed with zero JBR command frames and expected unsupported reasons for image filter, color filter, path effect, blend mode, saveLayer filter, and invalid sweep-gradient stops.
 
 Roadmap update:
 - Recorded ABI 45 command coverage.
 - Reclassified gradient-stroke paint from deliberate fallback to supported serialized command replay.
-- Recorded the focused smoke and command-probe row paths.
+- Recorded the focused smoke, focused command-probe row, and full command-probe suite paths.
 
 Next:
-- Run a full command-probe refresh for ABI 45 if time permits, then continue macOS MVP hardening with either native text parity, packaged old/new artifact matrix bundles, or the next narrow known-family rendering slice.
+- Continue macOS MVP hardening with either native text parity, packaged old/new artifact matrix bundles, or the next narrow known-family rendering slice.

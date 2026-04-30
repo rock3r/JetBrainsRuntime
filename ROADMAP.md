@@ -104,6 +104,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] ABI 44 command-probe suite refresh: `/tmp/magic-jewel-command-probe-abi44-full-20260430-115943/suite.tsv`.
 - [x] ABI 45 gradient-stroke command smoke: `/tmp/magic-jewel-abi45-gradient-stroke-smoke/report.md`.
 - [x] ABI 45 gradient-stroke command-probe row: `/tmp/magic-jewel-command-probe-abi45-gradient-stroke-20260430-125550/suite.tsv`.
+- [x] ABI 45 command-probe suite refresh: `/tmp/magic-jewel-command-probe-abi45-full-20260430-130148/suite.tsv`.
 - [x] Real undecorated Swing popup-window smoke captured separately by window id.
 
 ## Compatibility And ABI Hardening
