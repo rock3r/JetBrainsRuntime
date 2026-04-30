@@ -51,13 +51,13 @@ public class JBRSkiaApiTest {
     }
 
     public static void main(String[] args) throws Exception {
-        assertEquals(52, JBRSkia.ABI_ID, "ABI_ID");
+        assertEquals(53, JBRSkia.ABI_ID, "ABI_ID");
         assertEquals(3, JBRSkia.NATIVE_ABI_VERSION, "NATIVE_ABI_VERSION");
-        assertEquals("skia=m147-64a2414108;flags=macos-release-metal-poc:1;abi=52;native=3", JBRSkia.BUILD_ID, "BUILD_ID");
+        assertEquals("skia=m147-64a2414108;flags=macos-release-metal-poc:1;abi=53;native=3", JBRSkia.BUILD_ID, "BUILD_ID");
 
-        assertReflectiveStaticEquals(52, JBRSkia.class.getDeclaredField("ABI_ID"));
+        assertReflectiveStaticEquals(53, JBRSkia.class.getDeclaredField("ABI_ID"));
         assertReflectiveStaticEquals(3, JBRSkia.class.getDeclaredField("NATIVE_ABI_VERSION"));
-        assertReflectiveStaticEquals("skia=m147-64a2414108;flags=macos-release-metal-poc:1;abi=52;native=3", JBRSkia.class.getDeclaredField("BUILD_ID"));
+        assertReflectiveStaticEquals("skia=m147-64a2414108;flags=macos-release-metal-poc:1;abi=53;native=3", JBRSkia.class.getDeclaredField("BUILD_ID"));
 
         if (TestJBRSkia.INSTANCE != null) {
             throw new AssertionError("JBRSkia service must be unavailable before native runtime is wired");
@@ -164,7 +164,8 @@ public class JBRSkiaApiTest {
                 | JBRSkia.COMMAND_CAP64_STROKE_RECT_SWEEP_GRADIENT
                 | JBRSkia.COMMAND_CAP64_STROKE_ROUND_RECT_SWEEP_GRADIENT
                 | JBRSkia.COMMAND_CAP64_FILL_RECT_BLEND_MODE
-                | JBRSkia.COMMAND_CAP64_FILL_RECT_COLOR_FILTER;
+                | JBRSkia.COMMAND_CAP64_FILL_RECT_COLOR_FILTER
+                | JBRSkia.COMMAND_CAP64_STROKE_LINE_DASH_PATH_EFFECT;
     }
 
     private static void assertCommandStreamValidation() {
@@ -190,6 +191,7 @@ public class JBRSkiaApiTest {
         assertValidCommandStream(validSweepGradientStrokeRoundRectStream(), "valid sweep-gradient stroke round-rect stream");
         assertValidCommandStream(validFillRectPlusBlendModeStream(), "valid fill rect plus blend-mode stream");
         assertValidCommandStream(validFillRectTintColorFilterStream(), "valid fill rect tint color-filter stream");
+        assertValidCommandStream(validDashedStrokeLineStream(), "valid dashed stroke line stream");
         assertValidCommandStream(new int[] {
                 JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 3,
                 JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
@@ -452,6 +454,15 @@ public class JBRSkiaApiTest {
                 JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
                 JBRSkia.COMMAND_FILL_RECT_COLOR_FILTER, 40, JBRSkia.COMMAND_RECORD_FLAG_ANTIALIAS,
                 0xffff00ff, 0xff00ffff, JBRSkia.COMMAND_BLEND_MODE_SRC_IN, 3, 4, 10, 20
+        };
+    }
+
+    private static int[] validDashedStrokeLineStream() {
+        return new int[] {
+                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 16,
+                JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
+                JBRSkia.COMMAND_STROKE_LINE_DASH_PATH_EFFECT, 64, JBRSkia.COMMAND_RECORD_FLAG_ANTIALIAS,
+                0xffffffff, 1, 2, 11, 12, 8, 0, 1, 0, 3000, 2, 16000, 10000
         };
     }
 

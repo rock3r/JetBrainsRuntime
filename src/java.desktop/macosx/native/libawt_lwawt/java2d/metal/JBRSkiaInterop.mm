@@ -61,6 +61,7 @@
 #include "ganesh/mtl/GrMtlTypes.h"
 #include "include/gpu/ganesh/SkSurfaceGanesh.h"
 #include "include/effects/SkGradient.h"
+#include "include/effects/SkDashPathEffect.h"
 #include "modules/skparagraph/include/FontCollection.h"
 #include "modules/skparagraph/include/Paragraph.h"
 #include "modules/skparagraph/include/ParagraphBuilder.h"
@@ -71,7 +72,7 @@
 
 #include "MTLSurfaceDataBase.h"
 
-static constexpr jint ABI_ID = 52;
+static constexpr jint ABI_ID = 53;
 static constexpr jint COMMAND_STREAM_MAGIC = 1246972723;
 static constexpr jint COMMAND_STREAM_HEADER_SIZE = 6;
 static constexpr jint COMMAND_STREAM_FLAGS_NONE = 0;
@@ -124,6 +125,7 @@ static constexpr jint COMMAND_STROKE_RECT_SWEEP_GRADIENT = 39;
 static constexpr jint COMMAND_STROKE_ROUND_RECT_SWEEP_GRADIENT = 40;
 static constexpr jint COMMAND_FILL_RECT_BLEND_MODE = 41;
 static constexpr jint COMMAND_FILL_RECT_COLOR_FILTER = 42;
+static constexpr jint COMMAND_STROKE_LINE_DASH_PATH_EFFECT = 43;
 static constexpr jint COMMAND_BLEND_MODE_PLUS = 1;
 static constexpr jint COMMAND_BLEND_MODE_SRC_IN = 2;
 static constexpr jint COMMAND_PAINT_STYLE_FILL = 0;
@@ -2041,6 +2043,52 @@ static bool drawCommandList(SkCanvas* canvas,
                 paint.setStrokeCap(static_cast<SkPaint::Cap>(strokeCap));
                 paint.setStrokeJoin(static_cast<SkPaint::Join>(strokeJoin));
                 paint.setStrokeMiter(static_cast<SkScalar>(strokeMiter1000) / 1000.0f);
+                canvas->drawLine(static_cast<SkScalar>(x1),
+                                 static_cast<SkScalar>(y1),
+                                 static_cast<SkScalar>(x2),
+                                 static_cast<SkScalar>(y2),
+                                 paint);
+                break;
+            }
+            case COMMAND_STROKE_LINE_DASH_PATH_EFFECT: {
+                if (offset + 13 > recordEnd) {
+                    return false;
+                }
+                SkPaint paint;
+                paint.setAntiAlias(antiAlias);
+                paint.setStyle(SkPaint::kStroke_Style);
+                paint.setColor(skColorFromArgb(commands[offset++]));
+                jint x1 = commands[offset++];
+                jint y1 = commands[offset++];
+                jint x2 = commands[offset++];
+                jint y2 = commands[offset++];
+                jint strokeWidth = commands[offset++];
+                jint strokeCap = commands[offset++];
+                jint strokeJoin = commands[offset++];
+                jint strokeMiter1000 = commands[offset++];
+                jint phase1000 = commands[offset++];
+                jint intervalCount = commands[offset++];
+                if (!isValidStrokeMetadata(strokeWidth, strokeCap, strokeJoin, strokeMiter1000) ||
+                    phase1000 < 0 || intervalCount < 2 || intervalCount > 16 ||
+                    offset + intervalCount != recordEnd) {
+                    return false;
+                }
+                std::vector<SkScalar> intervals;
+                intervals.reserve(static_cast<size_t>(intervalCount));
+                for (jint index = 0; index < intervalCount; index++) {
+                    jint interval1000 = commands[offset++];
+                    if (interval1000 <= 0) {
+                        return false;
+                    }
+                    intervals.push_back(static_cast<SkScalar>(interval1000) / 1000.0f);
+                }
+                paint.setStrokeWidth(static_cast<SkScalar>(strokeWidth));
+                paint.setStrokeCap(static_cast<SkPaint::Cap>(strokeCap));
+                paint.setStrokeJoin(static_cast<SkPaint::Join>(strokeJoin));
+                paint.setStrokeMiter(static_cast<SkScalar>(strokeMiter1000) / 1000.0f);
+                paint.setPathEffect(SkDashPathEffect::Make(
+                        SkSpan<const SkScalar>(intervals.data(), static_cast<size_t>(intervalCount)),
+                        static_cast<SkScalar>(phase1000) / 1000.0f));
                 canvas->drawLine(static_cast<SkScalar>(x1),
                                  static_cast<SkScalar>(y1),
                                  static_cast<SkScalar>(x2),

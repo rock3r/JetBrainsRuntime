@@ -121,7 +121,8 @@ public class JBRSkiaService extends JBRSkia {
                     | COMMAND_CAP64_STROKE_RECT_SWEEP_GRADIENT
                     | COMMAND_CAP64_STROKE_ROUND_RECT_SWEEP_GRADIENT
                     | COMMAND_CAP64_FILL_RECT_BLEND_MODE
-                    | COMMAND_CAP64_FILL_RECT_COLOR_FILTER;
+                    | COMMAND_CAP64_FILL_RECT_COLOR_FILTER
+                    | COMMAND_CAP64_STROKE_LINE_DASH_PATH_EFFECT;
     private static final boolean NATIVE_BRIDGE_AVAILABLE = loadNativeBridge();
     private static final AtomicLong NEXT_SCOPE_ID = new AtomicLong(1);
     private static final int MAX_CACHED_IMAGES = 256;
@@ -250,6 +251,7 @@ public class JBRSkiaService extends JBRSkia {
         if (op == COMMAND_STROKE_ROUND_RECT_SWEEP_GRADIENT) return -22;
         if (op == COMMAND_FILL_RECT_BLEND_MODE) return 9;
         if (op == COMMAND_FILL_RECT_COLOR_FILTER) return 10;
+        if (op == COMMAND_STROKE_LINE_DASH_PATH_EFFECT) return -23;
         if (op == COMMAND_FILL_RECT_IMAGE_SHADER) return 14;
         if (op == COMMAND_CLEAR) return 4;
         if (op == COMMAND_CLEAR_RECT) return 7;
@@ -325,6 +327,9 @@ public class JBRSkiaService extends JBRSkia {
         if (expectedLength == -22 && record.op() == COMMAND_STROKE_ROUND_RECT_SWEEP_GRADIENT) {
             return record.recordLength() >= 20;
         }
+        if (expectedLength == -23 && record.op() == COMMAND_STROKE_LINE_DASH_PATH_EFFECT) {
+            return record.recordLength() >= 16;
+        }
         return expectedLength == record.recordLength();
     }
 
@@ -352,6 +357,23 @@ public class JBRSkiaService extends JBRSkia {
             int width = commands[record.argsStart() + 5];
             int height = commands[record.argsStart() + 6];
             return colorFilterBlendMode == COMMAND_BLEND_MODE_SRC_IN && width >= 0 && height >= 0;
+        }
+        if (record.op() == COMMAND_STROKE_LINE_DASH_PATH_EFFECT) {
+            int intervalCount = commands[record.argsStart() + 10];
+            if (intervalCount < 2 || intervalCount > 16 || record.recordLength() != 14 + intervalCount) {
+                return false;
+            }
+            int strokeWidth = commands[record.argsStart() + 5];
+            int phase = commands[record.argsStart() + 9];
+            if (strokeWidth <= 0 || phase < 0) {
+                return false;
+            }
+            for (int index = 0; index < intervalCount; index++) {
+                if (commands[record.argsStart() + 11 + index] <= 0) {
+                    return false;
+                }
+            }
+            return true;
         }
         if (record.op() == COMMAND_CLIP_RECT) {
             int clipOp = commands[record.recordEnd() - 1];
@@ -2621,6 +2643,36 @@ public class JBRSkiaService extends JBRSkia {
                         } finally {
                             current.setStroke(previous);
                         }
+                    } else if (op == COMMAND_STROKE_LINE_DASH_PATH_EFFECT) {
+                        if (offset + 13 > recordEnd) return false;
+                        applyAntialiasing(current, antiAlias);
+                        current.setColor(new Color(commands[offset++], true));
+                        int x1 = commands[offset++];
+                        int y1 = commands[offset++];
+                        int x2 = commands[offset++];
+                        int y2 = commands[offset++];
+                        int strokeWidth = Math.max(1, commands[offset++]);
+                        int strokeCap = commands[offset++];
+                        int strokeJoin = commands[offset++];
+                        float strokeMiter = commands[offset++] / 1000f;
+                        float phase = commands[offset++] / 1000f;
+                        int intervalCount = commands[offset++];
+                        if (intervalCount < 2 || intervalCount > 16 || offset + intervalCount != recordEnd) return false;
+                        float[] intervals = new float[intervalCount];
+                        for (int index = 0; index < intervalCount; index++) {
+                            int interval = commands[offset++];
+                            if (interval <= 0) return false;
+                            intervals[index] = interval / 1000f;
+                        }
+                        java.awt.Stroke previous = current.getStroke();
+                        java.awt.BasicStroke stroke = basicStroke(strokeWidth, strokeCap, strokeJoin, strokeMiter, intervals, phase);
+                        if (stroke == null) return false;
+                        try {
+                            current.setStroke(stroke);
+                            current.drawLine(x1, y1, x2, y2);
+                        } finally {
+                            current.setStroke(previous);
+                        }
                     } else if (op == COMMAND_FILL_OVAL) {
                         if (offset + 5 != recordEnd) return false;
                         applyAntialiasing(current, antiAlias);
@@ -2797,6 +2849,20 @@ public class JBRSkiaService extends JBRSkia {
                 return null;
             }
             return new java.awt.BasicStroke(width, cap, join, Math.max(1f, miter));
+        }
+
+        private static java.awt.BasicStroke basicStroke(
+                int width,
+                int cap,
+                int join,
+                float miter,
+                float[] dash,
+                float dashPhase
+        ) {
+            if (width < 1 || cap < 0 || cap > 2 || join < 0 || join > 2 || miter < 0 || dashPhase < 0) {
+                return null;
+            }
+            return new java.awt.BasicStroke(width, cap, join, Math.max(1f, miter), dash, dashPhase);
         }
 
         private static Rectangle toDeviceSpaceClip(Graphics2D graphics, Rectangle userSpaceClip) {

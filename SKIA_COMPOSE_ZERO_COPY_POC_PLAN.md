@@ -6344,3 +6344,71 @@ Roadmap update:
 
 Next:
 - Continue shrinking the fallback matrix; path effects and image filters remain intentionally harder because they require effect descriptors or handles, not just paint scalar metadata.
+
+## Checkpoint: ABI 53 Dashed Stroke Line
+
+Date: 2026-04-30
+
+Status: completed for the narrow dash path-effect stroked-line command path.
+
+Why:
+- The previous path-effect probe intentionally proved that unsupported path effects fell back cleanly to picture replay.
+- The Magic Jewel path-effect probe uses `PathEffect.dashPathEffect(floatArrayOf(16f, 10f), 0f)` on a straight stroked line. That can be serialized as dash intervals plus phase without sharing a Skiko `SkPathEffect*`.
+- This is not generic path-effect support yet; corner, chained, stamped, and arbitrary effect graphs still need serialized descriptors or JBR-owned effect handles.
+
+Changes:
+- JBR command ABI bumped to `ABI_ID=53`; `BUILD_ID` now includes `abi=53`.
+- Added 64-bit command capability `COMMAND_CAP64_STROKE_LINE_DASH_PATH_EFFECT = 1125899906842624L`.
+- Added command opcode `COMMAND_STROKE_LINE_DASH_PATH_EFFECT = 43`.
+- CMP now preserves dash metadata on Skiko-backed dash path effects and records dashed `drawLine` calls when the paint is otherwise a supported solid-color stroke.
+- Skiko compatibility now requires ABI 53 and the dashed-line path-effect capability bit before enabling command mode.
+- JBR validates dash interval count/ranges and reconstructs `SkDashPathEffect` inside JBR's Skia runtime for native replay.
+- The Java2D fallback replay maps the same command to `BasicStroke(..., dash, dashPhase)`.
+- Magic Jewel's path-effect probe now expects command replay instead of picture fallback; the historical case name `commands-path-effect-fallback` currently remains as the row identifier while its expected result has changed.
+
+Validation:
+- CMP TDD/focused recorder tests:
+  - first run failed before implementation with ABI 52/header-only output for `writesDashedStrokeLineRecord`.
+  - command: `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesDashedStrokeLineRecord --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesFillRectTintColorFilterRecord`
+  - result: passed after metadata retention and command recording implementation.
+- Runtime API compile:
+  - command: `javac -d /tmp/jbr-api-skia-abi53-compile src/com/jetbrains/Provided.java src/com/jetbrains/Service.java src/com/jetbrains/JBRSkia.java`
+  - result: passed.
+- JBR private API/service/test compile and runtime smoke:
+  - result: passed for `JBRSkia.java`, `JBRSkiaService.java`, and `JBRSkiaApiTest`; `/tmp/jbr-skia-run/desktop` refreshed with ABI 53 service classes.
+- JBR native dylib compile smoke:
+  - first run failed because Skia m147's `SkDashPathEffect::Make` takes `SkSpan<const SkScalar>` plus phase, not pointer/count/phase.
+  - result: passed after switching the call to `SkDashPathEffect::Make(SkSpan<const SkScalar>(...), phase)`.
+- Runtime API shim rebuild:
+  - command: `bash tools/build.sh process && bash tools/build.sh dev $(/usr/libexec/java_home -v 21) /tmp/jbr-api-skia-abi53-dev`
+  - result: passed; copied to `/tmp/jbr-api-shim.jar`.
+- Skiko compatibility tests:
+  - command: `./gradlew --no-daemon :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`
+  - result: passed.
+- Skiko local publish:
+  - command: `./gradlew --no-daemon :skiko:publishToMavenLocal`
+  - result: passed.
+- CMP desktop jars refresh:
+  - command: `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon :compose:ui:ui-graphics:desktopJar :compose:ui:ui-text:desktopJar :compose:ui:ui:desktopJar`
+  - result: passed.
+- Magic Jewel compile:
+  - command: `./gradlew --no-daemon compileKotlin && bash -n scripts/assert-jbr-skia-command-window-screenshot.sh && bash -n scripts/jbr-skia-command-probe-suite.sh`
+  - result: passed.
+- Focused Magic Jewel dashed path-effect smoke:
+  - command: `OUT_DIR=/tmp/magic-jewel-abi53-dashed-path-effect-smoke DURATION_SECONDS=6 WARMUP_SECONDS=1 SAMPLE_INTERVAL_SECONDS=1 JBR_SKIA_RENDER_MODE=commands MAGIC_JEWEL_COMPOSE_PATH_EFFECT=true SKIKO_VERSION=0.0.0-SNAPSHOT bash scripts/jbr-skia-interop-report.sh`
+  - result: passed.
+  - report: `/tmp/magic-jewel-abi53-dashed-path-effect-smoke/report.md`.
+  - command replay: `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, `jbr_command_frames=522` in the report summary.
+- Focused Magic Jewel command-probe row:
+  - command: `CASES=commands-path-effect-fallback OUT_ROOT=/tmp/magic-jewel-command-probe-abi53-path-effect DURATION_SECONDS=6 WARMUP_SECONDS=1 SAMPLE_INTERVAL_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT bash scripts/jbr-skia-command-probe-suite.sh`
+  - result: passed.
+  - suite: `/tmp/magic-jewel-command-probe-abi53-path-effect/suite.tsv`.
+  - row: `commands-path-effect-fallback`, `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, `jbr_command_frames=893`.
+
+Roadmap update:
+- Recorded ABI 53 command coverage.
+- Recorded the focused dashed path-effect smoke and command-probe row paths.
+- Kept broader path-effect/effect support tied to serialized descriptors or JBR-owned effect handles.
+
+Next:
+- Continue shrinking the fallback matrix. Image filters and saveLayer filters are the remaining paint/effect rows that likely need descriptor or handle work rather than scalar command payloads.
