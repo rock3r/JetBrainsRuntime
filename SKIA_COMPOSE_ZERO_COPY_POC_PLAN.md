@@ -6454,3 +6454,27 @@ Validation:
 
 Next:
 - Continue shrinking effect fallbacks with image-paint color filters or move into the first descriptor/handle ABI for generic image filters/runtime effects, while keeping the screenshot parity harness as the validation track for visual drift.
+
+## Checkpoint: ABI 55 Image Tint Color-Filter
+
+Status: completed for cached image refs drawn with `ColorFilter.tint(..., BlendMode.SrcIn)`.
+
+What changed:
+- CMP records `drawImageRect` with a SrcIn tint color filter as `COMMAND_DRAW_IMAGE_REF_COLOR_FILTER` instead of marking the image draw unsupported.
+- Runtime API and JBR private API now expose ABI 55, capability `COMMAND_CAP64_DRAW_IMAGE_REF_COLOR_FILTER = 4503599627370496L`, and opcode `COMMAND_DRAW_IMAGE_REF_COLOR_FILTER = 45`.
+- Skiko compatibility now requires ABI 55 and the image-ref color-filter capability before enabling command mode.
+- JBR validates the new image-ref payload; native replay applies `SkColorFilters::Blend(filterColor, SkBlendMode::kSrcIn)` to the image paint inside JBR's Skia runtime.
+- JBR Java2D command fallback approximates SrcIn image tinting by creating a tinted ARGB image before drawing.
+- Magic Jewel renamed the probe row from `commands-image-filter-fallback` to `commands-image-filter` and no longer expects a recorder fallback for this case.
+
+Validation:
+- CMP focused test: `writesImageTintColorFilterRecord` passed.
+- Runtime API compile passed for ABI 55.
+- Skiko `JbrSkiaInteropTest` passed with ABI 55 discovery.
+- JBR API/validator smoke passed with a valid image-ref tint color-filter stream.
+- Native `JBRSkiaInterop.mm` standalone build passed with command-stream ABI 55.
+- Magic Jewel smoke passed: `/tmp/magic-jewel-abi55-image-color-filter-smoke/report.md`.
+- Magic Jewel command-probe row passed: `/tmp/magic-jewel-command-probe-abi55-image-color-filter/suite.tsv`, with `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, and `jbr_command_frames=1707`.
+
+Next:
+- The remaining obvious effect family is no longer these narrow SrcIn tint cases; move toward the descriptor/handle ABI for real image filters/runtime effects or pick the next small explicit command shape only if it corresponds to a common Jewel/CMP paint pattern.

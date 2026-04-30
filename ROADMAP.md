@@ -51,6 +51,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] ABI 52: `ColorFilter.tint(..., BlendMode.SrcIn)` solid fill rectangles use an explicit color-filter fill command.
 - [x] ABI 53: dash path-effect stroked lines use serialized dash intervals and phase.
 - [x] ABI 54: `saveLayer` with `ColorFilter.tint(..., BlendMode.SrcIn)` uses an explicit color-filter layer command.
+- [x] ABI 55: cached image refs with `ColorFilter.tint(..., BlendMode.SrcIn)` use an explicit color-filter image command.
 
 ## Near-Term Rendering Work
 
@@ -92,6 +93,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [ ] Expand blend-mode command coverage beyond `Plus` fill rectangles only after each mode has exact Skia-vs-Java2D semantics documented.
 - [x] Add narrow tint color-filter solid fill-rectangle support through a versioned command instead of picture fallback.
 - [x] Add narrow tint color-filter `saveLayer` support through a versioned command instead of picture fallback.
+- [x] Add narrow tint color-filter cached-image support through a versioned command instead of picture fallback.
 - [ ] Expand color-filter command coverage beyond tint/SrcIn fill rectangles only through serialized descriptors or JBR-owned effect handles.
 - [x] Add narrow dash path-effect stroked-line support through a versioned command instead of picture fallback.
 - [ ] Expand path-effect command coverage beyond dash stroked lines only through serialized descriptors or JBR-owned effect handles.
@@ -157,6 +159,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] ABI 53 path-effect command-probe row: `/tmp/magic-jewel-command-probe-abi53-path-effect/suite.tsv`.
 - [x] ABI 54 saveLayer tint color-filter smoke: `/tmp/magic-jewel-abi54-save-layer-color-filter-smoke-3/report.md`.
 - [x] ABI 54 saveLayer tint color-filter command-probe row: `/tmp/magic-jewel-command-probe-abi54-save-layer-filter/suite.tsv`.
+- [x] ABI 55 image tint color-filter smoke: `/tmp/magic-jewel-abi55-image-color-filter-smoke/report.md`.
+- [x] ABI 55 image tint color-filter command-probe row: `/tmp/magic-jewel-command-probe-abi55-image-color-filter/suite.tsv`.
 - [x] Real undecorated Swing popup-window smoke captured separately by window id.
 
 ## Compatibility And ABI Hardening

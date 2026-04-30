@@ -72,7 +72,7 @@
 
 #include "MTLSurfaceDataBase.h"
 
-static constexpr jint ABI_ID = 54;
+static constexpr jint ABI_ID = 55;
 static constexpr jint COMMAND_STREAM_MAGIC = 1246972723;
 static constexpr jint COMMAND_STREAM_HEADER_SIZE = 6;
 static constexpr jint COMMAND_STREAM_FLAGS_NONE = 0;
@@ -127,6 +127,7 @@ static constexpr jint COMMAND_FILL_RECT_BLEND_MODE = 41;
 static constexpr jint COMMAND_FILL_RECT_COLOR_FILTER = 42;
 static constexpr jint COMMAND_STROKE_LINE_DASH_PATH_EFFECT = 43;
 static constexpr jint COMMAND_SAVE_LAYER_COLOR_FILTER = 44;
+static constexpr jint COMMAND_DRAW_IMAGE_REF_COLOR_FILTER = 45;
 static constexpr jint COMMAND_BLEND_MODE_PLUS = 1;
 static constexpr jint COMMAND_BLEND_MODE_SRC_IN = 2;
 static constexpr jint COMMAND_PAINT_STYLE_FILL = 0;
@@ -472,12 +473,20 @@ static bool drawImage(SkCanvas* canvas,
                       SkScalar dstTop,
                       SkScalar dstRight,
                       SkScalar dstBottom,
-                      jint alpha1000) {
+                      jint alpha1000,
+                      SkColor colorFilter = SK_ColorTRANSPARENT,
+                      jint colorFilterBlendMode = 0) {
     if (image == nullptr || alpha1000 < 0 || alpha1000 > 1000) {
         return false;
     }
     SkPaint imagePaint;
     imagePaint.setAlphaf(static_cast<float>(alpha1000) / 1000.0f);
+    if (colorFilterBlendMode != 0) {
+        if (colorFilterBlendMode != COMMAND_BLEND_MODE_SRC_IN) {
+            return false;
+        }
+        imagePaint.setColorFilter(SkColorFilters::Blend(colorFilter, SkBlendMode::kSrcIn));
+    }
     SkSamplingOptions sampling = (recordFlags & COMMAND_RECORD_FLAG_ANTIALIAS) != 0
             ? SkSamplingOptions(SkFilterMode::kLinear, SkMipmapMode::kNone)
             : SkSamplingOptions(SkFilterMode::kNearest, SkMipmapMode::kNone);
@@ -1710,6 +1719,49 @@ static bool drawCommandList(SkCanvas* canvas,
                 }
                 if (!drawImage(canvas, image, recordFlags, srcLeft, srcTop, srcRight, srcBottom,
                                dstLeft, dstTop, dstRight, dstBottom, alpha1000)) {
+                    return false;
+                }
+                break;
+            }
+            case COMMAND_DRAW_IMAGE_REF_COLOR_FILTER: {
+                if ((recordFlags & ~COMMAND_RECORD_FLAG_ANTIALIAS) != 0 || offset + 16 != recordEnd) {
+                    return false;
+                }
+                const SkScalar srcLeft = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkScalar srcTop = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkScalar srcRight = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkScalar srcBottom = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkScalar dstLeft = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkScalar dstTop = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkScalar dstRight = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkScalar dstBottom = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const uint64_t key = imageCacheKey(commands[offset], commands[offset + 1]);
+                offset += 2;
+                const jint imageWidth = commands[offset++];
+                const jint imageHeight = commands[offset++];
+                const jint alpha1000 = commands[offset++];
+                const jint filterQuality = commands[offset++];
+                SkColor filterColor = skColorFromArgb(commands[offset++]);
+                const jint colorFilterBlendMode = commands[offset++];
+                if (imageWidth <= 0 || imageHeight <= 0 || imageWidth > 4096 || imageHeight > 4096 ||
+                        alpha1000 < 0 || alpha1000 > 1000 || filterQuality < 0 || filterQuality > 3 ||
+                        colorFilterBlendMode != COMMAND_BLEND_MODE_SRC_IN) {
+                    return false;
+                }
+                sk_sp<SkImage> image;
+                {
+                    std::lock_guard<std::mutex> lock(gImageCacheMutex);
+                    auto found = gImagesByKey.find(ImageCacheScopedKey{imageCacheContextKey, key});
+                    if (found == gImagesByKey.end()) {
+                        return false;
+                    }
+                    image = found->second;
+                }
+                if (image->width() != imageWidth || image->height() != imageHeight) {
+                    return false;
+                }
+                if (!drawImage(canvas, image, recordFlags, srcLeft, srcTop, srcRight, srcBottom,
+                               dstLeft, dstTop, dstRight, dstBottom, alpha1000, filterColor, colorFilterBlendMode)) {
                     return false;
                 }
                 break;
