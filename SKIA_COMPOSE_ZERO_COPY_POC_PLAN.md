@@ -7399,3 +7399,34 @@ Known notes:
 
 - This slice covers solid fill rectangles with `ColorFilter.lighting(...)`; it does not yet cover lighting filters on images, saveLayer paints, graphics layers, or arbitrary shaders/runtime effects.
 - Native JBR test and live `commands-lighting-filter` validation should run after the local JBR native build is unblocked.
+
+## Checkpoint: ABI 78 SaveLayer Descriptor-Handle Filters
+
+Status: source and JVM-side validation are complete; native JBR/live Magic Jewel validation remains blocked on local Xcode license acceptance.
+
+What changed:
+
+- JBR private API, public Runtime API, Skiko compatibility gate, and CMP command recorder now use command ABI 78.
+- Added capability `COMMAND_CAP64_SAVE_LAYER_COLOR_FILTER_REF` and opcode `COMMAND_SAVE_LAYER_COLOR_FILTER_REF = 52`.
+- The new saveLayer command carries `[x, y, width, height, alpha1000, handleHigh, handleLow]` and references a previously defined typed effect descriptor instead of embedding raw Skia pointers.
+- JBR Java validation rejects undefined descriptor handles, malformed dimensions, bad alpha, and bad record shape. Java2D fallback replay validates the descriptor handle and preserves layer clipping; native Metal replay reconstructs the descriptor-backed `SkColorFilter` inside JBR-owned Skia and attaches it to the saveLayer paint.
+- CMP records `saveLayer` and command-recorded graphics layers with `ColorFilter.colorMatrix(...)` or `ColorFilter.lighting(...)` by defining/reusing descriptor handles, then emitting the new saveLayer reference command.
+- CMP intentionally still rejects descriptor color filters combined with non-SrcOver graphics-layer blend modes until a combined blend+descriptor ABI is introduced.
+- Skiko's strict ABI/capability gate now requires ABI 78 and the saveLayer descriptor-reference capability.
+- Magic Jewel gained `MAGIC_JEWEL_COMPOSE_GRAPHICS_LAYER_COLOR_MATRIX_FILTER` and a `commands-graphics-layer-color-matrix-filter` command-probe row.
+
+Verification:
+
+- Skiko interop tests passed:
+  - `./gradlew --no-daemon --no-configuration-cache :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`
+- CMP `ui-graphics` desktop sources compile:
+  - `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:compileKotlinDesktop`
+- Magic Jewel compiled:
+  - `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon --no-configuration-cache compileKotlin`
+- Magic Jewel script syntax checks passed:
+  - `bash -n scripts/jbr-skia-interop-report.sh && bash -n scripts/jbr-skia-command-probe-suite.sh && bash -n scripts/assert-jbr-skia-command-window-screenshot.sh`
+
+Known notes:
+
+- Focused CMP recorder test execution still trips the broader `compose:ui` desktop compile issue resolving the Skiko JBR command-frame bridge package before the recorder test class runs.
+- Native JBR test and live `commands-graphics-layer-color-matrix-filter` validation should run after the local JBR native build is unblocked.

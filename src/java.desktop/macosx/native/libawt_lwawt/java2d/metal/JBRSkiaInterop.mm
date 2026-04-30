@@ -75,7 +75,7 @@
 
 #include "MTLSurfaceDataBase.h"
 
-static constexpr jint ABI_ID = 77;
+static constexpr jint ABI_ID = 78;
 static constexpr jint COMMAND_STREAM_MAGIC = 1246972723;
 static constexpr jint COMMAND_STREAM_HEADER_SIZE = 6;
 static constexpr jint COMMAND_STREAM_FLAGS_NONE = 0;
@@ -137,6 +137,7 @@ static constexpr jint COMMAND_EVICT_COLOR_FILTER_HANDLE = 48;
 static constexpr jint COMMAND_DEFINE_EFFECT_DESCRIPTOR = 49;
 static constexpr jint COMMAND_SAVE_LAYER_BLEND_MODE = 50;
 static constexpr jint COMMAND_SAVE_LAYER_BLEND_COLOR_FILTER = 51;
+static constexpr jint COMMAND_SAVE_LAYER_COLOR_FILTER_REF = 52;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER = 1;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_COLOR_MATRIX_FILTER = 2;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_LIGHTING_FILTER = 3;
@@ -338,6 +339,25 @@ static SkScalar skScalarFromRawBits(jint bits) {
     static_assert(sizeof(value) == sizeof(bits));
     std::memcpy(&value, &bits, sizeof(value));
     return static_cast<SkScalar>(value);
+}
+
+static bool setDescriptorColorFilter(SkPaint* paint, const ColorFilterDescriptor& descriptor) {
+    if (descriptor.type == COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER) {
+        if (descriptor.blendMode != COMMAND_BLEND_MODE_SRC_IN) {
+            return false;
+        }
+        paint->setColorFilter(SkColorFilters::Blend(descriptor.argb, SkBlendMode::kSrcIn));
+        return true;
+    }
+    if (descriptor.type == COMMAND_EFFECT_DESCRIPTOR_COLOR_MATRIX_FILTER) {
+        paint->setColorFilter(SkColorFilters::Matrix(descriptor.matrix.data()));
+        return true;
+    }
+    if (descriptor.type == COMMAND_EFFECT_DESCRIPTOR_LIGHTING_FILTER) {
+        paint->setColorFilter(SkColorFilters::Lighting(descriptor.argb, static_cast<SkColor>(descriptor.blendMode)));
+        return true;
+    }
+    return false;
 }
 
 static SkTileMode skTileModeFromCommand(jint tileMode) {
@@ -1839,6 +1859,41 @@ static bool drawCommandList(SkCanvas* canvas,
                 canvas->saveLayer(&bounds, &layerPaint);
                 break;
             }
+            case COMMAND_SAVE_LAYER_COLOR_FILTER_REF: {
+                if (recordFlags != COMMAND_RECORD_FLAGS_NONE || offset + 7 != recordEnd) {
+                    return false;
+                }
+                jint x = commands[offset++];
+                jint y = commands[offset++];
+                jint layerWidth = commands[offset++];
+                jint layerHeight = commands[offset++];
+                jint alpha1000 = commands[offset++];
+                const uint64_t handle = imageCacheKey(commands[offset], commands[offset + 1]);
+                offset += 2;
+                if (layerWidth < 0 || layerHeight < 0 || alpha1000 < 0 || alpha1000 > 1000) {
+                    return false;
+                }
+                ColorFilterDescriptor descriptor;
+                {
+                    std::lock_guard<std::mutex> lock(gColorFilterCacheMutex);
+                    auto cached = gColorFiltersByKey.find(ColorFilterScopedKey{imageCacheContextKey, handle});
+                    if (cached == gColorFiltersByKey.end()) {
+                        return false;
+                    }
+                    descriptor = cached->second;
+                }
+                SkRect bounds = SkRect::MakeXYWH(static_cast<SkScalar>(x),
+                                                 static_cast<SkScalar>(y),
+                                                 static_cast<SkScalar>(layerWidth),
+                                                 static_cast<SkScalar>(layerHeight));
+                SkPaint layerPaint;
+                layerPaint.setAlphaf(static_cast<float>(alpha1000) / 1000.0f);
+                if (!setDescriptorColorFilter(&layerPaint, descriptor)) {
+                    return false;
+                }
+                canvas->saveLayer(&bounds, &layerPaint);
+                break;
+            }
             case COMMAND_DEFINE_IMAGE_ARGB: {
                 if (recordFlags != COMMAND_RECORD_FLAGS_NONE || offset + 5 > recordEnd) {
                     return false;
@@ -2359,16 +2414,7 @@ static bool drawCommandList(SkCanvas* canvas,
                 if (rectWidth < 0 || rectHeight < 0) {
                     return false;
                 }
-                if (descriptor.type == COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER) {
-                    if (descriptor.blendMode != COMMAND_BLEND_MODE_SRC_IN) {
-                        return false;
-                    }
-                    paint.setColorFilter(SkColorFilters::Blend(descriptor.argb, SkBlendMode::kSrcIn));
-                } else if (descriptor.type == COMMAND_EFFECT_DESCRIPTOR_COLOR_MATRIX_FILTER) {
-                    paint.setColorFilter(SkColorFilters::Matrix(descriptor.matrix.data()));
-                } else if (descriptor.type == COMMAND_EFFECT_DESCRIPTOR_LIGHTING_FILTER) {
-                    paint.setColorFilter(SkColorFilters::Lighting(descriptor.argb, static_cast<SkColor>(descriptor.blendMode)));
-                } else {
+                if (!setDescriptorColorFilter(&paint, descriptor)) {
                     return false;
                 }
                 canvas->drawRect(SkRect::MakeXYWH(static_cast<SkScalar>(x),

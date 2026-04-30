@@ -77,6 +77,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] ABI 75: saveLayer/graphics-layer replay supports combining a direct Skia blend mode with a tint/SrcIn color filter through a structured save-layer command.
 - [x] ABI 76: color-matrix color filters use a typed effect descriptor handle and solid fill-rect reference command.
 - [x] ABI 77: lighting color filters use a typed effect descriptor handle and solid fill-rect reference command.
+- [x] ABI 78: saveLayer/graphics-layer replay can apply typed color-filter descriptor handles through a structured save-layer reference command.
 
 ## Near-Term Rendering Work
 
@@ -91,6 +92,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   - [x] Third descriptor-shaped ABI slice: generic `COMMAND_DEFINE_EFFECT_DESCRIPTOR` envelope with descriptor type/version/payload validation and tint/SrcIn as the first schema.
   - [x] Fourth descriptor-shaped ABI slice: color-matrix color-filter descriptor handles with row-major 4x5 matrix payloads and JBR-owned `SkColorFilters::Matrix` reconstruction.
   - [x] Fifth descriptor-shaped ABI slice: lighting color-filter descriptor handles with multiply/add ARGB payloads and JBR-owned `SkColorFilters::Lighting` reconstruction.
+  - [x] Sixth descriptor-shaped ABI slice: saveLayer/graphics-layer paints can reference typed color-filter descriptor handles without raw Skia pointers.
   - [x] Strict JBR validator coverage for malformed effect descriptors: unknown type, unsupported version, bad payload count/length, unsupported blend mode, and evicted-handle use.
   - [ ] Implement JBR-owned shader/effect handles: Skiko/CMP serializes descriptors or create requests, JBR constructs objects inside its Skia runtime, draw commands reference versioned handles, and handles are scoped/evicted by destination context.
   - [ ] Support Skia runtime effects via descriptor payloads: SKSL source hash/source bytes, uniform block layout, child shader/color-filter handles, compile diagnostics, and stable fallback markers.
@@ -149,7 +151,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   - [x] Support directly mapped non-SrcOver graphics-layer blend modes through a bounded save-layer blend command.
   - [x] Support tint/SrcIn graphics-layer color filters by reusing the existing save-layer color-filter command.
   - [x] Support graphics layers that combine a directly mapped blend mode with tint/SrcIn color filtering through a bounded save-layer blend/color-filter command.
-  - [ ] Extend graphics-layer command replay beyond the current 2D subset: non-tint color filters, shadows, 3D rotation/camera, and offscreen strategy semantics.
+  - [x] Support color-matrix and lighting graphics-layer color filters by referencing typed descriptor handles from saveLayer paints.
+  - [ ] Extend graphics-layer command replay beyond the current 2D subset: descriptor filters combined with non-SrcOver blend modes, shadows, 3D rotation/camera, and offscreen strategy semantics.
   - [ ] Add render-effect descriptors for graphics-layer `RenderEffect` once the JBR-owned effect-handle ABI can construct the needed Skia image filters.
 - [x] Add narrow tint color-filter solid fill-rectangle support through a versioned command instead of picture fallback.
 - [x] Add narrow tint color-filter `saveLayer` support through a versioned command instead of picture fallback.
