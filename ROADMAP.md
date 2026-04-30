@@ -47,6 +47,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] ABI 48: radial-gradient stroked rounded rectangles use serialized gradient, radii, and stroke metadata.
 - [x] ABI 49: sweep-gradient stroked rectangles use serialized gradient and stroke metadata.
 - [x] ABI 50: sweep-gradient stroked rounded rectangles use serialized gradient, radii, and stroke metadata.
+- [x] ABI 51: `BlendMode.Plus` solid fill rectangles use an explicit blend-mode fill command.
 
 ## Near-Term Rendering Work
 
@@ -54,6 +55,10 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [ ] Generic shader strategy:
   - [x] Short term: keep rejecting opaque/unknown shader pointers and add serialized command payloads for known shader families.
   - [x] Medium term design sketch: document a JBR-owned shader factory ABI so Skiko can request shader construction inside JBR's Skia runtime. See `doc/skia-shader-factory.md`.
+  - [ ] Define the first shader/effect descriptor schema with stable type ids, payload lengths, lifecycle operations, and fallback reasons.
+  - [ ] Implement JBR-owned shader/effect handles: Skiko/CMP serializes descriptors or create requests, JBR constructs objects inside its Skia runtime, draw commands reference versioned handles, and handles are scoped/evicted by destination context.
+  - [ ] Add Magic Jewel probes that force handle creation, reuse, context migration, eviction, and fallback without relying on raw Skiko `SkShader*` or `SkRuntimeEffect*` pointers.
+  - [ ] Add ABI/version tests for shader/effect handle creation, use-after-free rejection, context migration invalidation, and old/new fallback markers.
   - [ ] Long term: revisit true generic shader support only after Skiko's fast path no longer creates Skia C++ objects in a separate bundled runtime.
 - [x] Strict recorder fallback for invalid gradient stops and excessive gradient color counts.
 - [x] Strict recorder fallback for invalid rounded-rectangle radii with gradient paints.
@@ -78,6 +83,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Add narrow radial-gradient stroked rounded-rectangle support without sharing raw `SkShader*` pointers.
 - [x] Add narrow sweep-gradient stroked-rectangle support without sharing raw `SkShader*` pointers.
 - [x] Add narrow sweep-gradient stroked rounded-rectangle support without sharing raw `SkShader*` pointers.
+- [x] Add narrow `BlendMode.Plus` solid fill-rectangle support through a versioned command instead of picture fallback.
+- [ ] Expand blend-mode command coverage beyond `Plus` fill rectangles only after each mode has exact Skia-vs-Java2D semantics documented.
 - [x] Add screenshot-level text-presence assertions using stable pixel regions for top/bottom Magic Jewel labels.
 - [x] Add screenshot-level text placement assertions using stable dark-pixel bounding boxes.
 - [x] Add paragraph-row screenshot assertions for native-text layout probes.
@@ -86,6 +93,10 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 ## Validation Harness
 
 - [x] Focused CMP recorder tests for command encodings.
+- [ ] Golden/diff screenshot harness for the full mixed Swing/Jewel/Compose Magic Jewel scene.
+- [ ] Capture the app window only in old/new renderer modes, with deterministic sizing, theme, font inputs, animation phase, and seeded content.
+- [ ] Compare screenshot regions by ownership: tight tolerance for Compose/Jewel regions, looser text-aware tolerance for Swing text after Java2D-to-Skia changes, and explicit occlusion/layer-boundary assertions for mixed content.
+- [ ] Persist old/new screenshots, diff images, per-region metrics, and pass/fail thresholds in the Magic Jewel report and `summary.properties`.
 - [x] Focused CMP recorder tests for unsupported saveLayer layer-paint fallback.
 - [x] Focused CMP recorder tests for unsupported image paint fallback.
 - [x] Focused Skiko compatibility/fallback tests.
@@ -127,6 +138,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] ABI 49 gradient-surfaces command-probe row: `/tmp/magic-jewel-command-probe-abi49-gradient-surfaces/suite.tsv`.
 - [x] ABI 50 sweep-gradient stroke rounded-rectangle smoke: `/tmp/magic-jewel-abi50-sweep-gradient-stroke-round-rect-smoke-2/report.md`.
 - [x] ABI 50 gradient-surfaces command-probe row: `/tmp/magic-jewel-command-probe-abi50-gradient-surfaces/suite.tsv`.
+- [x] ABI 51 Plus blend-mode fill-rect smoke: `/tmp/magic-jewel-abi51-fill-rect-plus-blend-smoke/report.md`.
+- [x] ABI 51 blend-mode command-probe row: `/tmp/magic-jewel-command-probe-abi51-blend-mode/suite.tsv`.
 - [x] Real undecorated Swing popup-window smoke captured separately by window id.
 
 ## Compatibility And ABI Hardening

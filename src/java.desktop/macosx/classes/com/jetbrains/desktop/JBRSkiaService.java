@@ -119,7 +119,8 @@ public class JBRSkiaService extends JBRSkia {
                     | COMMAND_CAP64_STROKE_RECT_RADIAL_GRADIENT
                     | COMMAND_CAP64_STROKE_ROUND_RECT_RADIAL_GRADIENT
                     | COMMAND_CAP64_STROKE_RECT_SWEEP_GRADIENT
-                    | COMMAND_CAP64_STROKE_ROUND_RECT_SWEEP_GRADIENT;
+                    | COMMAND_CAP64_STROKE_ROUND_RECT_SWEEP_GRADIENT
+                    | COMMAND_CAP64_FILL_RECT_BLEND_MODE;
     private static final boolean NATIVE_BRIDGE_AVAILABLE = loadNativeBridge();
     private static final AtomicLong NEXT_SCOPE_ID = new AtomicLong(1);
     private static final int MAX_CACHED_IMAGES = 256;
@@ -246,6 +247,7 @@ public class JBRSkiaService extends JBRSkia {
         if (op == COMMAND_STROKE_ROUND_RECT_RADIAL_GRADIENT) return -20;
         if (op == COMMAND_STROKE_RECT_SWEEP_GRADIENT) return -21;
         if (op == COMMAND_STROKE_ROUND_RECT_SWEEP_GRADIENT) return -22;
+        if (op == COMMAND_FILL_RECT_BLEND_MODE) return 9;
         if (op == COMMAND_FILL_RECT_IMAGE_SHADER) return 14;
         if (op == COMMAND_CLEAR) return 4;
         if (op == COMMAND_CLEAR_RECT) return 7;
@@ -336,6 +338,12 @@ public class JBRSkiaService extends JBRSkia {
             return record.recordFlags() == COMMAND_RECORD_FLAGS_NONE
                     && commands[record.recordEnd() - 1] >= 0
                     && commands[record.recordEnd() - 1] <= 1000;
+        }
+        if (record.op() == COMMAND_FILL_RECT_BLEND_MODE) {
+            int blendMode = commands[record.argsStart() + 1];
+            int width = commands[record.argsStart() + 4];
+            int height = commands[record.argsStart() + 5];
+            return blendMode == COMMAND_BLEND_MODE_PLUS && width >= 0 && height >= 0;
         }
         if (record.op() == COMMAND_CLIP_RECT) {
             int clipOp = commands[record.recordEnd() - 1];
@@ -2557,6 +2565,17 @@ public class JBRSkiaService extends JBRSkia {
                         } else {
                             current.fillRect(x, y, width, height);
                         }
+                    } else if (op == COMMAND_FILL_RECT_BLEND_MODE) {
+                        if (offset + 6 != recordEnd) return false;
+                        applyAntialiasing(current, antiAlias);
+                        current.setColor(new Color(commands[offset++], true));
+                        int blendMode = commands[offset++];
+                        int x = commands[offset++];
+                        int y = commands[offset++];
+                        int width = commands[offset++];
+                        int height = commands[offset++];
+                        if (blendMode != COMMAND_BLEND_MODE_PLUS || width < 0 || height < 0) return false;
+                        current.fillRect(x, y, width, height);
                     } else if (op == COMMAND_STROKE_LINE) {
                         if (offset + 9 != recordEnd) return false;
                         applyAntialiasing(current, antiAlias);

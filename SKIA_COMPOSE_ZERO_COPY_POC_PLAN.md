@@ -6208,3 +6208,70 @@ Roadmap update:
 
 Next:
 - Move into the next known shader/paint gap from the Magic Jewel fallback matrix, with generic JBR-owned shader handles still deferred to productionization.
+
+## Checkpoint: ABI 51 Plus Blend-Mode Fill Rect
+
+Date: 2026-04-30
+
+Status: completed for the narrow `BlendMode.Plus` solid fill-rectangle command path.
+
+Why:
+- The previous blend-mode probe intentionally proved that unsupported blend modes fell back cleanly to picture replay.
+- `BlendMode.Plus` on a solid fill rectangle is a small, deterministic paint-semantics slice that can move from fallback to JBR-owned Skia replay without solving every blend mode or every primitive at once.
+- This is not generic blend-mode support yet; it is a tightly versioned command for one common Compose paint case.
+
+Changes:
+- JBR command ABI bumped to `ABI_ID=51`; `BUILD_ID` now includes `abi=51`.
+- Added 64-bit command capability `COMMAND_CAP64_FILL_RECT_BLEND_MODE = 281474976710656L`.
+- Added command opcode `COMMAND_FILL_RECT_BLEND_MODE = 41`.
+- Added blend payload value `COMMAND_BLEND_MODE_PLUS = 1`.
+- CMP records `drawRect` with `BlendMode.Plus`, solid color, fill style, and no shader/color-filter/path-effect as a command payload instead of marking the frame unsupported.
+- Skiko compatibility now requires ABI 51 and the Plus blend fill-rect capability bit before enabling command mode.
+- JBR validates the command payload and native replay maps it to `SkBlendMode::kPlus` before drawing the rect.
+- Magic Jewel's blend-mode probe now expects command replay instead of picture fallback; the historical case name `commands-blend-mode-fallback` currently remains as the row identifier while its expected result has changed.
+
+Validation:
+- CMP TDD/focused recorder tests:
+  - first run failed before implementation with ABI 50/header-only output for `writesFillRectPlusBlendModeRecord`.
+  - command: `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesFillRectPlusBlendModeRecord --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesAntialiasRecordFlag`
+  - result: passed after the recorder implementation.
+- Runtime API compile:
+  - command: `javac -d /tmp/jbr-api-skia-abi51-compile src/com/jetbrains/Provided.java src/com/jetbrains/Service.java src/com/jetbrains/JBRSkia.java`
+  - result: passed.
+- JBR private API/service/test compile and runtime smoke:
+  - result: passed for `JBRSkia.java`, `JBRSkiaService.java`, and `JBRSkiaApiTest`; `/tmp/jbr-skia-run/desktop` refreshed with ABI 51 service classes.
+- JBR native dylib compile smoke:
+  - result: passed; `/tmp/jbr-skia-native/libjbrskiainterop.dylib` rebuilt with ABI 51.
+- Runtime API shim rebuild:
+  - command: `bash tools/build.sh process && bash tools/build.sh dev $(/usr/libexec/java_home -v 21) /tmp/jbr-api-skia-abi51-dev`
+  - result: passed; copied to `/tmp/jbr-api-shim.jar`.
+- Skiko compatibility tests:
+  - command: `./gradlew --no-daemon :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`
+  - result: passed.
+- Skiko local publish:
+  - command: `./gradlew --no-daemon :skiko:publishToMavenLocal`
+  - result: passed.
+- CMP desktop jars refresh:
+  - command: `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon :compose:ui:ui-graphics:desktopJar :compose:ui:ui-text:desktopJar :compose:ui:ui:desktopJar`
+  - result: passed.
+- Magic Jewel compile:
+  - command: `./gradlew --no-daemon compileKotlin`
+  - result: passed.
+- Focused Magic Jewel Plus blend-mode smoke:
+  - command: `OUT_DIR=/tmp/magic-jewel-abi51-fill-rect-plus-blend-smoke DURATION_SECONDS=6 WARMUP_SECONDS=1 SAMPLE_INTERVAL_SECONDS=1 JBR_SKIA_RENDER_MODE=commands MAGIC_JEWEL_COMPOSE_BLEND_MODE=true SKIKO_VERSION=0.0.0-SNAPSHOT bash scripts/jbr-skia-interop-report.sh`
+  - result: passed.
+  - report: `/tmp/magic-jewel-abi51-fill-rect-plus-blend-smoke/report.md`.
+  - command replay: `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, `jbr_command_frames=315` in the report summary.
+- Focused Magic Jewel command-probe row:
+  - command: `CASES=commands-blend-mode-fallback OUT_ROOT=/tmp/magic-jewel-command-probe-abi51-blend-mode DURATION_SECONDS=6 WARMUP_SECONDS=1 SAMPLE_INTERVAL_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT bash scripts/jbr-skia-command-probe-suite.sh`
+  - result: passed.
+  - suite: `/tmp/magic-jewel-command-probe-abi51-blend-mode/suite.tsv`.
+  - row: `commands-blend-mode-fallback`, `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, `jbr_command_frames=882`.
+
+Roadmap update:
+- Recorded ABI 51 command coverage.
+- Recorded the focused Plus blend-mode smoke and command-probe row paths.
+- Added concrete roadmap action items for old/new golden screenshot diffing and the eventual JBR-owned shader/effect handle ABI.
+
+Next:
+- Continue filling the paint-semantics gaps with small command slices while keeping broader generic shader/effect work behind a structured JBR-owned handle ABI.

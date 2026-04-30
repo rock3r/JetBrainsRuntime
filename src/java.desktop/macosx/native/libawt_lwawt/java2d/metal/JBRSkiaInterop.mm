@@ -70,7 +70,7 @@
 
 #include "MTLSurfaceDataBase.h"
 
-static constexpr jint ABI_ID = 50;
+static constexpr jint ABI_ID = 51;
 static constexpr jint COMMAND_STREAM_MAGIC = 1246972723;
 static constexpr jint COMMAND_STREAM_HEADER_SIZE = 6;
 static constexpr jint COMMAND_STREAM_FLAGS_NONE = 0;
@@ -121,6 +121,8 @@ static constexpr jint COMMAND_STROKE_RECT_RADIAL_GRADIENT = 37;
 static constexpr jint COMMAND_STROKE_ROUND_RECT_RADIAL_GRADIENT = 38;
 static constexpr jint COMMAND_STROKE_RECT_SWEEP_GRADIENT = 39;
 static constexpr jint COMMAND_STROKE_ROUND_RECT_SWEEP_GRADIENT = 40;
+static constexpr jint COMMAND_FILL_RECT_BLEND_MODE = 41;
+static constexpr jint COMMAND_BLEND_MODE_PLUS = 1;
 static constexpr jint COMMAND_PAINT_STYLE_FILL = 0;
 static constexpr jint COMMAND_PAINT_STYLE_STROKE = 1;
 static constexpr jint COMMAND_PATH_FILL_NON_ZERO = 0;
@@ -1946,6 +1948,29 @@ static bool drawCommandList(SkCanvas* canvas,
                 } else {
                     canvas->drawRect(rect, paint);
                 }
+                break;
+            }
+            case COMMAND_FILL_RECT_BLEND_MODE: {
+                if (offset + 6 != recordEnd) {
+                    return false;
+                }
+                SkPaint paint;
+                paint.setAntiAlias(antiAlias);
+                paint.setColor(skColorFromArgb(commands[offset++]));
+                jint blendMode = commands[offset++];
+                jint x = commands[offset++];
+                jint y = commands[offset++];
+                jint rectWidth = commands[offset++];
+                jint rectHeight = commands[offset++];
+                if (blendMode != COMMAND_BLEND_MODE_PLUS || rectWidth < 0 || rectHeight < 0) {
+                    return false;
+                }
+                paint.setBlendMode(SkBlendMode::kPlus);
+                canvas->drawRect(SkRect::MakeXYWH(static_cast<SkScalar>(x),
+                                                  static_cast<SkScalar>(y),
+                                                  static_cast<SkScalar>(rectWidth),
+                                                  static_cast<SkScalar>(rectHeight)),
+                                 paint);
                 break;
             }
             case COMMAND_CLEAR_RECT: {
