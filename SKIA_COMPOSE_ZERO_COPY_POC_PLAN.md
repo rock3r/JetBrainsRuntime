@@ -5270,3 +5270,37 @@ Validation:
 
 Note:
 - This closes one of the remaining practical generic-shader edge probes by proving gradient shader metadata with unsupported paint style falls back at the recorder boundary.
+
+## Checkpoint: Full Command Probe Suite Sweep
+
+Date: 2026-04-30
+
+Status: completed as a short-duration integration sweep after adding the expanded fallback cases.
+
+Command:
+- `OUT_ROOT=/tmp/magic-jewel-full-command-probe-short DURATION_SECONDS=2 WARMUP_SECONDS=1 SAMPLE_INTERVAL_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT bash scripts/jbr-skia-command-probe-suite.sh`
+
+Result:
+- `JBR_SKIA_COMMAND_PROBE_SUITE passed out_root=/tmp/magic-jewel-full-command-probe-short`
+- suite TSV: `/tmp/magic-jewel-full-command-probe-short/suite.tsv`
+
+Case summaries:
+- `commands-core-primitives`: `unsupported=none`, `jbr_picture_frames=0`, `jbr_command_frames=769`.
+- `commands-gradient-surfaces`: `unsupported=none`, `jbr_picture_frames=0`, `jbr_command_frames=762`.
+- `commands-gradient-paths`: `unsupported=none`, `jbr_picture_frames=0`, `jbr_command_frames=459`.
+- `commands-popup`: `unsupported=none`, `jbr_picture_frames=0`, `jbr_command_frames=418`.
+- `commands-popup-window`: `unsupported=none`, `jbr_picture_frames=0`, `jbr_command_frames=781`.
+- `commands-menu`: `unsupported=none`, `jbr_picture_frames=0`, `jbr_command_frames=788`.
+- `commands-text-image`: `unsupported=none`, `jbr_picture_frames=0`, `jbr_command_frames=515`.
+- `commands-native-text`: `unsupported=none`, `jbr_picture_frames=0`, `jbr_command_frames=888`.
+- `commands-shader-fallback`: `unsupported=shader:482`, `jbr_picture_frames=481`, `jbr_command_frames=0`.
+- `commands-image-filter-fallback`: `unsupported=image:488`, `jbr_picture_frames=488`, `jbr_command_frames=0`.
+- `commands-gradient-stroke-fallback`: `unsupported=linearGradientPaint:167`, `jbr_picture_frames=168`, `jbr_command_frames=0`.
+- `commands-color-filter-fallback`: `unsupported=colorFilter:174`, `jbr_picture_frames=174`, `jbr_command_frames=0`.
+- `commands-path-effect-fallback`: `unsupported=pathEffect:225`, `jbr_picture_frames=226`, `jbr_command_frames=0`.
+- `commands-blend-mode-fallback`: `unsupported=blendMode_Plus:421`, `jbr_picture_frames=420`, `jbr_command_frames=0`.
+- `commands-save-layer-filter-fallback`: `unsupported=unsupportedScope:487,saveLayer:487`, `jbr_picture_frames=487`, `jbr_command_frames=0`.
+- `commands-invalid-gradient-fallback`: `unsupported=sweepGradientStops:471`, `jbr_picture_frames=470`, `jbr_command_frames=0`.
+
+Note:
+- Short timings are for harness confidence, not final performance numbers. The user already noted the host is noisy, so benchmark numbers remain deferred to the quiet-machine pass.
