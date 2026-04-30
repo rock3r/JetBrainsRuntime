@@ -51,13 +51,13 @@ public class JBRSkiaApiTest {
     }
 
     public static void main(String[] args) throws Exception {
-        assertEquals(81, JBRSkia.ABI_ID, "ABI_ID");
+        assertEquals(82, JBRSkia.ABI_ID, "ABI_ID");
         assertEquals(3, JBRSkia.NATIVE_ABI_VERSION, "NATIVE_ABI_VERSION");
-        assertEquals("skia=m147-64a2414108;flags=macos-release-metal-poc:1;abi=81;native=3", JBRSkia.BUILD_ID, "BUILD_ID");
+        assertEquals("skia=m147-64a2414108;flags=macos-release-metal-poc:1;abi=82;native=3", JBRSkia.BUILD_ID, "BUILD_ID");
 
-        assertReflectiveStaticEquals(81, JBRSkia.class.getDeclaredField("ABI_ID"));
+        assertReflectiveStaticEquals(82, JBRSkia.class.getDeclaredField("ABI_ID"));
         assertReflectiveStaticEquals(3, JBRSkia.class.getDeclaredField("NATIVE_ABI_VERSION"));
-        assertReflectiveStaticEquals("skia=m147-64a2414108;flags=macos-release-metal-poc:1;abi=81;native=3", JBRSkia.class.getDeclaredField("BUILD_ID"));
+        assertReflectiveStaticEquals("skia=m147-64a2414108;flags=macos-release-metal-poc:1;abi=82;native=3", JBRSkia.class.getDeclaredField("BUILD_ID"));
 
         if (TestJBRSkia.INSTANCE != null) {
             throw new AssertionError("JBRSkia service must be unavailable before native runtime is wired");
@@ -74,7 +74,7 @@ public class JBRSkiaApiTest {
         var service = new JBRSkiaService();
         assertEquals(expectedCommandCapabilities(), service.getCommandCapabilities(), "command capabilities");
         assertEquals(expectedCommandCapabilities64(), service.getCommandCapabilities64(), "64-bit command capabilities");
-        assertEquals(0L, service.getCommandCapabilities64High(), "high 64-bit command capabilities");
+        assertEquals(expectedCommandCapabilities64High(), service.getCommandCapabilities64High(), "high 64-bit command capabilities");
         assertCommandStreamValidation();
         var image = new BufferedImage(32, 24, BufferedImage.TYPE_INT_ARGB_PRE);
         Graphics2D graphics = image.createGraphics();
@@ -180,6 +180,10 @@ public class JBRSkiaApiTest {
                 | JBRSkia.COMMAND_CAP64_SAVE_LAYER_COLOR_FILTER_REF
                 | JBRSkia.COMMAND_CAP64_DRAW_IMAGE_REF_COLOR_FILTER_REF
                 | JBRSkia.COMMAND_CAP64_SAVE_LAYER_BLEND_COLOR_FILTER_REF;
+    }
+
+    private static long expectedCommandCapabilities64High() {
+        return JBRSkia.COMMAND_CAP64_HIGH_SAVE_LAYER_IMAGE_FILTER_REF;
     }
 
     private static void assertCommandStreamValidation() {

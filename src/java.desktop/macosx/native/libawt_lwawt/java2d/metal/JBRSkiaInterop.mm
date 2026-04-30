@@ -65,6 +65,7 @@
 #include "include/gpu/ganesh/SkSurfaceGanesh.h"
 #include "include/effects/SkDashPathEffect.h"
 #include "include/effects/SkGradient.h"
+#include "include/effects/SkImageFilters.h"
 #include "modules/skparagraph/include/FontCollection.h"
 #include "modules/skparagraph/include/Paragraph.h"
 #include "modules/skparagraph/include/ParagraphBuilder.h"
@@ -75,7 +76,7 @@
 
 #include "MTLSurfaceDataBase.h"
 
-static constexpr jint ABI_ID = 81;
+static constexpr jint ABI_ID = 82;
 static constexpr jint COMMAND_STREAM_MAGIC = 1246972723;
 static constexpr jint COMMAND_STREAM_HEADER_SIZE = 6;
 static constexpr jint COMMAND_STREAM_FLAGS_NONE = 0;
@@ -140,9 +141,11 @@ static constexpr jint COMMAND_SAVE_LAYER_BLEND_COLOR_FILTER = 51;
 static constexpr jint COMMAND_SAVE_LAYER_COLOR_FILTER_REF = 52;
 static constexpr jint COMMAND_DRAW_IMAGE_REF_COLOR_FILTER_REF = 53;
 static constexpr jint COMMAND_SAVE_LAYER_BLEND_COLOR_FILTER_REF = 54;
+static constexpr jint COMMAND_SAVE_LAYER_IMAGE_FILTER_REF = 55;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER = 1;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_COLOR_MATRIX_FILTER = 2;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_LIGHTING_FILTER = 3;
+static constexpr jint COMMAND_EFFECT_DESCRIPTOR_BLUR_IMAGE_FILTER = 4;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_VERSION_1 = 1;
 static constexpr jint COMMAND_BLEND_MODE_PLUS = 1;
 static constexpr jint COMMAND_BLEND_MODE_SRC_IN = 2;
@@ -196,6 +199,9 @@ struct ColorFilterDescriptor {
     SkColor argb;
     jint blendMode;
     std::array<SkScalar, 20> matrix;
+    SkScalar sigmaX = 0;
+    SkScalar sigmaY = 0;
+    jint tileMode = 0;
 };
 
 struct ColorFilterScopedKey {
@@ -367,6 +373,22 @@ static SkTileMode skTileModeFromCommand(jint tileMode) {
     if (tileMode == 2) return SkTileMode::kMirror;
     if (tileMode == 3) return SkTileMode::kDecal;
     return SkTileMode::kClamp;
+}
+
+static bool setDescriptorImageFilter(SkPaint* paint, const ColorFilterDescriptor& descriptor) {
+    if (descriptor.type == COMMAND_EFFECT_DESCRIPTOR_BLUR_IMAGE_FILTER) {
+        if (descriptor.sigmaX < 0 || descriptor.sigmaY < 0 || descriptor.tileMode < 0 || descriptor.tileMode > 3) {
+            return false;
+        }
+        paint->setImageFilter(SkImageFilters::Blur(
+                descriptor.sigmaX,
+                descriptor.sigmaY,
+                skTileModeFromCommand(descriptor.tileMode),
+                nullptr,
+                nullptr));
+        return true;
+    }
+    return false;
 }
 
 static jsize recordLengthFromBytes(jint recordByteLength) {
@@ -1968,6 +1990,41 @@ static bool drawCommandList(SkCanvas* canvas,
                 canvas->saveLayer(&bounds, &layerPaint);
                 break;
             }
+            case COMMAND_SAVE_LAYER_IMAGE_FILTER_REF: {
+                if (recordFlags != COMMAND_RECORD_FLAGS_NONE || offset + 7 != recordEnd) {
+                    return false;
+                }
+                jint x = commands[offset++];
+                jint y = commands[offset++];
+                jint layerWidth = commands[offset++];
+                jint layerHeight = commands[offset++];
+                jint alpha1000 = commands[offset++];
+                const uint64_t handle = imageCacheKey(commands[offset], commands[offset + 1]);
+                offset += 2;
+                if (layerWidth < 0 || layerHeight < 0 || alpha1000 < 0 || alpha1000 > 1000) {
+                    return false;
+                }
+                ColorFilterDescriptor descriptor;
+                {
+                    std::lock_guard<std::mutex> lock(gColorFilterCacheMutex);
+                    auto cached = gColorFiltersByKey.find(ColorFilterScopedKey{imageCacheContextKey, handle});
+                    if (cached == gColorFiltersByKey.end()) {
+                        return false;
+                    }
+                    descriptor = cached->second;
+                }
+                SkRect bounds = SkRect::MakeXYWH(static_cast<SkScalar>(x),
+                                                 static_cast<SkScalar>(y),
+                                                 static_cast<SkScalar>(layerWidth),
+                                                 static_cast<SkScalar>(layerHeight));
+                SkPaint layerPaint;
+                layerPaint.setAlphaf(static_cast<float>(alpha1000) / 1000.0f);
+                if (!setDescriptorImageFilter(&layerPaint, descriptor)) {
+                    return false;
+                }
+                canvas->saveLayer(&bounds, &layerPaint);
+                break;
+            }
             case COMMAND_DEFINE_IMAGE_ARGB: {
                 if (recordFlags != COMMAND_RECORD_FLAGS_NONE || offset + 5 > recordEnd) {
                     return false;
@@ -2505,6 +2562,18 @@ static bool drawCommandList(SkCanvas* canvas,
                     }
                     descriptor.argb = skColorFromArgb(commands[offset++]);
                     descriptor.blendMode = static_cast<jint>(skColorFromArgb(commands[offset++]));
+                } else if (descriptorType == COMMAND_EFFECT_DESCRIPTOR_BLUR_IMAGE_FILTER) {
+                    if (payloadIntCount != 3) {
+                        return false;
+                    }
+                    descriptor.sigmaX = skScalarFromRawBits(commands[offset++]);
+                    descriptor.sigmaY = skScalarFromRawBits(commands[offset++]);
+                    descriptor.tileMode = commands[offset++];
+                    if (!std::isfinite(descriptor.sigmaX) || !std::isfinite(descriptor.sigmaY) ||
+                            descriptor.sigmaX < 0 || descriptor.sigmaY < 0 ||
+                            descriptor.tileMode < 0 || descriptor.tileMode > 3) {
+                        return false;
+                    }
                 } else {
                     return false;
                 }

@@ -7515,3 +7515,27 @@ Known notes:
 
 - This is a structural ABI checkpoint only; it intentionally adds no drawing command.
 - Native JBR/live validation remains blocked on local Xcode license acceptance.
+
+## Checkpoint: ABI 82 Blur Image-Filter Descriptor
+
+Status: source and JVM-side validation passed for Skiko/CMP; native JBR/live validation remains blocked on local Xcode license acceptance.
+
+What changed:
+
+- JBR private API, public Runtime API, Skiko compatibility gate, and CMP command recorder now use command ABI 82.
+- Added high-word capability `COMMAND_CAP64_HIGH_SAVE_LAYER_IMAGE_FILTER_REF = 1`, descriptor type `COMMAND_EFFECT_DESCRIPTOR_BLUR_IMAGE_FILTER = 4`, and opcode `COMMAND_SAVE_LAYER_IMAGE_FILTER_REF = 55`.
+- CMP serializes graphics-layer `BlurEffect` with no child effect into the generic effect-descriptor envelope as `[sigmaXBits, sigmaYBits, tileMode]`, then applies it through a saveLayer image-filter reference command.
+- CMP still rejects nested/opaque render effects, or render effects combined with non-SrcOver blend/color-filter layer paints, instead of passing raw Skiko `SkImageFilter*` pointers across the ABI.
+- JBR Java validation rejects malformed blur descriptors, non-finite/negative sigmas, invalid tile modes, undefined handles, bad dimensions, and bad alpha. Java2D fallback replay validates the scope; native Metal replay reconstructs `SkImageFilters::Blur(...)` inside JBR-owned Skia.
+
+Verification:
+
+- Skiko focused interop tests passed:
+  - `./gradlew --no-daemon --no-configuration-cache :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`
+- CMP `ui-graphics` desktop sources compile:
+  - `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:compileKotlinDesktop`
+
+Known notes:
+
+- This slice covers only simple graphics-layer blur effects. Offset effects, nested render-effect chains, runtime effects/SKSL, and combinations with layer blend/color-filter paints remain future descriptor/handle work.
+- Native JBR test and live Magic Jewel blur-render-effect validation should run after the local JBR native build is unblocked.

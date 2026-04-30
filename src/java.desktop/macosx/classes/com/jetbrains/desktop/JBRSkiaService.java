@@ -138,7 +138,8 @@ public class JBRSkiaService extends JBRSkia {
                     | COMMAND_CAP64_SAVE_LAYER_COLOR_FILTER_REF
                     | COMMAND_CAP64_DRAW_IMAGE_REF_COLOR_FILTER_REF
                     | COMMAND_CAP64_SAVE_LAYER_BLEND_COLOR_FILTER_REF;
-    private static final long COMMAND_CAPABILITIES_HIGH = 0L;
+    private static final long COMMAND_CAPABILITIES_HIGH =
+            COMMAND_CAP64_HIGH_SAVE_LAYER_IMAGE_FILTER_REF;
     private static final boolean NATIVE_BRIDGE_AVAILABLE = loadNativeBridge();
     private static final AtomicLong NEXT_SCOPE_ID = new AtomicLong(1);
     private static final int MAX_CACHED_IMAGES = 256;
@@ -232,6 +233,9 @@ public class JBRSkiaService extends JBRSkia {
             } else if (record.op() == COMMAND_SAVE_LAYER_BLEND_COLOR_FILTER_REF
                     && !colorFilterHandles.contains(commandHandle(commands[record.argsStart() + 6], commands[record.argsStart() + 7]))) {
                 return false;
+            } else if (record.op() == COMMAND_SAVE_LAYER_IMAGE_FILTER_REF
+                    && !colorFilterHandles.contains(commandHandle(commands[record.argsStart() + 5], commands[record.argsStart() + 6]))) {
+                return false;
             } else if (record.op() == COMMAND_DRAW_IMAGE_REF_COLOR_FILTER_REF
                     && !colorFilterHandles.contains(commandHandle(commands[record.argsStart() + 14], commands[record.argsStart() + 15]))) {
                 return false;
@@ -277,6 +281,7 @@ public class JBRSkiaService extends JBRSkia {
         if (op == COMMAND_SAVE_LAYER_BLEND_COLOR_FILTER) return 11;
         if (op == COMMAND_SAVE_LAYER_COLOR_FILTER_REF) return 10;
         if (op == COMMAND_SAVE_LAYER_BLEND_COLOR_FILTER_REF) return 11;
+        if (op == COMMAND_SAVE_LAYER_IMAGE_FILTER_REF) return 10;
         if (op == COMMAND_DRAW_IMAGE_ARGB) return -2;
         if (op == COMMAND_DEFINE_IMAGE_ARGB) return -3;
         if (op == COMMAND_DRAW_TEXT_UTF16) return -4;
@@ -469,6 +474,16 @@ public class JBRSkiaService extends JBRSkia {
                     && alpha1000 <= 1000
                     && isSupportedBlendMode(blendMode);
         }
+        if (record.op() == COMMAND_SAVE_LAYER_IMAGE_FILTER_REF) {
+            int width = commands[record.argsStart() + 2];
+            int height = commands[record.argsStart() + 3];
+            int alpha1000 = commands[record.argsStart() + 4];
+            return record.recordFlags() == COMMAND_RECORD_FLAGS_NONE
+                    && width >= 0
+                    && height >= 0
+                    && alpha1000 >= 0
+                    && alpha1000 <= 1000;
+        }
         if (record.op() == COMMAND_FILL_RECT_BLEND_MODE) {
             int blendMode = commands[record.argsStart() + 1];
             int width = commands[record.argsStart() + 4];
@@ -511,6 +526,18 @@ public class JBRSkiaService extends JBRSkia {
             }
             if (descriptorType == COMMAND_EFFECT_DESCRIPTOR_LIGHTING_FILTER) {
                 return payloadIntCount == 2;
+            }
+            if (descriptorType == COMMAND_EFFECT_DESCRIPTOR_BLUR_IMAGE_FILTER) {
+                if (payloadIntCount != 3) return false;
+                float sigmaX = Float.intBitsToFloat(commands[record.argsStart() + 5]);
+                float sigmaY = Float.intBitsToFloat(commands[record.argsStart() + 6]);
+                int tileMode = commands[record.argsStart() + 7];
+                return Float.isFinite(sigmaX)
+                        && Float.isFinite(sigmaY)
+                        && sigmaX >= 0f
+                        && sigmaY >= 0f
+                        && tileMode >= 0
+                        && tileMode <= 3;
             }
             return false;
         }
@@ -1388,6 +1415,15 @@ public class JBRSkiaService extends JBRSkia {
 
         static ColorFilterDescriptor lighting(int multiplyArgb, int addArgb) {
             return new ColorFilterDescriptor(COMMAND_EFFECT_DESCRIPTOR_LIGHTING_FILTER, multiplyArgb, addArgb, null);
+        }
+
+        static ColorFilterDescriptor blurImageFilter(int sigmaXBits, int sigmaYBits, int tileMode) {
+            return new ColorFilterDescriptor(
+                    COMMAND_EFFECT_DESCRIPTOR_BLUR_IMAGE_FILTER,
+                    0,
+                    0,
+                    new int[] { sigmaXBits, sigmaYBits, tileMode }
+            );
         }
     }
 
@@ -2713,6 +2749,20 @@ public class JBRSkiaService extends JBRSkia {
                         stack.addLast(current);
                         current = (Graphics2D) current.create();
                         current.clipRect(x, y, width, height);
+                    } else if (op == COMMAND_SAVE_LAYER_IMAGE_FILTER_REF) {
+                        if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE || offset + 7 != recordEnd) return false;
+                        int x = commands[offset++];
+                        int y = commands[offset++];
+                        int width = commands[offset++];
+                        int height = commands[offset++];
+                        int alpha1000 = commands[offset++];
+                        long handle = cacheKey(commands[offset++], commands[offset++]);
+                        ColorFilterDescriptor descriptor = COLOR_FILTER_CACHE.get(new ColorFilterCacheKey(contextPtr, handle));
+                        if (descriptor == null || descriptor.type() != COMMAND_EFFECT_DESCRIPTOR_BLUR_IMAGE_FILTER
+                                || width < 0 || height < 0 || alpha1000 < 0 || alpha1000 > 1000) return false;
+                        stack.addLast(current);
+                        current = (Graphics2D) current.create();
+                        current.clipRect(x, y, width, height);
                     } else if (op == COMMAND_CLEAR_IMAGE_CACHE) {
                         if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE || offset != recordEnd) return false;
                         int cleared = clearImageCacheForContext(contextPtr);
@@ -3070,6 +3120,19 @@ public class JBRSkiaService extends JBRSkia {
                             COLOR_FILTER_CACHE.put(
                                     new ColorFilterCacheKey(contextPtr, handle),
                                     ColorFilterDescriptor.lighting(multiplyArgb, addArgb)
+                            );
+                        } else if (descriptorType == COMMAND_EFFECT_DESCRIPTOR_BLUR_IMAGE_FILTER) {
+                            if (payloadIntCount != 3) return false;
+                            int sigmaXBits = commands[offset++];
+                            int sigmaYBits = commands[offset++];
+                            int tileMode = commands[offset++];
+                            float sigmaX = Float.intBitsToFloat(sigmaXBits);
+                            float sigmaY = Float.intBitsToFloat(sigmaYBits);
+                            if (!Float.isFinite(sigmaX) || !Float.isFinite(sigmaY)
+                                    || sigmaX < 0f || sigmaY < 0f || tileMode < 0 || tileMode > 3) return false;
+                            COLOR_FILTER_CACHE.put(
+                                    new ColorFilterCacheKey(contextPtr, handle),
+                                    ColorFilterDescriptor.blurImageFilter(sigmaXBits, sigmaYBits, tileMode)
                             );
                         } else {
                             return false;

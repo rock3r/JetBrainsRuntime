@@ -81,6 +81,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] ABI 79: cached image refs can apply typed color-filter descriptor handles through a structured image reference command.
 - [x] ABI 80: saveLayer/graphics-layer replay can combine direct blend modes with typed color-filter descriptor handles.
 - [x] ABI 81: command capability negotiation has a second 64-bit word so future shader/effect commands have strict room to grow.
+- [x] ABI 82: graphics-layer `BlurEffect` can be serialized as a JBR-owned blur image-filter descriptor and applied through saveLayer.
 
 ## Near-Term Rendering Work
 
@@ -98,6 +99,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   - [x] Sixth descriptor-shaped ABI slice: saveLayer/graphics-layer paints can reference typed color-filter descriptor handles without raw Skia pointers.
   - [x] Seventh descriptor-shaped ABI slice: cached image draws can reference typed color-filter descriptor handles without raw Skia pointers.
   - [x] Eighth descriptor-shaped ABI slice: saveLayer/graphics-layer paints can combine direct blend modes with typed descriptor color filters.
+  - [x] Ninth descriptor-shaped ABI slice: graphics-layer blur render effects use a typed image-filter descriptor and high-word capability gate.
   - [x] Strict JBR validator coverage for malformed effect descriptors: unknown type, unsupported version, bad payload count/length, unsupported blend mode, and evicted-handle use.
   - [ ] Implement JBR-owned shader/effect handles: Skiko/CMP serializes descriptors or create requests, JBR constructs objects inside its Skia runtime, draw commands reference versioned handles, and handles are scoped/evicted by destination context.
   - [ ] Support Skia runtime effects via descriptor payloads: SKSL source hash/source bytes, uniform block layout, child shader/color-filter handles, compile diagnostics, and stable fallback markers.
