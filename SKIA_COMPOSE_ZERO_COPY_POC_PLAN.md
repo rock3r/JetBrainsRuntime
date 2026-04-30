@@ -7345,7 +7345,7 @@ Known notes:
 
 ## Checkpoint: ABI 76 Color-Matrix Effect Descriptor
 
-Status: source and JVM-side validation are in progress; native JBR/live Magic Jewel validation remains blocked on local Xcode license acceptance.
+Status: source and JVM-side validation are complete; native JBR/live Magic Jewel validation remains blocked on local Xcode license acceptance.
 
 What changed:
 
@@ -7369,3 +7369,33 @@ Known notes:
 
 - This slice covers solid fill rectangles with `ColorFilter.colorMatrix(...)`; it does not yet cover color matrices on images, saveLayer paints, graphics layers, or arbitrary shaders/runtime effects.
 - Native JBR test and live `commands-color-matrix-filter` validation should run after the local JBR native build is unblocked.
+
+## Checkpoint: ABI 77 Lighting Effect Descriptor
+
+Status: source and JVM-side validation are complete; native JBR/live Magic Jewel validation remains blocked on local Xcode license acceptance.
+
+What changed:
+
+- JBR private API, public Runtime API, Skiko compatibility gate, and CMP command recorder now use command ABI 77.
+- Added capability `COMMAND_CAP64_EFFECT_DESCRIPTOR_LIGHTING_FILTER` and descriptor type `COMMAND_EFFECT_DESCRIPTOR_LIGHTING_FILTER = 3`.
+- The generic `COMMAND_DEFINE_EFFECT_DESCRIPTOR` envelope now accepts version-1 lighting descriptors with payload `[multiplyArgb, addArgb]`.
+- JBR Java validation, Java2D fallback replay, and native Metal replay accept the lighting descriptor. Native replay reconstructs `SkColorFilters::Lighting(...)` inside JBR-owned Skia.
+- CMP records solid fill rectangles using `ColorFilter.lighting(...)` through the existing descriptor define/use path instead of falling back.
+- Skiko's strict ABI/capability gate now requires ABI 77 and the lighting descriptor capability.
+- Magic Jewel gained `MAGIC_JEWEL_COMPOSE_LIGHTING_FILTER` and a `commands-lighting-filter` command-probe row.
+
+Verification:
+
+- Skiko interop tests passed:
+  - `./gradlew --no-daemon --no-configuration-cache :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`
+- CMP `ui-graphics` desktop sources compile:
+  - `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:compileKotlinDesktop`
+- Magic Jewel compiled:
+  - `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon --no-configuration-cache compileKotlin`
+- Magic Jewel script syntax checks passed:
+  - `bash -n scripts/jbr-skia-interop-report.sh && bash -n scripts/jbr-skia-command-probe-suite.sh`
+
+Known notes:
+
+- This slice covers solid fill rectangles with `ColorFilter.lighting(...)`; it does not yet cover lighting filters on images, saveLayer paints, graphics layers, or arbitrary shaders/runtime effects.
+- Native JBR test and live `commands-lighting-filter` validation should run after the local JBR native build is unblocked.

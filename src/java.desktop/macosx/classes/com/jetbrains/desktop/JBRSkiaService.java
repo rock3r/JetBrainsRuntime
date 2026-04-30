@@ -133,7 +133,8 @@ public class JBRSkiaService extends JBRSkia {
                     | COMMAND_CAP64_DEFINE_EFFECT_DESCRIPTOR
                     | COMMAND_CAP64_SAVE_LAYER_BLEND_MODE
                     | COMMAND_CAP64_SAVE_LAYER_BLEND_COLOR_FILTER
-                    | COMMAND_CAP64_EFFECT_DESCRIPTOR_COLOR_MATRIX_FILTER;
+                    | COMMAND_CAP64_EFFECT_DESCRIPTOR_COLOR_MATRIX_FILTER
+                    | COMMAND_CAP64_EFFECT_DESCRIPTOR_LIGHTING_FILTER;
     private static final boolean NATIVE_BRIDGE_AVAILABLE = loadNativeBridge();
     private static final AtomicLong NEXT_SCOPE_ID = new AtomicLong(1);
     private static final int MAX_CACHED_IMAGES = 256;
@@ -464,6 +465,9 @@ public class JBRSkiaService extends JBRSkia {
                     }
                 }
                 return true;
+            }
+            if (descriptorType == COMMAND_EFFECT_DESCRIPTOR_LIGHTING_FILTER) {
+                return payloadIntCount == 2;
             }
             return false;
         }
@@ -1320,6 +1324,10 @@ public class JBRSkiaService extends JBRSkia {
         static ColorFilterDescriptor colorMatrix(int[] matrixBits) {
             return new ColorFilterDescriptor(COMMAND_EFFECT_DESCRIPTOR_COLOR_MATRIX_FILTER, 0, 0, matrixBits.clone());
         }
+
+        static ColorFilterDescriptor lighting(int multiplyArgb, int addArgb) {
+            return new ColorFilterDescriptor(COMMAND_EFFECT_DESCRIPTOR_LIGHTING_FILTER, multiplyArgb, addArgb, null);
+        }
     }
 
     private static int applyColorMatrix(int argb, int[] matrixBits) {
@@ -1341,6 +1349,18 @@ public class JBRSkiaService extends JBRSkia {
                 + Float.intBitsToFloat(matrixBits[offset + 3]) * a
                 + Float.intBitsToFloat(matrixBits[offset + 4]);
         return Math.max(0, Math.min(255, Math.round(value * 255f)));
+    }
+
+    private static int applyLightingFilter(int argb, int multiplyArgb, int addArgb) {
+        int outR = lightingChannel((argb >>> 16) & 0xff, (multiplyArgb >>> 16) & 0xff, (addArgb >>> 16) & 0xff);
+        int outG = lightingChannel((argb >>> 8) & 0xff, (multiplyArgb >>> 8) & 0xff, (addArgb >>> 8) & 0xff);
+        int outB = lightingChannel(argb & 0xff, multiplyArgb & 0xff, addArgb & 0xff);
+        int outA = (argb >>> 24) & 0xff;
+        return (outA << 24) | (outR << 16) | (outG << 8) | outB;
+    }
+
+    private static int lightingChannel(int source, int multiply, int add) {
+        return Math.max(0, Math.min(255, (source * multiply + 127) / 255 + add));
     }
 
     private static final class PocScopedSkiaCanvas extends ScopedSkiaCanvas {
@@ -2926,6 +2946,14 @@ public class JBRSkiaService extends JBRSkia {
                                     new ColorFilterCacheKey(contextPtr, handle),
                                     ColorFilterDescriptor.colorMatrix(matrixBits)
                             );
+                        } else if (descriptorType == COMMAND_EFFECT_DESCRIPTOR_LIGHTING_FILTER) {
+                            if (payloadIntCount != 2) return false;
+                            int multiplyArgb = commands[offset++];
+                            int addArgb = commands[offset++];
+                            COLOR_FILTER_CACHE.put(
+                                    new ColorFilterCacheKey(contextPtr, handle),
+                                    ColorFilterDescriptor.lighting(multiplyArgb, addArgb)
+                            );
                         } else {
                             return false;
                         }
@@ -2948,6 +2976,8 @@ public class JBRSkiaService extends JBRSkia {
                             current.setColor(new Color((combinedAlpha << 24) | (descriptor.argb() & 0x00ffffff), true));
                         } else if (descriptor.type() == COMMAND_EFFECT_DESCRIPTOR_COLOR_MATRIX_FILTER) {
                             current.setColor(new Color(applyColorMatrix(argb, descriptor.matrixBits()), true));
+                        } else if (descriptor.type() == COMMAND_EFFECT_DESCRIPTOR_LIGHTING_FILTER) {
+                            current.setColor(new Color(applyLightingFilter(argb, descriptor.argb(), descriptor.blendMode()), true));
                         } else {
                             return false;
                         }

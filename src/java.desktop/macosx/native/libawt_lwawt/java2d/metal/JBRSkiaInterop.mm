@@ -75,7 +75,7 @@
 
 #include "MTLSurfaceDataBase.h"
 
-static constexpr jint ABI_ID = 76;
+static constexpr jint ABI_ID = 77;
 static constexpr jint COMMAND_STREAM_MAGIC = 1246972723;
 static constexpr jint COMMAND_STREAM_HEADER_SIZE = 6;
 static constexpr jint COMMAND_STREAM_FLAGS_NONE = 0;
@@ -139,6 +139,7 @@ static constexpr jint COMMAND_SAVE_LAYER_BLEND_MODE = 50;
 static constexpr jint COMMAND_SAVE_LAYER_BLEND_COLOR_FILTER = 51;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER = 1;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_COLOR_MATRIX_FILTER = 2;
+static constexpr jint COMMAND_EFFECT_DESCRIPTOR_LIGHTING_FILTER = 3;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_VERSION_1 = 1;
 static constexpr jint COMMAND_BLEND_MODE_PLUS = 1;
 static constexpr jint COMMAND_BLEND_MODE_SRC_IN = 2;
@@ -2318,6 +2319,12 @@ static bool drawCommandList(SkCanvas* canvas,
                         }
                         descriptor.matrix[i] = value;
                     }
+                } else if (descriptorType == COMMAND_EFFECT_DESCRIPTOR_LIGHTING_FILTER) {
+                    if (payloadIntCount != 2) {
+                        return false;
+                    }
+                    descriptor.argb = skColorFromArgb(commands[offset++]);
+                    descriptor.blendMode = static_cast<jint>(skColorFromArgb(commands[offset++]));
                 } else {
                     return false;
                 }
@@ -2359,6 +2366,8 @@ static bool drawCommandList(SkCanvas* canvas,
                     paint.setColorFilter(SkColorFilters::Blend(descriptor.argb, SkBlendMode::kSrcIn));
                 } else if (descriptor.type == COMMAND_EFFECT_DESCRIPTOR_COLOR_MATRIX_FILTER) {
                     paint.setColorFilter(SkColorFilters::Matrix(descriptor.matrix.data()));
+                } else if (descriptor.type == COMMAND_EFFECT_DESCRIPTOR_LIGHTING_FILTER) {
+                    paint.setColorFilter(SkColorFilters::Lighting(descriptor.argb, static_cast<SkColor>(descriptor.blendMode)));
                 } else {
                     return false;
                 }

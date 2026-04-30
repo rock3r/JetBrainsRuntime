@@ -76,6 +76,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] ABI 74: saveLayer/graphics-layer replay supports direct Skia blend modes through a structured save-layer blend command.
 - [x] ABI 75: saveLayer/graphics-layer replay supports combining a direct Skia blend mode with a tint/SrcIn color filter through a structured save-layer command.
 - [x] ABI 76: color-matrix color filters use a typed effect descriptor handle and solid fill-rect reference command.
+- [x] ABI 77: lighting color filters use a typed effect descriptor handle and solid fill-rect reference command.
 
 ## Near-Term Rendering Work
 
@@ -89,6 +90,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   - [x] Second descriptor-shaped ABI slice: destination-context-scoped tint handle reuse plus explicit handle eviction.
   - [x] Third descriptor-shaped ABI slice: generic `COMMAND_DEFINE_EFFECT_DESCRIPTOR` envelope with descriptor type/version/payload validation and tint/SrcIn as the first schema.
   - [x] Fourth descriptor-shaped ABI slice: color-matrix color-filter descriptor handles with row-major 4x5 matrix payloads and JBR-owned `SkColorFilters::Matrix` reconstruction.
+  - [x] Fifth descriptor-shaped ABI slice: lighting color-filter descriptor handles with multiply/add ARGB payloads and JBR-owned `SkColorFilters::Lighting` reconstruction.
   - [x] Strict JBR validator coverage for malformed effect descriptors: unknown type, unsupported version, bad payload count/length, unsupported blend mode, and evicted-handle use.
   - [ ] Implement JBR-owned shader/effect handles: Skiko/CMP serializes descriptors or create requests, JBR constructs objects inside its Skia runtime, draw commands reference versioned handles, and handles are scoped/evicted by destination context.
   - [ ] Support Skia runtime effects via descriptor payloads: SKSL source hash/source bytes, uniform block layout, child shader/color-filter handles, compile diagnostics, and stable fallback markers.
@@ -178,6 +180,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Magic Jewel graphics-layer tint color-filter probe is wired into the command-probe suite and screenshot assertion; live execution waits for refreshed ABI 74 JBR/Skiko artifacts.
 - [x] Magic Jewel graphics-layer combined blend/color-filter probe is wired into the command-probe suite; live execution waits for refreshed ABI 75 JBR/Skiko artifacts.
 - [x] Magic Jewel color-matrix descriptor probe is wired into the command-probe suite; live execution waits for refreshed ABI 76 JBR/Skiko artifacts.
+- [x] Magic Jewel lighting descriptor probe is wired into the command-probe suite; live execution waits for refreshed ABI 77 JBR/Skiko artifacts.
 - [x] Persist old/new screenshots and pass/fail thresholds in the Magic Jewel report.
 - [x] Make the parity suite window-only end to end: launch old/new renderers, capture the Magic Jewel window by id/title, crop no whole-screen screenshots, and keep the capture metadata in the report.
 - [x] Add deterministic animation-phase controls for parity runs so animated progress, blend probes, gradients, and Swing islands can be compared at repeatable frame phases.
