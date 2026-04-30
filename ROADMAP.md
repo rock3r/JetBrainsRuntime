@@ -42,6 +42,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] ABI 43: native text commands carry JBR-resolved font-family names.
 - [x] ABI 44: image-shader rectangle fills use serialized image refs and JBR-owned shader reconstruction.
 - [x] ABI 45: linear-gradient stroked rectangles use serialized gradient and stroke metadata.
+- [x] ABI 46: linear-gradient stroked rounded rectangles use serialized gradient, radii, and stroke metadata.
 
 ## Near-Term Rendering Work
 
@@ -68,6 +69,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Rebuild ABI 43 local artifacts and pass a native-text Magic Jewel command smoke with paragraph commands and screenshot assertion.
 - [x] Add narrow image-shader rectangle support without sharing raw `SkShader*` pointers.
 - [x] Add narrow linear-gradient stroked-rectangle support without sharing raw `SkShader*` pointers.
+- [x] Add narrow linear-gradient stroked rounded-rectangle support without sharing raw `SkShader*` pointers.
 - [x] Add screenshot-level text-presence assertions using stable pixel regions for top/bottom Magic Jewel labels.
 - [x] Add screenshot-level text placement assertions using stable dark-pixel bounding boxes.
 - [x] Add paragraph-row screenshot assertions for native-text layout probes.
@@ -107,6 +109,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] ABI 45 gradient-stroke command smoke: `/tmp/magic-jewel-abi45-gradient-stroke-smoke/report.md`.
 - [x] ABI 45 gradient-stroke command-probe row: `/tmp/magic-jewel-command-probe-abi45-gradient-stroke-20260430-125550/suite.tsv`.
 - [x] ABI 45 command-probe suite refresh: `/tmp/magic-jewel-command-probe-abi45-full-20260430-130148/suite.tsv`.
+- [x] ABI 46 gradient stroke rounded-rectangle smoke: `/tmp/magic-jewel-abi46-gradient-stroke-round-rect-smoke-2/report.md`.
+- [x] ABI 46 gradient-surfaces command-probe row: `/tmp/magic-jewel-command-probe-abi46-gradient-surfaces/suite.tsv`.
 - [x] Real undecorated Swing popup-window smoke captured separately by window id.
 
 ## Compatibility And ABI Hardening
