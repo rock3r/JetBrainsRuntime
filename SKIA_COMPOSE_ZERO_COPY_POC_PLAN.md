@@ -5453,7 +5453,7 @@ Next:
 
 Date: 2026-04-30
 
-Status: in progress as a source-level ABI slice across JBR, public Runtime API, Skiko, CMP, and Magic Jewel docs.
+Status: completed as a source-level ABI slice across JBR, public Runtime API, Skiko, CMP, and Magic Jewel docs, with a live native-text Magic Jewel smoke.
 
 Why:
 - Native JBR text commands previously carried font size/style/alignment, but not the resolved font family.
@@ -5494,10 +5494,21 @@ Validation:
 - Diff hygiene:
   - command: `git diff --check`
   - result: passed in JBR, Runtime API, Skiko, CMP, and Magic Jewel worktrees.
+- Local artifact refresh:
+  - Public Runtime API snapshot rebuilt with `bash tools/build.sh process` and `bash tools/build.sh dev $(/usr/libexec/java_home -v 21) /tmp/jbr-api-skia-abi43-dev`; `/tmp/jbr-api-shim.jar` refreshed from the result.
+  - Skiko `0.0.0-SNAPSHOT` republished to Maven local with ABI 43.
+  - JBR patched `java.desktop` classes refreshed into `/tmp/jbr-skia-run/desktop`.
+  - JBR native `libjbrskiainterop.dylib` rebuilt into `/tmp/jbr-skia-native/libjbrskiainterop.dylib`.
+- Live native-text Magic Jewel command smoke:
+  - command: `OUT_DIR=/tmp/magic-jewel-abi43-native-text-smoke-3 DURATION_SECONDS=6 WARMUP_SECONDS=1 SAMPLE_INTERVAL_SECONDS=1 JBR_SKIA_RENDER_MODE=commands JBR_SKIA_NATIVE_TEXT=true MAGIC_JEWEL_UNSUPPORTED_TEXT=true MAGIC_JEWEL_PARAGRAPH_LAYOUT_TEXT=true EXPECT_MIN_PARAGRAPH_TEXT_COMMANDS=4 SKIKO_VERSION=0.0.0-SNAPSHOT bash scripts/jbr-skia-interop-report.sh`
+  - result: passed.
+  - report: `/tmp/magic-jewel-abi43-native-text-smoke-3/report.md`.
+  - counters: 960 CMP recorder frames, 960 Skiko command frames, 960 JBR command frames, 0 picture replay frames, 0 fallback markers, 6 paragraph text commands per frame.
+  - screenshot: `/tmp/magic-jewel-abi43-native-text-smoke-3/new-window.png`; command screenshot assertion passed.
+  - timing: JBR command replay averaged 1.684 ms/frame total, including 0.494 ms draw, 1.166 ms flush, and 0.108 ms paragraph replay.
 
-Not yet validated:
-- ABI 43 has not yet been rebuilt into the local patched JBR classes/native dylib and Skiko/CMP artifacts for a live Magic Jewel screenshot.
-- The native text path is still opt-in with `JBR_SKIA_NATIVE_TEXT=true`; the default remains fidelity-first text-as-image replay until live ABI 43 typography is checked.
+Remaining caveat:
+- The native text path is still opt-in with `JBR_SKIA_NATIVE_TEXT=true`; default command mode remains fidelity-first text-as-image replay until more typography metrics, baseline, and style parity are proven across a wider Jewel surface.
 
 Next:
-- Rebuild/publish the affected local artifacts, then run the native-text Magic Jewel command probe and screenshot oracle to see whether family metadata fixes the visible Jewel font/size mismatch or whether the next text ABI slice also needs baseline/metrics or font-size calibration.
+- Continue hardening native text toward becoming the default by adding baseline/metrics parity checks or by documenting the remaining typography differences if the next slice proves they are JBR/Skia font-manager policy rather than ABI gaps.

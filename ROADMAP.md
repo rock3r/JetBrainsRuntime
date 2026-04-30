@@ -63,6 +63,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Improve Magic Jewel visual fidelity so labels use Jewel `Text` and `JewelTheme.defaultTextStyle`.
 - [x] Prefer fidelity-first text image replay by default so command mode preserves resolved Jewel font/size/alignment until JBR-owned typefaces exist.
 - [x] Add font-family metadata to native text commands without sharing Skia `SkTypeface*` pointers.
+- [x] Rebuild ABI 43 local artifacts and pass a native-text Magic Jewel command smoke with paragraph commands and screenshot assertion.
 - [x] Add screenshot-level text-presence assertions using stable pixel regions for top/bottom Magic Jewel labels.
 - [x] Add screenshot-level text placement assertions using stable dark-pixel bounding boxes.
 - [x] Investigate observed text alignment drift in Magic Jewel/Jewel labels on the command path.

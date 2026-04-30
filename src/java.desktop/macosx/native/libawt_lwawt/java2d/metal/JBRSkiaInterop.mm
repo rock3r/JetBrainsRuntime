@@ -1844,7 +1844,7 @@ Java_com_jetbrains_desktop_JBRSkiaService_nativeRenderCommandFrame
         canvas->translate(static_cast<SkScalar>(destinationX),
                           static_cast<SkScalar>(destinationY));
         bool rendered = drawCommandList(canvas, IntCommandWords{commands}, commandCount, width, height,
-                                        getContextFromNativeOps(nativeOpsPtr), &metrics);
+                                        (__bridge void*) getContextFromNativeOps(nativeOpsPtr), &metrics);
         canvas->restore();
         const long long drawNanos = monotonicNanos() - drawStartNanos;
         env->ReleaseIntArrayElements(commandArray, commands, JNI_ABORT);
@@ -1932,7 +1932,7 @@ Java_com_jetbrains_desktop_JBRSkiaService_nativeRenderCommandBufferFrame
         canvas->translate(static_cast<SkScalar>(destinationX),
                           static_cast<SkScalar>(destinationY));
         bool rendered = drawCommandList(canvas, LittleEndianByteCommandWords{commandBytes}, commandCount,
-                                        width, height, getContextFromNativeOps(nativeOpsPtr), &metrics);
+                                        width, height, (__bridge void*) getContextFromNativeOps(nativeOpsPtr), &metrics);
         canvas->restore();
         const long long drawNanos = monotonicNanos() - drawStartNanos;
         env->ReleaseByteArrayElements(commandArray, commandBytes, JNI_ABORT);
@@ -2013,7 +2013,7 @@ Java_com_jetbrains_desktop_JBRSkiaService_nativeRenderCommandDirectFrame
         canvas->translate(static_cast<SkScalar>(destinationX),
                           static_cast<SkScalar>(destinationY));
         bool rendered = drawCommandList(canvas, LittleEndianByteCommandWords{commandBytes}, commandCount,
-                                        width, height, getContextFromNativeOps(nativeOpsPtr), &metrics);
+                                        width, height, (__bridge void*) getContextFromNativeOps(nativeOpsPtr), &metrics);
         canvas->restore();
         const long long drawNanos = monotonicNanos() - drawStartNanos;
         if (!rendered) {
