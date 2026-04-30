@@ -67,6 +67,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   - [x] First descriptor-shaped ABI slice: in-frame tint color-filter handles with define/use validation and native replay.
   - [x] Second descriptor-shaped ABI slice: destination-context-scoped tint handle reuse plus explicit handle eviction.
   - [x] Third descriptor-shaped ABI slice: generic `COMMAND_DEFINE_EFFECT_DESCRIPTOR` envelope with descriptor type/version/payload validation and tint/SrcIn as the first schema.
+  - [x] Strict JBR validator coverage for malformed effect descriptors: unknown type, unsupported version, bad payload count/length, unsupported blend mode, and evicted-handle use.
   - [ ] Implement JBR-owned shader/effect handles: Skiko/CMP serializes descriptors or create requests, JBR constructs objects inside its Skia runtime, draw commands reference versioned handles, and handles are scoped/evicted by destination context.
   - [ ] Support Skia runtime effects via descriptor payloads: SKSL source hash/source bytes, uniform block layout, child shader/color-filter handles, compile diagnostics, and stable fallback markers.
   - [ ] Add Magic Jewel probes that force handle creation, reuse, context migration, eviction, and fallback without relying on raw Skiko `SkShader*` or `SkRuntimeEffect*` pointers.

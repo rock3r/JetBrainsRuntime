@@ -6551,3 +6551,19 @@ Next:
 - Add negative validation tests for malformed effect descriptors: unknown descriptor type/version, mismatched payload length, unsupported blend mode, undefined handle, stale/evicted handle, and context migration.
 - Start the first non-tint descriptor: either image-filter/blur or runtime-effect/SKSL, depending on which Compose paint path can be serialized cleanly without transferring Skiko-owned Skia C++ objects.
 - Build the old/new rich-content screenshot parity harness as the visual regression gate for descriptor/effect work, with tight Compose/Jewel tolerances and separate Swing-text tolerance notes.
+
+## Checkpoint: Effect Descriptor Negative Validation
+
+Status: completed for JBR static command-stream validation.
+
+What changed:
+- `JBRSkiaApiTest` now rejects malformed `COMMAND_DEFINE_EFFECT_DESCRIPTOR` records for unknown descriptor type, unsupported descriptor version, mismatched payload count, mismatched record length, unsupported tint blend mode, and use after explicit handle eviction.
+- No ABI or runtime implementation changes were needed; this slice pins the stricter compatibility contract around ABI 58 so future descriptor kinds do not loosen validation accidentally.
+- `ROADMAP.md` records the strict descriptor validation coverage as complete while keeping runtime-effect/SKSL descriptor support open.
+
+Validation:
+- JBR API/validator smoke passed after adding the malformed descriptor cases.
+
+Next:
+- Add live/report-level fallback markers for descriptor parse failures once Skiko/CMP can intentionally emit an incompatible descriptor under a test switch.
+- Start the first non-tint descriptor implementation, with blur/image-filter and runtime-effect/SKSL still the two candidate paths.

@@ -286,6 +286,62 @@ public class JBRSkiaApiTest {
                 0xffff00ff, 0xff00ffff, JBRSkia.COMMAND_BLEND_MODE_SRC_IN, 3, 4, 10, 20
         }, "undefined color-filter handle");
         assertInvalidCommandStream(new int[] {
+                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 10,
+                JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
+                JBRSkia.COMMAND_DEFINE_EFFECT_DESCRIPTOR, 40, JBRSkia.COMMAND_RECORD_FLAGS_NONE,
+                0xff00ffff, JBRSkia.COMMAND_BLEND_MODE_SRC_IN,
+                99, JBRSkia.COMMAND_EFFECT_DESCRIPTOR_VERSION_1,
+                2, 0xff00ffff, JBRSkia.COMMAND_BLEND_MODE_SRC_IN
+        }, "unknown effect descriptor type");
+        assertInvalidCommandStream(new int[] {
+                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 10,
+                JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
+                JBRSkia.COMMAND_DEFINE_EFFECT_DESCRIPTOR, 40, JBRSkia.COMMAND_RECORD_FLAGS_NONE,
+                0xff00ffff, JBRSkia.COMMAND_BLEND_MODE_SRC_IN,
+                JBRSkia.COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER, 2,
+                2, 0xff00ffff, JBRSkia.COMMAND_BLEND_MODE_SRC_IN
+        }, "unsupported effect descriptor version");
+        assertInvalidCommandStream(new int[] {
+                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 10,
+                JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
+                JBRSkia.COMMAND_DEFINE_EFFECT_DESCRIPTOR, 40, JBRSkia.COMMAND_RECORD_FLAGS_NONE,
+                0xff00ffff, JBRSkia.COMMAND_BLEND_MODE_SRC_IN,
+                JBRSkia.COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER,
+                JBRSkia.COMMAND_EFFECT_DESCRIPTOR_VERSION_1,
+                1, 0xff00ffff, JBRSkia.COMMAND_BLEND_MODE_SRC_IN
+        }, "effect descriptor payload count mismatch");
+        assertInvalidCommandStream(new int[] {
+                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 10,
+                JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
+                JBRSkia.COMMAND_DEFINE_EFFECT_DESCRIPTOR, 36, JBRSkia.COMMAND_RECORD_FLAGS_NONE,
+                0xff00ffff, JBRSkia.COMMAND_BLEND_MODE_SRC_IN,
+                JBRSkia.COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER,
+                JBRSkia.COMMAND_EFFECT_DESCRIPTOR_VERSION_1,
+                2, 0xff00ffff, JBRSkia.COMMAND_BLEND_MODE_SRC_IN
+        }, "effect descriptor record length mismatch");
+        assertInvalidCommandStream(new int[] {
+                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 10,
+                JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
+                JBRSkia.COMMAND_DEFINE_EFFECT_DESCRIPTOR, 40, JBRSkia.COMMAND_RECORD_FLAGS_NONE,
+                0xff00ffff, JBRSkia.COMMAND_BLEND_MODE_SRC_IN,
+                JBRSkia.COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER,
+                JBRSkia.COMMAND_EFFECT_DESCRIPTOR_VERSION_1,
+                2, 0xff00ffff, JBRSkia.COMMAND_BLEND_MODE_PLUS
+        }, "unsupported effect descriptor blend mode");
+        assertInvalidCommandStream(new int[] {
+                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 25,
+                JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
+                JBRSkia.COMMAND_DEFINE_EFFECT_DESCRIPTOR, 40, JBRSkia.COMMAND_RECORD_FLAGS_NONE,
+                0xff00ffff, JBRSkia.COMMAND_BLEND_MODE_SRC_IN,
+                JBRSkia.COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER,
+                JBRSkia.COMMAND_EFFECT_DESCRIPTOR_VERSION_1,
+                2, 0xff00ffff, JBRSkia.COMMAND_BLEND_MODE_SRC_IN,
+                JBRSkia.COMMAND_EVICT_COLOR_FILTER_HANDLE, 20, JBRSkia.COMMAND_RECORD_FLAGS_NONE,
+                0xff00ffff, JBRSkia.COMMAND_BLEND_MODE_SRC_IN,
+                JBRSkia.COMMAND_FILL_RECT_COLOR_FILTER_REF, 40, JBRSkia.COMMAND_RECORD_FLAG_ANTIALIAS,
+                0xffff00ff, 0xff00ffff, JBRSkia.COMMAND_BLEND_MODE_SRC_IN, 3, 4, 10, 20
+        }, "evicted effect descriptor handle");
+        assertInvalidCommandStream(new int[] {
                 JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 20,
                 JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
                 JBRSkia.COMMAND_DRAW_IMAGE_ARGB, 80, JBRSkia.COMMAND_RECORD_FLAGS_NONE,
