@@ -5512,3 +5512,36 @@ Remaining caveat:
 
 Next:
 - Continue hardening native text toward becoming the default by adding baseline/metrics parity checks or by documenting the remaining typography differences if the next slice proves they are JBR/Skia font-manager policy rather than ABI gaps.
+
+## Checkpoint: ABI 43 Quiet Benchmark Refresh
+
+Date: 2026-04-30
+
+Status: completed after refreshing the local ABI 43 JBR, Runtime API, Skiko, and CMP artifacts.
+
+Why:
+- The earlier quiet-machine benchmark was collected before the live ABI 43 native-text artifact refresh.
+- The user explicitly noted the machine was quieter, so this pass is a better smoke datapoint for the current runnable MVP.
+- The SKP picture row remains useful as the reference artifact path for later quieter or profiler-backed benchmarking.
+
+Command:
+- `OUT_ROOT=/tmp/magic-jewel-quiet-benchmark-abi43-20260430-110714 DURATION_SECONDS=30 WARMUP_SECONDS=5 SAMPLE_INTERVAL_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ENABLE_ASPROF=false bash scripts/jbr-skia-benchmark-suite.sh`
+
+Results:
+- suite: `/tmp/magic-jewel-quiet-benchmark-abi43-20260430-110714/suite.tsv`.
+- picture: passed, 0 fallbacks, old avg CPU 85.02, new avg CPU 94.89, old app FPS 404.7, new app/JBR picture FPS 233.4.
+- commands: passed, 0 fallbacks, old avg CPU 85.74, new avg CPU 88.67, old app FPS 402.2, new app/JBR command FPS 314.0, 9419 JBR command frames.
+- commands-stable-images: passed, 0 fallbacks, old avg CPU 127.60, new avg CPU 119.63, old app FPS 173.1, new app/JBR command FPS 174.3, 5228 JBR command frames.
+- commands-dynamic-images: passed, 0 fallbacks, old avg CPU 125.06, new avg CPU 110.68, old app FPS 173.6, new app/JBR command FPS 169.7, 5091 JBR command frames.
+- commands-resize-dynamic-images: passed, 0 fallbacks, old avg CPU 114.93, new avg CPU 112.69, old app FPS 164.8, new app/JBR command FPS 167.4, 5023 JBR command frames, 1 Skiko surface-change marker.
+
+Interpretation:
+- All current benchmark rows remain strict and fallback-free with zero picture replay in command rows.
+- CPU still comes from coarse `ps` sampling and the host load was not zero (`host_load_1m` ranged roughly 4.87-6.18), but this pass is a better checkpoint than the previous noisier run.
+- The image-cache workloads now show the new path slightly lower or roughly tied on CPU while preserving the same-context resize/surface-change signal.
+
+Roadmap update:
+- Marked the ABI 43 quiet benchmark refresh complete and kept the exact suite/SKP report root in this plan.
+
+Next:
+- Move from measurement refresh back to rendering parity: either native text baseline/style parity or the next unsupported rendering family that still forces text/image fallback.

@@ -83,6 +83,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Magic Jewel benchmark-suite wrapper for SKP picture, command, stable-image, dynamic-image, and resize workloads.
 - [x] Benchmark suite writes a machine-readable `suite.tsv` with sample counts, CPU, FPS, and report paths.
 - [x] Magic Jewel reports include host CPU count and load-average metadata for noisy-machine benchmark context.
+- [x] ABI 43 quiet-machine benchmark refresh: `/tmp/magic-jewel-quiet-benchmark-abi43-20260430-110714/suite.tsv`.
 - [x] Async-profiler integration in Magic Jewel report.
 - [x] CI-friendly parser for Magic Jewel report summary.
 - [x] Machine-readable Skiko surface-change marker count in Magic Jewel reports.
