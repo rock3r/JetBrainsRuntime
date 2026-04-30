@@ -7117,3 +7117,39 @@ Verification:
 Next:
 
 - Continue macOS MVP hardening. Good next slices are graphics-layer nested command recording or the first real JBR-owned shader/effect handle implementation, with the parity diff artifact now available as a regression gate.
+
+## Checkpoint: Nested Graphics-Layer Command Replay
+
+Status: completed as a narrow CMP/Magic Jewel rendering slice.
+
+What changed:
+
+- CMP `JbrSkiaCommandRecorder` can now create a nested child command recording while preserving the parent recorder, then splice that child stream back at the eventual layer draw site.
+- CMP Skiko `GraphicsLayer` records layer-local drawing into that child stream when the root command recorder is active.
+- Supported command-layer replay is intentionally narrow: non-released 2D layers with finite alpha, translation, scale, rotationZ, no clip/shadow/color-filter/render-effect, and `BlendMode.SrcOver`.
+- Replay brackets the child commands with save, layer transform, saveLayer alpha, child payload, restore, restore. Unsupported layer semantics still report `graphicsLayer` and fall back to the old behavior.
+- Magic Jewel's graphics-layer probe graduated from expected fallback to command replay while retaining the old `commands-graphics-layer-fallback` case alias for compatibility.
+- `ROADMAP.md` records the completed narrow graphics-layer subset and splits the remaining layer semantics into explicit follow-up work.
+
+Verification:
+
+- Focused CMP nested recorder test passed:
+  - `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.nestedRecordingReplaysAtLayerDrawSite`
+- CMP desktop jars rebuilt successfully for Magic Jewel:
+  - `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopJar :compose:ui:ui:desktopJar :compose:foundation:foundation:desktopJar :compose:material3:material3:desktopJar`
+- Magic Jewel graphics-layer report passed with zero fallbacks and zero unsupported command frames:
+  - report: `/tmp/magic-jewel-graphics-layer-command/report.md`
+  - `CMP command recorder: frames=300 fps=75.0 ... unsupported_frames=0`
+  - `JBR command frames: frames=300 fps=75.0`
+  - screenshot assertion passed with `probeRightPurple=35580`.
+- Magic Jewel command probe suite case passed:
+  - `/tmp/magic-jewel-command-suite-graphics-layer/suite.tsv`
+  - `status=passed fallback_new_count=0 unsupported=none jbr_picture_frames=0 jbr_command_frames=317`.
+
+Known test note:
+
+- The full `JbrSkiaCommandRecorderTest` class still has unrelated exact-array expectation failures in three older gradient/image-shader tests (`writesSweepGradientStrokeRectRecord`, `writesRadialGradientRoundRectRecord`, `writesImageShaderRectRecord`). The new nested-layer test and app-level graphics-layer probe pass; the older failures reproduce when run individually and should be cleaned up in a separate test-maintenance slice.
+
+Next:
+
+- Continue layer coverage only where semantics are explicit: first add clip/outline or non-SrcOver/color-filter layer paint support, or pivot to the JBR-owned generic shader/effect handle implementation needed for `RenderEffect`.
