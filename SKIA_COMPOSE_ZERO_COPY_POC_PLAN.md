@@ -5304,3 +5304,7 @@ Case summaries:
 
 Note:
 - Short timings are for harness confidence, not final performance numbers. The user already noted the host is noisy, so benchmark numbers remain deferred to the quiet-machine pass.
+
+Roadmap update:
+- Marked the remaining near-term generic shader fallback probes complete after covering opaque image shaders, transformed gradients, composite shaders, invalid gradient metadata, image-filter paint, gradient stroke paint, color filters, path effects, blend modes, and unsupported saveLayer paints.
+- Kept the broader generic shader strategy open because true generic shader support still needs JBR-owned shader construction rather than raw `SkShader*` sharing across Skia runtimes.

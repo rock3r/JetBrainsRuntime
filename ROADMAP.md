@@ -56,7 +56,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Live Magic Jewel recorder-level fallback probe for unsupported saveLayer layer paint.
 - [x] Live Magic Jewel recorder-level fallback probe for unsupported image paint.
 - [x] Live Magic Jewel recorder-level fallback probe for unsupported gradient stroke paint.
-- [ ] Remaining generic shader edge cases beyond transformed/composite/opaque shader wrappers.
+- [x] Remaining near-term generic shader fallback probes beyond transformed/composite/opaque shader wrappers.
 - [x] Expand screenshot assertions to check core primitive and gradient probe colors/regions explicitly.
 - [x] Improve Magic Jewel visual fidelity so labels use Jewel `Text` and `JewelTheme.defaultTextStyle`.
 - [x] Prefer fidelity-first text image replay by default so command mode preserves resolved Jewel font/size/alignment until JBR-owned typefaces exist.
