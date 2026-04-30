@@ -6657,3 +6657,29 @@ Next:
 - Keep the roadmap's screenshot-parity and generic-shader implementation tracks active while doing the next rendering slice:
   - screenshot parity must compare rich old/new Swing/CMP/Jewel content with tight Compose/Jewel thresholds and Swing-text-aware regions.
   - generic shaders must become a real JBR-owned shader/effect handle implementation, not just documentation.
+
+## Checkpoint: ABI 62 Darken Blend-Mode Fill Rectangles
+
+Status: completed for `BlendMode.Darken` on solid fill rectangles.
+
+Changes:
+- CMP records solid fill rectangles using `BlendMode.Darken` as `COMMAND_FILL_RECT_BLEND_MODE` with payload value `COMMAND_BLEND_MODE_DARKEN = 6`.
+- Runtime API and JBR private API expose ABI 62 and the Darken blend-mode payload constant.
+- JBR Java validation accepts Darken wherever the fill-rect blend-mode command is valid.
+- Native `JBRSkiaInterop.mm` gates command streams on ABI 62 and maps the payload to `SkBlendMode::kDarken` inside JBR's Skia runtime.
+- Skiko compatibility requires ABI 62 before enabling command mode.
+- Magic Jewel extends the blend-mode visual probe and screenshot assertion with a Darken region.
+
+Validation:
+- Runtime API compile passed for ABI 62.
+- JBR API validator passed with ABI 62 and the Darken payload.
+- Native `JBRSkiaInterop.mm` standalone build passed with the Darken mapping.
+- CMP focused recorder tests passed for Darken and Overlay blend-mode records.
+- Skiko interop tests passed with ABI 62 fixture expectations.
+- Magic Jewel Kotlin compile passed after adding the Darken probe.
+- Runtime API shim, Skiko Maven-local artifact, and CMP desktop jars were rebuilt for the live run.
+- Magic Jewel ABI 62 Darken live command probe passed: `/tmp/magic-jewel-command-probe-abi62-darken-blend/suite.tsv`, with `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, and `jbr_command_frames=583`.
+- Screenshot assertion passed with `blendModeDarken=884`.
+
+Next:
+- Continue blend-mode expansion one value at a time only for modes with direct Skia mappings, or pivot to screenshot parity/generic shader handles if rich-content drift becomes the larger risk.
