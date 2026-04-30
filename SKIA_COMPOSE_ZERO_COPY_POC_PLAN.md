@@ -5324,3 +5324,31 @@ Change:
 - The doc commits to a JBR-owned shader factory/handle table instead of raw `SkShader*` sharing.
 - It scopes handles to the JBR destination context id, requires explicit capability gates, and lists candidate factory requests in priority order.
 - `ROADMAP.md` now marks the short-term shader fallback work and the medium-term design sketch complete, while leaving true generic shader support as a later production item.
+
+## Checkpoint: Text Placement Screenshot Assertions
+
+Date: 2026-04-30
+
+Status: completed as a stronger screenshot oracle without OCR.
+
+Why:
+- The previous command screenshot assertion counted dark pixels in broad top/bottom text regions.
+- That caught disappeared text, but not text that was badly shifted or squeezed inside the region.
+
+Change:
+- `scripts/assert-jbr-skia-command-window-screenshot.sh` now reports `topTextBox` and `bottomTextBox` bounding boxes for dark text pixels.
+- The assertion checks loose width, height, and vertical-anchor constraints for the top and bottom text regions.
+- `ROADMAP.md` now records screenshot-level text placement assertions as complete.
+
+Validation:
+- Existing capture calibration:
+  - command: `MAGIC_JEWEL_COMPOSE_IMAGE=true MAGIC_JEWEL_COMPOSE_TRANSFORM=true MAGIC_JEWEL_COMPOSE_SAVELAYER=true MAGIC_JEWEL_COMPOSE_CLIP=true MAGIC_JEWEL_COMPOSE_CLIP_OUT=true MAGIC_JEWEL_COMPOSE_CLIP_PATH=true MAGIC_JEWEL_COMPOSE_DRAW_PATH=true MAGIC_JEWEL_COMPOSE_DRAW_ARC=true MAGIC_JEWEL_COMPOSE_DRAW_ROUND_RECT=true scripts/assert-jbr-skia-command-window-screenshot.sh /tmp/magic-jewel-full-command-probe-short/commands-core-primitives/new-window.png`
+  - result: passed.
+  - measured boxes: `topTextBox=139,159,954,284`, `bottomTextBox=209,1176,1002,1289`.
+- Live focused command-probe suite:
+  - command: `OUT_ROOT=/tmp/magic-jewel-text-placement-suite CASES=commands-core-primitives DURATION_SECONDS=2 WARMUP_SECONDS=1 SAMPLE_INTERVAL_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT bash scripts/jbr-skia-command-probe-suite.sh`
+  - result: `JBR_SKIA_COMMAND_PROBE_SUITE passed out_root=/tmp/magic-jewel-text-placement-suite`
+  - case summary: `status=passed`, `unsupported=none`, `jbr_picture_frames=0`, `jbr_command_frames=390`.
+
+Note:
+- This remains a placement guardrail, not a glyph-metric or OCR assertion.
