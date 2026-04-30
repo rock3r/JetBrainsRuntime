@@ -50,10 +50,12 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Strict recorder fallback for invalid rounded-rectangle radii with gradient paints.
 - [x] Strict recorder fallback for transformed gradient shaders.
 - [x] Strict recorder fallback for composite/opaque shader wrappers.
+- [x] Strict recorder fallback for unsupported gradient stroke paint.
 - [x] More strict shader fallback tests for nonfinite gradient metadata that survives shader construction.
 - [x] Live Magic Jewel recorder-level fallback probes for color filters and path effects.
 - [x] Live Magic Jewel recorder-level fallback probe for unsupported saveLayer layer paint.
 - [x] Live Magic Jewel recorder-level fallback probe for unsupported image paint.
+- [x] Live Magic Jewel recorder-level fallback probe for unsupported gradient stroke paint.
 - [ ] Remaining generic shader edge cases beyond transformed/composite/opaque shader wrappers.
 - [x] Expand screenshot assertions to check core primitive and gradient probe colors/regions explicitly.
 - [x] Improve Magic Jewel visual fidelity so labels use Jewel `Text` and `JewelTheme.defaultTextStyle`.

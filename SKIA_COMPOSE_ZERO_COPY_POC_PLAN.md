@@ -5231,3 +5231,42 @@ Validation:
 
 Note:
 - This is another recorder-level operation fallback. The expected signal is `cmp_unsupported_reasons=image:...`, picture replay, and zero JBR command frames.
+
+## Checkpoint: Gradient Stroke Paint Fallback Probe
+
+Date: 2026-04-30
+
+Status: completed as live recorder-level fallback coverage plus CMP unit coverage.
+
+Why:
+- The command ABI supports serialized gradient fills for rectangles, rounded rectangles, and paths, but not gradient stroke paint yet.
+- Stroke styles change Skia paint semantics enough that they must not be encoded as gradient fill commands.
+
+Changes:
+- Magic Jewel added `MAGIC_JEWEL_COMPOSE_LINEAR_GRADIENT_STROKE=true`.
+- The probe draws a stroked rectangle with `Brush.linearGradient(...)`.
+- The command-probe suite gained `commands-gradient-stroke-fallback`.
+- CMP added `JbrSkiaCommandRecorderTest.rejectsGradientStrokePaintInStrictMode`.
+- README documents the manual command and suite coverage.
+- `ROADMAP.md` records strict/live fallback coverage for unsupported gradient stroke paint.
+
+Validation:
+- Syntax check:
+  - command: `bash -n scripts/jbr-skia-interop-report.sh scripts/jbr-skia-command-probe-suite.sh`
+  - result: passed.
+- Magic Jewel compile:
+  - command: `./gradlew --no-daemon compileKotlin`
+  - result: passed.
+- CMP recorder unit test:
+  - command: `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.rejectsGradientStrokePaintInStrictMode`
+  - result: passed.
+- Report parser tests:
+  - command: `bash scripts/test-jbr-skia-report-validation.sh`
+  - result: `JBR_SKIA_REPORT_VALIDATION_TESTS passed`.
+- Focused command-probe suite:
+  - command: `OUT_ROOT=/tmp/magic-jewel-gradient-stroke-suite CASES=commands-gradient-stroke-fallback DURATION_SECONDS=3 WARMUP_SECONDS=1 SAMPLE_INTERVAL_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT bash scripts/jbr-skia-command-probe-suite.sh`
+  - result: `JBR_SKIA_COMMAND_PROBE_SUITE passed out_root=/tmp/magic-jewel-gradient-stroke-suite`
+  - case summary: `status=passed`, `fallback_new_count=0`, `unsupported=linearGradientPaint:233`, `jbr_picture_frames=233`, `jbr_command_frames=0`.
+
+Note:
+- This closes one of the remaining practical generic-shader edge probes by proving gradient shader metadata with unsupported paint style falls back at the recorder boundary.
