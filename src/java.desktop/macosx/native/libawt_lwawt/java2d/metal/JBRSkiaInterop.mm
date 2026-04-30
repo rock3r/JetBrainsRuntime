@@ -41,6 +41,7 @@
 #include "SkImage.h"
 #include "SkImageInfo.h"
 #include "SkFont.h"
+#include "SkFontMgr.h"
 #include "SkPaint.h"
 #include "SkPath.h"
 #include "SkPathBuilder.h"
@@ -69,7 +70,7 @@
 
 #include "MTLSurfaceDataBase.h"
 
-static constexpr jint ABI_ID = 42;
+static constexpr jint ABI_ID = 43;
 static constexpr jint COMMAND_STREAM_MAGIC = 1246972723;
 static constexpr jint COMMAND_STREAM_HEADER_SIZE = 6;
 static constexpr jint COMMAND_STREAM_FLAGS_NONE = 0;
@@ -148,6 +149,7 @@ static std::unordered_map<ImageCacheScopedKey, sk_sp<SkImage>, ImageCacheScopedK
 static std::mutex gParagraphDependenciesMutex;
 static sk_sp<skia::textlayout::FontCollection> gParagraphFontCollection;
 static sk_sp<SkUnicode> gParagraphUnicode;
+static sk_sp<SkFontMgr> gCoreTextFontMgr;
 
 @class AWTView;
 @class MTLLayer;
@@ -169,11 +171,20 @@ typedef struct _JBRSkiaMTLGraphicsConfigInfo {
     jint displayID;
 } JBRSkiaMTLGraphicsConfigInfo;
 
+static sk_sp<SkFontMgr> coreTextFontMgr() {
+    std::scoped_lock lock(gParagraphDependenciesMutex);
+    if (gCoreTextFontMgr == nullptr) {
+        gCoreTextFontMgr = SkFontMgr_New_CoreText(nullptr);
+    }
+    return gCoreTextFontMgr;
+}
+
 static sk_sp<skia::textlayout::FontCollection> paragraphFontCollection() {
+    sk_sp<SkFontMgr> fontMgr = coreTextFontMgr();
     std::scoped_lock lock(gParagraphDependenciesMutex);
     if (gParagraphFontCollection == nullptr) {
         auto fontCollection = sk_make_sp<skia::textlayout::FontCollection>();
-        fontCollection->setDefaultFontManager(SkFontMgr_New_CoreText(nullptr));
+        fontCollection->setDefaultFontManager(fontMgr);
         gParagraphFontCollection = fontCollection;
     }
     return gParagraphFontCollection;
@@ -1326,13 +1337,21 @@ static bool drawCommandList(SkCanvas* canvas,
                 break;
             }
             case COMMAND_DRAW_TEXT_UTF16: {
-                if ((recordFlags & ~COMMAND_RECORD_FLAG_ANTIALIAS) != 0 || offset + 5 > recordEnd) {
+                if ((recordFlags & ~COMMAND_RECORD_FLAG_ANTIALIAS) != 0 || offset + 6 > recordEnd) {
                     return false;
                 }
                 const SkScalar x = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
                 const SkScalar baseline = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
                 const SkScalar fontSize = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
                 const SkColor color = skColorFromArgb(commands[offset++]);
+                const jint familyCharCount = commands[offset++];
+                if (familyCharCount < 0 || familyCharCount > 256 || offset + familyCharCount >= recordEnd) {
+                    return false;
+                }
+                std::string fontFamily;
+                if (!appendUtf16CommandText(fontFamily, commands, offset, familyCharCount)) {
+                    return false;
+                }
                 const jint charCount = commands[offset++];
                 if (fontSize <= 0.0f || charCount < 0 || charCount > 4096 || offset + charCount != recordEnd) {
                     return false;
@@ -1341,7 +1360,11 @@ static bool drawCommandList(SkCanvas* canvas,
                 if (!appendUtf16CommandText(text, commands, offset, charCount)) {
                     return false;
                 }
-                SkFont font(nullptr, fontSize);
+                sk_sp<SkTypeface> typeface;
+                if (!fontFamily.empty()) {
+                    typeface = coreTextFontMgr()->matchFamilyStyle(fontFamily.c_str(), SkFontStyle());
+                }
+                SkFont font(typeface, fontSize);
                 font.setEdging((recordFlags & COMMAND_RECORD_FLAG_ANTIALIAS) != 0
                         ? SkFont::Edging::kAntiAlias
                         : SkFont::Edging::kAlias);
@@ -1352,7 +1375,7 @@ static bool drawCommandList(SkCanvas* canvas,
                 break;
             }
             case COMMAND_DRAW_PARAGRAPH_UTF16: {
-                if ((recordFlags & ~COMMAND_RECORD_FLAG_ANTIALIAS) != 0 || offset + 6 > recordEnd) {
+                if ((recordFlags & ~COMMAND_RECORD_FLAG_ANTIALIAS) != 0 || offset + 7 > recordEnd) {
                     return false;
                 }
                 const SkScalar x = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
@@ -1363,6 +1386,14 @@ static bool drawCommandList(SkCanvas* canvas,
                 const jint fontWeight = commands[offset++];
                 const jint fontWidth = commands[offset++];
                 const jint fontSlant = commands[offset++];
+                const jint familyCharCount = commands[offset++];
+                if (familyCharCount < 0 || familyCharCount > 256 || offset + familyCharCount + 10 > recordEnd) {
+                    return false;
+                }
+                std::string fontFamily;
+                if (!appendUtf16CommandText(fontFamily, commands, offset, familyCharCount)) {
+                    return false;
+                }
                 const jint textAlign = commands[offset++];
                 const jint textDirection = commands[offset++];
                 const jint lineHeightMultiplier1000 = commands[offset++];
@@ -1414,6 +1445,11 @@ static bool drawCommandList(SkCanvas* canvas,
                         fontWeight,
                         fontWidth,
                         static_cast<SkFontStyle::Slant>(fontSlant)));
+                if (!fontFamily.empty()) {
+                    std::vector<SkString> fontFamilies;
+                    fontFamilies.emplace_back(fontFamily.c_str());
+                    textStyle.setFontFamilies(fontFamilies);
+                }
                 if (lineHeightMultiplier1000 > 0) {
                     textStyle.setHeight(static_cast<SkScalar>(lineHeightMultiplier1000) / 1000.0f);
                     textStyle.setHeightOverride(true);

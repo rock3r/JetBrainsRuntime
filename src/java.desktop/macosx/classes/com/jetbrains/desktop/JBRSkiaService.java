@@ -110,7 +110,8 @@ public class JBRSkiaService extends JBRSkia {
                     | COMMAND_CAP64_FILL_RECT_SWEEP_GRADIENT
                     | COMMAND_CAP64_FILL_ROUND_RECT_SWEEP_GRADIENT
                     | COMMAND_CAP64_FILL_PATH_SWEEP_GRADIENT
-                    | COMMAND_CAP64_EVICT_IMAGE_CACHE_KEY;
+                    | COMMAND_CAP64_EVICT_IMAGE_CACHE_KEY
+                    | COMMAND_CAP64_TEXT_FONT_FAMILY;
     private static final boolean NATIVE_BRIDGE_AVAILABLE = loadNativeBridge();
     private static final AtomicLong NEXT_SCOPE_ID = new AtomicLong(1);
     private static final int MAX_CACHED_IMAGES = 256;
@@ -249,10 +250,10 @@ public class JBRSkiaService extends JBRSkia {
             return record.recordLength() >= 8;
         }
         if (expectedLength == -4 && record.op() == COMMAND_DRAW_TEXT_UTF16) {
-            return record.recordLength() >= 8;
+            return record.recordLength() >= 9;
         }
         if (expectedLength == -5 && record.op() == COMMAND_DRAW_PARAGRAPH_UTF16) {
-            return record.recordLength() >= 21;
+            return record.recordLength() >= 22;
         }
         if (expectedLength == -6 && record.op() == COMMAND_CLIP_PATH) {
             return record.recordLength() >= 6;
@@ -710,11 +711,16 @@ public class JBRSkiaService extends JBRSkia {
                 return false;
             }
             int fontSize1000 = commands[record.argsStart() + 2];
-            int charCount = commands[record.argsStart() + 4];
+            int fontFamilyCount = commands[record.argsStart() + 4];
+            if (fontFamilyCount < 0 || fontFamilyCount > 256
+                    || record.argsStart() + 5 + fontFamilyCount >= record.recordEnd()) {
+                return false;
+            }
+            int charCount = commands[record.argsStart() + 5 + fontFamilyCount];
             return fontSize1000 > 0
                     && charCount >= 0
                     && charCount <= 4096
-                    && record.recordLength() == 8 + charCount;
+                    && record.recordLength() == 9 + fontFamilyCount + charCount;
         }
         if (record.op() == COMMAND_DRAW_PARAGRAPH_UTF16) {
             if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE
@@ -726,15 +732,21 @@ public class JBRSkiaService extends JBRSkia {
             int fontWeight = commands[record.argsStart() + 5];
             int fontWidth = commands[record.argsStart() + 6];
             int fontSlant = commands[record.argsStart() + 7];
-            int textAlign = commands[record.argsStart() + 8];
-            int textDirection = commands[record.argsStart() + 9];
-            int lineHeightMultiplier1000 = commands[record.argsStart() + 10];
-            int maxLines = commands[record.argsStart() + 11];
-            int ellipsisMode = commands[record.argsStart() + 12];
-            int decorationMask = commands[record.argsStart() + 13];
-            int letterSpacing1000 = commands[record.argsStart() + 14];
-            int backgroundSpecified = commands[record.argsStart() + 15];
-            int charCount = commands[record.argsStart() + 17];
+            int fontFamilyCount = commands[record.argsStart() + 8];
+            if (fontFamilyCount < 0 || fontFamilyCount > 256
+                    || record.argsStart() + 9 + fontFamilyCount + 9 >= record.recordEnd()) {
+                return false;
+            }
+            int metadataStart = record.argsStart() + 9 + fontFamilyCount;
+            int textAlign = commands[metadataStart];
+            int textDirection = commands[metadataStart + 1];
+            int lineHeightMultiplier1000 = commands[metadataStart + 2];
+            int maxLines = commands[metadataStart + 3];
+            int ellipsisMode = commands[metadataStart + 4];
+            int decorationMask = commands[metadataStart + 5];
+            int letterSpacing1000 = commands[metadataStart + 6];
+            int backgroundSpecified = commands[metadataStart + 7];
+            int charCount = commands[metadataStart + 9];
             return width1000 > 0
                     && fontSize1000 > 0
                     && fontWeight >= 1
@@ -761,7 +773,7 @@ public class JBRSkiaService extends JBRSkia {
                     && backgroundSpecified <= 1
                     && charCount >= 0
                     && charCount <= 4096
-                    && record.recordLength() == 21 + charCount;
+                    && record.recordLength() == 22 + fontFamilyCount + charCount;
         }
         if (record.op() != COMMAND_STROKE_LINE && record.op() != COMMAND_STROKE_OVAL) {
             return true;
@@ -1780,12 +1792,15 @@ public class JBRSkiaService extends JBRSkia {
                         drawImage(current, image, filtered, srcLeft1000, srcTop1000, srcRight1000, srcBottom1000,
                                 dstLeft1000, dstTop1000, dstRight1000, dstBottom1000, alpha1000);
                     } else if (op == COMMAND_DRAW_TEXT_UTF16) {
-                        if (offset + 5 > recordEnd) return false;
+                        if (offset + 6 > recordEnd) return false;
                         applyAntialiasing(current, antiAlias);
                         int x1000 = commands[offset++];
                         int baseline1000 = commands[offset++];
                         int fontSize1000 = commands[offset++];
                         int argb = commands[offset++];
+                        String fontFamily = readUtf16String(commands, recordEnd, offset, 256);
+                        if (fontFamily == null) return false;
+                        offset += 1 + fontFamily.length();
                         int charCount = commands[offset++];
                         if (fontSize1000 <= 0 || charCount < 0 || charCount > 4096 || offset + charCount != recordEnd) {
                             return false;
@@ -1800,11 +1815,11 @@ public class JBRSkiaService extends JBRSkia {
                         }
                         java.awt.Font previousFont = current.getFont();
                         current.setColor(new Color(argb, true));
-                        current.setFont(previousFont.deriveFont(fontSize1000 / 1000f));
+                        current.setFont(deriveCommandFont(previousFont, fontFamily, java.awt.Font.PLAIN, fontSize1000));
                         current.drawString(text.toString(), x1000 / 1000f, baseline1000 / 1000f);
                         current.setFont(previousFont);
                     } else if (op == COMMAND_DRAW_PARAGRAPH_UTF16) {
-                        if (offset + 6 > recordEnd) return false;
+                        if (offset + 7 > recordEnd) return false;
                         applyAntialiasing(current, antiAlias);
                         int x1000 = commands[offset++];
                         int y1000 = commands[offset++];
@@ -1814,6 +1829,9 @@ public class JBRSkiaService extends JBRSkia {
                         int fontWeight = commands[offset++];
                         int fontWidth = commands[offset++];
                         int fontSlant = commands[offset++];
+                        String fontFamily = readUtf16String(commands, recordEnd, offset, 256);
+                        if (fontFamily == null) return false;
+                        offset += 1 + fontFamily.length();
                         int textAlign = commands[offset++];
                         int textDirection = commands[offset++];
                         int lineHeightMultiplier1000 = commands[offset++];
@@ -1850,7 +1868,9 @@ public class JBRSkiaService extends JBRSkia {
                         }
                         java.awt.Font previousFont = current.getFont();
                         current.setColor(new Color(argb, true));
-                        current.setFont(previousFont.deriveFont(fontSize1000 / 1000f));
+                        int fontStyle = (fontWeight >= 600 ? java.awt.Font.BOLD : java.awt.Font.PLAIN)
+                                | (fontSlant == 0 ? java.awt.Font.PLAIN : java.awt.Font.ITALIC);
+                        current.setFont(deriveCommandFont(previousFont, fontFamily, fontStyle, fontSize1000));
                         current.drawString(text.toString(), x1000 / 1000f, y1000 / 1000f + current.getFontMetrics().getAscent());
                         current.setFont(previousFont);
                     } else if (op == COMMAND_CLEAR) {
@@ -1968,6 +1988,34 @@ public class JBRSkiaService extends JBRSkia {
                 }
             }
             return cleared;
+        }
+
+        private static String readUtf16String(int[] commands, int recordEnd, int offset, int maxChars) {
+            if (offset >= recordEnd) return null;
+            int charCount = commands[offset++];
+            if (charCount < 0 || charCount > maxChars || offset + charCount > recordEnd) {
+                return null;
+            }
+            StringBuilder value = new StringBuilder(charCount);
+            for (int index = 0; index < charCount; index++) {
+                int codeUnit = commands[offset++];
+                if (codeUnit < Character.MIN_VALUE || codeUnit > Character.MAX_VALUE) {
+                    return null;
+                }
+                value.append((char) codeUnit);
+            }
+            return value.toString();
+        }
+
+        private static java.awt.Font deriveCommandFont(
+                java.awt.Font previousFont,
+                String fontFamily,
+                int fontStyle,
+                int fontSize1000
+        ) {
+            String family = fontFamily.isEmpty() ? previousFont.getFamily() : fontFamily;
+            return new java.awt.Font(family, fontStyle, Math.max(1, Math.round(fontSize1000 / 1000f)))
+                    .deriveFont(fontSize1000 / 1000f);
         }
 
         private static void drawImage(Graphics2D current, BufferedImage image, boolean filtered,

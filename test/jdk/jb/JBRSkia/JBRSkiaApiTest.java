@@ -51,13 +51,13 @@ public class JBRSkiaApiTest {
     }
 
     public static void main(String[] args) throws Exception {
-        assertEquals(41, JBRSkia.ABI_ID, "ABI_ID");
+        assertEquals(43, JBRSkia.ABI_ID, "ABI_ID");
         assertEquals(3, JBRSkia.NATIVE_ABI_VERSION, "NATIVE_ABI_VERSION");
-        assertEquals("skia=m147-64a2414108;flags=macos-release-metal-poc:1;abi=41;native=3", JBRSkia.BUILD_ID, "BUILD_ID");
+        assertEquals("skia=m147-64a2414108;flags=macos-release-metal-poc:1;abi=43;native=3", JBRSkia.BUILD_ID, "BUILD_ID");
 
-        assertReflectiveStaticEquals(41, JBRSkia.class.getDeclaredField("ABI_ID"));
+        assertReflectiveStaticEquals(43, JBRSkia.class.getDeclaredField("ABI_ID"));
         assertReflectiveStaticEquals(3, JBRSkia.class.getDeclaredField("NATIVE_ABI_VERSION"));
-        assertReflectiveStaticEquals("skia=m147-64a2414108;flags=macos-release-metal-poc:1;abi=41;native=3", JBRSkia.class.getDeclaredField("BUILD_ID"));
+        assertReflectiveStaticEquals("skia=m147-64a2414108;flags=macos-release-metal-poc:1;abi=43;native=3", JBRSkia.class.getDeclaredField("BUILD_ID"));
 
         if (TestJBRSkia.INSTANCE != null) {
             throw new AssertionError("JBRSkia service must be unavailable before native runtime is wired");
@@ -224,10 +224,10 @@ public class JBRSkiaApiTest {
                 0xffff0000, 0xff00ff00, 0xff0000ff, 0xffffffff
         }, "invalid image alpha");
         assertInvalidCommandStream(new int[] {
-                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 8,
+                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 9,
                 JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
-                JBRSkia.COMMAND_DRAW_TEXT_UTF16, 32, JBRSkia.COMMAND_RECORD_FLAGS_NONE,
-                0, 12000, 0, 0xff000000, 0
+                JBRSkia.COMMAND_DRAW_TEXT_UTF16, 36, JBRSkia.COMMAND_RECORD_FLAGS_NONE,
+                0, 12000, 0, 0xff000000, 0, 0
         }, "invalid text font size");
     }
 
@@ -309,19 +309,19 @@ public class JBRSkiaApiTest {
 
     private static int[] validTextStream() {
         return new int[] {
-                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 10,
+                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 16,
                 JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
-                JBRSkia.COMMAND_DRAW_TEXT_UTF16, 40, JBRSkia.COMMAND_RECORD_FLAG_ANTIALIAS,
-                1250, 18500, 13000, 0xff000000, 2, 'H', 'i'
+                JBRSkia.COMMAND_DRAW_TEXT_UTF16, 64, JBRSkia.COMMAND_RECORD_FLAG_ANTIALIAS,
+                1250, 18500, 13000, 0xff000000, 5, 'I', 'n', 't', 'e', 'r', 2, 'H', 'i'
         };
     }
 
     private static int[] validLatin1TextStream() {
         return new int[] {
-                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 12,
+                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 13,
                 JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
-                JBRSkia.COMMAND_DRAW_TEXT_UTF16, 48, JBRSkia.COMMAND_RECORD_FLAG_ANTIALIAS,
-                1250, 18500, 13000, 0xff000000, 4, 'C', 'a', 'f', '\u00e9'
+                JBRSkia.COMMAND_DRAW_TEXT_UTF16, 52, JBRSkia.COMMAND_RECORD_FLAG_ANTIALIAS,
+                1250, 18500, 13000, 0xff000000, 0, 4, 'C', 'a', 'f', '\u00e9'
         };
     }
 

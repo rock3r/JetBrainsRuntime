@@ -38,6 +38,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] ABI 39: sweep-gradient path fill.
 - [x] ABI 40/native 2: scoped destination surface identity.
 - [x] ABI 41/native 3: scoped destination context identity.
+- [x] ABI 42: single-key image cache eviction.
+- [x] ABI 43: native text commands carry JBR-resolved font-family names.
 
 ## Near-Term Rendering Work
 
@@ -60,6 +62,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Expand screenshot assertions to check core primitive and gradient probe colors/regions explicitly.
 - [x] Improve Magic Jewel visual fidelity so labels use Jewel `Text` and `JewelTheme.defaultTextStyle`.
 - [x] Prefer fidelity-first text image replay by default so command mode preserves resolved Jewel font/size/alignment until JBR-owned typefaces exist.
+- [x] Add font-family metadata to native text commands without sharing Skia `SkTypeface*` pointers.
 - [x] Add screenshot-level text-presence assertions using stable pixel regions for top/bottom Magic Jewel labels.
 - [x] Add screenshot-level text placement assertions using stable dark-pixel bounding boxes.
 - [x] Investigate observed text alignment drift in Magic Jewel/Jewel labels on the command path.
@@ -118,7 +121,6 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Combined resize + image-cache churn smoke proving stable context-scoped cache ownership across same-context surface replacement.
 - [x] Strict report assertion for scoped JBR image-cache-clear markers.
 - [x] Reduce redundant image-cache clear/define churn for stable fallback images.
-- [x] ABI 42: single-key image cache eviction.
 - [x] Replace whole-cache churn with oldest-entry eviction in CMP recorder.
 - [x] Add long-running quiet-machine benchmark pass for stable/dynamic image-cache workloads.
 

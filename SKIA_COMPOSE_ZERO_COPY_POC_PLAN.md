@@ -5448,3 +5448,56 @@ Roadmap update:
 
 Next:
 - Continue macOS MVP hardening with either real old-artifact bundles for the artifact matrix or the next rendering/ownership slice, with text/font ownership and JBR-owned shader factories still deliberately deferred production items.
+
+## Checkpoint: ABI 43 Text Font-Family Metadata
+
+Date: 2026-04-30
+
+Status: in progress as a source-level ABI slice across JBR, public Runtime API, Skiko, CMP, and Magic Jewel docs.
+
+Why:
+- Native JBR text commands previously carried font size/style/alignment, but not the resolved font family.
+- That left JBR's SkParagraph/CoreText path free to choose a different default family than the Skiko paragraph path, which matched the observed wrong-looking Jewel text when `JBR_SKIA_NATIVE_TEXT=true`.
+- Passing a font-family name keeps ownership on the correct side: CMP/Skiko may read a family name from Skiko's typeface, but the JBR runtime resolves the actual `SkTypeface` through its own CoreText-backed Skia runtime. No raw `SkTypeface*` crosses the ABI.
+
+Changes:
+- JBR command ABI bumped to `ABI_ID=43`; `BUILD_ID` now includes `abi=43`.
+- Public Runtime API `JBRSkia` mirrors ABI 43 and adds `COMMAND_CAP64_TEXT_FONT_FAMILY`.
+- JBR service advertises the new 64-bit capability.
+- `COMMAND_DRAW_TEXT_UTF16` payload now includes:
+  - `fontFamilyCharCount`, UTF-16 family code units, `charCount`, UTF-16 text code units.
+- `COMMAND_DRAW_PARAGRAPH_UTF16` payload now includes:
+  - font style metadata, then `fontFamilyCharCount`, UTF-16 family code units, then paragraph layout metadata and text.
+- Native JBR replay resolves simple text typefaces via JBR's CoreText `SkFontMgr`.
+- Native JBR paragraph replay calls `TextStyle::setFontFamilies(...)` when a family was provided.
+- Java fallback replay reads the same family payload and uses it when deriving an AWT font for software/test surfaces.
+- CMP recorder API now accepts nullable `fontFamily` for simple and paragraph text commands.
+- CMP Skia paragraph recording passes `defaultFont.typeface?.familyName`.
+- Skiko compatibility gate expects ABI 43 and the new text-family capability.
+- Magic Jewel README now refers to ABI 43 for the current image-cache/text-family ABI generation.
+- `ROADMAP.md` records ABI 43 text-family metadata as complete at the checklist level.
+
+Validation:
+- CMP recorder tests:
+  - command: `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest`
+  - result: passed.
+- Skiko compatibility tests:
+  - command: `./gradlew --no-daemon :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`
+  - result: passed.
+- Public Runtime API compile smoke:
+  - command: `javac -d /tmp/jbr-api-skia-compile src/com/jetbrains/Provided.java src/com/jetbrains/Service.java src/com/jetbrains/JBRSkia.java`
+  - result: passed.
+- JBR API class compile smoke:
+  - command: `javac -d /tmp/jbr-runtime-skia-api-compile src/java.desktop/share/classes/com/jetbrains/desktop/JBRSkia.java`
+  - result: passed.
+- JBR service standalone `javac` smoke was attempted, but this is not a meaningful standalone compile target because it pulls broad JDK sources that require the configured JDK build toolchain and preview settings. It failed before isolating this file with unrelated source-tree preview/internal dependency errors.
+- Diff hygiene:
+  - command: `git diff --check`
+  - result: passed in JBR, Runtime API, Skiko, CMP, and Magic Jewel worktrees.
+
+Not yet validated:
+- ABI 43 has not yet been rebuilt into the local patched JBR classes/native dylib and Skiko/CMP artifacts for a live Magic Jewel screenshot.
+- The native text path is still opt-in with `JBR_SKIA_NATIVE_TEXT=true`; the default remains fidelity-first text-as-image replay until live ABI 43 typography is checked.
+
+Next:
+- Rebuild/publish the affected local artifacts, then run the native-text Magic Jewel command probe and screenshot oracle to see whether family metadata fixes the visible Jewel font/size mismatch or whether the next text ABI slice also needs baseline/metrics or font-size calibration.
