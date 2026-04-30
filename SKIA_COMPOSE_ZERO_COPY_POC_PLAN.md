@@ -6769,3 +6769,32 @@ Verification:
 Next:
 
 - Continue exact direct-mapping blend-mode slices if we want more paint coverage quickly; otherwise the richer next validation slice is the window-only old/new screenshot parity harness.
+
+## Checkpoint: ABI 66 ColorDodge Blend-Mode Fill Rectangles
+
+Status: completed as another exact direct-mapping blend-mode slice across JBR, public Runtime API, Skiko, CMP, and Magic Jewel.
+
+What changed:
+
+- Runtime API and JBR private API expose ABI 66 and the ColorDodge blend-mode payload constant.
+- JBR Java validation accepts ColorDodge wherever the fill-rect blend-mode command is valid.
+- Native `JBRSkiaInterop.mm` gates command streams on ABI 66 and maps the payload to `SkBlendMode::kColorDodge` inside JBR's Skia runtime.
+- Skiko compatibility requires ABI 66 before enabling command mode.
+- CMP records `BlendMode.ColorDodge` solid fill rectangles through the structured blend-mode command when the paint has no shader, color filter, or path effect.
+- Magic Jewel extends the blend-mode visual probe and screenshot assertion with a visible far-right ColorDodge region.
+- `ROADMAP.md` marks ABI 66 complete and records the live probe path.
+
+Verification:
+
+- Runtime API compile passed for ABI 66.
+- JBR API validator passed with ABI 66 and the ColorDodge payload.
+- Native `JBRSkiaInterop.mm` standalone build passed at `/tmp/jbr-skia-native/libjbrskiainterop.dylib` with the ColorDodge mapping.
+- CMP focused recorder tests passed for ColorDodge and Exclusion blend-mode records.
+- Skiko interop tests passed with ABI 66 fixture expectations.
+- Magic Jewel compile passed.
+- Magic Jewel ABI 66 ColorDodge live command probe passed: `/tmp/magic-jewel-command-probe-abi66-color-dodge-blend/suite.tsv`, with `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, and `jbr_command_frames=530`.
+- The window screenshot assertion passed with `blendModeColorDodge=3200`.
+
+Next:
+
+- Continue exact direct-mapping blend-mode slices, likely `ColorBurn`, or pivot to the window-only old/new screenshot parity harness now that the blend probe has enough varied color math to catch more regressions.
