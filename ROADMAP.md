@@ -41,6 +41,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] ABI 42: single-key image cache eviction.
 - [x] ABI 43: native text commands carry JBR-resolved font-family names.
 - [x] ABI 44: image-shader rectangle fills use serialized image refs and JBR-owned shader reconstruction.
+- [x] ABI 45: linear-gradient stroked rectangles use serialized gradient and stroke metadata.
 
 ## Near-Term Rendering Work
 
@@ -53,12 +54,12 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Strict recorder fallback for invalid rounded-rectangle radii with gradient paints.
 - [x] Strict recorder fallback for transformed gradient shaders.
 - [x] Strict recorder fallback for composite/opaque shader wrappers.
-- [x] Strict recorder fallback for unsupported gradient stroke paint.
+- [x] Linear-gradient stroke paint graduated from strict fallback to serialized command replay.
 - [x] More strict shader fallback tests for nonfinite gradient metadata that survives shader construction.
 - [x] Live Magic Jewel recorder-level fallback probes for color filters and path effects.
 - [x] Live Magic Jewel recorder-level fallback probe for unsupported saveLayer layer paint.
 - [x] Live Magic Jewel recorder-level fallback probe for unsupported image paint.
-- [x] Live Magic Jewel recorder-level fallback probe for unsupported gradient stroke paint.
+- [x] Live Magic Jewel rendering probe for linear-gradient stroked rectangles.
 - [x] Remaining near-term generic shader fallback probes beyond transformed/composite/opaque shader wrappers.
 - [x] Expand screenshot assertions to check core primitive and gradient probe colors/regions explicitly.
 - [x] Improve Magic Jewel visual fidelity so labels use Jewel `Text` and `JewelTheme.defaultTextStyle`.
@@ -66,6 +67,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Add font-family metadata to native text commands without sharing Skia `SkTypeface*` pointers.
 - [x] Rebuild ABI 43 local artifacts and pass a native-text Magic Jewel command smoke with paragraph commands and screenshot assertion.
 - [x] Add narrow image-shader rectangle support without sharing raw `SkShader*` pointers.
+- [x] Add narrow linear-gradient stroked-rectangle support without sharing raw `SkShader*` pointers.
 - [x] Add screenshot-level text-presence assertions using stable pixel regions for top/bottom Magic Jewel labels.
 - [x] Add screenshot-level text placement assertions using stable dark-pixel bounding boxes.
 - [x] Add paragraph-row screenshot assertions for native-text layout probes.
@@ -100,6 +102,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] ABI 43 command-probe suite refresh: `/tmp/magic-jewel-command-probe-abi43-20260430-111549/suite.tsv`.
 - [x] ABI 44 image-shader command smoke: `/tmp/magic-jewel-abi44-image-shader-smoke-3/report.md`.
 - [x] ABI 44 command-probe suite refresh: `/tmp/magic-jewel-command-probe-abi44-full-20260430-115943/suite.tsv`.
+- [x] ABI 45 gradient-stroke command smoke: `/tmp/magic-jewel-abi45-gradient-stroke-smoke/report.md`.
+- [x] ABI 45 gradient-stroke command-probe row: `/tmp/magic-jewel-command-probe-abi45-gradient-stroke-20260430-125550/suite.tsv`.
 - [x] Real undecorated Swing popup-window smoke captured separately by window id.
 
 ## Compatibility And ABI Hardening

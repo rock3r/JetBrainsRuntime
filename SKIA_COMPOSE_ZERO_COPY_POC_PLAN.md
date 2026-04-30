@@ -4366,7 +4366,7 @@ Primary target: **macOS + Metal + direct canvas path**. JCEF, video/external sur
   - Do not call `JBRApi.internalService()` from Skiko; it is caller-sensitive and only works from the JBR-side `@JBRApi.Provided` interface.
   - The normal Skiko runtime must remain loadable on non-JBR and older-JBR runtimes.
 - Discovery order:
-  - `Class.forName("com.jetbrains.JBRSkia")` from the public JBR API jar and read static `ABI_ID` / `BUILD_ID`; the current local Skiko PoC also accepts `com.jetbrains.desktop.JBRSkia` as a patched-runtime fallback until the public API jar is wired normally.
+  - `Class.forName("com.jetbrains.desktop.JBRSkia")` from the public JBR API jar and read static `ABI_ID` / `BUILD_ID`.
   - read those static fields reflectively, for example `clazz.getDeclaredField("ABI_ID").get(null)`, never through direct compiled field references.
   - perform compatibility checks before acquiring the service.
   - only after compatibility passes, reflect on `com.jetbrains.JBR.getJBRSkia()` or the final public accessor name.
@@ -5746,3 +5746,64 @@ Roadmap update:
 
 Next:
 - Continue native text parity work or move to a broader shader-factory/unsupported-family production slice, using the ABI 44 benchmark as the current local reference.
+
+## Checkpoint: ABI 45 Linear-Gradient Stroke Rect
+
+Date: 2026-04-30
+
+Status: completed as another narrow serialized shader-family slice across JBR, public Runtime API, Skiko, CMP, and Magic Jewel.
+
+Why:
+- Gradient stroke paint had deliberately fallen back because the earlier command ABI only serialized gradient fills.
+- Compose/Jewel can produce simple stroked rectangles with `Brush.linearGradient(...)`; this is still a known shader family with scalar stroke metadata, so it can be replayed safely by reconstructing the shader inside JBR's Skia runtime.
+- This keeps generic/opaque shader pointers out of the ABI while shrinking the practical fallback surface.
+
+Changes:
+- JBR command ABI bumped to `ABI_ID=45`; `BUILD_ID` now includes `abi=45`.
+- Public Runtime API and private JBR `JBRSkia` expose `COMMAND_CAP64_STROKE_RECT_LINEAR_GRADIENT` plus `COMMAND_STROKE_RECT_LINEAR_GRADIENT`.
+- CMP records fill-style linear gradients as before and now records stroke-style linear-gradient rectangles when the paint is otherwise simple `SrcOver`.
+- The new command payload carries:
+  - rect bounds in fixed-point user coordinates,
+  - stroke width/cap/join/miter metadata,
+  - linear-gradient endpoints, tile mode, ARGB colors, and strictly increasing stops.
+- JBR Java validation rejects malformed gradient-stroke records and Java2D fallback replay maps them to `LinearGradientPaint` plus `BasicStroke`.
+- JBR native replay reconstructs `SkShaders::LinearGradient`, applies stroke style metadata, and draws the rect without sharing any `SkShader*` or `SkPaint*` from Skiko.
+- Skiko compatibility now requires ABI 45 and the gradient-stroke capability bit before enabling command mode.
+- Magic Jewel's `MAGIC_JEWEL_COMPOSE_LINEAR_GRADIENT_STROKE=true` probe is now a strict rendering probe instead of an expected fallback row.
+- Command screenshot assertions require both cyan and orange pixels in the right-side probe region for the gradient-stroke case.
+
+Validation:
+- CMP focused recorder tests:
+  - command: `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesImageShaderRectRecord --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesLinearGradientStrokeRectRecord`
+  - result: passed.
+- JBR private API/service compile smoke:
+  - result: passed for `JBRSkia.java`, `JBRSkiaService.java`, and the updated `JBRSkiaApiTest.java` compile.
+- JBR native dylib compile smoke:
+  - result: passed; `/tmp/jbr-skia-native/libjbrskiainterop.dylib` rebuilt with ABI 45.
+- Runtime API shim rebuild:
+  - command: `bash tools/build.sh process && bash tools/build.sh dev $(/usr/libexec/java_home -v 21) /tmp/jbr-api-skia-abi45-dev`
+  - result: passed; copied to `/tmp/jbr-api-shim.jar`.
+- Skiko compatibility tests:
+  - command: `./gradlew --no-daemon :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`
+  - result: passed.
+- Magic Jewel compile:
+  - command: `./gradlew --no-daemon compileKotlin`
+  - result: passed.
+- Focused Magic Jewel gradient-stroke smoke:
+  - command: `OUT_DIR=/tmp/magic-jewel-abi45-gradient-stroke-smoke DURATION_SECONDS=6 WARMUP_SECONDS=1 SAMPLE_INTERVAL_SECONDS=1 JBR_SKIA_RENDER_MODE=commands MAGIC_JEWEL_COMPOSE_LINEAR_GRADIENT_STROKE=true SKIKO_VERSION=0.0.0-SNAPSHOT bash scripts/jbr-skia-interop-report.sh`
+  - result: passed.
+  - report: `/tmp/magic-jewel-abi45-gradient-stroke-smoke/report.md`.
+  - counters: `jbr_command_frames=676`, `jbr_command_fps=112.7`, `fallback_new_count=0`, `cmp_unsupported_reasons=none`, `screenshot_probeRightCyan=1394`, `screenshot_probeRightOrange=1466`.
+- Focused Magic Jewel command-probe row:
+  - command: `OUT_ROOT=/tmp/magic-jewel-command-probe-abi45-gradient-stroke-20260430-125550 CASES=commands-gradient-stroke SKIKO_VERSION=0.0.0-SNAPSHOT bash scripts/jbr-skia-command-probe-suite.sh`
+  - result: passed.
+  - suite: `/tmp/magic-jewel-command-probe-abi45-gradient-stroke-20260430-125550/suite.tsv`.
+  - row: `commands-gradient-stroke`, `fallbacks=0`, `unsupported=none`, `jbr_picture_frames=0`, `jbr_command_frames=1858`.
+
+Roadmap update:
+- Recorded ABI 45 command coverage.
+- Reclassified gradient-stroke paint from deliberate fallback to supported serialized command replay.
+- Recorded the focused smoke and command-probe row paths.
+
+Next:
+- Run a full command-probe refresh for ABI 45 if time permits, then continue macOS MVP hardening with either native text parity, packaged old/new artifact matrix bundles, or the next narrow known-family rendering slice.
