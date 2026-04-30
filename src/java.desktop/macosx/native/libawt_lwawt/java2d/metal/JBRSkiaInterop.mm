@@ -72,7 +72,7 @@
 
 #include "MTLSurfaceDataBase.h"
 
-static constexpr jint ABI_ID = 58;
+static constexpr jint ABI_ID = 59;
 static constexpr jint COMMAND_STREAM_MAGIC = 1246972723;
 static constexpr jint COMMAND_STREAM_HEADER_SIZE = 6;
 static constexpr jint COMMAND_STREAM_FLAGS_NONE = 0;
@@ -136,6 +136,7 @@ static constexpr jint COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER = 1;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_VERSION_1 = 1;
 static constexpr jint COMMAND_BLEND_MODE_PLUS = 1;
 static constexpr jint COMMAND_BLEND_MODE_SRC_IN = 2;
+static constexpr jint COMMAND_BLEND_MODE_MULTIPLY = 3;
 static constexpr jint COMMAND_PAINT_STYLE_FILL = 0;
 static constexpr jint COMMAND_PAINT_STYLE_STROKE = 1;
 static constexpr jint COMMAND_PATH_FILL_NON_ZERO = 0;
@@ -490,6 +491,19 @@ static sk_sp<SkImage> makeRasterImage(CommandWords commands, jsize pixelOffset, 
     }
     SkPixmap pixmap(imageInfo, pixels.data(), static_cast<size_t>(imageWidth) * sizeof(jint));
     return SkImages::RasterFromPixmapCopy(pixmap);
+}
+
+static bool skBlendModeForFill(jint commandBlendMode, SkBlendMode* blendMode) {
+    switch (commandBlendMode) {
+        case COMMAND_BLEND_MODE_PLUS:
+            *blendMode = SkBlendMode::kPlus;
+            return true;
+        case COMMAND_BLEND_MODE_MULTIPLY:
+            *blendMode = SkBlendMode::kMultiply;
+            return true;
+        default:
+            return false;
+    }
 }
 
 static bool drawImage(SkCanvas* canvas,
@@ -2085,10 +2099,11 @@ static bool drawCommandList(SkCanvas* canvas,
                 jint y = commands[offset++];
                 jint rectWidth = commands[offset++];
                 jint rectHeight = commands[offset++];
-                if (blendMode != COMMAND_BLEND_MODE_PLUS || rectWidth < 0 || rectHeight < 0) {
+                SkBlendMode skBlendMode;
+                if (!skBlendModeForFill(blendMode, &skBlendMode) || rectWidth < 0 || rectHeight < 0) {
                     return false;
                 }
-                paint.setBlendMode(SkBlendMode::kPlus);
+                paint.setBlendMode(skBlendMode);
                 canvas->drawRect(SkRect::MakeXYWH(static_cast<SkScalar>(x),
                                                   static_cast<SkScalar>(y),
                                                   static_cast<SkScalar>(rectWidth),

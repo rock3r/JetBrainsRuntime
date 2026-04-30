@@ -55,6 +55,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] ABI 56: tint color-filter descriptor handles can be defined in-frame and referenced by fill-rect commands.
 - [x] ABI 57: tint color-filter handles are cached per destination context, reused across frames, and explicitly evictable.
 - [x] ABI 58: effect descriptors use a generic typed/versioned envelope; tint/SrcIn color filters are descriptor type 1 version 1.
+- [x] ABI 59: solid fill rectangles support `BlendMode.Multiply` through the structured blend-mode command.
 
 ## Near-Term Rendering Work
 
@@ -97,7 +98,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Add narrow sweep-gradient stroked-rectangle support without sharing raw `SkShader*` pointers.
 - [x] Add narrow sweep-gradient stroked rounded-rectangle support without sharing raw `SkShader*` pointers.
 - [x] Add narrow `BlendMode.Plus` solid fill-rectangle support through a versioned command instead of picture fallback.
-- [ ] Expand blend-mode command coverage beyond `Plus` fill rectangles only after each mode has exact Skia-vs-Java2D semantics documented.
+- [x] Expand blend-mode command coverage beyond `Plus` fill rectangles with the first additional exact Skia mapping: `BlendMode.Multiply`.
+- [ ] Continue blend-mode command coverage mode-by-mode only after each mode has exact Skia-vs-Java2D semantics documented.
 - [x] Add narrow tint color-filter solid fill-rectangle support through a versioned command instead of picture fallback.
 - [x] Add narrow tint color-filter `saveLayer` support through a versioned command instead of picture fallback.
 - [x] Add narrow tint color-filter cached-image support through a versioned command instead of picture fallback.

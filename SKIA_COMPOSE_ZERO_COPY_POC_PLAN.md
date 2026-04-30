@@ -6567,3 +6567,27 @@ Validation:
 Next:
 - Add live/report-level fallback markers for descriptor parse failures once Skiko/CMP can intentionally emit an incompatible descriptor under a test switch.
 - Start the first non-tint descriptor implementation, with blur/image-filter and runtime-effect/SKSL still the two candidate paths.
+
+## Checkpoint: ABI 59 Multiply Blend-Mode Fill Rectangles
+
+Status: completed for `BlendMode.Multiply` on solid fill rectangles.
+
+What changed:
+- CMP now records solid fill rectangles using `BlendMode.Multiply` as `COMMAND_FILL_RECT_BLEND_MODE` with payload value `COMMAND_BLEND_MODE_MULTIPLY = 3`.
+- Runtime API and JBR private API expose ABI 59 and the new multiply blend-mode payload constant.
+- Skiko compatibility now requires ABI 59 before enabling command mode.
+- JBR validation accepts multiply for blend-mode fill rectangles; native replay maps it to `SkBlendMode::kMultiply` inside the JBR-owned Skia runtime.
+- Magic Jewel now draws an overlapping Plus/Multiply blend-mode probe and the command-probe suite exposes the clearer `commands-blend-mode` case name while keeping `commands-blend-mode-fallback` as an alias.
+- `ROADMAP.md` records ABI 59 and keeps future blend-mode expansion as a mode-by-mode compatibility track.
+
+Validation:
+- CMP focused tests `writesFillRectPlusBlendModeRecord` and `writesFillRectMultiplyBlendModeRecord` passed.
+- Runtime API compile passed for ABI 59.
+- Skiko `JbrSkiaInteropTest` passed with ABI 59 discovery and capability mask.
+- JBR API/validator smoke passed with valid Plus and Multiply blend-mode streams.
+- Native `JBRSkiaInterop.mm` standalone build passed with command-stream ABI 59.
+- Magic Jewel command-probe row passed: `/tmp/magic-jewel-command-probe-abi59-multiply-blend-renamed/suite.tsv`, with `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, and `jbr_command_frames=894`.
+
+Next:
+- Add screenshot-region assertions for the Plus/Multiply blend probe so the live harness proves color semantics, not only no-fallback replay.
+- Continue blend-mode expansion one value at a time, likely `Screen` or `Overlay`, only after pinning exact Skia mapping and fallback behavior.

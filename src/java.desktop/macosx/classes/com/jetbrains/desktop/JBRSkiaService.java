@@ -398,7 +398,7 @@ public class JBRSkiaService extends JBRSkia {
             int blendMode = commands[record.argsStart() + 1];
             int width = commands[record.argsStart() + 4];
             int height = commands[record.argsStart() + 5];
-            return blendMode == COMMAND_BLEND_MODE_PLUS && width >= 0 && height >= 0;
+            return isSupportedFillBlendMode(blendMode) && width >= 0 && height >= 0;
         }
         if (record.op() == COMMAND_FILL_RECT_COLOR_FILTER) {
             int colorFilterBlendMode = commands[record.argsStart() + 2];
@@ -1213,6 +1213,11 @@ public class JBRSkiaService extends JBRSkia {
                 && strokeJoin >= 0
                 && strokeJoin <= 2
                 && strokeMiter1000 >= 0;
+    }
+
+    private static boolean isSupportedFillBlendMode(int blendMode) {
+        return blendMode == COMMAND_BLEND_MODE_PLUS
+                || blendMode == COMMAND_BLEND_MODE_MULTIPLY;
     }
 
     private static CommandRecord readCommandRecord(int[] commands, int offset, int commandEnd) {
@@ -2751,7 +2756,7 @@ public class JBRSkiaService extends JBRSkia {
                         int y = commands[offset++];
                         int width = commands[offset++];
                         int height = commands[offset++];
-                        if (blendMode != COMMAND_BLEND_MODE_PLUS || width < 0 || height < 0) return false;
+                        if (!isSupportedFillBlendMode(blendMode) || width < 0 || height < 0) return false;
                         current.fillRect(x, y, width, height);
                     } else if (op == COMMAND_FILL_RECT_COLOR_FILTER) {
                         if (offset + 7 != recordEnd) return false;
