@@ -6972,3 +6972,33 @@ Verification:
 Next:
 
 - Finish the component blend family with `Luminosity`, then reassess whether the old/new screenshot parity harness should become the next priority checkpoint.
+
+## Checkpoint: ABI 73 Luminosity Blend-Mode Fill Rectangles
+
+Status: completed as the final component blend-mode slice across JBR, public Runtime API, Skiko, CMP, and Magic Jewel.
+
+What changed:
+
+- Runtime API and JBR private API expose ABI 73 and the Luminosity blend-mode payload constant.
+- JBR Java validation accepts Luminosity wherever the fill-rect blend-mode command is valid.
+- Native `JBRSkiaInterop.mm` gates command streams on ABI 73 and maps the payload to `SkBlendMode::kLuminosity` inside JBR's Skia runtime.
+- Skiko compatibility requires ABI 73 before enabling command mode.
+- CMP records `BlendMode.Luminosity` solid fill rectangles through the structured blend-mode command when the paint has no shader, color filter, or path effect.
+- Magic Jewel extends the blend-mode visual probe and screenshot assertion with a visible lower Luminosity region.
+- `ROADMAP.md` marks ABI 73 complete and records the live probe path.
+
+Verification:
+
+- Runtime API compile passed for ABI 73.
+- Native `JBRSkiaInterop.mm` standalone build passed at `/tmp/jbr-skia-native/libjbrskiainterop.dylib` with the Luminosity mapping.
+- Refreshed `/tmp/jbr-skia-run/desktop` patched classes so the Java service ABI matched the public API and native dylib. The first live run correctly fell back as `native-abi-mismatch` while those classes were stale.
+- CMP focused recorder tests passed for Luminosity and Color blend-mode records.
+- Skiko interop tests passed with ABI 73 fixture expectations.
+- Magic Jewel compile passed.
+- Magic Jewel ABI 73 Luminosity live command probe passed: `/tmp/magic-jewel-command-probe-abi73-luminosity-blend-2/suite.tsv`, with `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, and `jbr_command_frames=350`.
+- The window screenshot assertion passed with `blendModeLuminosity=3200`.
+- An attempted source-tree `javac --patch-module` run was discarded as an invalid local harness because it asked stock javac to compile unrelated JBR source/generated-code surfaces. The patched-class refresh plus native compile are the useful local checks for this slice until a full configured JBR build is wired.
+
+Next:
+
+- Start the window-only old/new screenshot parity harness for rich Swing/CMP/Jewel content, with deterministic animation phases so animated blend probes, gradients, progress bars, and Swing islands can be compared repeatably.
