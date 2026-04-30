@@ -5093,3 +5093,29 @@ Validation:
 
 Next:
 - Add similarly targeted region checks for gradient probe cases if their colors prove stable enough across captures.
+
+## Checkpoint: Gradient Screenshot Region Assertions
+
+Date: 2026-04-30
+
+Status: completed as screenshot-oracle hardening for gradient command probes.
+
+Change:
+- `scripts/assert-jbr-skia-command-window-screenshot.sh` now adds env-gated right-side region checks for gradient probes:
+  - linear-gradient surfaces require purple gradient pixels.
+  - radial-gradient surfaces require cyan gradient pixels.
+  - sweep-gradient surfaces require orange gradient pixels.
+  - gradient path probes use lower right-region thresholds because their shapes are smaller.
+
+Validation:
+- Calibrated against existing gradient captures:
+  - surfaces counts: `probeRightPurple=8830`, `probeRightOrange=3532`, `probeRightCyan=2510`.
+  - path counts: `probeRightPurple=1103`, `probeRightOrange=2169`, `probeRightCyan=868`.
+- Live command-probe suite:
+  - command: `OUT_ROOT=/tmp/magic-jewel-gradient-region-suite-smoke CASES="commands-gradient-surfaces commands-gradient-paths" DURATION_SECONDS=3 WARMUP_SECONDS=1 SAMPLE_INTERVAL_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT bash scripts/jbr-skia-command-probe-suite.sh`
+  - result: `JBR_SKIA_COMMAND_PROBE_SUITE passed out_root=/tmp/magic-jewel-gradient-region-suite-smoke`
+  - `commands-gradient-surfaces`: `status=passed`, `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, `jbr_command_frames=355`.
+  - `commands-gradient-paths`: `status=passed`, `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, `jbr_command_frames=175`.
+
+Next:
+- Keep screenshot assertions focused on stable deterministic probes; avoid adding fragile pixel checks for typography until there is a stronger OCR or glyph-region oracle.
