@@ -7153,3 +7153,30 @@ Known test note:
 Next:
 
 - Continue layer coverage only where semantics are explicit: first add clip/outline or non-SrcOver/color-filter layer paint support, or pivot to the JBR-owned generic shader/effect handle implementation needed for `RenderEffect`.
+
+## Checkpoint: Rectangular Graphics-Layer Clip Replay
+
+Status: completed as a follow-up graphics-layer semantics slice.
+
+What changed:
+
+- CMP nested graphics-layer replay now accepts an optional rectangular clip and emits `COMMAND_CLIP_RECT` inside the saved layer before splicing the child command stream.
+- CMP `GraphicsLayer` treats `clip=true` with a rectangular outline as command-replayable. Non-rectangular outlines still remain outside this slice.
+- Magic Jewel gained `MAGIC_JEWEL_COMPOSE_GRAPHICS_LAYER_CLIP`, which adds overflowing cyan content inside the rotated alpha layer and turns on rectangular layer clipping.
+- Magic Jewel report/help output and screenshot assertion now surface and validate the clipped graphics-layer probe.
+- The command probe suite includes `commands-graphics-layer-clip`.
+
+Verification:
+
+- Focused CMP nested recorder test passed after adding clip plumbing:
+  - `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.nestedRecordingReplaysAtLayerDrawSite`
+- CMP desktop jars rebuilt successfully for Magic Jewel.
+- Magic Jewel clipped graphics-layer suite case passed:
+  - `/tmp/magic-jewel-command-suite-graphics-layer-clip/suite.tsv`
+  - `status=passed fallback_new_count=0 unsupported=none jbr_picture_frames=0 jbr_command_frames=143`
+  - report: `/tmp/magic-jewel-command-suite-graphics-layer-clip/commands-graphics-layer-clip/report.md`
+  - screenshot assertion passed with `probeRightCyan=20561` and `probeRightPurple=10819`.
+
+Next:
+
+- The remaining layer semantics need their own explicit contracts: rounded/path outline clips can reuse path commands, while color filters, render effects, and non-SrcOver layer paints should wait for the JBR-owned effect/shader handle path.
