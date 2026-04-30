@@ -70,7 +70,7 @@
 
 #include "MTLSurfaceDataBase.h"
 
-static constexpr jint ABI_ID = 43;
+static constexpr jint ABI_ID = 44;
 static constexpr jint COMMAND_STREAM_MAGIC = 1246972723;
 static constexpr jint COMMAND_STREAM_HEADER_SIZE = 6;
 static constexpr jint COMMAND_STREAM_FLAGS_NONE = 0;
@@ -114,6 +114,7 @@ static constexpr jint COMMAND_FILL_RECT_SWEEP_GRADIENT = 30;
 static constexpr jint COMMAND_FILL_ROUND_RECT_SWEEP_GRADIENT = 31;
 static constexpr jint COMMAND_FILL_PATH_SWEEP_GRADIENT = 32;
 static constexpr jint COMMAND_EVICT_IMAGE_CACHE_KEY = 33;
+static constexpr jint COMMAND_FILL_RECT_IMAGE_SHADER = 34;
 static constexpr jint COMMAND_PAINT_STYLE_FILL = 0;
 static constexpr jint COMMAND_PAINT_STYLE_STROKE = 1;
 static constexpr jint COMMAND_PATH_FILL_NON_ZERO = 0;
@@ -1304,6 +1305,53 @@ static bool drawCommandList(SkCanvas* canvas,
                                dstLeft, dstTop, dstRight, dstBottom, alpha1000)) {
                     return false;
                 }
+                break;
+            }
+            case COMMAND_FILL_RECT_IMAGE_SHADER: {
+                if ((recordFlags & ~COMMAND_RECORD_FLAG_ANTIALIAS) != 0 || offset + 11 != recordEnd) {
+                    return false;
+                }
+                const SkScalar left = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkScalar top = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkScalar right = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkScalar bottom = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const uint64_t key = imageCacheKey(commands[offset], commands[offset + 1]);
+                offset += 2;
+                const jint imageWidth = commands[offset++];
+                const jint imageHeight = commands[offset++];
+                const jint tileModeX = commands[offset++];
+                const jint tileModeY = commands[offset++];
+                const jint alpha1000 = commands[offset++];
+                if (right < left || bottom < top ||
+                        imageWidth <= 0 || imageHeight <= 0 || imageWidth > 4096 || imageHeight > 4096 ||
+                        tileModeX < 0 || tileModeX > 3 || tileModeY < 0 || tileModeY > 3 ||
+                        alpha1000 < 0 || alpha1000 > 1000) {
+                    return false;
+                }
+                sk_sp<SkImage> image;
+                {
+                    std::lock_guard<std::mutex> lock(gImageCacheMutex);
+                    auto found = gImagesByKey.find(ImageCacheScopedKey{imageCacheContextKey, key});
+                    if (found == gImagesByKey.end()) {
+                        return false;
+                    }
+                    image = found->second;
+                }
+                if (image->width() != imageWidth || image->height() != imageHeight) {
+                    return false;
+                }
+                SkPaint paint;
+                paint.setAntiAlias(antiAlias);
+                paint.setAlphaf(static_cast<float>(alpha1000) / 1000.0f);
+                paint.setShader(image->makeShader(
+                        skTileModeFromCommand(tileModeX),
+                        skTileModeFromCommand(tileModeY),
+                        SkSamplingOptions(SkFilterMode::kLinear, SkMipmapMode::kNone),
+                        nullptr));
+                if (paint.getShader() == nullptr) {
+                    return false;
+                }
+                canvas->drawRect(SkRect::MakeLTRB(left, top, right, bottom), paint);
                 break;
             }
             case COMMAND_DRAW_IMAGE_ARGB: {

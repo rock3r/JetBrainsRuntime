@@ -40,6 +40,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] ABI 41/native 3: scoped destination context identity.
 - [x] ABI 42: single-key image cache eviction.
 - [x] ABI 43: native text commands carry JBR-resolved font-family names.
+- [x] ABI 44: image-shader rectangle fills use serialized image refs and JBR-owned shader reconstruction.
 
 ## Near-Term Rendering Work
 
@@ -64,6 +65,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Prefer fidelity-first text image replay by default so command mode preserves resolved Jewel font/size/alignment until JBR-owned typefaces exist.
 - [x] Add font-family metadata to native text commands without sharing Skia `SkTypeface*` pointers.
 - [x] Rebuild ABI 43 local artifacts and pass a native-text Magic Jewel command smoke with paragraph commands and screenshot assertion.
+- [x] Add narrow image-shader rectangle support without sharing raw `SkShader*` pointers.
 - [x] Add screenshot-level text-presence assertions using stable pixel regions for top/bottom Magic Jewel labels.
 - [x] Add screenshot-level text placement assertions using stable dark-pixel bounding boxes.
 - [x] Investigate observed text alignment drift in Magic Jewel/Jewel labels on the command path.
@@ -93,6 +95,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Selectable Magic Jewel command-probe suite for core primitives, gradients, text, popup, and fallback cases.
 - [x] Command-probe suite writes a machine-readable `suite.tsv`.
 - [x] ABI 43 command-probe suite refresh: `/tmp/magic-jewel-command-probe-abi43-20260430-111549/suite.tsv`.
+- [x] ABI 44 image-shader command smoke: `/tmp/magic-jewel-abi44-image-shader-smoke-3/report.md`.
+- [x] ABI 44 command-probe suite refresh: `/tmp/magic-jewel-command-probe-abi44-full-20260430-115943/suite.tsv`.
 - [x] Real undecorated Swing popup-window smoke captured separately by window id.
 
 ## Compatibility And ABI Hardening

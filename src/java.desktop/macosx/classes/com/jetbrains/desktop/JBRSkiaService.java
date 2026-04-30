@@ -44,6 +44,7 @@ import java.awt.Rectangle;
 import java.awt.RadialGradientPaint;
 import java.awt.RenderingHints;
 import java.awt.Shape;
+import java.awt.TexturePaint;
 import java.awt.Transparency;
 import java.awt.geom.Area;
 import java.awt.geom.Arc2D;
@@ -111,7 +112,8 @@ public class JBRSkiaService extends JBRSkia {
                     | COMMAND_CAP64_FILL_ROUND_RECT_SWEEP_GRADIENT
                     | COMMAND_CAP64_FILL_PATH_SWEEP_GRADIENT
                     | COMMAND_CAP64_EVICT_IMAGE_CACHE_KEY
-                    | COMMAND_CAP64_TEXT_FONT_FAMILY;
+                    | COMMAND_CAP64_TEXT_FONT_FAMILY
+                    | COMMAND_CAP64_FILL_RECT_IMAGE_SHADER;
     private static final boolean NATIVE_BRIDGE_AVAILABLE = loadNativeBridge();
     private static final AtomicLong NEXT_SCOPE_ID = new AtomicLong(1);
     private static final int MAX_CACHED_IMAGES = 256;
@@ -232,6 +234,7 @@ public class JBRSkiaService extends JBRSkia {
         if (op == COMMAND_FILL_RECT_SWEEP_GRADIENT) return -14;
         if (op == COMMAND_FILL_ROUND_RECT_SWEEP_GRADIENT) return -15;
         if (op == COMMAND_FILL_PATH_SWEEP_GRADIENT) return -16;
+        if (op == COMMAND_FILL_RECT_IMAGE_SHADER) return 14;
         if (op == COMMAND_CLEAR) return 4;
         if (op == COMMAND_CLEAR_RECT) return 7;
         if (op == COMMAND_CLIP_RECT) return 8;
@@ -386,6 +389,33 @@ public class JBRSkiaService extends JBRSkia {
                     && radiusX1000 >= 0
                     && radiusY1000 >= 0
                     && (paintStyle == COMMAND_PAINT_STYLE_FILL || isValidStrokeMetadata(strokeWidth, strokeCap, strokeJoin, strokeMiter));
+        }
+        if (record.op() == COMMAND_FILL_RECT_IMAGE_SHADER) {
+            if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE
+                    && record.recordFlags() != COMMAND_RECORD_FLAG_ANTIALIAS) {
+                return false;
+            }
+            int left1000 = commands[record.argsStart()];
+            int top1000 = commands[record.argsStart() + 1];
+            int right1000 = commands[record.argsStart() + 2];
+            int bottom1000 = commands[record.argsStart() + 3];
+            int imageWidth = commands[record.argsStart() + 6];
+            int imageHeight = commands[record.argsStart() + 7];
+            int tileModeX = commands[record.argsStart() + 8];
+            int tileModeY = commands[record.argsStart() + 9];
+            int alpha1000 = commands[record.argsStart() + 10];
+            return right1000 >= left1000
+                    && bottom1000 >= top1000
+                    && imageWidth > 0
+                    && imageHeight > 0
+                    && imageWidth <= 4096
+                    && imageHeight <= 4096
+                    && tileModeX >= 0
+                    && tileModeX <= 3
+                    && tileModeY >= 0
+                    && tileModeY <= 3
+                    && alpha1000 >= 0
+                    && alpha1000 <= 1000;
         }
         if (record.op() == COMMAND_FILL_RECT_LINEAR_GRADIENT) {
             if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE
@@ -1765,6 +1795,40 @@ public class JBRSkiaService extends JBRSkia {
                         }
                         drawImage(current, image, filtered, srcLeft1000, srcTop1000, srcRight1000, srcBottom1000,
                                 dstLeft1000, dstTop1000, dstRight1000, dstBottom1000, alpha1000);
+                    } else if (op == COMMAND_FILL_RECT_IMAGE_SHADER) {
+                        if (offset + 11 != recordEnd) return false;
+                        applyAntialiasing(current, antiAlias);
+                        int left1000 = commands[offset++];
+                        int top1000 = commands[offset++];
+                        int right1000 = commands[offset++];
+                        int bottom1000 = commands[offset++];
+                        long cacheKey = cacheKey(commands[offset++], commands[offset++]);
+                        int imageWidth = commands[offset++];
+                        int imageHeight = commands[offset++];
+                        int tileModeX = commands[offset++];
+                        int tileModeY = commands[offset++];
+                        int alpha1000 = commands[offset++];
+                        BufferedImage image = IMAGE_CACHE.get(new ImageCacheKey(contextPtr, cacheKey));
+                        if (image == null || image.getWidth() != imageWidth || image.getHeight() != imageHeight
+                                || right1000 < left1000 || bottom1000 < top1000
+                                || tileModeX < 0 || tileModeX > 3 || tileModeY < 0 || tileModeY > 3
+                                || alpha1000 < 0 || alpha1000 > 1000) {
+                            return false;
+                        }
+                        Paint previousPaint = current.getPaint();
+                        Composite previousComposite = current.getComposite();
+                        current.setPaint(new TexturePaint(image, new Rectangle(0, 0, imageWidth, imageHeight)));
+                        if (alpha1000 < 1000) {
+                            current.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha1000 / 1000f));
+                        }
+                        current.fill(new Rectangle(
+                                Math.round(left1000 / 1000f),
+                                Math.round(top1000 / 1000f),
+                                Math.round((right1000 - left1000) / 1000f),
+                                Math.round((bottom1000 - top1000) / 1000f)
+                        ));
+                        current.setComposite(previousComposite);
+                        current.setPaint(previousPaint);
                     } else if (op == COMMAND_DRAW_IMAGE_ARGB) {
                         if (offset + 13 > recordEnd) return false;
                         boolean filtered = (record.recordFlags() & COMMAND_RECORD_FLAG_ANTIALIAS) != 0;

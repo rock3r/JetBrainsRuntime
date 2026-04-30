@@ -5581,3 +5581,72 @@ Roadmap update:
 
 Next:
 - Start the next rendering parity slice. The most useful candidates are native text baseline/style parity, or a JBR-owned shader factory for unsupported shader families.
+
+## Checkpoint: ABI 44 Image-Shader Rect Fill
+
+Date: 2026-04-30
+
+Status: completed as a narrow serialized shader-family slice across JBR, public Runtime API, Skiko, CMP, and Magic Jewel.
+
+Why:
+- Generic shader support is still deliberately deferred because raw `SkShader*` pointers cannot cross the Skiko/JBR Skia runtime boundary safely.
+- Compose `ImageShader(image, tileModeX, tileModeY)` is a tractable known shader family: CMP already owns the `ImageBitmap`, the command stream already has image cache definitions, and JBR can reconstruct the actual Skia image shader inside the JBR-owned Skia runtime.
+- This gives us real shader-backed paint coverage without weakening the strict fallback rules for opaque/nonserializable shader wrappers.
+
+Changes:
+- JBR command ABI bumped to `ABI_ID=44`; `BUILD_ID` now includes `abi=44`.
+- Public Runtime API `JBRSkia` mirrors ABI 44 and adds `COMMAND_CAP64_FILL_RECT_IMAGE_SHADER` plus `COMMAND_FILL_RECT_IMAGE_SHADER`.
+- `COMMAND_FILL_RECT_IMAGE_SHADER` payload records a destination rect, cached image key, image dimensions, horizontal/vertical tile modes, and `alpha1000`.
+- JBR Java validation rejects malformed image-shader records and advertises the new 64-bit capability.
+- Native JBR replay looks up the context-scoped `SkImage`, reconstructs an `SkShader` in JBR's Skia runtime with the recorded tile modes, and fills the destination rect.
+- CMP desktop shader metadata now preserves the source `ImageBitmap` and tile modes for plain `ImageShader` construction.
+- CMP command recording emits image-shader rect fills only for simple fill-style `SrcOver` paints with no color filter/path effect and a cacheable bitmap.
+- Skiko compatibility now requires ABI 44 and the image-shader capability bit before enabling command mode.
+- Magic Jewel's image-shader probe now draws a real tiled image shader instead of a synthetic unsupported-shader marker.
+- Magic Jewel compiles against the same patched CMP jars that it prepends at runtime, preventing compile/runtime Compose API signature drift in local PoC runs.
+- Screenshot assertions now check the visible tiled image-shader probe with right-region yellow/dark pixel counts.
+
+Validation:
+- CMP focused recorder test:
+  - command: `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest`
+  - result: passed.
+- JBR API class compile smoke:
+  - command: `javac -d /tmp/jbr-runtime-skia-api-compile src/java.desktop/share/classes/com/jetbrains/desktop/JBRSkia.java`
+  - result: passed.
+- JBR service restricted compile smoke:
+  - result: passed with patched output in `/tmp/jbr-skia-run/desktop`; the temporary `com/jetbrains/exported` stub was removed from the patch tree afterward.
+- JBR native dylib compile smoke:
+  - result: passed; `/tmp/jbr-skia-native/libjbrskiainterop.dylib` rebuilt with ABI 44.
+- Public Runtime API compile/build:
+  - command: `bash tools/build.sh process && bash tools/build.sh dev $(/usr/libexec/java_home -v 21) /tmp/jbr-api-skia-abi44-dev`
+  - result: passed; `/tmp/jbr-api-shim.jar` refreshed.
+- Skiko compatibility tests:
+  - command: `./gradlew --no-daemon :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`
+  - result: passed.
+- Skiko local artifact:
+  - command: `./gradlew --no-daemon :skiko:publishToMavenLocal`
+  - result: passed.
+- Magic Jewel compile against patched CMP:
+  - command: `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon compileKotlin --rerun-tasks`
+  - result: passed.
+- Focused Magic Jewel image-shader smoke:
+  - command: `OUT_DIR=/tmp/magic-jewel-abi44-image-shader-smoke-3 DURATION_SECONDS=6 WARMUP_SECONDS=1 SAMPLE_INTERVAL_SECONDS=1 JBR_SKIA_RENDER_MODE=commands MAGIC_JEWEL_COMPOSE_IMAGE_SHADER=true EXPECT_MIN_IMAGE_REFS=1 SKIKO_VERSION=0.0.0-SNAPSHOT bash scripts/jbr-skia-interop-report.sh`
+  - result: passed.
+  - report: `/tmp/magic-jewel-abi44-image-shader-smoke-3/report.md`.
+  - counters: 429 CMP recorder frames, 430 Skiko command frames, 430 JBR command frames, 0 picture replay frames, 0 fallback markers, 10 image refs per frame, max 1 image define.
+  - screenshot: `/tmp/magic-jewel-abi44-image-shader-smoke-3/new-window.png`; command screenshot assertion passed with `probeRightYellow=3346` and `probeRightDark=21514`.
+- Focused command-probe row:
+  - command: `OUT_ROOT=/tmp/magic-jewel-command-probe-abi44-image-shader-20260430-115855 CASES=commands-image-shader SKIKO_VERSION=0.0.0-SNAPSHOT bash scripts/jbr-skia-command-probe-suite.sh`
+  - result: passed; 1,918 JBR command frames, 0 fallbacks, 0 picture replay frames.
+- Full command-probe suite:
+  - command: `OUT_ROOT=/tmp/magic-jewel-command-probe-abi44-full-20260430-115943 SKIKO_VERSION=0.0.0-SNAPSHOT bash scripts/jbr-skia-command-probe-suite.sh`
+  - result: passed.
+  - suite: `/tmp/magic-jewel-command-probe-abi44-full-20260430-115943/suite.tsv`.
+  - strict rows passed with zero fallback and zero picture replay, including `commands-image-shader` with 1,968 JBR command frames.
+  - deliberate fallback rows still passed with expected unsupported reasons for image filter, gradient stroke paint, color filter, path effect, blend mode, saveLayer filter, and invalid sweep-gradient stops.
+
+Remaining caveat:
+- This is not generic shader support. It is a serialized known-family shader command where JBR reconstructs the shader from image cache refs and tile-mode metadata. Opaque/transformed/composite/nonserializable shader objects still fall back by design.
+
+Next:
+- Continue macOS MVP hardening with either native text baseline/style parity, productionizing JBR-owned shader factory design for broader shader families, or packaging a full old/new artifact matrix with real old bundles.
