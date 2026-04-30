@@ -72,6 +72,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] ABI 71: solid fill rectangles support `BlendMode.Saturation` through the structured blend-mode command.
 - [x] ABI 72: solid fill rectangles support `BlendMode.Color` through the structured blend-mode command.
 - [x] ABI 73: solid fill rectangles support `BlendMode.Luminosity` through the structured blend-mode command.
+- [x] ABI 74: saveLayer/graphics-layer replay supports direct Skia blend modes through a structured save-layer blend command.
 
 ## Near-Term Rendering Work
 
@@ -139,7 +140,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   - [x] Support rectangular graphics-layer clips by replaying the layer outline through existing `COMMAND_CLIP_RECT` inside the saved layer scope.
   - [x] Support rounded graphics-layer clips by serializing rounded/conic outline paths as quadratic path commands and replaying them through `COMMAND_CLIP_PATH`.
   - [x] Support generic path outline clips by replaying `Outline.Generic` through existing `COMMAND_CLIP_PATH`.
-  - [ ] Extend graphics-layer command replay beyond the current 2D subset: non-SrcOver blend, color filters, shadows, 3D rotation/camera, and offscreen strategy semantics.
+  - [x] Support directly mapped non-SrcOver graphics-layer blend modes through a bounded save-layer blend command.
+  - [ ] Extend graphics-layer command replay beyond the current 2D subset: color filters, shadows, 3D rotation/camera, and offscreen strategy semantics.
   - [ ] Add render-effect descriptors for graphics-layer `RenderEffect` once the JBR-owned effect-handle ABI can construct the needed Skia image filters.
 - [x] Add narrow tint color-filter solid fill-rectangle support through a versioned command instead of picture fallback.
 - [x] Add narrow tint color-filter `saveLayer` support through a versioned command instead of picture fallback.

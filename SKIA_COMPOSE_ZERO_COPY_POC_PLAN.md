@@ -7242,3 +7242,38 @@ Known notes:
 Next:
 
 - Continue layer coverage only where semantics are explicit: non-SrcOver layer paints, color filters, and render effects should wait for the JBR-owned effect/shader handle path. The nearest small rendering slice is likely polishing animation/screenshot stability or choosing one directly mappable layer blend mode with a strict old/new screenshot gate.
+
+## Checkpoint: ABI 74 Save-Layer Blend Mode
+
+Status: in progress; source and focused JVM-side validation are complete, native JBR/live Magic Jewel validation is blocked on local Xcode license acceptance.
+
+What changed:
+
+- JBR private API, public Runtime API, Skiko's compatibility gate, and CMP command recorder now use command ABI 74.
+- Added capability `COMMAND_CAP64_SAVE_LAYER_BLEND_MODE` and opcode `COMMAND_SAVE_LAYER_BLEND_MODE = 50`.
+- The new command shape is `[op, 36, 0, x, y, width, height, alpha1000, blendMode]`, using the same direct Skia blend-mode payload values already accepted by fill-rect blend commands.
+- JBR Java validation and native Metal replay accept the new command and map its blend payload to `SkPaint::setBlendMode(...)` on the saved layer paint.
+- CMP now records `Canvas.saveLayer(...)` and command-recorded `GraphicsLayer` replay with directly mapped non-SrcOver blend modes instead of marking those layer paints unsupported.
+- Magic Jewel gained `MAGIC_JEWEL_COMPOSE_GRAPHICS_LAYER_BLEND_MODE`, and the command probe suite gained `commands-graphics-layer-blend-mode`.
+
+Verification:
+
+- Focused CMP tests passed:
+  - `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesSaveLayerBlendModeRecord --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.nestedRecordingReplaysAtLayerDrawSite`
+- Skiko AWT sources compiled after the ABI/capability gate bump:
+  - `./gradlew --no-daemon --no-configuration-cache :skiko:compileKotlinAwt`
+- Magic Jewel compiled after the graphics-layer blend probe wiring:
+  - `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon --no-configuration-cache compileKotlin`
+- JBR `make test TEST='test/jdk/jb/JBRSkia/JBRSkiaApiTest.java'` could not run yet:
+  - an existing config was unavailable in this worktree;
+  - `bash configure --with-skia-interop=bundled --disable-warnings-as-errors` failed because the active developer directory is Command Line Tools;
+  - `bash configure --with-xcode-path=/Applications/Xcode.app --with-skia-interop=bundled --disable-warnings-as-errors` found Xcode but failed because the Xcode license has not been accepted on this machine.
+
+Known notes:
+
+- This is structured save-layer blend support, not arbitrary layer effects. Layer color filters and render effects still need the JBR-owned descriptor/handle path.
+- Live Magic Jewel command-mode validation should run after JBR can be configured/built with Xcode available and the ABI 74 Skiko/JBR artifacts are refreshed together.
+
+Next:
+
+- Unblock JBR validation by accepting the local Xcode license or using a preconfigured JBR build environment, then run the JBR API test and `commands-graphics-layer-blend-mode` Magic Jewel probe. After that, commit ABI 74 across JBR, Runtime API, Skiko, CMP, Magic Jewel, and docs.

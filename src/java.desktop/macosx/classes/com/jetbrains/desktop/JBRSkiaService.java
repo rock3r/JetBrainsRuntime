@@ -130,7 +130,8 @@ public class JBRSkiaService extends JBRSkia {
                     | COMMAND_CAP64_DEFINE_COLOR_FILTER_TINT
                     | COMMAND_CAP64_FILL_RECT_COLOR_FILTER_REF
                     | COMMAND_CAP64_EVICT_COLOR_FILTER_HANDLE
-                    | COMMAND_CAP64_DEFINE_EFFECT_DESCRIPTOR;
+                    | COMMAND_CAP64_DEFINE_EFFECT_DESCRIPTOR
+                    | COMMAND_CAP64_SAVE_LAYER_BLEND_MODE;
     private static final boolean NATIVE_BRIDGE_AVAILABLE = loadNativeBridge();
     private static final AtomicLong NEXT_SCOPE_ID = new AtomicLong(1);
     private static final int MAX_CACHED_IMAGES = 256;
@@ -251,6 +252,7 @@ public class JBRSkiaService extends JBRSkia {
         if (op == COMMAND_TRANSLATE || op == COMMAND_SCALE) return 5;
         if (op == COMMAND_SAVE_LAYER) return 8;
         if (op == COMMAND_SAVE_LAYER_COLOR_FILTER) return 10;
+        if (op == COMMAND_SAVE_LAYER_BLEND_MODE) return 9;
         if (op == COMMAND_DRAW_IMAGE_ARGB) return -2;
         if (op == COMMAND_DEFINE_IMAGE_ARGB) return -3;
         if (op == COMMAND_DRAW_TEXT_UTF16) return -4;
@@ -393,6 +395,18 @@ public class JBRSkiaService extends JBRSkia {
                     && alpha1000 >= 0
                     && alpha1000 <= 1000
                     && colorFilterBlendMode == COMMAND_BLEND_MODE_SRC_IN;
+        }
+        if (record.op() == COMMAND_SAVE_LAYER_BLEND_MODE) {
+            int width = commands[record.argsStart() + 2];
+            int height = commands[record.argsStart() + 3];
+            int alpha1000 = commands[record.argsStart() + 4];
+            int blendMode = commands[record.argsStart() + 5];
+            return record.recordFlags() == COMMAND_RECORD_FLAGS_NONE
+                    && width >= 0
+                    && height >= 0
+                    && alpha1000 >= 0
+                    && alpha1000 <= 1000
+                    && isSupportedBlendMode(blendMode);
         }
         if (record.op() == COMMAND_FILL_RECT_BLEND_MODE) {
             int blendMode = commands[record.argsStart() + 1];
@@ -2502,6 +2516,19 @@ public class JBRSkiaService extends JBRSkia {
                         int colorFilterBlendMode = commands[offset++];
                         if (width < 0 || height < 0 || alpha1000 < 0 || alpha1000 > 1000
                                 || colorFilterBlendMode != COMMAND_BLEND_MODE_SRC_IN) return false;
+                        stack.addLast(current);
+                        current = (Graphics2D) current.create();
+                        current.clipRect(x, y, width, height);
+                    } else if (op == COMMAND_SAVE_LAYER_BLEND_MODE) {
+                        if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE || offset + 6 != recordEnd) return false;
+                        int x = commands[offset++];
+                        int y = commands[offset++];
+                        int width = commands[offset++];
+                        int height = commands[offset++];
+                        int alpha1000 = commands[offset++];
+                        int blendMode = commands[offset++];
+                        if (width < 0 || height < 0 || alpha1000 < 0 || alpha1000 > 1000
+                                || !isSupportedBlendMode(blendMode)) return false;
                         stack.addLast(current);
                         current = (Graphics2D) current.create();
                         current.clipRect(x, y, width, height);
