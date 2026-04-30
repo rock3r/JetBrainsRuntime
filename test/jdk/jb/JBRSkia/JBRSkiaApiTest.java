@@ -51,13 +51,13 @@ public class JBRSkiaApiTest {
     }
 
     public static void main(String[] args) throws Exception {
-        assertEquals(53, JBRSkia.ABI_ID, "ABI_ID");
+        assertEquals(54, JBRSkia.ABI_ID, "ABI_ID");
         assertEquals(3, JBRSkia.NATIVE_ABI_VERSION, "NATIVE_ABI_VERSION");
-        assertEquals("skia=m147-64a2414108;flags=macos-release-metal-poc:1;abi=53;native=3", JBRSkia.BUILD_ID, "BUILD_ID");
+        assertEquals("skia=m147-64a2414108;flags=macos-release-metal-poc:1;abi=54;native=3", JBRSkia.BUILD_ID, "BUILD_ID");
 
-        assertReflectiveStaticEquals(53, JBRSkia.class.getDeclaredField("ABI_ID"));
+        assertReflectiveStaticEquals(54, JBRSkia.class.getDeclaredField("ABI_ID"));
         assertReflectiveStaticEquals(3, JBRSkia.class.getDeclaredField("NATIVE_ABI_VERSION"));
-        assertReflectiveStaticEquals("skia=m147-64a2414108;flags=macos-release-metal-poc:1;abi=53;native=3", JBRSkia.class.getDeclaredField("BUILD_ID"));
+        assertReflectiveStaticEquals("skia=m147-64a2414108;flags=macos-release-metal-poc:1;abi=54;native=3", JBRSkia.class.getDeclaredField("BUILD_ID"));
 
         if (TestJBRSkia.INSTANCE != null) {
             throw new AssertionError("JBRSkia service must be unavailable before native runtime is wired");
@@ -165,7 +165,8 @@ public class JBRSkiaApiTest {
                 | JBRSkia.COMMAND_CAP64_STROKE_ROUND_RECT_SWEEP_GRADIENT
                 | JBRSkia.COMMAND_CAP64_FILL_RECT_BLEND_MODE
                 | JBRSkia.COMMAND_CAP64_FILL_RECT_COLOR_FILTER
-                | JBRSkia.COMMAND_CAP64_STROKE_LINE_DASH_PATH_EFFECT;
+                | JBRSkia.COMMAND_CAP64_STROKE_LINE_DASH_PATH_EFFECT
+                | JBRSkia.COMMAND_CAP64_SAVE_LAYER_COLOR_FILTER;
     }
 
     private static void assertCommandStreamValidation() {
@@ -192,6 +193,7 @@ public class JBRSkiaApiTest {
         assertValidCommandStream(validFillRectPlusBlendModeStream(), "valid fill rect plus blend-mode stream");
         assertValidCommandStream(validFillRectTintColorFilterStream(), "valid fill rect tint color-filter stream");
         assertValidCommandStream(validDashedStrokeLineStream(), "valid dashed stroke line stream");
+        assertValidCommandStream(validSaveLayerTintColorFilterStream(), "valid saveLayer tint color-filter stream");
         assertValidCommandStream(new int[] {
                 JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 3,
                 JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
@@ -263,6 +265,12 @@ public class JBRSkiaApiTest {
                 JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
                 JBRSkia.COMMAND_SAVE_LAYER, 32, JBRSkia.COMMAND_RECORD_FLAGS_NONE, 1, 2, 10, 10, 1001
         }, "invalid saveLayer alpha");
+        assertInvalidCommandStream(new int[] {
+                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 10,
+                JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
+                JBRSkia.COMMAND_SAVE_LAYER_COLOR_FILTER, 40, JBRSkia.COMMAND_RECORD_FLAGS_NONE,
+                1, 2, 10, 10, 600, 0xff00ffff, JBRSkia.COMMAND_BLEND_MODE_PLUS
+        }, "invalid saveLayer color-filter blend mode");
         assertInvalidCommandStream(new int[] {
                 JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 20,
                 JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
@@ -463,6 +471,15 @@ public class JBRSkiaApiTest {
                 JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
                 JBRSkia.COMMAND_STROKE_LINE_DASH_PATH_EFFECT, 64, JBRSkia.COMMAND_RECORD_FLAG_ANTIALIAS,
                 0xffffffff, 1, 2, 11, 12, 8, 0, 1, 0, 3000, 2, 16000, 10000
+        };
+    }
+
+    private static int[] validSaveLayerTintColorFilterStream() {
+        return new int[] {
+                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 10,
+                JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
+                JBRSkia.COMMAND_SAVE_LAYER_COLOR_FILTER, 40, JBRSkia.COMMAND_RECORD_FLAGS_NONE,
+                1, 2, 10, 10, 600, 0xff00ffff, JBRSkia.COMMAND_BLEND_MODE_SRC_IN
         };
     }
 

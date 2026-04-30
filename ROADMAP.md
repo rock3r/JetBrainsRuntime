@@ -50,6 +50,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] ABI 51: `BlendMode.Plus` solid fill rectangles use an explicit blend-mode fill command.
 - [x] ABI 52: `ColorFilter.tint(..., BlendMode.SrcIn)` solid fill rectangles use an explicit color-filter fill command.
 - [x] ABI 53: dash path-effect stroked lines use serialized dash intervals and phase.
+- [x] ABI 54: `saveLayer` with `ColorFilter.tint(..., BlendMode.SrcIn)` uses an explicit color-filter layer command.
 
 ## Near-Term Rendering Work
 
@@ -57,8 +58,10 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [ ] Generic shader strategy:
   - [x] Short term: keep rejecting opaque/unknown shader pointers and add serialized command payloads for known shader families.
   - [x] Medium term design sketch: document a JBR-owned shader factory ABI so Skiko can request shader construction inside JBR's Skia runtime. See `doc/skia-shader-factory.md`.
+  - [ ] End-state requirement: generic shaders/effects are implemented, not merely documented; unsupported descriptors must fall back only when a runtime genuinely lacks the negotiated capability.
   - [ ] Define the first shader/effect descriptor schema with stable type ids, payload lengths, lifecycle operations, and fallback reasons.
   - [ ] Implement JBR-owned shader/effect handles: Skiko/CMP serializes descriptors or create requests, JBR constructs objects inside its Skia runtime, draw commands reference versioned handles, and handles are scoped/evicted by destination context.
+  - [ ] Support Skia runtime effects via descriptor payloads: SKSL source hash/source bytes, uniform block layout, child shader/color-filter handles, compile diagnostics, and stable fallback markers.
   - [ ] Add Magic Jewel probes that force handle creation, reuse, context migration, eviction, and fallback without relying on raw Skiko `SkShader*` or `SkRuntimeEffect*` pointers.
   - [ ] Add ABI/version tests for shader/effect handle creation, use-after-free rejection, context migration invalidation, and old/new fallback markers.
   - [ ] Long term: revisit true generic shader support only after Skiko's fast path no longer creates Skia C++ objects in a separate bundled runtime.
@@ -88,6 +91,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Add narrow `BlendMode.Plus` solid fill-rectangle support through a versioned command instead of picture fallback.
 - [ ] Expand blend-mode command coverage beyond `Plus` fill rectangles only after each mode has exact Skia-vs-Java2D semantics documented.
 - [x] Add narrow tint color-filter solid fill-rectangle support through a versioned command instead of picture fallback.
+- [x] Add narrow tint color-filter `saveLayer` support through a versioned command instead of picture fallback.
 - [ ] Expand color-filter command coverage beyond tint/SrcIn fill rectangles only through serialized descriptors or JBR-owned effect handles.
 - [x] Add narrow dash path-effect stroked-line support through a versioned command instead of picture fallback.
 - [ ] Expand path-effect command coverage beyond dash stroked lines only through serialized descriptors or JBR-owned effect handles.
@@ -101,7 +105,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Focused CMP recorder tests for command encodings.
 - [ ] Golden/diff screenshot harness for the full mixed Swing/Jewel/Compose Magic Jewel scene.
 - [ ] Capture the app window only in old/new renderer modes, with deterministic sizing, theme, font inputs, animation phase, and seeded content.
-- [ ] Compare screenshot regions by ownership: tight tolerance for Compose/Jewel regions, looser text-aware tolerance for Swing text after Java2D-to-Skia changes, and explicit occlusion/layer-boundary assertions for mixed content.
+- [ ] Compare screenshot regions by ownership: tight tolerance for Compose/Jewel regions because CMP should match old Skia output, looser text-aware tolerance for Swing text after Java2D-to-Skia changes, and explicit occlusion/layer-boundary assertions for mixed content.
+- [ ] Add a rich-content old/new parity suite with Jewel controls/text, Compose primitives/text/images/effects, Swing islands, popups/menus, and always-on animation sampled at deterministic phases.
 - [ ] Persist old/new screenshots, diff images, per-region metrics, and pass/fail thresholds in the Magic Jewel report and `summary.properties`.
 - [x] Focused CMP recorder tests for unsupported saveLayer layer-paint fallback.
 - [x] Focused CMP recorder tests for unsupported image paint fallback.
@@ -150,6 +155,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] ABI 52 color-filter command-probe row: `/tmp/magic-jewel-command-probe-abi52-color-filter/suite.tsv`.
 - [x] ABI 53 dashed path-effect stroke-line smoke: `/tmp/magic-jewel-abi53-dashed-path-effect-smoke/report.md`.
 - [x] ABI 53 path-effect command-probe row: `/tmp/magic-jewel-command-probe-abi53-path-effect/suite.tsv`.
+- [x] ABI 54 saveLayer tint color-filter smoke: `/tmp/magic-jewel-abi54-save-layer-color-filter-smoke-3/report.md`.
+- [x] ABI 54 saveLayer tint color-filter command-probe row: `/tmp/magic-jewel-command-probe-abi54-save-layer-filter/suite.tsv`.
 - [x] Real undecorated Swing popup-window smoke captured separately by window id.
 
 ## Compatibility And ABI Hardening

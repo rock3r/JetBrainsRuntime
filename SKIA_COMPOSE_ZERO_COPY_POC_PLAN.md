@@ -6412,3 +6412,45 @@ Roadmap update:
 
 Next:
 - Continue shrinking the fallback matrix. Image filters and saveLayer filters are the remaining paint/effect rows that likely need descriptor or handle work rather than scalar command payloads.
+
+## Checkpoint: ABI 54 saveLayer Tint Color-Filter
+
+Status: completed for the narrow `Canvas.saveLayer` layer-paint path using `ColorFilter.tint(..., BlendMode.SrcIn)`.
+
+What changed:
+- CMP records a new `COMMAND_SAVE_LAYER_COLOR_FILTER` command instead of marking the saveLayer scope unsupported when the layer paint is otherwise simple and has a SrcIn tint color filter.
+- Runtime API and JBR private API now expose ABI 54, capability `COMMAND_CAP64_SAVE_LAYER_COLOR_FILTER = 2251799813685248L`, and opcode `COMMAND_SAVE_LAYER_COLOR_FILTER = 44`.
+- Skiko compatibility now requires ABI 54 and the saveLayer color-filter capability before enabling command mode.
+- JBR validates the new payload and native replay reconstructs the layer paint inside JBR's Skia runtime with `SkColorFilters::Blend(filterColor, SkBlendMode::kSrcIn)`.
+- JBR Java2D command fallback now restores a missing image interpolation hint by removing the hint instead of setting it to `null`; this avoided masking native replay diagnostics when native was intentionally disabled.
+- Skiko now unwraps `InvocationTargetException` from reflective scope calls so command-frame failures log the real underlying exception.
+- Magic Jewel renamed the probe row from `commands-save-layer-filter-fallback` to `commands-save-layer-filter` and no longer expects a recorder fallback for this case.
+- `ROADMAP.md` now marks ABI 54 complete and records concrete old/new screenshot parity and generic shader/effect implementation action points.
+
+Validation:
+- CMP focused recorder test class:
+  - command: `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest`
+  - result: passed after updating all expected command-stream headers to ABI 54.
+- Runtime API compile:
+  - command: `javac -d /tmp/jbr-api-skia-abi54-compile src/com/jetbrains/Provided.java src/com/jetbrains/Service.java src/com/jetbrains/JBRSkia.java`
+  - result: passed.
+- Skiko compatibility tests:
+  - command: `./gradlew --no-daemon :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`
+  - result: passed with ABI 54 discovery.
+- JBR Java validator/API smoke:
+  - command: patched `JBRSkia.java` + `JBRSkiaService.java` compile into `/tmp/jbr-skia-run/desktop`, then `JBRSkiaApiTest`.
+  - result: passed for ABI 54, capability mask, valid saveLayer color-filter stream, and invalid blend-mode rejection.
+- JBR native standalone build:
+  - command: standalone `clang++` build of `JBRSkiaInterop.mm` against Skia m147 arm64 into `/tmp/jbr-skia-native/libjbrskiainterop.dylib`.
+  - result: passed; first native smoke failed until the native ABI constant was bumped from 53 to 54, proving the ABI gate caught the mismatch.
+- Magic Jewel ABI54 smoke:
+  - command: `OUT_DIR=/tmp/magic-jewel-abi54-save-layer-color-filter-smoke-3 DURATION_SECONDS=6 WARMUP_SECONDS=1 SAMPLE_INTERVAL_SECONDS=1 JBR_SKIA_RENDER_MODE=commands MAGIC_JEWEL_COMPOSE_SAVELAYER_FILTER=true SKIKO_VERSION=0.0.0-SNAPSHOT bash scripts/jbr-skia-interop-report.sh`
+  - result: passed.
+  - report: `/tmp/magic-jewel-abi54-save-layer-color-filter-smoke-3/report.md`.
+- Magic Jewel command-probe row:
+  - command: `CASES=commands-save-layer-filter OUT_ROOT=/tmp/magic-jewel-command-probe-abi54-save-layer-filter DURATION_SECONDS=6 WARMUP_SECONDS=1 SAMPLE_INTERVAL_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT bash scripts/jbr-skia-command-probe-suite.sh`
+  - result: passed with `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, and `jbr_command_frames=409`.
+  - suite: `/tmp/magic-jewel-command-probe-abi54-save-layer-filter/suite.tsv`.
+
+Next:
+- Continue shrinking effect fallbacks with image-paint color filters or move into the first descriptor/handle ABI for generic image filters/runtime effects, while keeping the screenshot parity harness as the validation track for visual drift.

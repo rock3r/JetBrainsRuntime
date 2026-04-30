@@ -122,7 +122,8 @@ public class JBRSkiaService extends JBRSkia {
                     | COMMAND_CAP64_STROKE_ROUND_RECT_SWEEP_GRADIENT
                     | COMMAND_CAP64_FILL_RECT_BLEND_MODE
                     | COMMAND_CAP64_FILL_RECT_COLOR_FILTER
-                    | COMMAND_CAP64_STROKE_LINE_DASH_PATH_EFFECT;
+                    | COMMAND_CAP64_STROKE_LINE_DASH_PATH_EFFECT
+                    | COMMAND_CAP64_SAVE_LAYER_COLOR_FILTER;
     private static final boolean NATIVE_BRIDGE_AVAILABLE = loadNativeBridge();
     private static final AtomicLong NEXT_SCOPE_ID = new AtomicLong(1);
     private static final int MAX_CACHED_IMAGES = 256;
@@ -225,6 +226,7 @@ public class JBRSkiaService extends JBRSkia {
         if (op == COMMAND_ROTATE) return 4;
         if (op == COMMAND_TRANSLATE || op == COMMAND_SCALE) return 5;
         if (op == COMMAND_SAVE_LAYER) return 8;
+        if (op == COMMAND_SAVE_LAYER_COLOR_FILTER) return 10;
         if (op == COMMAND_DRAW_IMAGE_ARGB) return -2;
         if (op == COMMAND_DEFINE_IMAGE_ARGB) return -3;
         if (op == COMMAND_DRAW_TEXT_UTF16) return -4;
@@ -345,6 +347,18 @@ public class JBRSkiaService extends JBRSkia {
             return record.recordFlags() == COMMAND_RECORD_FLAGS_NONE
                     && commands[record.recordEnd() - 1] >= 0
                     && commands[record.recordEnd() - 1] <= 1000;
+        }
+        if (record.op() == COMMAND_SAVE_LAYER_COLOR_FILTER) {
+            int width = commands[record.argsStart() + 2];
+            int height = commands[record.argsStart() + 3];
+            int alpha1000 = commands[record.argsStart() + 4];
+            int colorFilterBlendMode = commands[record.argsStart() + 6];
+            return record.recordFlags() == COMMAND_RECORD_FLAGS_NONE
+                    && width >= 0
+                    && height >= 0
+                    && alpha1000 >= 0
+                    && alpha1000 <= 1000
+                    && colorFilterBlendMode == COMMAND_BLEND_MODE_SRC_IN;
         }
         if (record.op() == COMMAND_FILL_RECT_BLEND_MODE) {
             int blendMode = commands[record.argsStart() + 1];
@@ -2370,6 +2384,20 @@ public class JBRSkiaService extends JBRSkia {
                         stack.addLast(current);
                         current = (Graphics2D) current.create();
                         current.clipRect(x, y, width, height);
+                    } else if (op == COMMAND_SAVE_LAYER_COLOR_FILTER) {
+                        if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE || offset + 7 != recordEnd) return false;
+                        int x = commands[offset++];
+                        int y = commands[offset++];
+                        int width = commands[offset++];
+                        int height = commands[offset++];
+                        int alpha1000 = commands[offset++];
+                        offset++; // filter color: native Skia replay applies this on restore.
+                        int colorFilterBlendMode = commands[offset++];
+                        if (width < 0 || height < 0 || alpha1000 < 0 || alpha1000 > 1000
+                                || colorFilterBlendMode != COMMAND_BLEND_MODE_SRC_IN) return false;
+                        stack.addLast(current);
+                        current = (Graphics2D) current.create();
+                        current.clipRect(x, y, width, height);
                     } else if (op == COMMAND_CLEAR_IMAGE_CACHE) {
                         if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE || offset != recordEnd) return false;
                         int cleared = clearImageCacheForContext(contextPtr);
@@ -2789,7 +2817,11 @@ public class JBRSkiaService extends JBRSkia {
                     null
             );
             current.setComposite(previousComposite);
-            current.setRenderingHint(RenderingHints.KEY_INTERPOLATION, previousInterpolation);
+            if (previousInterpolation == null) {
+                current.getRenderingHints().remove(RenderingHints.KEY_INTERPOLATION);
+            } else {
+                current.setRenderingHint(RenderingHints.KEY_INTERPOLATION, previousInterpolation);
+            }
         }
 
         private static Path2D pathFromCommandData(int[] commands, int offset, int recordEnd, int fillType) {
