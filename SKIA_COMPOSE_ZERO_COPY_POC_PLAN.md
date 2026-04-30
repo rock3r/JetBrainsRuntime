@@ -5404,3 +5404,47 @@ Validation:
   - command: `OUT_DIR=/tmp/magic-jewel-host-load-summary-smoke DURATION_SECONDS=2 WARMUP_SECONDS=1 SAMPLE_INTERVAL_SECONDS=1 JBR_SKIA_RENDER_MODE=commands SKIKO_VERSION=0.0.0-SNAPSHOT bash scripts/jbr-skia-interop-report.sh`
   - result: passed with report `/tmp/magic-jewel-host-load-summary-smoke/report.md`.
   - summary keys observed: `host_cpu_count=10`, `host_load_1m=3.90`, `host_load_5m=4.38`, `host_load_15m=5.20`.
+
+## Checkpoint: Longer Quiet-Machine Benchmark Collection
+
+Date: 2026-04-30
+
+Status: completed as a 30-second-per-mode benchmark-suite pass with host-load metadata attached.
+
+Command:
+- `OUT_ROOT=/tmp/magic-jewel-quiet-benchmark-20260430-102300 DURATION_SECONDS=30 WARMUP_SECONDS=5 SAMPLE_INTERVAL_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ENABLE_ASPROF=false bash scripts/jbr-skia-benchmark-suite.sh`
+
+Result:
+- `JBR_SKIA_BENCHMARK_SUITE passed out_root=/tmp/magic-jewel-quiet-benchmark-20260430-102300`
+- suite TSV: `/tmp/magic-jewel-quiet-benchmark-20260430-102300/suite.tsv`
+
+Case summaries:
+- `picture`: `status=passed`, `fallbacks=0`, `old_avg_cpu=71.44`, `new_avg_cpu=102.05`, `app_old_fps=307.5`, `app_new_fps=231.5`, `jbr_picture_fps=231.4`, `jbr_command_fps=0.0`, `jbr_command_frames=0`.
+- `commands`: `status=passed`, `fallbacks=0`, `old_avg_cpu=72.92`, `new_avg_cpu=81.12`, `app_old_fps=314.1`, `app_new_fps=249.2`, `jbr_picture_fps=0.0`, `jbr_command_fps=249.2`, `jbr_command_frames=7475`.
+- `commands-stable-images`: `status=passed`, `fallbacks=0`, `old_avg_cpu=133.51`, `new_avg_cpu=126.23`, `app_old_fps=177.7`, `app_new_fps=172.3`, `jbr_picture_fps=0.0`, `jbr_command_fps=172.3`, `jbr_command_frames=5170`.
+- `commands-dynamic-images`: `status=passed`, `fallbacks=0`, `old_avg_cpu=122.81`, `new_avg_cpu=129.23`, `app_old_fps=181.5`, `app_new_fps=170.0`, `jbr_picture_fps=0.0`, `jbr_command_fps=170.0`, `jbr_command_frames=5099`.
+- `commands-resize-dynamic-images`: `status=passed`, `fallbacks=0`, `old_avg_cpu=133.50`, `new_avg_cpu=120.49`, `app_old_fps=166.6`, `app_new_fps=163.4`, `jbr_picture_fps=0.0`, `jbr_command_fps=163.4`, `jbr_command_frames=4903`.
+
+Notable report details:
+- Host load was lower than earlier noisy runs at start, but still not laboratory quiet during the suite:
+  - `picture`: host load `5.43 3.97 3.45`
+  - `commands`: host load `5.70 4.46 3.69`
+  - `commands-dynamic-images`: host load `10.01 6.48 4.64`
+  - `commands-resize-dynamic-images`: host load `7.46 6.40 4.78`
+- The functional signal is strong across all command cases:
+  - zero fallback markers;
+  - zero JBR picture replay frames in command mode;
+  - JBR command replay frames equal the app draw frames;
+  - dynamic-image cases use per-key eviction with zero whole-cache clears;
+  - resize + dynamic images records one Skiko surface-change marker while preserving `contextChanged=false surfaceChanged=true`.
+- The `picture` row remains the SKP correctness/reference path and intentionally records picture replay rather than command replay.
+
+Interpretation:
+- The CPU columns are still coarse `ps` samples and should not be treated as final perf proof.
+- The most meaningful result for this checkpoint is that the command path stayed strict and fallback-free under longer warmup-aware workloads, including stable images, dynamic image churn, and same-context resize.
+
+Roadmap update:
+- Marked the quiet-machine benchmark pass and long-running stable/dynamic image-cache benchmark pass complete.
+
+Next:
+- Continue macOS MVP hardening with either real old-artifact bundles for the artifact matrix or the next rendering/ownership slice, with text/font ownership and JBR-owned shader factories still deliberately deferred production items.

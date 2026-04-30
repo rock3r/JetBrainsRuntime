@@ -75,7 +75,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Runtime API shim rebuild.
 - [x] Magic Jewel report smoke for each ABI checkpoint.
 - [x] Magic Jewel command-mode smoke for ABI 40 surface identity.
-- [ ] Quiet-machine benchmark pass using existing SKP/report paths.
+- [x] Quiet-machine benchmark pass using existing SKP/report paths.
 - [x] Magic Jewel benchmark-suite wrapper for SKP picture, command, stable-image, dynamic-image, and resize workloads.
 - [x] Benchmark suite writes a machine-readable `suite.tsv` with sample counts, CPU, FPS, and report paths.
 - [x] Magic Jewel reports include host CPU count and load-average metadata for noisy-machine benchmark context.
@@ -120,7 +120,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Reduce redundant image-cache clear/define churn for stable fallback images.
 - [x] ABI 42: single-key image cache eviction.
 - [x] Replace whole-cache churn with oldest-entry eviction in CMP recorder.
-- [ ] Add long-running quiet-machine benchmark pass for stable/dynamic image-cache workloads.
+- [x] Add long-running quiet-machine benchmark pass for stable/dynamic image-cache workloads.
 
 ## Productionization Later
 
