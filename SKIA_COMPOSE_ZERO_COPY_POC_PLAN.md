@@ -5185,6 +5185,10 @@ Validation:
   - command: `OUT_ROOT=/tmp/magic-jewel-save-layer-filter-suite CASES=commands-save-layer-filter-fallback DURATION_SECONDS=3 WARMUP_SECONDS=1 SAMPLE_INTERVAL_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT bash scripts/jbr-skia-command-probe-suite.sh`
   - result: `JBR_SKIA_COMMAND_PROBE_SUITE passed out_root=/tmp/magic-jewel-save-layer-filter-suite`
   - case summary: `status=passed`, `fallback_new_count=0`, `unsupported=unsupportedScope:235,saveLayer:235`, `jbr_picture_frames=236`, `jbr_command_frames=0`.
+- CMP recorder unit test:
+  - command: `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.rejectsSaveLayerWithUnsupportedBlendMode`
+  - result: passed.
 
 Note:
 - This is a recorder-level operation fallback, not a compatibility-gate fallback, so the expected signal is `cmp_unsupported_reasons=saveLayer:...`, picture replay, and zero JBR command frames.
+- The focused CMP unit test uses `BlendMode.Plus` as the unsupported layer-paint input because that boundary is deterministic in the recorder-only test harness; the Magic Jewel live probe keeps exercising the filtered layer-paint path.

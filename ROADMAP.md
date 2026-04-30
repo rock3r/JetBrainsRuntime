@@ -64,6 +64,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 ## Validation Harness
 
 - [x] Focused CMP recorder tests for command encodings.
+- [x] Focused CMP recorder tests for unsupported saveLayer layer-paint fallback.
 - [x] Focused Skiko compatibility/fallback tests.
 - [x] JBR Java service compile smoke.
 - [x] JBR native dylib compile smoke.
