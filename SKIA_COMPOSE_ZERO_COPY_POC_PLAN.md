@@ -7179,4 +7179,35 @@ Verification:
 
 Next:
 
-- The remaining layer semantics need their own explicit contracts: rounded/path outline clips can reuse path commands, while color filters, render effects, and non-SrcOver layer paints should wait for the JBR-owned effect/shader handle path.
+- The remaining layer semantics need their own explicit contracts: rounded outline clips can reuse path commands, generic path outlines need their own probe, while color filters, render effects, and non-SrcOver layer paints should wait for the JBR-owned effect/shader handle path.
+
+## Checkpoint: Rounded Graphics-Layer Clip Replay
+
+Status: completed as a follow-up graphics-layer semantics slice.
+
+What changed:
+
+- CMP nested graphics-layer replay now accepts an optional path clip and emits `COMMAND_CLIP_PATH` inside the saved layer before splicing the child command stream.
+- CMP `GraphicsLayer` treats `clip=true` with a rounded outline as command-replayable.
+- CMP command-only layer recording now records layer-local content into a plain Skia `PictureRecorder` canvas instead of the clipped `RenderNode` recording canvas, so the layer clip is represented exactly once by the parent replay command.
+- CMP path command serialization now lowers Skiko conic path segments to quadratic path verbs for this command ABI. This makes rounded outlines serializable without adding a new conic verb yet.
+- Magic Jewel gained `MAGIC_JEWEL_COMPOSE_GRAPHICS_LAYER_ROUND_CLIP`, which turns on a rounded clipped graphics layer with overflowing cyan content.
+- Magic Jewel report/help output, command probe suite, and screenshot assertion now surface and validate the rounded clipped graphics-layer probe.
+
+Verification:
+
+- Focused CMP tests passed:
+  - `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesRoundedClipPathRecord --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.nestedRecordingReplaysLayerClipPath :compose:ui:ui-graphics:desktopJar`
+- Magic Jewel rounded clipped graphics-layer suite case passed:
+  - `/tmp/magic-jewel-command-suite-graphics-layer-round-clip/suite.tsv`
+  - `status=passed fallback_new_count=0 unsupported=none jbr_picture_frames=0 jbr_command_frames=337`
+  - report: `/tmp/magic-jewel-command-suite-graphics-layer-round-clip/commands-graphics-layer-round-clip/report.md`
+
+Known notes:
+
+- Conic lowering is a PoC-compatible approximation through existing quadratic path verbs. A production ABI can either keep this lowering with explicit tolerance documentation or add a versioned conic path verb if exact rational quadratics become necessary.
+- The full `JbrSkiaCommandRecorderTest` class still has unrelated exact-array expectation failures in three older gradient/image-shader tests (`writesSweepGradientStrokeRectRecord`, `writesRadialGradientRoundRectRecord`, `writesImageShaderRectRecord`). Focused graphics-layer/path tests pass.
+
+Next:
+
+- Continue layer coverage only where semantics are explicit: generic path outline clips are the nearest shape follow-up; non-SrcOver layer paints, color filters, and render effects should wait for the JBR-owned effect/shader handle path.
