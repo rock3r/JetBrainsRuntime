@@ -7260,8 +7260,11 @@ Verification:
 
 - Focused CMP tests passed:
   - `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesSaveLayerBlendModeRecord --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.nestedRecordingReplaysAtLayerDrawSite`
+  - `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.nestedRecordingReplaysLayerBlendMode --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesSaveLayerBlendModeRecord`
 - Skiko AWT sources compiled after the ABI/capability gate bump:
   - `./gradlew --no-daemon --no-configuration-cache :skiko:compileKotlinAwt`
+- Skiko interop tests passed after adding explicit coverage that a JBR missing only `COMMAND_CAP64_SAVE_LAYER_BLEND_MODE` falls back with `command-capability-mismatch`:
+  - `./gradlew --no-daemon --no-configuration-cache :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`
 - Magic Jewel compiled after the graphics-layer blend probe wiring:
   - `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon --no-configuration-cache compileKotlin`
 - JBR `make test TEST='test/jdk/jb/JBRSkia/JBRSkiaApiTest.java'` could not run yet:
