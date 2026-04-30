@@ -52,6 +52,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] ABI 53: dash path-effect stroked lines use serialized dash intervals and phase.
 - [x] ABI 54: `saveLayer` with `ColorFilter.tint(..., BlendMode.SrcIn)` uses an explicit color-filter layer command.
 - [x] ABI 55: cached image refs with `ColorFilter.tint(..., BlendMode.SrcIn)` use an explicit color-filter image command.
+- [x] ABI 56: tint color-filter descriptor handles can be defined in-frame and referenced by fill-rect commands.
 
 ## Near-Term Rendering Work
 
@@ -61,6 +62,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   - [x] Medium term design sketch: document a JBR-owned shader factory ABI so Skiko can request shader construction inside JBR's Skia runtime. See `doc/skia-shader-factory.md`.
   - [ ] End-state requirement: generic shaders/effects are implemented, not merely documented; unsupported descriptors must fall back only when a runtime genuinely lacks the negotiated capability.
   - [ ] Define the first shader/effect descriptor schema with stable type ids, payload lengths, lifecycle operations, and fallback reasons.
+  - [x] First descriptor-shaped ABI slice: in-frame tint color-filter handles with define/use validation and native replay.
   - [ ] Implement JBR-owned shader/effect handles: Skiko/CMP serializes descriptors or create requests, JBR constructs objects inside its Skia runtime, draw commands reference versioned handles, and handles are scoped/evicted by destination context.
   - [ ] Support Skia runtime effects via descriptor payloads: SKSL source hash/source bytes, uniform block layout, child shader/color-filter handles, compile diagnostics, and stable fallback markers.
   - [ ] Add Magic Jewel probes that force handle creation, reuse, context migration, eviction, and fallback without relying on raw Skiko `SkShader*` or `SkRuntimeEffect*` pointers.
@@ -161,6 +163,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] ABI 54 saveLayer tint color-filter command-probe row: `/tmp/magic-jewel-command-probe-abi54-save-layer-filter/suite.tsv`.
 - [x] ABI 55 image tint color-filter smoke: `/tmp/magic-jewel-abi55-image-color-filter-smoke/report.md`.
 - [x] ABI 55 image tint color-filter command-probe row: `/tmp/magic-jewel-command-probe-abi55-image-color-filter/suite.tsv`.
+- [x] ABI 56 color-filter descriptor-handle command-probe row: `/tmp/magic-jewel-command-probe-abi56-color-filter-handle/suite.tsv`.
 - [x] Real undecorated Swing popup-window smoke captured separately by window id.
 
 ## Compatibility And ABI Hardening

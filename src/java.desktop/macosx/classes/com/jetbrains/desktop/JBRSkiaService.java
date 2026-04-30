@@ -59,10 +59,12 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.ArrayDeque;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 
 @JBRApi.Service
@@ -124,7 +126,9 @@ public class JBRSkiaService extends JBRSkia {
                     | COMMAND_CAP64_FILL_RECT_COLOR_FILTER
                     | COMMAND_CAP64_STROKE_LINE_DASH_PATH_EFFECT
                     | COMMAND_CAP64_SAVE_LAYER_COLOR_FILTER
-                    | COMMAND_CAP64_DRAW_IMAGE_REF_COLOR_FILTER;
+                    | COMMAND_CAP64_DRAW_IMAGE_REF_COLOR_FILTER
+                    | COMMAND_CAP64_DEFINE_COLOR_FILTER_TINT
+                    | COMMAND_CAP64_FILL_RECT_COLOR_FILTER_REF;
     private static final boolean NATIVE_BRIDGE_AVAILABLE = loadNativeBridge();
     private static final AtomicLong NEXT_SCOPE_ID = new AtomicLong(1);
     private static final int MAX_CACHED_IMAGES = 256;
@@ -184,11 +188,18 @@ public class JBRSkiaService extends JBRSkia {
             return false;
         }
         int offset = COMMAND_STREAM_HEADER_SIZE;
+        Set<Long> colorFilterHandles = new HashSet<>();
         while (offset < commandEnd) {
             CommandRecord record = readCommandRecord(commands, offset, commandEnd);
             if (record == null
                     || !hasExpectedRecordLength(record)
                     || !validateRecordArguments(commands, record)) {
+                return false;
+            }
+            if (record.op() == COMMAND_DEFINE_COLOR_FILTER_TINT) {
+                colorFilterHandles.add(commandHandle(commands[record.argsStart()], commands[record.argsStart() + 1]));
+            } else if (record.op() == COMMAND_FILL_RECT_COLOR_FILTER_REF
+                    && !colorFilterHandles.contains(commandHandle(commands[record.argsStart() + 1], commands[record.argsStart() + 2]))) {
                 return false;
             }
             offset = record.recordEnd();
@@ -255,6 +266,8 @@ public class JBRSkiaService extends JBRSkia {
         if (op == COMMAND_STROKE_ROUND_RECT_SWEEP_GRADIENT) return -22;
         if (op == COMMAND_FILL_RECT_BLEND_MODE) return 9;
         if (op == COMMAND_FILL_RECT_COLOR_FILTER) return 10;
+        if (op == COMMAND_DEFINE_COLOR_FILTER_TINT) return 7;
+        if (op == COMMAND_FILL_RECT_COLOR_FILTER_REF) return 10;
         if (op == COMMAND_STROKE_LINE_DASH_PATH_EFFECT) return -23;
         if (op == COMMAND_FILL_RECT_IMAGE_SHADER) return 14;
         if (op == COMMAND_CLEAR) return 4;
@@ -373,6 +386,16 @@ public class JBRSkiaService extends JBRSkia {
             int width = commands[record.argsStart() + 5];
             int height = commands[record.argsStart() + 6];
             return colorFilterBlendMode == COMMAND_BLEND_MODE_SRC_IN && width >= 0 && height >= 0;
+        }
+        if (record.op() == COMMAND_DEFINE_COLOR_FILTER_TINT) {
+            int colorFilterBlendMode = commands[record.argsStart() + 3];
+            return record.recordFlags() == COMMAND_RECORD_FLAGS_NONE
+                    && colorFilterBlendMode == COMMAND_BLEND_MODE_SRC_IN;
+        }
+        if (record.op() == COMMAND_FILL_RECT_COLOR_FILTER_REF) {
+            int width = commands[record.argsStart() + 5];
+            int height = commands[record.argsStart() + 6];
+            return width >= 0 && height >= 0;
         }
         if (record.op() == COMMAND_STROKE_LINE_DASH_PATH_EFFECT) {
             int intervalCount = commands[record.argsStart() + 10];
@@ -1181,11 +1204,18 @@ public class JBRSkiaService extends JBRSkia {
     private record CommandRecord(int op, int argsStart, int recordEnd, int recordLength, int recordFlags) {
     }
 
+    private static long commandHandle(int high, int low) {
+        return ((long) high << 32) ^ (low & 0xffffffffL);
+    }
+
     private record MetalSurfaceMetadata(long nativeOpsPtr, long contextPtr, long texturePtr) {
         private static final MetalSurfaceMetadata EMPTY = new MetalSurfaceMetadata(0, 0, 0);
     }
 
     private record ImageCacheKey(long contextId, long imageId) {
+    }
+
+    private record TintColorFilterDescriptor(int argb, int blendMode) {
     }
 
     private static final class PocScopedSkiaCanvas extends ScopedSkiaCanvas {
@@ -1453,6 +1483,7 @@ public class JBRSkiaService extends JBRSkia {
             }
 
             ArrayDeque<Graphics2D> stack = new ArrayDeque<>();
+            Map<Long, TintColorFilterDescriptor> colorFilterDescriptors = new LinkedHashMap<>();
             Graphics2D current = g;
             int offset = COMMAND_STREAM_HEADER_SIZE;
             try {
@@ -2698,6 +2729,30 @@ public class JBRSkiaService extends JBRSkia {
                         int filterAlpha = (filterArgb >>> 24) & 0xff;
                         int combinedAlpha = (sourceAlpha * filterAlpha + 127) / 255;
                         current.setColor(new Color((combinedAlpha << 24) | (filterArgb & 0x00ffffff), true));
+                        current.fillRect(x, y, width, height);
+                    } else if (op == COMMAND_DEFINE_COLOR_FILTER_TINT) {
+                        if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE || offset + 4 != recordEnd) return false;
+                        long handle = cacheKey(commands[offset++], commands[offset++]);
+                        int filterArgb = commands[offset++];
+                        int filterBlendMode = commands[offset++];
+                        if (filterBlendMode != COMMAND_BLEND_MODE_SRC_IN) return false;
+                        colorFilterDescriptors.put(handle, new TintColorFilterDescriptor(filterArgb, filterBlendMode));
+                    } else if (op == COMMAND_FILL_RECT_COLOR_FILTER_REF) {
+                        if (offset + 7 != recordEnd) return false;
+                        applyAntialiasing(current, antiAlias);
+                        int argb = commands[offset++];
+                        long handle = cacheKey(commands[offset++], commands[offset++]);
+                        int x = commands[offset++];
+                        int y = commands[offset++];
+                        int width = commands[offset++];
+                        int height = commands[offset++];
+                        TintColorFilterDescriptor descriptor = colorFilterDescriptors.get(handle);
+                        if (descriptor == null || descriptor.blendMode() != COMMAND_BLEND_MODE_SRC_IN
+                                || width < 0 || height < 0) return false;
+                        int sourceAlpha = (argb >>> 24) & 0xff;
+                        int filterAlpha = (descriptor.argb() >>> 24) & 0xff;
+                        int combinedAlpha = (sourceAlpha * filterAlpha + 127) / 255;
+                        current.setColor(new Color((combinedAlpha << 24) | (descriptor.argb() & 0x00ffffff), true));
                         current.fillRect(x, y, width, height);
                     } else if (op == COMMAND_STROKE_LINE) {
                         if (offset + 9 != recordEnd) return false;

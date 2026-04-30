@@ -72,7 +72,7 @@
 
 #include "MTLSurfaceDataBase.h"
 
-static constexpr jint ABI_ID = 55;
+static constexpr jint ABI_ID = 56;
 static constexpr jint COMMAND_STREAM_MAGIC = 1246972723;
 static constexpr jint COMMAND_STREAM_HEADER_SIZE = 6;
 static constexpr jint COMMAND_STREAM_FLAGS_NONE = 0;
@@ -128,6 +128,8 @@ static constexpr jint COMMAND_FILL_RECT_COLOR_FILTER = 42;
 static constexpr jint COMMAND_STROKE_LINE_DASH_PATH_EFFECT = 43;
 static constexpr jint COMMAND_SAVE_LAYER_COLOR_FILTER = 44;
 static constexpr jint COMMAND_DRAW_IMAGE_REF_COLOR_FILTER = 45;
+static constexpr jint COMMAND_DEFINE_COLOR_FILTER_TINT = 46;
+static constexpr jint COMMAND_FILL_RECT_COLOR_FILTER_REF = 47;
 static constexpr jint COMMAND_BLEND_MODE_PLUS = 1;
 static constexpr jint COMMAND_BLEND_MODE_SRC_IN = 2;
 static constexpr jint COMMAND_PAINT_STYLE_FILL = 0;
@@ -158,6 +160,11 @@ struct ImageCacheScopedKeyHash {
         size_t imageHash = std::hash<uint64_t>{}(key.image);
         return contextHash ^ (imageHash + 0x9e3779b97f4a7c15ULL + (contextHash << 6) + (contextHash >> 2));
     }
+};
+
+struct TintColorFilterDescriptor {
+    SkColor argb;
+    jint blendMode;
 };
 
 static std::mutex gImageCacheMutex;
@@ -527,6 +534,7 @@ static bool drawCommandList(SkCanvas* canvas,
 
     jsize offset = COMMAND_STREAM_HEADER_SIZE;
     jsize commandEnd = COMMAND_STREAM_HEADER_SIZE + payloadLength;
+    std::unordered_map<uint64_t, TintColorFilterDescriptor> colorFilterDescriptors;
     while (offset < commandEnd) {
         jsize recordStart = offset;
         jint op = commands[offset++];
@@ -2073,6 +2081,47 @@ static bool drawCommandList(SkCanvas* canvas,
                     return false;
                 }
                 paint.setColorFilter(SkColorFilters::Blend(filterColor, SkBlendMode::kSrcIn));
+                canvas->drawRect(SkRect::MakeXYWH(static_cast<SkScalar>(x),
+                                                  static_cast<SkScalar>(y),
+                                                  static_cast<SkScalar>(rectWidth),
+                                                  static_cast<SkScalar>(rectHeight)),
+                                 paint);
+                break;
+            }
+            case COMMAND_DEFINE_COLOR_FILTER_TINT: {
+                if (recordFlags != COMMAND_RECORD_FLAGS_NONE || offset + 4 != recordEnd) {
+                    return false;
+                }
+                const uint64_t handle = imageCacheKey(commands[offset], commands[offset + 1]);
+                offset += 2;
+                const SkColor filterColor = skColorFromArgb(commands[offset++]);
+                const jint filterBlendMode = commands[offset++];
+                if (filterBlendMode != COMMAND_BLEND_MODE_SRC_IN) {
+                    return false;
+                }
+                colorFilterDescriptors[handle] = TintColorFilterDescriptor{filterColor, filterBlendMode};
+                break;
+            }
+            case COMMAND_FILL_RECT_COLOR_FILTER_REF: {
+                if (offset + 7 != recordEnd) {
+                    return false;
+                }
+                SkPaint paint;
+                paint.setAntiAlias(antiAlias);
+                paint.setColor(skColorFromArgb(commands[offset++]));
+                const uint64_t handle = imageCacheKey(commands[offset], commands[offset + 1]);
+                offset += 2;
+                jint x = commands[offset++];
+                jint y = commands[offset++];
+                jint rectWidth = commands[offset++];
+                jint rectHeight = commands[offset++];
+                auto descriptor = colorFilterDescriptors.find(handle);
+                if (descriptor == colorFilterDescriptors.end() ||
+                        descriptor->second.blendMode != COMMAND_BLEND_MODE_SRC_IN ||
+                        rectWidth < 0 || rectHeight < 0) {
+                    return false;
+                }
+                paint.setColorFilter(SkColorFilters::Blend(descriptor->second.argb, SkBlendMode::kSrcIn));
                 canvas->drawRect(SkRect::MakeXYWH(static_cast<SkScalar>(x),
                                                   static_cast<SkScalar>(y),
                                                   static_cast<SkScalar>(rectWidth),
