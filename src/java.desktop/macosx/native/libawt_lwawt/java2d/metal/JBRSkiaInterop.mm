@@ -75,7 +75,7 @@
 
 #include "MTLSurfaceDataBase.h"
 
-static constexpr jint ABI_ID = 79;
+static constexpr jint ABI_ID = 80;
 static constexpr jint COMMAND_STREAM_MAGIC = 1246972723;
 static constexpr jint COMMAND_STREAM_HEADER_SIZE = 6;
 static constexpr jint COMMAND_STREAM_FLAGS_NONE = 0;
@@ -139,6 +139,7 @@ static constexpr jint COMMAND_SAVE_LAYER_BLEND_MODE = 50;
 static constexpr jint COMMAND_SAVE_LAYER_BLEND_COLOR_FILTER = 51;
 static constexpr jint COMMAND_SAVE_LAYER_COLOR_FILTER_REF = 52;
 static constexpr jint COMMAND_DRAW_IMAGE_REF_COLOR_FILTER_REF = 53;
+static constexpr jint COMMAND_SAVE_LAYER_BLEND_COLOR_FILTER_REF = 54;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER = 1;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_COLOR_MATRIX_FILTER = 2;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_LIGHTING_FILTER = 3;
@@ -1890,6 +1891,45 @@ static bool drawCommandList(SkCanvas* canvas,
                 layerPaint.setAlphaf(static_cast<float>(alpha1000) / 1000.0f);
                 layerPaint.setBlendMode(skBlendMode);
                 layerPaint.setColorFilter(SkColorFilters::Blend(filterColor, SkBlendMode::kSrcIn));
+                canvas->saveLayer(&bounds, &layerPaint);
+                break;
+            }
+            case COMMAND_SAVE_LAYER_BLEND_COLOR_FILTER_REF: {
+                if (recordFlags != COMMAND_RECORD_FLAGS_NONE || offset + 8 != recordEnd) {
+                    return false;
+                }
+                jint x = commands[offset++];
+                jint y = commands[offset++];
+                jint layerWidth = commands[offset++];
+                jint layerHeight = commands[offset++];
+                jint alpha1000 = commands[offset++];
+                jint commandBlendMode = commands[offset++];
+                const uint64_t handle = imageCacheKey(commands[offset], commands[offset + 1]);
+                offset += 2;
+                SkBlendMode blendMode;
+                if (layerWidth < 0 || layerHeight < 0 || alpha1000 < 0 || alpha1000 > 1000 ||
+                        !skBlendMode(commandBlendMode, &blendMode)) {
+                    return false;
+                }
+                ColorFilterDescriptor descriptor;
+                {
+                    std::lock_guard<std::mutex> lock(gColorFilterCacheMutex);
+                    auto cached = gColorFiltersByKey.find(ColorFilterScopedKey{imageCacheContextKey, handle});
+                    if (cached == gColorFiltersByKey.end()) {
+                        return false;
+                    }
+                    descriptor = cached->second;
+                }
+                SkRect bounds = SkRect::MakeXYWH(static_cast<SkScalar>(x),
+                                                 static_cast<SkScalar>(y),
+                                                 static_cast<SkScalar>(layerWidth),
+                                                 static_cast<SkScalar>(layerHeight));
+                SkPaint layerPaint;
+                layerPaint.setAlphaf(static_cast<float>(alpha1000) / 1000.0f);
+                layerPaint.setBlendMode(blendMode);
+                if (!setDescriptorColorFilter(&layerPaint, descriptor)) {
+                    return false;
+                }
                 canvas->saveLayer(&bounds, &layerPaint);
                 break;
             }

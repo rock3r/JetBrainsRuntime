@@ -79,6 +79,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] ABI 77: lighting color filters use a typed effect descriptor handle and solid fill-rect reference command.
 - [x] ABI 78: saveLayer/graphics-layer replay can apply typed color-filter descriptor handles through a structured save-layer reference command.
 - [x] ABI 79: cached image refs can apply typed color-filter descriptor handles through a structured image reference command.
+- [x] ABI 80: saveLayer/graphics-layer replay can combine direct blend modes with typed color-filter descriptor handles.
 
 ## Near-Term Rendering Work
 
@@ -95,6 +96,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   - [x] Fifth descriptor-shaped ABI slice: lighting color-filter descriptor handles with multiply/add ARGB payloads and JBR-owned `SkColorFilters::Lighting` reconstruction.
   - [x] Sixth descriptor-shaped ABI slice: saveLayer/graphics-layer paints can reference typed color-filter descriptor handles without raw Skia pointers.
   - [x] Seventh descriptor-shaped ABI slice: cached image draws can reference typed color-filter descriptor handles without raw Skia pointers.
+  - [x] Eighth descriptor-shaped ABI slice: saveLayer/graphics-layer paints can combine direct blend modes with typed descriptor color filters.
   - [x] Strict JBR validator coverage for malformed effect descriptors: unknown type, unsupported version, bad payload count/length, unsupported blend mode, and evicted-handle use.
   - [ ] Implement JBR-owned shader/effect handles: Skiko/CMP serializes descriptors or create requests, JBR constructs objects inside its Skia runtime, draw commands reference versioned handles, and handles are scoped/evicted by destination context.
   - [ ] Support Skia runtime effects via descriptor payloads: SKSL source hash/source bytes, uniform block layout, child shader/color-filter handles, compile diagnostics, and stable fallback markers.
@@ -154,13 +156,13 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   - [x] Support tint/SrcIn graphics-layer color filters by reusing the existing save-layer color-filter command.
   - [x] Support graphics layers that combine a directly mapped blend mode with tint/SrcIn color filtering through a bounded save-layer blend/color-filter command.
   - [x] Support color-matrix and lighting graphics-layer color filters by referencing typed descriptor handles from saveLayer paints.
-  - [ ] Extend graphics-layer command replay beyond the current 2D subset: descriptor filters combined with non-SrcOver blend modes, shadows, 3D rotation/camera, and offscreen strategy semantics.
+  - [ ] Extend graphics-layer command replay beyond the current 2D subset: shadows, 3D rotation/camera, offscreen strategy semantics, image filters, and render effects.
   - [ ] Add render-effect descriptors for graphics-layer `RenderEffect` once the JBR-owned effect-handle ABI can construct the needed Skia image filters.
 - [x] Add narrow tint color-filter solid fill-rectangle support through a versioned command instead of picture fallback.
 - [x] Add narrow tint color-filter `saveLayer` support through a versioned command instead of picture fallback.
 - [x] Add narrow tint color-filter cached-image support through a versioned command instead of picture fallback.
 - [x] Expand color-matrix/lighting color-filter command coverage to solid rectangles, saveLayer/graphics-layer paints, and cached images through typed descriptors.
-- [ ] Expand color-filter command coverage to descriptor filters combined with non-SrcOver layer blend modes, image filters, runtime effects, and generic shaders.
+- [ ] Expand color-filter command coverage to image filters, runtime effects, and generic shaders.
 - [x] Add narrow dash path-effect stroked-line support through a versioned command instead of picture fallback.
 - [ ] Expand path-effect command coverage beyond dash stroked lines only through serialized descriptors or JBR-owned effect handles.
 - [x] Add screenshot-level text-presence assertions using stable pixel regions for top/bottom Magic Jewel labels.
