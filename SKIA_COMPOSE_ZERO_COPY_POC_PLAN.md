@@ -5376,3 +5376,31 @@ Validation:
 - Required-old dry-run:
   - command: `DRY_RUN=true REQUIRE_OLD_ARTIFACT_ROWS=true OUT_ROOT=/tmp/magic-jewel-artifact-matrix-required-dry bash scripts/jbr-skia-artifact-matrix.sh --dry-run`
   - result: failed as expected with `JBR_SKIA_ARTIFACT_MATRIX failed: 5 optional old-artifact rows were skipped`.
+
+## Checkpoint: Host Load Metadata In Reports
+
+Date: 2026-04-30
+
+Status: completed as benchmark/report context metadata.
+
+Why:
+- CPU and FPS numbers are only useful when paired with host-load context, especially while other agents/builds are running on the same machine.
+
+Change:
+- `scripts/jbr-skia-interop-report.sh` now writes `host_cpu_count`, `host_load_1m`, `host_load_5m`, and `host_load_15m` to `summary.properties`.
+- `report.md` includes the same host CPU/load metadata near the top.
+- README lists the new machine-readable summary keys.
+- Report validation tests assert the keys are present.
+- `ROADMAP.md` records host-load report context as complete.
+
+Validation:
+- Syntax check:
+  - command: `bash -n scripts/jbr-skia-interop-report.sh scripts/test-jbr-skia-report-validation.sh`
+  - result: passed.
+- Report parser tests:
+  - command: `bash scripts/test-jbr-skia-report-validation.sh`
+  - result: `JBR_SKIA_REPORT_VALIDATION_TESTS passed`.
+- Real report smoke:
+  - command: `OUT_DIR=/tmp/magic-jewel-host-load-summary-smoke DURATION_SECONDS=2 WARMUP_SECONDS=1 SAMPLE_INTERVAL_SECONDS=1 JBR_SKIA_RENDER_MODE=commands SKIKO_VERSION=0.0.0-SNAPSHOT bash scripts/jbr-skia-interop-report.sh`
+  - result: passed with report `/tmp/magic-jewel-host-load-summary-smoke/report.md`.
+  - summary keys observed: `host_cpu_count=10`, `host_load_1m=3.90`, `host_load_5m=4.38`, `host_load_15m=5.20`.
