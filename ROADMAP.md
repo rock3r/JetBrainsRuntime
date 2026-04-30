@@ -54,6 +54,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] ABI 55: cached image refs with `ColorFilter.tint(..., BlendMode.SrcIn)` use an explicit color-filter image command.
 - [x] ABI 56: tint color-filter descriptor handles can be defined in-frame and referenced by fill-rect commands.
 - [x] ABI 57: tint color-filter handles are cached per destination context, reused across frames, and explicitly evictable.
+- [x] ABI 58: effect descriptors use a generic typed/versioned envelope; tint/SrcIn color filters are descriptor type 1 version 1.
 
 ## Near-Term Rendering Work
 
@@ -62,9 +63,10 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   - [x] Short term: keep rejecting opaque/unknown shader pointers and add serialized command payloads for known shader families.
   - [x] Medium term design sketch: document a JBR-owned shader factory ABI so Skiko can request shader construction inside JBR's Skia runtime. See `doc/skia-shader-factory.md`.
   - [ ] End-state requirement: generic shaders/effects are implemented, not merely documented; unsupported descriptors must fall back only when a runtime genuinely lacks the negotiated capability.
-  - [ ] Define the first shader/effect descriptor schema with stable type ids, payload lengths, lifecycle operations, and fallback reasons.
+  - [x] Define the first shader/effect descriptor schema with stable type ids, payload lengths, lifecycle operations, and fallback reasons.
   - [x] First descriptor-shaped ABI slice: in-frame tint color-filter handles with define/use validation and native replay.
   - [x] Second descriptor-shaped ABI slice: destination-context-scoped tint handle reuse plus explicit handle eviction.
+  - [x] Third descriptor-shaped ABI slice: generic `COMMAND_DEFINE_EFFECT_DESCRIPTOR` envelope with descriptor type/version/payload validation and tint/SrcIn as the first schema.
   - [ ] Implement JBR-owned shader/effect handles: Skiko/CMP serializes descriptors or create requests, JBR constructs objects inside its Skia runtime, draw commands reference versioned handles, and handles are scoped/evicted by destination context.
   - [ ] Support Skia runtime effects via descriptor payloads: SKSL source hash/source bytes, uniform block layout, child shader/color-filter handles, compile diagnostics, and stable fallback markers.
   - [ ] Add Magic Jewel probes that force handle creation, reuse, context migration, eviction, and fallback without relying on raw Skiko `SkShader*` or `SkRuntimeEffect*` pointers.

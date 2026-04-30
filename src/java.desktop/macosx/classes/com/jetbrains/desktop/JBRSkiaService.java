@@ -129,7 +129,8 @@ public class JBRSkiaService extends JBRSkia {
                     | COMMAND_CAP64_DRAW_IMAGE_REF_COLOR_FILTER
                     | COMMAND_CAP64_DEFINE_COLOR_FILTER_TINT
                     | COMMAND_CAP64_FILL_RECT_COLOR_FILTER_REF
-                    | COMMAND_CAP64_EVICT_COLOR_FILTER_HANDLE;
+                    | COMMAND_CAP64_EVICT_COLOR_FILTER_HANDLE
+                    | COMMAND_CAP64_DEFINE_EFFECT_DESCRIPTOR;
     private static final boolean NATIVE_BRIDGE_AVAILABLE = loadNativeBridge();
     private static final AtomicLong NEXT_SCOPE_ID = new AtomicLong(1);
     private static final int MAX_CACHED_IMAGES = 256;
@@ -205,7 +206,7 @@ public class JBRSkiaService extends JBRSkia {
                     || !validateRecordArguments(commands, record)) {
                 return false;
             }
-            if (record.op() == COMMAND_DEFINE_COLOR_FILTER_TINT) {
+            if (record.op() == COMMAND_DEFINE_COLOR_FILTER_TINT || record.op() == COMMAND_DEFINE_EFFECT_DESCRIPTOR) {
                 colorFilterHandles.add(commandHandle(commands[record.argsStart()], commands[record.argsStart() + 1]));
             } else if (record.op() == COMMAND_EVICT_COLOR_FILTER_HANDLE) {
                 colorFilterHandles.remove(commandHandle(commands[record.argsStart()], commands[record.argsStart() + 1]));
@@ -280,6 +281,7 @@ public class JBRSkiaService extends JBRSkia {
         if (op == COMMAND_DEFINE_COLOR_FILTER_TINT) return 7;
         if (op == COMMAND_FILL_RECT_COLOR_FILTER_REF) return 10;
         if (op == COMMAND_EVICT_COLOR_FILTER_HANDLE) return 5;
+        if (op == COMMAND_DEFINE_EFFECT_DESCRIPTOR) return -24;
         if (op == COMMAND_STROKE_LINE_DASH_PATH_EFFECT) return -23;
         if (op == COMMAND_FILL_RECT_IMAGE_SHADER) return 14;
         if (op == COMMAND_CLEAR) return 4;
@@ -359,6 +361,9 @@ public class JBRSkiaService extends JBRSkia {
         if (expectedLength == -23 && record.op() == COMMAND_STROKE_LINE_DASH_PATH_EFFECT) {
             return record.recordLength() >= 16;
         }
+        if (expectedLength == -24 && record.op() == COMMAND_DEFINE_EFFECT_DESCRIPTOR) {
+            return record.recordLength() >= 8;
+        }
         return expectedLength == record.recordLength();
     }
 
@@ -405,6 +410,20 @@ public class JBRSkiaService extends JBRSkia {
             int colorFilterBlendMode = commands[record.argsStart() + 3];
             return record.recordFlags() == COMMAND_RECORD_FLAGS_NONE
                     && colorFilterBlendMode == COMMAND_BLEND_MODE_SRC_IN;
+        }
+        if (record.op() == COMMAND_DEFINE_EFFECT_DESCRIPTOR) {
+            int descriptorType = commands[record.argsStart() + 2];
+            int descriptorVersion = commands[record.argsStart() + 3];
+            int payloadIntCount = commands[record.argsStart() + 4];
+            if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE
+                    || descriptorType != COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER
+                    || descriptorVersion != COMMAND_EFFECT_DESCRIPTOR_VERSION_1
+                    || payloadIntCount != 2
+                    || record.recordLength() != 8 + payloadIntCount) {
+                return false;
+            }
+            int colorFilterBlendMode = commands[record.argsStart() + 6];
+            return colorFilterBlendMode == COMMAND_BLEND_MODE_SRC_IN;
         }
         if (record.op() == COMMAND_FILL_RECT_COLOR_FILTER_REF) {
             int width = commands[record.argsStart() + 5];
@@ -2753,6 +2772,23 @@ public class JBRSkiaService extends JBRSkia {
                     } else if (op == COMMAND_DEFINE_COLOR_FILTER_TINT) {
                         if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE || offset + 4 != recordEnd) return false;
                         long handle = cacheKey(commands[offset++], commands[offset++]);
+                        int filterArgb = commands[offset++];
+                        int filterBlendMode = commands[offset++];
+                        if (filterBlendMode != COMMAND_BLEND_MODE_SRC_IN) return false;
+                        COLOR_FILTER_CACHE.put(
+                                new ColorFilterCacheKey(contextPtr, handle),
+                                new TintColorFilterDescriptor(filterArgb, filterBlendMode)
+                        );
+                    } else if (op == COMMAND_DEFINE_EFFECT_DESCRIPTOR) {
+                        if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE || offset + 5 > recordEnd) return false;
+                        long handle = cacheKey(commands[offset++], commands[offset++]);
+                        int descriptorType = commands[offset++];
+                        int descriptorVersion = commands[offset++];
+                        int payloadIntCount = commands[offset++];
+                        if (descriptorType != COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER
+                                || descriptorVersion != COMMAND_EFFECT_DESCRIPTOR_VERSION_1
+                                || payloadIntCount != 2
+                                || offset + payloadIntCount != recordEnd) return false;
                         int filterArgb = commands[offset++];
                         int filterBlendMode = commands[offset++];
                         if (filterBlendMode != COMMAND_BLEND_MODE_SRC_IN) return false;

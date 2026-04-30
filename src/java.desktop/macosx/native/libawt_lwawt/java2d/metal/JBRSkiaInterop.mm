@@ -72,7 +72,7 @@
 
 #include "MTLSurfaceDataBase.h"
 
-static constexpr jint ABI_ID = 57;
+static constexpr jint ABI_ID = 58;
 static constexpr jint COMMAND_STREAM_MAGIC = 1246972723;
 static constexpr jint COMMAND_STREAM_HEADER_SIZE = 6;
 static constexpr jint COMMAND_STREAM_FLAGS_NONE = 0;
@@ -131,6 +131,9 @@ static constexpr jint COMMAND_DRAW_IMAGE_REF_COLOR_FILTER = 45;
 static constexpr jint COMMAND_DEFINE_COLOR_FILTER_TINT = 46;
 static constexpr jint COMMAND_FILL_RECT_COLOR_FILTER_REF = 47;
 static constexpr jint COMMAND_EVICT_COLOR_FILTER_HANDLE = 48;
+static constexpr jint COMMAND_DEFINE_EFFECT_DESCRIPTOR = 49;
+static constexpr jint COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER = 1;
+static constexpr jint COMMAND_EFFECT_DESCRIPTOR_VERSION_1 = 1;
 static constexpr jint COMMAND_BLEND_MODE_PLUS = 1;
 static constexpr jint COMMAND_BLEND_MODE_SRC_IN = 2;
 static constexpr jint COMMAND_PAINT_STYLE_FILL = 0;
@@ -2123,6 +2126,33 @@ static bool drawCommandList(SkCanvas* canvas,
                 }
                 const uint64_t handle = imageCacheKey(commands[offset], commands[offset + 1]);
                 offset += 2;
+                const SkColor filterColor = skColorFromArgb(commands[offset++]);
+                const jint filterBlendMode = commands[offset++];
+                if (filterBlendMode != COMMAND_BLEND_MODE_SRC_IN) {
+                    return false;
+                }
+                {
+                    std::lock_guard<std::mutex> lock(gColorFilterCacheMutex);
+                    gColorFiltersByKey[ColorFilterScopedKey{imageCacheContextKey, handle}] =
+                            TintColorFilterDescriptor{filterColor, filterBlendMode};
+                }
+                break;
+            }
+            case COMMAND_DEFINE_EFFECT_DESCRIPTOR: {
+                if (recordFlags != COMMAND_RECORD_FLAGS_NONE || offset + 5 > recordEnd) {
+                    return false;
+                }
+                const uint64_t handle = imageCacheKey(commands[offset], commands[offset + 1]);
+                offset += 2;
+                const jint descriptorType = commands[offset++];
+                const jint descriptorVersion = commands[offset++];
+                const jint payloadIntCount = commands[offset++];
+                if (descriptorType != COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER ||
+                        descriptorVersion != COMMAND_EFFECT_DESCRIPTOR_VERSION_1 ||
+                        payloadIntCount != 2 ||
+                        offset + payloadIntCount != recordEnd) {
+                    return false;
+                }
                 const SkColor filterColor = skColorFromArgb(commands[offset++]);
                 const jint filterBlendMode = commands[offset++];
                 if (filterBlendMode != COMMAND_BLEND_MODE_SRC_IN) {

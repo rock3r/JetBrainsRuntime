@@ -36,7 +36,7 @@ import java.nio.ByteBuffer;
  * so downstream compile-only clients cannot accidentally inline stale values.
  */
 public abstract class JBRSkia {
-    public static final int ABI_ID = Integer.parseInt("57");
+    public static final int ABI_ID = Integer.parseInt("58");
     public static final int NATIVE_ABI_VERSION = Integer.parseInt("3");
     public static final String SKIA_REVISION = "m147-" + "64a2414108";
     public static final String SKIA_FLAGS_HASH = "macos-release-metal-poc:" + Integer.parseInt("1");
@@ -106,6 +106,7 @@ public abstract class JBRSkia {
     public static final long COMMAND_CAP64_DEFINE_COLOR_FILTER_TINT = Long.parseLong("9007199254740992");
     public static final long COMMAND_CAP64_FILL_RECT_COLOR_FILTER_REF = Long.parseLong("18014398509481984");
     public static final long COMMAND_CAP64_EVICT_COLOR_FILTER_HANDLE = Long.parseLong("36028797018963968");
+    public static final long COMMAND_CAP64_DEFINE_EFFECT_DESCRIPTOR = Long.parseLong("72057594037927936");
     public static final int COMMAND_CLEAR = Integer.parseInt("1");
     public static final int COMMAND_FILL_RECT = Integer.parseInt("2");
     public static final int COMMAND_STROKE_LINE = Integer.parseInt("3");
@@ -156,6 +157,9 @@ public abstract class JBRSkia {
     public static final int COMMAND_DEFINE_COLOR_FILTER_TINT = Integer.parseInt("46");
     public static final int COMMAND_FILL_RECT_COLOR_FILTER_REF = Integer.parseInt("47");
     public static final int COMMAND_EVICT_COLOR_FILTER_HANDLE = Integer.parseInt("48");
+    public static final int COMMAND_DEFINE_EFFECT_DESCRIPTOR = Integer.parseInt("49");
+    public static final int COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER = Integer.parseInt("1");
+    public static final int COMMAND_EFFECT_DESCRIPTOR_VERSION_1 = Integer.parseInt("1");
     public static final int COMMAND_BLEND_MODE_PLUS = Integer.parseInt("1");
     public static final int COMMAND_BLEND_MODE_SRC_IN = Integer.parseInt("2");
     public static final int COMMAND_PAINT_STYLE_FILL = Integer.parseInt("0");

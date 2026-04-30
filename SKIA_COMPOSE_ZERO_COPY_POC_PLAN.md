@@ -6526,3 +6526,28 @@ Validation:
 Next:
 - Replace the tint-specific handle payload with a generalized descriptor envelope: descriptor kind, version, payload length, stable hash, create/use/evict commands, and parseable fallback reasons.
 - Use that envelope for the first non-tint effect descriptor, likely blur/image-filter or a small runtime-effect/SKSL probe depending on what Compose exposes cleanly without raw Skia pointer transfer.
+
+## Checkpoint: ABI 58 Generic Effect Descriptor Envelope
+
+Status: completed for a generic typed/versioned descriptor envelope, with tint/SrcIn color filters as descriptor type 1 version 1.
+
+What changed:
+- CMP now emits `COMMAND_DEFINE_EFFECT_DESCRIPTOR` for reusable tint color-filter handles instead of the tint-specific `COMMAND_DEFINE_COLOR_FILTER_TINT` record.
+- Runtime API and JBR private API expose ABI 58, capability `COMMAND_CAP64_DEFINE_EFFECT_DESCRIPTOR = 72057594037927936L`, opcode `COMMAND_DEFINE_EFFECT_DESCRIPTOR = 49`, descriptor type `COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER = 1`, and descriptor version `COMMAND_EFFECT_DESCRIPTOR_VERSION_1 = 1`.
+- Skiko compatibility now requires ABI 58 and the generic descriptor capability before enabling command mode.
+- JBR Java validation and native replay parse the descriptor envelope as `[handleHigh, handleLow, descriptorType, descriptorVersion, payloadIntCount, payload...]`, then construct/cache the tint filter inside the JBR-owned destination context.
+- The old tint-specific define command remains accepted for compatibility, but the forward path is now the generic effect descriptor envelope. This is the concrete first step toward runtime effects/SKSL and other JBR-owned effect handles without raw Skia pointer sharing.
+- `ROADMAP.md` now marks ABI 58 complete and keeps screenshot parity plus generic shader/effect support as concrete action tracks, not just documentation.
+
+Validation:
+- CMP focused tests `writesFillRectTintColorFilterHandleRecord` and `reusesTintColorFilterHandleAcrossFrames` passed with ABI 58 expectations.
+- Runtime API compile passed for ABI 58.
+- Skiko `JbrSkiaInteropTest` passed with ABI 58 discovery and capability mask.
+- JBR API/validator smoke passed with valid generic effect descriptor define/use/evict streams.
+- Native `JBRSkiaInterop.mm` standalone build passed with command-stream ABI 58.
+- Magic Jewel command-probe row passed: `/tmp/magic-jewel-command-probe-abi58-effect-descriptor/suite.tsv`, with `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, and `jbr_command_frames=735`.
+
+Next:
+- Add negative validation tests for malformed effect descriptors: unknown descriptor type/version, mismatched payload length, unsupported blend mode, undefined handle, stale/evicted handle, and context migration.
+- Start the first non-tint descriptor: either image-filter/blur or runtime-effect/SKSL, depending on which Compose paint path can be serialized cleanly without transferring Skiko-owned Skia C++ objects.
+- Build the old/new rich-content screenshot parity harness as the visual regression gate for descriptor/effect work, with tight Compose/Jewel tolerances and separate Swing-text tolerance notes.
