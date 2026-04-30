@@ -1224,7 +1224,8 @@ public class JBRSkiaService extends JBRSkia {
                 || blendMode == COMMAND_BLEND_MODE_LIGHTEN
                 || blendMode == COMMAND_BLEND_MODE_DIFFERENCE
                 || blendMode == COMMAND_BLEND_MODE_EXCLUSION
-                || blendMode == COMMAND_BLEND_MODE_COLOR_DODGE;
+                || blendMode == COMMAND_BLEND_MODE_COLOR_DODGE
+                || blendMode == COMMAND_BLEND_MODE_COLOR_BURN;
     }
 
     private static CommandRecord readCommandRecord(int[] commands, int offset, int commandEnd) {

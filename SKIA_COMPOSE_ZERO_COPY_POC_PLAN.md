@@ -6798,3 +6798,32 @@ Verification:
 Next:
 
 - Continue exact direct-mapping blend-mode slices, likely `ColorBurn`, or pivot to the window-only old/new screenshot parity harness now that the blend probe has enough varied color math to catch more regressions.
+
+## Checkpoint: ABI 67 ColorBurn Blend-Mode Fill Rectangles
+
+Status: completed as another exact direct-mapping blend-mode slice across JBR, public Runtime API, Skiko, CMP, and Magic Jewel.
+
+What changed:
+
+- Runtime API and JBR private API expose ABI 67 and the ColorBurn blend-mode payload constant.
+- JBR Java validation accepts ColorBurn wherever the fill-rect blend-mode command is valid.
+- Native `JBRSkiaInterop.mm` gates command streams on ABI 67 and maps the payload to `SkBlendMode::kColorBurn` inside JBR's Skia runtime.
+- Skiko compatibility requires ABI 67 before enabling command mode.
+- CMP records `BlendMode.ColorBurn` solid fill rectangles through the structured blend-mode command when the paint has no shader, color filter, or path effect.
+- Magic Jewel extends the blend-mode visual probe and screenshot assertion with a visible far-right lower ColorBurn region.
+- `ROADMAP.md` marks ABI 67 complete and records the live probe path.
+
+Verification:
+
+- Runtime API compile passed for ABI 67.
+- JBR API validator passed with ABI 67 and the ColorBurn payload.
+- Native `JBRSkiaInterop.mm` standalone build passed at `/tmp/jbr-skia-native/libjbrskiainterop.dylib` with the ColorBurn mapping.
+- CMP focused recorder tests passed for ColorBurn and ColorDodge blend-mode records.
+- Skiko interop tests passed with ABI 67 fixture expectations.
+- Magic Jewel compile passed.
+- Magic Jewel ABI 67 ColorBurn live command probe passed: `/tmp/magic-jewel-command-probe-abi67-color-burn-blend/suite.tsv`, with `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, and `jbr_command_frames=846`.
+- The window screenshot assertion passed with `blendModeColorBurn=1500`.
+
+Next:
+
+- Either continue with `Hardlight`/`Softlight` direct mappings, or start the window-only old/new screenshot parity harness. The latter is increasingly valuable because the current Magic Jewel scene now has enough blend/color/animation/layer content for meaningful visual-diff regions.
