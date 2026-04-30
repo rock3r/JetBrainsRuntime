@@ -57,6 +57,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] ABI 58: effect descriptors use a generic typed/versioned envelope; tint/SrcIn color filters are descriptor type 1 version 1.
 - [x] ABI 59: solid fill rectangles support `BlendMode.Multiply` through the structured blend-mode command.
 - [x] ABI 60: solid fill rectangles support `BlendMode.Screen` through the structured blend-mode command.
+- [x] ABI 61: solid fill rectangles support `BlendMode.Overlay` through the structured blend-mode command.
 
 ## Near-Term Rendering Work
 
@@ -104,6 +105,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Add narrow `BlendMode.Plus` solid fill-rectangle support through a versioned command instead of picture fallback.
 - [x] Expand blend-mode command coverage beyond `Plus` fill rectangles with the first additional exact Skia mapping: `BlendMode.Multiply`.
 - [x] Add `BlendMode.Screen` fill-rectangle command replay and screenshot-region validation.
+- [x] Add `BlendMode.Overlay` fill-rectangle command replay and screenshot-region validation.
 - [ ] Continue blend-mode command coverage mode-by-mode only after each mode has exact Skia-vs-Java2D semantics documented.
 - [ ] Command-recorded graphics layers:
   - [x] Mark Skiko `GraphicsLayer`/`RenderNode` draws as an explicit strict fallback while command replay cannot encode layer contents/effects.
@@ -183,6 +185,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] ABI 55 image tint color-filter command-probe row: `/tmp/magic-jewel-command-probe-abi55-image-color-filter/suite.tsv`.
 - [x] ABI 56 color-filter descriptor-handle command-probe row: `/tmp/magic-jewel-command-probe-abi56-color-filter-handle/suite.tsv`.
 - [x] ABI 57 persistent color-filter descriptor-handle command-probe row: `/tmp/magic-jewel-command-probe-abi57-color-filter-handle/suite.tsv`.
+- [x] ABI 61 Overlay blend-mode command-probe row: `/tmp/magic-jewel-command-probe-abi61-overlay-blend-4/suite.tsv`.
+- [x] Explicit graphics-layer fallback command-probe row after narrowing benign layer fallback: `/tmp/magic-jewel-command-probe-graphics-layer-fallback-2/suite.tsv`.
 - [x] Real undecorated Swing popup-window smoke captured separately by window id.
 
 ## Compatibility And ABI Hardening

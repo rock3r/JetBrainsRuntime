@@ -6626,7 +6626,34 @@ Validation:
 - Skiko `JbrSkiaInteropTest` passed with ABI 60 discovery and capability mask.
 - JBR API/validator smoke passed with valid Plus, Multiply, and Screen blend-mode streams.
 - Native `JBRSkiaInterop.mm` standalone build passed with command-stream ABI 60.
-- Magic Jewel command-probe row passed: `/tmp/magic-jewel-command-probe-abi60-screen-blend/suite.tsv`, with `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, and `jbr_command_frames=418`.
+
+## Checkpoint: ABI 61 Overlay Blend-Mode Fill Rectangles
+
+Status: completed for `BlendMode.Overlay` on solid fill rectangles.
+
+Changes:
+- CMP records solid fill rectangles using `BlendMode.Overlay` as `COMMAND_FILL_RECT_BLEND_MODE` with payload value `COMMAND_BLEND_MODE_OVERLAY = 5`.
+- Runtime API and JBR private API expose ABI 61 and the overlay blend-mode payload constant.
+- JBR Java validation accepts Overlay wherever the fill-rect blend-mode command is valid.
+- Native `JBRSkiaInterop.mm` maps the payload to `SkBlendMode::kOverlay`, keeping the replay implementation inside JBR's Skia runtime.
+- Native `JBRSkiaInterop.mm` gates command streams on ABI 61. The first live run caught a stale native ABI 60 gate because Skiko command frames succeeded while JBR native replay markers stayed at zero and Java fallback drew the frame instead.
+- Skiko compatibility requires ABI 61 before enabling command mode.
+- Magic Jewel extends the blend-mode visual probe and screenshot assertion with an Overlay region.
+- CMP's graphics-layer command fallback was narrowed so ordinary benign layers created by z-ordering/internal composition no longer force picture fallback; only unsupported layer semantics such as alpha, transform, clipping, shadow, or explicit layer creation mark the command stream unsupported.
+
+Validation:
+- CMP focused recorder tests passed for Screen and Overlay blend-mode records.
+- Runtime API compile passed for ABI 61.
+- Magic Jewel Kotlin compile passed after adding the Overlay probe.
+- Native `JBRSkiaInterop.mm` standalone build passed with the Overlay mapping.
+- JBR API validator passed with ABI 61 and the Overlay payload.
+- Skiko interop tests passed with ABI 61 fixture expectations.
+- Skiko `publishToMavenLocal` and CMP desktop jar rebuild passed for the local Magic Jewel run.
+- Magic Jewel ABI 61 Overlay live command probe passed: `/tmp/magic-jewel-command-probe-abi61-overlay-blend-4/suite.tsv`, with `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, and `jbr_command_frames=908`.
+- Magic Jewel explicit graphics-layer fallback probe passed after narrowing benign layer fallback: `/tmp/magic-jewel-command-probe-graphics-layer-fallback-2/suite.tsv`, with `unsupported=graphicsLayer:780`, `jbr_picture_frames=781`, and `jbr_command_frames=0`.
 
 Next:
 - Continue blend-mode expansion one value at a time or pivot to the first non-tint effect descriptor; render-effect/blur support needs graphics-layer plumbing rather than the simple paint recorder.
+- Keep the roadmap's screenshot-parity and generic-shader implementation tracks active while doing the next rendering slice:
+  - screenshot parity must compare rich old/new Swing/CMP/Jewel content with tight Compose/Jewel thresholds and Swing-text-aware regions.
+  - generic shaders must become a real JBR-owned shader/effect handle implementation, not just documentation.
