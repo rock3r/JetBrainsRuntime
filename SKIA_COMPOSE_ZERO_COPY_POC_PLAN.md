@@ -6078,3 +6078,67 @@ Roadmap update:
 
 Next:
 - Continue the known-family stroke expansion with sweep-gradient stroked rectangles, then sweep-gradient stroked rounded rectangles.
+
+## Checkpoint: ABI 49 Sweep-Gradient Stroke Rect
+
+Date: 2026-04-30
+
+Status: completed for Compose sweep-gradient stroked-rectangle command recording and JBR/Skia replay.
+
+Why:
+- ABI 37 covered sweep-gradient rectangle fills; ABI 49 adds the matching stroked-rectangle payload without sharing raw `SkShader*` pointers between Skiko and JBR.
+- This keeps the strict command path moving through known shader families before the later generic JBR-owned shader-factory work.
+
+Changes:
+- JBR command ABI bumped to `ABI_ID=49`; `BUILD_ID` now includes `abi=49`.
+- Added 64-bit command capability `COMMAND_CAP64_STROKE_RECT_SWEEP_GRADIENT = 70368744177664L`.
+- Added command opcode `COMMAND_STROKE_RECT_SWEEP_GRADIENT = 39`.
+- The new payload carries rect bounds, stroke width/cap/join/miter metadata, sweep-gradient center, and ARGB colors/stops.
+- CMP records `drawRect(brush = Brush.sweepGradient(...), style = Stroke(...))` when the paint is otherwise strict-command-compatible.
+- JBR Java validation/replay and native Skia replay reconstruct the sweep shader inside the JBR-owned runtime and draw a stroked rectangle.
+- Skiko compatibility now requires ABI 49 and the sweep-gradient stroked-rectangle capability bit before enabling command mode.
+- Magic Jewel's `MAGIC_JEWEL_COMPOSE_SWEEP_GRADIENT=true` probe now draws a visible sweep-gradient stroke over the existing sweep-gradient rectangle fill; the screenshot assertion checks the cyan/purple stroked marker.
+
+Validation:
+- CMP TDD/focused recorder tests:
+  - first run failed before implementation with the stream still at ABI 48 and only the command header emitted.
+  - command: `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesSweepGradientStrokeRectRecord --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesSweepGradientRectRecord`
+  - result: passed after the recorder implementation.
+- Runtime API compile:
+  - command: `javac -d /tmp/jbr-api-skia-abi49-compile src/com/jetbrains/Provided.java src/com/jetbrains/Service.java src/com/jetbrains/JBRSkia.java`
+  - result: passed.
+- JBR private API/service/test compile and runtime smoke:
+  - result: passed for `JBRSkia.java`, `JBRSkiaService.java`, and `JBRSkiaApiTest`; `/tmp/jbr-skia-run/desktop` refreshed with ABI 49 service classes.
+- JBR native dylib compile smoke:
+  - result: passed; `/tmp/jbr-skia-native/libjbrskiainterop.dylib` rebuilt with ABI 49.
+- Runtime API shim rebuild:
+  - command: `bash tools/build.sh process && bash tools/build.sh dev $(/usr/libexec/java_home -v 21) /tmp/jbr-api-skia-abi49-dev`
+  - result: passed; copied to `/tmp/jbr-api-shim.jar`.
+- Skiko compatibility tests:
+  - command: `./gradlew --no-daemon :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`
+  - result: passed.
+- Skiko local publish:
+  - command: `./gradlew --no-daemon :skiko:publishToMavenLocal`
+  - result: passed.
+- CMP desktop jars refresh:
+  - command: `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon :compose:ui:ui-graphics:desktopJar :compose:ui:ui-text:desktopJar :compose:ui:ui:desktopJar`
+  - result: passed.
+- Magic Jewel compile:
+  - command: `./gradlew --no-daemon compileKotlin`
+  - result: passed.
+- Focused Magic Jewel sweep-gradient stroke smoke:
+  - command: `OUT_DIR=/tmp/magic-jewel-abi49-sweep-gradient-stroke-smoke-2 DURATION_SECONDS=6 WARMUP_SECONDS=1 SAMPLE_INTERVAL_SECONDS=1 JBR_SKIA_RENDER_MODE=commands MAGIC_JEWEL_COMPOSE_SWEEP_GRADIENT=true SKIKO_VERSION=0.0.0-SNAPSHOT bash scripts/jbr-skia-interop-report.sh`
+  - result: passed.
+  - report: `/tmp/magic-jewel-abi49-sweep-gradient-stroke-smoke-2/report.md`.
+- Focused Magic Jewel command-probe row:
+  - command: `CASES=commands-gradient-surfaces OUT_ROOT=/tmp/magic-jewel-command-probe-abi49-gradient-surfaces DURATION_SECONDS=6 WARMUP_SECONDS=1 SAMPLE_INTERVAL_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT bash scripts/jbr-skia-command-probe-suite.sh`
+  - result: passed.
+  - suite: `/tmp/magic-jewel-command-probe-abi49-gradient-surfaces/suite.tsv`.
+  - row: `commands-gradient-surfaces`, `fallbacks=0`, `unsupported=none`, `jbr_picture_frames=0`, `jbr_command_frames=1240`.
+
+Roadmap update:
+- Recorded ABI 49 command coverage.
+- Recorded the focused smoke and focused command-probe row paths.
+
+Next:
+- Continue the known-family stroke expansion with sweep-gradient stroked rounded rectangles.

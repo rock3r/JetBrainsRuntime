@@ -70,7 +70,7 @@
 
 #include "MTLSurfaceDataBase.h"
 
-static constexpr jint ABI_ID = 48;
+static constexpr jint ABI_ID = 49;
 static constexpr jint COMMAND_STREAM_MAGIC = 1246972723;
 static constexpr jint COMMAND_STREAM_HEADER_SIZE = 6;
 static constexpr jint COMMAND_STREAM_FLAGS_NONE = 0;
@@ -119,6 +119,7 @@ static constexpr jint COMMAND_STROKE_RECT_LINEAR_GRADIENT = 35;
 static constexpr jint COMMAND_STROKE_ROUND_RECT_LINEAR_GRADIENT = 36;
 static constexpr jint COMMAND_STROKE_RECT_RADIAL_GRADIENT = 37;
 static constexpr jint COMMAND_STROKE_ROUND_RECT_RADIAL_GRADIENT = 38;
+static constexpr jint COMMAND_STROKE_RECT_SWEEP_GRADIENT = 39;
 static constexpr jint COMMAND_PAINT_STYLE_FILL = 0;
 static constexpr jint COMMAND_PAINT_STYLE_STROKE = 1;
 static constexpr jint COMMAND_PATH_FILL_NON_ZERO = 0;
@@ -1337,6 +1338,62 @@ static bool drawCommandList(SkCanvas* canvas,
                 }
                 SkPaint paint;
                 paint.setAntiAlias(antiAlias);
+                SkGradient gradient(
+                        SkGradient::Colors(
+                                SkSpan<const SkColor4f>(colors, colorCount),
+                                SkSpan<const float>(positions, colorCount),
+                                SkTileMode::kClamp),
+                        SkGradient::Interpolation{SkGradient::Interpolation::InPremul::kYes});
+                paint.setShader(SkShaders::SweepGradient(center, 0.0f, 360.0f, gradient));
+                if (paint.getShader() == nullptr) {
+                    return false;
+                }
+                canvas->drawRect(SkRect::MakeLTRB(left, top, right, bottom), paint);
+                break;
+            }
+            case COMMAND_STROKE_RECT_SWEEP_GRADIENT: {
+                if (offset + 11 > recordEnd) {
+                    return false;
+                }
+                const SkScalar left = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkScalar top = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkScalar right = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkScalar bottom = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkScalar strokeWidth = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const jint strokeCap = commands[offset++];
+                const jint strokeJoin = commands[offset++];
+                const SkScalar strokeMiter = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkPoint center = {
+                        static_cast<SkScalar>(commands[offset++]) / 1000.0f,
+                        static_cast<SkScalar>(commands[offset++]) / 1000.0f
+                };
+                const jint colorCount = commands[offset++];
+                if (right < left || bottom < top ||
+                        strokeWidth <= 0 || strokeCap < 0 || strokeCap > 2 ||
+                        strokeJoin < 0 || strokeJoin > 2 || strokeMiter < 0 ||
+                        colorCount < 2 || colorCount > 16 ||
+                        offset + colorCount * 2 != recordEnd) {
+                    return false;
+                }
+                SkColor4f colors[16];
+                float positions[16];
+                jint previousStop = -1;
+                for (jint i = 0; i < colorCount; i++) {
+                    colors[i] = SkColor4f::FromColor(skColorFromArgb(commands[offset++]));
+                    const jint stop1000 = commands[offset++];
+                    if (stop1000 < 0 || stop1000 > 1000 || stop1000 <= previousStop) {
+                        return false;
+                    }
+                    previousStop = stop1000;
+                    positions[i] = static_cast<float>(stop1000) / 1000.0f;
+                }
+                SkPaint paint;
+                paint.setAntiAlias(antiAlias);
+                paint.setStyle(SkPaint::kStroke_Style);
+                paint.setStrokeWidth(strokeWidth);
+                paint.setStrokeCap(static_cast<SkPaint::Cap>(strokeCap));
+                paint.setStrokeJoin(static_cast<SkPaint::Join>(strokeJoin));
+                paint.setStrokeMiter(std::max<SkScalar>(1.0f, strokeMiter));
                 SkGradient gradient(
                         SkGradient::Colors(
                                 SkSpan<const SkColor4f>(colors, colorCount),

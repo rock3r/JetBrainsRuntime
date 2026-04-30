@@ -36,7 +36,7 @@ import java.nio.ByteBuffer;
  * so downstream compile-only clients cannot accidentally inline stale values.
  */
 public abstract class JBRSkia {
-    public static final int ABI_ID = Integer.parseInt("48");
+    public static final int ABI_ID = Integer.parseInt("49");
     public static final int NATIVE_ABI_VERSION = Integer.parseInt("3");
     public static final String SKIA_REVISION = "m147-" + "64a2414108";
     public static final String SKIA_FLAGS_HASH = "macos-release-metal-poc:" + Integer.parseInt("1");
@@ -96,6 +96,7 @@ public abstract class JBRSkia {
     public static final long COMMAND_CAP64_STROKE_ROUND_RECT_LINEAR_GRADIENT = Long.parseLong("8796093022208");
     public static final long COMMAND_CAP64_STROKE_RECT_RADIAL_GRADIENT = Long.parseLong("17592186044416");
     public static final long COMMAND_CAP64_STROKE_ROUND_RECT_RADIAL_GRADIENT = Long.parseLong("35184372088832");
+    public static final long COMMAND_CAP64_STROKE_RECT_SWEEP_GRADIENT = Long.parseLong("70368744177664");
     public static final int COMMAND_CLEAR = Integer.parseInt("1");
     public static final int COMMAND_FILL_RECT = Integer.parseInt("2");
     public static final int COMMAND_STROKE_LINE = Integer.parseInt("3");
@@ -136,6 +137,7 @@ public abstract class JBRSkia {
     public static final int COMMAND_STROKE_ROUND_RECT_LINEAR_GRADIENT = Integer.parseInt("36");
     public static final int COMMAND_STROKE_RECT_RADIAL_GRADIENT = Integer.parseInt("37");
     public static final int COMMAND_STROKE_ROUND_RECT_RADIAL_GRADIENT = Integer.parseInt("38");
+    public static final int COMMAND_STROKE_RECT_SWEEP_GRADIENT = Integer.parseInt("39");
     public static final int COMMAND_PAINT_STYLE_FILL = Integer.parseInt("0");
     public static final int COMMAND_PAINT_STYLE_STROKE = Integer.parseInt("1");
     public static final int COMMAND_PATH_FILL_NON_ZERO = Integer.parseInt("0");
