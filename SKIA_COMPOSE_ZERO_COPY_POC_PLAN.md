@@ -5153,3 +5153,38 @@ Note:
 
 Next:
 - Remaining generic shader work is now mostly design/production work rather than missing fallback coverage for the obvious paint-object boundaries.
+
+## Checkpoint: saveLayer Filter Fallback Probe
+
+Date: 2026-04-30
+
+Status: completed as live recorder-level fallback coverage.
+
+Why:
+- Simple `saveLayer` is now part of the command subset, so the old saveLayer fallback probe no longer exercises the unsupported path.
+- Layer paints with color filters still require Skia paint objects outside the current command ABI and must fall back to picture replay cleanly.
+
+Changes:
+- Magic Jewel added `MAGIC_JEWEL_COMPOSE_SAVELAYER_FILTER=true`.
+- The probe calls `Canvas.saveLayer(...)` with a tinted layer paint, then draws content inside the layer.
+- The command-probe suite gained `commands-save-layer-filter-fallback`.
+- README documents the manual command and suite coverage.
+- `ROADMAP.md` records this as completed recorder-level fallback coverage for unsupported layer paints.
+
+Validation:
+- Syntax check:
+  - command: `bash -n scripts/jbr-skia-interop-report.sh scripts/jbr-skia-command-probe-suite.sh`
+  - result: passed.
+- Report parser tests:
+  - command: `bash scripts/test-jbr-skia-report-validation.sh`
+  - result: `JBR_SKIA_REPORT_VALIDATION_TESTS passed`.
+- Compile:
+  - command: `./gradlew --no-daemon compileKotlin`
+  - result: passed.
+- Focused command-probe suite:
+  - command: `OUT_ROOT=/tmp/magic-jewel-save-layer-filter-suite CASES=commands-save-layer-filter-fallback DURATION_SECONDS=3 WARMUP_SECONDS=1 SAMPLE_INTERVAL_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT bash scripts/jbr-skia-command-probe-suite.sh`
+  - result: `JBR_SKIA_COMMAND_PROBE_SUITE passed out_root=/tmp/magic-jewel-save-layer-filter-suite`
+  - case summary: `status=passed`, `fallback_new_count=0`, `unsupported=unsupportedScope:235,saveLayer:235`, `jbr_picture_frames=236`, `jbr_command_frames=0`.
+
+Note:
+- This is a recorder-level operation fallback, not a compatibility-gate fallback, so the expected signal is `cmp_unsupported_reasons=saveLayer:...`, picture replay, and zero JBR command frames.
