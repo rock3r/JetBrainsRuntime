@@ -7308,3 +7308,37 @@ Known notes:
 
 - This is narrow tint/SrcIn layer color-filter support only. General color matrices, lighting filters, image filters, and layer render effects still require the JBR-owned effect/shader handle path.
 - Live `commands-graphics-layer-color-filter` validation should run after the local JBR native build is unblocked.
+
+## Checkpoint: ABI 75 Combined Save-Layer Blend And Tint
+
+Status: source and JVM-side validation are complete; native JBR/live Magic Jewel validation is blocked on local Xcode license acceptance.
+
+What changed:
+
+- JBR private API, public Runtime API, Skiko's compatibility gate, and CMP command recorder now use command ABI 75.
+- Added capability `COMMAND_CAP64_SAVE_LAYER_BLEND_COLOR_FILTER` and opcode `COMMAND_SAVE_LAYER_BLEND_COLOR_FILTER = 51`.
+- The new command shape is `[op, 44, 0, x, y, width, height, alpha1000, blendMode, colorFilterArgb, colorFilterBlendMode]`.
+- `blendMode` uses the direct Skia blend-mode values already accepted by fill-rect and save-layer blend commands.
+- `colorFilterBlendMode` is still intentionally narrow and must be `COMMAND_BLEND_MODE_SRC_IN`.
+- JBR Java validation, Java2D fallback replay, and native Metal replay accept the new command. Native replay sets both `SkPaint::setBlendMode(...)` and `SkPaint::setColorFilter(SkColorFilters::Blend(..., kSrcIn))` on the saved layer paint.
+- CMP records command-mode `GraphicsLayer` replay with both a directly mapped non-SrcOver blend mode and a tint/SrcIn color filter instead of falling back.
+- Skiko's strict ABI/capability gate now requires ABI 75 and the new combined save-layer paint capability.
+- Magic Jewel gained a `commands-graphics-layer-blend-color-filter` command-probe row by enabling both existing graphics-layer blend and color-filter flags.
+
+Verification:
+
+- Focused CMP tests passed:
+  - `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.nestedRecordingReplaysLayerBlendModeAndTintColorFilter --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.nestedRecordingReplaysLayerTintColorFilter --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.nestedRecordingReplaysLayerBlendMode`
+- Full CMP command-recorder desktop test class passed:
+  - `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest`
+- Skiko interop tests passed:
+  - `./gradlew --no-daemon --no-configuration-cache :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`
+- Magic Jewel compiled:
+  - `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon --no-configuration-cache compileKotlin`
+- Magic Jewel script syntax checks passed:
+  - `bash -n scripts/jbr-skia-command-probe-suite.sh`
+
+Known notes:
+
+- This does not broaden color-filter support beyond tint/SrcIn. It only removes the artificial fallback when a supported graphics-layer blend mode and supported graphics-layer tint filter are used together.
+- JBR native test and live `commands-graphics-layer-blend-color-filter` validation should run after the local JBR native build is unblocked.

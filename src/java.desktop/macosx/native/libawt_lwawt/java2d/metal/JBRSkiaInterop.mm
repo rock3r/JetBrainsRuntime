@@ -72,7 +72,7 @@
 
 #include "MTLSurfaceDataBase.h"
 
-static constexpr jint ABI_ID = 74;
+static constexpr jint ABI_ID = 75;
 static constexpr jint COMMAND_STREAM_MAGIC = 1246972723;
 static constexpr jint COMMAND_STREAM_HEADER_SIZE = 6;
 static constexpr jint COMMAND_STREAM_FLAGS_NONE = 0;
@@ -133,6 +133,7 @@ static constexpr jint COMMAND_FILL_RECT_COLOR_FILTER_REF = 47;
 static constexpr jint COMMAND_EVICT_COLOR_FILTER_HANDLE = 48;
 static constexpr jint COMMAND_DEFINE_EFFECT_DESCRIPTOR = 49;
 static constexpr jint COMMAND_SAVE_LAYER_BLEND_MODE = 50;
+static constexpr jint COMMAND_SAVE_LAYER_BLEND_COLOR_FILTER = 51;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER = 1;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_VERSION_1 = 1;
 static constexpr jint COMMAND_BLEND_MODE_PLUS = 1;
@@ -1792,6 +1793,35 @@ static bool drawCommandList(SkCanvas* canvas,
                 SkPaint layerPaint;
                 layerPaint.setAlphaf(static_cast<float>(alpha1000) / 1000.0f);
                 layerPaint.setBlendMode(skBlendMode);
+                canvas->saveLayer(&bounds, &layerPaint);
+                break;
+            }
+            case COMMAND_SAVE_LAYER_BLEND_COLOR_FILTER: {
+                if (recordFlags != COMMAND_RECORD_FLAGS_NONE || offset + 8 != recordEnd) {
+                    return false;
+                }
+                jint x = commands[offset++];
+                jint y = commands[offset++];
+                jint layerWidth = commands[offset++];
+                jint layerHeight = commands[offset++];
+                jint alpha1000 = commands[offset++];
+                jint blendMode = commands[offset++];
+                SkColor filterColor = skColorFromArgb(commands[offset++]);
+                jint filterBlendMode = commands[offset++];
+                SkBlendMode skBlendMode;
+                if (layerWidth < 0 || layerHeight < 0 || alpha1000 < 0 || alpha1000 > 1000
+                        || !skBlendModeForFill(blendMode, &skBlendMode)
+                        || filterBlendMode != COMMAND_BLEND_MODE_SRC_IN) {
+                    return false;
+                }
+                SkRect bounds = SkRect::MakeXYWH(static_cast<SkScalar>(x),
+                                                 static_cast<SkScalar>(y),
+                                                 static_cast<SkScalar>(layerWidth),
+                                                 static_cast<SkScalar>(layerHeight));
+                SkPaint layerPaint;
+                layerPaint.setAlphaf(static_cast<float>(alpha1000) / 1000.0f);
+                layerPaint.setBlendMode(skBlendMode);
+                layerPaint.setColorFilter(SkColorFilters::Blend(filterColor, SkBlendMode::kSrcIn));
                 canvas->saveLayer(&bounds, &layerPaint);
                 break;
             }
