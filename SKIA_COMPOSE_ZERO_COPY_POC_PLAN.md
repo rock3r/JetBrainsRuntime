@@ -7002,3 +7002,51 @@ Verification:
 Next:
 
 - Start the window-only old/new screenshot parity harness for rich Swing/CMP/Jewel content, with deterministic animation phases so animated blend probes, gradients, progress bars, and Swing islands can be compared repeatably.
+
+## Checkpoint: Window-Only Screenshot Parity And Swing Repaint Preservation
+
+Status: completed as the first rich old/new screenshot parity harness and a Skiko-side preservation guard for Swing-driven interop-only repaint passes.
+
+What changed:
+
+- Magic Jewel gained deterministic screenshot controls:
+  - `magic.jewel.fixedAnimationPhase`
+  - `magic.jewel.fixedFrameTicks`
+  - `magic.jewel.pauseSwingAnimation`
+- The report harness can now capture old and new renderer windows by window id/title, without full-screen screenshot-and-crop fallback.
+- Added `scripts/jbr-skia-screenshot-parity.sh`, which runs old SwingGraphics and new JBR Skia command mode with the same deterministic Magic Jewel scene, captures both windows, runs strict command screenshot assertions, and then compares the two PNGs with a Swift image-diff helper.
+- Added `scripts/compare-jbr-skia-window-screenshots.sh`, which emits a stable `JBR_SKIA_SCREENSHOT_PARITY ...` marker with size, average delta, max delta, bad pixel count, and bad pixel ratio.
+- Skiko command mode no longer self-schedules a repaint after every successful command replay. That loop created extra tiny command streams after a useful full-frame replay.
+- Skiko now caches the last meaningful command stream and replays it for tiny interop-only command streams. This prevents Swing child repaint/layout passes from replacing the full Compose scene with a mostly blank destination while still allowing real Compose command frames to refresh the cache.
+- The preservation cache clears on Skiko removal and JBR destination surface replacement, so it does not carry stale commands across surface migration/resize.
+- Magic Jewel screenshot thresholds were tuned for the richer all-probes parity scene, where Skia text/raster differences can shift paragraph and arc-probe pixel counts without indicating a blank or misplaced scene.
+
+Verification:
+
+- Skiko focused interop tests passed, including new command-frame cache tests:
+  - cache returns the current meaningful stream
+  - cache replays the last meaningful stream for a minimal interop-only stream
+  - cache returns a minimal stream if no meaningful stream exists yet
+  - cache clears after surface replacement/removal
+- Skiko snapshot was republished locally for Magic Jewel.
+- Magic Jewel compile passed with the deterministic parity properties.
+- Magic Jewel frozen old/new screenshot parity passed:
+  - `/tmp/magic-jewel-screenshot-parity-cache-guard-3/summary.tsv`
+  - report: `/tmp/magic-jewel-screenshot-parity-cache-guard-3/report/report.md`
+- The parity run emitted `SKIKO_JBR_INTEROP_COMMAND_REPLAY_CACHED` markers for tiny 26-word interop-only streams and rendered the cached full scene instead of blanking the window.
+- Magic Jewel non-frozen command-mode smoke passed:
+  - report: `/tmp/magic-jewel-command-animation-smoke/report.md`
+  - `new` app frames: `980`, `app_new_fps=163.3`
+  - `jbr_command_frames=980`, `jbr_command_fps=163.3`
+  - zero picture replay and zero unsupported command frames
+- The non-frozen smoke screenshot shows advancing Magic Jewel frame/tick counters, confirming the deterministic parity freeze did not disable normal animation.
+
+Open risks:
+
+- The Skiko preservation guard currently uses command-stream size as the signal for interop-only repaint frames. That is acceptable for this PoC checkpoint, but the next cleanup should replace it with an explicit recorder/frame-kind marker from CMP/Skiko so a legitimately tiny full-scene frame is not misclassified.
+- The parity script persists old/new screenshots and pass/fail markers, but does not yet persist a diff image or per-region ownership metrics into `summary.properties`.
+- Old/new parity is intentionally tolerant of text/raster differences. Compose/Jewel-owned regions still need a more explicit ownership map so Swing text changes do not hide real Compose geometry drift.
+
+Next:
+
+- Replace the cache-size heuristic with an explicit frame-kind signal, then add diff-image/ownership-region output to the parity report. After that, the next feature slice should be graphics-layer nested command recording or the first real JBR-owned generic shader/effect handle.

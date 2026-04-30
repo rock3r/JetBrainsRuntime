@@ -13,6 +13,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Magic Jewel report compares old/new modes and records command/picture/fallback counters.
 - [x] Magic Jewel summary exposes machine-readable FPS fields for app, Swing, popup, picture, and command markers.
 - [x] Command mode validated with zero picture replay and zero fallback markers.
+- [x] Skiko command mode preserves the last meaningful Compose command stream across Swing-driven interop-only repaint passes, avoiding blank/flashing frames while real Compose animation frames still update.
 
 ## Command ABI Coverage
 
@@ -150,14 +151,17 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 ## Validation Harness
 
 - [x] Focused CMP recorder tests for command encodings.
-- [ ] Golden/diff screenshot harness for the full mixed Swing/Jewel/Compose Magic Jewel scene.
-- [ ] Capture the app window only in old/new renderer modes, with deterministic sizing, theme, font inputs, animation phase, and seeded content.
+- [x] Golden/diff screenshot harness for the full mixed Swing/Jewel/Compose Magic Jewel scene.
+- [x] Capture the app window only in old/new renderer modes, with deterministic sizing, theme, font inputs, animation phase, and seeded content.
 - [ ] Compare screenshot regions by ownership: tight tolerance for Compose/Jewel regions because CMP should match old Skia output, looser text-aware tolerance for Swing text after Java2D-to-Skia changes, and explicit occlusion/layer-boundary assertions for mixed content.
-- [ ] Add screenshot parity jobs that run both old and new renderers for the same rich scene, emit old/new/diff images, and fail on unexpected Compose/Jewel geometry/color drift. Expected Swing text rendering differences must be isolated to Swing-owned regions and documented in the report.
-- [ ] Add a rich-content old/new parity suite with Jewel controls/text, Compose primitives/text/images/effects, Swing islands, popups/menus, and always-on animation sampled at deterministic phases.
-- [ ] Persist old/new screenshots, diff images, per-region metrics, and pass/fail thresholds in the Magic Jewel report and `summary.properties`.
-- [ ] Make the parity suite window-only end to end: launch old/new renderers, capture the Magic Jewel window by id/title, crop no whole-screen screenshots, and keep the capture metadata in the report.
-- [ ] Add deterministic animation-phase controls for parity runs so animated progress, blend probes, gradients, and Swing islands can be compared at repeatable frame phases.
+- [x] Add screenshot parity jobs that run both old and new renderers for the same rich scene, emit old/new images, and fail on unexpected Compose/Jewel geometry/color drift. Expected Swing text rendering differences must be isolated to Swing-owned regions and documented in the report.
+- [x] Add a rich-content old/new parity suite with Jewel controls/text, Compose primitives/text/images/effects, Swing islands, popups/menus, and always-on animation sampled at deterministic phases.
+- [ ] Persist diff images and per-region parity metrics in the Magic Jewel report and `summary.properties`.
+- [x] Persist old/new screenshots and pass/fail thresholds in the Magic Jewel report.
+- [x] Make the parity suite window-only end to end: launch old/new renderers, capture the Magic Jewel window by id/title, crop no whole-screen screenshots, and keep the capture metadata in the report.
+- [x] Add deterministic animation-phase controls for parity runs so animated progress, blend probes, gradients, and Swing islands can be compared at repeatable frame phases.
+- [x] Add a live non-frozen command-mode animation smoke after the preservation guard so FPS and frame counters prove the sample still animates outside parity mode.
+- [ ] Replace the command-stream size heuristic for interop-only repaint preservation with an explicit CMP/Skiko frame-kind marker once the recorder can tag full-scene vs. interop-only paints.
 - [x] Focused CMP recorder tests for unsupported saveLayer layer-paint fallback.
 - [x] Focused CMP recorder tests for unsupported image paint fallback.
 - [x] Focused Skiko compatibility/fallback tests.
