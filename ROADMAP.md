@@ -66,6 +66,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] ABI 67: solid fill rectangles support `BlendMode.ColorBurn` through the structured blend-mode command.
 - [x] ABI 68: solid fill rectangles support `BlendMode.Hardlight` through the structured blend-mode command.
 - [x] ABI 69: solid fill rectangles support `BlendMode.Softlight` through the structured blend-mode command.
+- [x] ABI 70: solid fill rectangles support `BlendMode.Hue` through the structured blend-mode command.
 
 ## Near-Term Rendering Work
 
@@ -122,6 +123,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Add `BlendMode.ColorBurn` fill-rectangle command replay and screenshot-region validation.
 - [x] Add `BlendMode.Hardlight` fill-rectangle command replay and screenshot-region validation.
 - [x] Add `BlendMode.Softlight` fill-rectangle command replay and screenshot-region validation.
+- [x] Add `BlendMode.Hue` fill-rectangle command replay and screenshot-region validation.
 - [ ] Continue blend-mode command coverage mode-by-mode only after each mode has exact Skia-vs-Java2D semantics documented.
 - [ ] Command-recorded graphics layers:
   - [x] Mark Skiko `GraphicsLayer`/`RenderNode` draws as an explicit strict fallback while command replay cannot encode layer contents/effects.
@@ -212,6 +214,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] ABI 67 ColorBurn blend-mode command-probe row: `/tmp/magic-jewel-command-probe-abi67-color-burn-blend/suite.tsv`.
 - [x] ABI 68 Hardlight blend-mode command-probe row: `/tmp/magic-jewel-command-probe-abi68-hardlight-blend/suite.tsv`.
 - [x] ABI 69 Softlight blend-mode command-probe row: `/tmp/magic-jewel-command-probe-abi69-softlight-blend/suite.tsv`.
+- [x] ABI 70 Hue blend-mode command-probe row: `/tmp/magic-jewel-command-probe-abi70-hue-blend/suite.tsv`.
 - [x] Explicit graphics-layer fallback command-probe row after narrowing benign layer fallback: `/tmp/magic-jewel-command-probe-graphics-layer-fallback-2/suite.tsv`.
 - [x] Real undecorated Swing popup-window smoke captured separately by window id.
 

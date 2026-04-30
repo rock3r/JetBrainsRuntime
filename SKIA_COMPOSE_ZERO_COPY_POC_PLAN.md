@@ -6885,3 +6885,32 @@ Verification:
 Next:
 
 - Continue exact direct-mapping blend modes where Skia has a one-to-one `SkBlendMode`, or switch to the window-only old/new screenshot parity harness now that the blend probe has broad visible coverage.
+
+## Checkpoint: ABI 70 Hue Blend-Mode Fill Rectangles
+
+Status: completed as another exact direct-mapping blend-mode slice across JBR, public Runtime API, Skiko, CMP, and Magic Jewel.
+
+What changed:
+
+- Runtime API and JBR private API expose ABI 70 and the Hue blend-mode payload constant.
+- JBR Java validation accepts Hue wherever the fill-rect blend-mode command is valid.
+- Native `JBRSkiaInterop.mm` gates command streams on ABI 70 and maps the payload to `SkBlendMode::kHue` inside JBR's Skia runtime.
+- Skiko compatibility requires ABI 70 before enabling command mode.
+- CMP records `BlendMode.Hue` solid fill rectangles through the structured blend-mode command when the paint has no shader, color filter, or path effect.
+- Magic Jewel extends the blend-mode visual probe and screenshot assertion with a visible far-right lower Hue region.
+- `ROADMAP.md` marks ABI 70 complete and records the live probe path.
+
+Verification:
+
+- Runtime API compile passed for ABI 70.
+- JBR API validator passed with ABI 70 and the Hue payload.
+- Native `JBRSkiaInterop.mm` standalone build passed at `/tmp/jbr-skia-native/libjbrskiainterop.dylib` with the Hue mapping.
+- CMP focused recorder tests passed for Hue and Softlight blend-mode records.
+- Skiko interop tests passed with ABI 70 fixture expectations.
+- Magic Jewel compile passed.
+- Magic Jewel ABI 70 Hue live command probe passed: `/tmp/magic-jewel-command-probe-abi70-hue-blend/suite.tsv`, with `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, and `jbr_command_frames=739`.
+- The window screenshot assertion passed with `blendModeHue=1508`.
+
+Next:
+
+- Continue the component blend family with `Saturation`, `Color`, and `Luminosity`, or spend a slice on the old/new screenshot parity harness before adding more modes.

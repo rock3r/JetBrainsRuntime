@@ -72,7 +72,7 @@
 
 #include "MTLSurfaceDataBase.h"
 
-static constexpr jint ABI_ID = 69;
+static constexpr jint ABI_ID = 70;
 static constexpr jint COMMAND_STREAM_MAGIC = 1246972723;
 static constexpr jint COMMAND_STREAM_HEADER_SIZE = 6;
 static constexpr jint COMMAND_STREAM_FLAGS_NONE = 0;
@@ -147,6 +147,7 @@ static constexpr jint COMMAND_BLEND_MODE_COLOR_DODGE = 10;
 static constexpr jint COMMAND_BLEND_MODE_COLOR_BURN = 11;
 static constexpr jint COMMAND_BLEND_MODE_HARDLIGHT = 12;
 static constexpr jint COMMAND_BLEND_MODE_SOFTLIGHT = 13;
+static constexpr jint COMMAND_BLEND_MODE_HUE = 14;
 static constexpr jint COMMAND_PAINT_STYLE_FILL = 0;
 static constexpr jint COMMAND_PAINT_STYLE_STROKE = 1;
 static constexpr jint COMMAND_PATH_FILL_NON_ZERO = 0;
@@ -540,6 +541,9 @@ static bool skBlendModeForFill(jint commandBlendMode, SkBlendMode* blendMode) {
             return true;
         case COMMAND_BLEND_MODE_SOFTLIGHT:
             *blendMode = SkBlendMode::kSoftLight;
+            return true;
+        case COMMAND_BLEND_MODE_HUE:
+            *blendMode = SkBlendMode::kHue;
             return true;
         default:
             return false;
