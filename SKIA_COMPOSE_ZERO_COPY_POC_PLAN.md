@@ -7463,7 +7463,7 @@ Known notes:
 
 ## Checkpoint: ABI 80 SaveLayer Blend + Descriptor-Handle Filters
 
-Status: source and JVM-side validation are in progress; native JBR/live Magic Jewel validation remains blocked on local Xcode license acceptance.
+Status: source and JVM-side validation passed; native JBR/live Magic Jewel validation remains blocked on local Xcode license acceptance.
 
 What changed:
 
@@ -7490,3 +7490,28 @@ Known notes:
 
 - Focused CMP recorder test execution still trips the broader `compose:ui` desktop compile issue resolving the Skiko JBR command-frame bridge package before the recorder test class runs.
 - Native JBR test and live `commands-graphics-layer-blend-color-matrix-filter` validation should run after the local JBR native build is unblocked.
+
+## Checkpoint: ABI 81 Expandable Command Capability Negotiation
+
+Status: source and JVM-side validation passed; native JBR/live validation remains blocked on local Xcode license acceptance.
+
+What changed:
+
+- JBR private API, public Runtime API, Skiko compatibility gate, and CMP command recorder now use command ABI 81.
+- Added `getCommandCapabilities64High()` as a second 64-bit command capability word. It currently returns `0L`, but gives future render-effect/generic-shader commands a strict negotiated space now that ABI 80 consumed every bit of the low word.
+- Skiko reads both low and high words reflectively and treats missing required bits in either word as `SKIKO_JBR_INTEROP_FALLBACK reason=command-capability-mismatch`.
+- Skiko tests include a high-word override property, `skiko.jbr.interop.requiredCommandCapabilitiesHighForTest`, so future high-word capabilities can be tested before a concrete command lands.
+
+Verification:
+
+- Skiko focused interop tests passed:
+  - `./gradlew --no-daemon --no-configuration-cache :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`
+- CMP `ui-graphics` desktop sources compile:
+  - `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:compileKotlinDesktop`
+- Magic Jewel compiled:
+  - `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon --no-configuration-cache compileKotlin`
+
+Known notes:
+
+- This is a structural ABI checkpoint only; it intentionally adds no drawing command.
+- Native JBR/live validation remains blocked on local Xcode license acceptance.

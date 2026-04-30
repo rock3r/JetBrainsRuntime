@@ -51,13 +51,13 @@ public class JBRSkiaApiTest {
     }
 
     public static void main(String[] args) throws Exception {
-        assertEquals(80, JBRSkia.ABI_ID, "ABI_ID");
+        assertEquals(81, JBRSkia.ABI_ID, "ABI_ID");
         assertEquals(3, JBRSkia.NATIVE_ABI_VERSION, "NATIVE_ABI_VERSION");
-        assertEquals("skia=m147-64a2414108;flags=macos-release-metal-poc:1;abi=80;native=3", JBRSkia.BUILD_ID, "BUILD_ID");
+        assertEquals("skia=m147-64a2414108;flags=macos-release-metal-poc:1;abi=81;native=3", JBRSkia.BUILD_ID, "BUILD_ID");
 
-        assertReflectiveStaticEquals(80, JBRSkia.class.getDeclaredField("ABI_ID"));
+        assertReflectiveStaticEquals(81, JBRSkia.class.getDeclaredField("ABI_ID"));
         assertReflectiveStaticEquals(3, JBRSkia.class.getDeclaredField("NATIVE_ABI_VERSION"));
-        assertReflectiveStaticEquals("skia=m147-64a2414108;flags=macos-release-metal-poc:1;abi=80;native=3", JBRSkia.class.getDeclaredField("BUILD_ID"));
+        assertReflectiveStaticEquals("skia=m147-64a2414108;flags=macos-release-metal-poc:1;abi=81;native=3", JBRSkia.class.getDeclaredField("BUILD_ID"));
 
         if (TestJBRSkia.INSTANCE != null) {
             throw new AssertionError("JBRSkia service must be unavailable before native runtime is wired");
@@ -74,6 +74,7 @@ public class JBRSkiaApiTest {
         var service = new JBRSkiaService();
         assertEquals(expectedCommandCapabilities(), service.getCommandCapabilities(), "command capabilities");
         assertEquals(expectedCommandCapabilities64(), service.getCommandCapabilities64(), "64-bit command capabilities");
+        assertEquals(0L, service.getCommandCapabilities64High(), "high 64-bit command capabilities");
         assertCommandStreamValidation();
         var image = new BufferedImage(32, 24, BufferedImage.TYPE_INT_ARGB_PRE);
         Graphics2D graphics = image.createGraphics();

@@ -138,6 +138,7 @@ public class JBRSkiaService extends JBRSkia {
                     | COMMAND_CAP64_SAVE_LAYER_COLOR_FILTER_REF
                     | COMMAND_CAP64_DRAW_IMAGE_REF_COLOR_FILTER_REF
                     | COMMAND_CAP64_SAVE_LAYER_BLEND_COLOR_FILTER_REF;
+    private static final long COMMAND_CAPABILITIES_HIGH = 0L;
     private static final boolean NATIVE_BRIDGE_AVAILABLE = loadNativeBridge();
     private static final AtomicLong NEXT_SCOPE_ID = new AtomicLong(1);
     private static final int MAX_CACHED_IMAGES = 256;
@@ -171,6 +172,11 @@ public class JBRSkiaService extends JBRSkia {
     @Override
     public long getCommandCapabilities64() {
         return COMMAND_CAPABILITIES;
+    }
+
+    @Override
+    public long getCommandCapabilities64High() {
+        return COMMAND_CAPABILITIES_HIGH;
     }
 
     @Override

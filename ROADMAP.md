@@ -80,6 +80,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] ABI 78: saveLayer/graphics-layer replay can apply typed color-filter descriptor handles through a structured save-layer reference command.
 - [x] ABI 79: cached image refs can apply typed color-filter descriptor handles through a structured image reference command.
 - [x] ABI 80: saveLayer/graphics-layer replay can combine direct blend modes with typed color-filter descriptor handles.
+- [x] ABI 81: command capability negotiation has a second 64-bit word so future shader/effect commands have strict room to grow.
 
 ## Near-Term Rendering Work
 
