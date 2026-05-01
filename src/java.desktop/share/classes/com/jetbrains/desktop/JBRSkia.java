@@ -36,7 +36,7 @@ import java.nio.ByteBuffer;
  * so downstream compile-only clients cannot accidentally inline stale values.
  */
 public abstract class JBRSkia {
-    public static final int ABI_ID = Integer.parseInt("82");
+    public static final int ABI_ID = Integer.parseInt("83");
     public static final int NATIVE_ABI_VERSION = Integer.parseInt("3");
     public static final String SKIA_REVISION = "m147-" + "64a2414108";
     public static final String SKIA_FLAGS_HASH = "macos-release-metal-poc:" + Integer.parseInt("1");
@@ -115,6 +115,7 @@ public abstract class JBRSkia {
     public static final long COMMAND_CAP64_DRAW_IMAGE_REF_COLOR_FILTER_REF = Long.parseLong("4611686018427387904");
     public static final long COMMAND_CAP64_SAVE_LAYER_BLEND_COLOR_FILTER_REF = Long.parseLong("-9223372036854775808");
     public static final long COMMAND_CAP64_HIGH_SAVE_LAYER_IMAGE_FILTER_REF = Long.parseLong("1");
+    public static final long COMMAND_CAP64_HIGH_EFFECT_DESCRIPTOR_OFFSET_IMAGE_FILTER = Long.parseLong("2");
     public static final int COMMAND_CLEAR = Integer.parseInt("1");
     public static final int COMMAND_FILL_RECT = Integer.parseInt("2");
     public static final int COMMAND_STROKE_LINE = Integer.parseInt("3");
@@ -176,6 +177,7 @@ public abstract class JBRSkia {
     public static final int COMMAND_EFFECT_DESCRIPTOR_COLOR_MATRIX_FILTER = Integer.parseInt("2");
     public static final int COMMAND_EFFECT_DESCRIPTOR_LIGHTING_FILTER = Integer.parseInt("3");
     public static final int COMMAND_EFFECT_DESCRIPTOR_BLUR_IMAGE_FILTER = Integer.parseInt("4");
+    public static final int COMMAND_EFFECT_DESCRIPTOR_OFFSET_IMAGE_FILTER = Integer.parseInt("5");
     public static final int COMMAND_EFFECT_DESCRIPTOR_VERSION_1 = Integer.parseInt("1");
     public static final int COMMAND_BLEND_MODE_PLUS = Integer.parseInt("1");
     public static final int COMMAND_BLEND_MODE_SRC_IN = Integer.parseInt("2");

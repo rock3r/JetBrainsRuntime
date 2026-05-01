@@ -7544,3 +7544,26 @@ Known notes:
 
 - This slice covers only simple graphics-layer blur effects. Offset effects, nested render-effect chains, runtime effects/SKSL, and combinations with layer blend/color-filter paints remain future descriptor/handle work.
 - Native JBR test and live Magic Jewel blur-render-effect validation should run after the local JBR native build is unblocked.
+
+## Checkpoint: ABI 83 Offset Image-Filter Descriptor
+
+Status: source and JVM-side validation passed for Skiko/CMP; native JBR/live validation remains blocked on local Xcode license acceptance.
+
+What changed:
+
+- JBR private API, public Runtime API, Skiko compatibility gate, and CMP command recorder now use command ABI 83.
+- Added high-word capability `COMMAND_CAP64_HIGH_EFFECT_DESCRIPTOR_OFFSET_IMAGE_FILTER = 2` and descriptor type `COMMAND_EFFECT_DESCRIPTOR_OFFSET_IMAGE_FILTER = 5`.
+- CMP serializes graphics-layer `OffsetEffect` with no child effect into the generic effect-descriptor envelope as `[dxBits, dyBits]`, then reuses `COMMAND_SAVE_LAYER_IMAGE_FILTER_REF`.
+- JBR Java validation rejects malformed offset descriptors and non-finite offsets. Java2D fallback replay validates the descriptor scope; native Metal replay reconstructs `SkImageFilters::Offset(...)` inside JBR-owned Skia.
+
+Verification:
+
+- Skiko focused interop tests passed:
+  - `./gradlew --no-daemon --no-configuration-cache :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`
+- CMP `ui-graphics` desktop sources compile:
+  - `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:compileKotlinDesktop`
+
+Known notes:
+
+- This slice still rejects nested render-effect chains. The next render-effect step is either a chain descriptor contract or a Magic Jewel offset probe.
+- Native JBR test and live validation should run after the local JBR native build is unblocked.

@@ -139,7 +139,8 @@ public class JBRSkiaService extends JBRSkia {
                     | COMMAND_CAP64_DRAW_IMAGE_REF_COLOR_FILTER_REF
                     | COMMAND_CAP64_SAVE_LAYER_BLEND_COLOR_FILTER_REF;
     private static final long COMMAND_CAPABILITIES_HIGH =
-            COMMAND_CAP64_HIGH_SAVE_LAYER_IMAGE_FILTER_REF;
+            COMMAND_CAP64_HIGH_SAVE_LAYER_IMAGE_FILTER_REF
+                    | COMMAND_CAP64_HIGH_EFFECT_DESCRIPTOR_OFFSET_IMAGE_FILTER;
     private static final boolean NATIVE_BRIDGE_AVAILABLE = loadNativeBridge();
     private static final AtomicLong NEXT_SCOPE_ID = new AtomicLong(1);
     private static final int MAX_CACHED_IMAGES = 256;
@@ -538,6 +539,12 @@ public class JBRSkiaService extends JBRSkia {
                         && sigmaY >= 0f
                         && tileMode >= 0
                         && tileMode <= 3;
+            }
+            if (descriptorType == COMMAND_EFFECT_DESCRIPTOR_OFFSET_IMAGE_FILTER) {
+                if (payloadIntCount != 2) return false;
+                float dx = Float.intBitsToFloat(commands[record.argsStart() + 5]);
+                float dy = Float.intBitsToFloat(commands[record.argsStart() + 6]);
+                return Float.isFinite(dx) && Float.isFinite(dy);
             }
             return false;
         }
@@ -1423,6 +1430,15 @@ public class JBRSkiaService extends JBRSkia {
                     0,
                     0,
                     new int[] { sigmaXBits, sigmaYBits, tileMode }
+            );
+        }
+
+        static ColorFilterDescriptor offsetImageFilter(int dxBits, int dyBits) {
+            return new ColorFilterDescriptor(
+                    COMMAND_EFFECT_DESCRIPTOR_OFFSET_IMAGE_FILTER,
+                    0,
+                    0,
+                    new int[] { dxBits, dyBits }
             );
         }
     }
@@ -2758,7 +2774,9 @@ public class JBRSkiaService extends JBRSkia {
                         int alpha1000 = commands[offset++];
                         long handle = cacheKey(commands[offset++], commands[offset++]);
                         ColorFilterDescriptor descriptor = COLOR_FILTER_CACHE.get(new ColorFilterCacheKey(contextPtr, handle));
-                        if (descriptor == null || descriptor.type() != COMMAND_EFFECT_DESCRIPTOR_BLUR_IMAGE_FILTER
+                        if (descriptor == null
+                                || (descriptor.type() != COMMAND_EFFECT_DESCRIPTOR_BLUR_IMAGE_FILTER
+                                        && descriptor.type() != COMMAND_EFFECT_DESCRIPTOR_OFFSET_IMAGE_FILTER)
                                 || width < 0 || height < 0 || alpha1000 < 0 || alpha1000 > 1000) return false;
                         stack.addLast(current);
                         current = (Graphics2D) current.create();
@@ -3133,6 +3151,17 @@ public class JBRSkiaService extends JBRSkia {
                             COLOR_FILTER_CACHE.put(
                                     new ColorFilterCacheKey(contextPtr, handle),
                                     ColorFilterDescriptor.blurImageFilter(sigmaXBits, sigmaYBits, tileMode)
+                            );
+                        } else if (descriptorType == COMMAND_EFFECT_DESCRIPTOR_OFFSET_IMAGE_FILTER) {
+                            if (payloadIntCount != 2) return false;
+                            int dxBits = commands[offset++];
+                            int dyBits = commands[offset++];
+                            float dx = Float.intBitsToFloat(dxBits);
+                            float dy = Float.intBitsToFloat(dyBits);
+                            if (!Float.isFinite(dx) || !Float.isFinite(dy)) return false;
+                            COLOR_FILTER_CACHE.put(
+                                    new ColorFilterCacheKey(contextPtr, handle),
+                                    ColorFilterDescriptor.offsetImageFilter(dxBits, dyBits)
                             );
                         } else {
                             return false;

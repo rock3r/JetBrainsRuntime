@@ -76,7 +76,7 @@
 
 #include "MTLSurfaceDataBase.h"
 
-static constexpr jint ABI_ID = 82;
+static constexpr jint ABI_ID = 83;
 static constexpr jint COMMAND_STREAM_MAGIC = 1246972723;
 static constexpr jint COMMAND_STREAM_HEADER_SIZE = 6;
 static constexpr jint COMMAND_STREAM_FLAGS_NONE = 0;
@@ -146,6 +146,7 @@ static constexpr jint COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER = 1;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_COLOR_MATRIX_FILTER = 2;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_LIGHTING_FILTER = 3;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_BLUR_IMAGE_FILTER = 4;
+static constexpr jint COMMAND_EFFECT_DESCRIPTOR_OFFSET_IMAGE_FILTER = 5;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_VERSION_1 = 1;
 static constexpr jint COMMAND_BLEND_MODE_PLUS = 1;
 static constexpr jint COMMAND_BLEND_MODE_SRC_IN = 2;
@@ -202,6 +203,8 @@ struct ColorFilterDescriptor {
     SkScalar sigmaX = 0;
     SkScalar sigmaY = 0;
     jint tileMode = 0;
+    SkScalar dx = 0;
+    SkScalar dy = 0;
 };
 
 struct ColorFilterScopedKey {
@@ -384,6 +387,17 @@ static bool setDescriptorImageFilter(SkPaint* paint, const ColorFilterDescriptor
                 descriptor.sigmaX,
                 descriptor.sigmaY,
                 skTileModeFromCommand(descriptor.tileMode),
+                nullptr,
+                nullptr));
+        return true;
+    }
+    if (descriptor.type == COMMAND_EFFECT_DESCRIPTOR_OFFSET_IMAGE_FILTER) {
+        if (!std::isfinite(descriptor.dx) || !std::isfinite(descriptor.dy)) {
+            return false;
+        }
+        paint->setImageFilter(SkImageFilters::Offset(
+                descriptor.dx,
+                descriptor.dy,
                 nullptr,
                 nullptr));
         return true;
@@ -2572,6 +2586,15 @@ static bool drawCommandList(SkCanvas* canvas,
                     if (!std::isfinite(descriptor.sigmaX) || !std::isfinite(descriptor.sigmaY) ||
                             descriptor.sigmaX < 0 || descriptor.sigmaY < 0 ||
                             descriptor.tileMode < 0 || descriptor.tileMode > 3) {
+                        return false;
+                    }
+                } else if (descriptorType == COMMAND_EFFECT_DESCRIPTOR_OFFSET_IMAGE_FILTER) {
+                    if (payloadIntCount != 2) {
+                        return false;
+                    }
+                    descriptor.dx = skScalarFromRawBits(commands[offset++]);
+                    descriptor.dy = skScalarFromRawBits(commands[offset++]);
+                    if (!std::isfinite(descriptor.dx) || !std::isfinite(descriptor.dy)) {
                         return false;
                     }
                 } else {
