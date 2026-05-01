@@ -547,6 +547,9 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Skiko reads JBR scoped paint ids and includes them in acquisition diagnostics.
 - [x] Parser-level tests for old Skiko/new JBR and new Skiko/old JBR fallback combinations.
 - [x] Launch-level forced compatibility matrix runner for happy path plus ABI/native-ABI/capability/public-API fallbacks.
+- [x] Launch-level compatibility matrix now validates high-word command capability mismatch. The low 64-bit capability
+  word is saturated in this PoC, so the high-word mismatch row is the useful forward-compatibility guard:
+  `/Users/rock3r/src/magic-jewel/out/jbr-skia-compatibility-matrix/20260501-215807`.
 - [x] Launch-level artifact matrix scaffold for named current/old JBR API, JBR native, desktop patch, Skiko, and CMP artifacts.
 - [x] Artifact matrix can require old-artifact rows in CI and fail if optional bundles are missing.
 - [x] Artifact bundle packaging helper can capture a current artifact set and feed it back into the launch-level artifact matrix.

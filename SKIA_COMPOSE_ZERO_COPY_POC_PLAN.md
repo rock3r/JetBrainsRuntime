@@ -10612,3 +10612,35 @@ Next checkpoint:
 
 - Continue with the next remaining functionality gap. Current candidates are exact shadow/elevation semantics or
   additional descriptor lifecycle/old-runtime compatibility tests.
+
+## Checkpoint: High-Word Capability Compatibility Matrix
+
+Status: completed as a stricter launch-level compatibility guard for newer descriptor capabilities.
+
+What changed:
+
+- Magic Jewel now propagates `SKIKO_REQUIRED_COMMAND_CAPABILITIES_HIGH_FOR_TEST` through `run-jbr-skia.sh` into
+  `-Dskiko.jbr.interop.requiredCommandCapabilitiesHighForTest=...`.
+- `jbr-skia-compatibility-matrix.sh` now validates high-word `command-capability-mismatch` instead of the old low-word
+  mismatch probe.
+- The low 64-bit capability word is saturated in this PoC, so requiring `-1` on the low word is no longer a valid
+  negative test. The high word still has spare bits and is the useful forward-compatibility guard for new descriptor
+  families.
+- Magic Jewel `README.md` and report-script help document the high-word test property.
+
+Verification:
+
+- Magic Jewel launch/report/matrix syntax passed:
+  - command: `bash -n scripts/run-jbr-skia.sh`
+  - command: `bash -n scripts/jbr-skia-interop-report.sh`
+  - command: `bash -n scripts/jbr-skia-compatibility-matrix.sh`
+- Magic Jewel compatibility matrix passed:
+  - command: `DURATION_SECONDS=3 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-compatibility-matrix.sh`
+  - output root: `/Users/rock3r/src/magic-jewel/out/jbr-skia-compatibility-matrix/20260501-215807`
+  - result: happy path produced JBR command frames; `abi-mismatch`, `native-abi-mismatch`,
+    `command-capability-high-mismatch`, and `public-api-missing` each emitted one structured fallback marker and zero
+    JBR command frames.
+
+Next checkpoint:
+
+- Continue with renderer functionality. Exact shadow/elevation semantics remains the largest visible fidelity gap.
