@@ -616,6 +616,26 @@ public class JBRSkiaService extends JBRSkia {
                 float radius = Float.intBitsToFloat(commands[record.argsStart() + 5]);
                 return Float.isFinite(radius) && radius >= 0f;
             }
+            if (descriptorType == COMMAND_EFFECT_DESCRIPTOR_STAMPED_PATH_EFFECT) {
+                if (payloadIntCount < 5) return false;
+                int payloadOffset = record.argsStart() + 5;
+                float advance = Float.intBitsToFloat(commands[payloadOffset]);
+                float phase = Float.intBitsToFloat(commands[payloadOffset + 1]);
+                int style = commands[payloadOffset + 2];
+                int fillType = commands[payloadOffset + 3];
+                int pathDataLength = commands[payloadOffset + 4];
+                return Float.isFinite(advance)
+                        && advance > 0f
+                        && Float.isFinite(phase)
+                        && phase >= 0f
+                        && style >= 0
+                        && style <= 2
+                        && (fillType == COMMAND_PATH_FILL_NON_ZERO || fillType == COMMAND_PATH_FILL_EVEN_ODD)
+                        && pathDataLength >= 0
+                        && pathDataLength <= 4096
+                        && payloadIntCount == 5 + pathDataLength
+                        && validatePathData(commands, payloadOffset + 5, record.recordEnd());
+            }
             return false;
         }
         if (record.op() == COMMAND_DEFINE_SHADER_DESCRIPTOR) {
@@ -1929,7 +1949,8 @@ public class JBRSkiaService extends JBRSkia {
     }
 
     private static boolean isPathEffectDescriptor(ColorFilterDescriptor descriptor) {
-        return descriptor.type() == COMMAND_EFFECT_DESCRIPTOR_CORNER_PATH_EFFECT;
+        return descriptor.type() == COMMAND_EFFECT_DESCRIPTOR_CORNER_PATH_EFFECT
+                || descriptor.type() == COMMAND_EFFECT_DESCRIPTOR_STAMPED_PATH_EFFECT;
     }
 
     private static int applyColorMatrix(int argb, int[] matrixBits) {
@@ -3735,6 +3756,28 @@ public class JBRSkiaService extends JBRSkia {
                             COLOR_FILTER_CACHE.put(
                                     new ColorFilterCacheKey(contextPtr, handle),
                                     ColorFilterDescriptor.pathEffect(descriptorType, new int[] { radiusBits })
+                            );
+                            logEffectHandleDefine("java2d", contextPtr, handle, descriptorType, descriptorVersion, payloadIntCount, false);
+                        } else if (descriptorType == COMMAND_EFFECT_DESCRIPTOR_STAMPED_PATH_EFFECT) {
+                            if (payloadIntCount < 5) return false;
+                            int[] payload = new int[payloadIntCount];
+                            System.arraycopy(commands, offset, payload, 0, payloadIntCount);
+                            float advance = Float.intBitsToFloat(payload[0]);
+                            float phase = Float.intBitsToFloat(payload[1]);
+                            int style = payload[2];
+                            int fillType = payload[3];
+                            int pathDataLength = payload[4];
+                            if (!Float.isFinite(advance) || advance <= 0f
+                                    || !Float.isFinite(phase) || phase < 0f
+                                    || style < 0 || style > 2
+                                    || (fillType != COMMAND_PATH_FILL_NON_ZERO && fillType != COMMAND_PATH_FILL_EVEN_ODD)
+                                    || pathDataLength < 0 || pathDataLength > 4096
+                                    || payloadIntCount != 5 + pathDataLength
+                                    || !validatePathData(payload, 5, payload.length)) return false;
+                            offset += payloadIntCount;
+                            COLOR_FILTER_CACHE.put(
+                                    new ColorFilterCacheKey(contextPtr, handle),
+                                    ColorFilterDescriptor.pathEffect(descriptorType, payload)
                             );
                             logEffectHandleDefine("java2d", contextPtr, handle, descriptorType, descriptorVersion, payloadIntCount, false);
                         } else {

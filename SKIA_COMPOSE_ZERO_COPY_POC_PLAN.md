@@ -9244,3 +9244,39 @@ Next checkpoint:
 
 - Extend the typed path-effect descriptor family to stamped path effects, then chain descriptors once both dash/corner and
   stamped leaves can be represented.
+
+## Checkpoint: ABI 97 Stamped PathEffect Descriptor Replay
+
+Status: typed path-effect descriptors now cover `PathEffect.stampedPathEffect(...)` for arbitrary `drawPath` records.
+
+What changed:
+
+- Bumped the tightly versioned interop ABI to `97` across JBR, the public Runtime API mirror, Skiko's compatibility gate,
+  and CMP's command stream header.
+- Added descriptor type `COMMAND_EFFECT_DESCRIPTOR_STAMPED_PATH_EFFECT = 10`.
+- CMP now preserves stamped path-effect metadata in `SkiaBackedPathEffect`, including advance, phase, style, fill type,
+  and the nested stamp-shape path payload.
+- JBR validates stamped descriptors for finite positive advance, finite non-negative phase, valid style/fill type,
+  bounded path payload length, and valid path verbs.
+- Native replay rebuilds the nested stamp path, creates `SkPath1DPathEffect`, attaches it to the paint, and reuses the
+  existing descriptor-ref `drawPath` command.
+- Magic Jewel's path-effect probe now includes a stamped rotating marker path in addition to dash and corner coverage.
+
+Verification:
+
+- Rebuilt Skiko AWT and published the local snapshot:
+  - command: `./gradlew --no-daemon --no-configuration-cache compileKotlinAwt publishAwtPublicationToMavenLocal`
+- Focused CMP recorder test passed:
+  - command: `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesStampedPathEffectDescriptorPathRecord`
+- Rebuilt local JBR API/desktop/native artifacts:
+  - command: `./scripts/rebuild-jbr-skia-local-artifacts.sh`
+- Focused Magic Jewel path-effect command probe passed:
+  - command: `CASES="commands-path-effect-fallback" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-110918/suite.tsv`
+  - result: `status=passed`, `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`,
+    `jbr_command_frames=330`
+
+Next checkpoint:
+
+- Add chained path-effect descriptors so Compose can combine descriptor-backed leaves without falling back to picture
+  replay.

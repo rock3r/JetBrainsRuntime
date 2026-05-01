@@ -66,6 +66,7 @@
 #include "ganesh/mtl/GrMtlDirectContext.h"
 #include "ganesh/mtl/GrMtlTypes.h"
 #include "include/gpu/ganesh/SkSurfaceGanesh.h"
+#include "include/effects/Sk1DPathEffect.h"
 #include "include/effects/SkCornerPathEffect.h"
 #include "include/effects/SkDashPathEffect.h"
 #include "include/effects/SkGradient.h"
@@ -80,7 +81,7 @@
 
 #include "MTLSurfaceDataBase.h"
 
-static constexpr jint ABI_ID = 96;
+static constexpr jint ABI_ID = 97;
 static constexpr jint COMMAND_STREAM_MAGIC = 1246972723;
 static constexpr jint COMMAND_STREAM_HEADER_SIZE = 6;
 static constexpr jint COMMAND_STREAM_FLAGS_NONE = 0;
@@ -162,6 +163,7 @@ static constexpr jint COMMAND_EFFECT_DESCRIPTOR_BLUR_IMAGE_FILTER_WITH_INPUT = 6
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_OFFSET_IMAGE_FILTER_WITH_INPUT = 7;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_RUNTIME_COLOR_FILTER = 8;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_CORNER_PATH_EFFECT = 9;
+static constexpr jint COMMAND_EFFECT_DESCRIPTOR_STAMPED_PATH_EFFECT = 10;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_VERSION_1 = 1;
 static constexpr jint COMMAND_SHADER_DESCRIPTOR_LINEAR_GRADIENT = 1;
 static constexpr jint COMMAND_SHADER_DESCRIPTOR_RADIAL_GRADIENT = 2;
@@ -388,6 +390,9 @@ static SkScalar skScalarFromRawBits(jint bits) {
     return static_cast<SkScalar>(value);
 }
 
+template <typename CommandWords>
+static bool pathFromCommandData(CommandWords commands, jsize offset, jsize recordEnd, jint fillType, SkPath* path);
+
 static sk_sp<SkColorFilter> makeDescriptorRuntimeColorFilter(const ColorFilterDescriptor& descriptor);
 
 static sk_sp<SkColorFilter> makeDescriptorColorFilter(const ColorFilterDescriptor& descriptor) {
@@ -431,7 +436,8 @@ static bool isImageFilterDescriptorType(jint type) {
 }
 
 static bool isPathEffectDescriptorType(jint type) {
-    return type == COMMAND_EFFECT_DESCRIPTOR_CORNER_PATH_EFFECT;
+    return type == COMMAND_EFFECT_DESCRIPTOR_CORNER_PATH_EFFECT ||
+            type == COMMAND_EFFECT_DESCRIPTOR_STAMPED_PATH_EFFECT;
 }
 
 static sk_sp<SkPathEffect> makeDescriptorPathEffect(const ColorFilterDescriptor& descriptor) {
@@ -440,6 +446,31 @@ static sk_sp<SkPathEffect> makeDescriptorPathEffect(const ColorFilterDescriptor&
         SkScalar radius = skScalarFromRawBits(descriptor.payload[0]);
         if (!std::isfinite(radius) || radius < 0) return nullptr;
         return SkCornerPathEffect::Make(radius);
+    }
+    if (descriptor.type == COMMAND_EFFECT_DESCRIPTOR_STAMPED_PATH_EFFECT) {
+        if (descriptor.payload.size() < 5) return nullptr;
+        const SkScalar advance = skScalarFromRawBits(descriptor.payload[0]);
+        const SkScalar phase = skScalarFromRawBits(descriptor.payload[1]);
+        const jint style = descriptor.payload[2];
+        const jint fillType = descriptor.payload[3];
+        const jint pathDataLength = descriptor.payload[4];
+        if (!std::isfinite(advance) || advance <= 0 ||
+                !std::isfinite(phase) || phase < 0 ||
+                style < 0 || style > 2 ||
+                (fillType != COMMAND_PATH_FILL_NON_ZERO && fillType != COMMAND_PATH_FILL_EVEN_ODD) ||
+                pathDataLength < 0 ||
+                descriptor.payload.size() != static_cast<size_t>(5 + pathDataLength)) {
+            return nullptr;
+        }
+        SkPath path;
+        if (!pathFromCommandData(descriptor.payload, 5, static_cast<jsize>(descriptor.payload.size()), fillType, &path)) {
+            return nullptr;
+        }
+        return SkPath1DPathEffect::Make(
+                path,
+                advance,
+                phase,
+                static_cast<SkPath1DPathEffect::Style>(style));
     }
     return nullptr;
 }
@@ -3289,6 +3320,30 @@ static bool drawCommandList(SkCanvas* canvas,
                     descriptor.payload.push_back(commands[offset++]);
                     const SkScalar radius = skScalarFromRawBits(descriptor.payload[0]);
                     if (!std::isfinite(radius) || radius < 0) {
+                        return false;
+                    }
+                } else if (descriptorType == COMMAND_EFFECT_DESCRIPTOR_STAMPED_PATH_EFFECT) {
+                    if (payloadIntCount < 5) {
+                        return false;
+                    }
+                    descriptor.payload.reserve(static_cast<size_t>(payloadIntCount));
+                    for (jint i = 0; i < payloadIntCount; i++) {
+                        descriptor.payload.push_back(commands[offset++]);
+                    }
+                    const SkScalar advance = skScalarFromRawBits(descriptor.payload[0]);
+                    const SkScalar phase = skScalarFromRawBits(descriptor.payload[1]);
+                    const jint style = descriptor.payload[2];
+                    const jint fillType = descriptor.payload[3];
+                    const jint pathDataLength = descriptor.payload[4];
+                    SkPath descriptorPath;
+                    if (!std::isfinite(advance) || advance <= 0 ||
+                            !std::isfinite(phase) || phase < 0 ||
+                            style < 0 || style > 2 ||
+                            (fillType != COMMAND_PATH_FILL_NON_ZERO && fillType != COMMAND_PATH_FILL_EVEN_ODD) ||
+                            pathDataLength < 0 ||
+                            pathDataLength > 4096 ||
+                            payloadIntCount != 5 + pathDataLength ||
+                            !pathFromCommandData(descriptor.payload, 5, static_cast<jsize>(descriptor.payload.size()), fillType, &descriptorPath)) {
                         return false;
                     }
                 } else {
