@@ -144,7 +144,8 @@ public class JBRSkiaService extends JBRSkia {
                     | COMMAND_CAP64_HIGH_EFFECT_DESCRIPTOR_CHAIN_IMAGE_FILTER
                     | COMMAND_CAP64_HIGH_SHADER_DESCRIPTOR_REF
                     | COMMAND_CAP64_HIGH_EFFECT_DESCRIPTOR_RUNTIME_COLOR_FILTER
-                    | COMMAND_CAP64_HIGH_STROKE_RECT_DASH_PATH_EFFECT;
+                    | COMMAND_CAP64_HIGH_STROKE_RECT_DASH_PATH_EFFECT
+                    | COMMAND_CAP64_HIGH_STROKE_ROUND_RECT_DASH_PATH_EFFECT;
     private static final boolean NATIVE_BRIDGE_AVAILABLE = loadNativeBridge();
     private static final AtomicLong NEXT_SCOPE_ID = new AtomicLong(1);
     private static final int MAX_CACHED_IMAGES = 256;
@@ -347,6 +348,7 @@ public class JBRSkiaService extends JBRSkia {
         if (op == COMMAND_FILL_RECT_SHADER_REF) return 10;
         if (op == COMMAND_STROKE_LINE_DASH_PATH_EFFECT) return -23;
         if (op == COMMAND_STROKE_RECT_DASH_PATH_EFFECT) return -23;
+        if (op == COMMAND_STROKE_ROUND_RECT_DASH_PATH_EFFECT) return -26;
         if (op == COMMAND_FILL_RECT_IMAGE_SHADER) return 14;
         if (op == COMMAND_CLEAR) return 4;
         if (op == COMMAND_CLEAR_RECT) return 7;
@@ -432,6 +434,9 @@ public class JBRSkiaService extends JBRSkia {
         }
         if (expectedLength == -25 && record.op() == COMMAND_DEFINE_SHADER_DESCRIPTOR) {
             return record.recordLength() >= 8;
+        }
+        if (expectedLength == -26 && record.op() == COMMAND_STROKE_ROUND_RECT_DASH_PATH_EFFECT) {
+            return record.recordLength() >= 18;
         }
         return expectedLength == record.recordLength();
     }
@@ -647,6 +652,33 @@ public class JBRSkiaService extends JBRSkia {
             }
             for (int index = 0; index < intervalCount; index++) {
                 if (commands[record.argsStart() + 11 + index] <= 0) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        if (record.op() == COMMAND_STROKE_ROUND_RECT_DASH_PATH_EFFECT) {
+            int intervalCount = commands[record.argsStart() + 12];
+            if (intervalCount < 2 || intervalCount > 16 || record.recordLength() != 16 + intervalCount) {
+                return false;
+            }
+            int left1000 = commands[record.argsStart() + 1];
+            int top1000 = commands[record.argsStart() + 2];
+            int right1000 = commands[record.argsStart() + 3];
+            int bottom1000 = commands[record.argsStart() + 4];
+            int radiusX1000 = commands[record.argsStart() + 5];
+            int radiusY1000 = commands[record.argsStart() + 6];
+            int strokeWidth = commands[record.argsStart() + 7];
+            int strokeCap = commands[record.argsStart() + 8];
+            int strokeJoin = commands[record.argsStart() + 9];
+            int strokeMiter = commands[record.argsStart() + 10];
+            int phase = commands[record.argsStart() + 11];
+            if (right1000 < left1000 || bottom1000 < top1000 || radiusX1000 < 0 || radiusY1000 < 0
+                    || !isValidStrokeMetadata(strokeWidth, strokeCap, strokeJoin, strokeMiter) || phase < 0) {
+                return false;
+            }
+            for (int index = 0; index < intervalCount; index++) {
+                if (commands[record.argsStart() + 13 + index] <= 0) {
                     return false;
                 }
             }
@@ -3769,6 +3801,47 @@ public class JBRSkiaService extends JBRSkia {
                         try {
                             current.setStroke(stroke);
                             current.drawRect(x, y, width, height);
+                        } finally {
+                            current.setStroke(previous);
+                        }
+                    } else if (op == COMMAND_STROKE_ROUND_RECT_DASH_PATH_EFFECT) {
+                        if (offset + 15 > recordEnd) return false;
+                        applyAntialiasing(current, antiAlias);
+                        current.setColor(new Color(commands[offset++], true));
+                        int left1000 = commands[offset++];
+                        int top1000 = commands[offset++];
+                        int right1000 = commands[offset++];
+                        int bottom1000 = commands[offset++];
+                        int radiusX1000 = commands[offset++];
+                        int radiusY1000 = commands[offset++];
+                        int strokeWidth = Math.max(1, commands[offset++]);
+                        int strokeCap = commands[offset++];
+                        int strokeJoin = commands[offset++];
+                        float strokeMiter = commands[offset++] / 1000f;
+                        float phase = commands[offset++] / 1000f;
+                        int intervalCount = commands[offset++];
+                        if (right1000 < left1000 || bottom1000 < top1000 || radiusX1000 < 0 || radiusY1000 < 0
+                                || intervalCount < 2 || intervalCount > 16 || offset + intervalCount != recordEnd) return false;
+                        float[] intervals = new float[intervalCount];
+                        for (int index = 0; index < intervalCount; index++) {
+                            int interval = commands[offset++];
+                            if (interval <= 0) return false;
+                            intervals[index] = interval / 1000f;
+                        }
+                        java.awt.Stroke previous = current.getStroke();
+                        java.awt.BasicStroke stroke = basicStroke(strokeWidth, strokeCap, strokeJoin, strokeMiter, intervals, phase);
+                        if (stroke == null) return false;
+                        RoundRectangle2D.Float roundRect = new RoundRectangle2D.Float(
+                                left1000 / 1000f,
+                                top1000 / 1000f,
+                                (right1000 - left1000) / 1000f,
+                                (bottom1000 - top1000) / 1000f,
+                                radiusX1000 / 1000f,
+                                radiusY1000 / 1000f
+                        );
+                        try {
+                            current.setStroke(stroke);
+                            current.draw(roundRect);
                         } finally {
                             current.setStroke(previous);
                         }

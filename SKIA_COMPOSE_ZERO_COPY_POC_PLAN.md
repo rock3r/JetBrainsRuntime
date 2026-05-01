@@ -9129,3 +9129,40 @@ Next checkpoint:
 
 - Continue path-effect coverage toward a typed descriptor shape for non-dash effects such as corner/stamped/chain, or
   add a narrower dashed round-rect/path command if we want one more low-risk step before descriptorizing path effects.
+
+## Checkpoint: ABI 94 Dashed Rounded-Rectangle PathEffect Replay
+
+Status: dash path-effect command replay now covers stroked rounded rectangles in addition to lines and rectangles.
+
+What changed:
+
+- Bumped the tightly versioned interop ABI to `94` across JBR, the public Runtime API mirror, Skiko's compatibility gate,
+  and CMP's command stream header.
+- Added `COMMAND_STROKE_ROUND_RECT_DASH_PATH_EFFECT = 60` and high capability bit
+  `COMMAND_CAP64_HIGH_STROKE_ROUND_RECT_DASH_PATH_EFFECT = 64`.
+- CMP records stroked rounded rectangles with `PathEffect.dashPathEffect(...)` as one structured command carrying solid
+  color, fixed-point round-rect bounds/radii, stroke metadata, dash phase, and dash intervals.
+- JBR Java validation rejects malformed dashed rounded-rectangle records, including inverted bounds, negative radii, bad
+  stroke metadata, bad dash phase, and invalid interval counts/values.
+- JBR Java2D fallback replay and native Skia replay both consume the new command. Native replay rebuilds a
+  `SkDashPathEffect` and draws a stroked `SkRRect`.
+- Magic Jewel's path-effect probe now draws a dashed line, dashed rectangle, and dashed rounded rectangle.
+
+Verification:
+
+- Rebuilt Skiko AWT and published the local snapshot:
+  - command: `./gradlew --no-daemon --no-configuration-cache compileKotlinAwt publishAwtPublicationToMavenLocal`
+- Focused CMP recorder tests passed:
+  - command: `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesDashedStrokeRectRecord --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesDashedStrokeRoundRectRecord`
+- Rebuilt local JBR API/desktop/native artifacts:
+  - command: `./scripts/rebuild-jbr-skia-local-artifacts.sh`
+- Focused Magic Jewel path-effect command probe passed:
+  - command: `CASES="commands-path-effect-fallback" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-103512/suite.tsv`
+  - result: `status=passed`, `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`,
+    `jbr_command_frames=152`
+
+Next checkpoint:
+
+- Decide whether the next path-effect increment should be dashed arbitrary paths, which requires a variable path payload
+  plus dash metadata, or the broader typed descriptor route for corner/stamped/chain effects.
