@@ -7815,3 +7815,38 @@ Known notes:
 
 - ABI 89 validates named uniform metadata but still passes raw uniform bytes positionally to `SkRuntimeEffect::makeShader`. Builder-backed named uniform assignment remains the next correctness slice if we need Skia-side layout validation instead of schema diagnostics.
 - Uniform names are intentionally restricted to simple ASCII SkSL identifiers for this first schema. Array/dotted names can be added later with explicit tests and an ABI bump.
+
+## Checkpoint: ABI 90 RuntimeEffect Named Child Schema
+
+Status: source implementation and JVM validation passed; native JBR build/live validation still waits for the local Xcode license/build unblock.
+
+What changed:
+
+- JBR private API, public Runtime API, Skiko compatibility gates, and CMP command recorder now use command ABI 90.
+- RuntimeEffect shader descriptor payloads now include a named-child schema count after the named-uniform count, followed by the source hash, child shader handles, named uniform entries, named child entries, SKSL source bytes, and raw uniform float bits.
+- CMP adds experimental `RuntimeEffectChild(name, shader)` metadata to `RuntimeEffectShader(...)`, serializes named child entries as child-index/name pairs, and keeps the old positional `children` list for compatibility.
+- JBR Java validation and native replay validate named child count, duplicate child indices, child index range, and child names before accepting a RuntimeEffect descriptor.
+- JBR API source coverage now includes malformed RuntimeEffect uniform-schema and child-schema streams that must fail validation.
+- JBR native replay can use `SkRuntimeEffectBuilder` when all child shaders are named and the named uniform schema covers the full uniform payload. This covers Magic Jewel's `phase` plus `content` RuntimeEffect probe without passing Skiko runtime objects across the ABI.
+- Magic Jewel's RuntimeEffect probe now declares both `RuntimeEffectUniform("phase", 0, 1)` and `RuntimeEffectChild("content", child)`.
+
+Verification:
+
+- JBR public API and Runtime API compile smokes passed:
+  - `javac -d /tmp/jbr-skia-api-compile src/java.desktop/share/classes/com/jetbrains/desktop/JBRSkia.java`
+  - `javac -d /tmp/jbr-runtime-api-skia-compile src/com/jetbrains/Service.java src/com/jetbrains/Provided.java src/com/jetbrains/JBRSkia.java`
+- Skiko interop tests passed with `abi=90`:
+  - `./gradlew --no-daemon --no-configuration-cache :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`
+- Skiko ABI 90 snapshot published locally:
+  - `./gradlew --no-daemon --no-configuration-cache :skiko:publishToMavenLocal`
+- CMP focused RuntimeEffect descriptor tests passed:
+  - `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesRuntimeEffectNamedChildSchemaInStrictMode --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.rejectsInvalidRuntimeEffectNamedChildSchemaInStrictMode --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesRuntimeEffectNamedUniformSchemaInStrictMode --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesRuntimeEffectShaderDescriptorWithChildShaderInStrictMode`
+- CMP full command-recorder suite passed with ABI 90:
+  - `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest`
+- Magic Jewel compiles against the refreshed local ABI 90 Skiko/CMP stack:
+  - `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon --no-configuration-cache compileKotlin`
+
+Known notes:
+
+- The builder path is deliberately conservative: it is used only when every child is named and named uniform coverage equals the full uniform payload. Partial schemas continue through the positional `makeShader` path after validation.
+- Child color-filter handles and richer compile diagnostics remain open RuntimeEffect work.

@@ -91,6 +91,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] ABI 88: RuntimeEffect/SKSL descriptors include a stable source hash that CMP writes and JBR Java/native validation verifies before compilation.
 - [x] RuntimeEffect compile failures emit parseable JBR markers and Magic Jewel reports expose/assert the marker count.
 - [x] ABI 89: RuntimeEffect/SKSL descriptors carry named uniform schema metadata that CMP writes and JBR Java/native validation checks before compilation.
+- [x] ABI 90: RuntimeEffect/SKSL descriptors carry named child shader schema metadata, and JBR can use `SkRuntimeEffectBuilder` when all children are named.
 
 ## Near-Term Rendering Work
 
@@ -115,7 +116,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   - [x] Add a shader descriptor-handle ABI so composite shader trees can be rebuilt inside JBR-owned Skia.
   - [ ] Implement JBR-owned shader/effect handles: Skiko/CMP serializes descriptors or create requests, JBR constructs objects inside its Skia runtime, draw commands reference versioned handles, and handles are scoped/evicted by destination context.
   - [x] Implement a concrete generic-shader MVP: CMP serializes a `RuntimeEffect` descriptor with ASCII SKSL source and raw float uniforms; JBR compiles/caches it inside the destination context and draw commands reference the JBR-owned handle.
-  - [ ] Extend Skia runtime effects via descriptor payloads: builder-backed named uniforms, child color-filter handles, richer compile diagnostics, and stable fallback markers.
+  - [ ] Extend Skia runtime effects via descriptor payloads: child color-filter handles, richer compile diagnostics, and stable fallback markers.
   - [ ] Add shader/effect lifecycle commands for create, use, context-scoped cache hit, compile failure, eviction, and context migration invalidation; never pass raw Skiko `SkShader*`, `SkImageFilter*`, or `SkRuntimeEffect*` pointers across the ABI.
   - [ ] Add RuntimeEffect conformance probes in Magic Jewel: one pure color shader, one child-shader composition, one uniform animation, one compile-failure fallback, and one old-runtime capability fallback.
   - [ ] Add Magic Jewel probes that force handle creation, reuse, context migration, eviction, and fallback without relying on raw Skiko `SkShader*` or `SkRuntimeEffect*` pointers.

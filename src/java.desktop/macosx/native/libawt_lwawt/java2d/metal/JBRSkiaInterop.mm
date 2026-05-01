@@ -34,6 +34,7 @@
 #include <functional>
 #include <memory>
 #include <mutex>
+#include <string>
 #include <unordered_map>
 #include <vector>
 
@@ -78,7 +79,7 @@
 
 #include "MTLSurfaceDataBase.h"
 
-static constexpr jint ABI_ID = 89;
+static constexpr jint ABI_ID = 90;
 static constexpr jint COMMAND_STREAM_MAGIC = 1246972723;
 static constexpr jint COMMAND_STREAM_HEADER_SIZE = 6;
 static constexpr jint COMMAND_STREAM_FLAGS_NONE = 0;
@@ -487,6 +488,11 @@ static int runtimeEffectUniformSchemaEnd(const std::vector<jint>& payload,
                                          int schemaEnd,
                                          jint namedUniformCount,
                                          jint uniformFloatCount);
+static int runtimeEffectChildSchemaEnd(const std::vector<jint>& payload,
+                                       int offset,
+                                       int schemaEnd,
+                                       jint namedChildCount,
+                                       jint childCount);
 
 static sk_sp<SkShader> makeDescriptorShader(const ShaderDescriptor& descriptor, void* imageCacheContextKey, int depth) {
     if (depth > 8) {
@@ -588,11 +594,12 @@ static sk_sp<SkShader> makeDescriptorShader(const ShaderDescriptor& descriptor, 
         return SkShaders::Blend(blendMode, dst, src);
     }
     if (descriptor.type == COMMAND_SHADER_DESCRIPTOR_RUNTIME_EFFECT) {
-        if (descriptor.payload.size() < 6) return nullptr;
+        if (descriptor.payload.size() < 7) return nullptr;
         const jint skslLength = descriptor.payload[0];
         const jint uniformFloatCount = descriptor.payload[1];
         const jint childCount = descriptor.payload[2];
         const jint namedUniformCount = descriptor.payload[3];
+        const jint namedChildCount = descriptor.payload[4];
         if (skslLength <= 0 ||
                 skslLength > 4096 ||
                 uniformFloatCount < 0 ||
@@ -601,8 +608,10 @@ static sk_sp<SkShader> makeDescriptorShader(const ShaderDescriptor& descriptor, 
                 childCount > 8 ||
                 namedUniformCount < 0 ||
                 namedUniformCount > 16 ||
+                namedChildCount < 0 ||
+                namedChildCount > childCount ||
                 descriptor.children.size() != static_cast<size_t>(childCount) ||
-                descriptor.payload.size() < static_cast<size_t>(6 + childCount * 2 + skslLength + uniformFloatCount)) {
+                descriptor.payload.size() < static_cast<size_t>(7 + childCount * 2 + skslLength + uniformFloatCount)) {
             return nullptr;
         }
         std::vector<sk_sp<SkShader>> childShaders;
@@ -613,15 +622,17 @@ static sk_sp<SkShader> makeDescriptorShader(const ShaderDescriptor& descriptor, 
             if (!shader) return nullptr;
             childShaders.push_back(shader);
         }
-        const int schemaStart = 6 + childCount * 2;
+        const int schemaStart = 7 + childCount * 2;
         const int schemaEnd = static_cast<int>(descriptor.payload.size()) - skslLength - uniformFloatCount;
-        const int skslStartInt = runtimeEffectUniformSchemaEnd(
+        const int childSchemaStart = runtimeEffectUniformSchemaEnd(
                 descriptor.payload, schemaStart, schemaEnd, namedUniformCount, uniformFloatCount);
+        const int skslStartInt = runtimeEffectChildSchemaEnd(
+                descriptor.payload, childSchemaStart, schemaEnd, namedChildCount, childCount);
         if (skslStartInt < 0 || skslStartInt + skslLength + uniformFloatCount != static_cast<int>(descriptor.payload.size())) {
             return nullptr;
         }
         const size_t skslStart = static_cast<size_t>(skslStartInt);
-        const uint64_t expectedHash = imageCacheKey(descriptor.payload[4], descriptor.payload[5]);
+        const uint64_t expectedHash = imageCacheKey(descriptor.payload[5], descriptor.payload[6]);
         if (shaderSourceHash(descriptor.payload, skslStart, skslLength) != expectedHash) return nullptr;
         std::string sksl;
         sksl.reserve(static_cast<size_t>(skslLength));
@@ -632,7 +643,7 @@ static sk_sp<SkShader> makeDescriptorShader(const ShaderDescriptor& descriptor, 
         }
         SkRuntimeEffect::Result result = SkRuntimeEffect::MakeForShader(SkString(sksl.c_str(), sksl.size()));
         if (!result.effect || !result.errorText.isEmpty()) {
-            const uint64_t sourceHash = imageCacheKey(descriptor.payload[3], descriptor.payload[4]);
+            const uint64_t sourceHash = imageCacheKey(descriptor.payload[5], descriptor.payload[6]);
             std::fprintf(stderr,
                          "JBR_SKIA_INTEROP_RUNTIME_EFFECT_COMPILE_FAILED hash=0x%016llx skslLength=%d uniforms=%d children=%d errorLength=%zu\n",
                          static_cast<unsigned long long>(sourceHash),
@@ -649,6 +660,46 @@ static sk_sp<SkShader> makeDescriptorShader(const ShaderDescriptor& descriptor, 
             uniformData = SkData::MakeWithCopy(
                     descriptor.payload.data() + skslStart + skslLength,
                     static_cast<size_t>(uniformFloatCount) * sizeof(jint));
+        }
+        jint namedUniformFloatTotal = 0;
+        int uniformSchemaOffset = schemaStart;
+        for (jint i = 0; i < namedUniformCount; i++) {
+            uniformSchemaOffset++;
+            namedUniformFloatTotal += descriptor.payload[static_cast<size_t>(uniformSchemaOffset++)];
+            const jint nameLength = descriptor.payload[static_cast<size_t>(uniformSchemaOffset++)];
+            uniformSchemaOffset += nameLength;
+        }
+        const bool canUseBuilder = (namedUniformCount > 0 || namedChildCount > 0) &&
+                (namedUniformCount == 0 || namedUniformFloatTotal == uniformFloatCount) &&
+                (childCount == 0 || namedChildCount == childCount);
+        if (canUseBuilder) {
+            SkRuntimeEffectBuilder builder(result.effect);
+            int uniformOffset = schemaStart;
+            for (jint i = 0; i < namedUniformCount; i++) {
+                const jint floatOffset = descriptor.payload[static_cast<size_t>(uniformOffset++)];
+                const jint floatCount = descriptor.payload[static_cast<size_t>(uniformOffset++)];
+                const jint nameLength = descriptor.payload[static_cast<size_t>(uniformOffset++)];
+                std::string name;
+                name.reserve(static_cast<size_t>(nameLength));
+                for (jint charIndex = 0; charIndex < nameLength; charIndex++) {
+                    name.push_back(static_cast<char>(descriptor.payload[static_cast<size_t>(uniformOffset++)]));
+                }
+                const float* values = reinterpret_cast<const float*>(
+                        descriptor.payload.data() + skslStart + skslLength + floatOffset);
+                if (!builder.uniform(name).set<float>(values, floatCount)) return nullptr;
+            }
+            int childOffset = childSchemaStart;
+            for (jint i = 0; i < namedChildCount; i++) {
+                const jint childIndex = descriptor.payload[static_cast<size_t>(childOffset++)];
+                const jint nameLength = descriptor.payload[static_cast<size_t>(childOffset++)];
+                std::string name;
+                name.reserve(static_cast<size_t>(nameLength));
+                for (jint charIndex = 0; charIndex < nameLength; charIndex++) {
+                    name.push_back(static_cast<char>(descriptor.payload[static_cast<size_t>(childOffset++)]));
+                }
+                builder.child(name) = childShaders[static_cast<size_t>(childIndex)];
+            }
+            return builder.makeShader(nullptr);
         }
         return result.effect->makeShader(
                 uniformData,
@@ -771,6 +822,32 @@ static int runtimeEffectUniformSchemaEnd(const std::vector<jint>& payload,
                 !isValidRuntimeEffectUniformName(payload, offset, nameLength)) {
             return -1;
         }
+        offset += nameLength;
+    }
+    return offset;
+}
+
+static int runtimeEffectChildSchemaEnd(const std::vector<jint>& payload,
+                                       int offset,
+                                       int schemaEnd,
+                                       jint namedChildCount,
+                                       jint childCount) {
+    if (offset < 0) return -1;
+    std::vector<bool> seen(static_cast<size_t>(childCount), false);
+    for (jint i = 0; i < namedChildCount; i++) {
+        if (offset + 2 > schemaEnd) return -1;
+        const jint childIndex = payload[static_cast<size_t>(offset++)];
+        const jint nameLength = payload[static_cast<size_t>(offset++)];
+        if (childIndex < 0 ||
+                childIndex >= childCount ||
+                seen[static_cast<size_t>(childIndex)] ||
+                nameLength <= 0 ||
+                nameLength > 64 ||
+                offset + nameLength > schemaEnd ||
+                !isValidRuntimeEffectUniformName(payload, offset, nameLength)) {
+            return -1;
+        }
+        seen[static_cast<size_t>(childIndex)] = true;
         offset += nameLength;
     }
     return offset == schemaEnd ? offset : -1;
@@ -3019,11 +3096,12 @@ static bool drawCommandList(SkCanvas* canvas,
                         descriptor.src = std::make_shared<ShaderDescriptor>(src->second);
                     }
                 } else if (descriptorType == COMMAND_SHADER_DESCRIPTOR_RUNTIME_EFFECT) {
-                    if (payloadIntCount < 6) return false;
+                    if (payloadIntCount < 7) return false;
                     const jint skslLength = descriptor.payload[0];
                     const jint uniformFloatCount = descriptor.payload[1];
                     const jint childCount = descriptor.payload[2];
                     const jint namedUniformCount = descriptor.payload[3];
+                    const jint namedChildCount = descriptor.payload[4];
                     if (skslLength <= 0 ||
                             skslLength > 4096 ||
                             uniformFloatCount < 0 ||
@@ -3032,17 +3110,21 @@ static bool drawCommandList(SkCanvas* canvas,
                             childCount > 8 ||
                             namedUniformCount < 0 ||
                             namedUniformCount > 16 ||
-                            payloadIntCount < 6 + childCount * 2 + skslLength + uniformFloatCount) {
+                            namedChildCount < 0 ||
+                            namedChildCount > childCount ||
+                            payloadIntCount < 7 + childCount * 2 + skslLength + uniformFloatCount) {
                         return false;
                     }
-                    const jint schemaStart = 6 + childCount * 2;
+                    const jint schemaStart = 7 + childCount * 2;
                     const jint schemaEnd = payloadIntCount - skslLength - uniformFloatCount;
-                    const jint skslStart = runtimeEffectUniformSchemaEnd(
+                    const jint childSchemaStart = runtimeEffectUniformSchemaEnd(
                             descriptor.payload, schemaStart, schemaEnd, namedUniformCount, uniformFloatCount);
+                    const jint skslStart = runtimeEffectChildSchemaEnd(
+                            descriptor.payload, childSchemaStart, schemaEnd, namedChildCount, childCount);
                     if (skslStart < 0 || skslStart + skslLength + uniformFloatCount != payloadIntCount) {
                         return false;
                     }
-                    const uint64_t expectedHash = imageCacheKey(descriptor.payload[4], descriptor.payload[5]);
+                    const uint64_t expectedHash = imageCacheKey(descriptor.payload[5], descriptor.payload[6]);
                     if (shaderSourceHash(descriptor.payload, static_cast<size_t>(skslStart), skslLength) != expectedHash) {
                         return false;
                     }
@@ -3050,8 +3132,8 @@ static bool drawCommandList(SkCanvas* canvas,
                         std::lock_guard<std::mutex> lock(gShaderCacheMutex);
                         for (jint i = 0; i < childCount; i++) {
                             const uint64_t childHandle = imageCacheKey(
-                                    descriptor.payload[6 + i * 2],
-                                    descriptor.payload[7 + i * 2]);
+                                    descriptor.payload[7 + i * 2],
+                                    descriptor.payload[8 + i * 2]);
                             auto child = gShadersByKey.find(ColorFilterScopedKey{imageCacheContextKey, childHandle});
                             if (child == gShadersByKey.end()) return false;
                             descriptor.children.push_back(std::make_shared<ShaderDescriptor>(child->second));
