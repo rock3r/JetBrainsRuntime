@@ -7930,7 +7930,7 @@ Known notes:
 
 ## Checkpoint: Magic Jewel Live Animation Marker Assertion
 
-Status: report parser validation and Magic Jewel compile passed; live native execution still waits for runnable local artifacts/native build state.
+Status: live command-mode validation passed after refreshing the ABI 90 public API shim, patched `java.desktop` classes, and native bridge dylib.
 
 What changed:
 
@@ -7952,7 +7952,19 @@ Verification:
   - `git diff --check`
 - Focused Skiko command-frame cache tests passed:
   - `./gradlew --no-daemon --no-configuration-cache awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest.commandFrameCacheDoesNotReplaceMeaningfulFrameWithMinimalFullSceneFrame --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest.commandFrameCacheReturnsMinimalFullSceneFrameWhenNoMeaningfulFrameWasSeen --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest.commandFrameCacheReplaysLastMeaningfulFrameForMinimalInteropOnlyFrame`
+- Refreshed local runtime artifacts for ABI 90:
+  - Runtime API public shim rebuilt with `bash tools/build.sh dev "" out` and copied to `/tmp/jbr-api-shim.jar`.
+  - JBR patched `java.desktop` classes rebuilt into `/tmp/jbr-skia-run/desktop`; the temporary `com.jetbrains.exported` compile stub was removed from the patch output to avoid a boot-layer split package.
+  - JBR native bridge rebuilt into `/tmp/jbr-skia-native/libjbrskiainterop.dylib`.
+- Magic Jewel live command probe passed:
+  - command: `CASES=commands-live-animation DURATION_SECONDS=6 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`
+  - result: passed with `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, `skiko_command_frames=432`, `jbr_command_frames=432`, `app_new_frames=432`, `app_new_fps=72.0`, and `skiko_tiny_full_scene_injections=1`.
+  - report: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-045238/commands-live-animation/report.md`.
 
 Known notes:
 
 - This assertion proves frame production and exercises the tiny-frame preservation branch. It does not yet compare visual pixel movement across two live phases.
+- Two stale-artifact failures were useful:
+  - stale public API shim produced `SKIKO_JBR_INTEROP_FALLBACK reason=abi-mismatch`;
+  - refreshed public API with stale native/classes produced `reason=native-abi-mismatch`;
+  - patched-class refresh must not leave the temporary `com.jetbrains.exported` stub under the `java.desktop` patch directory.
