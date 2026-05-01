@@ -222,7 +222,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   - [x] Validate `CompositingStrategy.ModulateAlpha` graphics-layer replay stays on the command path.
   - [x] Support simple `CompositingStrategy.Offscreen` graphics-layer replay by clipping layer contents to bounds inside the command saveLayer.
   - [x] Support first 3D/camera graphics-layer replay by flattening Compose's layer transform into `COMMAND_CONCAT_MATRIX33`.
-  - [ ] Extend graphics-layer command replay beyond the current subset: elevation-accurate shadows, broader image-filter surfaces, and screenshot parity for 3D/camera transforms.
+  - [ ] Extend graphics-layer command replay beyond the current subset: elevation-accurate shadows, broader image-filter surfaces, and additional 3D/camera transform coverage.
   - [x] Add render-effect descriptors for graphics-layer `RenderEffect` once the JBR-owned effect-handle ABI can construct the needed Skia image filters.
 - [x] Add narrow tint color-filter solid fill-rectangle support through a versioned command instead of picture fallback.
 - [x] Add narrow tint color-filter `saveLayer` support through a versioned command instead of picture fallback.
@@ -302,6 +302,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-151108/suite.tsv`.
 - [x] Simple Offscreen graphics-layer screenshot parity row passed:
   `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-160638/suite.tsv`.
+- [x] RotationX graphics-layer screenshot parity row passed:
+  `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-163641/suite.tsv`.
 - [x] Magic Jewel graphics-layer command probe runs without fallback markers and validates the replayed layer region in the screenshot assertion.
 - [x] Magic Jewel clipped graphics-layer command probe runs without fallback markers and validates clipped cyan/purple layer content.
 - [x] Magic Jewel rounded clipped graphics-layer command probe runs without fallback markers and validates clipped cyan/purple layer content.

@@ -9908,3 +9908,32 @@ Next checkpoint:
 
 - Add old/new screenshot parity for the rotationX graphics-layer row, then run a compact graphics-layer matrix that
   includes Offscreen, ModulateAlpha, shadows, and rotationX together.
+
+## Checkpoint: Graphics-Layer RotationX Screenshot Parity
+
+Status: completed as the old/new visual gate for the first 3D/camera graphics-layer command replay path.
+
+What changed:
+
+- Magic Jewel's named screenshot parity suite now includes `parity-graphics-layer-rotationx` in the default row set.
+- The row isolates the rotationX graphics-layer probe by disabling unrelated primitive/gradient/effect probes, so the
+  old/new diff is focused on layer transform, clip, and paint-order fidelity.
+- Magic Jewel `README.md` documents graphics-layer rotationX as part of the deterministic old/new window-capture parity
+  suite.
+- `ROADMAP.md` records the focused parity run and narrows remaining graphics-layer 3D work to additional transform
+  coverage rather than the first rotationX gate.
+
+Verification:
+
+- Magic Jewel screenshot parity script syntax passed:
+  - command: `bash -n scripts/jbr-skia-screenshot-parity-suite.sh scripts/jbr-skia-screenshot-parity.sh`
+- Focused Magic Jewel rotationX screenshot parity row passed:
+  - command: `CASES="parity-graphics-layer-rotationx" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-163641/suite.tsv`
+  - result: `status=passed`, `avg_delta=2.191`, `bad_pixel_ratio=0.05199`,
+    `compose_bad_pixel_ratio=0.07606`, `compose_bottom_swatches_bad_pixel_ratio=0.00000`
+
+Next checkpoint:
+
+- Run a compact graphics-layer matrix that includes Offscreen, ModulateAlpha, shadows, and rotationX together. Then add
+  rotationY as the next bounded 3D/camera row if the compact matrix stays green.
