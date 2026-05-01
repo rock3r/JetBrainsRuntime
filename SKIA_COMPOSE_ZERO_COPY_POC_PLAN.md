@@ -10830,7 +10830,15 @@ Verification:
   - command: `CASES="commands-invalid-descriptor-use-fallback commands-invalid-descriptor-use-after-evict-fallback commands-invalid-descriptor-version-fallback commands-runtime-effect-child-type-fallback" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`
   - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-234018/suite.tsv`
 
+Broad validation after commit:
+
+- Broad Magic Jewel command-probe suite passed with descriptor-version and stale-handle fallback rows included in the
+  default case list:
+  - command: `DURATION_SECONDS=3 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-234428/suite.tsv`
+  - result: all rows passed. The only picture replay remains the intentional `commands-invalid-gradient-fallback` row;
+    descriptor invalid-stream rows each produced structured fallback with zero JBR command frames.
+
 Next checkpoint:
 
-- Commit the stale-handle slice, rerun the broad command-probe suite with the expanded default case list, then continue
-  with remaining descriptor lifecycle/version tests or renderer coverage.
+- Continue with remaining descriptor lifecycle/version tests or renderer coverage.
