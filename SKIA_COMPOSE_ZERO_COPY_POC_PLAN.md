@@ -7976,3 +7976,45 @@ Known notes:
   - stale public API shim produced `SKIKO_JBR_INTEROP_FALLBACK reason=abi-mismatch`;
   - refreshed public API with stale native/classes produced `reason=native-abi-mismatch`;
   - patched-class refresh must not leave the temporary `com.jetbrains.exported` stub under the `java.desktop` patch directory.
+
+## Checkpoint: Full Command Probe Sweep With Nested Fallback Reasons
+
+Status: full Magic Jewel command-probe sweep passed with refreshed ABI 90 artifacts.
+
+What changed:
+
+- Magic Jewel's screenshot classifier now distinguishes the cyan graphics-layer color-filter probe from the purple
+  graphics-layer color-matrix probe.
+- The purple classifier accepts the paler blended color-matrix output used by the graphics-layer blend/color-matrix row.
+- Magic Jewel reports now parse `CMP_JBR_COMMAND_RECORDER_NESTED_UNSUPPORTED` alongside the top-level
+  `CMP_JBR_COMMAND_RECORDER_FRAME` marker when summarizing unsupported command reasons.
+- Strict fallback validation can match an expected unsupported reason from either top-level or nested recorder markers.
+  This keeps intentionally unsupported nested command families, such as invalid sweep-gradient child commands, visible
+  in machine-readable reports.
+- Parser fixtures cover nested unsupported reasons so CI can assert the precise fallback reason instead of accepting a
+  generic graphics-layer fallback.
+
+Verification:
+
+- Magic Jewel report scripts passed syntax validation and parser fixtures:
+  - `bash -n scripts/jbr-skia-interop-report.sh scripts/jbr-skia-command-probe-suite.sh scripts/test-jbr-skia-report-validation.sh`
+  - `bash scripts/test-jbr-skia-report-validation.sh`
+- Targeted invalid-gradient fallback passed:
+  - command: `CASES=commands-invalid-gradient-fallback DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`
+  - report: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-053330/commands-invalid-gradient-fallback/report.md`
+  - result: `unsupported=sweepGradientStops:247,graphicsLayer:childCommands:247,graphicsLayer:247`, `jbr_picture_frames=246`, `jbr_command_frames=0`.
+- Full Magic Jewel command-probe sweep passed:
+  - command: `DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-053403/suite.tsv`
+  - result: 39/39 rows passed.
+  - zero-fallback command rows include live animation, mixed Swing popups/menus, text/images, image/composite shaders,
+    RuntimeEffects, color filters, blend modes, graphics layers, render effects, and saveLayer filters.
+  - the only intentional picture-path row is `commands-invalid-gradient-fallback`, which reports nested
+    `sweepGradientStops` reasons and no JBR command frames.
+
+Known notes:
+
+- This is still a short per-row validation run. It proves command-path coverage and fallback labeling, not stable
+  benchmark numbers.
+- Some frame-rate values exceed display refresh because marker counts track renderer command submissions over the sample
+  interval, not presented vsync frames.

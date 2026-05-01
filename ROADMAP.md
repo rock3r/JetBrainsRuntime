@@ -293,6 +293,16 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] ABI 73 Luminosity blend-mode command-probe row: `/tmp/magic-jewel-command-probe-abi73-luminosity-blend-2/suite.tsv`.
 - [x] Explicit graphics-layer fallback command-probe row after narrowing benign layer fallback: `/tmp/magic-jewel-command-probe-graphics-layer-fallback-2/suite.tsv`.
 - [x] Real undecorated Swing popup-window smoke captured separately by window id.
+- [x] RuntimeEffect source/uniform/child/build-fallback conformance subset through JBR command replay:
+  `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-050347/suite.tsv`.
+- [x] Full Magic Jewel command-probe sweep: 39/39 rows passed with ABI 90 refreshed artifacts:
+  `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-053403/suite.tsv`.
+- [x] Broad command sweep includes live animation, mixed Swing popups/menus, text/images, image/composite shaders,
+  RuntimeEffects, color filters, blend modes, graphics layers, render effects, saveLayer filters, and the explicit
+  invalid-gradient fallback.
+- [x] Expected invalid-gradient fallback reports nested unsupported reasons, including `sweepGradientStops`, while staying
+  off JBR command replay for that frame family.
+- [x] Screenshot assertion harness distinguishes cyan color-filter probes from purple color-matrix probes.
 
 ## Compatibility And ABI Hardening
 
@@ -310,6 +320,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Launch-level forced compatibility matrix runner for happy path plus ABI/native-ABI/capability/public-API fallbacks.
 - [x] Launch-level artifact matrix scaffold for named current/old JBR API, JBR native, desktop patch, Skiko, and CMP artifacts.
 - [x] Artifact matrix can require old-artifact rows in CI and fail if optional bundles are missing.
+- [x] Report parser includes nested CMP unsupported-command markers in `cmp_unsupported_reasons`.
 - [x] Skiko invalidates temporary cached surface state when scoped destination identity changes.
 - [x] Magic Jewel parser coverage for `SKIKO_JBR_INTEROP_SURFACE_CHANGED`.
 - [x] Magic Jewel launch-level resize validation for surface identity changes.
