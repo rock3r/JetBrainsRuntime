@@ -636,6 +636,9 @@ public class JBRSkiaService extends JBRSkia {
                         && payloadIntCount == 5 + pathDataLength
                         && validatePathData(commands, payloadOffset + 5, record.recordEnd());
             }
+            if (descriptorType == COMMAND_EFFECT_DESCRIPTOR_CHAIN_PATH_EFFECT) {
+                return payloadIntCount == 4;
+            }
             return false;
         }
         if (record.op() == COMMAND_DEFINE_SHADER_DESCRIPTOR) {
@@ -1950,7 +1953,8 @@ public class JBRSkiaService extends JBRSkia {
 
     private static boolean isPathEffectDescriptor(ColorFilterDescriptor descriptor) {
         return descriptor.type() == COMMAND_EFFECT_DESCRIPTOR_CORNER_PATH_EFFECT
-                || descriptor.type() == COMMAND_EFFECT_DESCRIPTOR_STAMPED_PATH_EFFECT;
+                || descriptor.type() == COMMAND_EFFECT_DESCRIPTOR_STAMPED_PATH_EFFECT
+                || descriptor.type() == COMMAND_EFFECT_DESCRIPTOR_CHAIN_PATH_EFFECT;
     }
 
     private static int applyColorMatrix(int argb, int[] matrixBits) {
@@ -3774,6 +3778,22 @@ public class JBRSkiaService extends JBRSkia {
                                     || pathDataLength < 0 || pathDataLength > 4096
                                     || payloadIntCount != 5 + pathDataLength
                                     || !validatePathData(payload, 5, payload.length)) return false;
+                            offset += payloadIntCount;
+                            COLOR_FILTER_CACHE.put(
+                                    new ColorFilterCacheKey(contextPtr, handle),
+                                    ColorFilterDescriptor.pathEffect(descriptorType, payload)
+                            );
+                            logEffectHandleDefine("java2d", contextPtr, handle, descriptorType, descriptorVersion, payloadIntCount, false);
+                        } else if (descriptorType == COMMAND_EFFECT_DESCRIPTOR_CHAIN_PATH_EFFECT) {
+                            if (payloadIntCount != 4) return false;
+                            long outerHandle = cacheKey(commands[offset], commands[offset + 1]);
+                            long innerHandle = cacheKey(commands[offset + 2], commands[offset + 3]);
+                            ColorFilterDescriptor outer = COLOR_FILTER_CACHE.get(new ColorFilterCacheKey(contextPtr, outerHandle));
+                            ColorFilterDescriptor inner = COLOR_FILTER_CACHE.get(new ColorFilterCacheKey(contextPtr, innerHandle));
+                            if (outer == null || inner == null
+                                    || !isPathEffectDescriptor(outer) || !isPathEffectDescriptor(inner)) return false;
+                            int[] payload = new int[payloadIntCount];
+                            System.arraycopy(commands, offset, payload, 0, payloadIntCount);
                             offset += payloadIntCount;
                             COLOR_FILTER_CACHE.put(
                                     new ColorFilterCacheKey(contextPtr, handle),

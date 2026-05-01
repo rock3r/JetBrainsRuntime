@@ -9280,3 +9280,40 @@ Next checkpoint:
 
 - Add chained path-effect descriptors so Compose can combine descriptor-backed leaves without falling back to picture
   replay.
+
+## Checkpoint: ABI 98 Chained PathEffect Descriptor Replay
+
+Status: typed path-effect descriptors now cover `PathEffect.chainPathEffect(...)` when both child effects are already
+descriptor-backed.
+
+What changed:
+
+- Bumped the tightly versioned interop ABI to `98` across JBR, the public Runtime API mirror, Skiko's compatibility gate,
+  and CMP's command stream header.
+- Added descriptor type `COMMAND_EFFECT_DESCRIPTOR_CHAIN_PATH_EFFECT = 11`.
+- CMP now preserves structured chain metadata when both outer and inner path effects have descriptors, recursively
+  defines the child descriptors first, and emits a chain descriptor containing child handles.
+- JBR validates chain descriptors as two path-effect descriptor handle pairs and rejects missing or non-path-effect
+  children.
+- Native replay resolves both children, rebuilds their Skia path effects recursively, composes them with
+  `SkPathEffect::MakeCompose`, and reuses the descriptor-ref `drawPath` command.
+- Magic Jewel's path-effect probe now includes a chained corner+stamped path-effect shape.
+
+Verification:
+
+- Rebuilt Skiko AWT and published the local snapshot:
+  - command: `./gradlew --no-daemon --no-configuration-cache compileKotlinAwt publishAwtPublicationToMavenLocal`
+- Focused CMP recorder test passed:
+  - command: `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesChainedPathEffectDescriptorPathRecord`
+- Rebuilt local JBR API/desktop/native artifacts:
+  - command: `./scripts/rebuild-jbr-skia-local-artifacts.sh`
+- Focused Magic Jewel path-effect command probe passed:
+  - command: `CASES="commands-path-effect-fallback" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-111807/suite.tsv`
+  - result: `status=passed`, `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`,
+    `jbr_command_frames=657`
+
+Next checkpoint:
+
+- Re-run a broader command-probe subset now that path-effect coverage has expanded, then move to the next unsupported
+  rendering family surfaced by that sweep.

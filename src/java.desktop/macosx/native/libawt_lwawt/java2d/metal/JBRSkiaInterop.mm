@@ -81,7 +81,7 @@
 
 #include "MTLSurfaceDataBase.h"
 
-static constexpr jint ABI_ID = 97;
+static constexpr jint ABI_ID = 98;
 static constexpr jint COMMAND_STREAM_MAGIC = 1246972723;
 static constexpr jint COMMAND_STREAM_HEADER_SIZE = 6;
 static constexpr jint COMMAND_STREAM_FLAGS_NONE = 0;
@@ -164,6 +164,7 @@ static constexpr jint COMMAND_EFFECT_DESCRIPTOR_OFFSET_IMAGE_FILTER_WITH_INPUT =
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_RUNTIME_COLOR_FILTER = 8;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_CORNER_PATH_EFFECT = 9;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_STAMPED_PATH_EFFECT = 10;
+static constexpr jint COMMAND_EFFECT_DESCRIPTOR_CHAIN_PATH_EFFECT = 11;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_VERSION_1 = 1;
 static constexpr jint COMMAND_SHADER_DESCRIPTOR_LINEAR_GRADIENT = 1;
 static constexpr jint COMMAND_SHADER_DESCRIPTOR_RADIAL_GRADIENT = 2;
@@ -437,7 +438,8 @@ static bool isImageFilterDescriptorType(jint type) {
 
 static bool isPathEffectDescriptorType(jint type) {
     return type == COMMAND_EFFECT_DESCRIPTOR_CORNER_PATH_EFFECT ||
-            type == COMMAND_EFFECT_DESCRIPTOR_STAMPED_PATH_EFFECT;
+            type == COMMAND_EFFECT_DESCRIPTOR_STAMPED_PATH_EFFECT ||
+            type == COMMAND_EFFECT_DESCRIPTOR_CHAIN_PATH_EFFECT;
 }
 
 static sk_sp<SkPathEffect> makeDescriptorPathEffect(const ColorFilterDescriptor& descriptor) {
@@ -471,6 +473,17 @@ static sk_sp<SkPathEffect> makeDescriptorPathEffect(const ColorFilterDescriptor&
                 advance,
                 phase,
                 static_cast<SkPath1DPathEffect::Style>(style));
+    }
+    if (descriptor.type == COMMAND_EFFECT_DESCRIPTOR_CHAIN_PATH_EFFECT) {
+        if (descriptor.children.size() != 2 || !descriptor.children[0] || !descriptor.children[1]) {
+            return nullptr;
+        }
+        sk_sp<SkPathEffect> outer = makeDescriptorPathEffect(*descriptor.children[0]);
+        sk_sp<SkPathEffect> inner = makeDescriptorPathEffect(*descriptor.children[1]);
+        if (!outer || !inner) {
+            return nullptr;
+        }
+        return SkPathEffect::MakeCompose(std::move(outer), std::move(inner));
     }
     return nullptr;
 }
@@ -3345,6 +3358,26 @@ static bool drawCommandList(SkCanvas* canvas,
                             payloadIntCount != 5 + pathDataLength ||
                             !pathFromCommandData(descriptor.payload, 5, static_cast<jsize>(descriptor.payload.size()), fillType, &descriptorPath)) {
                         return false;
+                    }
+                } else if (descriptorType == COMMAND_EFFECT_DESCRIPTOR_CHAIN_PATH_EFFECT) {
+                    if (payloadIntCount != 4) {
+                        return false;
+                    }
+                    const uint64_t outerHandle = imageCacheKey(commands[offset], commands[offset + 1]);
+                    const uint64_t innerHandle = imageCacheKey(commands[offset + 2], commands[offset + 3]);
+                    offset += 4;
+                    {
+                        std::lock_guard<std::mutex> lock(gColorFilterCacheMutex);
+                        auto outer = gColorFiltersByKey.find(ColorFilterScopedKey{imageCacheContextKey, outerHandle});
+                        auto inner = gColorFiltersByKey.find(ColorFilterScopedKey{imageCacheContextKey, innerHandle});
+                        if (outer == gColorFiltersByKey.end() ||
+                                inner == gColorFiltersByKey.end() ||
+                                !isPathEffectDescriptorType(outer->second.type) ||
+                                !isPathEffectDescriptorType(inner->second.type)) {
+                            return false;
+                        }
+                        descriptor.children.push_back(std::make_shared<ColorFilterDescriptor>(outer->second));
+                        descriptor.children.push_back(std::make_shared<ColorFilterDescriptor>(inner->second));
                     }
                 } else {
                     return false;
