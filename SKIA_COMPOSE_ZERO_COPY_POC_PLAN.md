@@ -10596,3 +10596,19 @@ Next checkpoint:
 
 - Run the broad default screenshot parity suite with `parity-path-effect` included, then continue with the next
   remaining functionality gap.
+
+## Checkpoint: Broad Screenshot Parity With PathEffect Row
+
+Status: completed after adding `parity-path-effect` to the default screenshot suite.
+
+Verification:
+
+- Broad Magic Jewel screenshot parity sweep passed:
+  - command: `DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-213341/suite.tsv`
+  - result: all twenty-seven rows passed with `compose_bottom_swatches_bad_pixel_ratio=0.00000` in every row.
+
+Next checkpoint:
+
+- Continue with the next remaining functionality gap. Current candidates are exact shadow/elevation semantics or
+  additional descriptor lifecycle/old-runtime compatibility tests.

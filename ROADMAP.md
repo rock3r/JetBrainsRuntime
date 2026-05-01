@@ -518,6 +518,9 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-205417/suite.tsv`.
 - [x] Focused path-effect screenshot parity row covering dash, corner, stamped, and chained path effects passed:
   `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-213130/suite.tsv`.
+- [x] Default Magic Jewel screenshot parity suite with the path-effect row included: 27/27 rows passed with exact
+  bottom-swatches parity in every row:
+  `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-213341/suite.tsv`.
 - [x] Full Magic Jewel command-probe sweep after RuntimeEffect child-type crash hardening: 46/46 rows passed, adding the
   `commands-runtime-effect-child-type-fallback` row:
   `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-121521/suite.tsv`.
