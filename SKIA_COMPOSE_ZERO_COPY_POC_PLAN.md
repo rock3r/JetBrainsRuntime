@@ -10235,3 +10235,45 @@ Next checkpoint:
 
 - Attempt command replay for this combination by nesting the existing image-filter saveLayer with the existing
   color-filter/blend saveLayer records, then validate command mode and screenshot parity.
+
+## Checkpoint: Graphics-Layer RenderEffect + ColorFilter Replay
+
+Status: completed as the first nested graphics-layer renderEffect/paint command replay slice.
+
+What changed:
+
+- CMP now supports graphics-layer renderEffect combined with tint/SrcIn color-filter metadata by nesting existing command
+  records instead of introducing a new ABI command.
+- The recorder emits the image-filter saveLayer first, then an inner color-filter saveLayer, then the layer content.
+- Layer alpha is applied on the outer image-filter saveLayer for this nested case, while the inner paint saveLayer uses
+  full alpha to avoid double application.
+- The previous `graphicsLayer:renderEffectPaint` guard is removed for this tint color-filter case.
+- Magic Jewel's command-probe row is now `commands-graphics-layer-render-effect-color-filter` and expects command replay
+  plus JBR image-filter handle use instead of picture fallback.
+- Magic Jewel's screenshot parity suite now includes `parity-graphics-layer-render-effect-color-filter` in the default
+  row set.
+- `ROADMAP.md` records the supported tint color-filter case and leaves blend/descriptor color-filter combinations as the
+  next nested renderEffect work.
+
+Verification:
+
+- CMP focused recorder tests passed:
+  - command: `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.nestedRecordingReplaysLayerImageFilterThenColorFilter --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.nestedRecordingReplaysLayerNestedImageFilterHandle --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.nestedRecordingReplaysRectangularLayerShadow --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.nestedRecordingReplaysLayerShadowPathBeforeShadowFill`
+- Magic Jewel command and screenshot parity suite syntax passed:
+  - command: `bash -n scripts/jbr-skia-command-probe-suite.sh`
+  - command: `bash -n scripts/jbr-skia-screenshot-parity-suite.sh`
+- Focused Magic Jewel renderEffect + colorFilter command row passed:
+  - command: `CASES="commands-graphics-layer-render-effect-color-filter" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-174650/suite.tsv`
+  - result: `status=passed`, `fallbacks=0`, `unsupported=none`, `jbr_picture_frames=0`,
+    `jbr_command_frames=715`
+- Focused Magic Jewel renderEffect + colorFilter screenshot parity row passed:
+  - command: `CASES="parity-graphics-layer-render-effect-color-filter" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-174829/suite.tsv`
+  - result: `status=passed`, `avg_delta=2.185`, `bad_pixel_ratio=0.05176`,
+    `compose_bad_pixel_ratio=0.07567`, `compose_bottom_swatches_bad_pixel_ratio=0.00000`
+
+Next checkpoint:
+
+- Run the compact graphics-layer command matrix with the new renderEffect/colorFilter row included, then extend nested
+  renderEffect replay to blend-mode or descriptor color-filter combinations.

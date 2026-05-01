@@ -226,7 +226,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   - [ ] Extend graphics-layer command replay beyond the current subset: elevation-accurate shadows, broader image-filter surfaces, and combined/edge-case 3D camera transform coverage.
   - [x] Add render-effect descriptors for graphics-layer `RenderEffect` once the JBR-owned effect-handle ABI can construct the needed Skia image filters.
   - [x] Add an explicit expected-fallback row for graphics-layer `RenderEffect` combined with paint color-filter metadata.
-  - [ ] Decide and implement the semantics for graphics-layer `RenderEffect` combined with blend/color-filter paint metadata, likely through nested saveLayer command replay if parity is acceptable.
+  - [x] Support graphics-layer `RenderEffect` combined with tint/SrcIn color-filter metadata through nested image-filter and color-filter saveLayer command replay.
+  - [ ] Extend nested graphics-layer `RenderEffect` replay to blend-mode and descriptor color-filter combinations if parity is acceptable.
 - [x] Add narrow tint color-filter solid fill-rectangle support through a versioned command instead of picture fallback.
 - [x] Add narrow tint color-filter `saveLayer` support through a versioned command instead of picture fallback.
 - [x] Add narrow tint color-filter cached-image support through a versioned command instead of picture fallback.
@@ -336,6 +337,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Graphics-layer rectangular/rounded/path shadow regression subset passed at `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-145831/suite.tsv`.
 - [x] Graphics-layer rectangular/rounded/path shadow regression subset passed with two-pass ambient/spot replay at `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-172736/suite.tsv`.
 - [x] Graphics-layer renderEffect + tint color-filter expected-fallback row passed at `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-174104/suite.tsv`.
+- [x] Graphics-layer renderEffect + tint color-filter command row passed through nested saveLayer replay at `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-174650/suite.tsv`.
+- [x] Graphics-layer renderEffect + tint color-filter screenshot parity row passed at `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-174829/suite.tsv`.
 - [x] Magic Jewel graphics-layer rotationX and Offscreen fallback rows passed at `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-150748/suite.tsv`.
 - [x] Magic Jewel graphics-layer ModulateAlpha command row passed at `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-151636/suite.tsv`.
 - [x] Compact graphics-layer command/fallback matrix passed at `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-151820/suite.tsv`.
