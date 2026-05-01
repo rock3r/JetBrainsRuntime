@@ -9058,3 +9058,31 @@ Next checkpoint:
 - Move back to functionality coverage. The next likely target is the remaining graphics-layer/render-effect gap: using
   the existing image-filter descriptor machinery from ABI 82-84 in more layer/image-filter drawing surfaces, while keeping
   raw Skiko `SkImageFilter*` pointers out of the ABI.
+
+## Checkpoint: Graphics-Layer RenderEffect Descriptor Assertions
+
+Status: the graphics-layer blur, offset, and chained render-effect rows now prove that JBR consumes and reuses
+image-filter descriptor handles instead of merely avoiding fallback.
+
+What changed:
+
+- Tightened Magic Jewel's graphics-layer render-effect command-suite rows:
+  - `commands-graphics-layer-render-effect` requires JBR effect-handle define, use, and cache-hit markers.
+  - `commands-graphics-layer-offset-effect` requires JBR effect-handle define, use, and cache-hit markers.
+  - `commands-graphics-layer-chained-render-effect` requires at least two effect-handle defines, plus use and cache-hit
+    markers, so the chained `OffsetEffect(BlurEffect(...))` path proves both child descriptors are materialized.
+- `ROADMAP.md` now marks graphics-layer `RenderEffect` descriptors complete and narrows the remaining graphics-layer
+  gap to shadows, 3D/camera transforms, offscreen semantics, and broader image-filter surfaces.
+
+Verification:
+
+- Focused graphics-layer effect descriptor row set passed:
+  - command: `CASES="commands-graphics-layer-render-effect commands-graphics-layer-offset-effect commands-graphics-layer-chained-render-effect" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-100545/suite.tsv`
+  - result: all three rows passed with `fallback_new_count=0`, `unsupported=none`, and `jbr_picture_frames=0`
+  - observed command frames: render-effect `257`, offset-effect `605`, chained-render-effect `586`
+
+Next checkpoint:
+
+- Expand the next functionality slice around the remaining graphics-layer gaps or typed image-filter/path-effect
+  descriptor coverage, while preserving the strict lifecycle gates added for descriptor define/use/cache-hit behavior.

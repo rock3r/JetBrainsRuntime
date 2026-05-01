@@ -141,6 +141,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   - [x] Forced context-change descriptor probe exercises the `contextChanged` cache-clear path without relying on physical
     multi-monitor migration.
   - [x] Missing CMP command-cache clear hook is a structured Skiko fallback (`command-cache-clear-unavailable`) instead of a silent stale-handle risk.
+  - [x] Graphics-layer blur, offset, and chained render-effect rows now assert JBR effect-handle define/use/cache-hit
+    markers, proving ABI 82-84 image-filter descriptors are consumed by replay and reused across frames.
   - [ ] Implement JBR-owned shader/effect handles: Skiko/CMP serializes descriptors or create requests, JBR constructs objects inside its Skia runtime, draw commands reference versioned handles, and handles are scoped/evicted by destination context.
   - [x] Implement a concrete generic-shader MVP: CMP serializes a `RuntimeEffect` descriptor with ASCII SKSL source and raw float uniforms; JBR compiles/caches it inside the destination context and draw commands reference the JBR-owned handle.
   - [x] Skiko prerequisite for RuntimeEffect color-filter support: `RuntimeEffect.makeColorFilter(Data?)` now wraps Skia
@@ -207,8 +209,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   - [x] Support tint/SrcIn graphics-layer color filters by reusing the existing save-layer color-filter command.
   - [x] Support graphics layers that combine a directly mapped blend mode with tint/SrcIn color filtering through a bounded save-layer blend/color-filter command.
   - [x] Support color-matrix and lighting graphics-layer color filters by referencing typed descriptor handles from saveLayer paints.
-  - [ ] Extend graphics-layer command replay beyond the current 2D subset: shadows, 3D rotation/camera, offscreen strategy semantics, image filters, and render effects.
-  - [ ] Add render-effect descriptors for graphics-layer `RenderEffect` once the JBR-owned effect-handle ABI can construct the needed Skia image filters.
+  - [ ] Extend graphics-layer command replay beyond the current 2D subset: shadows, 3D rotation/camera, offscreen strategy semantics, and broader image-filter surfaces.
+  - [x] Add render-effect descriptors for graphics-layer `RenderEffect` once the JBR-owned effect-handle ABI can construct the needed Skia image filters.
 - [x] Add narrow tint color-filter solid fill-rectangle support through a versioned command instead of picture fallback.
 - [x] Add narrow tint color-filter `saveLayer` support through a versioned command instead of picture fallback.
 - [x] Add narrow tint color-filter cached-image support through a versioned command instead of picture fallback.
@@ -369,6 +371,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-090711/suite.tsv`.
 - [x] RuntimeEffect descriptor handle-use assertions through JBR command replay:
   `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-092522/suite.tsv`.
+- [x] Graphics-layer RenderEffect descriptor assertions through JBR command replay:
+  `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-100545/suite.tsv`.
 - [x] Full Magic Jewel command-probe sweep: 39/39 rows passed with ABI 90 refreshed artifacts:
   `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-053403/suite.tsv`.
 - [x] Broad command sweep includes live animation, mixed Swing popups/menus, text/images, image/composite shaders,
