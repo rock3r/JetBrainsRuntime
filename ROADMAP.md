@@ -14,6 +14,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Magic Jewel summary exposes machine-readable FPS fields for app, Swing, popup, picture, and command markers.
 - [x] Command mode validated with zero picture replay and zero fallback markers.
 - [x] Skiko command mode preserves the last meaningful Compose command stream across Swing-driven interop-only repaint passes, avoiding blank/flashing frames while real Compose animation frames still update.
+- [x] Skiko command mode no longer lets suspiciously tiny `FullScene` command frames evict the last meaningful animated frame, which reduces transient blank/flashing frames during fragile repaint ordering.
 - [x] CMP now tags command frames as `FullScene` or `InteropOnly`, and Skiko uses that explicit frame kind for preservation replay instead of relying only on command-stream size.
 - [x] CMP's full `JbrSkiaCommandRecorderTest` desktop suite is green for ABI 74, so command-stream golden expectations are a usable regression gate again.
 
@@ -93,7 +94,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] ABI 89: RuntimeEffect/SKSL descriptors carry named uniform schema metadata that CMP writes and JBR Java/native validation checks before compilation.
 - [x] ABI 90: RuntimeEffect/SKSL descriptors carry named child shader schema metadata, and JBR can use `SkRuntimeEffectBuilder` when all children are named.
 - [x] RuntimeEffect builder failures emit parseable JBR markers, and Magic Jewel has a bad-child-name probe/report assertion.
-- [x] Magic Jewel RuntimeEffect conformance probes cover pure color, uniform-only animation, child-only composition, combined child+uniform, and builder-failure fallback cases.
+  - [x] Magic Jewel RuntimeEffect conformance probes cover pure color, uniform-only animation, child-only composition, combined child+uniform, and builder-failure fallback cases.
+  - [ ] Add a live animation preservation regression job that asserts non-frozen command-mode frame markers continue advancing after transient tiny/full-scene frames.
 
 ## Near-Term Rendering Work
 

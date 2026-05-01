@@ -7904,3 +7904,27 @@ Verification:
 Known notes:
 
 - These are launch/report probes, not yet screenshot parity assertions per individual RuntimeEffect variant. They provide stable switches for the next quiet-machine live run.
+
+## Checkpoint: Defensive Command-Frame Animation Preservation
+
+Status: Skiko regression tests added; execution is currently blocked in this shell by Gradle wrapper distribution download timeout.
+
+What changed:
+
+- Skiko's command-frame cache now treats a `FullScene` command frame as cacheable only when it reaches the same minimum meaningful command-word threshold used for unknown frames.
+- If a tiny `FullScene` frame arrives after a meaningful animated frame, Skiko replays the cached frame instead of replacing it. This avoids a transient blank or tiny command stream from freezing/flashing the JBR command renderer.
+- The no-cache case still returns the tiny `FullScene` frame, so a genuinely empty first scene is not hidden forever.
+- Focused Skiko tests cover both behaviors:
+  - `commandFrameCacheDoesNotReplaceMeaningfulFrameWithMinimalFullSceneFrame`
+  - `commandFrameCacheReturnsMinimalFullSceneFrameWhenNoMeaningfulFrameWasSeen`
+
+Verification:
+
+- `git diff --check` passed in the Skiko worktree.
+- Attempted focused Skiko test run:
+  - `./gradlew --no-daemon --no-configuration-cache :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest.commandFrameCacheDoesNotReplaceMeaningfulFrameWithMinimalFullSceneFrame --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest.commandFrameCacheReturnsMinimalFullSceneFrameWhenNoMeaningfulFrameWasSeen --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest.commandFrameCacheReplaysLastMeaningfulFrameForMinimalInteropOnlyFrame`
+- The test command did not reach compilation or execution because Gradle wrapper download for `gradle-8.14.3-all.zip` timed out while connecting to `services.gradle.org`.
+
+Known notes:
+
+- This is a defensive guard for transient repaint ordering. It should be followed by a live Magic Jewel animation-preservation report case that asserts non-frozen command-mode frame markers advance after the tiny-frame path is exercised.
