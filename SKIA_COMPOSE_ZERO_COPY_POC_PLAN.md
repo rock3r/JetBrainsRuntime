@@ -8919,3 +8919,55 @@ Next checkpoint:
 
 - Continue descriptor lifecycle hardening with cache-hit/reuse observability for RuntimeEffect shader and effect handles,
   then add context-migration invalidation probes so steady-state reuse and cache clearing are both visible in reports.
+
+## Checkpoint: Descriptor Cache-Hit Markers
+
+Status: JBR and Magic Jewel now expose explicit descriptor cache-hit markers for steady-state shader/effect handle reuse.
+This turns reuse from an inferred condition ("define count stopped growing") into a directly asserted lifecycle signal.
+
+What changed:
+
+- JBR tracks descriptor handles seen by its lifecycle marker scanner per backend, destination context, and handle id.
+- JBR emits `JBR_SKIA_INTEROP_SHADER_HANDLE_CACHE_HIT backend=... contextId=... handle=... op=...` when a shader-handle
+  use references a handle known from an earlier command frame, not one defined in the same frame.
+- JBR emits `JBR_SKIA_INTEROP_EFFECT_HANDLE_CACHE_HIT backend=... contextId=... handle=... op=...` with the same semantics
+  for effect/color-filter/image-filter descriptor handles.
+- Evict commands remove the handle from the marker-side cache so later uses do not report stale cache hits.
+- Magic Jewel report parsing now records `jbr_shader_handle_cache_hit_frames` and
+  `jbr_effect_handle_cache_hit_frames`, prints both summaries, and supports
+  `EXPECT_MIN_JBR_SHADER_HANDLE_CACHE_HITS` / `EXPECT_MIN_JBR_EFFECT_HANDLE_CACHE_HITS` gates.
+- The command-probe suite asserts cache-hit markers on stable descriptor rows:
+  `commands-runtime-effect-pure-color`, `commands-color-filter-handle`, `commands-color-matrix-filter`, and
+  `commands-lighting-filter`. Animated RuntimeEffect rows remain define/use probes because their uniform payloads
+  intentionally produce fresh descriptor handles each frame.
+
+Verification:
+
+- Magic Jewel report parser tests passed:
+  - command: `./scripts/test-jbr-skia-report-validation.sh`
+- Local JBR Skia artifact rebuild passed:
+  - command: `./scripts/rebuild-jbr-skia-local-artifacts.sh`
+  - output artifacts: `/tmp/jbr-api-shim.jar`, `/tmp/jbr-skia-run/desktop`,
+    `/tmp/jbr-skia-native/libjbrskiainterop.dylib`
+- Stable descriptor cache-hit command probes passed:
+  - command: `CASES="commands-runtime-effect-pure-color commands-color-filter-handle commands-color-matrix-filter commands-lighting-filter" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-094603/suite.tsv`
+  - result: all four rows passed with `fallback_new_count=0`, `unsupported=none`, and `jbr_picture_frames=0`
+  - observed cache hits:
+    - RuntimeEffect pure-color shader: `jbr_shader_handle_define_frames=1`,
+      `jbr_shader_handle_use_frames=1288`, `jbr_shader_handle_cache_hit_frames=1287`
+    - tint color-filter handle: `jbr_effect_handle_define_frames=1`, `jbr_effect_handle_use_frames=889`,
+      `jbr_effect_handle_cache_hit_frames=888`
+    - color-matrix filter: `jbr_effect_handle_define_frames=1`, `jbr_effect_handle_use_frames=835`,
+      `jbr_effect_handle_cache_hit_frames=834`
+    - lighting filter: `jbr_effect_handle_define_frames=1`, `jbr_effect_handle_use_frames=1093`,
+      `jbr_effect_handle_cache_hit_frames=1092`
+- Animated RuntimeEffect define/use rows still passed after moving cache-hit assertions to stable rows:
+  - command: `CASES="commands-runtime-effect-shader commands-runtime-effect-color-filter commands-runtime-effect-color-filter-child" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-094911/suite.tsv`
+  - result: all three rows passed with `fallback_new_count=0`, `unsupported=none`, and `jbr_picture_frames=0`
+
+Next checkpoint:
+
+- Add an explicit context-migration/cache-clear validation pass that proves Skiko clears CMP-owned descriptor/image caches
+  on destination context changes and that JBR sees fresh defines rather than stale handle reuse after migration.

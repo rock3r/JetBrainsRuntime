@@ -170,6 +170,10 @@ public class JBRSkiaService extends JBRSkia {
                     return size() > MAX_CACHED_SHADERS;
                 }
             });
+    private static final Set<MarkerHandleKey> EFFECT_HANDLE_MARKER_CACHE =
+            Collections.synchronizedSet(new HashSet<>());
+    private static final Set<MarkerHandleKey> SHADER_HANDLE_MARKER_CACHE =
+            Collections.synchronizedSet(new HashSet<>());
 
     public JBRSkiaService() {
         if (!Boolean.getBoolean(PROPERTY)) {
@@ -1737,6 +1741,9 @@ public class JBRSkiaService extends JBRSkia {
     }
 
     private record ColorFilterCacheKey(long contextId, long filterId) {
+    }
+
+    private record MarkerHandleKey(String backend, long contextId, long handleId) {
     }
 
     private record ShaderDescriptor(
@@ -4100,6 +4107,8 @@ public class JBRSkiaService extends JBRSkia {
         if (commandEnd < 0) {
             return;
         }
+        Set<ColorFilterCacheKey> frameEffectDefines = new HashSet<>();
+        Set<ColorFilterCacheKey> frameShaderDefines = new HashSet<>();
         int offset = COMMAND_STREAM_HEADER_SIZE;
         while (offset < commandEnd) {
             CommandRecord record = readCommandRecord(commands, offset, commandEnd);
@@ -4111,10 +4120,12 @@ public class JBRSkiaService extends JBRSkia {
                 if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE || !hasRecordArgs(record, 4)) {
                     return;
                 }
+                long handle = commandHandle(commands[argsStart], commands[argsStart + 1]);
+                markEffectHandleDefined(backend, contextPtr, handle, frameEffectDefines);
                 logEffectHandleDefine(
                         backend,
                         contextPtr,
-                        commandHandle(commands[argsStart], commands[argsStart + 1]),
+                        handle,
                         COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER,
                         0,
                         2,
@@ -4124,10 +4135,12 @@ public class JBRSkiaService extends JBRSkia {
                 if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE || !hasRecordArgs(record, 5)) {
                     return;
                 }
+                long handle = commandHandle(commands[argsStart], commands[argsStart + 1]);
+                markEffectHandleDefined(backend, contextPtr, handle, frameEffectDefines);
                 logEffectHandleDefine(
                         backend,
                         contextPtr,
-                        commandHandle(commands[argsStart], commands[argsStart + 1]),
+                        handle,
                         commands[argsStart + 2],
                         commands[argsStart + 3],
                         commands[argsStart + 4],
@@ -4137,15 +4150,19 @@ public class JBRSkiaService extends JBRSkia {
                 if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE || !hasRecordArgs(record, 2)) {
                     return;
                 }
-                logEffectHandleEvict(backend, contextPtr, commandHandle(commands[argsStart], commands[argsStart + 1]), true);
+                long handle = commandHandle(commands[argsStart], commands[argsStart + 1]);
+                markEffectHandleEvicted(backend, contextPtr, handle);
+                logEffectHandleEvict(backend, contextPtr, handle, true);
             } else if (record.op() == COMMAND_DEFINE_SHADER_DESCRIPTOR) {
                 if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE || !hasRecordArgs(record, 5)) {
                     return;
                 }
+                long handle = commandHandle(commands[argsStart], commands[argsStart + 1]);
+                markShaderHandleDefined(backend, contextPtr, handle, frameShaderDefines);
                 logShaderHandleDefine(
                         backend,
                         contextPtr,
-                        commandHandle(commands[argsStart], commands[argsStart + 1]),
+                        handle,
                         commands[argsStart + 2],
                         commands[argsStart + 3],
                         commands[argsStart + 4]
@@ -4154,33 +4171,45 @@ public class JBRSkiaService extends JBRSkia {
                 if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE || !hasRecordArgs(record, 2)) {
                     return;
                 }
-                logShaderHandleEvict(backend, contextPtr, commandHandle(commands[argsStart], commands[argsStart + 1]), true);
+                long handle = commandHandle(commands[argsStart], commands[argsStart + 1]);
+                markShaderHandleEvicted(backend, contextPtr, handle);
+                logShaderHandleEvict(backend, contextPtr, handle, true);
             } else if (record.op() == COMMAND_FILL_RECT_SHADER_REF) {
                 if (!hasRecordArgs(record, 2)) {
                     return;
                 }
-                logShaderHandleUse(backend, contextPtr, commandHandle(commands[argsStart], commands[argsStart + 1]), record.op());
+                long handle = commandHandle(commands[argsStart], commands[argsStart + 1]);
+                logShaderHandleCacheHitIfKnown(backend, contextPtr, handle, record.op(), frameShaderDefines);
+                logShaderHandleUse(backend, contextPtr, handle, record.op());
             } else if (record.op() == COMMAND_FILL_RECT_COLOR_FILTER_REF) {
                 if (!hasRecordArgs(record, 3)) {
                     return;
                 }
-                logEffectHandleUse(backend, contextPtr, commandHandle(commands[argsStart + 1], commands[argsStart + 2]), record.op());
+                long handle = commandHandle(commands[argsStart + 1], commands[argsStart + 2]);
+                logEffectHandleCacheHitIfKnown(backend, contextPtr, handle, record.op(), frameEffectDefines);
+                logEffectHandleUse(backend, contextPtr, handle, record.op());
             } else if (record.op() == COMMAND_SAVE_LAYER_COLOR_FILTER_REF
                     || record.op() == COMMAND_SAVE_LAYER_IMAGE_FILTER_REF) {
                 if (!hasRecordArgs(record, 7)) {
                     return;
                 }
-                logEffectHandleUse(backend, contextPtr, commandHandle(commands[argsStart + 5], commands[argsStart + 6]), record.op());
+                long handle = commandHandle(commands[argsStart + 5], commands[argsStart + 6]);
+                logEffectHandleCacheHitIfKnown(backend, contextPtr, handle, record.op(), frameEffectDefines);
+                logEffectHandleUse(backend, contextPtr, handle, record.op());
             } else if (record.op() == COMMAND_SAVE_LAYER_BLEND_COLOR_FILTER_REF) {
                 if (!hasRecordArgs(record, 8)) {
                     return;
                 }
-                logEffectHandleUse(backend, contextPtr, commandHandle(commands[argsStart + 6], commands[argsStart + 7]), record.op());
+                long handle = commandHandle(commands[argsStart + 6], commands[argsStart + 7]);
+                logEffectHandleCacheHitIfKnown(backend, contextPtr, handle, record.op(), frameEffectDefines);
+                logEffectHandleUse(backend, contextPtr, handle, record.op());
             } else if (record.op() == COMMAND_DRAW_IMAGE_REF_COLOR_FILTER_REF) {
                 if (!hasRecordArgs(record, 16)) {
                     return;
                 }
-                logEffectHandleUse(backend, contextPtr, commandHandle(commands[argsStart + 14], commands[argsStart + 15]), record.op());
+                long handle = commandHandle(commands[argsStart + 14], commands[argsStart + 15]);
+                logEffectHandleCacheHitIfKnown(backend, contextPtr, handle, record.op(), frameEffectDefines);
+                logEffectHandleUse(backend, contextPtr, handle, record.op());
             }
             offset = record.recordEnd();
         }
@@ -4188,6 +4217,64 @@ public class JBRSkiaService extends JBRSkia {
 
     private static boolean hasRecordArgs(CommandRecord record, int argCount) {
         return record.argsStart() + argCount <= record.recordEnd();
+    }
+
+    private static void markEffectHandleDefined(
+            String backend,
+            long contextPtr,
+            long handle,
+            Set<ColorFilterCacheKey> frameDefines
+    ) {
+        frameDefines.add(new ColorFilterCacheKey(contextPtr, handle));
+        EFFECT_HANDLE_MARKER_CACHE.add(new MarkerHandleKey(backend, contextPtr, handle));
+    }
+
+    private static void markEffectHandleEvicted(String backend, long contextPtr, long handle) {
+        EFFECT_HANDLE_MARKER_CACHE.remove(new MarkerHandleKey(backend, contextPtr, handle));
+    }
+
+    private static void markShaderHandleDefined(
+            String backend,
+            long contextPtr,
+            long handle,
+            Set<ColorFilterCacheKey> frameDefines
+    ) {
+        frameDefines.add(new ColorFilterCacheKey(contextPtr, handle));
+        SHADER_HANDLE_MARKER_CACHE.add(new MarkerHandleKey(backend, contextPtr, handle));
+    }
+
+    private static void markShaderHandleEvicted(String backend, long contextPtr, long handle) {
+        SHADER_HANDLE_MARKER_CACHE.remove(new MarkerHandleKey(backend, contextPtr, handle));
+    }
+
+    private static void logEffectHandleCacheHitIfKnown(
+            String backend,
+            long contextPtr,
+            long handle,
+            int op,
+            Set<ColorFilterCacheKey> frameDefines
+    ) {
+        if (!frameDefines.contains(new ColorFilterCacheKey(contextPtr, handle))
+                && EFFECT_HANDLE_MARKER_CACHE.contains(new MarkerHandleKey(backend, contextPtr, handle))) {
+            System.err.println("JBR_SKIA_INTEROP_EFFECT_HANDLE_CACHE_HIT backend=" + backend + " contextId=0x"
+                    + Long.toHexString(contextPtr) + " handle=0x" + Long.toHexString(handle)
+                    + " op=" + op);
+        }
+    }
+
+    private static void logShaderHandleCacheHitIfKnown(
+            String backend,
+            long contextPtr,
+            long handle,
+            int op,
+            Set<ColorFilterCacheKey> frameDefines
+    ) {
+        if (!frameDefines.contains(new ColorFilterCacheKey(contextPtr, handle))
+                && SHADER_HANDLE_MARKER_CACHE.contains(new MarkerHandleKey(backend, contextPtr, handle))) {
+            System.err.println("JBR_SKIA_INTEROP_SHADER_HANDLE_CACHE_HIT backend=" + backend + " contextId=0x"
+                    + Long.toHexString(contextPtr) + " handle=0x" + Long.toHexString(handle)
+                    + " op=" + op);
+        }
     }
 
     private static void logEffectHandleDefine(

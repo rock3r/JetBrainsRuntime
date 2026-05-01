@@ -99,6 +99,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] ABI 92: RuntimeEffect color-filter descriptors can reference child color-filter handles and named child schema metadata, so JBR builds child-backed `SkRuntimeEffect` color filters inside its own Skia runtime.
 - [x] RuntimeEffect builder failures emit parseable JBR markers, and Magic Jewel has a bad-child-name probe/report assertion.
   - [x] Descriptor handle use markers now distinguish "handle was consumed by replay" from "handle was defined in the command stream"; RuntimeEffect rows assert use markers for shader and color-filter refs.
+  - [x] Descriptor handle cache-hit markers distinguish same-frame define/use from steady-state reuse across frames; stable
+    shader/effect rows assert cache-hit markers.
   - [x] RuntimeEffect compile/build failure markers now include hashed diagnostic fields, and the bad-child probe asserts the
     specific `stage=missing-child` builder path.
   - [x] Invalid descriptor-use fallback probe corrupts a known-good effect-handle reference after CMP recording and asserts
@@ -133,6 +135,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   - [x] JBR emits structured effect/shader handle lifecycle markers for native and Java2D command submissions, and Magic Jewel reports/asserts descriptor define markers from the full log.
   - [x] Magic Jewel has a descriptor eviction probe that overfills CMP's effect/shader handle caches and asserts JBR-side define/evict markers.
   - [x] Stable Magic Jewel descriptor rows assert reuse with max-count gates so unchanged effect/shader descriptors are not redefined every frame.
+  - [x] JBR emits explicit shader/effect cache-hit markers for descriptor uses that reuse handles from previous frames, and Magic Jewel can assert those markers on stable descriptor rows.
   - [x] Skiko clears CMP-owned command descriptor/image caches on JBR surface changes, with a resize probe proving descriptors are redefined for the new surface.
   - [x] Missing CMP command-cache clear hook is a structured Skiko fallback (`command-cache-clear-unavailable`) instead of a silent stale-handle risk.
   - [ ] Implement JBR-owned shader/effect handles: Skiko/CMP serializes descriptors or create requests, JBR constructs objects inside its Skia runtime, draw commands reference versioned handles, and handles are scoped/evicted by destination context.
