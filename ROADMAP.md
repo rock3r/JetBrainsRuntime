@@ -224,6 +224,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-055435/suite.tsv`.
 - [x] Combined RuntimeEffect screenshot parity row passed:
   `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-060341/suite.tsv`.
+- [x] RuntimeEffect screenshot parity subset now runs pure-color, uniform-only, child-only, and combined child+uniform rows by default:
+  `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-080056/suite.tsv`.
 - [x] Native-text screenshot parity row passed:
   `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-062651/suite.tsv`.
 - [x] Clean-geometry screenshot parity row passed:

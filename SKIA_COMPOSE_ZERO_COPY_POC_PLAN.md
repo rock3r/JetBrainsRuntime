@@ -8554,3 +8554,36 @@ Next checkpoint:
 
 - Decide whether the next RuntimeEffect slice is child color-filter handles or broader screenshot parity for the
   RuntimeEffect conformance rows.
+
+## Checkpoint: RuntimeEffect Parity Default Coverage
+
+Status: the Magic Jewel screenshot parity suite now includes the combined child+uniform RuntimeEffect row in its default
+RuntimeEffect coverage, and the full focused RuntimeEffect parity subset passed.
+
+What changed:
+
+- `jbr-skia-screenshot-parity-suite.sh` default cases now include `parity-runtime-effect-shader` alongside:
+  - `parity-runtime-effect-pure-color`
+  - `parity-runtime-effect-uniform-only`
+  - `parity-runtime-effect-child-only`
+- Magic Jewel `README.md` documents that RuntimeEffect screenshot parity covers pure-color, uniform-only, child-only, and
+  combined child+uniform rows.
+- `ROADMAP.md` records the new default parity coverage.
+
+Verification:
+
+- Magic Jewel screenshot parity script syntax passed:
+  - command: `bash -n scripts/jbr-skia-screenshot-parity-suite.sh scripts/jbr-skia-screenshot-parity.sh`
+- Focused RuntimeEffect screenshot parity subset passed:
+  - command: `CASES="parity-runtime-effect-pure-color parity-runtime-effect-uniform-only parity-runtime-effect-child-only parity-runtime-effect-shader" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-080056/suite.tsv`
+  - observed Compose-canvas bad-pixel ratios:
+    - `parity-runtime-effect-pure-color`: `0.06168`
+    - `parity-runtime-effect-uniform-only`: `0.06173`
+    - `parity-runtime-effect-child-only`: `0.06215`
+    - `parity-runtime-effect-shader`: `0.06188`
+
+Next checkpoint:
+
+- Continue RuntimeEffect functionality with child color-filter handles, or run the full default screenshot parity suite
+  after the next artifact refresh.
