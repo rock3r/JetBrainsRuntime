@@ -8971,3 +8971,32 @@ Next checkpoint:
 
 - Add an explicit context-migration/cache-clear validation pass that proves Skiko clears CMP-owned descriptor/image caches
   on destination context changes and that JBR sees fresh defines rather than stale handle reuse after migration.
+
+## Checkpoint: Resize Descriptor Cache Recovery
+
+Status: the existing resize/surface-replacement descriptor probe now also proves steady-state cache reuse resumes after
+Skiko clears CMP-owned command caches and CMP emits a fresh descriptor define for the new destination surface.
+
+What changed:
+
+- Tightened Magic Jewel's `commands-resize-descriptor-redefine` row to require
+  `EXPECT_MIN_JBR_EFFECT_HANDLE_CACHE_HITS=1` in addition to the existing surface-change, command-cache-clear, and
+  second-define gates.
+- The row still requires `contextChanged=false` and `surfaceChanged=true`, so this checkpoint covers same-context
+  destination surface replacement such as resize. True multi-monitor context migration remains a separate follow-up.
+
+Verification:
+
+- Focused resize descriptor redefine row passed:
+  - command: `CASES="commands-resize-descriptor-redefine" DURATION_SECONDS=6 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-095217/suite.tsv`
+  - result: `status=passed`, `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`,
+    `jbr_command_frames=981`
+  - observed counts: `skiko_surface_change_markers=1`, `skiko_command_cache_clear_markers=1`,
+    `jbr_effect_handle_define_frames=2`, `jbr_effect_handle_use_frames=1797`,
+    `jbr_effect_handle_cache_hit_frames=1795`
+
+Next checkpoint:
+
+- Add a true context-migration probe when we can reliably move the Magic Jewel window between displays/graphics configs,
+  or add a JBR/Skiko test hook that forces a context identity change without depending on physical monitor topology.
