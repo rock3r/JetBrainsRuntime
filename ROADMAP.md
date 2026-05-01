@@ -339,6 +339,9 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Launch-level forced compatibility matrix runner for happy path plus ABI/native-ABI/capability/public-API fallbacks.
 - [x] Launch-level artifact matrix scaffold for named current/old JBR API, JBR native, desktop patch, Skiko, and CMP artifacts.
 - [x] Artifact matrix can require old-artifact rows in CI and fail if optional bundles are missing.
+- [x] Artifact bundle packaging helper can capture a current artifact set and feed it back into the launch-level artifact matrix.
+- [x] Bundle-backed artifact matrix self-check passed with all optional rows required:
+  `/Users/rock3r/src/magic-jewel/out/jbr-skia-artifact-matrix/20260501-063815/matrix.tsv`.
 - [x] Report parser includes nested CMP unsupported-command markers in `cmp_unsupported_reasons`.
 - [x] Local artifact rebuild helper recreates the public API shim, patched `java.desktop` classes, and native bridge dylib.
 - [x] Post-rebuild live animation command smoke passed:

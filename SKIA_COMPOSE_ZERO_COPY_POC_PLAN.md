@@ -8178,3 +8178,50 @@ Known notes:
 - This is still local patched-artifact wiring, not true JBR build-system integration.
 - The helper is intentionally macOS arm64 only for the current PoC artifact path. x64/universal packaging belongs with the
   later production build integration.
+
+## Checkpoint: Artifact Bundle Packaging
+
+Status: Magic Jewel can package a local artifact set and feed it back into the launch-level artifact matrix as a required
+old-artifact bundle.
+
+What changed:
+
+- Added `scripts/package-jbr-skia-artifact-bundle.sh` in Magic Jewel.
+- The helper captures:
+  - patched `java.desktop` output;
+  - public JBR API shim jar;
+  - native JBR Skia bridge dylib;
+  - Skiko version;
+  - CMP output root.
+- The bundle writes a stable `manifest.properties` plus `use-as-old.env`.
+- `scripts/jbr-skia-artifact-matrix.sh` now accepts `OLD_ARTIFACT_BUNDLE`, reads the manifest without sourcing arbitrary
+  shell, and uses explicit `OLD_*` variables as overrides when both are present.
+- Magic Jewel README documents the bundle helper, the replay command, and the same-version self-check mode.
+- `ROADMAP.md` marks the bundle packaging helper and bundle-backed artifact matrix self-check complete.
+
+Verification:
+
+- Script syntax passed:
+  - `bash -n scripts/package-jbr-skia-artifact-bundle.sh`
+  - `bash -n scripts/jbr-skia-artifact-matrix.sh`
+- Packaged the current local artifacts:
+  - command: `./scripts/package-jbr-skia-artifact-bundle.sh`
+  - bundle: `/Users/rock3r/src/magic-jewel/out/jbr-skia-artifact-bundles/20260501-063751`
+  - manifest: `/Users/rock3r/src/magic-jewel/out/jbr-skia-artifact-bundles/20260501-063751/manifest.properties`
+- Dry-run matrix with all optional rows required passed:
+  - command: `OLD_ARTIFACT_BUNDLE=/Users/rock3r/src/magic-jewel/out/jbr-skia-artifact-bundles/20260501-063751 REQUIRE_OLD_ARTIFACT_ROWS=true ./scripts/jbr-skia-artifact-matrix.sh --dry-run`
+  - matrix: `/Users/rock3r/src/magic-jewel/out/jbr-skia-artifact-matrix/20260501-063801/matrix.tsv`
+- Real bundle-backed self-check passed, with the same-version bundle expected to stay on the fast path:
+  - command: `OLD_ARTIFACT_BUNDLE=/Users/rock3r/src/magic-jewel/out/jbr-skia-artifact-bundles/20260501-063751 REQUIRE_OLD_ARTIFACT_ROWS=true OLD_JBR_EXPECTED_REASON=none OLD_API_EXPECTED_REASON=none OLD_SKIKO_EXPECTED_REASON=none OLD_CMP_EXPECTED_REASON=none DURATION_SECONDS=4 WARMUP_SECONDS=1 SAMPLE_INTERVAL_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-artifact-matrix.sh`
+  - matrix: `/Users/rock3r/src/magic-jewel/out/jbr-skia-artifact-matrix/20260501-063815/matrix.tsv`
+  - `current-all`: passed, `fallback_new_count=0`, `jbr_command_frames=598`
+  - `missing-public-api`: passed, `fallback_new_count=1`, `jbr_command_frames=0`
+  - all bundle-backed optional rows: passed, `fallback_new_count=0`
+
+Known notes:
+
+- This validates the packaging/replay mechanism using a same-version bundle. The final old/new compatibility matrix still
+  needs real older incompatible JBR API/JBR native/Skiko/CMP bundles to prove the expected fallback reasons with historical
+  artifacts.
+- The bundle currently stores the CMP output as a manifest pointer by default; set `COPY_CMP_OUT=true` when a fully
+  self-contained archive is needed.
