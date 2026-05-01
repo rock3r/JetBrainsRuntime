@@ -483,6 +483,10 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Broad Magic Jewel command-probe sweep after adding renderEffect + blend/filter rows: 61/61 rows passed. The new
   rows stayed on JBR command replay; only the explicit invalid-gradient fallback row used picture replay:
   `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-182335/suite.tsv`.
+- [x] Broad Magic Jewel screenshot parity sweep after adding renderEffect + blend/filter rows: 23/23 rows passed,
+  including rich mixed Swing/Compose, native text, RuntimeEffects, graphics-layer effects/shadows/Offscreen/3D, and exact
+  bottom-swatches parity in every row:
+  `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-185303/suite.tsv`.
 - [x] Full Magic Jewel command-probe sweep after RuntimeEffect child-type crash hardening: 46/46 rows passed, adding the
   `commands-runtime-effect-child-type-fallback` row:
   `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-121521/suite.tsv`.

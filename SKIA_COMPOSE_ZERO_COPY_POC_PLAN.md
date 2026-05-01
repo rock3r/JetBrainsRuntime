@@ -10370,3 +10370,21 @@ Next checkpoint:
 
 - Inspect unsupported/fallback inventory after this sweep and pick the next implementation slice, likely a remaining
   shader/filter/path edge that currently requires picture replay or an explicit fallback row.
+
+## Checkpoint: Broad Screenshot Parity Sweep After RenderEffect Blend Rows
+
+Status: completed with the expanded screenshot-parity default case list.
+
+Verification:
+
+- Broad Magic Jewel screenshot parity suite passed:
+  - command: `DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-185303/suite.tsv`
+  - result: 23/23 rows passed. Coverage includes the rich mixed Swing/Compose baseline, geometry-clean baseline,
+    native text, RuntimeEffect shader/color-filter rows, graphics-layer renderEffect/blend/filter rows, shadows,
+    Offscreen, and 3D rotation/camera rows. Every row kept `compose_bottom_swatches_bad_pixel_ratio=0.00000`.
+
+Next checkpoint:
+
+- Choose the next functionality slice from the remaining non-intentional gaps. Current automated evidence says the broad
+  command and screenshot suites are green; remaining picture replay is limited to explicit fallback probes.
