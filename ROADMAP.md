@@ -163,7 +163,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   - [ ] Add shader/effect lifecycle commands for create, use, context-scoped cache hit, compile failure, eviction, and context migration invalidation; never pass raw Skiko `SkShader*`, `SkImageFilter*`, or `SkRuntimeEffect*` pointers across the ABI.
   - [x] Add RuntimeEffect conformance probes in Magic Jewel: one pure color shader, one child-shader composition, one uniform animation, one builder/compile-failure fallback, and one old-runtime capability fallback.
   - [x] Add Magic Jewel probes that force invalid descriptor-handle fallback without relying on raw Skiko `SkShader*` or `SkRuntimeEffect*` pointers.
-  - [ ] Add Magic Jewel probes that force handle creation, reuse, context migration, and eviction without relying on raw Skiko `SkShader*` or `SkRuntimeEffect*` pointers.
+  - [x] Add Magic Jewel probes that force handle creation, reuse, context migration, and eviction without relying on raw Skiko `SkShader*` or `SkRuntimeEffect*` pointers.
   - [ ] Add ABI/version tests for shader/effect handle creation, use-after-free rejection, context migration invalidation, and old/new fallback markers.
   - [ ] Long term: revisit true generic shader support only after Skiko's fast path no longer creates Skia C++ objects in a separate bundled runtime.
 - [x] Strict recorder fallback for invalid gradient stops and excessive gradient color counts.
@@ -227,7 +227,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   - [x] Add render-effect descriptors for graphics-layer `RenderEffect` once the JBR-owned effect-handle ABI can construct the needed Skia image filters.
   - [x] Add an explicit expected-fallback row for graphics-layer `RenderEffect` combined with paint color-filter metadata.
   - [x] Support graphics-layer `RenderEffect` combined with tint/SrcIn color-filter metadata through nested image-filter and color-filter saveLayer command replay.
-  - [ ] Extend nested graphics-layer `RenderEffect` replay to blend-mode and descriptor color-filter combinations if parity is acceptable.
+  - [x] Extend nested graphics-layer `RenderEffect` replay to blend-mode and descriptor color-filter combinations if parity is acceptable.
 - [x] Add narrow tint color-filter solid fill-rectangle support through a versioned command instead of picture fallback.
 - [x] Add narrow tint color-filter `saveLayer` support through a versioned command instead of picture fallback.
 - [x] Add narrow tint color-filter cached-image support through a versioned command instead of picture fallback.
