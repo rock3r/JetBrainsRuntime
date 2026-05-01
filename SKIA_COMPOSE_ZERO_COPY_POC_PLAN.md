@@ -8830,3 +8830,20 @@ Next checkpoint:
 
 - Run the expanded RuntimeEffect parity subset including the new child color-filter row, then continue with the remaining
   shader/effect diagnostic and lifecycle-marker gaps.
+
+## Checkpoint: RuntimeEffect Parity Coverage With Child ColorFilters
+
+Status: the focused RuntimeEffect screenshot parity subset passed with the new ABI 92 child color-filter row included.
+
+Verification:
+
+- Expanded RuntimeEffect screenshot parity subset passed:
+  - command: `CASES="parity-runtime-effect-pure-color parity-runtime-effect-uniform-only parity-runtime-effect-child-only parity-runtime-effect-shader parity-runtime-effect-color-filter parity-runtime-effect-color-filter-child" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-091420/suite.tsv`
+  - result: all six rows passed; child color-filter row reported `avg_delta=1.645`, `bad_pixel_ratio=0.03908`, and
+    `compose_bad_pixel_ratio=0.06230`
+
+Next checkpoint:
+
+- Continue shader/effect hardening with the remaining diagnostic and lifecycle-marker gaps: explicit create/use/cache-hit
+  markers for RuntimeEffect descriptor handles, plus fallback marker coverage for intentionally invalid descriptor use.
