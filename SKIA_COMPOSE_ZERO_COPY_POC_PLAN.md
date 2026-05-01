@@ -8729,3 +8729,30 @@ Next checkpoint:
 
 - Continue RuntimeEffect completeness with child color-filter handle design/probing, or run the full default screenshot
   parity suite with the ABI 91 artifact set if visual confidence becomes the priority.
+
+## Checkpoint: Skiko RuntimeEffect ColorFilter Children Prerequisite
+
+Status: Skiko can now create RuntimeEffect-backed color filters with child color filters through the direct
+`RuntimeEffect.makeColorFilter(...)` API. This unblocks the ABI 92 descriptor work for child color-filter handles without
+requiring CMP to use Skiko-owned `SkColorFilter*` pointers on the JBR fast path.
+
+What changed:
+
+- Extended `RuntimeEffect.makeColorFilter` to accept optional `Array<ColorFilter?>` children.
+- Added JVM and native/JS C++ bindings for `SkRuntimeEffect::makeColorFilter(uniforms, children, childCount)`.
+- Added a Skiko `RuntimeEffectTest` smoke that compiles a `uniform colorFilter child` effect and creates the child-backed
+  color filter.
+- Republished the patched Skiko AWT and macOS arm64 runtime artifacts to Maven Local.
+- `ROADMAP.md` records this as the Skiko prerequisite for the next command-stream ABI slice.
+
+Verification:
+
+- Skiko JVM/AWT Kotlin compilation passed:
+  - command: `./gradlew --no-daemon --no-configuration-cache compileKotlinJvm compileKotlinAwt`
+- Skiko native/JVM macOS arm64 runtime and AWT publication passed:
+  - command: `./gradlew --no-daemon --no-configuration-cache linkJvmBindingsMacosArm64 skikoJvmRuntimeJarMacosArm64 publishSkikoJvmRuntimeMacosArm64PublicationToMavenLocal publishAwtPublicationToMavenLocal`
+
+Next checkpoint:
+
+- Add ABI 92 child color-filter descriptor handles across Runtime API, JBR, CMP, Skiko compatibility gates, and Magic
+  Jewel probes.
