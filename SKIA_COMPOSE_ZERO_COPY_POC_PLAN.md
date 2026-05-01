@@ -10921,6 +10921,23 @@ Validation:
   `CASES="commands-composite-shader-color-filter" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`.
 - Suite result: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260502-005357/suite.tsv`.
 
+## Checkpoint: Image Shader + Color-Filter Wrapper Probe
+
+Status: completed for image-backed shader descriptor trees under the color-filter wrapper.
+
+What changed:
+- CMP has a recorder regression for `ImageShader(...)` plus `ColorFilter.tint(..., BlendMode.SrcIn)`, proving image shader descriptors can be wrapped without bypassing the descriptor/effect handle path.
+- Magic Jewel adds `MAGIC_JEWEL_COMPOSE_IMAGE_SHADER_COLOR_FILTER` / `magic.jewel.compose.imageShaderColorFilter` and a named command-probe row, `commands-image-shader-color-filter`.
+- The Magic Jewel row asserts image refs plus shader/effect handle markers, so it catches both image-cache and wrapper-descriptor regressions.
+- Initial validation exposed that the new flag was missing from `imageProbe` creation; after adding it to the `remember(...)` keys and creation predicate, the row produced the expected handle markers.
+
+Validation:
+- Magic Jewel compile passed: `./gradlew --no-daemon --no-configuration-cache :compileKotlin`.
+- CMP `:compose:ui:ui-graphics:compileKotlinDesktop` and `:compose:ui:ui-graphics:desktopJar` passed.
+- Magic Jewel focused command probe passed:
+  `CASES="commands-image-shader-color-filter" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`.
+- Suite result: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260502-010440/suite.tsv`.
+
 Next:
-- Continue broadening wrapped-shader coverage to image shader families, then add focused parity rows for the stable cases.
+- Add focused screenshot parity rows for the stable wrapped-shader cases.
 - Add old-artifact matrix coverage for the new high-word shader color-filter capability when an actual pre-wrapper JBR artifact bundle is available.
