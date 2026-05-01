@@ -66,6 +66,7 @@
 #include "ganesh/mtl/GrMtlDirectContext.h"
 #include "ganesh/mtl/GrMtlTypes.h"
 #include "include/gpu/ganesh/SkSurfaceGanesh.h"
+#include "include/effects/SkCornerPathEffect.h"
 #include "include/effects/SkDashPathEffect.h"
 #include "include/effects/SkGradient.h"
 #include "include/effects/SkImageFilters.h"
@@ -79,7 +80,7 @@
 
 #include "MTLSurfaceDataBase.h"
 
-static constexpr jint ABI_ID = 95;
+static constexpr jint ABI_ID = 96;
 static constexpr jint COMMAND_STREAM_MAGIC = 1246972723;
 static constexpr jint COMMAND_STREAM_HEADER_SIZE = 6;
 static constexpr jint COMMAND_STREAM_FLAGS_NONE = 0;
@@ -151,6 +152,7 @@ static constexpr jint COMMAND_FILL_RECT_SHADER_REF = 58;
 static constexpr jint COMMAND_STROKE_RECT_DASH_PATH_EFFECT = 59;
 static constexpr jint COMMAND_STROKE_ROUND_RECT_DASH_PATH_EFFECT = 60;
 static constexpr jint COMMAND_STROKE_PATH_DASH_PATH_EFFECT = 61;
+static constexpr jint COMMAND_DRAW_PATH_PATH_EFFECT_REF = 62;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER = 1;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_COLOR_MATRIX_FILTER = 2;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_LIGHTING_FILTER = 3;
@@ -159,6 +161,7 @@ static constexpr jint COMMAND_EFFECT_DESCRIPTOR_OFFSET_IMAGE_FILTER = 5;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_BLUR_IMAGE_FILTER_WITH_INPUT = 6;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_OFFSET_IMAGE_FILTER_WITH_INPUT = 7;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_RUNTIME_COLOR_FILTER = 8;
+static constexpr jint COMMAND_EFFECT_DESCRIPTOR_CORNER_PATH_EFFECT = 9;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_VERSION_1 = 1;
 static constexpr jint COMMAND_SHADER_DESCRIPTOR_LINEAR_GRADIENT = 1;
 static constexpr jint COMMAND_SHADER_DESCRIPTOR_RADIAL_GRADIENT = 2;
@@ -425,6 +428,20 @@ static bool isImageFilterDescriptorType(jint type) {
             type == COMMAND_EFFECT_DESCRIPTOR_OFFSET_IMAGE_FILTER ||
             type == COMMAND_EFFECT_DESCRIPTOR_BLUR_IMAGE_FILTER_WITH_INPUT ||
             type == COMMAND_EFFECT_DESCRIPTOR_OFFSET_IMAGE_FILTER_WITH_INPUT;
+}
+
+static bool isPathEffectDescriptorType(jint type) {
+    return type == COMMAND_EFFECT_DESCRIPTOR_CORNER_PATH_EFFECT;
+}
+
+static sk_sp<SkPathEffect> makeDescriptorPathEffect(const ColorFilterDescriptor& descriptor) {
+    if (descriptor.type == COMMAND_EFFECT_DESCRIPTOR_CORNER_PATH_EFFECT) {
+        if (descriptor.payload.size() != 1) return nullptr;
+        SkScalar radius = skScalarFromRawBits(descriptor.payload[0]);
+        if (!std::isfinite(radius) || radius < 0) return nullptr;
+        return SkCornerPathEffect::Make(radius);
+    }
+    return nullptr;
 }
 
 static sk_sp<SkImageFilter> makeDescriptorImageFilter(const ColorFilterDescriptor& descriptor, int depth) {
@@ -1409,6 +1426,59 @@ static bool drawCommandList(SkCanvas* canvas,
                 SkPaint paint;
                 paint.setAntiAlias(antiAlias);
                 paint.setColor(skColorFromArgb(argb));
+                if (paintStyle == COMMAND_PAINT_STYLE_STROKE) {
+                    paint.setStyle(SkPaint::kStroke_Style);
+                    paint.setStrokeWidth(static_cast<SkScalar>(strokeWidth));
+                    paint.setStrokeCap(static_cast<SkPaint::Cap>(strokeCap));
+                    paint.setStrokeJoin(static_cast<SkPaint::Join>(strokeJoin));
+                    paint.setStrokeMiter(static_cast<SkScalar>(strokeMiter1000) / 1000.0f);
+                }
+                canvas->drawPath(path, paint);
+                break;
+            }
+            case COMMAND_DRAW_PATH_PATH_EFFECT_REF: {
+                if (offset + 10 > recordEnd) {
+                    return false;
+                }
+                const jint paintStyle = commands[offset++];
+                const jint argb = commands[offset++];
+                const jint strokeWidth = commands[offset++];
+                const jint strokeCap = commands[offset++];
+                const jint strokeJoin = commands[offset++];
+                const jint strokeMiter1000 = commands[offset++];
+                const uint64_t handle = imageCacheKey(commands[offset], commands[offset + 1]);
+                offset += 2;
+                const jint fillType = commands[offset++];
+                const jint pathDataLength = commands[offset++];
+                if ((paintStyle != COMMAND_PAINT_STYLE_FILL && paintStyle != COMMAND_PAINT_STYLE_STROKE) ||
+                        (paintStyle == COMMAND_PAINT_STYLE_STROKE && !isValidStrokeMetadata(strokeWidth, strokeCap, strokeJoin, strokeMiter1000)) ||
+                        (fillType != COMMAND_PATH_FILL_NON_ZERO && fillType != COMMAND_PATH_FILL_EVEN_ODD) ||
+                        pathDataLength < 0 ||
+                        offset + pathDataLength != recordEnd) {
+                    return false;
+                }
+                ColorFilterDescriptor descriptor;
+                {
+                    std::lock_guard<std::mutex> lock(gColorFilterCacheMutex);
+                    auto cached = gColorFiltersByKey.find(ColorFilterScopedKey{imageCacheContextKey, handle});
+                    if (cached == gColorFiltersByKey.end() || !isPathEffectDescriptorType(cached->second.type)) {
+                        return false;
+                    }
+                    descriptor = cached->second;
+                }
+                SkPath path;
+                if (!pathFromCommandData(commands, offset, recordEnd, fillType, &path)) {
+                    return false;
+                }
+                offset = recordEnd;
+                SkPaint paint;
+                paint.setAntiAlias(antiAlias);
+                paint.setColor(skColorFromArgb(argb));
+                sk_sp<SkPathEffect> pathEffect = makeDescriptorPathEffect(descriptor);
+                if (!pathEffect) {
+                    return false;
+                }
+                paint.setPathEffect(std::move(pathEffect));
                 if (paintStyle == COMMAND_PAINT_STYLE_STROKE) {
                     paint.setStyle(SkPaint::kStroke_Style);
                     paint.setStrokeWidth(static_cast<SkScalar>(strokeWidth));
@@ -3211,6 +3281,15 @@ static bool drawCommandList(SkCanvas* canvas,
                     for (jint i = 0; i < skslLength; i++) {
                         const jint code = descriptor.payload[static_cast<size_t>(skslStart + i)];
                         if (code <= 0 || code > 127) return false;
+                    }
+                } else if (descriptorType == COMMAND_EFFECT_DESCRIPTOR_CORNER_PATH_EFFECT) {
+                    if (payloadIntCount != 1) {
+                        return false;
+                    }
+                    descriptor.payload.push_back(commands[offset++]);
+                    const SkScalar radius = skScalarFromRawBits(descriptor.payload[0]);
+                    if (!std::isfinite(radius) || radius < 0) {
+                        return false;
                     }
                 } else {
                     return false;

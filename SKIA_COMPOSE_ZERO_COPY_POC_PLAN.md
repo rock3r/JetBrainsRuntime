@@ -9204,3 +9204,43 @@ Next checkpoint:
 
 - Continue path-effect coverage by designing typed path-effect descriptors for non-dash effects such as corner,
   stamped, discrete, and chained path effects, unless a higher-value command replay gap appears first.
+
+## Checkpoint: ABI 96 Corner PathEffect Descriptor Replay
+
+Status: typed path-effect descriptors now cover `PathEffect.cornerPathEffect(...)` for arbitrary `drawPath` records.
+
+What changed:
+
+- Bumped the tightly versioned interop ABI to `96` across JBR, the public Runtime API mirror, Skiko's compatibility gate,
+  and CMP's command stream header.
+- Added `COMMAND_DRAW_PATH_PATH_EFFECT_REF = 62`, high capability bit
+  `COMMAND_CAP64_HIGH_PATH_EFFECT_DESCRIPTOR_REF = 256`, and descriptor type
+  `COMMAND_EFFECT_DESCRIPTOR_CORNER_PATH_EFFECT = 9`.
+- CMP now preserves structured corner path-effect metadata in `SkiaBackedPathEffect`, defines a reusable descriptor
+  handle, and records descriptor-backed `drawPath` commands for solid-color fill/stroke paths.
+- JBR validates corner path-effect descriptors as a one-float payload, rejects non-finite/negative radii, and validates
+  descriptor-ref path records against the existing path payload parser.
+- Native replay resolves the descriptor from the scoped handle cache, rebuilds `SkCornerPathEffect`, attaches it to the
+  `SkPaint`, and draws the path through Skia. Java2D fallback accepts the command and draws the original path if the
+  native bridge is unavailable.
+- Magic Jewel's path-effect probe now includes a corner path-effect shape in addition to dashed line/rect/round-rect/path
+  coverage.
+
+Verification:
+
+- Rebuilt Skiko AWT and published the local snapshot:
+  - command: `./gradlew --no-daemon --no-configuration-cache compileKotlinAwt publishAwtPublicationToMavenLocal`
+- Focused CMP recorder test passed:
+  - command: `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesCornerPathEffectDescriptorPathRecord`
+- Rebuilt local JBR API/desktop/native artifacts:
+  - command: `./scripts/rebuild-jbr-skia-local-artifacts.sh`
+- Focused Magic Jewel path-effect command probe passed:
+  - command: `CASES="commands-path-effect-fallback" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-105953/suite.tsv`
+  - result: `status=passed`, `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`,
+    `jbr_command_frames=145`
+
+Next checkpoint:
+
+- Extend the typed path-effect descriptor family to stamped path effects, then chain descriptors once both dash/corner and
+  stamped leaves can be represented.

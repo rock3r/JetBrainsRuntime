@@ -383,6 +383,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-103512/suite.tsv`.
 - [x] ABI 95 dashed arbitrary-path probe through JBR command replay:
   `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-104709/suite.tsv`.
+- [x] ABI 96 corner path-effect descriptor probe through JBR command replay:
+  `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-105953/suite.tsv`.
 - [x] Full Magic Jewel command-probe sweep: 39/39 rows passed with ABI 90 refreshed artifacts:
   `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-053403/suite.tsv`.
 - [x] Broad command sweep includes live animation, mixed Swing popups/menus, text/images, image/composite shaders,
@@ -437,6 +439,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [ ] Decide final Skiko artifact shape for Skia-less JBR interop.
 - [ ] Font/typeface ownership through the JBR Skia runtime.
 - [ ] JBR-owned generic shader factory and handles for non-serialized shader families.
+- [ ] Extend path-effect descriptors beyond corner to stamped and chained path effects.
 - [ ] Screen migration/context invalidation hardening.
 - [x] Real menu stress tests beyond popup-window coverage.
 - [ ] JCEF/shared-texture exploration after Compose is solid.

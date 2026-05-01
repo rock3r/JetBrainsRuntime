@@ -146,7 +146,8 @@ public class JBRSkiaService extends JBRSkia {
                     | COMMAND_CAP64_HIGH_EFFECT_DESCRIPTOR_RUNTIME_COLOR_FILTER
                     | COMMAND_CAP64_HIGH_STROKE_RECT_DASH_PATH_EFFECT
                     | COMMAND_CAP64_HIGH_STROKE_ROUND_RECT_DASH_PATH_EFFECT
-                    | COMMAND_CAP64_HIGH_STROKE_PATH_DASH_PATH_EFFECT;
+                    | COMMAND_CAP64_HIGH_STROKE_PATH_DASH_PATH_EFFECT
+                    | COMMAND_CAP64_HIGH_PATH_EFFECT_DESCRIPTOR_REF;
     private static final boolean NATIVE_BRIDGE_AVAILABLE = loadNativeBridge();
     private static final AtomicLong NEXT_SCOPE_ID = new AtomicLong(1);
     private static final int MAX_CACHED_IMAGES = 256;
@@ -351,6 +352,7 @@ public class JBRSkiaService extends JBRSkia {
         if (op == COMMAND_STROKE_RECT_DASH_PATH_EFFECT) return -23;
         if (op == COMMAND_STROKE_ROUND_RECT_DASH_PATH_EFFECT) return -26;
         if (op == COMMAND_STROKE_PATH_DASH_PATH_EFFECT) return -27;
+        if (op == COMMAND_DRAW_PATH_PATH_EFFECT_REF) return -28;
         if (op == COMMAND_FILL_RECT_IMAGE_SHADER) return 14;
         if (op == COMMAND_CLEAR) return 4;
         if (op == COMMAND_CLEAR_RECT) return 7;
@@ -442,6 +444,9 @@ public class JBRSkiaService extends JBRSkia {
         }
         if (expectedLength == -27 && record.op() == COMMAND_STROKE_PATH_DASH_PATH_EFFECT) {
             return record.recordLength() >= 14;
+        }
+        if (expectedLength == -28 && record.op() == COMMAND_DRAW_PATH_PATH_EFFECT_REF) {
+            return record.recordLength() >= 13;
         }
         return expectedLength == record.recordLength();
     }
@@ -606,6 +611,11 @@ public class JBRSkiaService extends JBRSkia {
             if (descriptorType == COMMAND_EFFECT_DESCRIPTOR_RUNTIME_COLOR_FILTER) {
                 return validateRuntimeColorFilterDescriptorPayload(commands, record, payloadIntCount);
             }
+            if (descriptorType == COMMAND_EFFECT_DESCRIPTOR_CORNER_PATH_EFFECT) {
+                if (payloadIntCount != 1) return false;
+                float radius = Float.intBitsToFloat(commands[record.argsStart() + 5]);
+                return Float.isFinite(radius) && radius >= 0f;
+            }
             return false;
         }
         if (record.op() == COMMAND_DEFINE_SHADER_DESCRIPTOR) {
@@ -716,6 +726,26 @@ public class JBRSkiaService extends JBRSkia {
                 }
             }
             return validatePathData(commands, pathHeaderOffset + 2, record.recordEnd());
+        }
+        if (record.op() == COMMAND_DRAW_PATH_PATH_EFFECT_REF) {
+            if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE
+                    && record.recordFlags() != COMMAND_RECORD_FLAG_ANTIALIAS) {
+                return false;
+            }
+            int paintStyle = commands[record.argsStart()];
+            int strokeWidth = commands[record.argsStart() + 2];
+            int strokeCap = commands[record.argsStart() + 3];
+            int strokeJoin = commands[record.argsStart() + 4];
+            int strokeMiter = commands[record.argsStart() + 5];
+            int fillType = commands[record.argsStart() + 8];
+            int pathDataLength = commands[record.argsStart() + 9];
+            return (paintStyle == COMMAND_PAINT_STYLE_FILL || paintStyle == COMMAND_PAINT_STYLE_STROKE)
+                    && (paintStyle == COMMAND_PAINT_STYLE_FILL || isValidStrokeMetadata(strokeWidth, strokeCap, strokeJoin, strokeMiter))
+                    && (fillType == COMMAND_PATH_FILL_NON_ZERO || fillType == COMMAND_PATH_FILL_EVEN_ODD)
+                    && pathDataLength >= 0
+                    && pathDataLength <= 4096
+                    && record.argsStart() + 10 + pathDataLength == record.recordEnd()
+                    && validatePathData(commands, record.argsStart() + 10, record.recordEnd());
         }
         if (record.op() == COMMAND_CLIP_RECT) {
             int clipOp = commands[record.recordEnd() - 1];
@@ -1855,6 +1885,10 @@ public class JBRSkiaService extends JBRSkia {
             return new ColorFilterDescriptor(COMMAND_EFFECT_DESCRIPTOR_RUNTIME_COLOR_FILTER, 0, 0, payload.clone(), null);
         }
 
+        static ColorFilterDescriptor pathEffect(int type, int[] payload) {
+            return new ColorFilterDescriptor(type, 0, 0, payload.clone(), null);
+        }
+
         static ColorFilterDescriptor blurImageFilter(
                 int type,
                 int sigmaXBits,
@@ -1892,6 +1926,10 @@ public class JBRSkiaService extends JBRSkia {
                 || descriptor.type() == COMMAND_EFFECT_DESCRIPTOR_OFFSET_IMAGE_FILTER
                 || descriptor.type() == COMMAND_EFFECT_DESCRIPTOR_BLUR_IMAGE_FILTER_WITH_INPUT
                 || descriptor.type() == COMMAND_EFFECT_DESCRIPTOR_OFFSET_IMAGE_FILTER_WITH_INPUT;
+    }
+
+    private static boolean isPathEffectDescriptor(ColorFilterDescriptor descriptor) {
+        return descriptor.type() == COMMAND_EFFECT_DESCRIPTOR_CORNER_PATH_EFFECT;
     }
 
     private static int applyColorMatrix(int argb, int[] matrixBits) {
@@ -2269,6 +2307,42 @@ public class JBRSkiaService extends JBRSkia {
                                 || offset + pathDataLength != recordEnd) {
                             return false;
                         }
+                        Path2D path = pathFromCommandData(commands, offset, recordEnd, fillType);
+                        if (path == null) return false;
+                        offset = recordEnd;
+                        applyAntialiasing(current, antiAlias);
+                        current.setColor(new Color(argb, true));
+                        if (paintStyle == COMMAND_PAINT_STYLE_FILL) {
+                            current.fill(path);
+                        } else {
+                            current.setStroke(new BasicStroke(
+                                    strokeWidth,
+                                    strokeCap == 1 ? BasicStroke.CAP_ROUND : strokeCap == 2 ? BasicStroke.CAP_SQUARE : BasicStroke.CAP_BUTT,
+                                    strokeJoin == 1 ? BasicStroke.JOIN_ROUND : strokeJoin == 2 ? BasicStroke.JOIN_BEVEL : BasicStroke.JOIN_MITER,
+                                    Math.max(1f, strokeMiter / 1000f)
+                            ));
+                            current.draw(path);
+                        }
+                    } else if (op == COMMAND_DRAW_PATH_PATH_EFFECT_REF) {
+                        if (offset + 10 > recordEnd) return false;
+                        int paintStyle = commands[offset++];
+                        int argb = commands[offset++];
+                        int strokeWidth = commands[offset++];
+                        int strokeCap = commands[offset++];
+                        int strokeJoin = commands[offset++];
+                        int strokeMiter = commands[offset++];
+                        long handle = cacheKey(commands[offset++], commands[offset++]);
+                        int fillType = commands[offset++];
+                        int pathDataLength = commands[offset++];
+                        if ((paintStyle != COMMAND_PAINT_STYLE_FILL && paintStyle != COMMAND_PAINT_STYLE_STROKE)
+                                || (paintStyle == COMMAND_PAINT_STYLE_STROKE && !isValidStrokeMetadata(strokeWidth, strokeCap, strokeJoin, strokeMiter))
+                                || (fillType != COMMAND_PATH_FILL_NON_ZERO && fillType != COMMAND_PATH_FILL_EVEN_ODD)
+                                || pathDataLength < 0
+                                || offset + pathDataLength != recordEnd) {
+                            return false;
+                        }
+                        ColorFilterDescriptor descriptor = COLOR_FILTER_CACHE.get(new ColorFilterCacheKey(contextPtr, handle));
+                        if (descriptor == null || !isPathEffectDescriptor(descriptor)) return false;
                         Path2D path = pathFromCommandData(commands, offset, recordEnd, fillType);
                         if (path == null) return false;
                         offset = recordEnd;
@@ -3651,6 +3725,16 @@ public class JBRSkiaService extends JBRSkia {
                             COLOR_FILTER_CACHE.put(
                                     new ColorFilterCacheKey(contextPtr, handle),
                                     ColorFilterDescriptor.runtimeColorFilter(payload)
+                            );
+                            logEffectHandleDefine("java2d", contextPtr, handle, descriptorType, descriptorVersion, payloadIntCount, false);
+                        } else if (descriptorType == COMMAND_EFFECT_DESCRIPTOR_CORNER_PATH_EFFECT) {
+                            if (payloadIntCount != 1) return false;
+                            int radiusBits = commands[offset++];
+                            float radius = Float.intBitsToFloat(radiusBits);
+                            if (!Float.isFinite(radius) || radius < 0f) return false;
+                            COLOR_FILTER_CACHE.put(
+                                    new ColorFilterCacheKey(contextPtr, handle),
+                                    ColorFilterDescriptor.pathEffect(descriptorType, new int[] { radiusBits })
                             );
                             logEffectHandleDefine("java2d", contextPtr, handle, descriptorType, descriptorVersion, payloadIntCount, false);
                         } else {
