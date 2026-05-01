@@ -1480,15 +1480,15 @@ public class JBRSkiaService extends JBRSkia {
             long srcHandle = commandHandle(commands[payloadStart + 2], commands[payloadStart + 3]);
             return shaderHandles.contains(dstHandle) && shaderHandles.contains(srcHandle);
         }
-        if (descriptorType == COMMAND_SHADER_DESCRIPTOR_RUNTIME_EFFECT && payloadIntCount >= 3) {
+        if (descriptorType == COMMAND_SHADER_DESCRIPTOR_RUNTIME_EFFECT && payloadIntCount >= 5) {
             int childCount = commands[payloadStart + 2];
-            if (childCount < 0 || childCount > 8 || payloadIntCount < 3 + childCount * 2) {
+            if (childCount < 0 || childCount > 8 || payloadIntCount < 5 + childCount * 2) {
                 return false;
             }
             for (int index = 0; index < childCount; index++) {
                 long childHandle = commandHandle(
-                        commands[payloadStart + 3 + index * 2],
-                        commands[payloadStart + 4 + index * 2]
+                        commands[payloadStart + 5 + index * 2],
+                        commands[payloadStart + 6 + index * 2]
                 );
                 if (!shaderHandles.contains(childHandle)) return false;
             }
@@ -1545,7 +1545,7 @@ public class JBRSkiaService extends JBRSkia {
             return payloadIntCount == 5 && isSupportedBlendMode(blendMode);
         }
         if (descriptorType == COMMAND_SHADER_DESCRIPTOR_RUNTIME_EFFECT) {
-            if (payloadIntCount < 3) return false;
+            if (payloadIntCount < 5) return false;
             int skslLength = commands[payloadStart];
             int uniformFloatCount = commands[payloadStart + 1];
             int childCount = commands[payloadStart + 2];
@@ -1555,10 +1555,12 @@ public class JBRSkiaService extends JBRSkia {
                     || uniformFloatCount > 256
                     || childCount < 0
                     || childCount > 8
-                    || payloadIntCount != 3 + childCount * 2 + skslLength + uniformFloatCount) {
+                    || payloadIntCount != 5 + childCount * 2 + skslLength + uniformFloatCount) {
                 return false;
             }
-            int skslStart = payloadStart + 3 + childCount * 2;
+            int skslStart = payloadStart + 5 + childCount * 2;
+            long expectedHash = commandHandle(commands[payloadStart + 3], commands[payloadStart + 4]);
+            if (shaderSourceHash(commands, skslStart, skslLength) != expectedHash) return false;
             for (int index = 0; index < skslLength; index++) {
                 int code = commands[skslStart + index];
                 if (code <= 0 || code > 127) return false;
@@ -1566,6 +1568,15 @@ public class JBRSkiaService extends JBRSkia {
             return true;
         }
         return false;
+    }
+
+    private static long shaderSourceHash(int[] commands, int skslStart, int skslLength) {
+        long hash = -3750763034362895579L;
+        for (int index = 0; index < skslLength; index++) {
+            hash ^= commands[skslStart + index] & 0xffL;
+            hash *= 1099511628211L;
+        }
+        return hash;
     }
 
     private static boolean validateGradientStops(int[] commands, int payloadOffset, int recordEnd, int colorCount) {
@@ -3418,7 +3429,7 @@ public class JBRSkiaService extends JBRSkia {
                         } else if (descriptorType == COMMAND_SHADER_DESCRIPTOR_RUNTIME_EFFECT) {
                             int childCount = commands[offset + 2];
                             children = new ShaderDescriptor[childCount];
-                            offset += 3;
+                            offset += 5;
                             for (int index = 0; index < childCount; index++) {
                                 long childHandle = cacheKey(commands[offset++], commands[offset++]);
                                 children[index] = SHADER_CACHE.get(new ColorFilterCacheKey(contextPtr, childHandle));

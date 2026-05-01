@@ -78,7 +78,7 @@
 
 #include "MTLSurfaceDataBase.h"
 
-static constexpr jint ABI_ID = 87;
+static constexpr jint ABI_ID = 88;
 static constexpr jint COMMAND_STREAM_MAGIC = 1246972723;
 static constexpr jint COMMAND_STREAM_HEADER_SIZE = 6;
 static constexpr jint COMMAND_STREAM_FLAGS_NONE = 0;
@@ -480,6 +480,9 @@ static bool readGradientStops(const std::vector<jint>& payload,
     return true;
 }
 
+static uint64_t imageCacheKey(jint high, jint low);
+static uint64_t shaderSourceHash(const std::vector<jint>& payload, size_t skslStart, jint skslLength);
+
 static sk_sp<SkShader> makeDescriptorShader(const ShaderDescriptor& descriptor, void* imageCacheContextKey, int depth) {
     if (depth > 8) {
         return nullptr;
@@ -580,7 +583,7 @@ static sk_sp<SkShader> makeDescriptorShader(const ShaderDescriptor& descriptor, 
         return SkShaders::Blend(blendMode, dst, src);
     }
     if (descriptor.type == COMMAND_SHADER_DESCRIPTOR_RUNTIME_EFFECT) {
-        if (descriptor.payload.size() < 3) return nullptr;
+        if (descriptor.payload.size() < 5) return nullptr;
         const jint skslLength = descriptor.payload[0];
         const jint uniformFloatCount = descriptor.payload[1];
         const jint childCount = descriptor.payload[2];
@@ -591,7 +594,7 @@ static sk_sp<SkShader> makeDescriptorShader(const ShaderDescriptor& descriptor, 
                 childCount < 0 ||
                 childCount > 8 ||
                 descriptor.children.size() != static_cast<size_t>(childCount) ||
-                descriptor.payload.size() != static_cast<size_t>(3 + childCount * 2 + skslLength + uniformFloatCount)) {
+                descriptor.payload.size() != static_cast<size_t>(5 + childCount * 2 + skslLength + uniformFloatCount)) {
             return nullptr;
         }
         std::vector<sk_sp<SkShader>> childShaders;
@@ -602,7 +605,9 @@ static sk_sp<SkShader> makeDescriptorShader(const ShaderDescriptor& descriptor, 
             if (!shader) return nullptr;
             childShaders.push_back(shader);
         }
-        const size_t skslStart = static_cast<size_t>(3 + childCount * 2);
+        const size_t skslStart = static_cast<size_t>(5 + childCount * 2);
+        const uint64_t expectedHash = imageCacheKey(descriptor.payload[3], descriptor.payload[4]);
+        if (shaderSourceHash(descriptor.payload, skslStart, skslLength) != expectedHash) return nullptr;
         std::string sksl;
         sksl.reserve(static_cast<size_t>(skslLength));
         for (jint i = 0; i < skslLength; i++) {
@@ -701,6 +706,15 @@ static bool isValidStrokeMetadata(jint strokeWidth, jint strokeCap, jint strokeJ
 static uint64_t imageCacheKey(jint high, jint low) {
     return (static_cast<uint64_t>(static_cast<uint32_t>(high)) << 32)
             | static_cast<uint32_t>(low);
+}
+
+static uint64_t shaderSourceHash(const std::vector<jint>& payload, size_t skslStart, jint skslLength) {
+    uint64_t hash = 14695981039346656037ULL;
+    for (jint i = 0; i < skslLength; i++) {
+        hash ^= static_cast<uint8_t>(payload[skslStart + i]);
+        hash *= 1099511628211ULL;
+    }
+    return hash;
 }
 
 static int clearImageCacheForContext(void* contextKey) {
@@ -2946,7 +2960,7 @@ static bool drawCommandList(SkCanvas* canvas,
                         descriptor.src = std::make_shared<ShaderDescriptor>(src->second);
                     }
                 } else if (descriptorType == COMMAND_SHADER_DESCRIPTOR_RUNTIME_EFFECT) {
-                    if (payloadIntCount < 3) return false;
+                    if (payloadIntCount < 5) return false;
                     const jint skslLength = descriptor.payload[0];
                     const jint uniformFloatCount = descriptor.payload[1];
                     const jint childCount = descriptor.payload[2];
@@ -2956,16 +2970,20 @@ static bool drawCommandList(SkCanvas* canvas,
                             uniformFloatCount > 256 ||
                             childCount < 0 ||
                             childCount > 8 ||
-                            payloadIntCount != 3 + childCount * 2 + skslLength + uniformFloatCount) {
+                            payloadIntCount != 5 + childCount * 2 + skslLength + uniformFloatCount) {
                         return false;
                     }
-                    const jint skslStart = 3 + childCount * 2;
+                    const jint skslStart = 5 + childCount * 2;
+                    const uint64_t expectedHash = imageCacheKey(descriptor.payload[3], descriptor.payload[4]);
+                    if (shaderSourceHash(descriptor.payload, static_cast<size_t>(skslStart), skslLength) != expectedHash) {
+                        return false;
+                    }
                     {
                         std::lock_guard<std::mutex> lock(gShaderCacheMutex);
                         for (jint i = 0; i < childCount; i++) {
                             const uint64_t childHandle = imageCacheKey(
-                                    descriptor.payload[3 + i * 2],
-                                    descriptor.payload[4 + i * 2]);
+                                    descriptor.payload[5 + i * 2],
+                                    descriptor.payload[6 + i * 2]);
                             auto child = gShadersByKey.find(ColorFilterScopedKey{imageCacheContextKey, childHandle});
                             if (child == gShadersByKey.end()) return false;
                             descriptor.children.push_back(std::make_shared<ShaderDescriptor>(child->second));

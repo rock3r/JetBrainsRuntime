@@ -7723,3 +7723,36 @@ Known notes:
 
 - Child shader handles are positional, matching `RuntimeEffect.makeShader(uniforms, children, matrix)`. Named builder-style child bindings remain future work.
 - RuntimeEffect descriptors still need source hashing, named uniform schema validation, compile diagnostics, and stable compile-failure fallback markers.
+
+## Checkpoint: ABI 88 RuntimeEffect Source Hash Validation
+
+Status: source implementation and JVM validation passed; native JBR build/live validation still waits for the local Xcode license/build unblock.
+
+What changed:
+
+- JBR private API, public Runtime API, Skiko compatibility gates, and CMP command recorder now use command ABI 88.
+- RuntimeEffect shader descriptor payloads now include a 64-bit FNV-1a source hash after `skslLength`, `uniformFloatCount`, and `childCount`, before child shader handles, SKSL bytes, and uniform payload.
+- CMP computes the hash from the ASCII SKSL source and writes it into every RuntimeEffect descriptor.
+- JBR Java validation and native replay recompute the source hash from the descriptor SKSL bytes and reject mismatches before a RuntimeEffect is cached or compiled.
+- JBR API coverage now includes a corrupted RuntimeEffect source-hash stream that must fail validation.
+
+Verification:
+
+- JBR public API and Runtime API compile smokes passed:
+  - `javac -d /tmp/jbr-skia-api-compile src/java.desktop/share/classes/com/jetbrains/desktop/JBRSkia.java`
+  - `javac -d /tmp/jbr-runtime-api-skia-compile src/com/jetbrains/Service.java src/com/jetbrains/Provided.java src/com/jetbrains/JBRSkia.java`
+- Skiko interop tests passed with `abi=88`:
+  - `./gradlew --no-daemon --no-configuration-cache :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`
+- Skiko ABI 88 snapshot published locally:
+  - `./gradlew --no-daemon --no-configuration-cache :skiko:publishToMavenLocal`
+- CMP focused RuntimeEffect descriptor tests passed:
+  - `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesRuntimeEffectShaderDescriptorRectInStrictMode --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesRuntimeEffectShaderDescriptorWithChildShaderInStrictMode`
+- CMP full command-recorder suite passed with ABI 88:
+  - `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest`
+- Magic Jewel compiles against the refreshed local ABI 88 Skiko/CMP stack:
+  - `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon --no-configuration-cache compileKotlin`
+
+Known notes:
+
+- Source hashing is a descriptor integrity/diagnostic primitive; it is not a security boundary.
+- RuntimeEffect descriptors still need named uniform schema validation, compile diagnostics, stable compile-failure fallback markers, and child color-filter handles.
