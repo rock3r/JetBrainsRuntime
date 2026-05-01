@@ -10905,6 +10905,22 @@ Validation:
 - Suite result: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260502-004855/suite.tsv`.
 - CMP `:compose:ui:ui-graphics:compileKotlinDesktop` passed. `:compose:ui:ui-graphics:compileTestKotlinDesktop` is still blocked by the existing local `compose.ui` command-delegate wiring failure before the new recorder test can execute.
 
+## Checkpoint: Composite Shader + Color-Filter Wrapper Probe
+
+Status: completed for nested shader descriptor trees under the color-filter wrapper.
+
+What changed:
+- CMP has a recorder regression for `CompositeShader(linearGradient, radialGradient, SrcOver)` plus `ColorFilter.tint(..., BlendMode.SrcIn)`, proving the wrapper can sit above a descriptor tree with multiple child shader handles.
+- Magic Jewel adds `MAGIC_JEWEL_COMPOSE_COMPOSITE_SHADER_COLOR_FILTER` / `magic.jewel.compose.compositeShaderColorFilter` and a named command-probe row, `commands-composite-shader-color-filter`.
+- The Magic Jewel row asserts at least four shader handle definitions, at least one shader handle use, and at least one effect handle definition.
+
+Validation:
+- Magic Jewel compile passed: `./gradlew --no-daemon --no-configuration-cache :compileKotlin`.
+- CMP `:compose:ui:ui-graphics:compileKotlinDesktop` passed.
+- Magic Jewel focused command probe passed:
+  `CASES="commands-composite-shader-color-filter" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`.
+- Suite result: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260502-005357/suite.tsv`.
+
 Next:
-- Continue broadening wrapped-shader coverage to image and composite shader families, then add focused parity rows for the stable cases.
+- Continue broadening wrapped-shader coverage to image shader families, then add focused parity rows for the stable cases.
 - Add old-artifact matrix coverage for the new high-word shader color-filter capability when an actual pre-wrapper JBR artifact bundle is available.

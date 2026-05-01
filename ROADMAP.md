@@ -293,6 +293,9 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   - CMP recorder regression: linear-gradient shader + tint color-filter records a child linear-gradient descriptor, a color-filter descriptor, a wrapper shader descriptor, and a shader-ref rect command.
   - Magic Jewel live probe: `CASES="commands-linear-gradient-shader-color-filter" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh` passed at `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260502-004855/suite.tsv`.
   - Validation note: `:compose:ui:ui-graphics:compileKotlinDesktop` passed; `compileTestKotlinDesktop` remains blocked by the existing local `compose.ui` command-delegate wiring failure before the new recorder test can execute.
+- [x] Broaden wrapped shader + color-filter coverage to composite shader trees.
+  - CMP recorder regression: composite linear/radial shader + tint color-filter records child descriptors, the composite descriptor, the color-filter descriptor, a wrapper shader descriptor, and a shader-ref rect command.
+  - Magic Jewel live probe: `CASES="commands-composite-shader-color-filter" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh` passed at `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260502-005357/suite.tsv`.
 - [x] Golden/diff screenshot harness for the full mixed Swing/Jewel/Compose Magic Jewel scene.
 - [x] Capture the app window only in old/new renderer modes, with deterministic sizing, theme, font inputs, animation phase, and seeded content.
 - [x] Add configurable per-region screenshot parity gates for header controls, Compose canvas, Swing island, and right probe strip.
