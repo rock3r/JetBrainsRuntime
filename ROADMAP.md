@@ -98,6 +98,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] ABI 91: RuntimeEffect color-filter descriptors carry ASCII SKSL, source hash, raw float uniforms, and named uniform schema metadata through the typed color-filter handle path.
 - [x] ABI 92: RuntimeEffect color-filter descriptors can reference child color-filter handles and named child schema metadata, so JBR builds child-backed `SkRuntimeEffect` color filters inside its own Skia runtime.
 - [x] RuntimeEffect builder failures emit parseable JBR markers, and Magic Jewel has a bad-child-name probe/report assertion.
+  - [x] Descriptor handle use markers now distinguish "handle was consumed by replay" from "handle was defined in the command stream"; RuntimeEffect rows assert use markers for shader and color-filter refs.
   - [x] RuntimeEffect compile/build failure markers now include hashed diagnostic fields, and the bad-child probe asserts the
     specific `stage=missing-child` builder path.
   - [x] Magic Jewel RuntimeEffect conformance probes cover pure color, uniform-only animation, child-only composition, combined child+uniform, and builder-failure fallback cases.
@@ -222,6 +223,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] ABI 91 broader descriptor regression gate: RuntimeEffect shader/color-filter, image color-matrix, typed color filters, and graphics-layer color-filter rows passed at `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-083644/suite.tsv`.
 - [x] RuntimeEffect color-filter child descriptor gate: `CASES="commands-runtime-effect-color-filter-child" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh` passed for ABI 92 at `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-090456/suite.tsv`.
 - [x] ABI 92 broader descriptor regression gate: RuntimeEffect shader/color-filter/child-color-filter, image color-matrix, typed color filters, and graphics-layer color-filter rows passed at `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-090711/suite.tsv`.
+- [x] RuntimeEffect descriptor handle-use gate: shader, color-filter, and child color-filter RuntimeEffect rows passed with JBR handle-use assertions at `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-092522/suite.tsv`.
 - [x] Golden/diff screenshot harness for the full mixed Swing/Jewel/Compose Magic Jewel scene.
 - [x] Capture the app window only in old/new renderer modes, with deterministic sizing, theme, font inputs, animation phase, and seeded content.
 - [x] Add configurable per-region screenshot parity gates for header controls, Compose canvas, Swing island, and right probe strip.
@@ -356,6 +358,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-083644/suite.tsv`.
 - [x] ABI 92 descriptor regression subset through JBR command replay:
   `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-090711/suite.tsv`.
+- [x] RuntimeEffect descriptor handle-use assertions through JBR command replay:
+  `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-092522/suite.tsv`.
 - [x] Full Magic Jewel command-probe sweep: 39/39 rows passed with ABI 90 refreshed artifacts:
   `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-053403/suite.tsv`.
 - [x] Broad command sweep includes live animation, mixed Swing popups/menus, text/images, image/composite shaders,

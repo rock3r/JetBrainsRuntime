@@ -8847,3 +8847,41 @@ Next checkpoint:
 
 - Continue shader/effect hardening with the remaining diagnostic and lifecycle-marker gaps: explicit create/use/cache-hit
   markers for RuntimeEffect descriptor handles, plus fallback marker coverage for intentionally invalid descriptor use.
+
+## Checkpoint: Descriptor Handle Use Markers
+
+Status: JBR and Magic Jewel now distinguish descriptor handles that were defined from descriptor handles that were
+actually consumed by command replay.
+
+What changed:
+
+- JBR emits `JBR_SKIA_INTEROP_EFFECT_HANDLE_USE backend=... contextId=... handle=... op=...` for typed effect handle
+  reference commands.
+- JBR emits `JBR_SKIA_INTEROP_SHADER_HANDLE_USE backend=... contextId=... handle=... op=...` for typed shader handle
+  reference commands.
+- The marker scanner covers the native command path, and Java2D fallback replay emits the same markers for the descriptor
+  rect-use commands it can replay.
+- Magic Jewel's report parser now exports `jbr_effect_handle_use_frames` and `jbr_shader_handle_use_frames`, prints those
+  summaries in reports, and supports strict `EXPECT_MIN_JBR_EFFECT_HANDLE_USES` /
+  `EXPECT_MIN_JBR_SHADER_HANDLE_USES` validation gates.
+- RuntimeEffect shader/color-filter/child-color-filter command-suite rows now assert handle-use markers, not just handle
+  definitions.
+
+Verification:
+
+- Magic Jewel report parser tests passed:
+  - command: `./scripts/test-jbr-skia-report-validation.sh`
+- Local JBR Skia artifact rebuild passed:
+  - command: `./scripts/rebuild-jbr-skia-local-artifacts.sh`
+- RuntimeEffect command rows passed with handle-use assertions:
+  - command: `CASES="commands-runtime-effect-shader commands-runtime-effect-color-filter commands-runtime-effect-color-filter-child" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-092522/suite.tsv`
+  - observed counts:
+    - shader row: `jbr_shader_handle_define_frames=795`, `jbr_shader_handle_use_frames=794`
+    - color-filter row: `jbr_effect_handle_define_frames=947`, `jbr_effect_handle_use_frames=947`
+    - child color-filter row: `jbr_effect_handle_define_frames=1347`, `jbr_effect_handle_use_frames=1346`
+
+Next checkpoint:
+
+- Add a controlled invalid descriptor-use probe that references a missing effect/shader handle and proves the command path
+  fails with a structured fallback marker instead of silently rendering stale or partial output.

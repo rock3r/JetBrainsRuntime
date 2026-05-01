@@ -3637,6 +3637,7 @@ public class JBRSkiaService extends JBRSkia {
                         ShaderDescriptor descriptor = SHADER_CACHE.get(new ColorFilterCacheKey(contextPtr, handle));
                         if (descriptor == null || right1000 < left1000 || bottom1000 < top1000
                                 || alpha1000 < 0 || alpha1000 > 1000) return false;
+                        logShaderHandleUse("java2d", contextPtr, handle, op);
                         current.setColor(new Color((alpha1000 * 255 / 1000) << 24 | 0x3388ff, true));
                         current.fillRect(
                                 left1000 / 1000,
@@ -3655,6 +3656,7 @@ public class JBRSkiaService extends JBRSkia {
                         int height = commands[offset++];
                         ColorFilterDescriptor descriptor = COLOR_FILTER_CACHE.get(new ColorFilterCacheKey(contextPtr, handle));
                         if (descriptor == null || width < 0 || height < 0) return false;
+                        logEffectHandleUse("java2d", contextPtr, handle, op);
                         if (descriptor.type() == COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER) {
                             if (descriptor.blendMode() != COMMAND_BLEND_MODE_SRC_IN) return false;
                             int sourceAlpha = (argb >>> 24) & 0xff;
@@ -4153,6 +4155,32 @@ public class JBRSkiaService extends JBRSkia {
                     return;
                 }
                 logShaderHandleEvict(backend, contextPtr, commandHandle(commands[argsStart], commands[argsStart + 1]), true);
+            } else if (record.op() == COMMAND_FILL_RECT_SHADER_REF) {
+                if (!hasRecordArgs(record, 2)) {
+                    return;
+                }
+                logShaderHandleUse(backend, contextPtr, commandHandle(commands[argsStart], commands[argsStart + 1]), record.op());
+            } else if (record.op() == COMMAND_FILL_RECT_COLOR_FILTER_REF) {
+                if (!hasRecordArgs(record, 3)) {
+                    return;
+                }
+                logEffectHandleUse(backend, contextPtr, commandHandle(commands[argsStart + 1], commands[argsStart + 2]), record.op());
+            } else if (record.op() == COMMAND_SAVE_LAYER_COLOR_FILTER_REF
+                    || record.op() == COMMAND_SAVE_LAYER_IMAGE_FILTER_REF) {
+                if (!hasRecordArgs(record, 7)) {
+                    return;
+                }
+                logEffectHandleUse(backend, contextPtr, commandHandle(commands[argsStart + 5], commands[argsStart + 6]), record.op());
+            } else if (record.op() == COMMAND_SAVE_LAYER_BLEND_COLOR_FILTER_REF) {
+                if (!hasRecordArgs(record, 8)) {
+                    return;
+                }
+                logEffectHandleUse(backend, contextPtr, commandHandle(commands[argsStart + 6], commands[argsStart + 7]), record.op());
+            } else if (record.op() == COMMAND_DRAW_IMAGE_REF_COLOR_FILTER_REF) {
+                if (!hasRecordArgs(record, 16)) {
+                    return;
+                }
+                logEffectHandleUse(backend, contextPtr, commandHandle(commands[argsStart + 14], commands[argsStart + 15]), record.op());
             }
             offset = record.recordEnd();
         }
@@ -4183,6 +4211,12 @@ public class JBRSkiaService extends JBRSkia {
                 + " removed=" + removed);
     }
 
+    private static void logEffectHandleUse(String backend, long contextPtr, long handle, int op) {
+        System.err.println("JBR_SKIA_INTEROP_EFFECT_HANDLE_USE backend=" + backend + " contextId=0x"
+                + Long.toHexString(contextPtr) + " handle=0x" + Long.toHexString(handle)
+                + " op=" + op);
+    }
+
     private static void logShaderHandleDefine(
             String backend,
             long contextPtr,
@@ -4201,6 +4235,12 @@ public class JBRSkiaService extends JBRSkia {
         System.err.println("JBR_SKIA_INTEROP_SHADER_HANDLE_EVICT backend=" + backend + " contextId=0x"
                 + Long.toHexString(contextPtr) + " handle=0x" + Long.toHexString(handle)
                 + " removed=" + removed);
+    }
+
+    private static void logShaderHandleUse(String backend, long contextPtr, long handle, int op) {
+        System.err.println("JBR_SKIA_INTEROP_SHADER_HANDLE_USE backend=" + backend + " contextId=0x"
+                + Long.toHexString(contextPtr) + " handle=0x" + Long.toHexString(handle)
+                + " op=" + op);
     }
 
     private static boolean loadNativeBridge() {
