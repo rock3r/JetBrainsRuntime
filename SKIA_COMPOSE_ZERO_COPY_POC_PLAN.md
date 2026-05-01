@@ -8126,3 +8126,41 @@ Known notes:
   geometry gate.
 - Next validation work should split smaller Compose-owned regions or mask text-heavy areas so the thresholds can become
   meaningfully tight without hiding known raster/font differences.
+
+## Checkpoint: Local Artifact Rebuild Helper
+
+Status: Magic Jewel can refresh the local patched JBR artifacts with one script, and the regenerated artifacts passed a
+live command-mode smoke.
+
+What changed:
+
+- Added `scripts/rebuild-jbr-skia-local-artifacts.sh` in Magic Jewel.
+- The helper:
+  - rebuilds the public JBR API shim from `/Users/rock3r/src/jbr-api-skia-poc`;
+  - copies it to `/tmp/jbr-api-shim.jar`;
+  - compiles patched JBR `java.desktop` classes into `/tmp/jbr-skia-run/desktop`;
+  - generates JNI headers under `/tmp/jbr-skia-native/generated`;
+  - removes the temporary `com.jetbrains.exported` compile stub from the patch-module output to avoid boot-layer split
+    packages;
+  - links `/tmp/jbr-skia-native/libjbrskiainterop.dylib` against the Skia archive from the Skiko worktree.
+- The script keeps path overrides for moved worktrees and non-default artifact locations.
+- Magic Jewel README documents the helper and its override variables.
+
+Verification:
+
+- Script syntax passed:
+  - `bash -n scripts/rebuild-jbr-skia-local-artifacts.sh`
+- Artifact rebuild helper completed successfully:
+  - command: `./scripts/rebuild-jbr-skia-local-artifacts.sh`
+  - output artifacts: `/tmp/jbr-api-shim.jar`, `/tmp/jbr-skia-run/desktop`, `/tmp/jbr-skia-native/libjbrskiainterop.dylib`.
+  - verified no `com.jetbrains.exported` class files remain under `/tmp/jbr-skia-run/desktop`.
+- Post-rebuild command smoke passed:
+  - command: `CASES=commands-live-animation DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-062207/suite.tsv`
+  - result: `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, `jbr_command_frames=269`.
+
+Known notes:
+
+- This is still local patched-artifact wiring, not true JBR build-system integration.
+- The helper is intentionally macOS arm64 only for the current PoC artifact path. x64/universal packaging belongs with the
+  later production build integration.

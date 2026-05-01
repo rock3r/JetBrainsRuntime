@@ -335,6 +335,9 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Launch-level artifact matrix scaffold for named current/old JBR API, JBR native, desktop patch, Skiko, and CMP artifacts.
 - [x] Artifact matrix can require old-artifact rows in CI and fail if optional bundles are missing.
 - [x] Report parser includes nested CMP unsupported-command markers in `cmp_unsupported_reasons`.
+- [x] Local artifact rebuild helper recreates the public API shim, patched `java.desktop` classes, and native bridge dylib.
+- [x] Post-rebuild live animation command smoke passed:
+  `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-062207/suite.tsv`.
 - [x] Skiko invalidates temporary cached surface state when scoped destination identity changes.
 - [x] Magic Jewel parser coverage for `SKIKO_JBR_INTEROP_SURFACE_CHANGED`.
 - [x] Magic Jewel launch-level resize validation for surface identity changes.
