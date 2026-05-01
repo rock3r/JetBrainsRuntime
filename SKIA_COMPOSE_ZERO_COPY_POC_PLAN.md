@@ -9960,3 +9960,41 @@ Next checkpoint:
 
 - Add a Magic Jewel rotationY row that exercises the same CMP matrix path from the other 3D axis, then run command and
   screenshot parity validation for it.
+
+## Checkpoint: Graphics-Layer RotationY Probe And Parity
+
+Status: completed as the second bounded 3D/camera graphics-layer validation row.
+
+What changed:
+
+- Magic Jewel now exposes `MAGIC_JEWEL_COMPOSE_GRAPHICS_LAYER_ROTATION_Y` /
+  `magic.jewel.compose.graphicsLayerRotationY`.
+- The sample applies `rotationY = -24f` to the existing graphics-layer probe when the flag is enabled, exercising the
+  same CMP `prepareTransformationMatrix(...)` + `COMMAND_CONCAT_MATRIX33` replay path from the other 3D axis.
+- The command-probe suite now includes `commands-graphics-layer-rotationy`.
+- The screenshot parity suite now includes `parity-graphics-layer-rotationy` in the default row set.
+- Magic Jewel `README.md` and report-script help text document the rotationY probe.
+- `ROADMAP.md` records both the command and old/new screenshot parity evidence.
+
+Verification:
+
+- Magic Jewel scripts passed syntax checks:
+  - command: `bash -n scripts/jbr-skia-command-probe-suite.sh scripts/jbr-skia-screenshot-parity-suite.sh scripts/jbr-skia-interop-report.sh`
+- Magic Jewel compiled:
+  - command: `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon compileKotlin`
+- Focused Magic Jewel rotationY command row passed:
+  - command: `CASES="commands-graphics-layer-rotationy" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-164836/suite.tsv`
+  - result: `status=passed`, `fallbacks=0`, `unsupported=none`, `jbr_picture_frames=0`,
+    `jbr_command_frames=678`
+- Focused Magic Jewel rotationY screenshot parity row passed:
+  - command: `CASES="parity-graphics-layer-rotationy" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-164917/suite.tsv`
+  - result: `status=passed`, `avg_delta=2.189`, `bad_pixel_ratio=0.05189`,
+    `compose_bad_pixel_ratio=0.07589`, `compose_bottom_swatches_bad_pixel_ratio=0.00000`
+
+Next checkpoint:
+
+- Run the compact graphics-layer matrix with both rotationX and rotationY included. If it stays green, the remaining
+  graphics-layer work should move away from single-axis 3D coverage and toward combined transforms, edge-case camera
+  distances, and higher-fidelity shadows/image-filter surfaces.
