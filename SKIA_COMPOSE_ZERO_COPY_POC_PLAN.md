@@ -10878,6 +10878,17 @@ Validation:
 - Report result: validation passed, zero fallback markers, zero unsupported commands, `jbr_command_frames=485`, and `screenshot_parity_badPixelRatio=0.05006` under the row's `0.06` full-window threshold.
 - Caveat: this row is a smoke/parity guard, not a pixel-perfect oracle. The visible diff is dominated by animation phase, AA, and text-sensitive regions; broader geometry/color subregion gates remain the better signal for missing command replay.
 
+## Checkpoint: Shader Color-Filter Capability Mismatch Guard
+
+Status: completed for Skiko's strict compatibility gate.
+
+What changed:
+- Skiko now has a focused unit fixture for the exact old-runtime shape that matters for the new wrapped-shader feature: the fake JBR service advertises all previous high-word command capabilities but omits `COMMAND_CAP64_HIGH_SHADER_DESCRIPTOR_COLOR_FILTER`.
+- Discovery rejects that runtime with `FallbackReason.COMMAND_CAPABILITY_MISMATCH` and the structured `SKIKO_JBR_INTEROP_FALLBACK reason=command-capability-mismatch` marker.
+
+Validation:
+- `./gradlew --no-daemon --no-configuration-cache awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest` passed in `/Users/rock3r/src/skiko-jbr-skia-poc/skiko`.
+
 Next:
 - Broaden wrapped-shader coverage beyond the RuntimeEffect probe once parity is stable.
-- Add more strict compatibility/old-artifact rows for the new high-word shader color-filter capability.
+- Add old-artifact matrix coverage for the new high-word shader color-filter capability when an actual pre-wrapper JBR artifact bundle is available.
