@@ -389,6 +389,11 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-110918/suite.tsv`.
 - [x] ABI 98 chained path-effect descriptor probe through JBR command replay:
   `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-111807/suite.tsv`.
+- [x] Full Magic Jewel command-probe sweep after ABI 98 path-effect descriptors: 45/45 rows passed, including live
+  animation, mixed Swing popups/menus, text/images, image/composite shaders, RuntimeEffects, color filters, blend modes,
+  graphics layers, render effects, saveLayer filters, path-effect descriptors, descriptor lifecycle probes, and explicit
+  fallback rows:
+  `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-112035/suite.tsv`.
 - [x] Full Magic Jewel command-probe sweep: 39/39 rows passed with ABI 90 refreshed artifacts:
   `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-053403/suite.tsv`.
 - [x] Broad command sweep includes live animation, mixed Swing popups/menus, text/images, image/composite shaders,

@@ -9315,5 +9315,26 @@ Verification:
 
 Next checkpoint:
 
-- Re-run a broader command-probe subset now that path-effect coverage has expanded, then move to the next unsupported
-  rendering family surfaced by that sweep.
+- Move to the next unsupported rendering family surfaced by the full ABI 98 sweep.
+
+## Checkpoint: ABI 98 Full Command-Path Sweep
+
+Status: the full Magic Jewel command-probe suite passes after the path-effect descriptor work. All non-negative rows stay
+on JBR command replay with no new fallback, while the intentional fallback rows still report structured fallback markers.
+
+Verification:
+
+- Full Magic Jewel command-probe sweep passed:
+  - command: `SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-112035/suite.tsv`
+  - result: `45/45` rows passed.
+- The sweep covers live animation, mixed Swing popups/menus, text/images, image/composite shaders, RuntimeEffects,
+  runtime-effect color filters, image filters, color filters, blend modes, graphics layers, render effects, saveLayer
+  filters, descriptor lifecycle probes, path-effect descriptors, and explicit fallback rows.
+- The broad rows reported `fallback_new_count=0`, `unsupported=none`, and `jbr_picture_frames=0`; the expected fallback
+  rows stayed observable through `SKIKO_JBR_INTEROP_FALLBACK`/unsupported markers instead of silently using the fast path.
+
+Next checkpoint:
+
+- Use the now-green broad sweep to target the next remaining visual/compatibility gap, with preference for screenshot
+  parity and any rendering family that still requires intentional fallback rather than command replay.
