@@ -10424,3 +10424,19 @@ Next checkpoint:
 
 - Fold the offset/chained renderEffect paint rows into the expanded graphics-layer command matrix and broad screenshot
   parity suite.
+
+## Checkpoint: Expanded Graphics-Layer Matrix With Offset/Chained RenderEffect Paint
+
+Status: completed after adding offset/chained renderEffect + blend/color-matrix rows.
+
+Verification:
+
+- Expanded Magic Jewel graphics-layer command matrix passed:
+  - command: `CASES="commands-graphics-layer commands-graphics-layer-modulate-alpha commands-graphics-layer-offscreen commands-graphics-layer-render-effect commands-graphics-layer-offset-effect commands-graphics-layer-chained-render-effect commands-graphics-layer-render-effect-color-filter commands-graphics-layer-render-effect-blend-mode commands-graphics-layer-render-effect-color-matrix-filter commands-graphics-layer-render-effect-blend-color-filter commands-graphics-layer-render-effect-blend-color-matrix-filter commands-graphics-layer-offset-effect-blend-color-matrix-filter commands-graphics-layer-chained-render-effect-blend-color-matrix-filter commands-graphics-layer-rotationx commands-graphics-layer-rotationy commands-graphics-layer-rotationxy commands-graphics-layer-near-camera commands-graphics-layer-clip commands-graphics-layer-round-clip commands-graphics-layer-path-clip commands-graphics-layer-blend-mode commands-graphics-layer-color-filter commands-graphics-layer-color-matrix-filter commands-graphics-layer-blend-color-filter commands-graphics-layer-blend-color-matrix-filter commands-graphics-layer-shadow commands-graphics-layer-round-shadow commands-graphics-layer-path-shadow" DURATION_SECONDS=3 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-191346/suite.tsv`
+  - result: all twenty-eight rows passed with `fallbacks=0`, `unsupported=none`, and `jbr_picture_frames=0`.
+
+Next checkpoint:
+
+- Run the broad screenshot parity suite with the offset/chained renderEffect paint rows included, then run the default
+  broad command sweep again if visual parity remains green.

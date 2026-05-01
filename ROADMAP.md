@@ -491,6 +491,9 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   passed with no command fallback and exact bottom-swatches parity:
   `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-190948/suite.tsv`,
   `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-191109/suite.tsv`.
+- [x] Expanded graphics-layer matrix with offset/chained renderEffect + blend/color-matrix rows: 28/28 rows passed with
+  `fallbacks=0`, `unsupported=none`, and `jbr_picture_frames=0`:
+  `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-191346/suite.tsv`.
 - [x] Full Magic Jewel command-probe sweep after RuntimeEffect child-type crash hardening: 46/46 rows passed, adding the
   `commands-runtime-effect-child-type-fallback` row:
   `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-121521/suite.tsv`.
