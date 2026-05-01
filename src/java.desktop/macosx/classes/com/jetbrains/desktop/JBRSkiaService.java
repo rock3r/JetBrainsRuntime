@@ -143,7 +143,8 @@ public class JBRSkiaService extends JBRSkia {
                     | COMMAND_CAP64_HIGH_EFFECT_DESCRIPTOR_OFFSET_IMAGE_FILTER
                     | COMMAND_CAP64_HIGH_EFFECT_DESCRIPTOR_CHAIN_IMAGE_FILTER
                     | COMMAND_CAP64_HIGH_SHADER_DESCRIPTOR_REF
-                    | COMMAND_CAP64_HIGH_EFFECT_DESCRIPTOR_RUNTIME_COLOR_FILTER;
+                    | COMMAND_CAP64_HIGH_EFFECT_DESCRIPTOR_RUNTIME_COLOR_FILTER
+                    | COMMAND_CAP64_HIGH_STROKE_RECT_DASH_PATH_EFFECT;
     private static final boolean NATIVE_BRIDGE_AVAILABLE = loadNativeBridge();
     private static final AtomicLong NEXT_SCOPE_ID = new AtomicLong(1);
     private static final int MAX_CACHED_IMAGES = 256;
@@ -345,6 +346,7 @@ public class JBRSkiaService extends JBRSkia {
         if (op == COMMAND_EVICT_SHADER_HANDLE) return 5;
         if (op == COMMAND_FILL_RECT_SHADER_REF) return 10;
         if (op == COMMAND_STROKE_LINE_DASH_PATH_EFFECT) return -23;
+        if (op == COMMAND_STROKE_RECT_DASH_PATH_EFFECT) return -23;
         if (op == COMMAND_FILL_RECT_IMAGE_SHADER) return 14;
         if (op == COMMAND_CLEAR) return 4;
         if (op == COMMAND_CLEAR_RECT) return 7;
@@ -420,7 +422,9 @@ public class JBRSkiaService extends JBRSkia {
         if (expectedLength == -22 && record.op() == COMMAND_STROKE_ROUND_RECT_SWEEP_GRADIENT) {
             return record.recordLength() >= 20;
         }
-        if (expectedLength == -23 && record.op() == COMMAND_STROKE_LINE_DASH_PATH_EFFECT) {
+        if (expectedLength == -23
+                && (record.op() == COMMAND_STROKE_LINE_DASH_PATH_EFFECT
+                || record.op() == COMMAND_STROKE_RECT_DASH_PATH_EFFECT)) {
             return record.recordLength() >= 16;
         }
         if (expectedLength == -24 && record.op() == COMMAND_DEFINE_EFFECT_DESCRIPTOR) {
@@ -623,10 +627,18 @@ public class JBRSkiaService extends JBRSkia {
             int height = commands[record.argsStart() + 6];
             return width >= 0 && height >= 0;
         }
-        if (record.op() == COMMAND_STROKE_LINE_DASH_PATH_EFFECT) {
+        if (record.op() == COMMAND_STROKE_LINE_DASH_PATH_EFFECT
+                || record.op() == COMMAND_STROKE_RECT_DASH_PATH_EFFECT) {
             int intervalCount = commands[record.argsStart() + 10];
             if (intervalCount < 2 || intervalCount > 16 || record.recordLength() != 14 + intervalCount) {
                 return false;
+            }
+            if (record.op() == COMMAND_STROKE_RECT_DASH_PATH_EFFECT) {
+                int width = commands[record.argsStart() + 3];
+                int height = commands[record.argsStart() + 4];
+                if (width < 0 || height < 0) {
+                    return false;
+                }
             }
             int strokeWidth = commands[record.argsStart() + 5];
             int phase = commands[record.argsStart() + 9];
@@ -3726,6 +3738,37 @@ public class JBRSkiaService extends JBRSkia {
                         try {
                             current.setStroke(stroke);
                             current.drawLine(x1, y1, x2, y2);
+                        } finally {
+                            current.setStroke(previous);
+                        }
+                    } else if (op == COMMAND_STROKE_RECT_DASH_PATH_EFFECT) {
+                        if (offset + 13 > recordEnd) return false;
+                        applyAntialiasing(current, antiAlias);
+                        current.setColor(new Color(commands[offset++], true));
+                        int x = commands[offset++];
+                        int y = commands[offset++];
+                        int width = commands[offset++];
+                        int height = commands[offset++];
+                        int strokeWidth = Math.max(1, commands[offset++]);
+                        int strokeCap = commands[offset++];
+                        int strokeJoin = commands[offset++];
+                        float strokeMiter = commands[offset++] / 1000f;
+                        float phase = commands[offset++] / 1000f;
+                        int intervalCount = commands[offset++];
+                        if (width < 0 || height < 0 || intervalCount < 2 || intervalCount > 16
+                                || offset + intervalCount != recordEnd) return false;
+                        float[] intervals = new float[intervalCount];
+                        for (int index = 0; index < intervalCount; index++) {
+                            int interval = commands[offset++];
+                            if (interval <= 0) return false;
+                            intervals[index] = interval / 1000f;
+                        }
+                        java.awt.Stroke previous = current.getStroke();
+                        java.awt.BasicStroke stroke = basicStroke(strokeWidth, strokeCap, strokeJoin, strokeMiter, intervals, phase);
+                        if (stroke == null) return false;
+                        try {
+                            current.setStroke(stroke);
+                            current.drawRect(x, y, width, height);
                         } finally {
                             current.setStroke(previous);
                         }

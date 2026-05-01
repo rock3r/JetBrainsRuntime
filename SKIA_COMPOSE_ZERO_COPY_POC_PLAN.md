@@ -9086,3 +9086,46 @@ Next checkpoint:
 
 - Expand the next functionality slice around the remaining graphics-layer gaps or typed image-filter/path-effect
   descriptor coverage, while preserving the strict lifecycle gates added for descriptor define/use/cache-hit behavior.
+
+## Checkpoint: ABI 93 Dashed Rectangle PathEffect Replay
+
+Status: dash path-effect command replay now covers stroked rectangles as well as lines.
+
+What changed:
+
+- Bumped the tightly versioned interop ABI to `93` across JBR, the public Runtime API mirror, Skiko's compatibility gate,
+  and CMP's command stream header.
+- Added `COMMAND_STROKE_RECT_DASH_PATH_EFFECT = 59` and high capability bit
+  `COMMAND_CAP64_HIGH_STROKE_RECT_DASH_PATH_EFFECT = 32`.
+- CMP records stroked rectangles with `PathEffect.dashPathEffect(...)` as one structured command carrying solid color,
+  rectangle bounds, stroke metadata, dash phase, and dash intervals.
+- JBR Java validation rejects malformed dashed-rectangle records, including negative dimensions, bad stroke metadata,
+  bad dash phase, and invalid interval counts/values.
+- JBR Java2D fallback replay and native Skia replay both consume the new command; native replay rebuilds a
+  `SkDashPathEffect` and draws the destination rectangle with a stroke paint.
+- Magic Jewel's path-effect probe now draws both a dashed line and a dashed rectangle.
+
+Verification:
+
+- Rebuilt Skiko AWT and published the local snapshot:
+  - command: `./gradlew --no-daemon --no-configuration-cache compileKotlinAwt publishAwtPublicationToMavenLocal`
+- Focused CMP recorder test passed:
+  - command: `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesDashedStrokeRectRecord`
+- Rebuilt local JBR API/desktop/native artifacts:
+  - command: `./scripts/rebuild-jbr-skia-local-artifacts.sh`
+- Focused Magic Jewel path-effect command probe passed:
+  - command: `CASES="commands-path-effect-fallback" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-102456/suite.tsv`
+  - result: `status=passed`, `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`,
+    `jbr_command_frames=155`
+
+Known verification gap:
+
+- Skiko's broader `awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest` did not reach the interop tests because
+  `compileTestKotlinAwt` is currently blocked by an unrelated `RuntimeEffectTest.kt` unresolved `makeMode` reference.
+  Main AWT compile/publish succeeded.
+
+Next checkpoint:
+
+- Continue path-effect coverage toward a typed descriptor shape for non-dash effects such as corner/stamped/chain, or
+  add a narrower dashed round-rect/path command if we want one more low-risk step before descriptorizing path effects.

@@ -79,7 +79,7 @@
 
 #include "MTLSurfaceDataBase.h"
 
-static constexpr jint ABI_ID = 92;
+static constexpr jint ABI_ID = 93;
 static constexpr jint COMMAND_STREAM_MAGIC = 1246972723;
 static constexpr jint COMMAND_STREAM_HEADER_SIZE = 6;
 static constexpr jint COMMAND_STREAM_FLAGS_NONE = 0;
@@ -148,6 +148,7 @@ static constexpr jint COMMAND_SAVE_LAYER_IMAGE_FILTER_REF = 55;
 static constexpr jint COMMAND_DEFINE_SHADER_DESCRIPTOR = 56;
 static constexpr jint COMMAND_EVICT_SHADER_HANDLE = 57;
 static constexpr jint COMMAND_FILL_RECT_SHADER_REF = 58;
+static constexpr jint COMMAND_STROKE_RECT_DASH_PATH_EFFECT = 59;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER = 1;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_COLOR_MATRIX_FILTER = 2;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_LIGHTING_FILTER = 3;
@@ -3500,6 +3501,53 @@ static bool drawCommandList(SkCanvas* canvas,
                                  static_cast<SkScalar>(y1),
                                  static_cast<SkScalar>(x2),
                                  static_cast<SkScalar>(y2),
+                                 paint);
+                break;
+            }
+            case COMMAND_STROKE_RECT_DASH_PATH_EFFECT: {
+                if (offset + 13 > recordEnd) {
+                    return false;
+                }
+                SkPaint paint;
+                paint.setAntiAlias(antiAlias);
+                paint.setStyle(SkPaint::kStroke_Style);
+                paint.setColor(skColorFromArgb(commands[offset++]));
+                jint x = commands[offset++];
+                jint y = commands[offset++];
+                jint rectWidth = commands[offset++];
+                jint rectHeight = commands[offset++];
+                jint strokeWidth = commands[offset++];
+                jint strokeCap = commands[offset++];
+                jint strokeJoin = commands[offset++];
+                jint strokeMiter1000 = commands[offset++];
+                jint phase1000 = commands[offset++];
+                jint intervalCount = commands[offset++];
+                if (rectWidth < 0 || rectHeight < 0 ||
+                    !isValidStrokeMetadata(strokeWidth, strokeCap, strokeJoin, strokeMiter1000) ||
+                    phase1000 < 0 || intervalCount < 2 || intervalCount > 16 ||
+                    offset + intervalCount != recordEnd) {
+                    return false;
+                }
+                std::vector<SkScalar> intervals;
+                intervals.reserve(static_cast<size_t>(intervalCount));
+                for (jint index = 0; index < intervalCount; index++) {
+                    jint interval1000 = commands[offset++];
+                    if (interval1000 <= 0) {
+                        return false;
+                    }
+                    intervals.push_back(static_cast<SkScalar>(interval1000) / 1000.0f);
+                }
+                paint.setStrokeWidth(static_cast<SkScalar>(strokeWidth));
+                paint.setStrokeCap(static_cast<SkPaint::Cap>(strokeCap));
+                paint.setStrokeJoin(static_cast<SkPaint::Join>(strokeJoin));
+                paint.setStrokeMiter(static_cast<SkScalar>(strokeMiter1000) / 1000.0f);
+                paint.setPathEffect(SkDashPathEffect::Make(
+                        SkSpan<const SkScalar>(intervals.data(), static_cast<size_t>(intervalCount)),
+                        static_cast<SkScalar>(phase1000) / 1000.0f));
+                canvas->drawRect(SkRect::MakeXYWH(static_cast<SkScalar>(x),
+                                                  static_cast<SkScalar>(y),
+                                                  static_cast<SkScalar>(rectWidth),
+                                                  static_cast<SkScalar>(rectHeight)),
                                  paint);
                 break;
             }
