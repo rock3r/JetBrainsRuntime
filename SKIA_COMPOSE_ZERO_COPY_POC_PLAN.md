@@ -9595,3 +9595,46 @@ Next checkpoint:
 
 - Commit this follow-up slice, then move to the next graphics-layer semantic boundary: explicit validation/fallback for
   3D rotation and offscreen compositing modes before attempting broader support.
+
+## Checkpoint: Graphics-Layer 3D/Offscreen Strict Fallbacks
+
+Status: completed as explicit safety coverage for semantics the command bridge does not replay yet.
+
+What changed:
+
+- CMP already rejected nonzero `rotationX` and `rotationY` for command-recorded graphics layers. This checkpoint adds the
+  missing explicit rejection for `CompositingStrategy.Offscreen`, because that strategy requires intermediate-buffer
+  semantics that the current nested command replay should not approximate silently.
+- Magic Jewel gained probe flags for:
+  - `MAGIC_JEWEL_COMPOSE_GRAPHICS_LAYER_ROTATION_X`
+  - `MAGIC_JEWEL_COMPOSE_GRAPHICS_LAYER_OFFSCREEN`
+- The command-probe suite now has two intentional fallback rows:
+  - `commands-graphics-layer-rotationx-fallback`
+  - `commands-graphics-layer-offscreen-fallback`
+- These rows assert the exact recorder reasons, prove picture fallback remains available, and guard against future
+  accidental partial command replay of 3D/camera or offscreen-buffer semantics.
+
+Verification:
+
+- CMP focused recorder test still passed after adding the Offscreen guard:
+  - command: `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.nestedRecordingReplaysLayerShadowPathBeforeShadowFill`
+- Magic Jewel compiled after adding the new probe flags:
+  - command: `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon compileKotlin`
+- Focused fallback rows passed:
+  - command: `CASES="commands-graphics-layer-rotationx-fallback commands-graphics-layer-offscreen-fallback" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-150748/suite.tsv`
+  - rotationX result: `status=passed`, `unsupported=graphicsLayer:rotationX:172,...`, `jbr_picture_frames=171`,
+    `jbr_command_frames=0`
+  - Offscreen result: `status=passed`, `unsupported=graphicsLayer:compositingStrategy:164,...`,
+    `jbr_picture_frames=165`, `jbr_command_frames=0`
+
+Roadmap update:
+
+- `ROADMAP.md` now records 3D rotation/camera and Offscreen compositing as named strict fallback surfaces rather than
+  ambiguous gaps.
+
+Next checkpoint:
+
+- Continue with the next fidelity gap that can move from fallback to command replay safely. The leading candidates are
+  elevation-accurate shadow semantics or a first offscreen-buffer command model, but both need a small design pass before
+  implementation.
