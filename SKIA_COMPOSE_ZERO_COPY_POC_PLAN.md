@@ -7694,3 +7694,32 @@ Next:
 
 - Run the full CMP command-recorder suite and Magic Jewel command probe once refreshed JBR native artifacts exist.
 - Extend RuntimeEffect descriptors with named uniforms and child shader handles so generic shaders can compose with the existing descriptor tree.
+
+## Checkpoint: ABI 87 RuntimeEffect Child Shader Handles
+
+Status: source implementation and focused JVM validation passed; native JBR build/live validation still waits for the local Xcode license/build unblock.
+
+What changed:
+
+- JBR private API, public Runtime API, Skiko compatibility gates, and CMP command recorder now use command ABI 87.
+- RuntimeEffect shader descriptor payloads now include a child shader count and child shader handle pairs before the SKSL source and uniform payload.
+- CMP's `RuntimeEffectShader` factory accepts child Compose `Shader`s, keeps them in JBR metadata, defines child shader descriptors first, and then defines the RuntimeEffect descriptor by handle.
+- JBR validation rejects missing child handles, excessive child counts, malformed payload lengths, and non-ASCII SKSL. Native replay reconstructs child shaders recursively and passes them to `SkRuntimeEffect::makeShader`.
+- Magic Jewel's `MAGIC_JEWEL_COMPOSE_RUNTIME_EFFECT_SHADER=true` probe now uses a child linear-gradient shader so it exercises the child-handle descriptor graph.
+
+Verification:
+
+- CMP focused child RuntimeEffect tests passed:
+  - `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesRuntimeEffectShaderDescriptorWithChildShaderInStrictMode --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesRuntimeEffectShaderDescriptorRectInStrictMode`
+- CMP full command-recorder suite passed with ABI 87:
+  - `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest`
+- Skiko interop tests passed with `abi=87`:
+  - `./gradlew --no-daemon --no-configuration-cache :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`
+- JBR public API and Runtime API compile smokes passed:
+  - `javac -d /tmp/jbr-skia-api-compile src/java.desktop/share/classes/com/jetbrains/desktop/JBRSkia.java`
+  - `javac -d /tmp/jbr-runtime-api-skia-compile src/com/jetbrains/Service.java src/com/jetbrains/Provided.java src/com/jetbrains/JBRSkia.java`
+
+Known notes:
+
+- Child shader handles are positional, matching `RuntimeEffect.makeShader(uniforms, children, matrix)`. Named builder-style child bindings remain future work.
+- RuntimeEffect descriptors still need source hashing, named uniform schema validation, compile diagnostics, and stable compile-failure fallback markers.

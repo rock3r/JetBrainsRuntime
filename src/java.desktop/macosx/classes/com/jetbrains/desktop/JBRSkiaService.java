@@ -1474,12 +1474,26 @@ public class JBRSkiaService extends JBRSkia {
     ) {
         int descriptorType = commands[record.argsStart() + 2];
         int payloadIntCount = commands[record.argsStart() + 4];
-        if (descriptorType != COMMAND_SHADER_DESCRIPTOR_COMPOSITE || payloadIntCount != 5) {
-            return true;
+        int payloadStart = record.argsStart() + 5;
+        if (descriptorType == COMMAND_SHADER_DESCRIPTOR_COMPOSITE && payloadIntCount == 5) {
+            long dstHandle = commandHandle(commands[payloadStart], commands[payloadStart + 1]);
+            long srcHandle = commandHandle(commands[payloadStart + 2], commands[payloadStart + 3]);
+            return shaderHandles.contains(dstHandle) && shaderHandles.contains(srcHandle);
         }
-        long dstHandle = commandHandle(commands[record.argsStart() + 5], commands[record.argsStart() + 6]);
-        long srcHandle = commandHandle(commands[record.argsStart() + 7], commands[record.argsStart() + 8]);
-        return shaderHandles.contains(dstHandle) && shaderHandles.contains(srcHandle);
+        if (descriptorType == COMMAND_SHADER_DESCRIPTOR_RUNTIME_EFFECT && payloadIntCount >= 3) {
+            int childCount = commands[payloadStart + 2];
+            if (childCount < 0 || childCount > 8 || payloadIntCount < 3 + childCount * 2) {
+                return false;
+            }
+            for (int index = 0; index < childCount; index++) {
+                long childHandle = commandHandle(
+                        commands[payloadStart + 3 + index * 2],
+                        commands[payloadStart + 4 + index * 2]
+                );
+                if (!shaderHandles.contains(childHandle)) return false;
+            }
+        }
+        return true;
     }
 
     private static boolean validateShaderDescriptorPayload(
@@ -1531,18 +1545,22 @@ public class JBRSkiaService extends JBRSkia {
             return payloadIntCount == 5 && isSupportedBlendMode(blendMode);
         }
         if (descriptorType == COMMAND_SHADER_DESCRIPTOR_RUNTIME_EFFECT) {
-            if (payloadIntCount < 2) return false;
+            if (payloadIntCount < 3) return false;
             int skslLength = commands[payloadStart];
             int uniformFloatCount = commands[payloadStart + 1];
+            int childCount = commands[payloadStart + 2];
             if (skslLength <= 0
                     || skslLength > 4096
                     || uniformFloatCount < 0
                     || uniformFloatCount > 256
-                    || payloadIntCount != 2 + skslLength + uniformFloatCount) {
+                    || childCount < 0
+                    || childCount > 8
+                    || payloadIntCount != 3 + childCount * 2 + skslLength + uniformFloatCount) {
                 return false;
             }
+            int skslStart = payloadStart + 3 + childCount * 2;
             for (int index = 0; index < skslLength; index++) {
-                int code = commands[payloadStart + 2 + index];
+                int code = commands[skslStart + index];
                 if (code <= 0 || code > 127) return false;
             }
             return true;
@@ -1579,7 +1597,8 @@ public class JBRSkiaService extends JBRSkia {
             int type,
             int[] payload,
             ShaderDescriptor dst,
-            ShaderDescriptor src
+            ShaderDescriptor src,
+            ShaderDescriptor[] children
     ) {
     }
 
@@ -3389,18 +3408,29 @@ public class JBRSkiaService extends JBRSkia {
                         if (!validateShaderDescriptorPayload(commands, record, descriptorType, payloadIntCount)) return false;
                         ShaderDescriptor dst = null;
                         ShaderDescriptor src = null;
+                        ShaderDescriptor[] children = null;
                         if (descriptorType == COMMAND_SHADER_DESCRIPTOR_COMPOSITE) {
                             long dstHandle = cacheKey(commands[offset++], commands[offset++]);
                             long srcHandle = cacheKey(commands[offset++], commands[offset++]);
                             dst = SHADER_CACHE.get(new ColorFilterCacheKey(contextPtr, dstHandle));
                             src = SHADER_CACHE.get(new ColorFilterCacheKey(contextPtr, srcHandle));
                             if (dst == null || src == null || !isSupportedBlendMode(commands[offset++])) return false;
+                        } else if (descriptorType == COMMAND_SHADER_DESCRIPTOR_RUNTIME_EFFECT) {
+                            int childCount = commands[offset + 2];
+                            children = new ShaderDescriptor[childCount];
+                            offset += 3;
+                            for (int index = 0; index < childCount; index++) {
+                                long childHandle = cacheKey(commands[offset++], commands[offset++]);
+                                children[index] = SHADER_CACHE.get(new ColorFilterCacheKey(contextPtr, childHandle));
+                                if (children[index] == null) return false;
+                            }
+                            offset = recordEnd;
                         } else {
                             offset = recordEnd;
                         }
                         int[] payload = new int[payloadIntCount];
                         System.arraycopy(commands, payloadStart, payload, 0, payloadIntCount);
-                        SHADER_CACHE.put(new ColorFilterCacheKey(contextPtr, handle), new ShaderDescriptor(descriptorType, payload, dst, src));
+                        SHADER_CACHE.put(new ColorFilterCacheKey(contextPtr, handle), new ShaderDescriptor(descriptorType, payload, dst, src, children));
                     } else if (op == COMMAND_EVICT_SHADER_HANDLE) {
                         if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE || offset + 2 != recordEnd) return false;
                         long handle = cacheKey(commands[offset++], commands[offset++]);

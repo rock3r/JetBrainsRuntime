@@ -51,13 +51,13 @@ public class JBRSkiaApiTest {
     }
 
     public static void main(String[] args) throws Exception {
-        assertEquals(86, JBRSkia.ABI_ID, "ABI_ID");
+        assertEquals(87, JBRSkia.ABI_ID, "ABI_ID");
         assertEquals(3, JBRSkia.NATIVE_ABI_VERSION, "NATIVE_ABI_VERSION");
-        assertEquals("skia=m147-64a2414108;flags=macos-release-metal-poc:1;abi=86;native=3", JBRSkia.BUILD_ID, "BUILD_ID");
+        assertEquals("skia=m147-64a2414108;flags=macos-release-metal-poc:1;abi=87;native=3", JBRSkia.BUILD_ID, "BUILD_ID");
 
-        assertReflectiveStaticEquals(86, JBRSkia.class.getDeclaredField("ABI_ID"));
+        assertReflectiveStaticEquals(87, JBRSkia.class.getDeclaredField("ABI_ID"));
         assertReflectiveStaticEquals(3, JBRSkia.class.getDeclaredField("NATIVE_ABI_VERSION"));
-        assertReflectiveStaticEquals("skia=m147-64a2414108;flags=macos-release-metal-poc:1;abi=86;native=3", JBRSkia.class.getDeclaredField("BUILD_ID"));
+        assertReflectiveStaticEquals("skia=m147-64a2414108;flags=macos-release-metal-poc:1;abi=87;native=3", JBRSkia.class.getDeclaredField("BUILD_ID"));
 
         if (TestJBRSkia.INSTANCE != null) {
             throw new AssertionError("JBRSkia service must be unavailable before native runtime is wired");
@@ -848,7 +848,7 @@ public class JBRSkiaApiTest {
 
     private static int[] validRuntimeEffectShaderDescriptorStream() {
         String sksl = "half4 main(float2 p){return half4(1);}";
-        int payloadIntCount = 2 + sksl.length() + 1;
+        int payloadIntCount = 3 + sksl.length() + 1;
         int defineRecordLength = 8 + payloadIntCount;
         int commandIntCount = defineRecordLength + 10;
         int[] commands = new int[JBRSkia.COMMAND_STREAM_HEADER_SIZE + commandIntCount];
@@ -869,6 +869,7 @@ public class JBRSkiaApiTest {
         commands[offset++] = payloadIntCount;
         commands[offset++] = sksl.length();
         commands[offset++] = 1;
+        commands[offset++] = 0;
         for (int index = 0; index < sksl.length(); index++) {
             commands[offset++] = sksl.charAt(index);
         }

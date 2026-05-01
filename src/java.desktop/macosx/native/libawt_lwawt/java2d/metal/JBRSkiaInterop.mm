@@ -78,7 +78,7 @@
 
 #include "MTLSurfaceDataBase.h"
 
-static constexpr jint ABI_ID = 86;
+static constexpr jint ABI_ID = 87;
 static constexpr jint COMMAND_STREAM_MAGIC = 1246972723;
 static constexpr jint COMMAND_STREAM_HEADER_SIZE = 6;
 static constexpr jint COMMAND_STREAM_FLAGS_NONE = 0;
@@ -228,6 +228,7 @@ struct ShaderDescriptor {
     std::vector<jint> payload;
     std::shared_ptr<ShaderDescriptor> dst;
     std::shared_ptr<ShaderDescriptor> src;
+    std::vector<std::shared_ptr<ShaderDescriptor>> children;
 };
 
 struct ColorFilterScopedKey {
@@ -579,20 +580,33 @@ static sk_sp<SkShader> makeDescriptorShader(const ShaderDescriptor& descriptor, 
         return SkShaders::Blend(blendMode, dst, src);
     }
     if (descriptor.type == COMMAND_SHADER_DESCRIPTOR_RUNTIME_EFFECT) {
-        if (descriptor.payload.size() < 2) return nullptr;
+        if (descriptor.payload.size() < 3) return nullptr;
         const jint skslLength = descriptor.payload[0];
         const jint uniformFloatCount = descriptor.payload[1];
+        const jint childCount = descriptor.payload[2];
         if (skslLength <= 0 ||
                 skslLength > 4096 ||
                 uniformFloatCount < 0 ||
                 uniformFloatCount > 256 ||
-                descriptor.payload.size() != static_cast<size_t>(2 + skslLength + uniformFloatCount)) {
+                childCount < 0 ||
+                childCount > 8 ||
+                descriptor.children.size() != static_cast<size_t>(childCount) ||
+                descriptor.payload.size() != static_cast<size_t>(3 + childCount * 2 + skslLength + uniformFloatCount)) {
             return nullptr;
         }
+        std::vector<sk_sp<SkShader>> childShaders;
+        childShaders.reserve(static_cast<size_t>(childCount));
+        for (const auto& child : descriptor.children) {
+            if (!child) return nullptr;
+            sk_sp<SkShader> shader = makeDescriptorShader(*child, imageCacheContextKey, depth + 1);
+            if (!shader) return nullptr;
+            childShaders.push_back(shader);
+        }
+        const size_t skslStart = static_cast<size_t>(3 + childCount * 2);
         std::string sksl;
         sksl.reserve(static_cast<size_t>(skslLength));
         for (jint i = 0; i < skslLength; i++) {
-            const jint code = descriptor.payload[2 + i];
+            const jint code = descriptor.payload[skslStart + i];
             if (code <= 0 || code > 127) return nullptr;
             sksl.push_back(static_cast<char>(code));
         }
@@ -605,10 +619,14 @@ static sk_sp<SkShader> makeDescriptorShader(const ShaderDescriptor& descriptor, 
             uniformData = SkData::MakeEmpty();
         } else {
             uniformData = SkData::MakeWithCopy(
-                    descriptor.payload.data() + 2 + skslLength,
+                    descriptor.payload.data() + skslStart + skslLength,
                     static_cast<size_t>(uniformFloatCount) * sizeof(jint));
         }
-        return result.effect->makeShader(uniformData, nullptr, 0, nullptr);
+        return result.effect->makeShader(
+                uniformData,
+                childShaders.empty() ? nullptr : childShaders.data(),
+                childShaders.size(),
+                nullptr);
     }
     return nullptr;
 }
@@ -2928,18 +2946,33 @@ static bool drawCommandList(SkCanvas* canvas,
                         descriptor.src = std::make_shared<ShaderDescriptor>(src->second);
                     }
                 } else if (descriptorType == COMMAND_SHADER_DESCRIPTOR_RUNTIME_EFFECT) {
-                    if (payloadIntCount < 2) return false;
+                    if (payloadIntCount < 3) return false;
                     const jint skslLength = descriptor.payload[0];
                     const jint uniformFloatCount = descriptor.payload[1];
+                    const jint childCount = descriptor.payload[2];
                     if (skslLength <= 0 ||
                             skslLength > 4096 ||
                             uniformFloatCount < 0 ||
                             uniformFloatCount > 256 ||
-                            payloadIntCount != 2 + skslLength + uniformFloatCount) {
+                            childCount < 0 ||
+                            childCount > 8 ||
+                            payloadIntCount != 3 + childCount * 2 + skslLength + uniformFloatCount) {
                         return false;
                     }
+                    const jint skslStart = 3 + childCount * 2;
+                    {
+                        std::lock_guard<std::mutex> lock(gShaderCacheMutex);
+                        for (jint i = 0; i < childCount; i++) {
+                            const uint64_t childHandle = imageCacheKey(
+                                    descriptor.payload[3 + i * 2],
+                                    descriptor.payload[4 + i * 2]);
+                            auto child = gShadersByKey.find(ColorFilterScopedKey{imageCacheContextKey, childHandle});
+                            if (child == gShadersByKey.end()) return false;
+                            descriptor.children.push_back(std::make_shared<ShaderDescriptor>(child->second));
+                        }
+                    }
                     for (jint i = 0; i < skslLength; i++) {
-                        const jint code = descriptor.payload[2 + i];
+                        const jint code = descriptor.payload[skslStart + i];
                         if (code <= 0 || code > 127) return false;
                     }
                 } else {
