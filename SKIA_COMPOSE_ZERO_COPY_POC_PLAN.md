@@ -8079,6 +8079,9 @@ What changed:
 
 - `scripts/compare-jbr-skia-window-screenshots.sh` now enforces separate bad-pixel-ratio limits for coarse ownership
   regions in addition to the full-window threshold.
+- The comparator also emits metric-only Compose subregions for left backdrop, center animation, and bottom labels. These
+  are not hard-gated yet because the current scene still mixes animated geometry and text/raster differences in those
+  areas.
 - Region thresholds are configurable with:
   - `MAX_HEADER_CONTROLS_BAD_PIXEL_RATIO`
   - `MAX_COMPOSE_CANVAS_BAD_PIXEL_RATIO`
@@ -8099,6 +8102,9 @@ Verification:
   - command: `CASES=parity-rich DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-screenshot-parity-suite.sh`
   - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-060146/suite.tsv`
   - metrics: `avg_delta=1.646`, `bad_pixel_ratio=0.03910`, `compose_bad_pixel_ratio=0.06235`.
+- Rich baseline parity-suite row also passed after adding metric-only subregions:
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-060531/suite.tsv`
+  - subregion metrics: left backdrop `0.08741`, center animation `0.09997`, bottom labels `0.08375`, right probe strip `0.02867`.
 
 Known notes:
 

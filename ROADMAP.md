@@ -205,6 +205,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Golden/diff screenshot harness for the full mixed Swing/Jewel/Compose Magic Jewel scene.
 - [x] Capture the app window only in old/new renderer modes, with deterministic sizing, theme, font inputs, animation phase, and seeded content.
 - [x] Add configurable per-region screenshot parity gates for header controls, Compose canvas, Swing island, and right probe strip.
+- [x] Add metric-only Compose subregions for left backdrop, center animation, and bottom labels to prepare tighter visual masks.
 - [ ] Tighten Compose/Jewel-owned region thresholds after splitting text/font raster drift from geometry/pixel ownership drift.
 - [x] Add screenshot parity jobs that run both old and new renderers for the same rich scene, emit old/new images, and fail on unexpected Compose/Jewel geometry/color drift. Expected Swing text rendering differences must be isolated to Swing-owned regions and documented in the report.
 - [x] Add a rich-content old/new parity suite with Jewel controls/text, Compose primitives/text/images/effects, Swing islands, popups/menus, and always-on animation sampled at deterministic phases.
