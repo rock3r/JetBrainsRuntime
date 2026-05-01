@@ -8803,3 +8803,30 @@ Next checkpoint:
 
 - Add screenshot parity coverage for the child color-filter RuntimeEffect row, then run a broader ABI 92 descriptor
   regression subset before moving on to the remaining shader/effect diagnostics and lifecycle-marker gaps.
+
+## Checkpoint: RuntimeEffect ColorFilter Child Screenshot Parity
+
+Status: the Magic Jewel screenshot parity suite now has a dedicated RuntimeEffect child color-filter row, and the focused
+old/new renderer capture passed against the ABI 92 artifact set.
+
+What changed:
+
+- Added `parity-runtime-effect-color-filter-child` to Magic Jewel's screenshot parity suite and default RuntimeEffect
+  parity coverage.
+- The row enables `MAGIC_JEWEL_COMPOSE_RUNTIME_EFFECT_COLOR_FILTER_CHILD`, capturing the old Skiko renderer and the JBR
+  command renderer with deterministic timing and window geometry.
+- Magic Jewel `README.md` documents child color-filter RuntimeEffect parity alongside the existing pure-color,
+  uniform-only, child-shader, combined child+uniform, and color-filter rows.
+- `ROADMAP.md` records the focused parity run and report path.
+
+Verification:
+
+- Focused RuntimeEffect child color-filter screenshot parity row passed:
+  - command: `CASES="parity-runtime-effect-color-filter-child" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-091255/suite.tsv`
+  - result: `avg_delta=1.645`, `bad_pixel_ratio=0.03908`, `compose_bad_pixel_ratio=0.06230`
+
+Next checkpoint:
+
+- Run the expanded RuntimeEffect parity subset including the new child color-filter row, then continue with the remaining
+  shader/effect diagnostic and lifecycle-marker gaps.

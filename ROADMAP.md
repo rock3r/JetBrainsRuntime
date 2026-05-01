@@ -241,6 +241,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-080056/suite.tsv`.
 - [x] RuntimeEffect color-filter screenshot parity row passed:
   `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-084511/suite.tsv`.
+- [x] RuntimeEffect child color-filter screenshot parity row passed:
+  `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-091255/suite.tsv`.
 - [x] Native-text screenshot parity row passed:
   `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-062651/suite.tsv`.
 - [x] Clean-geometry screenshot parity row passed:
