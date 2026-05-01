@@ -148,7 +148,8 @@ public class JBRSkiaService extends JBRSkia {
                     | COMMAND_CAP64_HIGH_STROKE_ROUND_RECT_DASH_PATH_EFFECT
                     | COMMAND_CAP64_HIGH_STROKE_PATH_DASH_PATH_EFFECT
                     | COMMAND_CAP64_HIGH_PATH_EFFECT_DESCRIPTOR_REF
-                    | COMMAND_CAP64_HIGH_CONCAT_MATRIX33;
+                    | COMMAND_CAP64_HIGH_CONCAT_MATRIX33
+                    | COMMAND_CAP64_HIGH_DRAW_SHADOW_PATH;
     private static final boolean NATIVE_BRIDGE_AVAILABLE = loadNativeBridge();
     private static final AtomicLong NEXT_SCOPE_ID = new AtomicLong(1);
     private static final int MAX_CACHED_IMAGES = 256;
@@ -354,6 +355,7 @@ public class JBRSkiaService extends JBRSkia {
         if (op == COMMAND_STROKE_ROUND_RECT_DASH_PATH_EFFECT) return -26;
         if (op == COMMAND_STROKE_PATH_DASH_PATH_EFFECT) return -27;
         if (op == COMMAND_DRAW_PATH_PATH_EFFECT_REF) return -28;
+        if (op == COMMAND_DRAW_SHADOW_PATH) return -29;
         if (op == COMMAND_FILL_RECT_IMAGE_SHADER) return 14;
         if (op == COMMAND_CLEAR) return 4;
         if (op == COMMAND_CLEAR_RECT) return 7;
@@ -448,6 +450,9 @@ public class JBRSkiaService extends JBRSkia {
         }
         if (expectedLength == -28 && record.op() == COMMAND_DRAW_PATH_PATH_EFFECT_REF) {
             return record.recordLength() >= 13;
+        }
+        if (expectedLength == -29 && record.op() == COMMAND_DRAW_SHADOW_PATH) {
+            return record.recordLength() >= 17;
         }
         return expectedLength == record.recordLength();
     }
@@ -4061,6 +4066,32 @@ public class JBRSkiaService extends JBRSkia {
                             current.draw(path);
                         } finally {
                             current.setStroke(previous);
+                        }
+                    } else if (op == COMMAND_DRAW_SHADOW_PATH) {
+                        if (offset + 14 > recordEnd) return false;
+                        applyAntialiasing(current, antiAlias);
+                        int ambientArgb = commands[offset++];
+                        int spotArgb = commands[offset++];
+                        offset += 8;
+                        int fillType = commands[offset++];
+                        int pathDataLength = commands[offset++];
+                        if ((fillType != COMMAND_PATH_FILL_NON_ZERO && fillType != COMMAND_PATH_FILL_EVEN_ODD)
+                                || pathDataLength < 0
+                                || offset + pathDataLength != recordEnd) {
+                            return false;
+                        }
+                        Path2D path = pathFromCommandData(commands, offset, recordEnd, fillType);
+                        if (path == null) return false;
+                        offset = recordEnd;
+                        Composite previousComposite = current.getComposite();
+                        try {
+                            current.setComposite(AlphaComposite.SrcOver);
+                            current.setColor(new Color(ambientArgb, true));
+                            current.fill(path);
+                            current.setColor(new Color(spotArgb, true));
+                            current.fill(path);
+                        } finally {
+                            current.setComposite(previousComposite);
                         }
                     } else if (op == COMMAND_FILL_OVAL) {
                         if (offset + 5 != recordEnd) return false;

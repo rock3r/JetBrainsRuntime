@@ -60,6 +60,8 @@
 #include "SkString.h"
 #include "SkSurface.h"
 #include "SkTileMode.h"
+#include "SkPoint3.h"
+#include "SkShadowUtils.h"
 #include "ganesh/GrBackendSurface.h"
 #include "ganesh/GrDirectContext.h"
 #include "ganesh/mtl/GrMtlBackendContext.h"
@@ -86,6 +88,13 @@ static constexpr jint ABI_ID = 99;
 static constexpr jint COMMAND_STREAM_MAGIC = 1246972723;
 static constexpr jint COMMAND_STREAM_HEADER_SIZE = 6;
 static constexpr jint COMMAND_STREAM_FLAGS_NONE = 0;
+
+static float commandBitsToFloat(jint bits) {
+    float value;
+    static_assert(sizeof(value) == sizeof(bits));
+    std::memcpy(&value, &bits, sizeof(value));
+    return value;
+}
 static constexpr jint COMMAND_COORDINATE_SPACE_SWING_USER = 1;
 static constexpr jint COMMAND_PAINT_FORMAT_SOLID_ARGB = 1;
 static constexpr jint COMMAND_RECORD_HEADER_SIZE_BYTES = 12;
@@ -156,6 +165,7 @@ static constexpr jint COMMAND_STROKE_ROUND_RECT_DASH_PATH_EFFECT = 60;
 static constexpr jint COMMAND_STROKE_PATH_DASH_PATH_EFFECT = 61;
 static constexpr jint COMMAND_DRAW_PATH_PATH_EFFECT_REF = 62;
 static constexpr jint COMMAND_CONCAT_MATRIX33 = 63;
+static constexpr jint COMMAND_DRAW_SHADOW_PATH = 64;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER = 1;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_COLOR_MATRIX_FILTER = 2;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_LIGHTING_FILTER = 3;
@@ -829,11 +839,49 @@ static sk_sp<SkShader> makeDescriptorShader(const ShaderDescriptor& descriptor, 
             }
             return shader;
         }
-        return result.effect->makeShader(
+        auto effectChildren = result.effect->children();
+        if (effectChildren.size() != childShaders.size()) {
+            std::fprintf(stderr,
+                         "JBR_SKIA_INTEROP_RUNTIME_EFFECT_BUILD_FAILED hash=0x%016llx stage=child-count skslLength=%d uniforms=%d children=%d namedUniforms=%d namedChildren=%d effectChildren=%zu\n",
+                         static_cast<unsigned long long>(expectedHash),
+                         skslLength,
+                         uniformFloatCount,
+                         childCount,
+                         namedUniformCount,
+                         namedChildCount,
+                         effectChildren.size());
+            return nullptr;
+        }
+        for (size_t i = 0; i < effectChildren.size(); i++) {
+            if (effectChildren[i].type != SkRuntimeEffect::ChildType::kShader) {
+                std::fprintf(stderr,
+                             "JBR_SKIA_INTEROP_RUNTIME_EFFECT_BUILD_FAILED hash=0x%016llx stage=positional-child-type childIndex=%zu skslLength=%d uniforms=%d children=%d namedUniforms=%d namedChildren=%d\n",
+                             static_cast<unsigned long long>(expectedHash),
+                             i,
+                             skslLength,
+                             uniformFloatCount,
+                             childCount,
+                             namedUniformCount,
+                             namedChildCount);
+                return nullptr;
+            }
+        }
+        sk_sp<SkShader> shader = result.effect->makeShader(
                 uniformData,
                 childShaders.empty() ? nullptr : childShaders.data(),
                 childShaders.size(),
                 nullptr);
+        if (!shader) {
+            std::fprintf(stderr,
+                         "JBR_SKIA_INTEROP_RUNTIME_EFFECT_BUILD_FAILED hash=0x%016llx stage=make-shader-positional skslLength=%d uniforms=%d children=%d namedUniforms=%d namedChildren=%d\n",
+                         static_cast<unsigned long long>(expectedHash),
+                         skslLength,
+                         uniformFloatCount,
+                         childCount,
+                         namedUniformCount,
+                         namedChildCount);
+        }
+        return shader;
     }
     return nullptr;
 }
@@ -3849,6 +3897,45 @@ static bool drawCommandList(SkCanvas* canvas,
                         SkSpan<const SkScalar>(intervals.data(), static_cast<size_t>(intervalCount)),
                         static_cast<SkScalar>(phase1000) / 1000.0f));
                 canvas->drawPath(path, paint);
+                break;
+            }
+            case COMMAND_DRAW_SHADOW_PATH: {
+                if (offset + 14 > recordEnd) {
+                    return false;
+                }
+                const SkColor ambientColor = skColorFromArgb(commands[offset++]);
+                const SkColor spotColor = skColorFromArgb(commands[offset++]);
+                const SkScalar zPlaneX = commandBitsToFloat(commands[offset++]);
+                const SkScalar zPlaneY = commandBitsToFloat(commands[offset++]);
+                const SkScalar zPlaneZ = commandBitsToFloat(commands[offset++]);
+                const SkScalar lightPosX = commandBitsToFloat(commands[offset++]);
+                const SkScalar lightPosY = commandBitsToFloat(commands[offset++]);
+                const SkScalar lightPosZ = commandBitsToFloat(commands[offset++]);
+                const SkScalar lightRadius = commandBitsToFloat(commands[offset++]);
+                const jint shadowFlags = commands[offset++];
+                const jint fillType = commands[offset++];
+                const jint pathDataLength = commands[offset++];
+                if ((fillType != COMMAND_PATH_FILL_NON_ZERO && fillType != COMMAND_PATH_FILL_EVEN_ODD) ||
+                    pathDataLength < 0 || offset + pathDataLength != recordEnd ||
+                    !std::isfinite(zPlaneX) || !std::isfinite(zPlaneY) || !std::isfinite(zPlaneZ) ||
+                    !std::isfinite(lightPosX) || !std::isfinite(lightPosY) || !std::isfinite(lightPosZ) ||
+                    !std::isfinite(lightRadius) || lightRadius < 0 || (shadowFlags & ~0x3) != 0) {
+                    return false;
+                }
+                SkPath path;
+                if (!pathFromCommandData(commands, offset, recordEnd, fillType, &path)) {
+                    return false;
+                }
+                offset = recordEnd;
+                SkShadowUtils::DrawShadow(
+                        canvas,
+                        path,
+                        SkPoint3::Make(zPlaneX, zPlaneY, zPlaneZ),
+                        SkPoint3::Make(lightPosX, lightPosY, lightPosZ),
+                        lightRadius,
+                        ambientColor,
+                        spotColor,
+                        static_cast<uint32_t>(shadowFlags));
                 break;
             }
             case COMMAND_FILL_OVAL: {

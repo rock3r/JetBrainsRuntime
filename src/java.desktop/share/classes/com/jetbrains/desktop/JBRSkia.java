@@ -124,6 +124,7 @@ public abstract class JBRSkia {
     public static final long COMMAND_CAP64_HIGH_STROKE_PATH_DASH_PATH_EFFECT = Long.parseLong("128");
     public static final long COMMAND_CAP64_HIGH_PATH_EFFECT_DESCRIPTOR_REF = Long.parseLong("256");
     public static final long COMMAND_CAP64_HIGH_CONCAT_MATRIX33 = Long.parseLong("512");
+    public static final long COMMAND_CAP64_HIGH_DRAW_SHADOW_PATH = Long.parseLong("1024");
     public static final int COMMAND_CLEAR = Integer.parseInt("1");
     public static final int COMMAND_FILL_RECT = Integer.parseInt("2");
     public static final int COMMAND_STROKE_LINE = Integer.parseInt("3");
@@ -189,6 +190,7 @@ public abstract class JBRSkia {
     public static final int COMMAND_STROKE_PATH_DASH_PATH_EFFECT = Integer.parseInt("61");
     public static final int COMMAND_DRAW_PATH_PATH_EFFECT_REF = Integer.parseInt("62");
     public static final int COMMAND_CONCAT_MATRIX33 = Integer.parseInt("63");
+    public static final int COMMAND_DRAW_SHADOW_PATH = Integer.parseInt("64");
     public static final int COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER = Integer.parseInt("1");
     public static final int COMMAND_EFFECT_DESCRIPTOR_COLOR_MATRIX_FILTER = Integer.parseInt("2");
     public static final int COMMAND_EFFECT_DESCRIPTOR_LIGHTING_FILTER = Integer.parseInt("3");

@@ -18,7 +18,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Magic Jewel reports can assert a minimum number of non-frozen Compose frame markers via `EXPECT_MIN_APP_NEW_FRAMES`, and the command-probe suite includes a passing `commands-live-animation` case.
 - [x] The `commands-live-animation` case can force one test-only tiny `FullScene` command stream and assert the `SKIKO_JBR_INTEROP_TINY_FULL_SCENE_INJECTED` marker.
 - [x] CMP now tags command frames as `FullScene` or `InteropOnly`, and Skiko uses that explicit frame kind for preservation replay instead of relying only on command-stream size.
-- [x] CMP's full `JbrSkiaCommandRecorderTest` desktop suite is green for ABI 90, so command-stream golden expectations are a usable regression gate again.
+- [x] CMP's full `JbrSkiaCommandRecorderTest` desktop suite is green for ABI 99, so command-stream golden expectations are a usable regression gate again.
 
 ## Command ABI Coverage
 
@@ -99,12 +99,19 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] ABI 92: RuntimeEffect color-filter descriptors can reference child color-filter handles and named child schema metadata, so JBR builds child-backed `SkRuntimeEffect` color filters inside its own Skia runtime.
 - [x] ABI 93: dash path-effect metadata can stroke rectangles through a structured command, extending dash support beyond line-only replay.
 - [x] ABI 94: dash path-effect metadata can stroke rounded rectangles through a structured command.
+- [x] ABI 95-98: path-effect metadata extends structured replay through dashed path strokes and path-effect draw-path refs.
+- [x] ABI 99 remains the current command-stream version; graphics-layer shadows add a high-word-gated
+  `COMMAND_DRAW_SHADOW_PATH` op backed by JBR-owned `SkShadowUtils::DrawShadow` for rectangular, rounded, and
+  generic path outlines without requiring a stream ABI bump.
 - [x] RuntimeEffect builder failures emit parseable JBR markers, and Magic Jewel has a bad-child-name probe/report assertion.
   - [x] Native RuntimeEffect shader replay rejects child type mismatches before assigning `SkRuntimeEffectBuilder`
     children, and Magic Jewel has a post-recording child-type corruption probe that asserts `stage=child-type` fallback
     instead of a native abort.
   - [x] RuntimeEffect child-type crash regression subset passed at
     `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-120945/suite.tsv`.
+  - [x] Native RuntimeEffect positional child replay now validates Skia child types before assignment, preventing
+    `SkRuntimeEffectBuilder::BuilderChild` aborts; the focused crash regression passed at
+    `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-223409/suite.tsv`.
   - [x] Descriptor handle use markers now distinguish "handle was consumed by replay" from "handle was defined in the command stream"; RuntimeEffect rows assert use markers for shader and color-filter refs.
   - [x] Descriptor handle cache-hit markers distinguish same-frame define/use from steady-state reuse across frames; stable
     shader/effect rows assert cache-hit markers.
@@ -220,10 +227,12 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   - [x] Support rounded-outline graphics-layer shadows by clipping the offset shadow source path inside the JBR-owned blur image-filter layer.
   - [x] Support generic-path graphics-layer shadows by reusing the offset shadow source path replay inside the JBR-owned blur image-filter layer.
   - [x] Improve graphics-layer shadow fidelity by replaying separate ambient and spot blur passes from Compose's ambient/spot shadow colors.
+  - [x] Replace blur-approximation graphics-layer shadows with a high-word-gated direct shadow command that lets JBR
+    call `SkShadowUtils::DrawShadow` against the destination Skia canvas for rectangular, rounded, and generic outlines.
   - [x] Validate `CompositingStrategy.ModulateAlpha` graphics-layer replay stays on the command path.
   - [x] Support simple `CompositingStrategy.Offscreen` graphics-layer replay by clipping layer contents to bounds inside the command saveLayer.
   - [x] Support first 3D/camera graphics-layer replay by flattening Compose's layer transform into `COMMAND_CONCAT_MATRIX33`.
-  - [ ] Extend graphics-layer command replay beyond the current subset: elevation-accurate shadows, broader image-filter surfaces, and combined/edge-case 3D camera transform coverage.
+  - [ ] Extend graphics-layer command replay beyond the current subset: dynamic root-lighting parity, broader image-filter surfaces, and combined/edge-case 3D camera transform coverage.
   - [x] Add render-effect descriptors for graphics-layer `RenderEffect` once the JBR-owned effect-handle ABI can construct the needed Skia image filters.
   - [x] Add an explicit expected-fallback row for graphics-layer `RenderEffect` combined with paint color-filter metadata.
   - [x] Support graphics-layer `RenderEffect` combined with tint/SrcIn color-filter metadata through nested image-filter and color-filter saveLayer command replay.

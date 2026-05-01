@@ -10644,3 +10644,55 @@ Verification:
 Next checkpoint:
 
 - Continue with renderer functionality. Exact shadow/elevation semantics remains the largest visible fidelity gap.
+
+## Checkpoint: Direct Skia Graphics-Layer Shadows and RuntimeEffect Crash Hardening
+
+Status: completed as a focused renderer-fidelity and native-stability slice.
+
+What changed:
+
+- CMP records graphics-layer elevation shadows as `COMMAND_DRAW_SHADOW_PATH` when the JBR/Skiko high-word capability is
+  available, carrying ambient/spot colors, z-plane, light position/radius, alpha flags, fill type, and serialized path
+  commands. Older runtimes still fall back to the previous blur-pass approximation or old Swing rendering path.
+- JBR API and Skiko capability negotiation now include `COMMAND_CAP64_HIGH_DRAW_SHADOW_PATH`, keeping the new command
+  behind strict compatibility gating instead of silently sending it to old runtimes.
+- JBR native command replay reconstructs the path inside JBR-owned Skia and calls `SkShadowUtils::DrawShadow`; the Java2D
+  fallback decoder validates and consumes the same payload so malformed command streams fail predictably.
+- Magic Jewel command and screenshot suites now validate rectangular, rounded, and generic-path graphics-layer shadows
+  with zero picture replay and zero fallback markers.
+- JBR native RuntimeEffect shader replay now validates positional child counts and child types before assigning builder
+  children, converting the previously observed `SkRuntimeEffectBuilder::BuilderChild` abort into a structured
+  `JBR_SKIA_INTEROP_RUNTIME_EFFECT_BUILD_FAILED` fallback.
+
+Verification:
+
+- JBR local Skia interop artifacts rebuilt successfully:
+  - command: `./scripts/rebuild-jbr-skia-local-artifacts.sh`
+- Skiko patched artifact published locally:
+  - command: `./gradlew --no-daemon --no-configuration-cache publishToMavenLocal`
+- CMP command-recorder suite passed for ABI 99:
+  - command: `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest`
+  - result: 104 tests passed.
+- Focused Magic Jewel shadow command suite passed:
+  - command: `CASES="commands-graphics-layer-shadow commands-graphics-layer-round-shadow commands-graphics-layer-path-shadow" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-223410/suite.tsv`
+  - result: each row stayed on JBR command replay with `fallback_new_count=0`, `unsupported=none`, and `jbr_picture_frames=0`.
+- Focused Magic Jewel shadow screenshot parity suite passed:
+  - command: `CASES="parity-graphics-layer-shadow parity-graphics-layer-round-shadow parity-graphics-layer-path-shadow" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-223626/suite.tsv`
+  - result: all three rows passed with exact bottom swatches and acceptable Compose-region deltas.
+- RuntimeEffect child-type crash regression passed without producing a new crash report:
+  - command: `CASES="commands-runtime-effect-child-type-fallback" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-223409/suite.tsv`
+  - result: structured fallback marker observed; no newer `java-2026-05-01` diagnostic report appeared.
+
+Known test gap:
+
+- Skiko `awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest` still reaches an unrelated existing common-test
+  compile issue in `RuntimeEffectTest.kt` (`makeMode` unresolved). `compileKotlinAwt` and `publishToMavenLocal` are green
+  for this slice.
+
+Next checkpoint:
+
+- Commit this direct-shadow/crash-hardening slice across JBR, Runtime API, Skiko, CMP, and Magic Jewel, then run a broad
+  command/screenshot sweep with the direct shadow command included before choosing the next remaining graphics-layer gap.
