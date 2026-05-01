@@ -9434,3 +9434,59 @@ Next checkpoint:
 
 - Continue toward the next remaining intentional fallback or visual parity gap, using the shadowless parity suite as the
   visual regression gate.
+
+## Checkpoint: Rectangular Graphics-Layer Shadow Command Replay
+
+Status: completed as a first narrow shadow slice for command-recorded graphics layers.
+
+What changed:
+
+- CMP nested graphics-layer replay now accepts finite positive rectangular `shadowElevation` and emits a shadow before
+  the layer content using only existing JBR-owned command primitives:
+  - define/reuse a blur image-filter descriptor
+  - `COMMAND_SAVE_LAYER_IMAGE_FILTER_REF` around the shadow bounds
+  - a layer-local shadow fill rectangle encoded in raw pixel coordinates
+  - restore, then replay the normal layer saveLayer/content sequence.
+- The slice intentionally supports only rectangular layer shadows. Non-rectangular shadow outlines remain explicit
+  `graphicsLayer:shadowOutline` fallback work rather than approximating path/round-rect elevation semantics silently.
+- Magic Jewel gained `MAGIC_JEWEL_COMPOSE_GRAPHICS_LAYER_SHADOW` /
+  `magic.jewel.compose.graphicsLayerShadow`, a `commands-graphics-layer-shadow` command-probe row, and a screenshot
+  assertion that detects the shadow-darkened right probe region.
+- The first Magic Jewel run exposed a real encoder bug: shadow fill coordinates were accidentally written in fixed-1000
+  scalar form even though JBR's `COMMAND_FILL_RECT` expects raw pixel-space ints. The focused CMP recorder test now
+  asserts those raw coordinates so this does not regress.
+- Broader suite validation exposed two unrelated brittle screenshot thresholds while preserving clean command replay:
+  image-shader strict-dark pixels and gradient-stroke orange pixels. Magic Jewel now keeps the old `probeRightDark`
+  meaning for image-shader checks, adds a separate `probeRightShadow` counter for layer shadows, and slightly lowers the
+  gradient-stroke orange threshold to match the captured probe size.
+
+Verification:
+
+- Focused CMP recorder test passed against the patched local Skiko snapshot:
+  - command: `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.nestedRecordingReplaysRectangularLayerShadow`
+- Focused Magic Jewel shadow row passed:
+  - command: `CASES="commands-graphics-layer-shadow" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-134341/suite.tsv`
+  - result: `status=passed`, `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`,
+    `jbr_command_frames=157`
+- Graphics-layer render-effect plus shadow regression subset passed:
+  - command: `CASES="commands-graphics-layer-render-effect commands-graphics-layer-offset-effect commands-graphics-layer-chained-render-effect commands-graphics-layer-shadow" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-134631/suite.tsv`
+- Magic Jewel report/script validation passed after adding `probeRightShadow`:
+  - command: `bash -n scripts/jbr-skia-interop-report.sh scripts/jbr-skia-command-probe-suite.sh scripts/assert-jbr-skia-command-window-screenshot.sh scripts/test-jbr-skia-report-validation.sh && ./scripts/test-jbr-skia-report-validation.sh`
+- Previously brittle image-shader and gradient-stroke rows passed in isolation after screenshot-oracle retuning:
+  - image-shader suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-140254/suite.tsv`
+  - gradient-stroke suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-141834/suite.tsv`
+- Remaining command-probe tail from image filters through graphics-layer shadow and invalid-gradient fallback passed:
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-141933/suite.tsv`
+
+Roadmap update:
+
+- `ROADMAP.md` now marks the first rectangular graphics-layer shadow slice complete and narrows the remaining graphics-layer
+  gap to non-rectangular/elevation-accurate shadows, 3D/camera transforms, offscreen strategy semantics, and broader
+  image-filter surfaces.
+
+Next checkpoint:
+
+- Commit the CMP, Magic Jewel, and roadmap/plan updates, then continue with the next remaining graphics-layer gap or
+  parity row depending on the next validation target.
