@@ -9638,3 +9638,35 @@ Next checkpoint:
 - Continue with the next fidelity gap that can move from fallback to command replay safely. The leading candidates are
   elevation-accurate shadow semantics or a first offscreen-buffer command model, but both need a small design pass before
   implementation.
+
+## Checkpoint: Rounded/Path Graphics-Layer Shadow Screenshot Parity
+
+Status: focused old/new parity rows passed for the rounded and generic-path shadow slices.
+
+What changed:
+
+- Magic Jewel's screenshot parity suite now includes these rows in the default set:
+  - `parity-graphics-layer-round-shadow`
+  - `parity-graphics-layer-path-shadow`
+- Both rows disable unrelated optional probes, enable the corresponding rounded/path graphics-layer outline plus shadow,
+  and keep the comparison in the existing shadowless, window-only capture pipeline.
+- The rows use slightly broader right-probe/Compose-canvas thresholds than the rectangular shadow row because the clipped
+  shadow region intentionally changes how many cyan/purple/shadow pixels land in the focused probe area.
+
+Verification:
+
+- Focused rounded/path shadow parity rows passed:
+  - command: `CASES="parity-graphics-layer-round-shadow parity-graphics-layer-path-shadow" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-151108/suite.tsv`
+  - rounded result: `avg_delta=2.276`, `bad_pixel_ratio=0.05203`, `compose_bad_pixel_ratio=0.07613`,
+    `compose_bottom_swatches_bad_pixel_ratio=0.00000`
+  - path result: `avg_delta=2.265`, `bad_pixel_ratio=0.05213`, `compose_bad_pixel_ratio=0.07630`,
+    `compose_bottom_swatches_bad_pixel_ratio=0.00000`
+
+Roadmap update:
+
+- `ROADMAP.md` now records screenshot parity coverage for rectangular, rounded, and generic-path graphics-layer shadows.
+
+Next checkpoint:
+
+- Commit the parity suite updates, then continue toward the next command coverage or fidelity gap.
