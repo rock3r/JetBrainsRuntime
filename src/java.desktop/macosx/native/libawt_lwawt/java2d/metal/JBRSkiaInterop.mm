@@ -32,6 +32,7 @@
 #include <cstdio>
 #include <cstring>
 #include <functional>
+#include <memory>
 #include <mutex>
 #include <unordered_map>
 #include <vector>
@@ -76,7 +77,7 @@
 
 #include "MTLSurfaceDataBase.h"
 
-static constexpr jint ABI_ID = 83;
+static constexpr jint ABI_ID = 84;
 static constexpr jint COMMAND_STREAM_MAGIC = 1246972723;
 static constexpr jint COMMAND_STREAM_HEADER_SIZE = 6;
 static constexpr jint COMMAND_STREAM_FLAGS_NONE = 0;
@@ -147,6 +148,8 @@ static constexpr jint COMMAND_EFFECT_DESCRIPTOR_COLOR_MATRIX_FILTER = 2;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_LIGHTING_FILTER = 3;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_BLUR_IMAGE_FILTER = 4;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_OFFSET_IMAGE_FILTER = 5;
+static constexpr jint COMMAND_EFFECT_DESCRIPTOR_BLUR_IMAGE_FILTER_WITH_INPUT = 6;
+static constexpr jint COMMAND_EFFECT_DESCRIPTOR_OFFSET_IMAGE_FILTER_WITH_INPUT = 7;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_VERSION_1 = 1;
 static constexpr jint COMMAND_BLEND_MODE_PLUS = 1;
 static constexpr jint COMMAND_BLEND_MODE_SRC_IN = 2;
@@ -205,6 +208,7 @@ struct ColorFilterDescriptor {
     jint tileMode = 0;
     SkScalar dx = 0;
     SkScalar dy = 0;
+    std::shared_ptr<ColorFilterDescriptor> child;
 };
 
 struct ColorFilterScopedKey {
@@ -378,28 +382,54 @@ static SkTileMode skTileModeFromCommand(jint tileMode) {
     return SkTileMode::kClamp;
 }
 
-static bool setDescriptorImageFilter(SkPaint* paint, const ColorFilterDescriptor& descriptor) {
-    if (descriptor.type == COMMAND_EFFECT_DESCRIPTOR_BLUR_IMAGE_FILTER) {
-        if (descriptor.sigmaX < 0 || descriptor.sigmaY < 0 || descriptor.tileMode < 0 || descriptor.tileMode > 3) {
-            return false;
+static bool isImageFilterDescriptorType(jint type) {
+    return type == COMMAND_EFFECT_DESCRIPTOR_BLUR_IMAGE_FILTER ||
+            type == COMMAND_EFFECT_DESCRIPTOR_OFFSET_IMAGE_FILTER ||
+            type == COMMAND_EFFECT_DESCRIPTOR_BLUR_IMAGE_FILTER_WITH_INPUT ||
+            type == COMMAND_EFFECT_DESCRIPTOR_OFFSET_IMAGE_FILTER_WITH_INPUT;
+}
+
+static sk_sp<SkImageFilter> makeDescriptorImageFilter(const ColorFilterDescriptor& descriptor, int depth) {
+    if (depth > 8) {
+        return nullptr;
+    }
+    sk_sp<SkImageFilter> child;
+    if (descriptor.child) {
+        child = makeDescriptorImageFilter(*descriptor.child, depth + 1);
+        if (!child) {
+            return nullptr;
         }
-        paint->setImageFilter(SkImageFilters::Blur(
+    }
+    if (descriptor.type == COMMAND_EFFECT_DESCRIPTOR_BLUR_IMAGE_FILTER ||
+            descriptor.type == COMMAND_EFFECT_DESCRIPTOR_BLUR_IMAGE_FILTER_WITH_INPUT) {
+        if (descriptor.sigmaX < 0 || descriptor.sigmaY < 0 || descriptor.tileMode < 0 || descriptor.tileMode > 3) {
+            return nullptr;
+        }
+        return SkImageFilters::Blur(
                 descriptor.sigmaX,
                 descriptor.sigmaY,
                 skTileModeFromCommand(descriptor.tileMode),
-                nullptr,
-                nullptr));
-        return true;
+                child,
+                nullptr);
     }
-    if (descriptor.type == COMMAND_EFFECT_DESCRIPTOR_OFFSET_IMAGE_FILTER) {
+    if (descriptor.type == COMMAND_EFFECT_DESCRIPTOR_OFFSET_IMAGE_FILTER ||
+            descriptor.type == COMMAND_EFFECT_DESCRIPTOR_OFFSET_IMAGE_FILTER_WITH_INPUT) {
         if (!std::isfinite(descriptor.dx) || !std::isfinite(descriptor.dy)) {
-            return false;
+            return nullptr;
         }
-        paint->setImageFilter(SkImageFilters::Offset(
+        return SkImageFilters::Offset(
                 descriptor.dx,
                 descriptor.dy,
-                nullptr,
-                nullptr));
+                child,
+                nullptr);
+    }
+    return nullptr;
+}
+
+static bool setDescriptorImageFilter(SkPaint* paint, const ColorFilterDescriptor& descriptor) {
+    sk_sp<SkImageFilter> filter = makeDescriptorImageFilter(descriptor, 0);
+    if (filter) {
+        paint->setImageFilter(filter);
         return true;
     }
     return false;
@@ -2576,8 +2606,23 @@ static bool drawCommandList(SkCanvas* canvas,
                     }
                     descriptor.argb = skColorFromArgb(commands[offset++]);
                     descriptor.blendMode = static_cast<jint>(skColorFromArgb(commands[offset++]));
-                } else if (descriptorType == COMMAND_EFFECT_DESCRIPTOR_BLUR_IMAGE_FILTER) {
-                    if (payloadIntCount != 3) {
+                } else if (descriptorType == COMMAND_EFFECT_DESCRIPTOR_BLUR_IMAGE_FILTER ||
+                        descriptorType == COMMAND_EFFECT_DESCRIPTOR_BLUR_IMAGE_FILTER_WITH_INPUT) {
+                    if (descriptorType == COMMAND_EFFECT_DESCRIPTOR_BLUR_IMAGE_FILTER_WITH_INPUT) {
+                        if (payloadIntCount != 5) {
+                            return false;
+                        }
+                        const uint64_t childHandle = imageCacheKey(commands[offset], commands[offset + 1]);
+                        offset += 2;
+                        {
+                            std::lock_guard<std::mutex> lock(gColorFilterCacheMutex);
+                            auto child = gColorFiltersByKey.find(ColorFilterScopedKey{imageCacheContextKey, childHandle});
+                            if (child == gColorFiltersByKey.end() || !isImageFilterDescriptorType(child->second.type)) {
+                                return false;
+                            }
+                            descriptor.child = std::make_shared<ColorFilterDescriptor>(child->second);
+                        }
+                    } else if (payloadIntCount != 3) {
                         return false;
                     }
                     descriptor.sigmaX = skScalarFromRawBits(commands[offset++]);
@@ -2588,8 +2633,23 @@ static bool drawCommandList(SkCanvas* canvas,
                             descriptor.tileMode < 0 || descriptor.tileMode > 3) {
                         return false;
                     }
-                } else if (descriptorType == COMMAND_EFFECT_DESCRIPTOR_OFFSET_IMAGE_FILTER) {
-                    if (payloadIntCount != 2) {
+                } else if (descriptorType == COMMAND_EFFECT_DESCRIPTOR_OFFSET_IMAGE_FILTER ||
+                        descriptorType == COMMAND_EFFECT_DESCRIPTOR_OFFSET_IMAGE_FILTER_WITH_INPUT) {
+                    if (descriptorType == COMMAND_EFFECT_DESCRIPTOR_OFFSET_IMAGE_FILTER_WITH_INPUT) {
+                        if (payloadIntCount != 4) {
+                            return false;
+                        }
+                        const uint64_t childHandle = imageCacheKey(commands[offset], commands[offset + 1]);
+                        offset += 2;
+                        {
+                            std::lock_guard<std::mutex> lock(gColorFilterCacheMutex);
+                            auto child = gColorFiltersByKey.find(ColorFilterScopedKey{imageCacheContextKey, childHandle});
+                            if (child == gColorFiltersByKey.end() || !isImageFilterDescriptorType(child->second.type)) {
+                                return false;
+                            }
+                            descriptor.child = std::make_shared<ColorFilterDescriptor>(child->second);
+                        }
+                    } else if (payloadIntCount != 2) {
                         return false;
                     }
                     descriptor.dx = skScalarFromRawBits(commands[offset++]);

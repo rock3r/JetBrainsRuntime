@@ -7570,4 +7570,34 @@ Verification:
 Known notes:
 
 - This slice still rejects nested render-effect chains. The next render-effect step is a chain descriptor contract if we want `OffsetEffect(BlurEffect(...), ...)` and similar composed image filters on the fast path.
+
+## Checkpoint: ABI 84 Chained Image-Filter Descriptors
+
+Status: source and JVM-side validation passed for Skiko/CMP/Magic Jewel; native JBR/live validation remains blocked on local Xcode license acceptance.
+
+What changed:
+
+- JBR private API, public Runtime API, Skiko compatibility gate, and CMP command recorder now use command ABI 84.
+- Added high-word capability `COMMAND_CAP64_HIGH_EFFECT_DESCRIPTOR_CHAIN_IMAGE_FILTER = 4`.
+- Added descriptor types `COMMAND_EFFECT_DESCRIPTOR_BLUR_IMAGE_FILTER_WITH_INPUT = 6` and `COMMAND_EFFECT_DESCRIPTOR_OFFSET_IMAGE_FILTER_WITH_INPUT = 7`.
+- CMP now serializes simple render-effect chains by defining the child image-filter descriptor first, then defining the parent descriptor with the child handle in its payload.
+- JBR Java/native replay snapshots the child descriptor at parent definition time, so later handle eviction cannot silently break a cached parent descriptor.
+- Magic Jewel now exposes `MAGIC_JEWEL_COMPOSE_GRAPHICS_LAYER_CHAINED_RENDER_EFFECT` / `magic.jewel.compose.graphicsLayerChainedRenderEffect` and a `commands-graphics-layer-chained-render-effect` command-probe suite row.
+
+Verification:
+
+- Skiko focused interop tests passed:
+  - `./gradlew --no-daemon --no-configuration-cache :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`
+- CMP `ui-graphics` desktop sources compile:
+  - `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:compileKotlinDesktop`
+- CMP command-recorder class test was attempted:
+  - `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest`
+  - This currently fails before the new test runs because the broader `:compose:ui:ui` desktop compile cannot resolve existing `org.jetbrains.skiko.jbr.*` command-rendering imports in `ComposeSceneMediator.desktop.kt` / `SwingSkiaLayerComponent.desktop.kt`.
+- Magic Jewel sample sources and scripts validate:
+  - `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon --no-configuration-cache compileKotlin`
+  - `bash -n scripts/jbr-skia-interop-report.sh && bash -n scripts/jbr-skia-command-probe-suite.sh && bash -n scripts/assert-jbr-skia-command-window-screenshot.sh`
+
+Known notes:
+
+- This supports chains composed from the currently structured blur/offset descriptors. Arbitrary Skia image filters and runtime shader filters still need their own descriptor contract instead of raw Skia pointer sharing.
 - Native JBR test and live validation should run after the local JBR native build is unblocked.

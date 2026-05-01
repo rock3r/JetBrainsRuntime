@@ -140,7 +140,8 @@ public class JBRSkiaService extends JBRSkia {
                     | COMMAND_CAP64_SAVE_LAYER_BLEND_COLOR_FILTER_REF;
     private static final long COMMAND_CAPABILITIES_HIGH =
             COMMAND_CAP64_HIGH_SAVE_LAYER_IMAGE_FILTER_REF
-                    | COMMAND_CAP64_HIGH_EFFECT_DESCRIPTOR_OFFSET_IMAGE_FILTER;
+                    | COMMAND_CAP64_HIGH_EFFECT_DESCRIPTOR_OFFSET_IMAGE_FILTER
+                    | COMMAND_CAP64_HIGH_EFFECT_DESCRIPTOR_CHAIN_IMAGE_FILTER;
     private static final boolean NATIVE_BRIDGE_AVAILABLE = loadNativeBridge();
     private static final AtomicLong NEXT_SCOPE_ID = new AtomicLong(1);
     private static final int MAX_CACHED_IMAGES = 256;
@@ -528,11 +529,16 @@ public class JBRSkiaService extends JBRSkia {
             if (descriptorType == COMMAND_EFFECT_DESCRIPTOR_LIGHTING_FILTER) {
                 return payloadIntCount == 2;
             }
-            if (descriptorType == COMMAND_EFFECT_DESCRIPTOR_BLUR_IMAGE_FILTER) {
-                if (payloadIntCount != 3) return false;
-                float sigmaX = Float.intBitsToFloat(commands[record.argsStart() + 5]);
-                float sigmaY = Float.intBitsToFloat(commands[record.argsStart() + 6]);
-                int tileMode = commands[record.argsStart() + 7];
+            if (descriptorType == COMMAND_EFFECT_DESCRIPTOR_BLUR_IMAGE_FILTER
+                    || descriptorType == COMMAND_EFFECT_DESCRIPTOR_BLUR_IMAGE_FILTER_WITH_INPUT) {
+                int payloadOffset = record.argsStart() + 5;
+                if (descriptorType == COMMAND_EFFECT_DESCRIPTOR_BLUR_IMAGE_FILTER_WITH_INPUT) {
+                    if (payloadIntCount != 5) return false;
+                    payloadOffset += 2;
+                } else if (payloadIntCount != 3) return false;
+                float sigmaX = Float.intBitsToFloat(commands[payloadOffset]);
+                float sigmaY = Float.intBitsToFloat(commands[payloadOffset + 1]);
+                int tileMode = commands[payloadOffset + 2];
                 return Float.isFinite(sigmaX)
                         && Float.isFinite(sigmaY)
                         && sigmaX >= 0f
@@ -540,10 +546,15 @@ public class JBRSkiaService extends JBRSkia {
                         && tileMode >= 0
                         && tileMode <= 3;
             }
-            if (descriptorType == COMMAND_EFFECT_DESCRIPTOR_OFFSET_IMAGE_FILTER) {
-                if (payloadIntCount != 2) return false;
-                float dx = Float.intBitsToFloat(commands[record.argsStart() + 5]);
-                float dy = Float.intBitsToFloat(commands[record.argsStart() + 6]);
+            if (descriptorType == COMMAND_EFFECT_DESCRIPTOR_OFFSET_IMAGE_FILTER
+                    || descriptorType == COMMAND_EFFECT_DESCRIPTOR_OFFSET_IMAGE_FILTER_WITH_INPUT) {
+                int payloadOffset = record.argsStart() + 5;
+                if (descriptorType == COMMAND_EFFECT_DESCRIPTOR_OFFSET_IMAGE_FILTER_WITH_INPUT) {
+                    if (payloadIntCount != 4) return false;
+                    payloadOffset += 2;
+                } else if (payloadIntCount != 2) return false;
+                float dx = Float.intBitsToFloat(commands[payloadOffset]);
+                float dy = Float.intBitsToFloat(commands[payloadOffset + 1]);
                 return Float.isFinite(dx) && Float.isFinite(dy);
             }
             return false;
@@ -1411,36 +1422,62 @@ public class JBRSkiaService extends JBRSkia {
     private record ColorFilterCacheKey(long contextId, long filterId) {
     }
 
-    private record ColorFilterDescriptor(int type, int argb, int blendMode, int[] matrixBits) {
+    private record ColorFilterDescriptor(
+            int type,
+            int argb,
+            int blendMode,
+            int[] matrixBits,
+            ColorFilterDescriptor child
+    ) {
         static ColorFilterDescriptor tint(int argb, int blendMode) {
-            return new ColorFilterDescriptor(COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER, argb, blendMode, null);
+            return new ColorFilterDescriptor(COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER, argb, blendMode, null, null);
         }
 
         static ColorFilterDescriptor colorMatrix(int[] matrixBits) {
-            return new ColorFilterDescriptor(COMMAND_EFFECT_DESCRIPTOR_COLOR_MATRIX_FILTER, 0, 0, matrixBits.clone());
+            return new ColorFilterDescriptor(COMMAND_EFFECT_DESCRIPTOR_COLOR_MATRIX_FILTER, 0, 0, matrixBits.clone(), null);
         }
 
         static ColorFilterDescriptor lighting(int multiplyArgb, int addArgb) {
-            return new ColorFilterDescriptor(COMMAND_EFFECT_DESCRIPTOR_LIGHTING_FILTER, multiplyArgb, addArgb, null);
+            return new ColorFilterDescriptor(COMMAND_EFFECT_DESCRIPTOR_LIGHTING_FILTER, multiplyArgb, addArgb, null, null);
         }
 
-        static ColorFilterDescriptor blurImageFilter(int sigmaXBits, int sigmaYBits, int tileMode) {
+        static ColorFilterDescriptor blurImageFilter(
+                int type,
+                int sigmaXBits,
+                int sigmaYBits,
+                int tileMode,
+                ColorFilterDescriptor child
+        ) {
             return new ColorFilterDescriptor(
-                    COMMAND_EFFECT_DESCRIPTOR_BLUR_IMAGE_FILTER,
+                    type,
                     0,
                     0,
-                    new int[] { sigmaXBits, sigmaYBits, tileMode }
+                    new int[] { sigmaXBits, sigmaYBits, tileMode },
+                    child
             );
         }
 
-        static ColorFilterDescriptor offsetImageFilter(int dxBits, int dyBits) {
+        static ColorFilterDescriptor offsetImageFilter(
+                int type,
+                int dxBits,
+                int dyBits,
+                ColorFilterDescriptor child
+        ) {
             return new ColorFilterDescriptor(
-                    COMMAND_EFFECT_DESCRIPTOR_OFFSET_IMAGE_FILTER,
+                    type,
                     0,
                     0,
-                    new int[] { dxBits, dyBits }
+                    new int[] { dxBits, dyBits },
+                    child
             );
         }
+    }
+
+    private static boolean isImageFilterDescriptor(ColorFilterDescriptor descriptor) {
+        return descriptor.type() == COMMAND_EFFECT_DESCRIPTOR_BLUR_IMAGE_FILTER
+                || descriptor.type() == COMMAND_EFFECT_DESCRIPTOR_OFFSET_IMAGE_FILTER
+                || descriptor.type() == COMMAND_EFFECT_DESCRIPTOR_BLUR_IMAGE_FILTER_WITH_INPUT
+                || descriptor.type() == COMMAND_EFFECT_DESCRIPTOR_OFFSET_IMAGE_FILTER_WITH_INPUT;
     }
 
     private static int applyColorMatrix(int argb, int[] matrixBits) {
@@ -2775,8 +2812,7 @@ public class JBRSkiaService extends JBRSkia {
                         long handle = cacheKey(commands[offset++], commands[offset++]);
                         ColorFilterDescriptor descriptor = COLOR_FILTER_CACHE.get(new ColorFilterCacheKey(contextPtr, handle));
                         if (descriptor == null
-                                || (descriptor.type() != COMMAND_EFFECT_DESCRIPTOR_BLUR_IMAGE_FILTER
-                                        && descriptor.type() != COMMAND_EFFECT_DESCRIPTOR_OFFSET_IMAGE_FILTER)
+                                || !isImageFilterDescriptor(descriptor)
                                 || width < 0 || height < 0 || alpha1000 < 0 || alpha1000 > 1000) return false;
                         stack.addLast(current);
                         current = (Graphics2D) current.create();
@@ -3139,8 +3175,15 @@ public class JBRSkiaService extends JBRSkia {
                                     new ColorFilterCacheKey(contextPtr, handle),
                                     ColorFilterDescriptor.lighting(multiplyArgb, addArgb)
                             );
-                        } else if (descriptorType == COMMAND_EFFECT_DESCRIPTOR_BLUR_IMAGE_FILTER) {
-                            if (payloadIntCount != 3) return false;
+                        } else if (descriptorType == COMMAND_EFFECT_DESCRIPTOR_BLUR_IMAGE_FILTER
+                                || descriptorType == COMMAND_EFFECT_DESCRIPTOR_BLUR_IMAGE_FILTER_WITH_INPUT) {
+                            ColorFilterDescriptor child = null;
+                            if (descriptorType == COMMAND_EFFECT_DESCRIPTOR_BLUR_IMAGE_FILTER_WITH_INPUT) {
+                                if (payloadIntCount != 5) return false;
+                                long childHandle = cacheKey(commands[offset++], commands[offset++]);
+                                child = COLOR_FILTER_CACHE.get(new ColorFilterCacheKey(contextPtr, childHandle));
+                                if (child == null || !isImageFilterDescriptor(child)) return false;
+                            } else if (payloadIntCount != 3) return false;
                             int sigmaXBits = commands[offset++];
                             int sigmaYBits = commands[offset++];
                             int tileMode = commands[offset++];
@@ -3150,10 +3193,17 @@ public class JBRSkiaService extends JBRSkia {
                                     || sigmaX < 0f || sigmaY < 0f || tileMode < 0 || tileMode > 3) return false;
                             COLOR_FILTER_CACHE.put(
                                     new ColorFilterCacheKey(contextPtr, handle),
-                                    ColorFilterDescriptor.blurImageFilter(sigmaXBits, sigmaYBits, tileMode)
+                                    ColorFilterDescriptor.blurImageFilter(descriptorType, sigmaXBits, sigmaYBits, tileMode, child)
                             );
-                        } else if (descriptorType == COMMAND_EFFECT_DESCRIPTOR_OFFSET_IMAGE_FILTER) {
-                            if (payloadIntCount != 2) return false;
+                        } else if (descriptorType == COMMAND_EFFECT_DESCRIPTOR_OFFSET_IMAGE_FILTER
+                                || descriptorType == COMMAND_EFFECT_DESCRIPTOR_OFFSET_IMAGE_FILTER_WITH_INPUT) {
+                            ColorFilterDescriptor child = null;
+                            if (descriptorType == COMMAND_EFFECT_DESCRIPTOR_OFFSET_IMAGE_FILTER_WITH_INPUT) {
+                                if (payloadIntCount != 4) return false;
+                                long childHandle = cacheKey(commands[offset++], commands[offset++]);
+                                child = COLOR_FILTER_CACHE.get(new ColorFilterCacheKey(contextPtr, childHandle));
+                                if (child == null || !isImageFilterDescriptor(child)) return false;
+                            } else if (payloadIntCount != 2) return false;
                             int dxBits = commands[offset++];
                             int dyBits = commands[offset++];
                             float dx = Float.intBitsToFloat(dxBits);
@@ -3161,7 +3211,7 @@ public class JBRSkiaService extends JBRSkia {
                             if (!Float.isFinite(dx) || !Float.isFinite(dy)) return false;
                             COLOR_FILTER_CACHE.put(
                                     new ColorFilterCacheKey(contextPtr, handle),
-                                    ColorFilterDescriptor.offsetImageFilter(dxBits, dyBits)
+                                    ColorFilterDescriptor.offsetImageFilter(descriptorType, dxBits, dyBits, child)
                             );
                         } else {
                             return false;
