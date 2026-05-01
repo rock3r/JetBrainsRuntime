@@ -8497,3 +8497,26 @@ Verification:
 - Magic Jewel script syntax and report parser tests passed:
   - command: `bash -n scripts/jbr-skia-interop-report.sh scripts/test-jbr-skia-report-validation.sh && ./scripts/test-jbr-skia-report-validation.sh`
   - result: `JBR_SKIA_REPORT_VALIDATION_TESTS passed`
+
+## Checkpoint: Combined Descriptor Lifecycle Smoke
+
+Status: the core descriptor lifecycle rows pass together against the current local JBR/CMP/Skiko/Magic Jewel worktrees.
+
+Verification:
+
+- Republished the patched Skiko AWT artifact to the local `0.0.0-SNAPSHOT` coordinate:
+  - command: `./gradlew publishAwtPublicationToMavenLocal`
+- Combined Magic Jewel lifecycle suite passed:
+  - command: `CASES="commands-color-filter-handle commands-runtime-effect-pure-color commands-composite-shader commands-descriptor-eviction commands-resize-descriptor-redefine" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-074549/suite.tsv`
+  - rows:
+    - `commands-color-filter-handle`: passed, `fallback_new_count=0`, `unsupported=none`, `jbr_command_frames=165`
+    - `commands-runtime-effect-pure-color`: passed, `fallback_new_count=0`, `unsupported=none`, `jbr_command_frames=282`
+    - `commands-composite-shader`: passed, `fallback_new_count=0`, `unsupported=none`, `jbr_command_frames=377`
+    - `commands-descriptor-eviction`: passed, `fallback_new_count=0`, `unsupported=none`, `jbr_command_frames=26`
+    - `commands-resize-descriptor-redefine`: passed, `fallback_new_count=0`, `unsupported=none`, `jbr_command_frames=568`
+
+Known notes:
+
+- The eviction row is intentionally heavy; the low frame count is expected and should not be interpreted as a normal
+  rendering performance benchmark.
