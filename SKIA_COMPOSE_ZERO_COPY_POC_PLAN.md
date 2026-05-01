@@ -9039,3 +9039,22 @@ Next checkpoint:
 
 - Run a broader lifecycle/default-suite subset with the new context and cache-hit rows included, then decide whether the
   next functionality slice should target remaining graphics-layer effects or typed path/image-filter descriptor expansion.
+
+## Checkpoint: Descriptor Lifecycle Subset
+
+Status: the descriptor lifecycle probes pass together after adding cache-hit, invalid-use, resize-recovery, and
+forced-context-recovery gates.
+
+Verification:
+
+- Broader descriptor lifecycle command subset passed:
+  - command: `CASES="commands-runtime-effect-pure-color commands-color-filter-handle commands-color-matrix-filter commands-lighting-filter commands-invalid-descriptor-use-fallback commands-resize-descriptor-redefine commands-forced-context-descriptor-redefine" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-095930/suite.tsv`
+  - result: all seven rows passed; cache-hit rows reported zero fallback/picture replay, invalid-use reported one
+    structured `command-stream-invalid` fallback, and resize/forced-context rows reported zero fallback/picture replay.
+
+Next checkpoint:
+
+- Move back to functionality coverage. The next likely target is the remaining graphics-layer/render-effect gap: using
+  the existing image-filter descriptor machinery from ABI 82-84 in more layer/image-filter drawing surfaces, while keeping
+  raw Skiko `SkImageFilter*` pointers out of the ABI.
