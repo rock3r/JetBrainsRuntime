@@ -219,6 +219,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   - [x] Support a first rectangular graphics-layer shadow slice by replaying a JBR-owned blur image-filter descriptor and layer-local shadow fill before the layer content.
   - [x] Support rounded-outline graphics-layer shadows by clipping the offset shadow source path inside the JBR-owned blur image-filter layer.
   - [x] Support generic-path graphics-layer shadows by reusing the offset shadow source path replay inside the JBR-owned blur image-filter layer.
+  - [x] Improve graphics-layer shadow fidelity by replaying separate ambient and spot blur passes from Compose's ambient/spot shadow colors.
   - [x] Validate `CompositingStrategy.ModulateAlpha` graphics-layer replay stays on the command path.
   - [x] Support simple `CompositingStrategy.Offscreen` graphics-layer replay by clipping layer contents to bounds inside the command saveLayer.
   - [x] Support first 3D/camera graphics-layer replay by flattening Compose's layer transform into `COMMAND_CONCAT_MATRIX33`.
@@ -300,6 +301,9 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-143422/suite.tsv`.
 - [x] Rounded and generic-path graphics-layer shadow screenshot parity rows passed:
   `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-151108/suite.tsv`.
+- [x] Rectangular, rounded, and generic-path graphics-layer shadow screenshot parity rows passed with two-pass
+  ambient/spot shadow replay:
+  `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-172910/suite.tsv`.
 - [x] Simple Offscreen graphics-layer screenshot parity row passed:
   `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-160638/suite.tsv`.
 - [x] RotationX graphics-layer screenshot parity row passed:
@@ -328,6 +332,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Graphics-layer shadow/rounded-clip regression subset passed at `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-144925/suite.tsv`.
 - [x] Magic Jewel generic-path graphics-layer shadow probe is wired into the command-probe suite; focused row passed at `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-145744/suite.tsv`.
 - [x] Graphics-layer rectangular/rounded/path shadow regression subset passed at `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-145831/suite.tsv`.
+- [x] Graphics-layer rectangular/rounded/path shadow regression subset passed with two-pass ambient/spot replay at `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-172736/suite.tsv`.
 - [x] Magic Jewel graphics-layer rotationX and Offscreen fallback rows passed at `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-150748/suite.tsv`.
 - [x] Magic Jewel graphics-layer ModulateAlpha command row passed at `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-151636/suite.tsv`.
 - [x] Compact graphics-layer command/fallback matrix passed at `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-151820/suite.tsv`.

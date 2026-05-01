@@ -10140,3 +10140,46 @@ Next checkpoint:
 
 - Inspect CMP's current graphics-layer shadow command replay and either improve shadow fidelity or add a precise
   fallback/validation row for a shadow case that the current approximation should not claim yet.
+
+## Checkpoint: Two-Pass Graphics-Layer Shadow Replay
+
+Status: completed as a graphics-layer shadow fidelity improvement that stays within the existing command ABI.
+
+What changed:
+
+- CMP no longer collapses graphics-layer shadows to a single spot-colored blur pass.
+- `SkiaGraphicsLayer` now passes both Compose shadow colors into the JBR command recorder:
+  `ambientShadowColor` and `spotShadowColor`.
+- The recorder emits two shadow passes before layer content when `shadowElevation > 0f`:
+  an ambient centered blur pass, then a spot blur pass with the existing vertical offset.
+- Rectangular, rounded, and generic-path shadow replay continue to use existing JBR-owned image-filter descriptors and
+  saveLayer-image-filter commands, so this change does not require an ABI bump.
+- Magic Jewel's screenshot oracle now allows lower cyan content pixels for shadowed clipped layer rows while still
+  requiring a dedicated shadow-pixel signal.
+- `ROADMAP.md` records the two-pass shadow capability and the refreshed command/parity evidence.
+
+Verification:
+
+- CMP focused recorder tests passed:
+  - command: `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.nestedRecordingReplaysRectangularLayerShadow --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.nestedRecordingReplaysLayerShadowPathBeforeShadowFill`
+- Magic Jewel screenshot assertion syntax passed:
+  - command: `bash -n scripts/assert-jbr-skia-command-window-screenshot.sh`
+- Focused Magic Jewel shadow command subset passed:
+  - command: `CASES="commands-graphics-layer-shadow commands-graphics-layer-round-shadow commands-graphics-layer-path-shadow" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-172736/suite.tsv`
+  - result: all three rows passed with `fallbacks=0`, `unsupported=none`, and `jbr_picture_frames=0`.
+- Focused Magic Jewel shadow screenshot parity subset passed:
+  - command: `CASES="parity-graphics-layer-shadow parity-graphics-layer-round-shadow parity-graphics-layer-path-shadow" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-172910/suite.tsv`
+  - result:
+    - `parity-graphics-layer-shadow`: `avg_delta=2.331`, `bad_pixel_ratio=0.05189`,
+      `compose_bad_pixel_ratio=0.07589`
+    - `parity-graphics-layer-round-shadow`: `avg_delta=2.333`, `bad_pixel_ratio=0.05203`,
+      `compose_bad_pixel_ratio=0.07613`
+    - `parity-graphics-layer-path-shadow`: `avg_delta=2.313`, `bad_pixel_ratio=0.05214`,
+      `compose_bad_pixel_ratio=0.07631`
+
+Next checkpoint:
+
+- Run a compact graphics-layer matrix after the two-pass shadow change, then move to broader image-filter/effect surfaces
+  if the matrix stays green.
