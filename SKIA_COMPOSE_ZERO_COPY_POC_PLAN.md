@@ -10080,3 +10080,40 @@ Next checkpoint:
 
 - Move from transform-coverage rows to the next graphics-layer fidelity gap. The current priority order is:
   edge camera-distance coverage, higher-fidelity shadows, then broader image-filter/effect surfaces.
+
+## Checkpoint: Near-Camera Graphics-Layer 3D Probe
+
+Status: completed as a bounded camera-distance validation row for the 3D graphics-layer matrix path.
+
+What changed:
+
+- Magic Jewel now exposes `MAGIC_JEWEL_COMPOSE_GRAPHICS_LAYER_NEAR_CAMERA` /
+  `magic.jewel.compose.graphicsLayerNearCamera`.
+- The sample lowers `cameraDistance` to `180f` when the flag is enabled, and the new command/parity rows combine that
+  stronger perspective with rotationX + rotationY.
+- The command-probe suite now includes `commands-graphics-layer-near-camera`.
+- The screenshot parity suite now includes `parity-graphics-layer-near-camera` in the default row set.
+- Magic Jewel `README.md` and report-script help text document the near-camera probe.
+- `ROADMAP.md` records both command and old/new screenshot parity evidence.
+
+Verification:
+
+- Magic Jewel scripts passed syntax checks:
+  - command: `bash -n scripts/jbr-skia-command-probe-suite.sh scripts/jbr-skia-screenshot-parity-suite.sh scripts/jbr-skia-interop-report.sh`
+- Magic Jewel compiled:
+  - command: `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon compileKotlin`
+- Focused Magic Jewel near-camera command row passed:
+  - command: `CASES="commands-graphics-layer-near-camera" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-171044/suite.tsv`
+  - result: `status=passed`, `fallbacks=0`, `unsupported=none`, `jbr_picture_frames=0`,
+    `jbr_command_frames=141`
+- Focused Magic Jewel near-camera screenshot parity row passed:
+  - command: `CASES="parity-graphics-layer-near-camera" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-171119/suite.tsv`
+  - result: `status=passed`, `avg_delta=2.191`, `bad_pixel_ratio=0.05200`,
+    `compose_bad_pixel_ratio=0.07609`, `compose_bottom_swatches_bad_pixel_ratio=0.00000`
+
+Next checkpoint:
+
+- Run the compact graphics-layer matrix with the near-camera row included. If it stays green, move to the next
+  non-transform graphics-layer fidelity gap: higher-fidelity shadows or broader image-filter/effect surfaces.

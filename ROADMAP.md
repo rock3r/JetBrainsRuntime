@@ -308,6 +308,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-164917/suite.tsv`.
 - [x] Combined rotationX + rotationY graphics-layer screenshot parity row passed:
   `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-165948/suite.tsv`.
+- [x] Near-camera combined-rotation graphics-layer screenshot parity row passed:
+  `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-171119/suite.tsv`.
 - [x] Magic Jewel graphics-layer command probe runs without fallback markers and validates the replayed layer region in the screenshot assertion.
 - [x] Magic Jewel clipped graphics-layer command probe runs without fallback markers and validates clipped cyan/purple layer content.
 - [x] Magic Jewel rounded clipped graphics-layer command probe runs without fallback markers and validates clipped cyan/purple layer content.
@@ -338,6 +340,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Compact graphics-layer matrix with rotationX in the supported command set passed at `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-163854/suite.tsv`.
 - [x] Magic Jewel graphics-layer rotationY command row passed through matrix replay at `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-164836/suite.tsv`.
 - [x] Magic Jewel combined rotationX + rotationY graphics-layer command row passed through matrix replay at `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-165908/suite.tsv`.
+- [x] Magic Jewel near-camera combined-rotation graphics-layer command row passed through matrix replay at `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-171044/suite.tsv`.
 - [x] Compact graphics-layer matrix with rotationX and rotationY in the supported command set passed at `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-165236/suite.tsv`.
 - [x] Compact graphics-layer matrix with combined rotation in the supported command set passed at `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-170137/suite.tsv`.
 - [x] Persist old/new screenshots and pass/fail thresholds in the Magic Jewel report.
