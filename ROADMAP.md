@@ -204,7 +204,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] RuntimeEffect conformance gate: `CASES="commands-runtime-effect-pure-color commands-runtime-effect-uniform-only commands-runtime-effect-child-only commands-runtime-effect-shader commands-runtime-effect-build-fallback" DURATION_SECONDS=6 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh` passed for ABI 90 at `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-050347/suite.tsv`.
 - [x] Golden/diff screenshot harness for the full mixed Swing/Jewel/Compose Magic Jewel scene.
 - [x] Capture the app window only in old/new renderer modes, with deterministic sizing, theme, font inputs, animation phase, and seeded content.
-- [ ] Compare screenshot regions by ownership: tight tolerance for Compose/Jewel regions because CMP should match old Skia output, looser text-aware tolerance for Swing text after Java2D-to-Skia changes, and explicit occlusion/layer-boundary assertions for mixed content.
+- [x] Add configurable per-region screenshot parity gates for header controls, Compose canvas, Swing island, and right probe strip.
+- [ ] Tighten Compose/Jewel-owned region thresholds after splitting text/font raster drift from geometry/pixel ownership drift.
 - [x] Add screenshot parity jobs that run both old and new renderers for the same rich scene, emit old/new images, and fail on unexpected Compose/Jewel geometry/color drift. Expected Swing text rendering differences must be isolated to Swing-owned regions and documented in the report.
 - [x] Add a rich-content old/new parity suite with Jewel controls/text, Compose primitives/text/images/effects, Swing islands, popups/menus, and always-on animation sampled at deterministic phases.
 - [x] Persist diff images and per-region parity metrics in the Magic Jewel report and `summary.properties`.

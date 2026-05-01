@@ -8067,3 +8067,40 @@ Known notes:
   tighter region-specific thresholds for Compose/Jewel-owned regions from known Swing/text raster drift.
 - `parity-runtime-effect-shader` is wired but was not included in this smoke pass; the command-probe suite already covers
   the combined child+uniform descriptor and build-fallback row.
+
+## Checkpoint: Configurable Screenshot Region Gates
+
+Status: initial per-region screenshot parity gates are wired and passing on the rich baseline parity case.
+
+What changed:
+
+- `scripts/compare-jbr-skia-window-screenshots.sh` now enforces separate bad-pixel-ratio limits for coarse ownership
+  regions in addition to the full-window threshold.
+- Region thresholds are configurable with:
+  - `MAX_HEADER_CONTROLS_BAD_PIXEL_RATIO`
+  - `MAX_COMPOSE_CANVAS_BAD_PIXEL_RATIO`
+  - `MAX_SWING_ISLAND_BAD_PIXEL_RATIO`
+  - `MAX_RIGHT_PROBE_STRIP_BAD_PIXEL_RATIO`
+- Default thresholds are intentionally conservative for the current mixed scene:
+  - header controls: `0.04`
+  - Compose canvas: `0.08`
+  - Swing island: `0.03`
+  - right probe strip: `0.05`
+- The README documents these knobs so CI or local slices can tighten regions independently.
+
+Verification:
+
+- Script syntax passed:
+  - `bash -n scripts/compare-jbr-skia-window-screenshots.sh scripts/jbr-skia-screenshot-parity.sh scripts/jbr-skia-screenshot-parity-suite.sh`
+- Rich baseline parity-suite row passed with the new gates:
+  - command: `CASES=parity-rich DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-060146/suite.tsv`
+  - metrics: `avg_delta=1.646`, `bad_pixel_ratio=0.03910`, `compose_bad_pixel_ratio=0.06235`.
+
+Known notes:
+
+- This is the threshold plumbing, not the final threshold policy. The current Compose-canvas region still includes text,
+  Swing overlap, and broad animated content, so its default threshold remains looser than the desired final Compose/Jewel
+  geometry gate.
+- Next validation work should split smaller Compose-owned regions or mask text-heavy areas so the thresholds can become
+  meaningfully tight without hiding known raster/font differences.
