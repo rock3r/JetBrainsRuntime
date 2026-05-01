@@ -10293,3 +10293,46 @@ Next checkpoint:
 
 - Extend nested renderEffect replay to blend-mode and descriptor color-filter combinations, with focused command rows and
   screenshot parity rows for each supported combination.
+
+## Checkpoint: Graphics-Layer RenderEffect + Blend/Descriptor Replay
+
+Status: completed for the current blend-mode and descriptor color-filter combinations.
+
+What changed:
+
+- CMP recorder unit coverage now asserts nested replay order for graphics-layer imageFilter followed by:
+  - blend-mode saveLayer,
+  - descriptor color-filter saveLayer,
+  - blend-mode plus descriptor color-filter saveLayer.
+- Magic Jewel's command suite now has focused rows for:
+  - `commands-graphics-layer-render-effect-blend-mode`,
+  - `commands-graphics-layer-render-effect-color-matrix-filter`,
+  - `commands-graphics-layer-render-effect-blend-color-filter`,
+  - `commands-graphics-layer-render-effect-blend-color-matrix-filter`.
+- Magic Jewel's screenshot parity suite has matching rows for the same four combinations. Blend-heavy rows use a
+  per-case `rightProbeStrip` threshold of `0.16` because the broad right-side probe is expected to carry AA/color drift
+  from BlendMode.Plus under the blur renderEffect, while the command screenshot oracle and geometry/color swatches remain
+  strict.
+
+Verification:
+
+- CMP focused recorder tests passed:
+  - command: `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.nestedRecordingReplaysLayerImageFilterThenBlendMode --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.nestedRecordingReplaysLayerImageFilterThenColorMatrixFilter --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.nestedRecordingReplaysLayerImageFilterThenBlendModeAndColorMatrixFilter`
+- Magic Jewel command-suite syntax passed:
+  - command: `bash -n scripts/jbr-skia-command-probe-suite.sh`
+- Magic Jewel screenshot-suite syntax passed:
+  - command: `bash -n scripts/jbr-skia-screenshot-parity-suite.sh`
+- Focused Magic Jewel command rows passed:
+  - command: `CASES="commands-graphics-layer-render-effect-blend-mode commands-graphics-layer-render-effect-color-matrix-filter commands-graphics-layer-render-effect-blend-color-filter commands-graphics-layer-render-effect-blend-color-matrix-filter" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-180307/suite.tsv`
+  - result: all four rows passed with `fallbacks=0`, `unsupported=none`, and `jbr_picture_frames=0`.
+- Focused Magic Jewel screenshot parity rows passed:
+  - command: `CASES="parity-graphics-layer-render-effect-blend-mode parity-graphics-layer-render-effect-color-matrix-filter parity-graphics-layer-render-effect-blend-color-filter parity-graphics-layer-render-effect-blend-color-matrix-filter" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-180743/suite.tsv`
+  - result: all four rows passed; bottom swatches stayed exact (`compose_bottom_swatches_bad_pixel_ratio=0.00000`) for
+    every row.
+
+Next checkpoint:
+
+- Run an expanded compact graphics-layer matrix including all renderEffect/blend/filter combinations, then either fold
+  the rows into the broader command sweep or move to the next unsupported graphics-layer edge.
