@@ -10456,3 +10456,21 @@ Verification:
 Next checkpoint:
 
 - Run the default broad command sweep with the offset/chained renderEffect paint rows included.
+
+## Checkpoint: Broad Command Sweep With Offset/Chained RenderEffect Paint
+
+Status: completed with the updated command-probe default case list.
+
+Verification:
+
+- Broad Magic Jewel command-probe sweep passed:
+  - command: `DURATION_SECONDS=3 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-194132/suite.tsv`
+  - result: 63/63 rows passed. The offset/chained renderEffect + blend/color-matrix rows stayed on JBR command replay
+    with no fallback or picture replay. The only `jbr_picture_frames` in the suite were from the explicit
+    `commands-invalid-gradient-fallback` row with the expected `sweepGradientStops` unsupported marker.
+
+Next checkpoint:
+
+- Reassess remaining roadmap items now that broad command and visual suites are green with the expanded renderEffect
+  paint coverage.
