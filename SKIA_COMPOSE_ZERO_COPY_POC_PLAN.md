@@ -7620,3 +7620,40 @@ Verification:
 Next:
 
 - Add a shader descriptor-handle ABI for known shader families, then serialize composite shader trees by defining child shader descriptors before the parent blend descriptor.
+
+## Checkpoint: ABI 85 Shader Descriptor Handles
+
+Status: source implementation and focused JVM validation passed; live/native JBR validation still waits for the local Xcode license/build unblock.
+
+What changed:
+
+- JBR private API, public Runtime API, Skiko compatibility gates, and CMP command recorder now use command ABI 85.
+- The ABI adds a high-word shader-descriptor capability, `COMMAND_DEFINE_SHADER_DESCRIPTOR`, `COMMAND_EVICT_SHADER_HANDLE`, and `COMMAND_FILL_RECT_SHADER_REF`.
+- JBR can reconstruct linear, radial, sweep, cached-image, and composite shader descriptors inside JBR-owned Skia, with `SrcOver` composition for structured `CompositeShader` trees.
+- CMP serializes known shader metadata into scoped descriptor handles and emits shader-handle rectangle draws for structured composite shaders without passing raw Skiko `SkShader*` pointers.
+- Magic Jewel has a `MAGIC_JEWEL_COMPOSE_COMPOSITE_SHADER=true` probe and command-suite case so the shader-descriptor path is visible in the sample and report automation.
+
+Verification:
+
+- CMP focused shader-descriptor test passed:
+  - `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesCompositeShaderDescriptorRectInStrictMode`
+- CMP command-recorder class tests passed:
+  - `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest`
+- Skiko interop tests passed with `abi=85`:
+  - `./gradlew --no-daemon --no-configuration-cache :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`
+- Skiko was republished locally for Magic Jewel/CMP smoke use:
+  - `./gradlew --no-daemon --no-configuration-cache :skiko:publishToMavenLocal`
+- JBR public API compile smoke passed:
+  - `javac -d /tmp/jbr-skia-api-compile src/java.desktop/share/classes/com/jetbrains/desktop/JBRSkia.java`
+- Runtime API focused compile smoke passed:
+  - `javac -d /tmp/jbr-runtime-api-skia-compile src/com/jetbrains/Service.java src/com/jetbrains/Provided.java src/com/jetbrains/JBRSkia.java`
+
+Known notes:
+
+- This is still a known-shader-family descriptor ABI. RuntimeEffect/SKSL and truly arbitrary shader sources remain open and non-negotiable for the end state.
+- Full native JBR build/live validation is still blocked locally by the unaccepted Xcode license. The JBR service smoke compile also still depends on module-private JDK internals and is not a substitute for the real JBR build.
+
+Next:
+
+- Run Magic Jewel compile/script smoke for the new composite-shader probe, then collect live command-mode screenshots once a refreshed native JBR build is available.
+- Start the RuntimeEffect/SKSL descriptor design/implementation branch after the known-shader descriptor path is stable.

@@ -51,13 +51,13 @@ public class JBRSkiaApiTest {
     }
 
     public static void main(String[] args) throws Exception {
-        assertEquals(84, JBRSkia.ABI_ID, "ABI_ID");
+        assertEquals(85, JBRSkia.ABI_ID, "ABI_ID");
         assertEquals(3, JBRSkia.NATIVE_ABI_VERSION, "NATIVE_ABI_VERSION");
-        assertEquals("skia=m147-64a2414108;flags=macos-release-metal-poc:1;abi=84;native=3", JBRSkia.BUILD_ID, "BUILD_ID");
+        assertEquals("skia=m147-64a2414108;flags=macos-release-metal-poc:1;abi=85;native=3", JBRSkia.BUILD_ID, "BUILD_ID");
 
-        assertReflectiveStaticEquals(84, JBRSkia.class.getDeclaredField("ABI_ID"));
+        assertReflectiveStaticEquals(85, JBRSkia.class.getDeclaredField("ABI_ID"));
         assertReflectiveStaticEquals(3, JBRSkia.class.getDeclaredField("NATIVE_ABI_VERSION"));
-        assertReflectiveStaticEquals("skia=m147-64a2414108;flags=macos-release-metal-poc:1;abi=84;native=3", JBRSkia.class.getDeclaredField("BUILD_ID"));
+        assertReflectiveStaticEquals("skia=m147-64a2414108;flags=macos-release-metal-poc:1;abi=85;native=3", JBRSkia.class.getDeclaredField("BUILD_ID"));
 
         if (TestJBRSkia.INSTANCE != null) {
             throw new AssertionError("JBRSkia service must be unavailable before native runtime is wired");
@@ -185,7 +185,8 @@ public class JBRSkiaApiTest {
     private static long expectedCommandCapabilities64High() {
         return JBRSkia.COMMAND_CAP64_HIGH_SAVE_LAYER_IMAGE_FILTER_REF
                 | JBRSkia.COMMAND_CAP64_HIGH_EFFECT_DESCRIPTOR_OFFSET_IMAGE_FILTER
-                | JBRSkia.COMMAND_CAP64_HIGH_EFFECT_DESCRIPTOR_CHAIN_IMAGE_FILTER;
+                | JBRSkia.COMMAND_CAP64_HIGH_EFFECT_DESCRIPTOR_CHAIN_IMAGE_FILTER
+                | JBRSkia.COMMAND_CAP64_HIGH_SHADER_DESCRIPTOR_REF;
     }
 
     private static void assertCommandStreamValidation() {
@@ -238,6 +239,7 @@ public class JBRSkiaApiTest {
         assertValidCommandStream(validSaveLayerTintColorFilterStream(), "valid saveLayer tint color-filter stream");
         assertValidCommandStream(validImageRefTintColorFilterStream(), "valid image-ref tint color-filter stream");
         assertValidCommandStream(validImageRefColorMatrixFilterHandleStream(), "valid image-ref color-matrix filter handle stream");
+        assertValidCommandStream(validCompositeShaderDescriptorStream(), "valid composite shader descriptor stream");
         assertValidCommandStream(new int[] {
                 JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 3,
                 JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
@@ -806,6 +808,40 @@ public class JBRSkiaApiTest {
                 f(0f), f(1f), f(0f), f(0f), f(0f),
                 f(0f), f(0f), f(1f), f(0f), f(0f),
                 f(0f), f(0f), f(0f), f(1f), f(0f)
+        };
+    }
+
+    private static int[] validCompositeShaderDescriptorStream() {
+        return new int[] {
+                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 58,
+                JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
+                JBRSkia.COMMAND_DEFINE_SHADER_DESCRIPTOR, 72, JBRSkia.COMMAND_RECORD_FLAGS_NONE,
+                0x00000001, 0x00000002,
+                JBRSkia.COMMAND_SHADER_DESCRIPTOR_LINEAR_GRADIENT,
+                JBRSkia.COMMAND_SHADER_DESCRIPTOR_VERSION_1,
+                10,
+                1000, 2000, 11000, 12000, 0, 2,
+                0xffff0000, 250,
+                0xff0000ff, 750,
+                JBRSkia.COMMAND_DEFINE_SHADER_DESCRIPTOR, 68, JBRSkia.COMMAND_RECORD_FLAGS_NONE,
+                0x00000003, 0x00000004,
+                JBRSkia.COMMAND_SHADER_DESCRIPTOR_RADIAL_GRADIENT,
+                JBRSkia.COMMAND_SHADER_DESCRIPTOR_VERSION_1,
+                9,
+                6000, 7000, 8000, 0, 2,
+                0xff00ff00, 200,
+                0xffffffff, 800,
+                JBRSkia.COMMAND_DEFINE_SHADER_DESCRIPTOR, 52, JBRSkia.COMMAND_RECORD_FLAGS_NONE,
+                0x00000005, 0x00000006,
+                JBRSkia.COMMAND_SHADER_DESCRIPTOR_COMPOSITE,
+                JBRSkia.COMMAND_SHADER_DESCRIPTOR_VERSION_1,
+                5,
+                0x00000001, 0x00000002,
+                0x00000003, 0x00000004,
+                JBRSkia.COMMAND_BLEND_MODE_SRC_OVER,
+                JBRSkia.COMMAND_FILL_RECT_SHADER_REF, 40, JBRSkia.COMMAND_RECORD_FLAG_ANTIALIAS,
+                0x00000005, 0x00000006,
+                1000, 2000, 11000, 12000, 1000
         };
     }
 

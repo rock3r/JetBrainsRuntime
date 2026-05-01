@@ -141,11 +141,13 @@ public class JBRSkiaService extends JBRSkia {
     private static final long COMMAND_CAPABILITIES_HIGH =
             COMMAND_CAP64_HIGH_SAVE_LAYER_IMAGE_FILTER_REF
                     | COMMAND_CAP64_HIGH_EFFECT_DESCRIPTOR_OFFSET_IMAGE_FILTER
-                    | COMMAND_CAP64_HIGH_EFFECT_DESCRIPTOR_CHAIN_IMAGE_FILTER;
+                    | COMMAND_CAP64_HIGH_EFFECT_DESCRIPTOR_CHAIN_IMAGE_FILTER
+                    | COMMAND_CAP64_HIGH_SHADER_DESCRIPTOR_REF;
     private static final boolean NATIVE_BRIDGE_AVAILABLE = loadNativeBridge();
     private static final AtomicLong NEXT_SCOPE_ID = new AtomicLong(1);
     private static final int MAX_CACHED_IMAGES = 256;
     private static final int MAX_CACHED_COLOR_FILTERS = 1024;
+    private static final int MAX_CACHED_SHADERS = 1024;
     private static final Map<ImageCacheKey, BufferedImage> IMAGE_CACHE = Collections.synchronizedMap(
             new LinkedHashMap<ImageCacheKey, BufferedImage>(MAX_CACHED_IMAGES, 0.75f, true) {
                 @Override
@@ -158,6 +160,13 @@ public class JBRSkiaService extends JBRSkia {
                 @Override
                 protected boolean removeEldestEntry(Map.Entry<ColorFilterCacheKey, ColorFilterDescriptor> eldest) {
                     return size() > MAX_CACHED_COLOR_FILTERS;
+                }
+            });
+    private static final Map<ColorFilterCacheKey, ShaderDescriptor> SHADER_CACHE = Collections.synchronizedMap(
+            new LinkedHashMap<ColorFilterCacheKey, ShaderDescriptor>(MAX_CACHED_SHADERS, 0.75f, true) {
+                @Override
+                protected boolean removeEldestEntry(Map.Entry<ColorFilterCacheKey, ShaderDescriptor> eldest) {
+                    return size() > MAX_CACHED_SHADERS;
                 }
             });
 
@@ -215,6 +224,7 @@ public class JBRSkiaService extends JBRSkia {
         }
         int offset = COMMAND_STREAM_HEADER_SIZE;
         Set<Long> colorFilterHandles = new HashSet<>();
+        Set<Long> shaderHandles = new HashSet<>();
         while (offset < commandEnd) {
             CommandRecord record = readCommandRecord(commands, offset, commandEnd);
             if (record == null
@@ -226,6 +236,13 @@ public class JBRSkiaService extends JBRSkia {
                 colorFilterHandles.add(commandHandle(commands[record.argsStart()], commands[record.argsStart() + 1]));
             } else if (record.op() == COMMAND_EVICT_COLOR_FILTER_HANDLE) {
                 colorFilterHandles.remove(commandHandle(commands[record.argsStart()], commands[record.argsStart() + 1]));
+            } else if (record.op() == COMMAND_DEFINE_SHADER_DESCRIPTOR) {
+                if (!validateShaderDescriptorReferences(commands, record, shaderHandles)) {
+                    return false;
+                }
+                shaderHandles.add(commandHandle(commands[record.argsStart()], commands[record.argsStart() + 1]));
+            } else if (record.op() == COMMAND_EVICT_SHADER_HANDLE) {
+                shaderHandles.remove(commandHandle(commands[record.argsStart()], commands[record.argsStart() + 1]));
             } else if (record.op() == COMMAND_FILL_RECT_COLOR_FILTER_REF
                     && !colorFilterHandles.contains(commandHandle(commands[record.argsStart() + 1], commands[record.argsStart() + 2]))) {
                 return false;
@@ -240,6 +257,9 @@ public class JBRSkiaService extends JBRSkia {
                 return false;
             } else if (record.op() == COMMAND_DRAW_IMAGE_REF_COLOR_FILTER_REF
                     && !colorFilterHandles.contains(commandHandle(commands[record.argsStart() + 14], commands[record.argsStart() + 15]))) {
+                return false;
+            } else if (record.op() == COMMAND_FILL_RECT_SHADER_REF
+                    && !shaderHandles.contains(commandHandle(commands[record.argsStart()], commands[record.argsStart() + 1]))) {
                 return false;
             }
             offset = record.recordEnd();
@@ -316,6 +336,9 @@ public class JBRSkiaService extends JBRSkia {
         if (op == COMMAND_FILL_RECT_COLOR_FILTER_REF) return 10;
         if (op == COMMAND_EVICT_COLOR_FILTER_HANDLE) return 5;
         if (op == COMMAND_DEFINE_EFFECT_DESCRIPTOR) return -24;
+        if (op == COMMAND_DEFINE_SHADER_DESCRIPTOR) return -25;
+        if (op == COMMAND_EVICT_SHADER_HANDLE) return 5;
+        if (op == COMMAND_FILL_RECT_SHADER_REF) return 10;
         if (op == COMMAND_STROKE_LINE_DASH_PATH_EFFECT) return -23;
         if (op == COMMAND_FILL_RECT_IMAGE_SHADER) return 14;
         if (op == COMMAND_CLEAR) return 4;
@@ -398,6 +421,9 @@ public class JBRSkiaService extends JBRSkia {
         if (expectedLength == -24 && record.op() == COMMAND_DEFINE_EFFECT_DESCRIPTOR) {
             return record.recordLength() >= 8;
         }
+        if (expectedLength == -25 && record.op() == COMMAND_DEFINE_SHADER_DESCRIPTOR) {
+            return record.recordLength() >= 8;
+        }
         return expectedLength == record.recordLength();
     }
 
@@ -408,7 +434,8 @@ public class JBRSkiaService extends JBRSkia {
         }
         if (record.op() == COMMAND_CLEAR_IMAGE_CACHE
                 || record.op() == COMMAND_EVICT_IMAGE_CACHE_KEY
-                || record.op() == COMMAND_EVICT_COLOR_FILTER_HANDLE) {
+                || record.op() == COMMAND_EVICT_COLOR_FILTER_HANDLE
+                || record.op() == COMMAND_EVICT_SHADER_HANDLE) {
             return record.recordFlags() == COMMAND_RECORD_FLAGS_NONE;
         }
         if (record.op() == COMMAND_SAVE_LAYER) {
@@ -558,6 +585,30 @@ public class JBRSkiaService extends JBRSkia {
                 return Float.isFinite(dx) && Float.isFinite(dy);
             }
             return false;
+        }
+        if (record.op() == COMMAND_DEFINE_SHADER_DESCRIPTOR) {
+            int descriptorType = commands[record.argsStart() + 2];
+            int descriptorVersion = commands[record.argsStart() + 3];
+            int payloadIntCount = commands[record.argsStart() + 4];
+            if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE
+                    || descriptorVersion != COMMAND_SHADER_DESCRIPTOR_VERSION_1
+                    || record.recordLength() != 8 + payloadIntCount) {
+                return false;
+            }
+            return validateShaderDescriptorPayload(commands, record, descriptorType, payloadIntCount);
+        }
+        if (record.op() == COMMAND_FILL_RECT_SHADER_REF) {
+            int left1000 = commands[record.argsStart() + 2];
+            int top1000 = commands[record.argsStart() + 3];
+            int right1000 = commands[record.argsStart() + 4];
+            int bottom1000 = commands[record.argsStart() + 5];
+            int alpha1000 = commands[record.argsStart() + 6];
+            return (record.recordFlags() == COMMAND_RECORD_FLAGS_NONE
+                    || record.recordFlags() == COMMAND_RECORD_FLAG_ANTIALIAS)
+                    && right1000 >= left1000
+                    && bottom1000 >= top1000
+                    && alpha1000 >= 0
+                    && alpha1000 <= 1000;
         }
         if (record.op() == COMMAND_FILL_RECT_COLOR_FILTER_REF) {
             int width = commands[record.argsStart() + 5];
@@ -1386,6 +1437,10 @@ public class JBRSkiaService extends JBRSkia {
                 || blendMode == COMMAND_BLEND_MODE_LUMINOSITY;
     }
 
+    private static boolean isSupportedBlendMode(int blendMode) {
+        return blendMode == COMMAND_BLEND_MODE_SRC_OVER || isSupportedFillBlendMode(blendMode);
+    }
+
     private static CommandRecord readCommandRecord(int[] commands, int offset, int commandEnd) {
         int recordStart = offset;
         int op = commands[offset++];
@@ -1412,6 +1467,87 @@ public class JBRSkiaService extends JBRSkia {
         return ((long) high << 32) ^ (low & 0xffffffffL);
     }
 
+    private static boolean validateShaderDescriptorReferences(
+            int[] commands,
+            CommandRecord record,
+            Set<Long> shaderHandles
+    ) {
+        int descriptorType = commands[record.argsStart() + 2];
+        int payloadIntCount = commands[record.argsStart() + 4];
+        if (descriptorType != COMMAND_SHADER_DESCRIPTOR_COMPOSITE || payloadIntCount != 5) {
+            return true;
+        }
+        long dstHandle = commandHandle(commands[record.argsStart() + 5], commands[record.argsStart() + 6]);
+        long srcHandle = commandHandle(commands[record.argsStart() + 7], commands[record.argsStart() + 8]);
+        return shaderHandles.contains(dstHandle) && shaderHandles.contains(srcHandle);
+    }
+
+    private static boolean validateShaderDescriptorPayload(
+            int[] commands,
+            CommandRecord record,
+            int descriptorType,
+            int payloadIntCount
+    ) {
+        int payloadStart = record.argsStart() + 5;
+        if (descriptorType == COMMAND_SHADER_DESCRIPTOR_LINEAR_GRADIENT) {
+            if (payloadIntCount < 6) return false;
+            int tileMode = commands[payloadStart + 4];
+            int colorCount = commands[payloadStart + 5];
+            return tileMode >= 0 && tileMode <= 3
+                    && validateGradientStops(commands, payloadStart + 6, record.recordEnd(), colorCount);
+        }
+        if (descriptorType == COMMAND_SHADER_DESCRIPTOR_RADIAL_GRADIENT) {
+            if (payloadIntCount < 5) return false;
+            int radius1000 = commands[payloadStart + 2];
+            int tileMode = commands[payloadStart + 3];
+            int colorCount = commands[payloadStart + 4];
+            return radius1000 > 0
+                    && tileMode >= 0
+                    && tileMode <= 3
+                    && validateGradientStops(commands, payloadStart + 5, record.recordEnd(), colorCount);
+        }
+        if (descriptorType == COMMAND_SHADER_DESCRIPTOR_SWEEP_GRADIENT) {
+            if (payloadIntCount < 3) return false;
+            int colorCount = commands[payloadStart + 2];
+            return validateGradientStops(commands, payloadStart + 3, record.recordEnd(), colorCount);
+        }
+        if (descriptorType == COMMAND_SHADER_DESCRIPTOR_IMAGE) {
+            if (payloadIntCount != 6) return false;
+            int imageWidth = commands[payloadStart + 2];
+            int imageHeight = commands[payloadStart + 3];
+            int tileModeX = commands[payloadStart + 4];
+            int tileModeY = commands[payloadStart + 5];
+            return imageWidth > 0
+                    && imageHeight > 0
+                    && imageWidth <= 4096
+                    && imageHeight <= 4096
+                    && tileModeX >= 0
+                    && tileModeX <= 3
+                    && tileModeY >= 0
+                    && tileModeY <= 3;
+        }
+        if (descriptorType == COMMAND_SHADER_DESCRIPTOR_COMPOSITE) {
+            int blendMode = commands[payloadStart + 4];
+            return payloadIntCount == 5 && isSupportedBlendMode(blendMode);
+        }
+        return false;
+    }
+
+    private static boolean validateGradientStops(int[] commands, int payloadOffset, int recordEnd, int colorCount) {
+        if (colorCount < 2 || colorCount > 16 || payloadOffset + colorCount * 2 != recordEnd) {
+            return false;
+        }
+        int previousStop = -1;
+        for (int index = 0; index < colorCount; index++) {
+            int stop1000 = commands[payloadOffset + 1 + index * 2];
+            if (stop1000 < 0 || stop1000 > 1000 || stop1000 <= previousStop) {
+                return false;
+            }
+            previousStop = stop1000;
+        }
+        return true;
+    }
+
     private record MetalSurfaceMetadata(long nativeOpsPtr, long contextPtr, long texturePtr) {
         private static final MetalSurfaceMetadata EMPTY = new MetalSurfaceMetadata(0, 0, 0);
     }
@@ -1420,6 +1556,14 @@ public class JBRSkiaService extends JBRSkia {
     }
 
     private record ColorFilterCacheKey(long contextId, long filterId) {
+    }
+
+    private record ShaderDescriptor(
+            int type,
+            int[] payload,
+            ShaderDescriptor dst,
+            ShaderDescriptor src
+    ) {
     }
 
     private record ColorFilterDescriptor(
@@ -3216,6 +3360,53 @@ public class JBRSkiaService extends JBRSkia {
                         } else {
                             return false;
                         }
+                    } else if (op == COMMAND_DEFINE_SHADER_DESCRIPTOR) {
+                        if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE || offset + 5 > recordEnd) return false;
+                        long handle = cacheKey(commands[offset++], commands[offset++]);
+                        int descriptorType = commands[offset++];
+                        int descriptorVersion = commands[offset++];
+                        int payloadIntCount = commands[offset++];
+                        if (descriptorVersion != COMMAND_SHADER_DESCRIPTOR_VERSION_1
+                                || offset + payloadIntCount != recordEnd) return false;
+                        int payloadStart = offset;
+                        if (!validateShaderDescriptorPayload(commands, record, descriptorType, payloadIntCount)) return false;
+                        ShaderDescriptor dst = null;
+                        ShaderDescriptor src = null;
+                        if (descriptorType == COMMAND_SHADER_DESCRIPTOR_COMPOSITE) {
+                            long dstHandle = cacheKey(commands[offset++], commands[offset++]);
+                            long srcHandle = cacheKey(commands[offset++], commands[offset++]);
+                            dst = SHADER_CACHE.get(new ColorFilterCacheKey(contextPtr, dstHandle));
+                            src = SHADER_CACHE.get(new ColorFilterCacheKey(contextPtr, srcHandle));
+                            if (dst == null || src == null || !isSupportedBlendMode(commands[offset++])) return false;
+                        } else {
+                            offset = recordEnd;
+                        }
+                        int[] payload = new int[payloadIntCount];
+                        System.arraycopy(commands, payloadStart, payload, 0, payloadIntCount);
+                        SHADER_CACHE.put(new ColorFilterCacheKey(contextPtr, handle), new ShaderDescriptor(descriptorType, payload, dst, src));
+                    } else if (op == COMMAND_EVICT_SHADER_HANDLE) {
+                        if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE || offset + 2 != recordEnd) return false;
+                        long handle = cacheKey(commands[offset++], commands[offset++]);
+                        SHADER_CACHE.remove(new ColorFilterCacheKey(contextPtr, handle));
+                    } else if (op == COMMAND_FILL_RECT_SHADER_REF) {
+                        if (offset + 7 != recordEnd) return false;
+                        applyAntialiasing(current, antiAlias);
+                        long handle = cacheKey(commands[offset++], commands[offset++]);
+                        int left1000 = commands[offset++];
+                        int top1000 = commands[offset++];
+                        int right1000 = commands[offset++];
+                        int bottom1000 = commands[offset++];
+                        int alpha1000 = commands[offset++];
+                        ShaderDescriptor descriptor = SHADER_CACHE.get(new ColorFilterCacheKey(contextPtr, handle));
+                        if (descriptor == null || right1000 < left1000 || bottom1000 < top1000
+                                || alpha1000 < 0 || alpha1000 > 1000) return false;
+                        current.setColor(new Color((alpha1000 * 255 / 1000) << 24 | 0x3388ff, true));
+                        current.fillRect(
+                                left1000 / 1000,
+                                top1000 / 1000,
+                                (right1000 - left1000) / 1000,
+                                (bottom1000 - top1000) / 1000
+                        );
                     } else if (op == COMMAND_FILL_RECT_COLOR_FILTER_REF) {
                         if (offset + 7 != recordEnd) return false;
                         applyAntialiasing(current, antiAlias);

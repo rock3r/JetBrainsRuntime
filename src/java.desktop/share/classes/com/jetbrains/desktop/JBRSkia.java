@@ -36,7 +36,7 @@ import java.nio.ByteBuffer;
  * so downstream compile-only clients cannot accidentally inline stale values.
  */
 public abstract class JBRSkia {
-    public static final int ABI_ID = Integer.parseInt("84");
+    public static final int ABI_ID = Integer.parseInt("85");
     public static final int NATIVE_ABI_VERSION = Integer.parseInt("3");
     public static final String SKIA_REVISION = "m147-" + "64a2414108";
     public static final String SKIA_FLAGS_HASH = "macos-release-metal-poc:" + Integer.parseInt("1");
@@ -117,6 +117,7 @@ public abstract class JBRSkia {
     public static final long COMMAND_CAP64_HIGH_SAVE_LAYER_IMAGE_FILTER_REF = Long.parseLong("1");
     public static final long COMMAND_CAP64_HIGH_EFFECT_DESCRIPTOR_OFFSET_IMAGE_FILTER = Long.parseLong("2");
     public static final long COMMAND_CAP64_HIGH_EFFECT_DESCRIPTOR_CHAIN_IMAGE_FILTER = Long.parseLong("4");
+    public static final long COMMAND_CAP64_HIGH_SHADER_DESCRIPTOR_REF = Long.parseLong("8");
     public static final int COMMAND_CLEAR = Integer.parseInt("1");
     public static final int COMMAND_FILL_RECT = Integer.parseInt("2");
     public static final int COMMAND_STROKE_LINE = Integer.parseInt("3");
@@ -174,6 +175,9 @@ public abstract class JBRSkia {
     public static final int COMMAND_DRAW_IMAGE_REF_COLOR_FILTER_REF = Integer.parseInt("53");
     public static final int COMMAND_SAVE_LAYER_BLEND_COLOR_FILTER_REF = Integer.parseInt("54");
     public static final int COMMAND_SAVE_LAYER_IMAGE_FILTER_REF = Integer.parseInt("55");
+    public static final int COMMAND_DEFINE_SHADER_DESCRIPTOR = Integer.parseInt("56");
+    public static final int COMMAND_EVICT_SHADER_HANDLE = Integer.parseInt("57");
+    public static final int COMMAND_FILL_RECT_SHADER_REF = Integer.parseInt("58");
     public static final int COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER = Integer.parseInt("1");
     public static final int COMMAND_EFFECT_DESCRIPTOR_COLOR_MATRIX_FILTER = Integer.parseInt("2");
     public static final int COMMAND_EFFECT_DESCRIPTOR_LIGHTING_FILTER = Integer.parseInt("3");
@@ -182,6 +186,12 @@ public abstract class JBRSkia {
     public static final int COMMAND_EFFECT_DESCRIPTOR_BLUR_IMAGE_FILTER_WITH_INPUT = Integer.parseInt("6");
     public static final int COMMAND_EFFECT_DESCRIPTOR_OFFSET_IMAGE_FILTER_WITH_INPUT = Integer.parseInt("7");
     public static final int COMMAND_EFFECT_DESCRIPTOR_VERSION_1 = Integer.parseInt("1");
+    public static final int COMMAND_SHADER_DESCRIPTOR_LINEAR_GRADIENT = Integer.parseInt("1");
+    public static final int COMMAND_SHADER_DESCRIPTOR_RADIAL_GRADIENT = Integer.parseInt("2");
+    public static final int COMMAND_SHADER_DESCRIPTOR_SWEEP_GRADIENT = Integer.parseInt("3");
+    public static final int COMMAND_SHADER_DESCRIPTOR_IMAGE = Integer.parseInt("4");
+    public static final int COMMAND_SHADER_DESCRIPTOR_COMPOSITE = Integer.parseInt("5");
+    public static final int COMMAND_SHADER_DESCRIPTOR_VERSION_1 = Integer.parseInt("1");
     public static final int COMMAND_BLEND_MODE_PLUS = Integer.parseInt("1");
     public static final int COMMAND_BLEND_MODE_SRC_IN = Integer.parseInt("2");
     public static final int COMMAND_BLEND_MODE_MULTIPLY = Integer.parseInt("3");
@@ -199,6 +209,7 @@ public abstract class JBRSkia {
     public static final int COMMAND_BLEND_MODE_SATURATION = Integer.parseInt("15");
     public static final int COMMAND_BLEND_MODE_COLOR = Integer.parseInt("16");
     public static final int COMMAND_BLEND_MODE_LUMINOSITY = Integer.parseInt("17");
+    public static final int COMMAND_BLEND_MODE_SRC_OVER = Integer.parseInt("18");
     public static final int COMMAND_PAINT_STYLE_FILL = Integer.parseInt("0");
     public static final int COMMAND_PAINT_STYLE_STROKE = Integer.parseInt("1");
     public static final int COMMAND_PATH_FILL_NON_ZERO = Integer.parseInt("0");

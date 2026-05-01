@@ -77,7 +77,7 @@
 
 #include "MTLSurfaceDataBase.h"
 
-static constexpr jint ABI_ID = 84;
+static constexpr jint ABI_ID = 85;
 static constexpr jint COMMAND_STREAM_MAGIC = 1246972723;
 static constexpr jint COMMAND_STREAM_HEADER_SIZE = 6;
 static constexpr jint COMMAND_STREAM_FLAGS_NONE = 0;
@@ -143,6 +143,9 @@ static constexpr jint COMMAND_SAVE_LAYER_COLOR_FILTER_REF = 52;
 static constexpr jint COMMAND_DRAW_IMAGE_REF_COLOR_FILTER_REF = 53;
 static constexpr jint COMMAND_SAVE_LAYER_BLEND_COLOR_FILTER_REF = 54;
 static constexpr jint COMMAND_SAVE_LAYER_IMAGE_FILTER_REF = 55;
+static constexpr jint COMMAND_DEFINE_SHADER_DESCRIPTOR = 56;
+static constexpr jint COMMAND_EVICT_SHADER_HANDLE = 57;
+static constexpr jint COMMAND_FILL_RECT_SHADER_REF = 58;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER = 1;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_COLOR_MATRIX_FILTER = 2;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_LIGHTING_FILTER = 3;
@@ -151,6 +154,12 @@ static constexpr jint COMMAND_EFFECT_DESCRIPTOR_OFFSET_IMAGE_FILTER = 5;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_BLUR_IMAGE_FILTER_WITH_INPUT = 6;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_OFFSET_IMAGE_FILTER_WITH_INPUT = 7;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_VERSION_1 = 1;
+static constexpr jint COMMAND_SHADER_DESCRIPTOR_LINEAR_GRADIENT = 1;
+static constexpr jint COMMAND_SHADER_DESCRIPTOR_RADIAL_GRADIENT = 2;
+static constexpr jint COMMAND_SHADER_DESCRIPTOR_SWEEP_GRADIENT = 3;
+static constexpr jint COMMAND_SHADER_DESCRIPTOR_IMAGE = 4;
+static constexpr jint COMMAND_SHADER_DESCRIPTOR_COMPOSITE = 5;
+static constexpr jint COMMAND_SHADER_DESCRIPTOR_VERSION_1 = 1;
 static constexpr jint COMMAND_BLEND_MODE_PLUS = 1;
 static constexpr jint COMMAND_BLEND_MODE_SRC_IN = 2;
 static constexpr jint COMMAND_BLEND_MODE_MULTIPLY = 3;
@@ -168,6 +177,7 @@ static constexpr jint COMMAND_BLEND_MODE_HUE = 14;
 static constexpr jint COMMAND_BLEND_MODE_SATURATION = 15;
 static constexpr jint COMMAND_BLEND_MODE_COLOR = 16;
 static constexpr jint COMMAND_BLEND_MODE_LUMINOSITY = 17;
+static constexpr jint COMMAND_BLEND_MODE_SRC_OVER = 18;
 static constexpr jint COMMAND_PAINT_STYLE_FILL = 0;
 static constexpr jint COMMAND_PAINT_STYLE_STROKE = 1;
 static constexpr jint COMMAND_PATH_FILL_NON_ZERO = 0;
@@ -211,6 +221,13 @@ struct ColorFilterDescriptor {
     std::shared_ptr<ColorFilterDescriptor> child;
 };
 
+struct ShaderDescriptor {
+    jint type = 0;
+    std::vector<jint> payload;
+    std::shared_ptr<ShaderDescriptor> dst;
+    std::shared_ptr<ShaderDescriptor> src;
+};
+
 struct ColorFilterScopedKey {
     void* context;
     uint64_t filter;
@@ -232,6 +249,8 @@ static std::mutex gImageCacheMutex;
 static std::unordered_map<ImageCacheScopedKey, sk_sp<SkImage>, ImageCacheScopedKeyHash> gImagesByKey;
 static std::mutex gColorFilterCacheMutex;
 static std::unordered_map<ColorFilterScopedKey, ColorFilterDescriptor, ColorFilterScopedKeyHash> gColorFiltersByKey;
+static std::mutex gShaderCacheMutex;
+static std::unordered_map<ColorFilterScopedKey, ShaderDescriptor, ColorFilterScopedKeyHash> gShadersByKey;
 static std::mutex gParagraphDependenciesMutex;
 static sk_sp<skia::textlayout::FontCollection> gParagraphFontCollection;
 static sk_sp<SkUnicode> gParagraphUnicode;
@@ -433,6 +452,131 @@ static bool setDescriptorImageFilter(SkPaint* paint, const ColorFilterDescriptor
         return true;
     }
     return false;
+}
+
+static bool skBlendMode(jint commandBlendMode, SkBlendMode* blendMode);
+
+static bool readGradientStops(const std::vector<jint>& payload,
+                              size_t offset,
+                              jint colorCount,
+                              SkColor4f* colors,
+                              float* positions) {
+    if (colorCount < 2 || colorCount > 16 || offset + static_cast<size_t>(colorCount) * 2 != payload.size()) {
+        return false;
+    }
+    jint previousStop = -1;
+    for (jint i = 0; i < colorCount; i++) {
+        colors[i] = SkColor4f::FromColor(skColorFromArgb(payload[offset++]));
+        const jint stop1000 = payload[offset++];
+        if (stop1000 < 0 || stop1000 > 1000 || stop1000 <= previousStop) {
+            return false;
+        }
+        previousStop = stop1000;
+        positions[i] = static_cast<float>(stop1000) / 1000.0f;
+    }
+    return true;
+}
+
+static sk_sp<SkShader> makeDescriptorShader(const ShaderDescriptor& descriptor, void* imageCacheContextKey, int depth) {
+    if (depth > 8) {
+        return nullptr;
+    }
+    if (descriptor.type == COMMAND_SHADER_DESCRIPTOR_LINEAR_GRADIENT) {
+        if (descriptor.payload.size() < 6) return nullptr;
+        SkPoint points[2] = {
+                {static_cast<SkScalar>(descriptor.payload[0]) / 1000.0f,
+                 static_cast<SkScalar>(descriptor.payload[1]) / 1000.0f},
+                {static_cast<SkScalar>(descriptor.payload[2]) / 1000.0f,
+                 static_cast<SkScalar>(descriptor.payload[3]) / 1000.0f}
+        };
+        const jint tileMode = descriptor.payload[4];
+        const jint colorCount = descriptor.payload[5];
+        if (tileMode < 0 || tileMode > 3) return nullptr;
+        SkColor4f colors[16];
+        float positions[16];
+        if (!readGradientStops(descriptor.payload, 6, colorCount, colors, positions)) return nullptr;
+        SkGradient gradient(
+                SkGradient::Colors(
+                        SkSpan<const SkColor4f>(colors, colorCount),
+                        SkSpan<const float>(positions, colorCount),
+                        skTileModeFromCommand(tileMode)),
+                SkGradient::Interpolation{SkGradient::Interpolation::InPremul::kYes});
+        return SkShaders::LinearGradient(points, gradient);
+    }
+    if (descriptor.type == COMMAND_SHADER_DESCRIPTOR_RADIAL_GRADIENT) {
+        if (descriptor.payload.size() < 5) return nullptr;
+        const SkPoint center = {
+                static_cast<SkScalar>(descriptor.payload[0]) / 1000.0f,
+                static_cast<SkScalar>(descriptor.payload[1]) / 1000.0f
+        };
+        const SkScalar radius = static_cast<SkScalar>(descriptor.payload[2]) / 1000.0f;
+        const jint tileMode = descriptor.payload[3];
+        const jint colorCount = descriptor.payload[4];
+        if (radius <= 0 || tileMode < 0 || tileMode > 3) return nullptr;
+        SkColor4f colors[16];
+        float positions[16];
+        if (!readGradientStops(descriptor.payload, 5, colorCount, colors, positions)) return nullptr;
+        SkGradient gradient(
+                SkGradient::Colors(
+                        SkSpan<const SkColor4f>(colors, colorCount),
+                        SkSpan<const float>(positions, colorCount),
+                        skTileModeFromCommand(tileMode)),
+                SkGradient::Interpolation{SkGradient::Interpolation::InPremul::kYes});
+        return SkShaders::RadialGradient(center, radius, gradient);
+    }
+    if (descriptor.type == COMMAND_SHADER_DESCRIPTOR_SWEEP_GRADIENT) {
+        if (descriptor.payload.size() < 3) return nullptr;
+        const SkPoint center = {
+                static_cast<SkScalar>(descriptor.payload[0]) / 1000.0f,
+                static_cast<SkScalar>(descriptor.payload[1]) / 1000.0f
+        };
+        const jint colorCount = descriptor.payload[2];
+        SkColor4f colors[16];
+        float positions[16];
+        if (!readGradientStops(descriptor.payload, 3, colorCount, colors, positions)) return nullptr;
+        SkGradient gradient(
+                SkGradient::Colors(
+                        SkSpan<const SkColor4f>(colors, colorCount),
+                        SkSpan<const float>(positions, colorCount),
+                        SkTileMode::kClamp),
+                SkGradient::Interpolation{SkGradient::Interpolation::InPremul::kYes});
+        return SkShaders::SweepGradient(center, 0.0f, 360.0f, gradient);
+    }
+    if (descriptor.type == COMMAND_SHADER_DESCRIPTOR_IMAGE) {
+        if (descriptor.payload.size() != 6) return nullptr;
+        const uint64_t key = imageCacheKey(descriptor.payload[0], descriptor.payload[1]);
+        const jint imageWidth = descriptor.payload[2];
+        const jint imageHeight = descriptor.payload[3];
+        const jint tileModeX = descriptor.payload[4];
+        const jint tileModeY = descriptor.payload[5];
+        if (imageWidth <= 0 || imageHeight <= 0 || imageWidth > 4096 || imageHeight > 4096 ||
+                tileModeX < 0 || tileModeX > 3 || tileModeY < 0 || tileModeY > 3) {
+            return nullptr;
+        }
+        sk_sp<SkImage> image;
+        {
+            std::lock_guard<std::mutex> lock(gImageCacheMutex);
+            auto found = gImagesByKey.find(ImageCacheScopedKey{imageCacheContextKey, key});
+            if (found == gImagesByKey.end()) return nullptr;
+            image = found->second;
+        }
+        if (image->width() != imageWidth || image->height() != imageHeight) return nullptr;
+        return image->makeShader(
+                skTileModeFromCommand(tileModeX),
+                skTileModeFromCommand(tileModeY),
+                SkSamplingOptions(SkFilterMode::kLinear, SkMipmapMode::kNone),
+                nullptr);
+    }
+    if (descriptor.type == COMMAND_SHADER_DESCRIPTOR_COMPOSITE) {
+        if (descriptor.payload.size() != 5 || !descriptor.dst || !descriptor.src) return nullptr;
+        SkBlendMode blendMode;
+        if (!skBlendMode(descriptor.payload[4], &blendMode)) return nullptr;
+        sk_sp<SkShader> dst = makeDescriptorShader(*descriptor.dst, imageCacheContextKey, depth + 1);
+        sk_sp<SkShader> src = makeDescriptorShader(*descriptor.src, imageCacheContextKey, depth + 1);
+        if (!dst || !src) return nullptr;
+        return SkShaders::Blend(blendMode, dst, src);
+    }
+    return nullptr;
 }
 
 static jsize recordLengthFromBytes(jint recordByteLength) {
@@ -666,6 +810,14 @@ static bool skBlendModeForFill(jint commandBlendMode, SkBlendMode* blendMode) {
     }
 }
 
+static bool skBlendMode(jint commandBlendMode, SkBlendMode* blendMode) {
+    if (commandBlendMode == COMMAND_BLEND_MODE_SRC_OVER) {
+        *blendMode = SkBlendMode::kSrcOver;
+        return true;
+    }
+    return skBlendModeForFill(commandBlendMode, blendMode);
+}
+
 static bool drawImage(SkCanvas* canvas,
                       const sk_sp<SkImage>& image,
                       jint recordFlags,
@@ -837,6 +989,16 @@ static bool drawCommandList(SkCanvas* canvas,
                 offset += 2;
                 std::lock_guard<std::mutex> lock(gColorFilterCacheMutex);
                 gColorFiltersByKey.erase(ColorFilterScopedKey{imageCacheContextKey, key});
+                break;
+            }
+            case COMMAND_EVICT_SHADER_HANDLE: {
+                if (recordFlags != COMMAND_RECORD_FLAGS_NONE || offset + 2 != recordEnd) {
+                    return false;
+                }
+                const uint64_t key = imageCacheKey(commands[offset], commands[offset + 1]);
+                offset += 2;
+                std::lock_guard<std::mutex> lock(gShaderCacheMutex);
+                gShadersByKey.erase(ColorFilterScopedKey{imageCacheContextKey, key});
                 break;
             }
             case COMMAND_CLIP_RECT: {
@@ -2664,6 +2826,114 @@ static bool drawCommandList(SkCanvas* canvas,
                     std::lock_guard<std::mutex> lock(gColorFilterCacheMutex);
                     gColorFiltersByKey[ColorFilterScopedKey{imageCacheContextKey, handle}] = descriptor;
                 }
+                break;
+            }
+            case COMMAND_DEFINE_SHADER_DESCRIPTOR: {
+                if (recordFlags != COMMAND_RECORD_FLAGS_NONE || offset + 5 > recordEnd) {
+                    return false;
+                }
+                const uint64_t handle = imageCacheKey(commands[offset], commands[offset + 1]);
+                offset += 2;
+                const jint descriptorType = commands[offset++];
+                const jint descriptorVersion = commands[offset++];
+                const jint payloadIntCount = commands[offset++];
+                if (descriptorVersion != COMMAND_SHADER_DESCRIPTOR_VERSION_1 ||
+                        payloadIntCount < 0 ||
+                        offset + payloadIntCount != recordEnd) {
+                    return false;
+                }
+                ShaderDescriptor descriptor{};
+                descriptor.type = descriptorType;
+                descriptor.payload.reserve(static_cast<size_t>(payloadIntCount));
+                for (jint i = 0; i < payloadIntCount; i++) {
+                    descriptor.payload.push_back(commands[offset + i]);
+                }
+                if (descriptorType == COMMAND_SHADER_DESCRIPTOR_LINEAR_GRADIENT) {
+                    if (payloadIntCount < 6) return false;
+                    const jint tileMode = descriptor.payload[4];
+                    const jint colorCount = descriptor.payload[5];
+                    SkColor4f colors[16];
+                    float positions[16];
+                    if (tileMode < 0 || tileMode > 3 ||
+                            !readGradientStops(descriptor.payload, 6, colorCount, colors, positions)) return false;
+                } else if (descriptorType == COMMAND_SHADER_DESCRIPTOR_RADIAL_GRADIENT) {
+                    if (payloadIntCount < 5) return false;
+                    const jint radius1000 = descriptor.payload[2];
+                    const jint tileMode = descriptor.payload[3];
+                    const jint colorCount = descriptor.payload[4];
+                    SkColor4f colors[16];
+                    float positions[16];
+                    if (radius1000 <= 0 || tileMode < 0 || tileMode > 3 ||
+                            !readGradientStops(descriptor.payload, 5, colorCount, colors, positions)) return false;
+                } else if (descriptorType == COMMAND_SHADER_DESCRIPTOR_SWEEP_GRADIENT) {
+                    if (payloadIntCount < 3) return false;
+                    const jint colorCount = descriptor.payload[2];
+                    SkColor4f colors[16];
+                    float positions[16];
+                    if (!readGradientStops(descriptor.payload, 3, colorCount, colors, positions)) return false;
+                } else if (descriptorType == COMMAND_SHADER_DESCRIPTOR_IMAGE) {
+                    if (payloadIntCount != 6) return false;
+                    const jint imageWidth = descriptor.payload[2];
+                    const jint imageHeight = descriptor.payload[3];
+                    const jint tileModeX = descriptor.payload[4];
+                    const jint tileModeY = descriptor.payload[5];
+                    if (imageWidth <= 0 || imageHeight <= 0 || imageWidth > 4096 || imageHeight > 4096 ||
+                            tileModeX < 0 || tileModeX > 3 || tileModeY < 0 || tileModeY > 3) return false;
+                } else if (descriptorType == COMMAND_SHADER_DESCRIPTOR_COMPOSITE) {
+                    if (payloadIntCount != 5) return false;
+                    const uint64_t dstHandle = imageCacheKey(descriptor.payload[0], descriptor.payload[1]);
+                    const uint64_t srcHandle = imageCacheKey(descriptor.payload[2], descriptor.payload[3]);
+                    SkBlendMode blendMode;
+                    if (!skBlendMode(descriptor.payload[4], &blendMode)) return false;
+                    {
+                        std::lock_guard<std::mutex> lock(gShaderCacheMutex);
+                        auto dst = gShadersByKey.find(ColorFilterScopedKey{imageCacheContextKey, dstHandle});
+                        auto src = gShadersByKey.find(ColorFilterScopedKey{imageCacheContextKey, srcHandle});
+                        if (dst == gShadersByKey.end() || src == gShadersByKey.end()) return false;
+                        descriptor.dst = std::make_shared<ShaderDescriptor>(dst->second);
+                        descriptor.src = std::make_shared<ShaderDescriptor>(src->second);
+                    }
+                } else {
+                    return false;
+                }
+                offset = recordEnd;
+                {
+                    std::lock_guard<std::mutex> lock(gShaderCacheMutex);
+                    gShadersByKey[ColorFilterScopedKey{imageCacheContextKey, handle}] = descriptor;
+                }
+                break;
+            }
+            case COMMAND_FILL_RECT_SHADER_REF: {
+                if ((recordFlags & ~COMMAND_RECORD_FLAG_ANTIALIAS) != 0 || offset + 7 != recordEnd) {
+                    return false;
+                }
+                const uint64_t handle = imageCacheKey(commands[offset], commands[offset + 1]);
+                offset += 2;
+                const SkScalar left = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkScalar top = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkScalar right = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkScalar bottom = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const jint alpha1000 = commands[offset++];
+                if (right < left || bottom < top || alpha1000 < 0 || alpha1000 > 1000) {
+                    return false;
+                }
+                ShaderDescriptor descriptor;
+                {
+                    std::lock_guard<std::mutex> lock(gShaderCacheMutex);
+                    auto cached = gShadersByKey.find(ColorFilterScopedKey{imageCacheContextKey, handle});
+                    if (cached == gShadersByKey.end()) {
+                        return false;
+                    }
+                    descriptor = cached->second;
+                }
+                SkPaint paint;
+                paint.setAntiAlias(antiAlias);
+                paint.setAlphaf(static_cast<float>(alpha1000) / 1000.0f);
+                paint.setShader(makeDescriptorShader(descriptor, imageCacheContextKey, 0));
+                if (!paint.getShader()) {
+                    return false;
+                }
+                canvas->drawRect(SkRect::MakeLTRB(left, top, right, bottom), paint);
                 break;
             }
             case COMMAND_FILL_RECT_COLOR_FILTER_REF: {
