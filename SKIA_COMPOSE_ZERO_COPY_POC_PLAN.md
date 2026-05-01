@@ -9728,3 +9728,26 @@ Next checkpoint:
 - Move from coverage polish to the next implementation surface. The highest-value remaining graphics-layer work is an
   explicit offscreen-buffer command model, but it should start with a small ABI/design checkpoint rather than a blind
   implementation.
+
+## Checkpoint: Short Full Command-Probe Sweep
+
+Status: completed after the graphics-layer shadow/fallback/ModulateAlpha additions.
+
+Verification:
+
+- Full default Magic Jewel command-probe suite passed at short duration:
+  - command: `DURATION_SECONDS=3 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-152730/suite.tsv`
+- Supported rows stayed on the JBR command path with no picture replay.
+- Intentional fallback rows, including RuntimeEffect builder/child-type failures, invalid descriptor use, graphics-layer
+  rotationX, graphics-layer Offscreen, and invalid sweep-gradient metadata, passed by taking the expected fallback path
+  with parseable reasons.
+
+Roadmap update:
+
+- `ROADMAP.md` now records the short full-suite pass as the latest broad command-regression checkpoint.
+
+Next checkpoint:
+
+- Start the Offscreen command-model design/implementation slice, or postpone it and keep shrinking smaller fallback
+  surfaces first.
