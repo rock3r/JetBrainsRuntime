@@ -9490,3 +9490,26 @@ Next checkpoint:
 
 - Commit the CMP, Magic Jewel, and roadmap/plan updates, then continue with the next remaining graphics-layer gap or
   parity row depending on the next validation target.
+
+## Checkpoint: Rectangular Graphics-Layer Shadow Screenshot Parity
+
+Status: completed for the focused old/new parity row.
+
+What changed:
+
+- Magic Jewel's screenshot parity suite now includes `parity-graphics-layer-shadow` in the default row set.
+- The row disables unrelated optional probes, enables the rectangular graphics-layer shadow probe, and keeps the
+  comparison scoped to the same shadowless window-capture pipeline used by the other parity rows.
+- This gives the rectangular shadow slice both command-level validation and old/new visual parity coverage.
+
+Verification:
+
+- Focused graphics-layer shadow parity row passed:
+  - command: `CASES="parity-graphics-layer-shadow" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-143422/suite.tsv`
+  - result: `avg_delta=2.360`, `bad_pixel_ratio=0.05277`, `compose_bad_pixel_ratio=0.07589`,
+    `compose_bottom_swatches_bad_pixel_ratio=0.00000`
+
+Next checkpoint:
+
+- Commit the Magic Jewel parity row and docs, then continue with the next remaining graphics-layer semantic gap.
