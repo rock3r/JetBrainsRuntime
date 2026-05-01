@@ -9556,3 +9556,42 @@ Next checkpoint:
 
 - Commit the CMP, Magic Jewel, and roadmap/plan updates, then continue with the next graphics-layer gap: either generic
   path shadows or the next offscreen/3D semantics fallback probe.
+
+## Checkpoint: Generic-Path Graphics-Layer Shadow Command Replay
+
+Status: completed by extending the rounded-shadow machinery to `Outline.Generic`.
+
+What changed:
+
+- CMP now accepts generic-path outlines for command-recorded graphics-layer shadows and passes the existing
+  `Outline.Generic.path` into the same shadow replay helper used by rounded outlines.
+- No new ABI was required. JBR still receives ordinary command records: saveLayer-image-filter by descriptor handle,
+  translate, clipPath, fillRect, restore, then the actual layer content replay.
+- This closes the previous `graphicsLayer:shadowOutline` fallback for path-backed 2D layer shadows. The remaining shadow
+  work is accuracy rather than coverage: Compose's full elevation model, spot/ambient split, and platform-specific shadow
+  semantics are still outside this approximation.
+- Magic Jewel now includes `commands-graphics-layer-path-shadow`, combining the existing generic-path clip probe with the
+  graphics-layer shadow flag and the same shadow-region screenshot oracle.
+
+Verification:
+
+- Focused CMP recorder test passed after rebuilding the local CMP UI graphics jar:
+  - command: `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.nestedRecordingReplaysLayerShadowPathBeforeShadowFill`
+- Focused Magic Jewel path-shadow row passed:
+  - command: `CASES="commands-graphics-layer-path-shadow" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-145744/suite.tsv`
+  - result: `status=passed`, `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`,
+    `jbr_command_frames=150`
+- Graphics-layer shadow/path regression subset passed:
+  - command: `CASES="commands-graphics-layer-shadow commands-graphics-layer-round-shadow commands-graphics-layer-path-shadow commands-graphics-layer-path-clip" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-145831/suite.tsv`
+
+Roadmap update:
+
+- `ROADMAP.md` now marks generic-path graphics-layer shadow replay complete and narrows remaining shadow work to
+  elevation-accurate semantics.
+
+Next checkpoint:
+
+- Commit this follow-up slice, then move to the next graphics-layer semantic boundary: explicit validation/fallback for
+  3D rotation and offscreen compositing modes before attempting broader support.
