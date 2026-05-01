@@ -10057,3 +10057,26 @@ Next checkpoint:
 - Run the compact graphics-layer matrix with the combined rotation row included. After that, move from transform coverage
   to the next higher-risk graphics-layer fidelity gap: edge camera-distance coverage, higher-fidelity shadows, or broader
   image-filter/effect surfaces.
+
+## Checkpoint: Compact Graphics-Layer Matrix With Combined Rotation
+
+Status: completed as the grouped command regression sweep after adding the combined 3D rotation row.
+
+What changed:
+
+- No code changed in this checkpoint; this is the grouped validation pass for the expanded graphics-layer command set.
+- The compact Magic Jewel graphics-layer matrix now includes `commands-graphics-layer-rotationxy` alongside the
+  single-axis 3D rows, Offscreen, ModulateAlpha, clips, and shadows.
+- `ROADMAP.md` records the expanded matrix pass.
+
+Verification:
+
+- Compact Magic Jewel graphics-layer command matrix passed:
+  - command: `CASES="commands-graphics-layer commands-graphics-layer-modulate-alpha commands-graphics-layer-offscreen commands-graphics-layer-rotationx commands-graphics-layer-rotationy commands-graphics-layer-rotationxy commands-graphics-layer-clip commands-graphics-layer-round-clip commands-graphics-layer-path-clip commands-graphics-layer-shadow commands-graphics-layer-round-shadow commands-graphics-layer-path-shadow" DURATION_SECONDS=3 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-170137/suite.tsv`
+  - result: all twelve rows passed with `fallbacks=0`, `unsupported=none`, and `jbr_picture_frames=0`.
+
+Next checkpoint:
+
+- Move from transform-coverage rows to the next graphics-layer fidelity gap. The current priority order is:
+  edge camera-distance coverage, higher-fidelity shadows, then broader image-filter/effect surfaces.
