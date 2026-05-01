@@ -8885,3 +8885,37 @@ Next checkpoint:
 
 - Add a controlled invalid descriptor-use probe that references a missing effect/shader handle and proves the command path
   fails with a structured fallback marker instead of silently rendering stale or partial output.
+
+## Checkpoint: Invalid Descriptor-Use Fallback Probe
+
+Status: Magic Jewel can now exercise a controlled bad-handle use after CMP has produced a valid command stream, proving
+that descriptor-reference corruption falls back with a structured marker instead of silently rendering stale or partial
+content.
+
+What changed:
+
+- Skiko gained a test-only `skiko.jbr.interop.corruptDescriptorUseForTesting` switch. In command mode it corrupts one
+  descriptor-reference command by replacing the referenced shader/color-filter handle with an impossible handle value
+  after the frame is recorded but before JBR replay sees it.
+- Skiko emits one `SKIKO_JBR_INTEROP_DESCRIPTOR_USE_CORRUPTED op=...` marker when the test hook mutates a stream.
+- Magic Jewel gained `MAGIC_JEWEL_CORRUPT_DESCRIPTOR_USE` plumbing in the launcher and report scripts.
+- The command-probe suite now includes `commands-invalid-descriptor-use-fallback`, which enables the child color-filter
+  RuntimeEffect row, corrupts one descriptor use, and requires `SKIKO_JBR_INTEROP_FALLBACK reason=command-stream-invalid`.
+- The README documents the focused invalid descriptor-use report invocation for future compatibility and regression runs.
+
+Verification:
+
+- Rebuilt Skiko AWT artifacts with the test hook:
+  - command: `./gradlew --no-daemon --no-configuration-cache compileKotlinAwt publishAwtPublicationToMavenLocal`
+- Focused invalid descriptor-use command probe passed:
+  - command: `CASES="commands-invalid-descriptor-use-fallback" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-093549/suite.tsv`
+  - result: `status=passed`, `fallback_new_count=1`, `unsupported=none`, `jbr_picture_frames=0`, `jbr_command_frames=0`
+  - markers: `SKIKO_JBR_INTEROP_DESCRIPTOR_USE_CORRUPTED op=47`,
+    `SKIKO_JBR_INTEROP_COMMAND_FRAME ... rendered=false`,
+    `SKIKO_JBR_INTEROP_FALLBACK reason=command-stream-invalid`
+
+Next checkpoint:
+
+- Continue descriptor lifecycle hardening with cache-hit/reuse observability for RuntimeEffect shader and effect handles,
+  then add context-migration invalidation probes so steady-state reuse and cache clearing are both visible in reports.

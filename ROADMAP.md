@@ -101,6 +101,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   - [x] Descriptor handle use markers now distinguish "handle was consumed by replay" from "handle was defined in the command stream"; RuntimeEffect rows assert use markers for shader and color-filter refs.
   - [x] RuntimeEffect compile/build failure markers now include hashed diagnostic fields, and the bad-child probe asserts the
     specific `stage=missing-child` builder path.
+  - [x] Invalid descriptor-use fallback probe corrupts a known-good effect-handle reference after CMP recording and asserts
+    structured `command-stream-invalid` fallback instead of silent stale/partial rendering.
   - [x] Magic Jewel RuntimeEffect conformance probes cover pure color, uniform-only animation, child-only composition, combined child+uniform, and builder-failure fallback cases.
   - [x] Live RuntimeEffect conformance subset passed for ABI 90: pure color, uniform-only, child-only, combined child+uniform, and the bad-child builder-failure fallback.
   - [x] Add a live animation preservation regression job that asserts non-frozen command-mode frame markers continue advancing.
@@ -145,7 +147,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   - [ ] Extend Skia runtime effects via descriptor payloads: remaining shader-family fallback markers and parity coverage for child color-filter descriptors.
   - [ ] Add shader/effect lifecycle commands for create, use, context-scoped cache hit, compile failure, eviction, and context migration invalidation; never pass raw Skiko `SkShader*`, `SkImageFilter*`, or `SkRuntimeEffect*` pointers across the ABI.
   - [x] Add RuntimeEffect conformance probes in Magic Jewel: one pure color shader, one child-shader composition, one uniform animation, one builder/compile-failure fallback, and one old-runtime capability fallback.
-  - [ ] Add Magic Jewel probes that force handle creation, reuse, context migration, eviction, and fallback without relying on raw Skiko `SkShader*` or `SkRuntimeEffect*` pointers.
+  - [x] Add Magic Jewel probes that force invalid descriptor-handle fallback without relying on raw Skiko `SkShader*` or `SkRuntimeEffect*` pointers.
+  - [ ] Add Magic Jewel probes that force handle creation, reuse, context migration, and eviction without relying on raw Skiko `SkShader*` or `SkRuntimeEffect*` pointers.
   - [ ] Add ABI/version tests for shader/effect handle creation, use-after-free rejection, context migration invalidation, and old/new fallback markers.
   - [ ] Long term: revisit true generic shader support only after Skiko's fast path no longer creates Skia C++ objects in a separate bundled runtime.
 - [x] Strict recorder fallback for invalid gradient stops and excessive gradient color counts.
