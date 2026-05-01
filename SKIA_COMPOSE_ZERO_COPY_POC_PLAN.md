@@ -9998,3 +9998,27 @@ Next checkpoint:
 - Run the compact graphics-layer matrix with both rotationX and rotationY included. If it stays green, the remaining
   graphics-layer work should move away from single-axis 3D coverage and toward combined transforms, edge-case camera
   distances, and higher-fidelity shadows/image-filter surfaces.
+
+## Checkpoint: Compact Graphics-Layer Matrix With Both 3D Axes
+
+Status: completed as the grouped command regression sweep after adding the rotationY probe.
+
+What changed:
+
+- No code changed in this checkpoint; this is the grouped validation pass for the supported graphics-layer command rows.
+- The compact Magic Jewel graphics-layer matrix now includes both `commands-graphics-layer-rotationx` and
+  `commands-graphics-layer-rotationy`.
+- `ROADMAP.md` records the both-axes matrix pass so single-axis 3D graphics-layer support has focused command,
+  screenshot parity, and grouped regression evidence.
+
+Verification:
+
+- Compact Magic Jewel graphics-layer command matrix passed:
+  - command: `CASES="commands-graphics-layer commands-graphics-layer-modulate-alpha commands-graphics-layer-offscreen commands-graphics-layer-rotationx commands-graphics-layer-rotationy commands-graphics-layer-clip commands-graphics-layer-round-clip commands-graphics-layer-path-clip commands-graphics-layer-shadow commands-graphics-layer-round-shadow commands-graphics-layer-path-shadow" DURATION_SECONDS=3 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-165236/suite.tsv`
+  - result: all eleven rows passed with `fallbacks=0`, `unsupported=none`, and `jbr_picture_frames=0`.
+
+Next checkpoint:
+
+- Add a combined rotationX + rotationY Magic Jewel row to exercise matrix composition beyond single-axis transforms,
+  then validate it through command probes and screenshot parity.
