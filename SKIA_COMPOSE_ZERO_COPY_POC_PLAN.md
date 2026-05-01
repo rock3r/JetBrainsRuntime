@@ -7601,3 +7601,22 @@ Known notes:
 
 - This supports chains composed from the currently structured blur/offset descriptors. Arbitrary Skia image filters and runtime shader filters still need their own descriptor contract instead of raw Skia pointer sharing.
 - Native JBR test and live validation should run after the local JBR native build is unblocked.
+
+## Checkpoint: Composite Shader Metadata Prerequisite
+
+Status: CMP source and focused recorder validation passed; this is a metadata prerequisite, not yet a JBR shader-descriptor ABI.
+
+What changed:
+
+- CMP now preserves JBR-compatible metadata for `CompositeShader(dst, src, blendMode)` when both child shaders already have structured JBR metadata.
+- The metadata stores the child `Shader` wrappers and blend mode so the next ABI slice can serialize a shader descriptor tree without passing raw Skiko `SkShader*` pointers to JBR.
+- Opaque shaders created through `SkShader.asComposeShader()` remain unsupported on the fast path and must continue to fall back until a real descriptor source exists.
+
+Verification:
+
+- CMP focused metadata test passed against the locally published Skiko snapshot:
+  - `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.compositeShaderKeepsJbrSkiaMetadataForStructuredChildren`
+
+Next:
+
+- Add a shader descriptor-handle ABI for known shader families, then serialize composite shader trees by defining child shader descriptors before the parent blend descriptor.

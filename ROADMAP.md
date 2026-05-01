@@ -84,6 +84,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] ABI 82: graphics-layer `BlurEffect` can be serialized as a JBR-owned blur image-filter descriptor and applied through saveLayer.
 - [x] ABI 83: graphics-layer `OffsetEffect` can be serialized as a JBR-owned offset image-filter descriptor and applied through saveLayer.
 - [x] ABI 84: nested render effects can snapshot child image-filter descriptors for chains such as `OffsetEffect(BlurEffect(...), ...)`.
+- [x] CMP now preserves structured `CompositeShader` metadata when both child shaders already have JBR-compatible metadata.
 
 ## Near-Term Rendering Work
 
@@ -103,7 +104,9 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   - [x] Eighth descriptor-shaped ABI slice: saveLayer/graphics-layer paints can combine direct blend modes with typed descriptor color filters.
   - [x] Ninth descriptor-shaped ABI slice: graphics-layer blur render effects use a typed image-filter descriptor and high-word capability gate.
   - [x] Tenth descriptor-shaped ABI slice: graphics-layer offset render effects use a typed image-filter descriptor and high-word capability gate.
+  - [x] Preserve CMP metadata for `CompositeShader` children as the first descriptor-tree prerequisite.
   - [x] Strict JBR validator coverage for malformed effect descriptors: unknown type, unsupported version, bad payload count/length, unsupported blend mode, and evicted-handle use.
+  - [ ] Add a shader descriptor-handle ABI so composite shader trees can be rebuilt inside JBR-owned Skia.
   - [ ] Implement JBR-owned shader/effect handles: Skiko/CMP serializes descriptors or create requests, JBR constructs objects inside its Skia runtime, draw commands reference versioned handles, and handles are scoped/evicted by destination context.
   - [ ] Support Skia runtime effects via descriptor payloads: SKSL source hash/source bytes, uniform block layout, child shader/color-filter handles, compile diagnostics, and stable fallback markers.
   - [ ] Implement a concrete generic-shader MVP: CMP/Skiko serializes a `RuntimeEffect` descriptor with SKSL source hash, source bytes, uniforms, and child-handle references; JBR compiles/caches it inside the destination context and draw commands reference the JBR-owned handle.
