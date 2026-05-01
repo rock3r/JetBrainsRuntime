@@ -8225,3 +8225,48 @@ Known notes:
   artifacts.
 - The bundle currently stores the CMP output as a manifest pointer by default; set `COPY_CMP_OUT=true` when a fully
   self-contained archive is needed.
+
+## Checkpoint: Finer Geometry Screenshot Gates
+
+Status: screenshot parity now exposes and gates smaller Compose-owned geometry/color regions so broad text/font and
+anti-aliasing drift no longer has to carry the whole validation burden.
+
+What changed:
+
+- `scripts/compare-jbr-skia-window-screenshots.sh` now emits additional Compose subregions:
+  - `composePurpleRect`
+  - `composeTopProgress`
+  - `composeBottomSwatches`
+- These regions have opt-in bad-pixel gates:
+  - `MAX_COMPOSE_PURPLE_RECT_BAD_PIXEL_RATIO`
+  - `MAX_COMPOSE_TOP_PROGRESS_BAD_PIXEL_RATIO`
+  - `MAX_COMPOSE_BOTTOM_SWATCHES_BAD_PIXEL_RATIO`
+- `parity-geometry-clean` now enables those gates while continuing to keep broader canvas/Swing regions looser.
+- `scripts/jbr-skia-screenshot-parity-suite.sh` writes the new subregion ratios into `suite.tsv` columns for CI/report
+  consumers.
+- Magic Jewel README documents the new region names and knobs.
+- `ROADMAP.md` marks the text/font-vs-geometry parity split complete.
+
+Verification:
+
+- Script syntax passed:
+  - `bash -n scripts/compare-jbr-skia-window-screenshots.sh`
+  - `bash -n scripts/jbr-skia-screenshot-parity-suite.sh`
+- Focused clean-geometry parity row passed:
+  - command: `CASES=parity-geometry-clean DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-064534/suite.tsv`
+  - metrics: `avg_delta=2.197`, `bad_pixel_ratio=0.05687`, `compose_bad_pixel_ratio=0.09083`,
+    `compose_purple_rect_bad_pixel_ratio=0.07653`, `compose_top_progress_bad_pixel_ratio=0.09475`,
+    `compose_bottom_swatches_bad_pixel_ratio=0.00000`.
+- Rich parity row still passed with the additional metric output:
+  - command: `CASES=parity-rich DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-064621/suite.tsv`
+  - metrics: `avg_delta=1.646`, `bad_pixel_ratio=0.03910`, `compose_bad_pixel_ratio=0.06235`,
+    `compose_bottom_swatches_bad_pixel_ratio=0.00000`.
+
+Known notes:
+
+- The purple rectangle and top progress regions still include anti-aliased diagonal stripe crossings, so their thresholds
+  remain intentionally higher than the bottom swatch region.
+- The bottom swatch region is the first near-exact color-ownership gate in the mixed screenshot suite. Future rows should
+  add more such isolated regions instead of tightening the full Compose canvas too aggressively.

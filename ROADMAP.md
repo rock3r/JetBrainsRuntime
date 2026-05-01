@@ -206,7 +206,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Capture the app window only in old/new renderer modes, with deterministic sizing, theme, font inputs, animation phase, and seeded content.
 - [x] Add configurable per-region screenshot parity gates for header controls, Compose canvas, Swing island, and right probe strip.
 - [x] Add metric-only Compose subregions for left backdrop, center animation, and bottom labels to prepare tighter visual masks.
-- [ ] Tighten Compose/Jewel-owned region thresholds after splitting text/font raster drift from geometry/pixel ownership drift.
+- [x] Tighten Compose/Jewel-owned region thresholds after splitting text/font raster drift from geometry/pixel ownership drift.
 - [x] Add screenshot parity jobs that run both old and new renderers for the same rich scene, emit old/new images, and fail on unexpected Compose/Jewel geometry/color drift. Expected Swing text rendering differences must be isolated to Swing-owned regions and documented in the report.
 - [x] Add a rich-content old/new parity suite with Jewel controls/text, Compose primitives/text/images/effects, Swing islands, popups/menus, and always-on animation sampled at deterministic phases.
 - [x] Persist diff images and per-region parity metrics in the Magic Jewel report and `summary.properties`.
@@ -221,6 +221,9 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-062651/suite.tsv`.
 - [x] Clean-geometry screenshot parity row passed:
   `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-061323/suite.tsv`.
+- [x] Clean-geometry screenshot parity row passed with tighter small-region gates for `composePurpleRect`,
+  `composeTopProgress`, and `composeBottomSwatches`:
+  `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-064534/suite.tsv`.
 - [x] Default named screenshot parity suite passed end to end:
   `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-061514/suite.tsv`.
 - [x] Default named screenshot parity suite passed with native-text row included:
