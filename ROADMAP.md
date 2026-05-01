@@ -208,6 +208,11 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Add screenshot parity jobs that run both old and new renderers for the same rich scene, emit old/new images, and fail on unexpected Compose/Jewel geometry/color drift. Expected Swing text rendering differences must be isolated to Swing-owned regions and documented in the report.
 - [x] Add a rich-content old/new parity suite with Jewel controls/text, Compose primitives/text/images/effects, Swing islands, popups/menus, and always-on animation sampled at deterministic phases.
 - [x] Persist diff images and per-region parity metrics in the Magic Jewel report and `summary.properties`.
+- [x] Add named old/new screenshot parity suite rows for the rich baseline, RuntimeEffect descriptors, and graphics-layer effects.
+- [x] RuntimeEffect screenshot parity rows passed for pure-color, uniform-only, and child-shader descriptors:
+  `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-055435/suite.tsv`.
+- [x] Graphics-layer effects screenshot parity row passed with focused probe scoping:
+  `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-055842/suite.tsv`.
 - [x] Magic Jewel graphics-layer command probe runs without fallback markers and validates the replayed layer region in the screenshot assertion.
 - [x] Magic Jewel clipped graphics-layer command probe runs without fallback markers and validates clipped cyan/purple layer content.
 - [x] Magic Jewel rounded clipped graphics-layer command probe runs without fallback markers and validates clipped cyan/purple layer content.

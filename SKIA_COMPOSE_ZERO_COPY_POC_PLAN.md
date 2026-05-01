@@ -8018,3 +8018,52 @@ Known notes:
   benchmark numbers.
 - Some frame-rate values exceed display refresh because marker counts track renderer command submissions over the sample
   interval, not presented vsync frames.
+
+## Checkpoint: Named Screenshot Parity Suite
+
+Status: focused old/new screenshot parity rows passed for the rich baseline, RuntimeEffect descriptors, and graphics-layer effects.
+
+What changed:
+
+- Magic Jewel now has `scripts/jbr-skia-screenshot-parity-suite.sh`, a named-case wrapper around the window-only old/new
+  parity script.
+- The suite writes `suite.tsv` with case status, whole-window average delta, whole-window bad-pixel ratio,
+  Compose-canvas bad-pixel ratio, report path, and diff-image path.
+- Initial named cases cover:
+  - `parity-rich`
+  - `parity-runtime-effect-pure-color`
+  - `parity-runtime-effect-uniform-only`
+  - `parity-runtime-effect-child-only`
+  - `parity-runtime-effect-shader`
+  - `parity-graphics-layer-effects`
+- The graphics-layer effects row disables unrelated baseline shape/gradient/blend probes so its strict screenshot oracle
+  does not fail on a cyan counter partially occluded by effect-specific content. The rich baseline row still covers those
+  baseline probes.
+- Magic Jewel README documents the suite and `CASES=...` subset usage.
+
+Verification:
+
+- Script syntax passed:
+  - `bash -n scripts/jbr-skia-screenshot-parity-suite.sh scripts/jbr-skia-screenshot-parity.sh`
+- Rich baseline parity-suite row passed:
+  - command: `CASES=parity-rich DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-055348/suite.tsv`
+  - metrics: `avg_delta=1.646`, `bad_pixel_ratio=0.03910`, `compose_bad_pixel_ratio=0.06235`.
+- RuntimeEffect parity rows passed:
+  - command: `CASES="parity-runtime-effect-pure-color parity-runtime-effect-uniform-only parity-runtime-effect-child-only" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-055435/suite.tsv`
+  - metrics:
+    - pure color: `avg_delta=1.632`, `bad_pixel_ratio=0.03871`, `compose_bad_pixel_ratio=0.06168`
+    - uniform only: `avg_delta=1.633`, `bad_pixel_ratio=0.03874`, `compose_bad_pixel_ratio=0.06173`
+    - child only: `avg_delta=1.642`, `bad_pixel_ratio=0.03899`, `compose_bad_pixel_ratio=0.06215`
+- Graphics-layer effects parity row passed:
+  - command: `CASES=parity-graphics-layer-effects DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-055842/suite.tsv`
+  - metrics: `avg_delta=1.690`, `bad_pixel_ratio=0.03997`, `compose_bad_pixel_ratio=0.06380`.
+
+Known notes:
+
+- These parity rows use the same broad thresholds as the rich baseline. The next validation-hardening step is to split
+  tighter region-specific thresholds for Compose/Jewel-owned regions from known Swing/text raster drift.
+- `parity-runtime-effect-shader` is wired but was not included in this smoke pass; the command-probe suite already covers
+  the combined child+uniform descriptor and build-fallback row.
