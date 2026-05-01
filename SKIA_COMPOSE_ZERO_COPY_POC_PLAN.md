@@ -8587,3 +8587,35 @@ Next checkpoint:
 
 - Continue RuntimeEffect functionality with child color-filter handles, or run the full default screenshot parity suite
   after the next artifact refresh.
+
+## Checkpoint: Skiko RuntimeEffect ColorFilter Prerequisite
+
+Status: Skiko now exposes the missing wrapper needed for RuntimeEffect-backed color filters, which is a prerequisite for
+serializing RuntimeEffect color-filter descriptors through CMP and JBR.
+
+What changed:
+
+- Added `RuntimeEffect.makeColorFilter(uniforms: Data?): ColorFilter` to Skiko common API.
+- Added JVM and native/JS C++ bindings to call `SkRuntimeEffect::makeColorFilter(...)`.
+- Extended the existing Skiko `RuntimeEffectTest` color-filter smoke to instantiate a real `ColorFilter`, not just compile
+  the RuntimeEffect.
+- Republished the patched Skiko AWT artifact to Maven Local for downstream local experiments.
+- `ROADMAP.md` records this as the Skiko prerequisite before CMP/JBR RuntimeEffect color-filter descriptor work.
+
+Verification:
+
+- Skiko JVM/AWT Kotlin compilation passed:
+  - command: `./gradlew compileKotlinJvm compileKotlinAwt`
+- Skiko focused JVM test attempt:
+  - command: `./gradlew jvmTest --tests org.jetbrains.skia.RuntimeEffectTest`
+  - result: Gradle completed successfully, but only the `import-generator` JVM test task was selected by this build layout.
+- Skiko root `test` task is not present in this checkout:
+  - command: `./gradlew test --tests org.jetbrains.skia.RuntimeEffectTest`
+  - result: failed with `Task 'test' not found in root project 'skiko' and its subprojects.`
+- Skiko AWT publication passed:
+  - command: `./gradlew publishAwtPublicationToMavenLocal`
+
+Next checkpoint:
+
+- Add CMP metadata/factory support for RuntimeEffect color filters, then decide the JBR descriptor schema for replaying
+  those filters through the existing typed effect-handle path.
