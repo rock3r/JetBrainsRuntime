@@ -10277,3 +10277,19 @@ Next checkpoint:
 
 - Run the compact graphics-layer command matrix with the new renderEffect/colorFilter row included, then extend nested
   renderEffect replay to blend-mode or descriptor color-filter combinations.
+
+## Checkpoint: Graphics-Layer RenderEffect + ColorFilter Matrix
+
+Status: completed as the compact graphics-layer regression check after nested renderEffect/tint color-filter replay.
+
+Verification:
+
+- Compact Magic Jewel graphics-layer command matrix passed with the renderEffect/colorFilter row included:
+  - command: `CASES="commands-graphics-layer commands-graphics-layer-modulate-alpha commands-graphics-layer-offscreen commands-graphics-layer-render-effect commands-graphics-layer-render-effect-color-filter commands-graphics-layer-rotationx commands-graphics-layer-rotationy commands-graphics-layer-rotationxy commands-graphics-layer-near-camera commands-graphics-layer-clip commands-graphics-layer-round-clip commands-graphics-layer-path-clip commands-graphics-layer-shadow commands-graphics-layer-round-shadow commands-graphics-layer-path-shadow" DURATION_SECONDS=3 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-175049/suite.tsv`
+  - result: all fifteen rows passed with `fallbacks=0`, `unsupported=none`, and `jbr_picture_frames=0`.
+
+Next checkpoint:
+
+- Extend nested renderEffect replay to blend-mode and descriptor color-filter combinations, with focused command rows and
+  screenshot parity rows for each supported combination.
