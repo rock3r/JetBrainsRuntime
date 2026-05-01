@@ -48,6 +48,7 @@
 #include "SkImageInfo.h"
 #include "SkFont.h"
 #include "SkFontMgr.h"
+#include "SkMatrix.h"
 #include "SkPaint.h"
 #include "SkPath.h"
 #include "SkPathBuilder.h"
@@ -81,7 +82,7 @@
 
 #include "MTLSurfaceDataBase.h"
 
-static constexpr jint ABI_ID = 98;
+static constexpr jint ABI_ID = 99;
 static constexpr jint COMMAND_STREAM_MAGIC = 1246972723;
 static constexpr jint COMMAND_STREAM_HEADER_SIZE = 6;
 static constexpr jint COMMAND_STREAM_FLAGS_NONE = 0;
@@ -154,6 +155,7 @@ static constexpr jint COMMAND_STROKE_RECT_DASH_PATH_EFFECT = 59;
 static constexpr jint COMMAND_STROKE_ROUND_RECT_DASH_PATH_EFFECT = 60;
 static constexpr jint COMMAND_STROKE_PATH_DASH_PATH_EFFECT = 61;
 static constexpr jint COMMAND_DRAW_PATH_PATH_EFFECT_REF = 62;
+static constexpr jint COMMAND_CONCAT_MATRIX33 = 63;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER = 1;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_COLOR_MATRIX_FILTER = 2;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_LIGHTING_FILTER = 3;
@@ -2487,6 +2489,25 @@ static bool drawCommandList(SkCanvas* canvas,
                 }
                 SkScalar degrees = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
                 canvas->rotate(degrees);
+                break;
+            }
+            case COMMAND_CONCAT_MATRIX33: {
+                if (recordFlags != COMMAND_RECORD_FLAGS_NONE || offset + 9 != recordEnd) {
+                    return false;
+                }
+                SkScalar values[9];
+                for (int i = 0; i < 9; i++) {
+                    values[i] = skScalarFromRawBits(commands[offset++]);
+                    if (!std::isfinite(values[i])) {
+                        return false;
+                    }
+                }
+                SkMatrix matrix;
+                matrix.setAll(
+                        values[0], values[1], values[2],
+                        values[3], values[4], values[5],
+                        values[6], values[7], values[8]);
+                canvas->concat(matrix);
                 break;
             }
             case COMMAND_SAVE_LAYER: {

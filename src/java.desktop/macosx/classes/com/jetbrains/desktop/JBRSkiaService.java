@@ -147,7 +147,8 @@ public class JBRSkiaService extends JBRSkia {
                     | COMMAND_CAP64_HIGH_STROKE_RECT_DASH_PATH_EFFECT
                     | COMMAND_CAP64_HIGH_STROKE_ROUND_RECT_DASH_PATH_EFFECT
                     | COMMAND_CAP64_HIGH_STROKE_PATH_DASH_PATH_EFFECT
-                    | COMMAND_CAP64_HIGH_PATH_EFFECT_DESCRIPTOR_REF;
+                    | COMMAND_CAP64_HIGH_PATH_EFFECT_DESCRIPTOR_REF
+                    | COMMAND_CAP64_HIGH_CONCAT_MATRIX33;
     private static final boolean NATIVE_BRIDGE_AVAILABLE = loadNativeBridge();
     private static final AtomicLong NEXT_SCOPE_ID = new AtomicLong(1);
     private static final int MAX_CACHED_IMAGES = 256;

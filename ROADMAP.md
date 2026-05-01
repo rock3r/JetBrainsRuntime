@@ -327,6 +327,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-152730/suite.tsv`.
 - [x] Magic Jewel graphics-layer Offscreen command row and rotationX fallback row passed at `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-155623/suite.tsv`.
 - [x] Compact graphics-layer matrix with Offscreen in the supported set passed at `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-155924/suite.tsv`.
+- [x] Magic Jewel concat-transform command row passed with ABI 99 artifacts at `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-162333/suite.tsv`.
 - [x] Persist old/new screenshots and pass/fail thresholds in the Magic Jewel report.
 - [x] Make the parity suite window-only end to end: launch old/new renderers, capture the Magic Jewel window by id/title, crop no whole-screen screenshots, and keep the capture metadata in the report.
 - [x] Add deterministic animation-phase controls for parity runs so animated progress, blend probes, gradients, and Swing islands can be compared at repeatable frame phases.
@@ -433,6 +434,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-110918/suite.tsv`.
 - [x] ABI 98 chained path-effect descriptor probe through JBR command replay:
   `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-111807/suite.tsv`.
+- [x] ABI 99: `COMMAND_CONCAT_MATRIX33` records arbitrary 3x3 canvas transforms with raw-float SkMatrix payloads.
 - [x] Full Magic Jewel command-probe sweep after ABI 98 path-effect descriptors: 45/45 rows passed, including live
   animation, mixed Swing popups/menus, text/images, image/composite shaders, RuntimeEffects, color filters, blend modes,
   graphics layers, render effects, saveLayer filters, path-effect descriptors, descriptor lifecycle probes, and explicit

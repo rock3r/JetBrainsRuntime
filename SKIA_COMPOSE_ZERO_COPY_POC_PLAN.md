@@ -9825,3 +9825,49 @@ Next checkpoint:
 - Continue from graphics-layer Offscreen into the next remaining fidelity gap. The highest-risk item is 3D/camera
   transform support because it needs a perspective-transform command model; the smaller alternative is another bounded
   image-filter/effect surface with screenshot parity.
+
+## Checkpoint: ABI 99 Canvas Concat Matrix
+
+Status: completed as the first general matrix-transform command slice.
+
+What changed:
+
+- JBR, the public JBR API mirror, Skiko, and CMP now agree on command-stream ABI 99.
+- JBR exposes and gates `COMMAND_CAP64_HIGH_CONCAT_MATRIX33`.
+- CMP records `Canvas.concat(Matrix)` as `COMMAND_CONCAT_MATRIX33`, carrying nine raw float bits in SkMatrix order:
+  scaleX, skewX, translateX, skewY, scaleY, translateY, perspective0, perspective1, perspective2.
+- JBR replays the record by reconstructing an `SkMatrix` and calling `SkCanvas::concat`.
+- Magic Jewel gained a dedicated `commands-concat-transform` row that draws a skewed cyan rectangle through
+  `Canvas.concat(...)`, so this path is validated independently from the older translate/scale/rotate commands.
+
+Verification:
+
+- CMP focused recorder test passed:
+  - command: `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesConcatMatrix33Record`
+- JBR local artifacts rebuilt:
+  - command: `./scripts/rebuild-jbr-skia-local-artifacts.sh`
+  - outputs: `/tmp/jbr-api-shim.jar`, `/tmp/jbr-skia-run/desktop`, `/tmp/jbr-skia-native/libjbrskiainterop.dylib`
+- Skiko ABI 99 AWT artifact published:
+  - command: `./gradlew --no-daemon --no-configuration-cache compileKotlinAwt publishAwtPublicationToMavenLocal`
+- Magic Jewel compiled:
+  - command: `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon compileKotlin`
+- Focused Magic Jewel concat-transform row passed:
+  - command: `CASES="commands-concat-transform" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-162333/suite.tsv`
+  - result: `status=passed`, `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`,
+    `jbr_command_frames=301`
+
+Known validation note:
+
+- A targeted Skiko `awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest` run did not reach the interop tests
+  because `src/commonTest/kotlin/org/jetbrains/skia/RuntimeEffectTest.kt` currently fails test compilation with an
+  unrelated unresolved `makeMode` reference. The production `compileKotlinAwt` and Maven-local publish path passed.
+
+Roadmap update:
+
+- `ROADMAP.md` now records ABI 99 and the focused Magic Jewel concat-transform command-probe pass.
+
+Next checkpoint:
+
+- Use the new matrix primitive as the basis for a 3D/camera graphics-layer design slice. The next safe step is to add a
+  strict positive/negative recorder test for matrix-composed layer transforms before enabling any live rotationX/Y row.
