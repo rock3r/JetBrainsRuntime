@@ -8414,3 +8414,57 @@ Known notes:
 
 - These gates validate recorder/JBR lifecycle stability through emitted markers. They do not yet expose explicit cache-hit
   markers; cache hits are inferred from the absence of additional define markers across many command frames.
+
+## Checkpoint: Surface-Change Command Cache Invalidation
+
+Status: Skiko now clears CMP-owned JBR command caches when the JBR destination surface changes, and Magic Jewel has a
+resize probe that proves descriptors are redefined for the replacement surface.
+
+What changed:
+
+- CMP `JbrSkiaCommandRecorder` now exposes `clearInteropCachesForSurfaceChange()` as a JVM-callable hook.
+- The hook clears the recorder's image-key, color-filter-handle, and shader-handle caches.
+- Existing test-only cache clearing now delegates to the same implementation.
+- Added a CMP unit test proving a stable tint color-filter handle is reused across frames until
+  `clearInteropCachesForSurfaceChange()` is called, after which the descriptor define record is emitted again.
+- Skiko `JbrSkiaSwingLayer` now calls that CMP hook reflectively when `SurfaceIdentityChange.surfaceChanged` is true.
+  The reflection avoids a hard dependency from Skiko back to Compose UI.
+- Skiko emits:
+  - `SKIKO_JBR_INTEROP_COMMAND_CACHES_CLEARED reason=surfaceChanged`
+  - or `SKIKO_JBR_INTEROP_COMMAND_CACHES_CLEARED reason=contextChanged`
+- If the CMP hook is absent, Skiko emits `SKIKO_JBR_INTEROP_COMMAND_CACHES_CLEAR_UNAVAILABLE reason=... error=...`.
+- Magic Jewel reports `skiko_command_cache_clear_markers` and can require them with
+  `EXPECT_MIN_COMMAND_CACHE_CLEARS`.
+- Added `commands-resize-descriptor-redefine`, which enables a stable descriptor-handle color-filter probe and auto
+  resize. It requires:
+  - one same-context surface-change marker
+  - one command-cache clear marker
+  - at least two JBR effect-handle define markers, proving the stable descriptor was redefined after resize
+- `README.md` documents the cache-clear marker and resize descriptor probe.
+- `ROADMAP.md` marks surface-change command cache invalidation complete.
+
+Verification:
+
+- Skiko AWT compile passed:
+  - command: `./gradlew compileKotlinAwt`
+- Skiko patched AWT artifact was republished to Maven Local for the consumed `0.0.0-SNAPSHOT` coordinate:
+  - command: `./gradlew publishAwtPublicationToMavenLocal`
+- CMP changed source set compiled:
+  - command: `./gradlew :compose:ui:ui-graphics:compileKotlinDesktop`
+- CMP targeted desktop test attempt was blocked by existing wider `compose:ui:ui` unresolved `org.jetbrains.skiko.jbr`
+  symbols in this worktree, after `ui-graphics` itself compiled. The new unit test remains in tree for the next full CMP
+  test pass once that wiring is restored.
+- Magic Jewel report parser tests passed:
+  - command: `./scripts/test-jbr-skia-report-validation.sh`
+  - result: `JBR_SKIA_REPORT_VALIDATION_TESTS passed`
+- Focused live resize descriptor row passed:
+  - command: `CASES="commands-resize-descriptor-redefine" DURATION_SECONDS=7 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-073716/suite.tsv`
+  - `jbr_effect_handle_define_frames=2`
+  - `skiko_surface_change_markers=1`
+  - `skiko_command_cache_clear_markers=1`
+
+Known notes:
+
+- This hook is intentionally reflective. If Compose UI is not present or the hook is missing, Skiko logs the unavailable
+  marker and continues; compatibility behavior can be tightened later when Skiko/CMP versions are released together.
