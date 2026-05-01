@@ -195,6 +195,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Magic Jewel color-matrix descriptor probe is wired into the command-probe suite; live execution waits for refreshed ABI 76 JBR/Skiko artifacts.
 - [x] Magic Jewel lighting descriptor probe is wired into the command-probe suite; live execution waits for refreshed ABI 77 JBR/Skiko artifacts.
 - [x] Magic Jewel graphics-layer blur render-effect probe is wired into the command-probe suite; live execution waits for refreshed ABI 82 JBR/Skiko artifacts.
+- [x] Magic Jewel graphics-layer offset render-effect probe is wired into the command-probe suite; live execution waits for refreshed ABI 83 JBR/Skiko artifacts.
 - [x] Persist old/new screenshots and pass/fail thresholds in the Magic Jewel report.
 - [x] Make the parity suite window-only end to end: launch old/new renderers, capture the Magic Jewel window by id/title, crop no whole-screen screenshots, and keep the capture metadata in the report.
 - [x] Add deterministic animation-phase controls for parity runs so animated progress, blend probes, gradients, and Swing islands can be compared at repeatable frame phases.

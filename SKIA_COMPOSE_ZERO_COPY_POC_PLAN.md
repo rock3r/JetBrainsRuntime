@@ -7555,6 +7555,7 @@ What changed:
 - Added high-word capability `COMMAND_CAP64_HIGH_EFFECT_DESCRIPTOR_OFFSET_IMAGE_FILTER = 2` and descriptor type `COMMAND_EFFECT_DESCRIPTOR_OFFSET_IMAGE_FILTER = 5`.
 - CMP serializes graphics-layer `OffsetEffect` with no child effect into the generic effect-descriptor envelope as `[dxBits, dyBits]`, then reuses `COMMAND_SAVE_LAYER_IMAGE_FILTER_REF`.
 - JBR Java validation rejects malformed offset descriptors and non-finite offsets. Java2D fallback replay validates the descriptor scope; native Metal replay reconstructs `SkImageFilters::Offset(...)` inside JBR-owned Skia.
+- Magic Jewel now exposes `MAGIC_JEWEL_COMPOSE_GRAPHICS_LAYER_OFFSET_EFFECT` / `magic.jewel.compose.graphicsLayerOffsetEffect` and a `commands-graphics-layer-offset-effect` command-probe suite row for live validation once refreshed ABI 83 artifacts are available.
 
 Verification:
 
@@ -7562,8 +7563,11 @@ Verification:
   - `./gradlew --no-daemon --no-configuration-cache :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`
 - CMP `ui-graphics` desktop sources compile:
   - `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:compileKotlinDesktop`
+- Magic Jewel sample sources and scripts validate:
+  - `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon --no-configuration-cache compileKotlin`
+  - `bash -n scripts/jbr-skia-interop-report.sh && bash -n scripts/jbr-skia-command-probe-suite.sh && bash -n scripts/assert-jbr-skia-command-window-screenshot.sh`
 
 Known notes:
 
-- This slice still rejects nested render-effect chains. The next render-effect step is either a chain descriptor contract or a Magic Jewel offset probe.
+- This slice still rejects nested render-effect chains. The next render-effect step is a chain descriptor contract if we want `OffsetEffect(BlurEffect(...), ...)` and similar composed image filters on the fast path.
 - Native JBR test and live validation should run after the local JBR native build is unblocked.
