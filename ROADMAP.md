@@ -92,6 +92,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] RuntimeEffect compile failures emit parseable JBR markers and Magic Jewel reports expose/assert the marker count.
 - [x] ABI 89: RuntimeEffect/SKSL descriptors carry named uniform schema metadata that CMP writes and JBR Java/native validation checks before compilation.
 - [x] ABI 90: RuntimeEffect/SKSL descriptors carry named child shader schema metadata, and JBR can use `SkRuntimeEffectBuilder` when all children are named.
+- [x] RuntimeEffect builder failures emit parseable JBR markers, and Magic Jewel has a bad-child-name probe/report assertion.
 
 ## Near-Term Rendering Work
 
@@ -118,7 +119,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   - [x] Implement a concrete generic-shader MVP: CMP serializes a `RuntimeEffect` descriptor with ASCII SKSL source and raw float uniforms; JBR compiles/caches it inside the destination context and draw commands reference the JBR-owned handle.
   - [ ] Extend Skia runtime effects via descriptor payloads: child color-filter handles, richer compile diagnostics, and stable fallback markers.
   - [ ] Add shader/effect lifecycle commands for create, use, context-scoped cache hit, compile failure, eviction, and context migration invalidation; never pass raw Skiko `SkShader*`, `SkImageFilter*`, or `SkRuntimeEffect*` pointers across the ABI.
-  - [ ] Add RuntimeEffect conformance probes in Magic Jewel: one pure color shader, one child-shader composition, one uniform animation, one compile-failure fallback, and one old-runtime capability fallback.
+  - [ ] Add RuntimeEffect conformance probes in Magic Jewel: one pure color shader, one child-shader composition, one uniform animation, one builder/compile-failure fallback, and one old-runtime capability fallback.
   - [ ] Add Magic Jewel probes that force handle creation, reuse, context migration, eviction, and fallback without relying on raw Skiko `SkShader*` or `SkRuntimeEffect*` pointers.
   - [ ] Add ABI/version tests for shader/effect handle creation, use-after-free rejection, context migration invalidation, and old/new fallback markers.
   - [ ] Long term: revisit true generic shader support only after Skiko's fast path no longer creates Skia C++ objects in a separate bundled runtime.

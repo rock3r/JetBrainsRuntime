@@ -7850,3 +7850,30 @@ Known notes:
 
 - The builder path is deliberately conservative: it is used only when every child is named and named uniform coverage equals the full uniform payload. Partial schemas continue through the positional `makeShader` path after validation.
 - Child color-filter handles and richer compile diagnostics remain open RuntimeEffect work.
+
+## Checkpoint: RuntimeEffect Builder-Failure Marker
+
+Status: marker plumbing and Magic Jewel report parser validation passed; native live validation still waits for the local Xcode license/build unblock.
+
+What changed:
+
+- JBR native RuntimeEffect replay now emits a parseable marker when the named-schema `SkRuntimeEffectBuilder` path cannot produce a shader:
+  - `JBR_SKIA_INTEROP_RUNTIME_EFFECT_BUILD_FAILED hash=0x... skslLength=... uniforms=... children=... namedUniforms=... namedChildren=...`
+- Magic Jewel adds `MAGIC_JEWEL_COMPOSE_RUNTIME_EFFECT_BAD_CHILD=true`, which keeps the Skiko fallback shader valid but intentionally sends a wrong JBR child name. That gives us a controlled builder-failure fallback probe without requiring invalid SKSL that would fail before JBR receives the descriptor.
+- Magic Jewel reports now count the marker in `summary.properties` as `jbr_runtime_effect_build_failures`.
+- Magic Jewel validation recognizes `EXPECT_COMMAND_FALLBACK_REASON=runtime-effect-build-failed` and requires both the JBR build-failure marker and a rendered=false Skiko command frame.
+- The command probe suite includes `commands-runtime-effect-build-fallback`.
+
+Verification:
+
+- JBR public API compile smoke passed:
+  - `javac -d /tmp/jbr-skia-api-compile src/java.desktop/share/classes/com/jetbrains/desktop/JBRSkia.java`
+- Magic Jewel compiles:
+  - `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon --no-configuration-cache compileKotlin`
+- Magic Jewel report scripts passed syntax validation and parser fixtures:
+  - `bash -n scripts/jbr-skia-interop-report.sh scripts/jbr-skia-command-probe-suite.sh scripts/test-jbr-skia-report-validation.sh`
+  - `bash scripts/test-jbr-skia-report-validation.sh`
+
+Known notes:
+
+- This is a JBR-builder-path failure probe, not an invalid-SKSL compile probe. Invalid SKSL still fails too early in the current CMP factory because old-path rendering constructs a normal Skiko RuntimeEffect first.
