@@ -10730,3 +10730,37 @@ Next checkpoint:
 
 - Commit the CMP dynamic-lighting slice, then continue with the remaining graphics-layer/image-filter or compatibility
   gaps from `ROADMAP.md`.
+
+## Checkpoint: Direct Shadow Replay Metrics
+
+Status: completed as a harness-hardening slice for the direct Skia shadow command.
+
+What changed:
+
+- JBR native command replay counts successful `COMMAND_DRAW_SHADOW_PATH` executions in the existing
+  `JBR_SKIA_INTEROP_COMMAND_TIMING` marker as `shadowCommands=<n>`.
+- Magic Jewel reports mirror the maximum observed value as `jbr_shadow_commands_max` in `summary.properties`.
+- The rectangular, rounded, and generic-path graphics-layer shadow command rows now require
+  `EXPECT_MIN_JBR_SHADOW_COMMANDS=1`, proving that they reached JBR's direct `SkShadowUtils::DrawShadow` replay path
+  instead of merely avoiding picture fallback.
+- The report validator has pass/fail unit coverage for the new metric, and the old Bash 3.2 regex fallback gate was
+  replaced with a `case` statement after the screenshot sweep exposed the parser issue.
+
+Verification:
+
+- JBR local Skia interop artifacts rebuilt successfully:
+  - command: `./scripts/rebuild-jbr-skia-local-artifacts.sh`
+- Magic Jewel report-validation tests passed:
+  - command: `scripts/test-jbr-skia-report-validation.sh`
+- Focused Magic Jewel direct-shadow metric suite passed:
+  - command: `CASES="commands-graphics-layer-shadow commands-graphics-layer-round-shadow commands-graphics-layer-path-shadow" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-232255/suite.tsv`
+  - result: all three rows passed with `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, and
+    `jbr_shadow_commands_max=1`.
+- Crash-report check remained clean after the earlier RuntimeEffect hardening:
+  - newest matching report is still `/Users/rock3r/Library/Logs/DiagnosticReports/java-2026-05-01-045659.ips`.
+
+Next checkpoint:
+
+- Commit the metric slice, then continue renderer functionality work from `ROADMAP.md`, with the strongest candidates being
+  the remaining generic shader/color-filter coverage and broader graphics-layer image-filter surfaces.

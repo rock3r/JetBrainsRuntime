@@ -1353,6 +1353,7 @@ static bool drawImageWithDescriptorColorFilter(SkCanvas* canvas,
 struct CommandReplayMetrics {
     int paragraphCommands = 0;
     long long paragraphNanos = 0;
+    int shadowCommands = 0;
 };
 
 template<typename CommandWords>
@@ -3927,6 +3928,9 @@ static bool drawCommandList(SkCanvas* canvas,
                     return false;
                 }
                 offset = recordEnd;
+                if (metrics) {
+                    metrics->shadowCommands++;
+                }
                 SkShadowUtils::DrawShadow(
                         canvas,
                         path,
@@ -4229,12 +4233,13 @@ Java_com_jetbrains_desktop_JBRSkiaService_nativeRenderCommandFrame
                      height,
                      commandCount);
         std::fprintf(stderr,
-                     "JBR_SKIA_INTEROP_COMMAND_TIMING totalNanos=%lld drawNanos=%lld flushNanos=%lld paragraphCommands=%d paragraphNanos=%lld\n",
+                     "JBR_SKIA_INTEROP_COMMAND_TIMING totalNanos=%lld drawNanos=%lld flushNanos=%lld paragraphCommands=%d paragraphNanos=%lld shadowCommands=%d\n",
                      monotonicNanos() - frameStartNanos,
                      drawNanos,
                      flushNanos,
                      metrics.paragraphCommands,
-                     metrics.paragraphNanos);
+                     metrics.paragraphNanos,
+                     metrics.shadowCommands);
         return JNI_TRUE;
     }
 }
@@ -4317,12 +4322,13 @@ Java_com_jetbrains_desktop_JBRSkiaService_nativeRenderCommandBufferFrame
                      height,
                      commandCount);
         std::fprintf(stderr,
-                     "JBR_SKIA_INTEROP_COMMAND_TIMING totalNanos=%lld drawNanos=%lld flushNanos=%lld paragraphCommands=%d paragraphNanos=%lld\n",
+                     "JBR_SKIA_INTEROP_COMMAND_TIMING totalNanos=%lld drawNanos=%lld flushNanos=%lld paragraphCommands=%d paragraphNanos=%lld shadowCommands=%d\n",
                      monotonicNanos() - frameStartNanos,
                      drawNanos,
                      flushNanos,
                      metrics.paragraphCommands,
-                     metrics.paragraphNanos);
+                     metrics.paragraphNanos,
+                     metrics.shadowCommands);
         return JNI_TRUE;
     }
 }
@@ -4397,12 +4403,13 @@ Java_com_jetbrains_desktop_JBRSkiaService_nativeRenderCommandDirectFrame
                      height,
                      commandCount);
         std::fprintf(stderr,
-                     "JBR_SKIA_INTEROP_COMMAND_TIMING totalNanos=%lld drawNanos=%lld flushNanos=%lld paragraphCommands=%d paragraphNanos=%lld\n",
+                     "JBR_SKIA_INTEROP_COMMAND_TIMING totalNanos=%lld drawNanos=%lld flushNanos=%lld paragraphCommands=%d paragraphNanos=%lld shadowCommands=%d\n",
                      monotonicNanos() - frameStartNanos,
                      drawNanos,
                      flushNanos,
                      metrics.paragraphCommands,
-                     metrics.paragraphNanos);
+                     metrics.paragraphNanos,
+                     metrics.shadowCommands);
         return JNI_TRUE;
     }
 }
