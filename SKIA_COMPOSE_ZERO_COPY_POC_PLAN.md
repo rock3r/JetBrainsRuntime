@@ -8619,3 +8619,36 @@ Next checkpoint:
 
 - Add CMP metadata/factory support for RuntimeEffect color filters, then decide the JBR descriptor schema for replaying
   those filters through the existing typed effect-handle path.
+
+## Checkpoint: CMP RuntimeEffect ColorFilter Metadata
+
+Status: CMP can now create RuntimeEffect-backed color filters on the Skiko desktop path while retaining the SKSL/uniform
+metadata needed for a future JBR-owned effect descriptor.
+
+What changed:
+
+- Added `RuntimeEffectColorFilter(...)` to CMP desktop/skiko graphics.
+- The factory compiles the normal Skiko `RuntimeEffect.makeForColorFilter(...)` path and calls the newly-added
+  Skiko `RuntimeEffect.makeColorFilter(...)`, so old rendering remains meaningful.
+- CMP stores JBR metadata beside the color filter:
+  - ASCII SKSL source
+  - copied float uniform payload
+  - named uniform schema using the same `RuntimeEffectUniform` model as RuntimeEffect shaders
+- Shared the existing float-uniform `SkData` packing helper between RuntimeEffect shader and color-filter factories.
+- Added a focused CMP desktop test proving the factory preserves JBR metadata.
+
+Verification:
+
+- CMP ui-graphics desktop compile passed:
+  - command: `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:compileKotlinDesktop`
+- Initial focused CMP test caught a native artifact mismatch:
+  - failure: `UnsatisfiedLinkError: 'long org.jetbrains.skia.RuntimeEffectKt._nMakeColorFilter(long, long)'`
+- Rebuilt and published Skiko macOS arm64 runtime artifact with the new JNI symbol:
+  - command: `./gradlew linkJvmBindingsMacosArm64 skikoJvmRuntimeJarMacosArm64 publishSkikoJvmRuntimeMacosArm64PublicationToMavenLocal publishAwtPublicationToMavenLocal`
+- Focused CMP metadata test passed:
+  - command: `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.runtimeEffectColorFilterKeepsJbrSkiaMetadata`
+
+Next checkpoint:
+
+- Add a typed JBR effect descriptor for RuntimeEffect color filters and wire CMP command recording to define/use that
+  handle in saveLayer/image/solid-paint paths.
