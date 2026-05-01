@@ -487,6 +487,10 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   including rich mixed Swing/Compose, native text, RuntimeEffects, graphics-layer effects/shadows/Offscreen/3D, and exact
   bottom-swatches parity in every row:
   `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-185303/suite.tsv`.
+- [x] Focused offset/chained renderEffect + blend/color-matrix rows: 2/2 command rows and 2/2 screenshot parity rows
+  passed with no command fallback and exact bottom-swatches parity:
+  `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-190948/suite.tsv`,
+  `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-191109/suite.tsv`.
 - [x] Full Magic Jewel command-probe sweep after RuntimeEffect child-type crash hardening: 46/46 rows passed, adding the
   `commands-runtime-effect-child-type-fallback` row:
   `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-121521/suite.tsv`.

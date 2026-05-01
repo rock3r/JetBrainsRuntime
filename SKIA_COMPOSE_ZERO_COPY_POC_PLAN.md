@@ -10388,3 +10388,39 @@ Next checkpoint:
 
 - Choose the next functionality slice from the remaining non-intentional gaps. Current automated evidence says the broad
   command and screenshot suites are green; remaining picture replay is limited to explicit fallback probes.
+
+## Checkpoint: Offset/Chained RenderEffect + Blend/Descriptor Replay
+
+Status: completed as broader image-filter tree coverage for graphics-layer paint metadata.
+
+What changed:
+
+- CMP recorder unit coverage now asserts a nested image-filter descriptor tree (blur input plus offset wrapper) can be
+  replayed as an outer image-filter saveLayer followed by an inner blend+descriptor-color-filter saveLayer.
+- Magic Jewel command and screenshot parity suites now include:
+  - `commands-graphics-layer-offset-effect-blend-color-matrix-filter`,
+  - `commands-graphics-layer-chained-render-effect-blend-color-matrix-filter`,
+  - `parity-graphics-layer-offset-effect-blend-color-matrix-filter`,
+  - `parity-graphics-layer-chained-render-effect-blend-color-matrix-filter`.
+
+Verification:
+
+- CMP focused recorder test passed:
+  - command: `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.nestedRecordingReplaysLayerNestedImageFilterThenBlendModeAndColorMatrixFilter`
+- Magic Jewel command-suite syntax passed:
+  - command: `bash -n scripts/jbr-skia-command-probe-suite.sh`
+- Magic Jewel screenshot-suite syntax passed:
+  - command: `bash -n scripts/jbr-skia-screenshot-parity-suite.sh`
+- Focused Magic Jewel command rows passed:
+  - command: `CASES="commands-graphics-layer-offset-effect-blend-color-matrix-filter commands-graphics-layer-chained-render-effect-blend-color-matrix-filter" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-190948/suite.tsv`
+  - result: both rows passed with `fallbacks=0`, `unsupported=none`, and `jbr_picture_frames=0`.
+- Focused Magic Jewel screenshot parity rows passed:
+  - command: `CASES="parity-graphics-layer-offset-effect-blend-color-matrix-filter parity-graphics-layer-chained-render-effect-blend-color-matrix-filter" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-191109/suite.tsv`
+  - result: both rows passed and kept exact bottom-swatches parity.
+
+Next checkpoint:
+
+- Fold the offset/chained renderEffect paint rows into the expanded graphics-layer command matrix and broad screenshot
+  parity suite.
