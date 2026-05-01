@@ -8056,6 +8056,10 @@ Verification:
     - pure color: `avg_delta=1.632`, `bad_pixel_ratio=0.03871`, `compose_bad_pixel_ratio=0.06168`
     - uniform only: `avg_delta=1.633`, `bad_pixel_ratio=0.03874`, `compose_bad_pixel_ratio=0.06173`
     - child only: `avg_delta=1.642`, `bad_pixel_ratio=0.03899`, `compose_bad_pixel_ratio=0.06215`
+- Combined RuntimeEffect parity row passed:
+  - command: `CASES=parity-runtime-effect-shader DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-060341/suite.tsv`
+  - metrics: `avg_delta=1.636`, `bad_pixel_ratio=0.03883`, `compose_bad_pixel_ratio=0.06188`.
 - Graphics-layer effects parity row passed:
   - command: `CASES=parity-graphics-layer-effects DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-screenshot-parity-suite.sh`
   - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-055842/suite.tsv`
@@ -8065,8 +8069,7 @@ Known notes:
 
 - These parity rows use the same broad thresholds as the rich baseline. The next validation-hardening step is to split
   tighter region-specific thresholds for Compose/Jewel-owned regions from known Swing/text raster drift.
-- `parity-runtime-effect-shader` is wired but was not included in this smoke pass; the command-probe suite already covers
-  the combined child+uniform descriptor and build-fallback row.
+- The command-probe suite still remains the primary validation for the intentional RuntimeEffect build-fallback row.
 
 ## Checkpoint: Configurable Screenshot Region Gates
 
