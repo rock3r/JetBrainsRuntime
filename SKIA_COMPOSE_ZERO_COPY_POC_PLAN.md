@@ -10336,3 +10336,19 @@ Next checkpoint:
 
 - Run an expanded compact graphics-layer matrix including all renderEffect/blend/filter combinations, then either fold
   the rows into the broader command sweep or move to the next unsupported graphics-layer edge.
+
+## Checkpoint: Expanded Graphics-Layer Command Matrix
+
+Status: completed after adding nested renderEffect/blend/filter combinations.
+
+Verification:
+
+- Expanded Magic Jewel graphics-layer command matrix passed:
+  - command: `CASES="commands-graphics-layer commands-graphics-layer-modulate-alpha commands-graphics-layer-offscreen commands-graphics-layer-render-effect commands-graphics-layer-offset-effect commands-graphics-layer-chained-render-effect commands-graphics-layer-render-effect-color-filter commands-graphics-layer-render-effect-blend-mode commands-graphics-layer-render-effect-color-matrix-filter commands-graphics-layer-render-effect-blend-color-filter commands-graphics-layer-render-effect-blend-color-matrix-filter commands-graphics-layer-rotationx commands-graphics-layer-rotationy commands-graphics-layer-rotationxy commands-graphics-layer-near-camera commands-graphics-layer-clip commands-graphics-layer-round-clip commands-graphics-layer-path-clip commands-graphics-layer-blend-mode commands-graphics-layer-color-filter commands-graphics-layer-color-matrix-filter commands-graphics-layer-blend-color-filter commands-graphics-layer-blend-color-matrix-filter commands-graphics-layer-shadow commands-graphics-layer-round-shadow commands-graphics-layer-path-shadow" DURATION_SECONDS=3 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-181133/suite.tsv`
+  - result: all twenty-six rows passed with `fallbacks=0`, `unsupported=none`, and `jbr_picture_frames=0`.
+
+Next checkpoint:
+
+- Fold the expanded renderEffect/blend/filter rows into the broad command sweep result, then inspect the remaining
+  unsupported graphics-path surface for the next implementation slice.
