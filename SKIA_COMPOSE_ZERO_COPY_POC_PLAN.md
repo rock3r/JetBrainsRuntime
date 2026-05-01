@@ -10799,3 +10799,38 @@ Next checkpoint:
 
 - Commit the descriptor-version fallback slice in Skiko, Magic Jewel, and JBR docs, then continue with remaining
   descriptor lifecycle/version tests or the next renderer coverage gap.
+
+## Checkpoint: Descriptor Use-After-Evict Fallback Probe
+
+Status: completed as a stale-handle compatibility regression slice.
+
+What changed:
+
+- Skiko has a test-only `skiko.jbr.interop.corruptDescriptorUseAfterEvictForTesting` hook that inserts a
+  `COMMAND_EVICT_SHADER_HANDLE` for the same handle immediately before a `COMMAND_FILL_RECT_SHADER_REF` use.
+- Magic Jewel exposes the hook as `MAGIC_JEWEL_CORRUPT_DESCRIPTOR_USE_AFTER_EVICT=true` and adds
+  `commands-invalid-descriptor-use-after-evict-fallback` to the command probe suite.
+- The new row proves JBR rejects stale/use-after-free shader handles with structured `command-stream-invalid` fallback
+  instead of replaying with an invalid descriptor.
+
+Verification:
+
+- Magic Jewel script syntax checks passed:
+  - command: `bash -n scripts/run-jbr-skia.sh`
+  - command: `bash -n scripts/jbr-skia-interop-report.sh`
+  - command: `bash -n scripts/jbr-skia-command-probe-suite.sh`
+- Skiko AWT compile and local publish passed:
+  - command: `./gradlew --no-daemon --no-configuration-cache compileKotlinAwt publishToMavenLocal`
+- Focused stale-handle fallback row passed:
+  - command: `CASES="commands-invalid-descriptor-use-after-evict-fallback" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-233924/suite.tsv`
+  - result: `SKIKO_JBR_INTEROP_DESCRIPTOR_USE_AFTER_EVICT_CORRUPTED` and
+    `SKIKO_JBR_INTEROP_FALLBACK reason=command-stream-invalid` observed; `jbr_command_frames=0`.
+- Descriptor invalid-stream group passed:
+  - command: `CASES="commands-invalid-descriptor-use-fallback commands-invalid-descriptor-use-after-evict-fallback commands-invalid-descriptor-version-fallback commands-runtime-effect-child-type-fallback" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-234018/suite.tsv`
+
+Next checkpoint:
+
+- Commit the stale-handle slice, rerun the broad command-probe suite with the expanded default case list, then continue
+  with remaining descriptor lifecycle/version tests or renderer coverage.
