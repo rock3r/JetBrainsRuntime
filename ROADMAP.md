@@ -236,7 +236,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Add narrow dash path-effect stroked-line support through a versioned command instead of picture fallback.
 - [x] Extend dash path-effect command replay to stroked rectangles with ABI 93 validation and native/Java2D replay.
 - [x] Extend dash path-effect command replay to stroked rounded rectangles with ABI 94 validation and native/Java2D replay.
-- [ ] Expand path-effect command coverage beyond dash stroked lines only through serialized descriptors or JBR-owned effect handles.
+- [x] Expand path-effect command coverage beyond dash stroked lines through dashed arbitrary paths plus corner, stamped,
+  and chained path-effect descriptors.
 - [x] Add screenshot-level text-presence assertions using stable pixel regions for top/bottom Magic Jewel labels.
 - [x] Add screenshot-level text placement assertions using stable dark-pixel bounding boxes.
 - [x] Add paragraph-row screenshot assertions for native-text layout probes.
@@ -515,6 +516,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   row: 64/64 rows passed. Strict rows stayed on command replay; only `commands-invalid-gradient-fallback` used picture
   replay with the expected `sweepGradientStops` unsupported marker:
   `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-205417/suite.tsv`.
+- [x] Focused path-effect screenshot parity row covering dash, corner, stamped, and chained path effects passed:
+  `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-213130/suite.tsv`.
 - [x] Full Magic Jewel command-probe sweep after RuntimeEffect child-type crash hardening: 46/46 rows passed, adding the
   `commands-runtime-effect-child-type-fallback` row:
   `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-121521/suite.tsv`.

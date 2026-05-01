@@ -10568,3 +10568,31 @@ Next checkpoint:
 
 - Reassess the remaining graphics-layer gaps. The practical next candidates are elevation-accurate shadow semantics,
   screenshot parity coverage for any still-command-only rows, and a quieter benchmark pass once functionality changes pause.
+
+## Checkpoint: Focused PathEffect Screenshot Parity Row
+
+Status: completed as a focused visual regression row for path-effect command replay.
+
+What changed:
+
+- Magic Jewel's screenshot parity suite now includes `parity-path-effect`.
+- The row isolates dash, corner, stamped, and chained path-effect drawing by disabling unrelated blend/filter/path/arc/
+  round-rect/gradient probes while keeping the old/new window comparison.
+- Magic Jewel `README.md` documents the focused path-effect parity row.
+
+Verification:
+
+- Magic Jewel suite syntax passed:
+  - command: `bash -n scripts/jbr-skia-screenshot-parity-suite.sh`
+- Magic Jewel report syntax passed:
+  - command: `bash -n scripts/jbr-skia-interop-report.sh`
+- Focused Magic Jewel path-effect screenshot parity row passed:
+  - command: `CASES="parity-path-effect" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-213130/suite.tsv`
+  - result: `status=passed`, `avg_delta=2.208`, `bad_pixel_ratio=0.05275`,
+    `compose_bad_pixel_ratio=0.07736`, `compose_bottom_swatches_bad_pixel_ratio=0.00000`.
+
+Next checkpoint:
+
+- Run the broad default screenshot parity suite with `parity-path-effect` included, then continue with the next
+  remaining functionality gap.
