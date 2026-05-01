@@ -96,6 +96,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] ABI 89: RuntimeEffect/SKSL descriptors carry named uniform schema metadata that CMP writes and JBR Java/native validation checks before compilation.
 - [x] ABI 90: RuntimeEffect/SKSL descriptors carry named child shader schema metadata, and JBR can use `SkRuntimeEffectBuilder` when all children are named.
 - [x] RuntimeEffect builder failures emit parseable JBR markers, and Magic Jewel has a bad-child-name probe/report assertion.
+  - [x] RuntimeEffect compile/build failure markers now include hashed diagnostic fields, and the bad-child probe asserts the
+    specific `stage=missing-child` builder path.
   - [x] Magic Jewel RuntimeEffect conformance probes cover pure color, uniform-only animation, child-only composition, combined child+uniform, and builder-failure fallback cases.
   - [x] Live RuntimeEffect conformance subset passed for ABI 90: pure color, uniform-only, child-only, combined child+uniform, and the bad-child builder-failure fallback.
   - [x] Add a live animation preservation regression job that asserts non-frozen command-mode frame markers continue advancing.
@@ -130,7 +132,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   - [x] Missing CMP command-cache clear hook is a structured Skiko fallback (`command-cache-clear-unavailable`) instead of a silent stale-handle risk.
   - [ ] Implement JBR-owned shader/effect handles: Skiko/CMP serializes descriptors or create requests, JBR constructs objects inside its Skia runtime, draw commands reference versioned handles, and handles are scoped/evicted by destination context.
   - [x] Implement a concrete generic-shader MVP: CMP serializes a `RuntimeEffect` descriptor with ASCII SKSL source and raw float uniforms; JBR compiles/caches it inside the destination context and draw commands reference the JBR-owned handle.
-  - [ ] Extend Skia runtime effects via descriptor payloads: child color-filter handles, richer compile diagnostics, and stable fallback markers.
+  - [ ] Extend Skia runtime effects via descriptor payloads: child color-filter handles and any remaining shader-family fallback markers.
   - [ ] Add shader/effect lifecycle commands for create, use, context-scoped cache hit, compile failure, eviction, and context migration invalidation; never pass raw Skiko `SkShader*`, `SkImageFilter*`, or `SkRuntimeEffect*` pointers across the ABI.
   - [x] Add RuntimeEffect conformance probes in Magic Jewel: one pure color shader, one child-shader composition, one uniform animation, one builder/compile-failure fallback, and one old-runtime capability fallback.
   - [ ] Add Magic Jewel probes that force handle creation, reuse, context migration, eviction, and fallback without relying on raw Skiko `SkShader*` or `SkRuntimeEffect*` pointers.
@@ -322,6 +324,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Real undecorated Swing popup-window smoke captured separately by window id.
 - [x] RuntimeEffect source/uniform/child/build-fallback conformance subset through JBR command replay:
   `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-050347/suite.tsv`.
+- [x] RuntimeEffect bad-child build-fallback diagnostic row with `stage=missing-child` assertion:
+  `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-075650/suite.tsv`.
 - [x] Full Magic Jewel command-probe sweep: 39/39 rows passed with ABI 90 refreshed artifacts:
   `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-053403/suite.tsv`.
 - [x] Broad command sweep includes live animation, mixed Swing popups/menus, text/images, image/composite shaders,

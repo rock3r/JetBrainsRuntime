@@ -483,6 +483,7 @@ static bool readGradientStops(const std::vector<jint>& payload,
 
 static uint64_t imageCacheKey(jint high, jint low);
 static uint64_t shaderSourceHash(const std::vector<jint>& payload, size_t skslStart, jint skslLength);
+static uint64_t asciiStringHash(const char* data, size_t length);
 static int runtimeEffectUniformSchemaEnd(const std::vector<jint>& payload,
                                          int offset,
                                          int schemaEnd,
@@ -644,13 +645,15 @@ static sk_sp<SkShader> makeDescriptorShader(const ShaderDescriptor& descriptor, 
         SkRuntimeEffect::Result result = SkRuntimeEffect::MakeForShader(SkString(sksl.c_str(), sksl.size()));
         if (!result.effect || !result.errorText.isEmpty()) {
             const uint64_t sourceHash = imageCacheKey(descriptor.payload[5], descriptor.payload[6]);
+            const uint64_t errorHash = asciiStringHash(result.errorText.c_str(), result.errorText.size());
             std::fprintf(stderr,
-                         "JBR_SKIA_INTEROP_RUNTIME_EFFECT_COMPILE_FAILED hash=0x%016llx skslLength=%d uniforms=%d children=%d errorLength=%zu\n",
+                         "JBR_SKIA_INTEROP_RUNTIME_EFFECT_COMPILE_FAILED hash=0x%016llx skslLength=%d uniforms=%d children=%d errorLength=%zu errorHash=0x%016llx\n",
                          static_cast<unsigned long long>(sourceHash),
                          skslLength,
                          uniformFloatCount,
                          childCount,
-                         result.errorText.size());
+                         result.errorText.size(),
+                         static_cast<unsigned long long>(errorHash));
             return nullptr;
         }
         sk_sp<SkData> uniformData;
@@ -686,7 +689,18 @@ static sk_sp<SkShader> makeDescriptorShader(const ShaderDescriptor& descriptor, 
                 }
                 const float* values = reinterpret_cast<const float*>(
                         descriptor.payload.data() + skslStart + skslLength + floatOffset);
-                if (!builder.uniform(name).set<float>(values, floatCount)) return nullptr;
+                if (!builder.uniform(name).set<float>(values, floatCount)) {
+                    std::fprintf(stderr,
+                                 "JBR_SKIA_INTEROP_RUNTIME_EFFECT_BUILD_FAILED hash=0x%016llx stage=uniform-set nameHash=0x%016llx skslLength=%d uniforms=%d children=%d namedUniforms=%d namedChildren=%d\n",
+                                 static_cast<unsigned long long>(expectedHash),
+                                 static_cast<unsigned long long>(asciiStringHash(name.data(), name.size())),
+                                 skslLength,
+                                 uniformFloatCount,
+                                 childCount,
+                                 namedUniformCount,
+                                 namedChildCount);
+                    return nullptr;
+                }
             }
             int childOffset = childSchemaStart;
             for (jint i = 0; i < namedChildCount; i++) {
@@ -699,8 +713,9 @@ static sk_sp<SkShader> makeDescriptorShader(const ShaderDescriptor& descriptor, 
                 }
                 if (result.effect->findChild(name) == nullptr) {
                     std::fprintf(stderr,
-                                 "JBR_SKIA_INTEROP_RUNTIME_EFFECT_BUILD_FAILED hash=0x%016llx skslLength=%d uniforms=%d children=%d namedUniforms=%d namedChildren=%d\n",
+                                 "JBR_SKIA_INTEROP_RUNTIME_EFFECT_BUILD_FAILED hash=0x%016llx stage=missing-child nameHash=0x%016llx skslLength=%d uniforms=%d children=%d namedUniforms=%d namedChildren=%d\n",
                                  static_cast<unsigned long long>(expectedHash),
+                                 static_cast<unsigned long long>(asciiStringHash(name.data(), name.size())),
                                  skslLength,
                                  uniformFloatCount,
                                  childCount,
@@ -713,7 +728,7 @@ static sk_sp<SkShader> makeDescriptorShader(const ShaderDescriptor& descriptor, 
             sk_sp<SkShader> shader = builder.makeShader(nullptr);
             if (!shader) {
                 std::fprintf(stderr,
-                             "JBR_SKIA_INTEROP_RUNTIME_EFFECT_BUILD_FAILED hash=0x%016llx skslLength=%d uniforms=%d children=%d namedUniforms=%d namedChildren=%d\n",
+                             "JBR_SKIA_INTEROP_RUNTIME_EFFECT_BUILD_FAILED hash=0x%016llx stage=make-shader skslLength=%d uniforms=%d children=%d namedUniforms=%d namedChildren=%d\n",
                              static_cast<unsigned long long>(expectedHash),
                              skslLength,
                              uniformFloatCount,
@@ -808,6 +823,15 @@ static uint64_t shaderSourceHash(const std::vector<jint>& payload, size_t skslSt
     uint64_t hash = 14695981039346656037ULL;
     for (jint i = 0; i < skslLength; i++) {
         hash ^= static_cast<uint8_t>(payload[skslStart + i]);
+        hash *= 1099511628211ULL;
+    }
+    return hash;
+}
+
+static uint64_t asciiStringHash(const char* data, size_t length) {
+    uint64_t hash = 14695981039346656037ULL;
+    for (size_t i = 0; i < length; i++) {
+        hash ^= static_cast<uint8_t>(data[i]);
         hash *= 1099511628211ULL;
     }
     return hash;

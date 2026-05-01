@@ -8520,3 +8520,37 @@ Known notes:
 
 - The eviction row is intentionally heavy; the low frame count is expected and should not be interpreted as a normal
   rendering performance benchmark.
+
+## Checkpoint: RuntimeEffect Build-Failure Diagnostics
+
+Status: JBR RuntimeEffect builder fallback markers now identify the failing builder stage without dumping raw SKSL or Skia
+error text into logs.
+
+What changed:
+
+- JBR native RuntimeEffect replay now hashes diagnostic details for stable one-line markers:
+  - compile failures include `errorHash=0x...`
+  - builder failures include `stage=missing-child|uniform-set|make-shader`
+  - child/uniform assignment failures include `nameHash=0x...`
+- The bad-child Magic Jewel probe now requires `EXPECT_RUNTIME_EFFECT_BUILD_FAILURE_STAGE=missing-child`, so the report
+  proves that the intended JBR builder path failed gracefully instead of falling through some unrelated fallback.
+- Magic Jewel parser fixtures and README marker documentation were updated for the richer RuntimeEffect diagnostics.
+- `ROADMAP.md` records the diagnostic slice and keeps remaining RuntimeEffect work focused on child color-filter handles
+  and other shader-family fallback markers.
+
+Verification:
+
+- Magic Jewel script syntax passed:
+  - command: `bash -n scripts/jbr-skia-interop-report.sh scripts/test-jbr-skia-report-validation.sh scripts/jbr-skia-command-probe-suite.sh`
+- Magic Jewel report parser tests passed:
+  - command: `./scripts/test-jbr-skia-report-validation.sh`
+  - result: `JBR_SKIA_REPORT_VALIDATION_TESTS passed`
+- Focused RuntimeEffect build-fallback diagnostic row passed:
+  - command: `CASES="commands-runtime-effect-build-fallback" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-075650/suite.tsv`
+  - marker sample: `JBR_SKIA_INTEROP_RUNTIME_EFFECT_BUILD_FAILED hash=0x6836c43e20a229b7 stage=missing-child nameHash=0xd7c56a11bd76ad10 skslLength=304 uniforms=1 children=1 namedUniforms=1 namedChildren=1`
+
+Next checkpoint:
+
+- Decide whether the next RuntimeEffect slice is child color-filter handles or broader screenshot parity for the
+  RuntimeEffect conformance rows.
