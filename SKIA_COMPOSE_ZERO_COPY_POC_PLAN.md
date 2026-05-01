@@ -7937,7 +7937,9 @@ What changed:
 
 - Magic Jewel reports accept `EXPECT_MIN_APP_NEW_FRAMES=N` in strict command mode.
 - The validator counts `MAGIC_JEWEL_COMPOSE_FRAME` markers in the new-renderer sample window and fails if the count is below `N`.
-- The command-probe suite now includes `commands-live-animation`, which runs the normal non-frozen command renderer and requires at least five Compose frame markers.
+- Skiko has a test-only `skiko.jbr.interop.forceTinyFullSceneOnceForTesting=true` switch that replaces the second meaningful `FullScene` command stream with a tiny header-only full-scene frame and logs `SKIKO_JBR_INTEROP_TINY_FULL_SCENE_INJECTED`.
+- Magic Jewel forwards this via `SKIKO_FORCE_TINY_FULL_SCENE_ONCE_FOR_TEST=true`; reports expose `skiko_tiny_full_scene_injections` and can assert it with `EXPECT_MIN_TINY_FULL_SCENE_INJECTIONS=N`.
+- The command-probe suite now includes `commands-live-animation`, which runs the normal non-frozen command renderer, requires at least five Compose frame markers, forces one tiny `FullScene` frame, and asserts the injection marker.
 - The README documents the new assertion and keeps the distinction clear: screenshot parity intentionally freezes animation; ordinary report/probe runs validate liveness.
 
 Verification:
@@ -7945,7 +7947,10 @@ Verification:
 - Magic Jewel report scripts passed syntax validation and parser fixtures:
   - `bash -n scripts/jbr-skia-interop-report.sh scripts/jbr-skia-command-probe-suite.sh scripts/test-jbr-skia-report-validation.sh`
   - `bash scripts/test-jbr-skia-report-validation.sh`
+- Skiko source whitespace validation passed:
+  - `git diff --check`
 
 Known notes:
 
-- This assertion proves frame production, not visual pixel movement. The next refinement is a deterministic transient tiny-frame trigger plus either marker correlation or a pair of window-only captures at different phases.
+- This assertion proves frame production and exercises the tiny-frame preservation branch. It does not yet compare visual pixel movement across two live phases.
+- Focused Skiko tests for the underlying command-frame cache were added, but this shell could not execute them because the Gradle wrapper download for `gradle-8.14.3-all.zip` timed out before build execution.
