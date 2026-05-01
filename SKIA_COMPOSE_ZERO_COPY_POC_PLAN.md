@@ -10764,3 +10764,38 @@ Next checkpoint:
 
 - Commit the metric slice, then continue renderer functionality work from `ROADMAP.md`, with the strongest candidates being
   the remaining generic shader/color-filter coverage and broader graphics-layer image-filter surfaces.
+
+## Checkpoint: Descriptor Version Fallback Probe
+
+Status: completed as a strict compatibility regression slice.
+
+What changed:
+
+- Skiko has a test-only `skiko.jbr.interop.corruptDescriptorVersionForTesting` hook that mutates one shader descriptor
+  version after CMP recording but before JBR command submission.
+- Magic Jewel exposes the hook as `MAGIC_JEWEL_CORRUPT_DESCRIPTOR_VERSION=true` and adds
+  `commands-invalid-descriptor-version-fallback` to the command probe suite.
+- The new row uses a RuntimeEffect shader descriptor, corrupts the descriptor version, and requires the structured
+  `command-stream-invalid` fallback with zero JBR command frames and zero picture frames.
+
+Verification:
+
+- Magic Jewel script syntax checks passed:
+  - command: `bash -n scripts/run-jbr-skia.sh`
+  - command: `bash -n scripts/jbr-skia-interop-report.sh`
+  - command: `bash -n scripts/jbr-skia-command-probe-suite.sh`
+- Skiko AWT compile and local publish passed:
+  - command: `./gradlew --no-daemon --no-configuration-cache compileKotlinAwt`
+  - command: `./gradlew --no-daemon --no-configuration-cache publishToMavenLocal`
+- Focused descriptor-version fallback row passed:
+  - command: `CASES="commands-invalid-descriptor-version-fallback" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-233237/suite.tsv`
+  - result: `SKIKO_JBR_INTEROP_DESCRIPTOR_VERSION_CORRUPTED` and `SKIKO_JBR_INTEROP_FALLBACK reason=command-stream-invalid` observed; `jbr_command_frames=0`.
+- Neighboring invalid-stream fallback rows passed together:
+  - command: `CASES="commands-invalid-descriptor-use-fallback commands-invalid-descriptor-version-fallback commands-runtime-effect-child-type-fallback" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-233318/suite.tsv`
+
+Next checkpoint:
+
+- Commit the descriptor-version fallback slice in Skiko, Magic Jewel, and JBR docs, then continue with remaining
+  descriptor lifecycle/version tests or the next renderer coverage gap.
