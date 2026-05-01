@@ -8652,3 +8652,53 @@ Next checkpoint:
 
 - Add a typed JBR effect descriptor for RuntimeEffect color filters and wire CMP command recording to define/use that
   handle in saveLayer/image/solid-paint paths.
+
+## Checkpoint: ABI 91 RuntimeEffect ColorFilter Descriptor
+
+Status: RuntimeEffect-backed Compose color filters can now render through the typed JBR effect-descriptor path without
+passing Skiko-owned `SkColorFilter*` or `SkRuntimeEffect*` objects across the ABI.
+
+What changed:
+
+- JBR private API, public Runtime API, Skiko compatibility gates, and CMP command recording now use command ABI 91.
+- The public Runtime API shim exposes `COMMAND_CAP64_HIGH_EFFECT_DESCRIPTOR_RUNTIME_COLOR_FILTER` and
+  `COMMAND_EFFECT_DESCRIPTOR_RUNTIME_COLOR_FILTER`, so Skiko can require the feature explicitly before using the fast
+  path.
+- CMP serializes RuntimeEffect color-filter metadata into a typed effect descriptor:
+  - ASCII SKSL source
+  - 64-bit source hash
+  - raw float uniform bits
+  - named uniform schema entries
+- JBR Java validation and native replay validate the descriptor payload shape, source hash, ASCII source, and named
+  uniform schema before accepting or compiling it.
+- JBR native replay compiles the color filter with `SkRuntimeEffect::MakeForColorFilter(...)` and
+  `SkRuntimeEffect::makeColorFilter(...)` inside JBR-owned Skia, then applies the resulting filter through the existing
+  descriptor-handle fill path.
+- Magic Jewel adds `MAGIC_JEWEL_COMPOSE_RUNTIME_EFFECT_COLOR_FILTER=true` plus a
+  `commands-runtime-effect-color-filter` command-probe row.
+- `ROADMAP.md` records ABI 91 and keeps child color-filter handles plus remaining shader-family fallback markers as
+  follow-up RuntimeEffect work.
+
+Verification:
+
+- Skiko AWT publication after ABI 91 compatibility update passed:
+  - command: `./gradlew --no-daemon --no-configuration-cache compileKotlinAwt publishAwtPublicationToMavenLocal`
+- JBR local artifact refresh passed after public Runtime API/JBR/native changes:
+  - command: `./scripts/rebuild-jbr-skia-local-artifacts.sh`
+- Rebuilt public API shim reports ABI 91 and the new descriptor constants:
+  - command: `javap -classpath /tmp/jbr-api-shim.jar com.jetbrains.JBRSkia | rg "RUNTIME_COLOR|ABI_ID|HIGH_EFFECT"`
+- CMP focused recorder/metadata tests passed:
+  - command: `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesRuntimeEffectColorFilterDescriptorRectInStrictMode --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.runtimeEffectColorFilterKeepsJbrSkiaMetadata`
+- Focused Magic Jewel RuntimeEffect color-filter row passed with no fallback:
+  - command: `CASES="commands-runtime-effect-color-filter" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-083405/suite.tsv`
+  - result: `status=passed fallback_new_count=0 unsupported=none jbr_command_frames=168`
+- Broader descriptor regression subset passed with no fallback across RuntimeEffect shader/color-filter rows, image
+  color-matrix, typed color filters, and graphics-layer color-filter rows:
+  - command: `CASES="commands-runtime-effect-shader commands-runtime-effect-pure-color commands-runtime-effect-uniform-only commands-runtime-effect-child-only commands-runtime-effect-color-filter commands-image-color-matrix-filter commands-color-filter-handle commands-color-matrix-filter commands-lighting-filter commands-graphics-layer-color-filter commands-graphics-layer-color-matrix-filter commands-graphics-layer-blend-color-filter commands-graphics-layer-blend-color-matrix-filter" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-083644/suite.tsv`
+
+Next checkpoint:
+
+- Commit the five-repo ABI 91 slice, then continue with child color-filter handles or screenshot parity for the new
+  RuntimeEffect color-filter probe.

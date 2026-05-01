@@ -79,7 +79,7 @@
 
 #include "MTLSurfaceDataBase.h"
 
-static constexpr jint ABI_ID = 90;
+static constexpr jint ABI_ID = 91;
 static constexpr jint COMMAND_STREAM_MAGIC = 1246972723;
 static constexpr jint COMMAND_STREAM_HEADER_SIZE = 6;
 static constexpr jint COMMAND_STREAM_FLAGS_NONE = 0;
@@ -155,6 +155,7 @@ static constexpr jint COMMAND_EFFECT_DESCRIPTOR_BLUR_IMAGE_FILTER = 4;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_OFFSET_IMAGE_FILTER = 5;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_BLUR_IMAGE_FILTER_WITH_INPUT = 6;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_OFFSET_IMAGE_FILTER_WITH_INPUT = 7;
+static constexpr jint COMMAND_EFFECT_DESCRIPTOR_RUNTIME_COLOR_FILTER = 8;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_VERSION_1 = 1;
 static constexpr jint COMMAND_SHADER_DESCRIPTOR_LINEAR_GRADIENT = 1;
 static constexpr jint COMMAND_SHADER_DESCRIPTOR_RADIAL_GRADIENT = 2;
@@ -221,6 +222,7 @@ struct ColorFilterDescriptor {
     jint tileMode = 0;
     SkScalar dx = 0;
     SkScalar dy = 0;
+    std::vector<jint> payload;
     std::shared_ptr<ColorFilterDescriptor> child;
 };
 
@@ -379,6 +381,8 @@ static SkScalar skScalarFromRawBits(jint bits) {
     return static_cast<SkScalar>(value);
 }
 
+static sk_sp<SkColorFilter> makeDescriptorRuntimeColorFilter(const ColorFilterDescriptor& descriptor);
+
 static bool setDescriptorColorFilter(SkPaint* paint, const ColorFilterDescriptor& descriptor) {
     if (descriptor.type == COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER) {
         if (descriptor.blendMode != COMMAND_BLEND_MODE_SRC_IN) {
@@ -393,6 +397,14 @@ static bool setDescriptorColorFilter(SkPaint* paint, const ColorFilterDescriptor
     }
     if (descriptor.type == COMMAND_EFFECT_DESCRIPTOR_LIGHTING_FILTER) {
         paint->setColorFilter(SkColorFilters::Lighting(descriptor.argb, static_cast<SkColor>(descriptor.blendMode)));
+        return true;
+    }
+    if (descriptor.type == COMMAND_EFFECT_DESCRIPTOR_RUNTIME_COLOR_FILTER) {
+        sk_sp<SkColorFilter> colorFilter = makeDescriptorRuntimeColorFilter(descriptor);
+        if (!colorFilter) {
+            return false;
+        }
+        paint->setColorFilter(std::move(colorFilter));
         return true;
     }
     return false;
@@ -745,6 +757,62 @@ static sk_sp<SkShader> makeDescriptorShader(const ShaderDescriptor& descriptor, 
                 nullptr);
     }
     return nullptr;
+}
+
+static sk_sp<SkColorFilter> makeDescriptorRuntimeColorFilter(const ColorFilterDescriptor& descriptor) {
+    if (descriptor.type != COMMAND_EFFECT_DESCRIPTOR_RUNTIME_COLOR_FILTER || descriptor.payload.size() < 5) {
+        return nullptr;
+    }
+    const jint skslLength = descriptor.payload[0];
+    const jint uniformFloatCount = descriptor.payload[1];
+    const jint namedUniformCount = descriptor.payload[2];
+    if (skslLength <= 0 ||
+            skslLength > 4096 ||
+            uniformFloatCount < 0 ||
+            uniformFloatCount > 256 ||
+            namedUniformCount < 0 ||
+            namedUniformCount > 16 ||
+            descriptor.payload.size() < static_cast<size_t>(5 + skslLength + uniformFloatCount)) {
+        return nullptr;
+    }
+    const int schemaEnd = static_cast<int>(descriptor.payload.size()) - skslLength - uniformFloatCount;
+    const int skslStartInt = runtimeEffectUniformSchemaEnd(
+            descriptor.payload, 5, schemaEnd, namedUniformCount, uniformFloatCount);
+    if (skslStartInt < 0 ||
+            skslStartInt + skslLength + uniformFloatCount != static_cast<int>(descriptor.payload.size())) {
+        return nullptr;
+    }
+    const size_t skslStart = static_cast<size_t>(skslStartInt);
+    const uint64_t expectedHash = imageCacheKey(descriptor.payload[3], descriptor.payload[4]);
+    if (shaderSourceHash(descriptor.payload, skslStart, skslLength) != expectedHash) return nullptr;
+    std::string sksl;
+    sksl.reserve(static_cast<size_t>(skslLength));
+    for (jint i = 0; i < skslLength; i++) {
+        const jint code = descriptor.payload[skslStart + i];
+        if (code <= 0 || code > 127) return nullptr;
+        sksl.push_back(static_cast<char>(code));
+    }
+    SkRuntimeEffect::Result result = SkRuntimeEffect::MakeForColorFilter(SkString(sksl.c_str(), sksl.size()));
+    if (!result.effect || !result.errorText.isEmpty()) {
+        const uint64_t errorHash = asciiStringHash(result.errorText.c_str(), result.errorText.size());
+        std::fprintf(stderr,
+                     "JBR_SKIA_INTEROP_RUNTIME_COLOR_FILTER_COMPILE_FAILED hash=0x%016llx skslLength=%d uniforms=%d errorLength=%zu errorHash=0x%016llx\n",
+                     static_cast<unsigned long long>(expectedHash),
+                     skslLength,
+                     uniformFloatCount,
+                     result.errorText.size(),
+                     static_cast<unsigned long long>(errorHash));
+        return nullptr;
+    }
+    sk_sp<SkData> uniformData;
+    if (uniformFloatCount == 0) {
+        uniformData = SkData::MakeEmpty();
+    } else {
+        uniformData = SkData::MakeWithCopy(
+                descriptor.payload.data() + skslStart + skslLength,
+                static_cast<size_t>(uniformFloatCount) * sizeof(jint));
+    }
+    return result.effect->makeColorFilter(uniformData);
 }
 
 static jsize recordLengthFromBytes(jint recordByteLength) {
@@ -3066,6 +3134,40 @@ static bool drawCommandList(SkCanvas* canvas,
                     descriptor.dy = skScalarFromRawBits(commands[offset++]);
                     if (!std::isfinite(descriptor.dx) || !std::isfinite(descriptor.dy)) {
                         return false;
+                    }
+                } else if (descriptorType == COMMAND_EFFECT_DESCRIPTOR_RUNTIME_COLOR_FILTER) {
+                    if (payloadIntCount < 5) {
+                        return false;
+                    }
+                    descriptor.payload.reserve(static_cast<size_t>(payloadIntCount));
+                    for (jint i = 0; i < payloadIntCount; i++) {
+                        descriptor.payload.push_back(commands[offset++]);
+                    }
+                    const jint skslLength = descriptor.payload[0];
+                    const jint uniformFloatCount = descriptor.payload[1];
+                    const jint namedUniformCount = descriptor.payload[2];
+                    if (skslLength <= 0 ||
+                            skslLength > 4096 ||
+                            uniformFloatCount < 0 ||
+                            uniformFloatCount > 256 ||
+                            namedUniformCount < 0 ||
+                            namedUniformCount > 16 ||
+                            descriptor.payload.size() < static_cast<size_t>(5 + skslLength + uniformFloatCount)) {
+                        return false;
+                    }
+                    const int schemaEnd = static_cast<int>(descriptor.payload.size()) - skslLength - uniformFloatCount;
+                    const int skslStart = runtimeEffectUniformSchemaEnd(
+                            descriptor.payload, 5, schemaEnd, namedUniformCount, uniformFloatCount);
+                    if (skslStart < 0 || skslStart + skslLength + uniformFloatCount != static_cast<int>(descriptor.payload.size())) {
+                        return false;
+                    }
+                    const uint64_t expectedHash = imageCacheKey(descriptor.payload[3], descriptor.payload[4]);
+                    if (shaderSourceHash(descriptor.payload, static_cast<size_t>(skslStart), skslLength) != expectedHash) {
+                        return false;
+                    }
+                    for (jint i = 0; i < skslLength; i++) {
+                        const jint code = descriptor.payload[static_cast<size_t>(skslStart + i)];
+                        if (code <= 0 || code > 127) return false;
                     }
                 } else {
                     return false;

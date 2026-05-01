@@ -142,7 +142,8 @@ public class JBRSkiaService extends JBRSkia {
             COMMAND_CAP64_HIGH_SAVE_LAYER_IMAGE_FILTER_REF
                     | COMMAND_CAP64_HIGH_EFFECT_DESCRIPTOR_OFFSET_IMAGE_FILTER
                     | COMMAND_CAP64_HIGH_EFFECT_DESCRIPTOR_CHAIN_IMAGE_FILTER
-                    | COMMAND_CAP64_HIGH_SHADER_DESCRIPTOR_REF;
+                    | COMMAND_CAP64_HIGH_SHADER_DESCRIPTOR_REF
+                    | COMMAND_CAP64_HIGH_EFFECT_DESCRIPTOR_RUNTIME_COLOR_FILTER;
     private static final boolean NATIVE_BRIDGE_AVAILABLE = loadNativeBridge();
     private static final AtomicLong NEXT_SCOPE_ID = new AtomicLong(1);
     private static final int MAX_CACHED_IMAGES = 256;
@@ -583,6 +584,9 @@ public class JBRSkiaService extends JBRSkia {
                 float dx = Float.intBitsToFloat(commands[payloadOffset]);
                 float dy = Float.intBitsToFloat(commands[payloadOffset + 1]);
                 return Float.isFinite(dx) && Float.isFinite(dy);
+            }
+            if (descriptorType == COMMAND_EFFECT_DESCRIPTOR_RUNTIME_COLOR_FILTER) {
+                return validateRuntimeColorFilterDescriptorPayload(commands, record, payloadIntCount);
             }
             return false;
         }
@@ -1585,6 +1589,43 @@ public class JBRSkiaService extends JBRSkia {
         return false;
     }
 
+    private static boolean validateRuntimeColorFilterDescriptorPayload(
+            int[] commands,
+            CommandRecord record,
+            int payloadIntCount
+    ) {
+        int payloadStart = record.argsStart() + 5;
+        if (payloadIntCount < 5) return false;
+        int skslLength = commands[payloadStart];
+        int uniformFloatCount = commands[payloadStart + 1];
+        int namedUniformCount = commands[payloadStart + 2];
+        if (skslLength <= 0
+                || skslLength > 4096
+                || uniformFloatCount < 0
+                || uniformFloatCount > 256
+                || namedUniformCount < 0
+                || namedUniformCount > 16
+                || payloadIntCount < 5 + skslLength + uniformFloatCount) {
+            return false;
+        }
+        int schemaEnd = record.recordEnd() - skslLength - uniformFloatCount;
+        int skslStart = validateRuntimeEffectUniformSchema(
+                commands,
+                payloadStart + 5,
+                schemaEnd,
+                namedUniformCount,
+                uniformFloatCount
+        );
+        if (skslStart < 0 || skslStart + skslLength + uniformFloatCount != record.recordEnd()) return false;
+        long expectedHash = commandHandle(commands[payloadStart + 3], commands[payloadStart + 4]);
+        if (shaderSourceHash(commands, skslStart, skslLength) != expectedHash) return false;
+        for (int index = 0; index < skslLength; index++) {
+            int code = commands[skslStart + index];
+            if (code <= 0 || code > 127) return false;
+        }
+        return true;
+    }
+
     private static int validateRuntimeEffectUniformSchema(
             int[] commands,
             int offset,
@@ -1711,6 +1752,10 @@ public class JBRSkiaService extends JBRSkia {
 
         static ColorFilterDescriptor lighting(int multiplyArgb, int addArgb) {
             return new ColorFilterDescriptor(COMMAND_EFFECT_DESCRIPTOR_LIGHTING_FILTER, multiplyArgb, addArgb, null, null);
+        }
+
+        static ColorFilterDescriptor runtimeColorFilter(int[] payload) {
+            return new ColorFilterDescriptor(COMMAND_EFFECT_DESCRIPTOR_RUNTIME_COLOR_FILTER, 0, 0, payload.clone(), null);
         }
 
         static ColorFilterDescriptor blurImageFilter(
@@ -3490,6 +3535,16 @@ public class JBRSkiaService extends JBRSkia {
                             COLOR_FILTER_CACHE.put(
                                     new ColorFilterCacheKey(contextPtr, handle),
                                     ColorFilterDescriptor.offsetImageFilter(descriptorType, dxBits, dyBits, child)
+                            );
+                            logEffectHandleDefine("java2d", contextPtr, handle, descriptorType, descriptorVersion, payloadIntCount, false);
+                        } else if (descriptorType == COMMAND_EFFECT_DESCRIPTOR_RUNTIME_COLOR_FILTER) {
+                            if (!validateRuntimeColorFilterDescriptorPayload(commands, record, payloadIntCount)) return false;
+                            int[] payload = new int[payloadIntCount];
+                            System.arraycopy(commands, offset, payload, 0, payloadIntCount);
+                            offset += payloadIntCount;
+                            COLOR_FILTER_CACHE.put(
+                                    new ColorFilterCacheKey(contextPtr, handle),
+                                    ColorFilterDescriptor.runtimeColorFilter(payload)
                             );
                             logEffectHandleDefine("java2d", contextPtr, handle, descriptorType, descriptorVersion, payloadIntCount, false);
                         } else {
