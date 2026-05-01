@@ -51,13 +51,13 @@ public class JBRSkiaApiTest {
     }
 
     public static void main(String[] args) throws Exception {
-        assertEquals(85, JBRSkia.ABI_ID, "ABI_ID");
+        assertEquals(86, JBRSkia.ABI_ID, "ABI_ID");
         assertEquals(3, JBRSkia.NATIVE_ABI_VERSION, "NATIVE_ABI_VERSION");
-        assertEquals("skia=m147-64a2414108;flags=macos-release-metal-poc:1;abi=85;native=3", JBRSkia.BUILD_ID, "BUILD_ID");
+        assertEquals("skia=m147-64a2414108;flags=macos-release-metal-poc:1;abi=86;native=3", JBRSkia.BUILD_ID, "BUILD_ID");
 
-        assertReflectiveStaticEquals(85, JBRSkia.class.getDeclaredField("ABI_ID"));
+        assertReflectiveStaticEquals(86, JBRSkia.class.getDeclaredField("ABI_ID"));
         assertReflectiveStaticEquals(3, JBRSkia.class.getDeclaredField("NATIVE_ABI_VERSION"));
-        assertReflectiveStaticEquals("skia=m147-64a2414108;flags=macos-release-metal-poc:1;abi=85;native=3", JBRSkia.class.getDeclaredField("BUILD_ID"));
+        assertReflectiveStaticEquals("skia=m147-64a2414108;flags=macos-release-metal-poc:1;abi=86;native=3", JBRSkia.class.getDeclaredField("BUILD_ID"));
 
         if (TestJBRSkia.INSTANCE != null) {
             throw new AssertionError("JBRSkia service must be unavailable before native runtime is wired");
@@ -240,6 +240,7 @@ public class JBRSkiaApiTest {
         assertValidCommandStream(validImageRefTintColorFilterStream(), "valid image-ref tint color-filter stream");
         assertValidCommandStream(validImageRefColorMatrixFilterHandleStream(), "valid image-ref color-matrix filter handle stream");
         assertValidCommandStream(validCompositeShaderDescriptorStream(), "valid composite shader descriptor stream");
+        assertValidCommandStream(validRuntimeEffectShaderDescriptorStream(), "valid runtime-effect shader descriptor stream");
         assertValidCommandStream(new int[] {
                 JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 3,
                 JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
@@ -843,6 +844,46 @@ public class JBRSkiaApiTest {
                 0x00000005, 0x00000006,
                 1000, 2000, 11000, 12000, 1000
         };
+    }
+
+    private static int[] validRuntimeEffectShaderDescriptorStream() {
+        String sksl = "half4 main(float2 p){return half4(1);}";
+        int payloadIntCount = 2 + sksl.length() + 1;
+        int defineRecordLength = 8 + payloadIntCount;
+        int commandIntCount = defineRecordLength + 10;
+        int[] commands = new int[JBRSkia.COMMAND_STREAM_HEADER_SIZE + commandIntCount];
+        int offset = 0;
+        commands[offset++] = JBRSkia.COMMAND_STREAM_MAGIC;
+        commands[offset++] = JBRSkia.ABI_ID;
+        commands[offset++] = JBRSkia.COMMAND_STREAM_FLAGS_NONE;
+        commands[offset++] = commandIntCount;
+        commands[offset++] = JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER;
+        commands[offset++] = JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB;
+        commands[offset++] = JBRSkia.COMMAND_DEFINE_SHADER_DESCRIPTOR;
+        commands[offset++] = defineRecordLength * Integer.BYTES;
+        commands[offset++] = JBRSkia.COMMAND_RECORD_FLAGS_NONE;
+        commands[offset++] = 0x00000011;
+        commands[offset++] = 0x00000012;
+        commands[offset++] = JBRSkia.COMMAND_SHADER_DESCRIPTOR_RUNTIME_EFFECT;
+        commands[offset++] = JBRSkia.COMMAND_SHADER_DESCRIPTOR_VERSION_1;
+        commands[offset++] = payloadIntCount;
+        commands[offset++] = sksl.length();
+        commands[offset++] = 1;
+        for (int index = 0; index < sksl.length(); index++) {
+            commands[offset++] = sksl.charAt(index);
+        }
+        commands[offset++] = Float.floatToRawIntBits(1f);
+        commands[offset++] = JBRSkia.COMMAND_FILL_RECT_SHADER_REF;
+        commands[offset++] = 40;
+        commands[offset++] = JBRSkia.COMMAND_RECORD_FLAG_ANTIALIAS;
+        commands[offset++] = 0x00000011;
+        commands[offset++] = 0x00000012;
+        commands[offset++] = 1000;
+        commands[offset++] = 2000;
+        commands[offset++] = 11000;
+        commands[offset++] = 12000;
+        commands[offset++] = 1000;
+        return commands;
     }
 
     private static int[] validFillRectLightingFilterHandleStream() {

@@ -1530,6 +1530,23 @@ public class JBRSkiaService extends JBRSkia {
             int blendMode = commands[payloadStart + 4];
             return payloadIntCount == 5 && isSupportedBlendMode(blendMode);
         }
+        if (descriptorType == COMMAND_SHADER_DESCRIPTOR_RUNTIME_EFFECT) {
+            if (payloadIntCount < 2) return false;
+            int skslLength = commands[payloadStart];
+            int uniformFloatCount = commands[payloadStart + 1];
+            if (skslLength <= 0
+                    || skslLength > 4096
+                    || uniformFloatCount < 0
+                    || uniformFloatCount > 256
+                    || payloadIntCount != 2 + skslLength + uniformFloatCount) {
+                return false;
+            }
+            for (int index = 0; index < skslLength; index++) {
+                int code = commands[payloadStart + 2 + index];
+                if (code <= 0 || code > 127) return false;
+            }
+            return true;
+        }
         return false;
     }
 

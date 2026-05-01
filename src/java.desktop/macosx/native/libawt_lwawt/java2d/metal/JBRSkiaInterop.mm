@@ -53,6 +53,7 @@
 #include "SkPicture.h"
 #include "SkPixmap.h"
 #include "SkRRect.h"
+#include "SkRuntimeEffect.h"
 #include "SkSamplingOptions.h"
 #include "SkString.h"
 #include "SkSurface.h"
@@ -77,7 +78,7 @@
 
 #include "MTLSurfaceDataBase.h"
 
-static constexpr jint ABI_ID = 85;
+static constexpr jint ABI_ID = 86;
 static constexpr jint COMMAND_STREAM_MAGIC = 1246972723;
 static constexpr jint COMMAND_STREAM_HEADER_SIZE = 6;
 static constexpr jint COMMAND_STREAM_FLAGS_NONE = 0;
@@ -159,6 +160,7 @@ static constexpr jint COMMAND_SHADER_DESCRIPTOR_RADIAL_GRADIENT = 2;
 static constexpr jint COMMAND_SHADER_DESCRIPTOR_SWEEP_GRADIENT = 3;
 static constexpr jint COMMAND_SHADER_DESCRIPTOR_IMAGE = 4;
 static constexpr jint COMMAND_SHADER_DESCRIPTOR_COMPOSITE = 5;
+static constexpr jint COMMAND_SHADER_DESCRIPTOR_RUNTIME_EFFECT = 6;
 static constexpr jint COMMAND_SHADER_DESCRIPTOR_VERSION_1 = 1;
 static constexpr jint COMMAND_BLEND_MODE_PLUS = 1;
 static constexpr jint COMMAND_BLEND_MODE_SRC_IN = 2;
@@ -575,6 +577,38 @@ static sk_sp<SkShader> makeDescriptorShader(const ShaderDescriptor& descriptor, 
         sk_sp<SkShader> src = makeDescriptorShader(*descriptor.src, imageCacheContextKey, depth + 1);
         if (!dst || !src) return nullptr;
         return SkShaders::Blend(blendMode, dst, src);
+    }
+    if (descriptor.type == COMMAND_SHADER_DESCRIPTOR_RUNTIME_EFFECT) {
+        if (descriptor.payload.size() < 2) return nullptr;
+        const jint skslLength = descriptor.payload[0];
+        const jint uniformFloatCount = descriptor.payload[1];
+        if (skslLength <= 0 ||
+                skslLength > 4096 ||
+                uniformFloatCount < 0 ||
+                uniformFloatCount > 256 ||
+                descriptor.payload.size() != static_cast<size_t>(2 + skslLength + uniformFloatCount)) {
+            return nullptr;
+        }
+        std::string sksl;
+        sksl.reserve(static_cast<size_t>(skslLength));
+        for (jint i = 0; i < skslLength; i++) {
+            const jint code = descriptor.payload[2 + i];
+            if (code <= 0 || code > 127) return nullptr;
+            sksl.push_back(static_cast<char>(code));
+        }
+        SkRuntimeEffect::Result result = SkRuntimeEffect::MakeForShader(SkString(sksl.c_str(), sksl.size()));
+        if (!result.effect || !result.errorText.isEmpty()) {
+            return nullptr;
+        }
+        sk_sp<SkData> uniformData;
+        if (uniformFloatCount == 0) {
+            uniformData = SkData::MakeEmpty();
+        } else {
+            uniformData = SkData::MakeWithCopy(
+                    descriptor.payload.data() + 2 + skslLength,
+                    static_cast<size_t>(uniformFloatCount) * sizeof(jint));
+        }
+        return result.effect->makeShader(uniformData, nullptr, 0, nullptr);
     }
     return nullptr;
 }
@@ -2892,6 +2926,21 @@ static bool drawCommandList(SkCanvas* canvas,
                         if (dst == gShadersByKey.end() || src == gShadersByKey.end()) return false;
                         descriptor.dst = std::make_shared<ShaderDescriptor>(dst->second);
                         descriptor.src = std::make_shared<ShaderDescriptor>(src->second);
+                    }
+                } else if (descriptorType == COMMAND_SHADER_DESCRIPTOR_RUNTIME_EFFECT) {
+                    if (payloadIntCount < 2) return false;
+                    const jint skslLength = descriptor.payload[0];
+                    const jint uniformFloatCount = descriptor.payload[1];
+                    if (skslLength <= 0 ||
+                            skslLength > 4096 ||
+                            uniformFloatCount < 0 ||
+                            uniformFloatCount > 256 ||
+                            payloadIntCount != 2 + skslLength + uniformFloatCount) {
+                        return false;
+                    }
+                    for (jint i = 0; i < skslLength; i++) {
+                        const jint code = descriptor.payload[2 + i];
+                        if (code <= 0 || code > 127) return false;
                     }
                 } else {
                     return false;

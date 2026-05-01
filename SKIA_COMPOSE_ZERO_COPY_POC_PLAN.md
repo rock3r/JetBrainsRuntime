@@ -7657,3 +7657,40 @@ Next:
 
 - Run Magic Jewel compile/script smoke for the new composite-shader probe, then collect live command-mode screenshots once a refreshed native JBR build is available.
 - Start the RuntimeEffect/SKSL descriptor design/implementation branch after the known-shader descriptor path is stable.
+
+## Checkpoint: ABI 86 RuntimeEffect Shader Descriptor MVP
+
+Status: source implementation and focused JVM validation passed; native JBR build/live validation still waits for the local Xcode license/build unblock.
+
+What changed:
+
+- JBR private API, public Runtime API, Skiko compatibility gates, and CMP command recorder now use command ABI 86.
+- The shader descriptor schema adds `COMMAND_SHADER_DESCRIPTOR_RUNTIME_EFFECT` for a first generic shader MVP.
+- CMP adds a desktop/skiko `RuntimeEffectShader(sksl, uniforms)` factory that keeps metadata alongside the normal Skiko shader so old rendering remains visually meaningful while command replay can serialize the descriptor.
+- The descriptor payload carries ASCII SKSL source and raw float uniform bits. JBR validates payload shape, compiles the SKSL inside JBR-owned Skia with `SkRuntimeEffect::MakeForShader`, builds uniform `SkData`, and draws through the existing shader-handle rectangle command.
+- Magic Jewel now has `MAGIC_JEWEL_COMPOSE_RUNTIME_EFFECT_SHADER=true` and a `commands-runtime-effect-shader` suite case for the animated SKSL probe.
+
+Verification:
+
+- CMP focused RuntimeEffect descriptor tests passed:
+  - `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.runtimeEffectShaderKeepsJbrSkiaMetadata --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesRuntimeEffectShaderDescriptorRectInStrictMode`
+- Skiko interop tests passed with `abi=86`:
+  - `./gradlew --no-daemon --no-configuration-cache :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`
+- Skiko was republished locally:
+  - `./gradlew --no-daemon --no-configuration-cache :skiko:publishToMavenLocal`
+- Magic Jewel compile and script syntax checks passed:
+  - `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon --no-configuration-cache compileKotlin`
+  - `bash -n scripts/jbr-skia-command-probe-suite.sh scripts/jbr-skia-interop-report.sh`
+- JBR public API and Runtime API compile smokes passed:
+  - `javac -d /tmp/jbr-skia-api-compile src/java.desktop/share/classes/com/jetbrains/desktop/JBRSkia.java`
+  - `javac -d /tmp/jbr-runtime-api-skia-compile src/com/jetbrains/Service.java src/com/jetbrains/Provided.java src/com/jetbrains/JBRSkia.java`
+
+Known notes:
+
+- ABI 86 intentionally supports only ASCII SKSL and positional raw float uniforms. Named uniforms, source hashing, child shader/color-filter handles, compile diagnostics, and stable compile-failure fallback markers remain open.
+- This still needs a real native JBR build before claiming live rendering parity. The current machine remains blocked on Xcode license acceptance.
+
+Next:
+
+- Run the full CMP command-recorder suite and Magic Jewel command probe once refreshed JBR native artifacts exist.
+- Extend RuntimeEffect descriptors with named uniforms and child shader handles so generic shaders can compose with the existing descriptor tree.
