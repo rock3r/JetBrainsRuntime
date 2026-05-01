@@ -1912,11 +1912,10 @@ public class JBRSkiaService extends JBRSkia {
             }
             if (NATIVE_BRIDGE_AVAILABLE
                     && nativeOpsPtr != 0
-                    && metalTexturePtr != 0
-                    && nativeRenderCommandFrame(nativeOpsPtr, metalTexturePtr,
-                            deviceSpaceClip.x, deviceSpaceClip.y, deviceSpaceClip.width, deviceSpaceClip.height,
-                            width, height, frameTimeNanos, commands)) {
-                return true;
+                    && metalTexturePtr != 0) {
+                return nativeRenderCommandFrame(nativeOpsPtr, metalTexturePtr,
+                        deviceSpaceClip.x, deviceSpaceClip.y, deviceSpaceClip.width, deviceSpaceClip.height,
+                        width, height, frameTimeNanos, commands);
             }
 
             Graphics2D commandGraphics = (Graphics2D) graphics.create();
@@ -1937,11 +1936,10 @@ public class JBRSkiaService extends JBRSkia {
             }
             if (NATIVE_BRIDGE_AVAILABLE
                     && nativeOpsPtr != 0
-                    && metalTexturePtr != 0
-                    && nativeRenderCommandBufferFrame(nativeOpsPtr, metalTexturePtr,
-                            deviceSpaceClip.x, deviceSpaceClip.y, deviceSpaceClip.width, deviceSpaceClip.height,
-                            width, height, frameTimeNanos, commands)) {
-                return true;
+                    && metalTexturePtr != 0) {
+                return nativeRenderCommandBufferFrame(nativeOpsPtr, metalTexturePtr,
+                        deviceSpaceClip.x, deviceSpaceClip.y, deviceSpaceClip.width, deviceSpaceClip.height,
+                        width, height, frameTimeNanos, commands);
             }
             if (width <= 0 || height <= 0) {
                 return false;
@@ -1967,11 +1965,10 @@ public class JBRSkiaService extends JBRSkia {
             if (NATIVE_BRIDGE_AVAILABLE
                     && nativeOpsPtr != 0
                     && metalTexturePtr != 0
-                    && commandBuffer.isDirect()
-                    && nativeRenderCommandDirectFrame(nativeOpsPtr, metalTexturePtr,
-                            deviceSpaceClip.x, deviceSpaceClip.y, deviceSpaceClip.width, deviceSpaceClip.height,
-                            width, height, frameTimeNanos, commandBuffer, commandByteCount)) {
-                return true;
+                    && commandBuffer.isDirect()) {
+                return nativeRenderCommandDirectFrame(nativeOpsPtr, metalTexturePtr,
+                        deviceSpaceClip.x, deviceSpaceClip.y, deviceSpaceClip.width, deviceSpaceClip.height,
+                        width, height, frameTimeNanos, commandBuffer, commandByteCount);
             }
             if (width <= 0 || height <= 0) {
                 return false;

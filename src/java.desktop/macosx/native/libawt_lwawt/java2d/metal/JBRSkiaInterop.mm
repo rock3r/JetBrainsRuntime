@@ -697,6 +697,17 @@ static sk_sp<SkShader> makeDescriptorShader(const ShaderDescriptor& descriptor, 
                 for (jint charIndex = 0; charIndex < nameLength; charIndex++) {
                     name.push_back(static_cast<char>(descriptor.payload[static_cast<size_t>(childOffset++)]));
                 }
+                if (result.effect->findChild(name) == nullptr) {
+                    std::fprintf(stderr,
+                                 "JBR_SKIA_INTEROP_RUNTIME_EFFECT_BUILD_FAILED hash=0x%016llx skslLength=%d uniforms=%d children=%d namedUniforms=%d namedChildren=%d\n",
+                                 static_cast<unsigned long long>(expectedHash),
+                                 skslLength,
+                                 uniformFloatCount,
+                                 childCount,
+                                 namedUniformCount,
+                                 namedChildCount);
+                    return nullptr;
+                }
                 builder.child(name) = childShaders[static_cast<size_t>(childIndex)];
             }
             sk_sp<SkShader> shader = builder.makeShader(nullptr);

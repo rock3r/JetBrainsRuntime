@@ -97,6 +97,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] ABI 90: RuntimeEffect/SKSL descriptors carry named child shader schema metadata, and JBR can use `SkRuntimeEffectBuilder` when all children are named.
 - [x] RuntimeEffect builder failures emit parseable JBR markers, and Magic Jewel has a bad-child-name probe/report assertion.
   - [x] Magic Jewel RuntimeEffect conformance probes cover pure color, uniform-only animation, child-only composition, combined child+uniform, and builder-failure fallback cases.
+  - [x] Live RuntimeEffect conformance subset passed for ABI 90: pure color, uniform-only, child-only, combined child+uniform, and the bad-child builder-failure fallback.
   - [x] Add a live animation preservation regression job that asserts non-frozen command-mode frame markers continue advancing.
   - [x] Extend the live animation preservation job to force a transient tiny/full-scene frame and assert the preservation-path marker.
   - [x] Refresh ABI 90 runtime artifacts and pass `commands-live-animation` live command replay with `fallback_new_count=0`, `unsupported=none`, `jbr_command_frames=432`, `app_new_frames=432`, and one tiny-frame injection marker.
@@ -200,6 +201,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Focused CMP recorder tests for command encodings.
 - [x] Full CMP command-recorder regression gate: `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest` passed for ABI 90.
 - [x] Live animation regression gate: `CASES=commands-live-animation DURATION_SECONDS=6 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh` passed for ABI 90 at `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-045238/commands-live-animation/report.md`.
+- [x] RuntimeEffect conformance gate: `CASES="commands-runtime-effect-pure-color commands-runtime-effect-uniform-only commands-runtime-effect-child-only commands-runtime-effect-shader commands-runtime-effect-build-fallback" DURATION_SECONDS=6 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh` passed for ABI 90 at `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-050347/suite.tsv`.
 - [x] Golden/diff screenshot harness for the full mixed Swing/Jewel/Compose Magic Jewel scene.
 - [x] Capture the app window only in old/new renderer modes, with deterministic sizing, theme, font inputs, animation phase, and seeded content.
 - [ ] Compare screenshot regions by ownership: tight tolerance for Compose/Jewel regions because CMP should match old Skia output, looser text-aware tolerance for Swing text after Java2D-to-Skia changes, and explicit occlusion/layer-boundary assertions for mixed content.

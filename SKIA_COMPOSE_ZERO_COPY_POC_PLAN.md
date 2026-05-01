@@ -7880,7 +7880,7 @@ Known notes:
 
 ## Checkpoint: Magic Jewel RuntimeEffect Conformance Probes
 
-Status: sample and report-suite validation passed; native live validation still waits for the local Xcode license/build unblock.
+Status: live command-mode validation passed for the refreshed ABI 90 artifact set.
 
 What changed:
 
@@ -7900,10 +7900,18 @@ Verification:
 - Magic Jewel report scripts passed syntax validation and parser fixtures:
   - `bash -n scripts/jbr-skia-interop-report.sh scripts/jbr-skia-command-probe-suite.sh scripts/test-jbr-skia-report-validation.sh`
   - `bash scripts/test-jbr-skia-report-validation.sh`
+- JBR native replay now checks `SkRuntimeEffect::findChild(name)` before assigning through `SkRuntimeEffectBuilder::child(name)`, so malformed child schemas emit `JBR_SKIA_INTEROP_RUNTIME_EFFECT_BUILD_FAILED` instead of tripping Skia's debug assertion.
+- JBR command rendering now propagates a native replay failure as `false` when the native bridge and destination texture are present, instead of hiding native failures behind Java2D command replay. Java2D command replay remains the fallback when the native bridge/surface is unavailable.
+- Magic Jewel RuntimeEffect conformance subset passed:
+  - command: `CASES="commands-runtime-effect-pure-color commands-runtime-effect-uniform-only commands-runtime-effect-child-only commands-runtime-effect-shader commands-runtime-effect-build-fallback" DURATION_SECONDS=6 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-050347/suite.tsv`.
+  - zero-fallback native command rows passed for pure-color (`jbr_command_frames=970`), uniform-only (`405`), child-only (`432`), and combined child+uniform (`390`).
+  - the intentional builder-fallback row passed with `fallback_new_count=1`, `unsupported=none`, `jbr_picture_frames=0`, `jbr_command_frames=0`, and the JBR build-failure marker present.
 
 Known notes:
 
-- These are launch/report probes, not yet screenshot parity assertions per individual RuntimeEffect variant. They provide stable switches for the next quiet-machine live run.
+- These are launch/report probes, not yet screenshot parity assertions per individual RuntimeEffect variant. They provide stable switches for the next screenshot-parity expansion.
+- The first live builder-fallback attempt exposed two correctness gaps: assigning an unknown named child into Skia's builder is fatal in debug builds, and Java-side command replay was masking native `false` results as successful frames.
 
 ## Checkpoint: Defensive Command-Frame Animation Preservation
 
