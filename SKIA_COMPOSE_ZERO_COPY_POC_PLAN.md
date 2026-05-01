@@ -8072,6 +8072,11 @@ Verification:
   - command: `CASES=parity-graphics-layer-effects DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-screenshot-parity-suite.sh`
   - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-055842/suite.tsv`
   - metrics: `avg_delta=1.690`, `bad_pixel_ratio=0.03997`, `compose_bad_pixel_ratio=0.06380`.
+- Default named screenshot parity suite passed end to end:
+  - command: `DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-061514/suite.tsv`
+  - rows: rich baseline, clean geometry, RuntimeEffect pure-color, RuntimeEffect uniform-only, RuntimeEffect child-only,
+    and graphics-layer effects.
 
 Known notes:
 
