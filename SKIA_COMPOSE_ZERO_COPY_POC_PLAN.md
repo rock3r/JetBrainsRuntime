@@ -8702,3 +8702,30 @@ Next checkpoint:
 
 - Commit the five-repo ABI 91 slice, then continue with child color-filter handles or screenshot parity for the new
   RuntimeEffect color-filter probe.
+
+## Checkpoint: RuntimeEffect ColorFilter Screenshot Parity
+
+Status: the Magic Jewel screenshot parity suite now has a dedicated RuntimeEffect color-filter row, and that focused row
+passed against the ABI 91 artifact set.
+
+What changed:
+
+- Added `parity-runtime-effect-color-filter` to the screenshot parity suite.
+- The default parity suite now includes the RuntimeEffect color-filter row alongside pure-color, uniform-only,
+  child-only, and combined child+uniform RuntimeEffect rows.
+- Magic Jewel `README.md` documents the expanded RuntimeEffect parity coverage.
+- `ROADMAP.md` records the focused parity run and report path.
+
+Verification:
+
+- Magic Jewel screenshot parity script syntax passed:
+  - command: `bash -n scripts/jbr-skia-screenshot-parity-suite.sh scripts/jbr-skia-screenshot-parity.sh`
+- Focused RuntimeEffect color-filter screenshot parity row passed:
+  - command: `CASES="parity-runtime-effect-color-filter" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-084511/suite.tsv`
+  - observed ratios: `bad_pixel_ratio=0.03905`, `compose_bad_pixel_ratio=0.06225`
+
+Next checkpoint:
+
+- Continue RuntimeEffect completeness with child color-filter handle design/probing, or run the full default screenshot
+  parity suite with the ABI 91 artifact set if visual confidence becomes the priority.
