@@ -10474,3 +10474,36 @@ Next checkpoint:
 
 - Reassess remaining roadmap items now that broad command and visual suites are green with the expanded renderEffect
   paint coverage.
+
+## Checkpoint: Near-Camera 3D + Chained RenderEffect Paint Probe
+
+Status: completed as a combined graphics-layer stress row.
+
+What changed:
+
+- Magic Jewel now includes a command and screenshot parity row that combines:
+  - graphics-layer rotationX + rotationY,
+  - near-camera perspective,
+  - chained offset-of-blur renderEffect descriptor tree,
+  - BlendMode.Plus saveLayer metadata,
+  - color-matrix descriptor color filter.
+
+Verification:
+
+- Magic Jewel command-suite syntax passed:
+  - command: `bash -n scripts/jbr-skia-command-probe-suite.sh`
+- Magic Jewel screenshot-suite syntax passed:
+  - command: `bash -n scripts/jbr-skia-screenshot-parity-suite.sh`
+- Focused Magic Jewel command row passed:
+  - command: `CASES="commands-graphics-layer-near-camera-chained-render-effect-blend-color-matrix-filter" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-201050/suite.tsv`
+  - result: `status=passed`, `fallbacks=0`, `unsupported=none`, `jbr_picture_frames=0`.
+- Focused Magic Jewel screenshot parity row passed:
+  - command: `CASES="parity-graphics-layer-near-camera-chained-render-effect-blend-color-matrix-filter" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-201126/suite.tsv`
+  - result: `status=passed`, `avg_delta=2.596`, `bad_pixel_ratio=0.06468`,
+    `compose_bad_pixel_ratio=0.09744`, `compose_bottom_swatches_bad_pixel_ratio=0.00000`.
+
+Next checkpoint:
+
+- Fold this combined stress row into the expanded graphics-layer matrix and broad screenshot/command default sweeps.
