@@ -10861,6 +10861,23 @@ Validation:
 - CMP `:compose:ui:ui-graphics:compileKotlinDesktop` passed. The broader focused `desktopTest` run remains blocked by the existing local `ui` module command-delegate wiring, after `ui-graphics` itself compiles.
 - Magic Jewel focused command probe passed: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260502-003307/suite.tsv`.
 
+## Checkpoint: RuntimeEffect Shader + Color-Filter Screenshot Parity
+
+Status: completed as a focused window-parity smoke row.
+
+What changed:
+- Magic Jewel's named screenshot parity suite now includes `parity-runtime-effect-shader-color-filter`.
+- The row enables `MAGIC_JEWEL_COMPOSE_RUNTIME_EFFECT_SHADER_COLOR_FILTER=true`, exercising the same wrapped shader descriptor path as the command probe while comparing frozen old/new window captures.
+- The README documents the row with the rest of the RuntimeEffect parity coverage.
+- `ROADMAP.md` marks the shader + color-filter parity item complete and records the report location.
+
+Validation:
+- Focused parity command passed:
+  `CASES="parity-runtime-effect-shader-color-filter" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-screenshot-parity-suite.sh`
+- Suite result: `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260502-003744/suite.tsv`.
+- Report result: validation passed, zero fallback markers, zero unsupported commands, `jbr_command_frames=485`, and `screenshot_parity_badPixelRatio=0.05006` under the row's `0.06` full-window threshold.
+- Caveat: this row is a smoke/parity guard, not a pixel-perfect oracle. The visible diff is dominated by animation phase, AA, and text-sensitive regions; broader geometry/color subregion gates remain the better signal for missing command replay.
+
 Next:
-- Add screenshot parity for shader + color-filter composition.
 - Broaden wrapped-shader coverage beyond the RuntimeEffect probe once parity is stable.
+- Add more strict compatibility/old-artifact rows for the new high-word shader color-filter capability.
