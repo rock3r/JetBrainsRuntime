@@ -511,6 +511,10 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   stress row: 26/26 rows passed with exact bottom-swatches parity in every row. The report validator now allows tiny
   Skiko/JBR command-frame marker boundary skew while keeping fallback, unsupported, and picture-frame invariants strict:
   `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-203740/suite.tsv`.
+- [x] Broad Magic Jewel command-probe sweep with the near-camera 3D + chained renderEffect + blend/color-matrix stress
+  row: 64/64 rows passed. Strict rows stayed on command replay; only `commands-invalid-gradient-fallback` used picture
+  replay with the expected `sweepGradientStops` unsupported marker:
+  `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-205417/suite.tsv`.
 - [x] Full Magic Jewel command-probe sweep after RuntimeEffect child-type crash hardening: 46/46 rows passed, adding the
   `commands-runtime-effect-child-type-fallback` row:
   `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-121521/suite.tsv`.

@@ -10548,3 +10548,23 @@ Next checkpoint:
 
 - Run the broad command-probe default sweep with the combined near-camera stress row included, then reassess remaining
   graphics-layer gaps against the roadmap.
+
+## Checkpoint: Broad Command Sweep With Near-Camera Stress Row
+
+Status: completed after folding the combined near-camera/chained-renderEffect stress row into the default command suite.
+
+Verification:
+
+- Broad Magic Jewel command-probe sweep passed:
+  - command: `DURATION_SECONDS=3 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-205417/suite.tsv`
+  - result: all sixty-four rows passed.
+- Strict command rows stayed on JBR command replay with `fallback_new_count=0`, `unsupported=none`, and
+  `jbr_picture_frames=0`.
+- The only picture replay was the explicit `commands-invalid-gradient-fallback` row, with the expected unsupported
+  markers `sweepGradientStops`, `graphicsLayer:childCommands`, and `graphicsLayer`.
+
+Next checkpoint:
+
+- Reassess the remaining graphics-layer gaps. The practical next candidates are elevation-accurate shadow semantics,
+  screenshot parity coverage for any still-command-only rows, and a quieter benchmark pass once functionality changes pause.
