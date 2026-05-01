@@ -1480,15 +1480,15 @@ public class JBRSkiaService extends JBRSkia {
             long srcHandle = commandHandle(commands[payloadStart + 2], commands[payloadStart + 3]);
             return shaderHandles.contains(dstHandle) && shaderHandles.contains(srcHandle);
         }
-        if (descriptorType == COMMAND_SHADER_DESCRIPTOR_RUNTIME_EFFECT && payloadIntCount >= 5) {
+        if (descriptorType == COMMAND_SHADER_DESCRIPTOR_RUNTIME_EFFECT && payloadIntCount >= 6) {
             int childCount = commands[payloadStart + 2];
-            if (childCount < 0 || childCount > 8 || payloadIntCount < 5 + childCount * 2) {
+            if (childCount < 0 || childCount > 8 || payloadIntCount < 6 + childCount * 2) {
                 return false;
             }
             for (int index = 0; index < childCount; index++) {
                 long childHandle = commandHandle(
-                        commands[payloadStart + 5 + index * 2],
-                        commands[payloadStart + 6 + index * 2]
+                        commands[payloadStart + 6 + index * 2],
+                        commands[payloadStart + 7 + index * 2]
                 );
                 if (!shaderHandles.contains(childHandle)) return false;
             }
@@ -1545,21 +1545,32 @@ public class JBRSkiaService extends JBRSkia {
             return payloadIntCount == 5 && isSupportedBlendMode(blendMode);
         }
         if (descriptorType == COMMAND_SHADER_DESCRIPTOR_RUNTIME_EFFECT) {
-            if (payloadIntCount < 5) return false;
+            if (payloadIntCount < 6) return false;
             int skslLength = commands[payloadStart];
             int uniformFloatCount = commands[payloadStart + 1];
             int childCount = commands[payloadStart + 2];
+            int namedUniformCount = commands[payloadStart + 3];
             if (skslLength <= 0
                     || skslLength > 4096
                     || uniformFloatCount < 0
                     || uniformFloatCount > 256
                     || childCount < 0
                     || childCount > 8
-                    || payloadIntCount != 5 + childCount * 2 + skslLength + uniformFloatCount) {
+                    || namedUniformCount < 0
+                    || namedUniformCount > 16
+                    || payloadIntCount < 6 + childCount * 2 + skslLength + uniformFloatCount) {
                 return false;
             }
-            int skslStart = payloadStart + 5 + childCount * 2;
-            long expectedHash = commandHandle(commands[payloadStart + 3], commands[payloadStart + 4]);
+            int schemaStart = payloadStart + 6 + childCount * 2;
+            int skslStart = validateRuntimeEffectUniformSchema(
+                    commands,
+                    schemaStart,
+                    record.recordEnd() - skslLength - uniformFloatCount,
+                    namedUniformCount,
+                    uniformFloatCount
+            );
+            if (skslStart < 0 || skslStart + skslLength + uniformFloatCount != record.recordEnd()) return false;
+            long expectedHash = commandHandle(commands[payloadStart + 4], commands[payloadStart + 5]);
             if (shaderSourceHash(commands, skslStart, skslLength) != expectedHash) return false;
             for (int index = 0; index < skslLength; index++) {
                 int code = commands[skslStart + index];
@@ -1568,6 +1579,44 @@ public class JBRSkiaService extends JBRSkia {
             return true;
         }
         return false;
+    }
+
+    private static int validateRuntimeEffectUniformSchema(
+            int[] commands,
+            int offset,
+            int schemaEnd,
+            int namedUniformCount,
+            int uniformFloatCount
+    ) {
+        for (int uniformIndex = 0; uniformIndex < namedUniformCount; uniformIndex++) {
+            if (offset + 3 > schemaEnd) return -1;
+            int floatOffset = commands[offset++];
+            int floatCount = commands[offset++];
+            int nameLength = commands[offset++];
+            if (floatOffset < 0
+                    || floatCount <= 0
+                    || floatOffset > uniformFloatCount - floatCount
+                    || nameLength <= 0
+                    || nameLength > 64
+                    || offset + nameLength > schemaEnd
+                    || !isValidRuntimeEffectUniformName(commands, offset, nameLength)) {
+                return -1;
+            }
+            offset += nameLength;
+        }
+        return offset == schemaEnd ? offset : -1;
+    }
+
+    private static boolean isValidRuntimeEffectUniformName(int[] commands, int offset, int length) {
+        for (int index = 0; index < length; index++) {
+            int code = commands[offset + index];
+            boolean valid = code == '_'
+                    || (code >= 'A' && code <= 'Z')
+                    || (code >= 'a' && code <= 'z')
+                    || (index > 0 && code >= '0' && code <= '9');
+            if (!valid) return false;
+        }
+        return true;
     }
 
     private static long shaderSourceHash(int[] commands, int skslStart, int skslLength) {
@@ -3428,12 +3477,18 @@ public class JBRSkiaService extends JBRSkia {
                             if (dst == null || src == null || !isSupportedBlendMode(commands[offset++])) return false;
                         } else if (descriptorType == COMMAND_SHADER_DESCRIPTOR_RUNTIME_EFFECT) {
                             int childCount = commands[offset + 2];
+                            int namedUniformCount = commands[offset + 3];
                             children = new ShaderDescriptor[childCount];
-                            offset += 5;
+                            offset += 6;
                             for (int index = 0; index < childCount; index++) {
                                 long childHandle = cacheKey(commands[offset++], commands[offset++]);
                                 children[index] = SHADER_CACHE.get(new ColorFilterCacheKey(contextPtr, childHandle));
                                 if (children[index] == null) return false;
+                            }
+                            for (int index = 0; index < namedUniformCount; index++) {
+                                offset += 2;
+                                int nameLength = commands[offset++];
+                                offset += nameLength;
                             }
                             offset = recordEnd;
                         } else {

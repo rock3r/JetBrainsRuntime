@@ -7781,3 +7781,37 @@ Verification:
 Known notes:
 
 - This is the first stable compile-failure marker. A future slice should add a controlled live invalid-RuntimeEffect probe and decide whether sanitized error codes/snippets are useful enough to include without making the marker brittle.
+
+## Checkpoint: ABI 89 RuntimeEffect Named Uniform Schema
+
+Status: schema implementation and JVM validation passed; native JBR build/live validation still waits for the local Xcode license/build unblock.
+
+What changed:
+
+- JBR private API, public Runtime API, Skiko compatibility gates, and CMP command recorder now use command ABI 89.
+- RuntimeEffect shader descriptor payloads now include a named-uniform schema count after `childCount`, followed by the source hash, child shader handles, named uniform entries, SKSL source bytes, and raw uniform float bits.
+- CMP adds experimental `RuntimeEffectUniform(name, floatOffset, floatCount)` metadata to `RuntimeEffectShader(...)` and serializes validated ASCII identifier names plus float ranges into the descriptor.
+- JBR Java validation and native replay validate schema count, identifier names, and overflow-safe uniform float ranges before accepting or compiling a RuntimeEffect descriptor.
+- Magic Jewel's RuntimeEffect probe now declares the animated `phase` uniform schema, so the sample exercises the new descriptor metadata while still rendering through the old path when interop is unavailable.
+
+Verification:
+
+- JBR public API and Runtime API compile smokes passed:
+  - `javac -d /tmp/jbr-skia-api-compile src/java.desktop/share/classes/com/jetbrains/desktop/JBRSkia.java`
+  - `javac -d /tmp/jbr-runtime-api-skia-compile src/com/jetbrains/Service.java src/com/jetbrains/Provided.java src/com/jetbrains/JBRSkia.java`
+- JBR API source coverage now includes a malformed RuntimeEffect uniform-schema stream that must fail validation. A standalone `javac` of the full test class is blocked outside the JBR module graph by existing internal JBR/Java2D package dependencies; the native/JTReg path still waits for the local Xcode license/build unblock.
+- Skiko interop tests passed with `abi=89`:
+  - `./gradlew --no-daemon --no-configuration-cache :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`
+- Skiko ABI 89 snapshot published locally:
+  - `./gradlew --no-daemon --no-configuration-cache :skiko:publishToMavenLocal`
+- CMP focused RuntimeEffect descriptor tests passed:
+  - `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesRuntimeEffectNamedUniformSchemaInStrictMode --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.rejectsInvalidRuntimeEffectUniformSchemaInStrictMode --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesRuntimeEffectShaderDescriptorRectInStrictMode --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesRuntimeEffectShaderDescriptorWithChildShaderInStrictMode --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.runtimeEffectShaderKeepsJbrSkiaMetadata`
+- CMP full command-recorder suite passed with ABI 89:
+  - `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest`
+- Magic Jewel compiles against the refreshed local ABI 89 Skiko/CMP stack:
+  - `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon --no-configuration-cache compileKotlin`
+
+Known notes:
+
+- ABI 89 validates named uniform metadata but still passes raw uniform bytes positionally to `SkRuntimeEffect::makeShader`. Builder-backed named uniform assignment remains the next correctness slice if we need Skia-side layout validation instead of schema diagnostics.
+- Uniform names are intentionally restricted to simple ASCII SkSL identifiers for this first schema. Array/dotted names can be added later with explicit tests and an ABI bump.

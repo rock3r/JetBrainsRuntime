@@ -51,13 +51,13 @@ public class JBRSkiaApiTest {
     }
 
     public static void main(String[] args) throws Exception {
-        assertEquals(88, JBRSkia.ABI_ID, "ABI_ID");
+        assertEquals(89, JBRSkia.ABI_ID, "ABI_ID");
         assertEquals(3, JBRSkia.NATIVE_ABI_VERSION, "NATIVE_ABI_VERSION");
-        assertEquals("skia=m147-64a2414108;flags=macos-release-metal-poc:1;abi=88;native=3", JBRSkia.BUILD_ID, "BUILD_ID");
+        assertEquals("skia=m147-64a2414108;flags=macos-release-metal-poc:1;abi=89;native=3", JBRSkia.BUILD_ID, "BUILD_ID");
 
-        assertReflectiveStaticEquals(88, JBRSkia.class.getDeclaredField("ABI_ID"));
+        assertReflectiveStaticEquals(89, JBRSkia.class.getDeclaredField("ABI_ID"));
         assertReflectiveStaticEquals(3, JBRSkia.class.getDeclaredField("NATIVE_ABI_VERSION"));
-        assertReflectiveStaticEquals("skia=m147-64a2414108;flags=macos-release-metal-poc:1;abi=88;native=3", JBRSkia.class.getDeclaredField("BUILD_ID"));
+        assertReflectiveStaticEquals("skia=m147-64a2414108;flags=macos-release-metal-poc:1;abi=89;native=3", JBRSkia.class.getDeclaredField("BUILD_ID"));
 
         if (TestJBRSkia.INSTANCE != null) {
             throw new AssertionError("JBRSkia service must be unavailable before native runtime is wired");
@@ -242,6 +242,7 @@ public class JBRSkiaApiTest {
         assertValidCommandStream(validCompositeShaderDescriptorStream(), "valid composite shader descriptor stream");
         assertValidCommandStream(validRuntimeEffectShaderDescriptorStream(), "valid runtime-effect shader descriptor stream");
         assertInvalidCommandStream(invalidRuntimeEffectShaderHashStream(), "invalid runtime-effect shader source hash stream");
+        assertInvalidCommandStream(invalidRuntimeEffectUniformSchemaStream(), "invalid runtime-effect uniform schema stream");
         assertValidCommandStream(new int[] {
                 JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 3,
                 JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
@@ -850,7 +851,7 @@ public class JBRSkiaApiTest {
     private static int[] validRuntimeEffectShaderDescriptorStream() {
         String sksl = "half4 main(float2 p){return half4(1);}";
         long sourceHash = shaderSourceHash(sksl);
-        int payloadIntCount = 5 + sksl.length() + 1;
+        int payloadIntCount = 6 + sksl.length() + 1;
         int defineRecordLength = 8 + payloadIntCount;
         int commandIntCount = defineRecordLength + 10;
         int[] commands = new int[JBRSkia.COMMAND_STREAM_HEADER_SIZE + commandIntCount];
@@ -871,6 +872,7 @@ public class JBRSkiaApiTest {
         commands[offset++] = payloadIntCount;
         commands[offset++] = sksl.length();
         commands[offset++] = 1;
+        commands[offset++] = 0;
         commands[offset++] = 0;
         commands[offset++] = (int) (sourceHash >> 32);
         commands[offset++] = (int) sourceHash;
@@ -893,7 +895,13 @@ public class JBRSkiaApiTest {
 
     private static int[] invalidRuntimeEffectShaderHashStream() {
         int[] commands = validRuntimeEffectShaderDescriptorStream();
-        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 11] ^= 1;
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 12] ^= 1;
+        return commands;
+    }
+
+    private static int[] invalidRuntimeEffectUniformSchemaStream() {
+        int[] commands = validRuntimeEffectShaderDescriptorStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 11] = 1;
         return commands;
     }
 
