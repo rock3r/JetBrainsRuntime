@@ -381,6 +381,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-102456/suite.tsv`.
 - [x] ABI 94 dashed path-effect line/rectangle/rounded-rectangle probe through JBR command replay:
   `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-103512/suite.tsv`.
+- [x] ABI 95 dashed arbitrary-path probe through JBR command replay:
+  `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-104709/suite.tsv`.
 - [x] Full Magic Jewel command-probe sweep: 39/39 rows passed with ABI 90 refreshed artifacts:
   `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-053403/suite.tsv`.
 - [x] Broad command sweep includes live animation, mixed Swing popups/menus, text/images, image/composite shaders,

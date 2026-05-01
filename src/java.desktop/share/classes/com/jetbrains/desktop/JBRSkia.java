@@ -36,7 +36,7 @@ import java.nio.ByteBuffer;
  * so downstream compile-only clients cannot accidentally inline stale values.
  */
 public abstract class JBRSkia {
-    public static final int ABI_ID = Integer.parseInt("94");
+    public static final int ABI_ID = Integer.parseInt("95");
     public static final int NATIVE_ABI_VERSION = Integer.parseInt("3");
     public static final String SKIA_REVISION = "m147-" + "64a2414108";
     public static final String SKIA_FLAGS_HASH = "macos-release-metal-poc:" + Integer.parseInt("1");
@@ -121,6 +121,7 @@ public abstract class JBRSkia {
     public static final long COMMAND_CAP64_HIGH_EFFECT_DESCRIPTOR_RUNTIME_COLOR_FILTER = Long.parseLong("16");
     public static final long COMMAND_CAP64_HIGH_STROKE_RECT_DASH_PATH_EFFECT = Long.parseLong("32");
     public static final long COMMAND_CAP64_HIGH_STROKE_ROUND_RECT_DASH_PATH_EFFECT = Long.parseLong("64");
+    public static final long COMMAND_CAP64_HIGH_STROKE_PATH_DASH_PATH_EFFECT = Long.parseLong("128");
     public static final int COMMAND_CLEAR = Integer.parseInt("1");
     public static final int COMMAND_FILL_RECT = Integer.parseInt("2");
     public static final int COMMAND_STROKE_LINE = Integer.parseInt("3");
@@ -183,6 +184,7 @@ public abstract class JBRSkia {
     public static final int COMMAND_FILL_RECT_SHADER_REF = Integer.parseInt("58");
     public static final int COMMAND_STROKE_RECT_DASH_PATH_EFFECT = Integer.parseInt("59");
     public static final int COMMAND_STROKE_ROUND_RECT_DASH_PATH_EFFECT = Integer.parseInt("60");
+    public static final int COMMAND_STROKE_PATH_DASH_PATH_EFFECT = Integer.parseInt("61");
     public static final int COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER = Integer.parseInt("1");
     public static final int COMMAND_EFFECT_DESCRIPTOR_COLOR_MATRIX_FILTER = Integer.parseInt("2");
     public static final int COMMAND_EFFECT_DESCRIPTOR_LIGHTING_FILTER = Integer.parseInt("3");

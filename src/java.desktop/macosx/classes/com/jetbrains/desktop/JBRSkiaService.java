@@ -145,7 +145,8 @@ public class JBRSkiaService extends JBRSkia {
                     | COMMAND_CAP64_HIGH_SHADER_DESCRIPTOR_REF
                     | COMMAND_CAP64_HIGH_EFFECT_DESCRIPTOR_RUNTIME_COLOR_FILTER
                     | COMMAND_CAP64_HIGH_STROKE_RECT_DASH_PATH_EFFECT
-                    | COMMAND_CAP64_HIGH_STROKE_ROUND_RECT_DASH_PATH_EFFECT;
+                    | COMMAND_CAP64_HIGH_STROKE_ROUND_RECT_DASH_PATH_EFFECT
+                    | COMMAND_CAP64_HIGH_STROKE_PATH_DASH_PATH_EFFECT;
     private static final boolean NATIVE_BRIDGE_AVAILABLE = loadNativeBridge();
     private static final AtomicLong NEXT_SCOPE_ID = new AtomicLong(1);
     private static final int MAX_CACHED_IMAGES = 256;
@@ -349,6 +350,7 @@ public class JBRSkiaService extends JBRSkia {
         if (op == COMMAND_STROKE_LINE_DASH_PATH_EFFECT) return -23;
         if (op == COMMAND_STROKE_RECT_DASH_PATH_EFFECT) return -23;
         if (op == COMMAND_STROKE_ROUND_RECT_DASH_PATH_EFFECT) return -26;
+        if (op == COMMAND_STROKE_PATH_DASH_PATH_EFFECT) return -27;
         if (op == COMMAND_FILL_RECT_IMAGE_SHADER) return 14;
         if (op == COMMAND_CLEAR) return 4;
         if (op == COMMAND_CLEAR_RECT) return 7;
@@ -437,6 +439,9 @@ public class JBRSkiaService extends JBRSkia {
         }
         if (expectedLength == -26 && record.op() == COMMAND_STROKE_ROUND_RECT_DASH_PATH_EFFECT) {
             return record.recordLength() >= 18;
+        }
+        if (expectedLength == -27 && record.op() == COMMAND_STROKE_PATH_DASH_PATH_EFFECT) {
+            return record.recordLength() >= 14;
         }
         return expectedLength == record.recordLength();
     }
@@ -683,6 +688,34 @@ public class JBRSkiaService extends JBRSkia {
                 }
             }
             return true;
+        }
+        if (record.op() == COMMAND_STROKE_PATH_DASH_PATH_EFFECT) {
+            int intervalCount = commands[record.argsStart() + 6];
+            int pathHeaderOffset = record.argsStart() + 7 + intervalCount;
+            if (intervalCount < 2 || intervalCount > 16 || pathHeaderOffset + 2 > record.recordEnd()) {
+                return false;
+            }
+            int strokeWidth = commands[record.argsStart() + 1];
+            int strokeCap = commands[record.argsStart() + 2];
+            int strokeJoin = commands[record.argsStart() + 3];
+            int strokeMiter = commands[record.argsStart() + 4];
+            int phase = commands[record.argsStart() + 5];
+            int fillType = commands[pathHeaderOffset];
+            int pathDataLength = commands[pathHeaderOffset + 1];
+            if (!isValidStrokeMetadata(strokeWidth, strokeCap, strokeJoin, strokeMiter)
+                    || phase < 0
+                    || (fillType != COMMAND_PATH_FILL_NON_ZERO && fillType != COMMAND_PATH_FILL_EVEN_ODD)
+                    || pathDataLength < 0
+                    || pathDataLength > 4096
+                    || pathHeaderOffset + 2 + pathDataLength != record.recordEnd()) {
+                return false;
+            }
+            for (int index = 0; index < intervalCount; index++) {
+                if (commands[record.argsStart() + 7 + index] <= 0) {
+                    return false;
+                }
+            }
+            return validatePathData(commands, pathHeaderOffset + 2, record.recordEnd());
         }
         if (record.op() == COMMAND_CLIP_RECT) {
             int clipOp = commands[record.recordEnd() - 1];
@@ -3842,6 +3875,42 @@ public class JBRSkiaService extends JBRSkia {
                         try {
                             current.setStroke(stroke);
                             current.draw(roundRect);
+                        } finally {
+                            current.setStroke(previous);
+                        }
+                    } else if (op == COMMAND_STROKE_PATH_DASH_PATH_EFFECT) {
+                        if (offset + 9 > recordEnd) return false;
+                        applyAntialiasing(current, antiAlias);
+                        current.setColor(new Color(commands[offset++], true));
+                        int strokeWidth = Math.max(1, commands[offset++]);
+                        int strokeCap = commands[offset++];
+                        int strokeJoin = commands[offset++];
+                        float strokeMiter = commands[offset++] / 1000f;
+                        float phase = commands[offset++] / 1000f;
+                        int intervalCount = commands[offset++];
+                        if (intervalCount < 2 || intervalCount > 16 || offset + intervalCount + 2 > recordEnd) return false;
+                        float[] intervals = new float[intervalCount];
+                        for (int index = 0; index < intervalCount; index++) {
+                            int interval = commands[offset++];
+                            if (interval <= 0) return false;
+                            intervals[index] = interval / 1000f;
+                        }
+                        int fillType = commands[offset++];
+                        int pathDataLength = commands[offset++];
+                        if ((fillType != COMMAND_PATH_FILL_NON_ZERO && fillType != COMMAND_PATH_FILL_EVEN_ODD)
+                                || pathDataLength < 0
+                                || offset + pathDataLength != recordEnd) {
+                            return false;
+                        }
+                        Path2D path = pathFromCommandData(commands, offset, recordEnd, fillType);
+                        if (path == null) return false;
+                        offset = recordEnd;
+                        java.awt.Stroke previous = current.getStroke();
+                        java.awt.BasicStroke stroke = basicStroke(strokeWidth, strokeCap, strokeJoin, strokeMiter, intervals, phase);
+                        if (stroke == null) return false;
+                        try {
+                            current.setStroke(stroke);
+                            current.draw(path);
                         } finally {
                             current.setStroke(previous);
                         }
