@@ -10522,3 +10522,29 @@ Verification:
 Next checkpoint:
 
 - Run broad screenshot parity and command default sweeps with the combined near-camera stress row included.
+
+## Checkpoint: Broad Screenshot Parity With Near-Camera Stress Row
+
+Status: completed after folding the combined near-camera/chained-renderEffect stress row into the default screenshot suite.
+
+What changed:
+
+- Magic Jewel's strict command-mode validator now tolerates small Skiko/JBR command-frame marker boundary skew at high
+  frame counts: tolerance is `max(3, ceil(max(skikoCommandFrames, jbrCommandFrames) / 100))`.
+- The production invariants remain strict: fallback must stay at zero for command-mode rows, `unsupported=none` is still
+  required, and both Skiko/JBR picture-frame counts must stay at zero unless the row explicitly expects picture replay.
+
+Verification:
+
+- Magic Jewel report-script syntax passed:
+  - command: `bash -n scripts/jbr-skia-interop-report.sh`
+- Broad Magic Jewel screenshot parity sweep passed:
+  - command: `DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-203740/suite.tsv`
+  - result: all twenty-six rows passed, including the combined near-camera/chained-renderEffect stress row, with
+    `compose_bottom_swatches_bad_pixel_ratio=0.00000` in every row.
+
+Next checkpoint:
+
+- Run the broad command-probe default sweep with the combined near-camera stress row included, then reassess remaining
+  graphics-layer gaps against the roadmap.
