@@ -10938,6 +10938,28 @@ Validation:
   `CASES="commands-image-shader-color-filter" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`.
 - Suite result: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260502-010440/suite.tsv`.
 
+## Checkpoint: Wrapped Shader + Color-Filter Screenshot Parity Rows
+
+Status: completed as focused window-parity smoke rows.
+
+What changed:
+- Magic Jewel's named screenshot parity suite now includes:
+  - `parity-image-shader-color-filter`
+  - `parity-composite-shader-color-filter`
+  - `parity-linear-gradient-shader-color-filter`
+- These rows complement the existing `parity-runtime-effect-shader-color-filter` row, so each stable wrapped-shader family now has both command-probe and old/new screenshot coverage.
+- The README documents shader-plus-color-filter parity coverage alongside the RuntimeEffect and graphics-layer parity rows.
+
+Validation:
+- Focused parity command passed:
+  `CASES="parity-image-shader-color-filter parity-composite-shader-color-filter parity-linear-gradient-shader-color-filter" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-screenshot-parity-suite.sh`
+- Suite result: `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260502-010715/suite.tsv`.
+- Results:
+  - image shader + color filter: `bad_pixel_ratio=0.05002`, `compose_bad_pixel_ratio=0.07454`
+  - composite shader + color filter: `bad_pixel_ratio=0.04991`, `compose_bad_pixel_ratio=0.07435`
+  - linear gradient shader + color filter: `bad_pixel_ratio=0.04997`, `compose_bad_pixel_ratio=0.07446`
+- Caveat: these rows remain smoke parity guards. They share the current shader parity noise floor dominated by animation phase, AA, and text-sensitive regions; they are useful for detecting missing replay paths but not yet for pixel-perfect evaluation.
+
 Next:
-- Add focused screenshot parity rows for the stable wrapped-shader cases.
+- Tighten the screenshot comparator so wrapped-shader rows can assert smaller local probe regions instead of relying only on whole-window/large-canvas ratios.
 - Add old-artifact matrix coverage for the new high-word shader color-filter capability when an actual pre-wrapper JBR artifact bundle is available.
