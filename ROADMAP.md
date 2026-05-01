@@ -157,6 +157,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   - [x] Resize descriptor-redefine probe now also asserts cache-hit recovery after the post-resize fresh define.
   - [x] Forced context-change descriptor probe exercises the `contextChanged` cache-clear path without relying on physical
     multi-monitor migration.
+  - [x] Shader descriptor redefine probes now mirror the effect-handle resize/context-change rows, requiring RuntimeEffect
+    shader handles to be redefined after same-context resize and forced context migration.
   - [x] Missing CMP command-cache clear hook is a structured Skiko fallback (`command-cache-clear-unavailable`) instead of a silent stale-handle risk.
   - [x] Graphics-layer blur, offset, and chained render-effect rows now assert JBR effect-handle define/use/cache-hit
     markers, proving ABI 82-84 image-filter descriptors are consumed by replay and reused across frames.

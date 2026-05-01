@@ -11027,3 +11027,27 @@ Validation:
 
 Next:
 - Reconcile the remaining color-filter roadmap umbrella with the already-passing RuntimeEffect/generic-shader/image-draw rows, then keep closing descriptor lifecycle and compatibility-matrix gaps.
+
+## Checkpoint: Shader Descriptor Resize/Context Redefine Probes
+
+Status: completed for RuntimeEffect shader handles.
+
+What changed:
+- Magic Jewel's command suite now includes:
+  - `commands-resize-shader-descriptor-redefine`
+  - `commands-forced-context-shader-descriptor-redefine`
+- The rows mirror the existing effect-handle lifecycle rows, but use a stable RuntimeEffect shader descriptor.
+- Each row requires a surface-change marker, a command-cache-clear marker, at least two JBR shader-handle define markers, and shader-handle cache hits after the fresh define.
+- The README documents shader descriptor redefinition alongside the existing effect descriptor resize/context-change rows.
+- `ROADMAP.md` records shader descriptor redefine coverage for both same-context resize and forced context migration.
+
+Validation:
+- Focused command probe passed:
+  `CASES="commands-resize-shader-descriptor-redefine commands-forced-context-shader-descriptor-redefine" DURATION_SECONDS=5 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`
+- Suite result: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260502-013134/suite.tsv`.
+- Marker checks:
+  - resize row: `jbr_shader_handle_define_frames=2`, `jbr_shader_handle_cache_hit_frames=828`, `skiko_surface_change_markers=1`, `skiko_command_cache_clear_markers=1`
+  - forced-context row: `jbr_shader_handle_define_frames=2`, `jbr_shader_handle_cache_hit_frames=561`, `skiko_surface_change_markers=1`, `skiko_command_cache_clear_markers=1`
+
+Next:
+- Keep tightening compatibility/version coverage, especially old/new fallback rows for newer high-word descriptor capabilities when reusable old artifact bundles are available.
