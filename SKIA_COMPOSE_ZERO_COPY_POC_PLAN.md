@@ -9937,3 +9937,26 @@ Next checkpoint:
 
 - Run a compact graphics-layer matrix that includes Offscreen, ModulateAlpha, shadows, and rotationX together. Then add
   rotationY as the next bounded 3D/camera row if the compact matrix stays green.
+
+## Checkpoint: Compact Graphics-Layer Matrix With RotationX
+
+Status: completed as the command-family regression sweep after enabling 3D matrix replay for rotationX.
+
+What changed:
+
+- No code changed in this checkpoint; this is the broader validation pass for the ABI 99 graphics-layer matrix path.
+- The compact Magic Jewel graphics-layer matrix now includes `commands-graphics-layer-rotationx` in the supported command
+  set alongside the base layer, ModulateAlpha, Offscreen, clips, and shadow rows.
+- `ROADMAP.md` records the new matrix pass so the rotationX slice has both focused and grouped validation evidence.
+
+Verification:
+
+- Compact Magic Jewel graphics-layer command matrix passed:
+  - command: `CASES="commands-graphics-layer commands-graphics-layer-modulate-alpha commands-graphics-layer-offscreen commands-graphics-layer-rotationx commands-graphics-layer-clip commands-graphics-layer-round-clip commands-graphics-layer-path-clip commands-graphics-layer-shadow commands-graphics-layer-round-shadow commands-graphics-layer-path-shadow" DURATION_SECONDS=3 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-163854/suite.tsv`
+  - result: all ten rows passed with `fallbacks=0`, `unsupported=none`, and `jbr_picture_frames=0`.
+
+Next checkpoint:
+
+- Add a Magic Jewel rotationY row that exercises the same CMP matrix path from the other 3D axis, then run command and
+  screenshot parity validation for it.
