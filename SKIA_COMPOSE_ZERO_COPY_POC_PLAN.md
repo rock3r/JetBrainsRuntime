@@ -8466,5 +8466,34 @@ Verification:
 
 Known notes:
 
-- This hook is intentionally reflective. If Compose UI is not present or the hook is missing, Skiko logs the unavailable
-  marker and continues; compatibility behavior can be tightened later when Skiko/CMP versions are released together.
+- This hook is intentionally reflective. The following checkpoint tightens the missing-hook path into a structured
+  compatibility fallback.
+
+## Checkpoint: Command Cache Clear Compatibility Fallback
+
+Status: a missing CMP command-cache clear hook is now a structured compatibility fallback instead of a silent
+stale-descriptor risk.
+
+What changed:
+
+- Added Skiko fallback reason:
+  - `command-cache-clear-unavailable`
+- `JbrSkiaSwingLayer` now treats `clearInteropCachesForSurfaceChange()` failure as a command-mode fallback for the current
+  paint after a JBR surface change.
+- The successful path still emits:
+  - `SKIKO_JBR_INTEROP_COMMAND_CACHES_CLEARED reason=...`
+- The unavailable path emits:
+  - `SKIKO_JBR_INTEROP_COMMAND_CACHES_CLEAR_UNAVAILABLE reason=... error=...`
+  - `SKIKO_JBR_INTEROP_FALLBACK reason=command-cache-clear-unavailable`
+- Magic Jewel's report validator accepts `command-cache-clear-unavailable` as a structured command fallback reason.
+- Added a report parser fixture for the new fallback reason.
+- Skiko `JBR-INTEROP.md` and Magic Jewel `README.md` document the behavior.
+- `ROADMAP.md` marks this compatibility fallback complete.
+
+Verification:
+
+- Skiko AWT compile passed:
+  - command: `./gradlew compileKotlinAwt`
+- Magic Jewel script syntax and report parser tests passed:
+  - command: `bash -n scripts/jbr-skia-interop-report.sh scripts/test-jbr-skia-report-validation.sh && ./scripts/test-jbr-skia-report-validation.sh`
+  - result: `JBR_SKIA_REPORT_VALIDATION_TESTS passed`
