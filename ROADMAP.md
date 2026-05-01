@@ -306,6 +306,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-163641/suite.tsv`.
 - [x] RotationY graphics-layer screenshot parity row passed:
   `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-164917/suite.tsv`.
+- [x] Combined rotationX + rotationY graphics-layer screenshot parity row passed:
+  `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-165948/suite.tsv`.
 - [x] Magic Jewel graphics-layer command probe runs without fallback markers and validates the replayed layer region in the screenshot assertion.
 - [x] Magic Jewel clipped graphics-layer command probe runs without fallback markers and validates clipped cyan/purple layer content.
 - [x] Magic Jewel rounded clipped graphics-layer command probe runs without fallback markers and validates clipped cyan/purple layer content.
@@ -335,6 +337,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Magic Jewel graphics-layer rotationX command row passed through matrix replay at `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-163107/suite.tsv`.
 - [x] Compact graphics-layer matrix with rotationX in the supported command set passed at `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-163854/suite.tsv`.
 - [x] Magic Jewel graphics-layer rotationY command row passed through matrix replay at `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-164836/suite.tsv`.
+- [x] Magic Jewel combined rotationX + rotationY graphics-layer command row passed through matrix replay at `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-165908/suite.tsv`.
 - [x] Compact graphics-layer matrix with rotationX and rotationY in the supported command set passed at `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-165236/suite.tsv`.
 - [x] Persist old/new screenshots and pass/fail thresholds in the Magic Jewel report.
 - [x] Make the parity suite window-only end to end: launch old/new renderers, capture the Magic Jewel window by id/title, crop no whole-screen screenshots, and keep the capture metadata in the report.

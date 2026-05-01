@@ -10022,3 +10022,38 @@ Next checkpoint:
 
 - Add a combined rotationX + rotationY Magic Jewel row to exercise matrix composition beyond single-axis transforms,
   then validate it through command probes and screenshot parity.
+
+## Checkpoint: Combined Graphics-Layer 3D Rotation Probe
+
+Status: completed as the first combined-axis graphics-layer 3D validation row.
+
+What changed:
+
+- Magic Jewel's command-probe suite now includes `commands-graphics-layer-rotationxy`, which enables both existing
+  rotation flags on the same graphics-layer probe.
+- Magic Jewel's screenshot parity suite now includes `parity-graphics-layer-rotationxy` in the default row set.
+- The combined row exercises Compose's composed 3D layer matrix through the same ABI 99 `COMMAND_CONCAT_MATRIX33`
+  replay path, covering transform composition beyond the single-axis rows.
+- Magic Jewel `README.md` documents the combined-rotation parity row.
+- `ROADMAP.md` records both command and old/new screenshot parity evidence.
+
+Verification:
+
+- Magic Jewel suite scripts passed syntax checks:
+  - command: `bash -n scripts/jbr-skia-command-probe-suite.sh scripts/jbr-skia-screenshot-parity-suite.sh`
+- Focused Magic Jewel combined rotation command row passed:
+  - command: `CASES="commands-graphics-layer-rotationxy" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-165908/suite.tsv`
+  - result: `status=passed`, `fallbacks=0`, `unsupported=none`, `jbr_picture_frames=0`,
+    `jbr_command_frames=295`
+- Focused Magic Jewel combined rotation screenshot parity row passed:
+  - command: `CASES="parity-graphics-layer-rotationxy" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-165948/suite.tsv`
+  - result: `status=passed`, `avg_delta=2.192`, `bad_pixel_ratio=0.05200`,
+    `compose_bad_pixel_ratio=0.07609`, `compose_bottom_swatches_bad_pixel_ratio=0.00000`
+
+Next checkpoint:
+
+- Run the compact graphics-layer matrix with the combined rotation row included. After that, move from transform coverage
+  to the next higher-risk graphics-layer fidelity gap: edge camera-distance coverage, higher-fidelity shadows, or broader
+  image-filter/effect surfaces.
