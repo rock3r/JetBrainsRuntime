@@ -7756,3 +7756,28 @@ Known notes:
 
 - Source hashing is a descriptor integrity/diagnostic primitive; it is not a security boundary.
 - RuntimeEffect descriptors still need named uniform schema validation, compile diagnostics, stable compile-failure fallback markers, and child color-filter handles.
+
+## Checkpoint: RuntimeEffect Compile-Failure Marker
+
+Status: marker plumbing and report parser validation passed; native live validation still waits for the local Xcode license/build unblock.
+
+What changed:
+
+- JBR native RuntimeEffect replay now emits a parseable marker when `SkRuntimeEffect::MakeForShader(...)` fails:
+  - `JBR_SKIA_INTEROP_RUNTIME_EFFECT_COMPILE_FAILED hash=0x... skslLength=... uniforms=... children=... errorLength=...`
+- The marker intentionally does not print raw Skia error text yet, so logs stay single-line and stable for report parsing. The source hash ties the failure back to the descriptor without dumping the full SKSL body.
+- Magic Jewel reports now count the marker in `summary.properties` as `jbr_runtime_effect_compile_failures`.
+- Magic Jewel validation recognizes `EXPECT_COMMAND_FALLBACK_REASON=runtime-effect-compile-failed` and requires both the JBR compile-failure marker and a rendered=false Skiko command frame.
+
+Verification:
+
+- JBR public API compile smoke passed:
+  - `javac -d /tmp/jbr-skia-api-compile src/java.desktop/share/classes/com/jetbrains/desktop/JBRSkia.java`
+- Magic Jewel report scripts passed syntax validation:
+  - `bash -n scripts/jbr-skia-interop-report.sh scripts/test-jbr-skia-report-validation.sh`
+- Magic Jewel report parser regression suite passed:
+  - `bash scripts/test-jbr-skia-report-validation.sh`
+
+Known notes:
+
+- This is the first stable compile-failure marker. A future slice should add a controlled live invalid-RuntimeEffect probe and decide whether sanitized error codes/snippets are useful enough to include without making the marker brittle.

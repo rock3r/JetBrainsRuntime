@@ -617,6 +617,14 @@ static sk_sp<SkShader> makeDescriptorShader(const ShaderDescriptor& descriptor, 
         }
         SkRuntimeEffect::Result result = SkRuntimeEffect::MakeForShader(SkString(sksl.c_str(), sksl.size()));
         if (!result.effect || !result.errorText.isEmpty()) {
+            const uint64_t sourceHash = imageCacheKey(descriptor.payload[3], descriptor.payload[4]);
+            std::fprintf(stderr,
+                         "JBR_SKIA_INTEROP_RUNTIME_EFFECT_COMPILE_FAILED hash=0x%016llx skslLength=%d uniforms=%d children=%d errorLength=%zu\n",
+                         static_cast<unsigned long long>(sourceHash),
+                         skslLength,
+                         uniformFloatCount,
+                         childCount,
+                         result.errorText.size());
             return nullptr;
         }
         sk_sp<SkData> uniformData;
