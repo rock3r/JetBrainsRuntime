@@ -7907,7 +7907,7 @@ Known notes:
 
 ## Checkpoint: Defensive Command-Frame Animation Preservation
 
-Status: Skiko regression tests added; execution is currently blocked in this shell by Gradle wrapper distribution download timeout.
+Status: focused Skiko regression tests passed.
 
 What changed:
 
@@ -7921,17 +7921,16 @@ What changed:
 Verification:
 
 - `git diff --check` passed in the Skiko worktree.
-- Attempted focused Skiko test run:
-  - `./gradlew --no-daemon --no-configuration-cache :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest.commandFrameCacheDoesNotReplaceMeaningfulFrameWithMinimalFullSceneFrame --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest.commandFrameCacheReturnsMinimalFullSceneFrameWhenNoMeaningfulFrameWasSeen --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest.commandFrameCacheReplaysLastMeaningfulFrameForMinimalInteropOnlyFrame`
-- The test command did not reach compilation or execution because Gradle wrapper download for `gradle-8.14.3-all.zip` timed out while connecting to `services.gradle.org`.
+- Focused Skiko tests passed:
+  - `./gradlew --no-daemon --no-configuration-cache awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest.commandFrameCacheDoesNotReplaceMeaningfulFrameWithMinimalFullSceneFrame --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest.commandFrameCacheReturnsMinimalFullSceneFrameWhenNoMeaningfulFrameWasSeen --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest.commandFrameCacheReplaysLastMeaningfulFrameForMinimalInteropOnlyFrame`
 
 Known notes:
 
-- This is a defensive guard for transient repaint ordering. It should be followed by a live Magic Jewel animation-preservation report case that asserts non-frozen command-mode frame markers advance after the tiny-frame path is exercised.
+- This is a defensive guard for transient repaint ordering. Magic Jewel now has a follow-up animation-preservation report case that asserts non-frozen command-mode frame markers advance and that the tiny-frame path is exercised.
 
 ## Checkpoint: Magic Jewel Live Animation Marker Assertion
 
-Status: report parser validation passed; live execution still waits for runnable local artifacts/native build state.
+Status: report parser validation and Magic Jewel compile passed; live native execution still waits for runnable local artifacts/native build state.
 
 What changed:
 
@@ -7947,10 +7946,13 @@ Verification:
 - Magic Jewel report scripts passed syntax validation and parser fixtures:
   - `bash -n scripts/jbr-skia-interop-report.sh scripts/jbr-skia-command-probe-suite.sh scripts/test-jbr-skia-report-validation.sh`
   - `bash scripts/test-jbr-skia-report-validation.sh`
+- Magic Jewel compiles with the new JVM property forwarding:
+  - `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon --no-configuration-cache compileKotlin`
 - Skiko source whitespace validation passed:
   - `git diff --check`
+- Focused Skiko command-frame cache tests passed:
+  - `./gradlew --no-daemon --no-configuration-cache awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest.commandFrameCacheDoesNotReplaceMeaningfulFrameWithMinimalFullSceneFrame --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest.commandFrameCacheReturnsMinimalFullSceneFrameWhenNoMeaningfulFrameWasSeen --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest.commandFrameCacheReplaysLastMeaningfulFrameForMinimalInteropOnlyFrame`
 
 Known notes:
 
 - This assertion proves frame production and exercises the tiny-frame preservation branch. It does not yet compare visual pixel movement across two live phases.
-- Focused Skiko tests for the underlying command-frame cache were added, but this shell could not execute them because the Gradle wrapper download for `gradle-8.14.3-all.zip` timed out before build execution.
