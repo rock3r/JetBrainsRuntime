@@ -9376,3 +9376,22 @@ Next checkpoint:
 
 - Fold the new child-type fallback row into the full command-probe sweep, then resume visual parity/remaining fallback
   work.
+
+## Checkpoint: RuntimeEffect Child-Type Full Sweep
+
+Status: the full Magic Jewel command-probe suite passes with the new child-type crash-regression row included.
+
+Verification:
+
+- Full Magic Jewel command-probe sweep passed:
+  - command: `SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-121521/suite.tsv`
+  - result: `46/46` rows passed.
+- The new `commands-runtime-effect-child-type-fallback` row reported `fallback_new_count=1`, `unsupported=none`,
+  `jbr_picture_frames=0`, and `jbr_command_frames=0`, proving the malformed RuntimeEffect child type exits through
+  structured fallback rather than native abort.
+
+Next checkpoint:
+
+- Resume remaining visual parity and intentional fallback work. The only full-suite unsupported markers are still from
+  the deliberate invalid-gradient row (`sweepGradientStops` nested under graphics-layer fallback).
