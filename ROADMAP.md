@@ -125,6 +125,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   - [x] Add a shader descriptor-handle ABI so composite shader trees can be rebuilt inside JBR-owned Skia.
   - [x] JBR emits structured effect/shader handle lifecycle markers for native and Java2D command submissions, and Magic Jewel reports/asserts descriptor define markers from the full log.
   - [x] Magic Jewel has a descriptor eviction probe that overfills CMP's effect/shader handle caches and asserts JBR-side define/evict markers.
+  - [x] Stable Magic Jewel descriptor rows assert reuse with max-count gates so unchanged effect/shader descriptors are not redefined every frame.
   - [ ] Implement JBR-owned shader/effect handles: Skiko/CMP serializes descriptors or create requests, JBR constructs objects inside its Skia runtime, draw commands reference versioned handles, and handles are scoped/evicted by destination context.
   - [x] Implement a concrete generic-shader MVP: CMP serializes a `RuntimeEffect` descriptor with ASCII SKSL source and raw float uniforms; JBR compiles/caches it inside the destination context and draw commands reference the JBR-owned handle.
   - [ ] Extend Skia runtime effects via descriptor payloads: child color-filter handles, richer compile diagnostics, and stable fallback markers.

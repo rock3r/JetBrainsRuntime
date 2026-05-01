@@ -8369,3 +8369,48 @@ Known notes:
   not a representative FPS benchmark.
 - Earlier plain-linear-gradient churn produced no shader descriptor markers because those draws can use dedicated gradient
   commands; this is now captured in the probe design.
+
+## Checkpoint: Stable Descriptor Reuse Gates
+
+Status: Magic Jewel can now fail command-mode probes when stable descriptors are redefined too often, not only when
+descriptor defines are missing.
+
+What changed:
+
+- Added strict report validator knobs:
+  - `EXPECT_MAX_JBR_EFFECT_HANDLE_DEFINES`
+  - `EXPECT_MAX_JBR_SHADER_HANDLE_DEFINES`
+- Added parser/validator fixtures proving those max gates pass at the limit and fail above it.
+- Applied max-count reuse gates to stable descriptor cases:
+  - `commands-color-filter-handle`: exactly one effect define
+  - `commands-color-matrix-filter`: exactly one effect define
+  - `commands-lighting-filter`: exactly one effect define
+  - `commands-image-color-matrix-filter`: exactly one effect define
+  - `commands-runtime-effect-pure-color`: exactly one shader define
+  - `commands-composite-shader`: exactly three shader defines for dst, src, and composite handles
+- Left animated/runtime-uniform rows without max gates because their descriptor payload can intentionally change over time.
+- `README.md` documents the stable descriptor reuse gates.
+- `ROADMAP.md` marks stable descriptor reuse validation complete.
+
+Verification:
+
+- Magic Jewel script syntax passed:
+  - `bash -n scripts/jbr-skia-interop-report.sh scripts/test-jbr-skia-report-validation.sh scripts/jbr-skia-command-probe-suite.sh`
+- Report parser tests passed:
+  - command: `./scripts/test-jbr-skia-report-validation.sh`
+  - result: `JBR_SKIA_REPORT_VALIDATION_TESTS passed`
+- Focused stable descriptor suite passed:
+  - command: `CASES="commands-color-filter-handle commands-color-matrix-filter commands-lighting-filter commands-image-color-matrix-filter commands-runtime-effect-pure-color commands-composite-shader" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-072500/suite.tsv`
+  - observed define counts:
+    - `commands-color-filter-handle`: `jbr_effect_handle_define_frames=1`
+    - `commands-color-matrix-filter`: `jbr_effect_handle_define_frames=1`
+    - `commands-lighting-filter`: `jbr_effect_handle_define_frames=1`
+    - `commands-image-color-matrix-filter`: `jbr_effect_handle_define_frames=1`
+    - `commands-runtime-effect-pure-color`: `jbr_shader_handle_define_frames=1`
+    - `commands-composite-shader`: `jbr_shader_handle_define_frames=3`
+
+Known notes:
+
+- These gates validate recorder/JBR lifecycle stability through emitted markers. They do not yet expose explicit cache-hit
+  markers; cache hits are inferred from the absence of additional define markers across many command frames.
