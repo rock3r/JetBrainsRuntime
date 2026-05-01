@@ -212,14 +212,19 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Persist diff images and per-region parity metrics in the Magic Jewel report and `summary.properties`.
 - [x] Add named old/new screenshot parity suite rows for the rich baseline, RuntimeEffect descriptors, and graphics-layer effects.
 - [x] Add `parity-geometry-clean`, a text/Swing-island-free parity row for stricter geometry-baseline experiments.
+- [x] Add `parity-native-text`, an opt-in native-text parity row with text-aware thresholds and paragraph-command assertions.
 - [x] RuntimeEffect screenshot parity rows passed for pure-color, uniform-only, and child-shader descriptors:
   `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-055435/suite.tsv`.
 - [x] Combined RuntimeEffect screenshot parity row passed:
   `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-060341/suite.tsv`.
+- [x] Native-text screenshot parity row passed:
+  `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-062651/suite.tsv`.
 - [x] Clean-geometry screenshot parity row passed:
   `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-061323/suite.tsv`.
 - [x] Default named screenshot parity suite passed end to end:
   `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-061514/suite.tsv`.
+- [x] Default named screenshot parity suite passed with native-text row included:
+  `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-062821/suite.tsv`.
 - [x] Graphics-layer effects screenshot parity row passed with focused probe scoping:
   `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-055842/suite.tsv`.
 - [x] Magic Jewel graphics-layer command probe runs without fallback markers and validates the replayed layer region in the screenshot assertion.

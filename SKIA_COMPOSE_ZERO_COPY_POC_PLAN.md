@@ -8034,6 +8034,7 @@ What changed:
 - Initial named cases cover:
   - `parity-rich`
   - `parity-geometry-clean`
+  - `parity-native-text`
   - `parity-runtime-effect-pure-color`
   - `parity-runtime-effect-uniform-only`
   - `parity-runtime-effect-child-only`
@@ -8057,6 +8058,11 @@ Verification:
   - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-061323/suite.tsv`
   - metrics: `avg_delta=2.197`, `bad_pixel_ratio=0.05687`, `compose_bad_pixel_ratio=0.09083`.
   - report signals: no Swing progress frames, no image refs, `jbr_command_frames=298`.
+- Native-text parity row passed with text-aware thresholds:
+  - command: `CASES=parity-native-text DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-062651/suite.tsv`
+  - metrics: `avg_delta=2.503`, `bad_pixel_ratio=0.04689`, `compose_bad_pixel_ratio=0.07407`.
+  - report signals: `JBR_SKIA_NATIVE_TEXT=true`, no image refs, paragraph text commands present, `jbr_command_frames=454`.
 - RuntimeEffect parity rows passed:
   - command: `CASES="parity-runtime-effect-pure-color parity-runtime-effect-uniform-only parity-runtime-effect-child-only" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-screenshot-parity-suite.sh`
   - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-055435/suite.tsv`
@@ -8077,11 +8083,19 @@ Verification:
   - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-061514/suite.tsv`
   - rows: rich baseline, clean geometry, RuntimeEffect pure-color, RuntimeEffect uniform-only, RuntimeEffect child-only,
     and graphics-layer effects.
+- Default named screenshot parity suite passed again with native-text included:
+  - command: `DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-062821/suite.tsv`
+  - rows: rich baseline, clean geometry, native text, RuntimeEffect pure-color, RuntimeEffect uniform-only,
+    RuntimeEffect child-only, and graphics-layer effects.
 
 Known notes:
 
 - These parity rows use the same broad thresholds as the rich baseline. The next validation-hardening step is to split
   tighter region-specific thresholds for Compose/Jewel-owned regions from known Swing/text raster drift.
+- Native text remains opt-in. Its parity row proves the command path renders and roughly matches layout, while preserving
+  the known raster/font drift as a separate text-aware threshold rather than silently treating it as identical to
+  text-as-image.
 - The command-probe suite still remains the primary validation for the intentional RuntimeEffect build-fallback row.
 
 ## Checkpoint: Configurable Screenshot Region Gates
