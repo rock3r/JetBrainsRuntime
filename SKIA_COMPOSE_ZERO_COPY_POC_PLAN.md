@@ -10842,3 +10842,25 @@ Broad validation after commit:
 Next checkpoint:
 
 - Continue with remaining descriptor lifecycle/version tests or renderer coverage.
+
+## Checkpoint: Shader Descriptor Color-Filter Wrappers
+
+Status: completed for the first RuntimeEffect shader + typed color-filter command path.
+
+What changed:
+- JBR/JBR API define `COMMAND_CAP64_HIGH_SHADER_DESCRIPTOR_COLOR_FILTER` and `COMMAND_SHADER_DESCRIPTOR_COLOR_FILTER`.
+- CMP records a wrapped shader descriptor when a supported shader paint also has a supported color filter, defining the child shader handle and color-filter handle before the wrapper.
+- JBR Java and native validation reject missing child shader/color-filter handles; native replay rebuilds the child shader and applies the color filter via `SkShader::makeWithColorFilter`.
+- Skiko now requires the new high capability bit, so old JBRs fall back through `command-capability-mismatch` instead of silently dropping the filter.
+- Magic Jewel has `commands-runtime-effect-shader-color-filter` and `MAGIC_JEWEL_COMPOSE_RUNTIME_EFFECT_SHADER_COLOR_FILTER` for live validation.
+
+Validation:
+- JBR local artifacts rebuilt with `./scripts/rebuild-jbr-skia-local-artifacts.sh` from Magic Jewel.
+- Skiko `compileKotlinAwt publishToMavenLocal` passed.
+- Skiko focused JBR interop tests passed: `./gradlew --no-daemon --no-configuration-cache compileKotlinAwt awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`.
+- CMP `:compose:ui:ui-graphics:compileKotlinDesktop` passed. The broader focused `desktopTest` run remains blocked by the existing local `ui` module command-delegate wiring, after `ui-graphics` itself compiles.
+- Magic Jewel focused command probe passed: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260502-003307/suite.tsv`.
+
+Next:
+- Add screenshot parity for shader + color-filter composition.
+- Broaden wrapped-shader coverage beyond the RuntimeEffect probe once parity is stable.

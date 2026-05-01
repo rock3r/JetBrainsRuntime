@@ -125,6 +125,8 @@ public abstract class JBRSkia {
     public static final long COMMAND_CAP64_HIGH_PATH_EFFECT_DESCRIPTOR_REF = Long.parseLong("256");
     public static final long COMMAND_CAP64_HIGH_CONCAT_MATRIX33 = Long.parseLong("512");
     public static final long COMMAND_CAP64_HIGH_DRAW_SHADOW_PATH = Long.parseLong("1024");
+    /** Supports shader descriptors that apply typed color-filter descriptor handles. */
+    public static final long COMMAND_CAP64_HIGH_SHADER_DESCRIPTOR_COLOR_FILTER = Long.parseLong("2048");
     public static final int COMMAND_CLEAR = Integer.parseInt("1");
     public static final int COMMAND_FILL_RECT = Integer.parseInt("2");
     public static final int COMMAND_STROKE_LINE = Integer.parseInt("3");
@@ -209,6 +211,8 @@ public abstract class JBRSkia {
     public static final int COMMAND_SHADER_DESCRIPTOR_IMAGE = Integer.parseInt("4");
     public static final int COMMAND_SHADER_DESCRIPTOR_COMPOSITE = Integer.parseInt("5");
     public static final int COMMAND_SHADER_DESCRIPTOR_RUNTIME_EFFECT = Integer.parseInt("6");
+    /** Shader descriptor type whose payload is shader-handle high/low and color-filter-handle high/low. */
+    public static final int COMMAND_SHADER_DESCRIPTOR_COLOR_FILTER = Integer.parseInt("7");
     public static final int COMMAND_SHADER_DESCRIPTOR_VERSION_1 = Integer.parseInt("1");
     public static final int COMMAND_BLEND_MODE_PLUS = Integer.parseInt("1");
     public static final int COMMAND_BLEND_MODE_SRC_IN = Integer.parseInt("2");

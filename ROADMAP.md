@@ -103,6 +103,9 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] ABI 99 remains the current command-stream version; graphics-layer shadows add a high-word-gated
   `COMMAND_DRAW_SHADOW_PATH` op backed by JBR-owned `SkShadowUtils::DrawShadow` for rectangular, rounded, and
   generic path outlines without requiring a stream ABI bump.
+- [x] High-word capability `COMMAND_CAP64_HIGH_SHADER_DESCRIPTOR_COLOR_FILTER`: shader descriptors can wrap typed
+  color-filter descriptor handles through `COMMAND_SHADER_DESCRIPTOR_COLOR_FILTER`, so shader fills preserve Compose
+  paint color filters inside JBR-owned Skia without requiring a stream ABI bump.
 - [x] RuntimeEffect builder failures emit parseable JBR markers, and Magic Jewel has a bad-child-name probe/report assertion.
   - [x] Native RuntimeEffect shader replay rejects child type mismatches before assigning `SkRuntimeEffectBuilder`
     children, and Magic Jewel has a post-recording child-type corruption probe that asserts `stage=child-type` fallback
@@ -167,6 +170,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   - [x] Skiko prerequisite for RuntimeEffect color-filter child support: `RuntimeEffect.makeColorFilter(Data?, Array<ColorFilter?>?)` now wraps Skia's child color-filter overload.
   - [x] RuntimeEffect color-filter child handles: CMP serializes child color-filter descriptor handles plus named child schema, Skiko requires ABI 92, and JBR reconstructs the child-backed color filter inside the destination context.
   - [ ] Extend Skia runtime effects via descriptor payloads: remaining shader-family fallback markers and parity coverage for child color-filter descriptors.
+  - [x] RuntimeEffect shader + color-filter descriptor command row passes through CMP -> Skiko -> JBR native replay with no picture fallback.
+  - [ ] Add old/new screenshot parity coverage for shader + color-filter descriptor composition.
   - [ ] Add shader/effect lifecycle commands for create, use, context-scoped cache hit, compile failure, eviction, and context migration invalidation; never pass raw Skiko `SkShader*`, `SkImageFilter*`, or `SkRuntimeEffect*` pointers across the ABI.
   - [x] Add RuntimeEffect conformance probes in Magic Jewel: one pure color shader, one child-shader composition, one uniform animation, one builder/compile-failure fallback, and one old-runtime capability fallback.
   - [x] Add Magic Jewel probes that force invalid descriptor-handle fallback without relying on raw Skiko `SkShader*` or `SkRuntimeEffect*` pointers.
@@ -250,6 +255,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Add narrow tint color-filter cached-image support through a versioned command instead of picture fallback.
 - [x] Expand color-matrix/lighting color-filter command coverage to solid rectangles, saveLayer/graphics-layer paints, and cached images through typed descriptors.
 - [ ] Expand color-filter command coverage to image filters, runtime effects, and generic shaders.
+  - [x] RuntimeEffect shader paints with typed color-filter descriptors replay through a wrapped shader descriptor.
+  - [ ] Expand the same wrapped-shader path to screenshot parity rows and broader shader families.
 - [x] Add narrow dash path-effect stroked-line support through a versioned command instead of picture fallback.
 - [x] Extend dash path-effect command replay to stroked rectangles with ABI 93 validation and native/Java2D replay.
 - [x] Extend dash path-effect command replay to stroked rounded rectangles with ABI 94 validation and native/Java2D replay.
@@ -277,6 +284,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] RuntimeEffect color-filter child descriptor gate: `CASES="commands-runtime-effect-color-filter-child" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh` passed for ABI 92 at `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-090456/suite.tsv`.
 - [x] ABI 92 broader descriptor regression gate: RuntimeEffect shader/color-filter/child-color-filter, image color-matrix, typed color filters, and graphics-layer color-filter rows passed at `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-090711/suite.tsv`.
 - [x] RuntimeEffect descriptor handle-use gate: shader, color-filter, and child color-filter RuntimeEffect rows passed with JBR handle-use assertions at `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-092522/suite.tsv`.
+- [x] RuntimeEffect shader + color-filter descriptor gate: `CASES="commands-runtime-effect-shader-color-filter" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh` passed at `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260502-003307/suite.tsv`.
 - [x] Golden/diff screenshot harness for the full mixed Swing/Jewel/Compose Magic Jewel scene.
 - [x] Capture the app window only in old/new renderer modes, with deterministic sizing, theme, font inputs, animation phase, and seeded content.
 - [x] Add configurable per-region screenshot parity gates for header controls, Compose canvas, Swing island, and right probe strip.

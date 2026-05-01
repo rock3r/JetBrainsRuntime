@@ -184,6 +184,7 @@ static constexpr jint COMMAND_SHADER_DESCRIPTOR_SWEEP_GRADIENT = 3;
 static constexpr jint COMMAND_SHADER_DESCRIPTOR_IMAGE = 4;
 static constexpr jint COMMAND_SHADER_DESCRIPTOR_COMPOSITE = 5;
 static constexpr jint COMMAND_SHADER_DESCRIPTOR_RUNTIME_EFFECT = 6;
+static constexpr jint COMMAND_SHADER_DESCRIPTOR_COLOR_FILTER = 7;
 static constexpr jint COMMAND_SHADER_DESCRIPTOR_VERSION_1 = 1;
 static constexpr jint COMMAND_BLEND_MODE_PLUS = 1;
 static constexpr jint COMMAND_BLEND_MODE_SRC_IN = 2;
@@ -253,6 +254,8 @@ struct ShaderDescriptor {
     std::vector<jint> payload;
     std::shared_ptr<ShaderDescriptor> dst;
     std::shared_ptr<ShaderDescriptor> src;
+    std::shared_ptr<ShaderDescriptor> child;
+    std::shared_ptr<ColorFilterDescriptor> colorFilter;
     std::vector<std::shared_ptr<ShaderDescriptor>> children;
 };
 
@@ -681,6 +684,13 @@ static sk_sp<SkShader> makeDescriptorShader(const ShaderDescriptor& descriptor, 
         sk_sp<SkShader> src = makeDescriptorShader(*descriptor.src, imageCacheContextKey, depth + 1);
         if (!dst || !src) return nullptr;
         return SkShaders::Blend(blendMode, dst, src);
+    }
+    if (descriptor.type == COMMAND_SHADER_DESCRIPTOR_COLOR_FILTER) {
+        if (descriptor.payload.size() != 4 || !descriptor.child || !descriptor.colorFilter) return nullptr;
+        sk_sp<SkShader> shader = makeDescriptorShader(*descriptor.child, imageCacheContextKey, depth + 1);
+        sk_sp<SkColorFilter> colorFilter = makeDescriptorColorFilter(*descriptor.colorFilter);
+        if (!shader || !colorFilter) return nullptr;
+        return shader->makeWithColorFilter(colorFilter);
     }
     if (descriptor.type == COMMAND_SHADER_DESCRIPTOR_RUNTIME_EFFECT) {
         if (descriptor.payload.size() < 7) return nullptr;
@@ -3535,6 +3545,22 @@ static bool drawCommandList(SkCanvas* canvas,
                         if (dst == gShadersByKey.end() || src == gShadersByKey.end()) return false;
                         descriptor.dst = std::make_shared<ShaderDescriptor>(dst->second);
                         descriptor.src = std::make_shared<ShaderDescriptor>(src->second);
+                    }
+                } else if (descriptorType == COMMAND_SHADER_DESCRIPTOR_COLOR_FILTER) {
+                    if (payloadIntCount != 4) return false;
+                    const uint64_t childHandle = imageCacheKey(descriptor.payload[0], descriptor.payload[1]);
+                    const uint64_t colorFilterHandle = imageCacheKey(descriptor.payload[2], descriptor.payload[3]);
+                    {
+                        std::lock_guard<std::mutex> lock(gShaderCacheMutex);
+                        auto child = gShadersByKey.find(ColorFilterScopedKey{imageCacheContextKey, childHandle});
+                        if (child == gShadersByKey.end()) return false;
+                        descriptor.child = std::make_shared<ShaderDescriptor>(child->second);
+                    }
+                    {
+                        std::lock_guard<std::mutex> lock(gColorFilterCacheMutex);
+                        auto colorFilter = gColorFiltersByKey.find(ColorFilterScopedKey{imageCacheContextKey, colorFilterHandle});
+                        if (colorFilter == gColorFiltersByKey.end()) return false;
+                        descriptor.colorFilter = std::make_shared<ColorFilterDescriptor>(colorFilter->second);
                     }
                 } else if (descriptorType == COMMAND_SHADER_DESCRIPTOR_RUNTIME_EFFECT) {
                     if (payloadIntCount < 7) return false;
