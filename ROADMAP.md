@@ -100,6 +100,11 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] ABI 93: dash path-effect metadata can stroke rectangles through a structured command, extending dash support beyond line-only replay.
 - [x] ABI 94: dash path-effect metadata can stroke rounded rectangles through a structured command.
 - [x] RuntimeEffect builder failures emit parseable JBR markers, and Magic Jewel has a bad-child-name probe/report assertion.
+  - [x] Native RuntimeEffect shader replay rejects child type mismatches before assigning `SkRuntimeEffectBuilder`
+    children, and Magic Jewel has a post-recording child-type corruption probe that asserts `stage=child-type` fallback
+    instead of a native abort.
+  - [x] RuntimeEffect child-type crash regression subset passed at
+    `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-120945/suite.tsv`.
   - [x] Descriptor handle use markers now distinguish "handle was consumed by replay" from "handle was defined in the command stream"; RuntimeEffect rows assert use markers for shader and color-filter refs.
   - [x] Descriptor handle cache-hit markers distinguish same-frame define/use from steady-state reuse across frames; stable
     shader/effect rows assert cache-hit markers.
@@ -375,6 +380,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-090711/suite.tsv`.
 - [x] RuntimeEffect descriptor handle-use assertions through JBR command replay:
   `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-092522/suite.tsv`.
+- [x] RuntimeEffect child-type crash regression subset through JBR command replay:
+  `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-120945/suite.tsv`.
 - [x] Graphics-layer RenderEffect descriptor assertions through JBR command replay:
   `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-100545/suite.tsv`.
 - [x] ABI 93 dashed path-effect line/rectangle probe through JBR command replay:

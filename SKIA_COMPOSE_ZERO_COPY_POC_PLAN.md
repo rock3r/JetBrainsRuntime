@@ -9338,3 +9338,41 @@ Next checkpoint:
 
 - Use the now-green broad sweep to target the next remaining visual/compatibility gap, with preference for screenshot
   parity and any rendering family that still requires intentional fallback rather than command replay.
+
+## Checkpoint: RuntimeEffect Child-Type Crash Hardening
+
+Status: JBR native RuntimeEffect shader replay now treats child type mismatches as structured build fallback instead of
+allowing Skia's builder assignment to abort the JVM.
+
+What changed:
+
+- JBR checks `SkRuntimeEffect::Child::type` before assigning a child shader through `SkRuntimeEffectBuilder`.
+- A non-shader child slot now logs
+  `JBR_SKIA_INTEROP_RUNTIME_EFFECT_BUILD_FAILED ... stage=child-type ...` and returns `false` from command replay, which
+  Skiko reports as command-stream fallback.
+- Skiko has a test-only post-recording corruption hook that mutates one valid RuntimeEffect shader descriptor so JBR sees
+  a `colorFilter` child declaration while the descriptor still supplies a shader handle. This avoids relying on Skiko's
+  bundled runtime to construct an invalid object up front.
+- Magic Jewel documents and runs `commands-runtime-effect-child-type-fallback` as the crash-regression row.
+
+Verification:
+
+- Rebuilt local JBR API/desktop/native artifacts:
+  - command: `./scripts/rebuild-jbr-skia-local-artifacts.sh`
+- Rebuilt Skiko AWT and published the local snapshot:
+  - command: `./gradlew --no-daemon --no-configuration-cache compileKotlinAwt publishAwtPublicationToMavenLocal`
+- Focused Magic Jewel crash-regression probe passed:
+  - command: `CASES="commands-runtime-effect-child-type-fallback" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-120647/suite.tsv`
+  - result: `status=passed`, `fallback_new_count=1`, `unsupported=none`, `jbr_picture_frames=0`,
+    `jbr_command_frames=0`
+- Compact RuntimeEffect regression subset passed:
+  - command: `CASES="commands-runtime-effect-shader commands-runtime-effect-child-only commands-runtime-effect-build-fallback commands-runtime-effect-child-type-fallback commands-runtime-effect-color-filter commands-runtime-effect-color-filter-child" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-120945/suite.tsv`
+- Magic Jewel report parser validation passed:
+  - command: `bash -n scripts/jbr-skia-interop-report.sh scripts/test-jbr-skia-report-validation.sh scripts/jbr-skia-command-probe-suite.sh scripts/run-jbr-skia.sh && ./scripts/test-jbr-skia-report-validation.sh`
+
+Next checkpoint:
+
+- Fold the new child-type fallback row into the full command-probe sweep, then resume visual parity/remaining fallback
+  work.
