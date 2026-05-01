@@ -10117,3 +10117,26 @@ Next checkpoint:
 
 - Run the compact graphics-layer matrix with the near-camera row included. If it stays green, move to the next
   non-transform graphics-layer fidelity gap: higher-fidelity shadows or broader image-filter/effect surfaces.
+
+## Checkpoint: Compact Graphics-Layer Matrix With Near Camera
+
+Status: completed as the grouped command regression sweep after adding the near-camera perspective row.
+
+What changed:
+
+- No code changed in this checkpoint; this is the grouped validation pass for the expanded graphics-layer command set.
+- The compact Magic Jewel graphics-layer matrix now includes `commands-graphics-layer-near-camera` alongside the
+  single-axis and combined-axis 3D rows, Offscreen, ModulateAlpha, clips, and shadows.
+- `ROADMAP.md` records the expanded matrix pass.
+
+Verification:
+
+- Compact Magic Jewel graphics-layer command matrix passed:
+  - command: `CASES="commands-graphics-layer commands-graphics-layer-modulate-alpha commands-graphics-layer-offscreen commands-graphics-layer-rotationx commands-graphics-layer-rotationy commands-graphics-layer-rotationxy commands-graphics-layer-near-camera commands-graphics-layer-clip commands-graphics-layer-round-clip commands-graphics-layer-path-clip commands-graphics-layer-shadow commands-graphics-layer-round-shadow commands-graphics-layer-path-shadow" DURATION_SECONDS=3 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-171313/suite.tsv`
+  - result: all thirteen rows passed with `fallbacks=0`, `unsupported=none`, and `jbr_picture_frames=0`.
+
+Next checkpoint:
+
+- Inspect CMP's current graphics-layer shadow command replay and either improve shadow fidelity or add a precise
+  fallback/validation row for a shadow case that the current approximation should not claim yet.
