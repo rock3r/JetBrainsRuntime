@@ -9794,3 +9794,34 @@ Roadmap update:
 Next checkpoint:
 
 - Commit this slice, then add screenshot parity for the Offscreen row or move to the next graphics-layer fidelity gap.
+
+## Checkpoint: Simple Offscreen Graphics-Layer Screenshot Parity
+
+Status: completed as the visual parity gate for the first bounded Offscreen command model.
+
+What changed:
+
+- Magic Jewel's named screenshot parity suite now includes `parity-graphics-layer-offscreen` in the default row set.
+- The row enables the graphics-layer probe with `MAGIC_JEWEL_COMPOSE_GRAPHICS_LAYER_OFFSCREEN=true` while disabling
+  unrelated blend, color-filter, path-effect, path, arc, round-rect, and gradient probes so the diff focuses on the
+  Offscreen layer semantics.
+- The README now documents graphics-layer Offscreen as part of the deterministic old/new window-capture parity suite.
+
+Verification:
+
+- Focused Magic Jewel Offscreen screenshot parity row passed:
+  - command: `CASES="parity-graphics-layer-offscreen" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-160638/suite.tsv`
+  - result: `status=passed`, `avg_delta=2.191`, `bad_pixel_ratio=0.05195`,
+    `compose_bad_pixel_ratio=0.07600`, `compose_bottom_swatches_bad_pixel_ratio=0.00000`
+
+Roadmap update:
+
+- `ROADMAP.md` now records the Offscreen screenshot parity row alongside the rectangular, rounded, and generic-path
+  graphics-layer shadow parity rows.
+
+Next checkpoint:
+
+- Continue from graphics-layer Offscreen into the next remaining fidelity gap. The highest-risk item is 3D/camera
+  transform support because it needs a perspective-transform command model; the smaller alternative is another bounded
+  image-filter/effect surface with screenshot parity.
