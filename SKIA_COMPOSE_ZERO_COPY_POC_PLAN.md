@@ -10960,6 +10960,26 @@ Validation:
   - linear gradient shader + color filter: `bad_pixel_ratio=0.04997`, `compose_bad_pixel_ratio=0.07446`
 - Caveat: these rows remain smoke parity guards. They share the current shader parity noise floor dominated by animation phase, AA, and text-sensitive regions; they are useful for detecting missing replay paths but not yet for pixel-perfect evaluation.
 
+## Checkpoint: Wrapped Shader Local Screenshot Gates
+
+Status: completed for tighter local parity coverage.
+
+What changed:
+- Magic Jewel's screenshot comparator now emits three additional local regions:
+  - `composeShaderImage`
+  - `composeShaderComposite`
+  - `composeShaderLinear`
+- The matching parity rows opt into local thresholds:
+  - image shader + color filter: `MAX_COMPOSE_SHADER_IMAGE_BAD_PIXEL_RATIO=0.05`
+  - composite shader + color filter: `MAX_COMPOSE_SHADER_COMPOSITE_BAD_PIXEL_RATIO=0.07`
+  - linear-gradient shader + color filter: `MAX_COMPOSE_SHADER_LINEAR_BAD_PIXEL_RATIO=0.05`
+- The README documents the local gate environment variables for the shader-plus-color-filter rows.
+
+Validation:
+- Focused parity command passed:
+  `CASES="parity-image-shader-color-filter parity-composite-shader-color-filter parity-linear-gradient-shader-color-filter" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-screenshot-parity-suite.sh`
+- Suite result: `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260502-011323/suite.tsv`.
+
 Next:
-- Tighten the screenshot comparator so wrapped-shader rows can assert smaller local probe regions instead of relying only on whole-window/large-canvas ratios.
+- Continue moving high-value unsupported surfaces from picture fallback to command replay, prioritizing paths that affect Jewel/CMP real apps.
 - Add old-artifact matrix coverage for the new high-word shader color-filter capability when an actual pre-wrapper JBR artifact bundle is available.

@@ -302,6 +302,9 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Add focused screenshot parity rows for stable wrapped shader + color-filter cases.
   - `parity-image-shader-color-filter`, `parity-composite-shader-color-filter`, and `parity-linear-gradient-shader-color-filter` passed at `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260502-010715/suite.tsv`.
   - Caveat: these share the same current shader-parity noise floor as the RuntimeEffect row; they are smoke parity guards, while geometry/color subregion gates remain the stricter signal.
+- [x] Tighten wrapped-shader screenshot parity with local probe-region gates.
+  - Added `composeShaderImage`, `composeShaderComposite`, and `composeShaderLinear` comparator regions plus per-row thresholds.
+  - Validation passed at `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260502-011323/suite.tsv`.
 - [x] Golden/diff screenshot harness for the full mixed Swing/Jewel/Compose Magic Jewel scene.
 - [x] Capture the app window only in old/new renderer modes, with deterministic sizing, theme, font inputs, animation phase, and seeded content.
 - [x] Add configurable per-region screenshot parity gates for header controls, Compose canvas, Swing island, and right probe strip.
