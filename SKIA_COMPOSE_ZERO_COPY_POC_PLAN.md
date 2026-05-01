@@ -9871,3 +9871,40 @@ Next checkpoint:
 
 - Use the new matrix primitive as the basis for a 3D/camera graphics-layer design slice. The next safe step is to add a
   strict positive/negative recorder test for matrix-composed layer transforms before enabling any live rotationX/Y row.
+
+## Checkpoint: Graphics-Layer RotationX Matrix Replay
+
+Status: completed as the first live graphics-layer 3D transform slice on top of ABI 99.
+
+What changed:
+
+- CMP graphics-layer command replay now accepts finite `rotationX`/`rotationY` and positive finite `cameraDistance`.
+- When a graphics layer has 3D rotation, CMP computes Compose's layer transform with `prepareTransformationMatrix(...)`,
+  translates to the layer's destination, emits `COMMAND_CONCAT_MATRIX33`, and then replays the existing saveLayer/content
+  commands inside that transformed scope.
+- The older translate/pivot/rotateZ/scale command sequence remains in place for non-3D layers, so the existing 2D layer
+  command streams stay compact and stable.
+- Magic Jewel's graphics-layer rotationX probe is now a supported command row, `commands-graphics-layer-rotationx`,
+  instead of an expected fallback row.
+
+Verification:
+
+- CMP focused recorder test passed:
+  - command: `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.nestedRecordingReplaysLayerMatrixTransformBeforeSaveLayer`
+- Magic Jewel compiled:
+  - command: `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon compileKotlin`
+- Focused Magic Jewel rotationX graphics-layer row passed:
+  - command: `CASES="commands-graphics-layer-rotationx" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-163107/suite.tsv`
+  - result: `status=passed`, `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`,
+    `jbr_command_frames=161`
+
+Roadmap update:
+
+- `ROADMAP.md` now marks first 3D/camera graphics-layer replay as supported and narrows remaining graphics-layer work
+  to elevation-accurate shadows, broader image-filter surfaces, and screenshot parity for 3D/camera transforms.
+
+Next checkpoint:
+
+- Add old/new screenshot parity for the rotationX graphics-layer row, then run a compact graphics-layer matrix that
+  includes Offscreen, ModulateAlpha, shadows, and rotationX together.
