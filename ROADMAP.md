@@ -217,7 +217,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   - [x] Support graphics layers that combine a directly mapped blend mode with tint/SrcIn color filtering through a bounded save-layer blend/color-filter command.
   - [x] Support color-matrix and lighting graphics-layer color filters by referencing typed descriptor handles from saveLayer paints.
   - [x] Support a first rectangular graphics-layer shadow slice by replaying a JBR-owned blur image-filter descriptor and layer-local shadow fill before the layer content.
-  - [ ] Extend graphics-layer command replay beyond the current 2D subset: non-rectangular/elevation-accurate shadows, 3D rotation/camera, offscreen strategy semantics, and broader image-filter surfaces.
+  - [x] Support rounded-outline graphics-layer shadows by clipping the offset shadow source path inside the JBR-owned blur image-filter layer.
+  - [ ] Extend graphics-layer command replay beyond the current 2D subset: generic-path/elevation-accurate shadows, 3D rotation/camera, offscreen strategy semantics, and broader image-filter surfaces.
   - [x] Add render-effect descriptors for graphics-layer `RenderEffect` once the JBR-owned effect-handle ABI can construct the needed Skia image filters.
 - [x] Add narrow tint color-filter solid fill-rectangle support through a versioned command instead of picture fallback.
 - [x] Add narrow tint color-filter `saveLayer` support through a versioned command instead of picture fallback.
@@ -307,6 +308,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Magic Jewel rectangular graphics-layer shadow probe is wired into the command-probe suite and screenshot assertion; focused row passed at `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-134341/suite.tsv`.
 - [x] Graphics-layer render-effect plus shadow regression subset passed at `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-134631/suite.tsv`.
 - [x] Remaining command-probe tail from image filters through graphics-layer shadow and invalid-gradient fallback passed at `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-141933/suite.tsv`.
+- [x] Magic Jewel rounded graphics-layer shadow probe is wired into the command-probe suite; focused row passed at `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-144839/suite.tsv`.
+- [x] Graphics-layer shadow/rounded-clip regression subset passed at `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-144925/suite.tsv`.
 - [x] Persist old/new screenshots and pass/fail thresholds in the Magic Jewel report.
 - [x] Make the parity suite window-only end to end: launch old/new renderers, capture the Magic Jewel window by id/title, crop no whole-screen screenshots, and keep the capture metadata in the report.
 - [x] Add deterministic animation-phase controls for parity runs so animated progress, blend probes, gradients, and Swing islands can be compared at repeatable frame phases.
