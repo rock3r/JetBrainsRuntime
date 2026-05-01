@@ -256,7 +256,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Expand color-matrix/lighting color-filter command coverage to solid rectangles, saveLayer/graphics-layer paints, and cached images through typed descriptors.
 - [ ] Expand color-filter command coverage to image filters, runtime effects, and generic shaders.
   - [x] RuntimeEffect shader paints with typed color-filter descriptors replay through a wrapped shader descriptor.
-  - [ ] Expand the same wrapped-shader path to screenshot parity rows and broader shader families.
+  - [x] Expand the same wrapped-shader path to screenshot parity rows and broader shader families.
 - [x] Add narrow dash path-effect stroked-line support through a versioned command instead of picture fallback.
 - [x] Extend dash path-effect command replay to stroked rectangles with ABI 93 validation and native/Java2D replay.
 - [x] Extend dash path-effect command replay to stroked rounded rectangles with ABI 94 validation and native/Java2D replay.

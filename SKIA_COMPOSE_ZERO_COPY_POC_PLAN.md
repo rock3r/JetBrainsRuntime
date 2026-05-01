@@ -10983,3 +10983,24 @@ Validation:
 Next:
 - Continue moving high-value unsupported surfaces from picture fallback to command replay, prioritizing paths that affect Jewel/CMP real apps.
 - Add old-artifact matrix coverage for the new high-word shader color-filter capability when an actual pre-wrapper JBR artifact bundle is available.
+
+## Checkpoint: Wrapped Shader Local Parity Reporting
+
+Status: completed for automation visibility.
+
+What changed:
+- Magic Jewel's screenshot parity suite `suite.tsv` now includes the local shader probe ratios:
+  - `compose_shader_image_bad_pixel_ratio`
+  - `compose_shader_composite_bad_pixel_ratio`
+  - `compose_shader_linear_bad_pixel_ratio`
+- The README documents that the parity suite exposes core Compose geometry and shader-probe ratios.
+- `ROADMAP.md` now marks broader wrapped-shader screenshot parity rows complete, matching the already-passing image/composite/linear shader-family rows.
+
+Validation:
+- Focused parity command passed:
+  `CASES="parity-image-shader-color-filter parity-composite-shader-color-filter parity-linear-gradient-shader-color-filter" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-screenshot-parity-suite.sh`
+- Suite result: `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260502-011838/suite.tsv`.
+- The TSV contains populated local shader-ratio columns for all three rows.
+
+Next:
+- Continue the next functional command-replay gap after wrapped shader/color-filter coverage, likely either remaining descriptor lifecycle/version matrix coverage or a high-value graphics/image-filter surface still falling back to picture replay.
