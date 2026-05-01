@@ -220,8 +220,9 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   - [x] Support rounded-outline graphics-layer shadows by clipping the offset shadow source path inside the JBR-owned blur image-filter layer.
   - [x] Support generic-path graphics-layer shadows by reusing the offset shadow source path replay inside the JBR-owned blur image-filter layer.
   - [x] Validate `CompositingStrategy.ModulateAlpha` graphics-layer replay stays on the command path.
-  - [x] Keep 3D rotation/camera and explicit Offscreen compositing strategy on named strict fallbacks until command replay can model them faithfully.
-  - [ ] Extend graphics-layer command replay beyond the current 2D subset: elevation-accurate shadows, 3D rotation/camera, offscreen strategy semantics, and broader image-filter surfaces.
+  - [x] Support simple `CompositingStrategy.Offscreen` graphics-layer replay by clipping layer contents to bounds inside the command saveLayer.
+  - [x] Keep 3D rotation/camera on named strict fallback until command replay can model perspective transforms faithfully.
+  - [ ] Extend graphics-layer command replay beyond the current 2D subset: elevation-accurate shadows, 3D rotation/camera, and broader image-filter surfaces.
   - [x] Add render-effect descriptors for graphics-layer `RenderEffect` once the JBR-owned effect-handle ABI can construct the needed Skia image filters.
 - [x] Add narrow tint color-filter solid fill-rectangle support through a versioned command instead of picture fallback.
 - [x] Add narrow tint color-filter `saveLayer` support through a versioned command instead of picture fallback.
@@ -322,6 +323,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Compact graphics-layer command/fallback matrix passed at `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-151820/suite.tsv`.
 - [x] Full default command-probe suite passed at short duration with the latest graphics-layer rows:
   `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-152730/suite.tsv`.
+- [x] Magic Jewel graphics-layer Offscreen command row and rotationX fallback row passed at `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-155623/suite.tsv`.
+- [x] Compact graphics-layer matrix with Offscreen in the supported set passed at `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-155924/suite.tsv`.
 - [x] Persist old/new screenshots and pass/fail thresholds in the Magic Jewel report.
 - [x] Make the parity suite window-only end to end: launch old/new renderers, capture the Magic Jewel window by id/title, crop no whole-screen screenshots, and keep the capture metadata in the report.
 - [x] Add deterministic animation-phase controls for parity runs so animated progress, blend probes, gradients, and Swing islands can be compared at repeatable frame phases.

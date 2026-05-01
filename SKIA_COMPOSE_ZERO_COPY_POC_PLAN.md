@@ -9751,3 +9751,46 @@ Next checkpoint:
 
 - Start the Offscreen command-model design/implementation slice, or postpone it and keep shrinking smaller fallback
   surfaces first.
+
+## Checkpoint: Simple Offscreen Graphics-Layer Replay
+
+Status: completed for the first bounded Offscreen command model.
+
+What changed:
+
+- CMP command-recorded graphics layers now accept `CompositingStrategy.Offscreen` for the current 2D layer subset.
+- The replay still uses existing ABI commands. It emits the normal layer saveLayer, then adds an explicit
+  `COMMAND_CLIP_RECT` to the layer bounds before appending child commands. This models the important Offscreen behavior
+  we can safely claim in the current command stream: layer contents are bounded before being composited back into the
+  parent.
+- `CompositingStrategy.ModulateAlpha` remains the alpha-multiplied child-recording path. `CompositingStrategy.Offscreen`
+  remains an actual saveLayer path with bounds clipping.
+- 3D rotation/camera stays on strict fallback; this checkpoint does not try to approximate perspective transforms.
+- Magic Jewel's Offscreen row changed from an intentional fallback row to a supported command row:
+  `commands-graphics-layer-offscreen`.
+
+Verification:
+
+- Focused CMP recorder test passed:
+  - command: `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.nestedRecordingReplaysOffscreenLayerBoundsClipBeforeContent`
+- Magic Jewel compiled:
+  - command: `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon compileKotlin`
+- Focused Magic Jewel Offscreen/rotationX rows passed:
+  - command: `CASES="commands-graphics-layer-offscreen commands-graphics-layer-rotationx-fallback" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-155623/suite.tsv`
+  - Offscreen result: `status=passed`, `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`,
+    `jbr_command_frames=304`
+  - rotationX result: `status=passed`, `unsupported=graphicsLayer:rotationX:161,...`,
+    `jbr_picture_frames=161`, `jbr_command_frames=0`
+- Compact graphics-layer matrix with Offscreen in the supported set passed:
+  - command: `CASES="commands-graphics-layer commands-graphics-layer-modulate-alpha commands-graphics-layer-offscreen commands-graphics-layer-clip commands-graphics-layer-round-clip commands-graphics-layer-path-clip commands-graphics-layer-shadow commands-graphics-layer-round-shadow commands-graphics-layer-path-shadow commands-graphics-layer-rotationx-fallback" DURATION_SECONDS=3 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-155924/suite.tsv`
+
+Roadmap update:
+
+- `ROADMAP.md` now records simple Offscreen replay as supported and narrows the remaining graphics-layer semantic gap to
+  elevation-accurate shadows, 3D/camera transforms, and broader image-filter surfaces.
+
+Next checkpoint:
+
+- Commit this slice, then add screenshot parity for the Offscreen row or move to the next graphics-layer fidelity gap.
