@@ -251,7 +251,11 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Tighten Compose/Jewel-owned region thresholds after splitting text/font raster drift from geometry/pixel ownership drift.
 - [x] Add screenshot parity jobs that run both old and new renderers for the same rich scene, emit old/new images, and fail on unexpected Compose/Jewel geometry/color drift. Expected Swing text rendering differences must be isolated to Swing-owned regions and documented in the report.
 - [x] Add a rich-content old/new parity suite with Jewel controls/text, Compose primitives/text/images/effects, Swing islands, popups/menus, and always-on animation sampled at deterministic phases.
+- [x] Make the macOS parity capture shadowless and log selected window id/bounds, so old/new comparisons use stable
+  window contents instead of variable `screencapture` shadow extents.
 - [x] Persist diff images and per-region parity metrics in the Magic Jewel report and `summary.properties`.
+- [x] Preserve parity metrics in `summary.properties`, `report.md`, and suite TSV rows even when the comparator fails a
+  threshold, so failures remain actionable.
 - [x] Add named old/new screenshot parity suite rows for the rich baseline, RuntimeEffect descriptors, and graphics-layer effects.
 - [x] Add `parity-geometry-clean`, a text/Swing-island-free parity row for stricter geometry-baseline experiments.
 - [x] Add `parity-native-text`, an opt-in native-text parity row with text-aware thresholds and paragraph-command assertions.
@@ -281,6 +285,11 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-062821/suite.tsv`.
 - [x] Graphics-layer effects screenshot parity row passed with focused probe scoping:
   `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-055842/suite.tsv`.
+- [x] Shadowless screenshot parity subset passed for clean geometry, native text, RuntimeEffect pure/uniform/child/shader
+  variants, RuntimeEffect color-filter variants, and graphics-layer effects:
+  `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-130835/suite.tsv`.
+- [x] Default shadowless screenshot parity suite passed end to end:
+  `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-131506/suite.tsv`.
 - [x] Magic Jewel graphics-layer command probe runs without fallback markers and validates the replayed layer region in the screenshot assertion.
 - [x] Magic Jewel clipped graphics-layer command probe runs without fallback markers and validates clipped cyan/purple layer content.
 - [x] Magic Jewel rounded clipped graphics-layer command probe runs without fallback markers and validates clipped cyan/purple layer content.

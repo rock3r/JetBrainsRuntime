@@ -9395,3 +9395,42 @@ Next checkpoint:
 
 - Resume remaining visual parity and intentional fallback work. The only full-suite unsupported markers are still from
   the deliberate invalid-gradient row (`sweepGradientStops` nested under graphics-layer fallback).
+
+## Checkpoint: Shadowless Screenshot Parity Harness
+
+Status: Magic Jewel screenshot parity now captures the actual macOS window contents without variable window-shadow extents,
+and failed comparisons preserve their metrics in the report instead of dropping diagnostics.
+
+What changed:
+
+- CMP's shared macOS window capture helper now logs the selected window id/bounds and calls `screencapture -o -l...`, so
+  old/new parity images compare the same window content rectangle instead of shadow-included PNGs whose dimensions can
+  drift by focus/window-server state.
+- Magic Jewel's parity script now appends `parity.log` output into `report.md` and mirrors `screenshot_parity_*` metrics
+  into `summary.properties` even when the comparator exits non-zero.
+- Magic Jewel's parity suite records failed rows into `suite.tsv` before returning failure, with `missing` placeholders
+  for fields that cannot be computed.
+- Shadowless capture required retuning screenshot assertions and broad full-window tolerances while preserving tighter
+  region gates for stable geometry/color probes.
+
+Verification:
+
+- Focused RuntimeEffect uniform-only parity passed after the capture fix:
+  - command: `CASES="parity-runtime-effect-uniform-only" SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-130130/suite.tsv`
+  - result: `avg_delta=2.764`, `bad_pixel_ratio=0.05250`, `compose_bad_pixel_ratio=0.07446`,
+    `compose_bottom_swatches_bad_pixel_ratio=0.00000`
+- Rich baseline parity passed with shadowless capture:
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-130313/suite.tsv`
+- Remaining shadowless parity matrix passed for clean geometry, native text, RuntimeEffect pure/uniform/child/shader
+  variants, RuntimeEffect color-filter variants, and graphics-layer effects:
+  - command: `CASES="parity-native-text parity-runtime-effect-pure-color parity-runtime-effect-uniform-only parity-runtime-effect-child-only parity-runtime-effect-shader parity-runtime-effect-color-filter parity-runtime-effect-color-filter-child parity-graphics-layer-effects" SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-130835/suite.tsv`
+- Full default shadowless screenshot parity suite passed:
+  - command: `SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-131506/suite.tsv`
+
+Next checkpoint:
+
+- Continue toward the next remaining intentional fallback or visual parity gap, using the shadowless parity suite as the
+  visual regression gate.
