@@ -10352,3 +10352,21 @@ Next checkpoint:
 
 - Fold the expanded renderEffect/blend/filter rows into the broad command sweep result, then inspect the remaining
   unsupported graphics-path surface for the next implementation slice.
+
+## Checkpoint: Broad Command Sweep After RenderEffect Blend Rows
+
+Status: completed with the expanded default command-probe case list.
+
+Verification:
+
+- Broad Magic Jewel command-probe sweep passed:
+  - command: `DURATION_SECONDS=3 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-182335/suite.tsv`
+  - result: 61/61 rows passed. The new renderEffect/blend/filter rows stayed on JBR command replay with no fallback or
+    picture replay. The only `jbr_picture_frames` in the suite were from the explicit `commands-invalid-gradient-fallback`
+    row, which still reports the expected `sweepGradientStops` unsupported marker.
+
+Next checkpoint:
+
+- Inspect unsupported/fallback inventory after this sweep and pick the next implementation slice, likely a remaining
+  shader/filter/path edge that currently requires picture replay or an explicit fallback row.
