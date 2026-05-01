@@ -7877,3 +7877,30 @@ Verification:
 Known notes:
 
 - This is a JBR-builder-path failure probe, not an invalid-SKSL compile probe. Invalid SKSL still fails too early in the current CMP factory because old-path rendering constructs a normal Skiko RuntimeEffect first.
+
+## Checkpoint: Magic Jewel RuntimeEffect Conformance Probes
+
+Status: sample and report-suite validation passed; native live validation still waits for the local Xcode license/build unblock.
+
+What changed:
+
+- Magic Jewel adds separate RuntimeEffect probe flags:
+  - `MAGIC_JEWEL_COMPOSE_RUNTIME_EFFECT_PURE_COLOR=true`
+  - `MAGIC_JEWEL_COMPOSE_RUNTIME_EFFECT_UNIFORM_ONLY=true`
+  - `MAGIC_JEWEL_COMPOSE_RUNTIME_EFFECT_CHILD_ONLY=true`
+  - existing combined `MAGIC_JEWEL_COMPOSE_RUNTIME_EFFECT_SHADER=true`
+  - existing builder-fallback `MAGIC_JEWEL_COMPOSE_RUNTIME_EFFECT_BAD_CHILD=true`
+- The command probe suite exposes matching cases: `commands-runtime-effect-pure-color`, `commands-runtime-effect-uniform-only`, `commands-runtime-effect-child-only`, `commands-runtime-effect-shader`, and `commands-runtime-effect-build-fallback`.
+- This splits generic shader validation into smaller failure domains: source-only, uniform layout, named child composition, combined builder path, and builder fallback.
+
+Verification:
+
+- Magic Jewel compiles:
+  - `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon --no-configuration-cache compileKotlin`
+- Magic Jewel report scripts passed syntax validation and parser fixtures:
+  - `bash -n scripts/jbr-skia-interop-report.sh scripts/jbr-skia-command-probe-suite.sh scripts/test-jbr-skia-report-validation.sh`
+  - `bash scripts/test-jbr-skia-report-validation.sh`
+
+Known notes:
+
+- These are launch/report probes, not yet screenshot parity assertions per individual RuntimeEffect variant. They provide stable switches for the next quiet-machine live run.
