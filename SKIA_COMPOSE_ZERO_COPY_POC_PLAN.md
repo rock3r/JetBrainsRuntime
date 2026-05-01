@@ -8327,3 +8327,45 @@ Known notes:
   shader-handle marker.
 - This slice improves lifecycle observability. It does not yet add explicit descriptor cache-hit, eviction, or
   context-migration invalidation probes.
+
+## Checkpoint: Descriptor Eviction Probe
+
+Status: Magic Jewel now has a command-mode stress row that forces both effect-handle and shader-handle eviction, and the
+report validator asserts the JBR-side lifecycle markers.
+
+What changed:
+
+- Added `MAGIC_JEWEL_COMPOSE_DESCRIPTOR_EVICTION=true` / `magic.jewel.compose.descriptorEviction`.
+- The probe draws `1032` unique tint color filters while `MAGIC_JEWEL_COMPOSE_COLOR_FILTER_HANDLE=true` is active, which
+  overfills CMP's `MAX_DEFINED_COLOR_FILTER_HANDLES = 1024` LRU cache.
+- The same probe draws `1032` unique `CompositeShader` trees. This deliberately uses composite shader descriptors rather
+  than plain linear gradients because the recorder has dedicated gradient commands; composite shader trees route through
+  the generic shader descriptor-handle path.
+- Added `commands-descriptor-eviction` to the command probe suite with strict expectations for:
+  - at least `1024` JBR effect-handle define markers
+  - at least one JBR effect-handle evict marker
+  - at least `1024` JBR shader-handle define markers
+  - at least one JBR shader-handle evict marker
+- `README.md` documents the new probe and its reason for using composite shader churn.
+- `ROADMAP.md` marks descriptor eviction marker coverage complete.
+
+Verification:
+
+- Magic Jewel script syntax passed:
+  - `bash -n scripts/jbr-skia-interop-report.sh scripts/jbr-skia-command-probe-suite.sh`
+- Magic Jewel Kotlin compile passed:
+  - command: `./gradlew compileKotlin`
+- Focused descriptor eviction row passed:
+  - command: `CASES="commands-descriptor-eviction" DURATION_SECONDS=3 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-072013/suite.tsv`
+  - `jbr_effect_handle_define_frames=56760`
+  - `jbr_effect_handle_evict_frames=55736`
+  - `jbr_shader_handle_define_frames=170280`
+  - `jbr_shader_handle_evict_frames=169256`
+
+Known notes:
+
+- This row is intentionally heavy and produced `14` command frames in a three-second run. It is a lifecycle stress probe,
+  not a representative FPS benchmark.
+- Earlier plain-linear-gradient churn produced no shader descriptor markers because those draws can use dedicated gradient
+  commands; this is now captured in the probe design.
