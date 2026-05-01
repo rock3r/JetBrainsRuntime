@@ -9704,3 +9704,27 @@ Next checkpoint:
 
 - Continue with a broader graphics-layer matrix sweep or start the design/implementation slice for an actual offscreen
   buffer command model.
+
+## Checkpoint: Compact Graphics-Layer Command Matrix
+
+Status: completed as a focused regression sweep over the current graphics-layer command surface.
+
+Verification:
+
+- The compact graphics-layer matrix passed:
+  - command: `CASES="commands-graphics-layer commands-graphics-layer-modulate-alpha commands-graphics-layer-clip commands-graphics-layer-round-clip commands-graphics-layer-path-clip commands-graphics-layer-blend-mode commands-graphics-layer-color-filter commands-graphics-layer-color-matrix-filter commands-graphics-layer-render-effect commands-graphics-layer-offset-effect commands-graphics-layer-chained-render-effect commands-graphics-layer-shadow commands-graphics-layer-round-shadow commands-graphics-layer-path-shadow commands-graphics-layer-rotationx-fallback commands-graphics-layer-offscreen-fallback commands-graphics-layer-blend-color-filter commands-graphics-layer-blend-color-matrix-filter" DURATION_SECONDS=3 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-151820/suite.tsv`
+- Supported rows stayed in command mode with `fallback_new_count=0`, `unsupported=none`, and `jbr_picture_frames=0`.
+- Intentional fallback rows stayed on picture replay with exact unsupported reasons:
+  - `graphicsLayer:rotationX`
+  - `graphicsLayer:compositingStrategy`
+
+Roadmap update:
+
+- `ROADMAP.md` now records the compact graphics-layer matrix as the current regression checkpoint for this subsystem.
+
+Next checkpoint:
+
+- Move from coverage polish to the next implementation surface. The highest-value remaining graphics-layer work is an
+  explicit offscreen-buffer command model, but it should start with a small ABI/design checkpoint rather than a blind
+  implementation.
