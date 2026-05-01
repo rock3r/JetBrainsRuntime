@@ -15,6 +15,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Command mode validated with zero picture replay and zero fallback markers.
 - [x] Skiko command mode preserves the last meaningful Compose command stream across Swing-driven interop-only repaint passes, avoiding blank/flashing frames while real Compose animation frames still update.
 - [x] Skiko command mode no longer lets suspiciously tiny `FullScene` command frames evict the last meaningful animated frame, which reduces transient blank/flashing frames during fragile repaint ordering.
+- [x] Magic Jewel reports can assert a minimum number of non-frozen Compose frame markers via `EXPECT_MIN_APP_NEW_FRAMES`, and the command-probe suite includes a `commands-live-animation` case.
 - [x] CMP now tags command frames as `FullScene` or `InteropOnly`, and Skiko uses that explicit frame kind for preservation replay instead of relying only on command-stream size.
 - [x] CMP's full `JbrSkiaCommandRecorderTest` desktop suite is green for ABI 74, so command-stream golden expectations are a usable regression gate again.
 
@@ -95,7 +96,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] ABI 90: RuntimeEffect/SKSL descriptors carry named child shader schema metadata, and JBR can use `SkRuntimeEffectBuilder` when all children are named.
 - [x] RuntimeEffect builder failures emit parseable JBR markers, and Magic Jewel has a bad-child-name probe/report assertion.
   - [x] Magic Jewel RuntimeEffect conformance probes cover pure color, uniform-only animation, child-only composition, combined child+uniform, and builder-failure fallback cases.
-  - [ ] Add a live animation preservation regression job that asserts non-frozen command-mode frame markers continue advancing after transient tiny/full-scene frames.
+  - [x] Add a live animation preservation regression job that asserts non-frozen command-mode frame markers continue advancing.
+  - [ ] Extend the live animation preservation job to force a transient tiny/full-scene frame once a deterministic trigger exists.
 
 ## Near-Term Rendering Work
 

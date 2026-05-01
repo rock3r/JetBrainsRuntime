@@ -7928,3 +7928,24 @@ Verification:
 Known notes:
 
 - This is a defensive guard for transient repaint ordering. It should be followed by a live Magic Jewel animation-preservation report case that asserts non-frozen command-mode frame markers advance after the tiny-frame path is exercised.
+
+## Checkpoint: Magic Jewel Live Animation Marker Assertion
+
+Status: report parser validation passed; live execution still waits for runnable local artifacts/native build state.
+
+What changed:
+
+- Magic Jewel reports accept `EXPECT_MIN_APP_NEW_FRAMES=N` in strict command mode.
+- The validator counts `MAGIC_JEWEL_COMPOSE_FRAME` markers in the new-renderer sample window and fails if the count is below `N`.
+- The command-probe suite now includes `commands-live-animation`, which runs the normal non-frozen command renderer and requires at least five Compose frame markers.
+- The README documents the new assertion and keeps the distinction clear: screenshot parity intentionally freezes animation; ordinary report/probe runs validate liveness.
+
+Verification:
+
+- Magic Jewel report scripts passed syntax validation and parser fixtures:
+  - `bash -n scripts/jbr-skia-interop-report.sh scripts/jbr-skia-command-probe-suite.sh scripts/test-jbr-skia-report-validation.sh`
+  - `bash scripts/test-jbr-skia-report-validation.sh`
+
+Known notes:
+
+- This assertion proves frame production, not visual pixel movement. The next refinement is a deterministic transient tiny-frame trigger plus either marker correlation or a pair of window-only captures at different phases.
