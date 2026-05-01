@@ -9670,3 +9670,37 @@ Roadmap update:
 Next checkpoint:
 
 - Commit the parity suite updates, then continue toward the next command coverage or fidelity gap.
+
+## Checkpoint: Graphics-Layer ModulateAlpha Command Probe
+
+Status: completed as positive coverage for the supported non-Offscreen compositing strategy.
+
+What changed:
+
+- Magic Jewel gained `MAGIC_JEWEL_COMPOSE_GRAPHICS_LAYER_MODULATE_ALPHA` /
+  `magic.jewel.compose.graphicsLayerModulateAlpha`.
+- The graphics-layer probe sets `CompositingStrategy.ModulateAlpha` when requested, while leaving Offscreen as the higher
+  precedence unsupported toggle for fallback validation.
+- The command-probe suite now includes `commands-graphics-layer-modulate-alpha` in the default graphics-layer matrix.
+- This sits next to the Offscreen fallback row: ModulateAlpha is expected to remain command-renderable because CMP records
+  the layer contents with an alpha multiplier and replays the parent layer without an additional offscreen-alpha saveLayer.
+
+Verification:
+
+- Magic Jewel compiled:
+  - command: `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon compileKotlin`
+- Focused ModulateAlpha row passed:
+  - command: `CASES="commands-graphics-layer-modulate-alpha" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-151636/suite.tsv`
+  - result: `status=passed`, `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`,
+    `jbr_command_frames=236`
+
+Roadmap update:
+
+- `ROADMAP.md` now records ModulateAlpha as validated command-path graphics-layer coverage, while Offscreen remains a
+  named strict fallback.
+
+Next checkpoint:
+
+- Continue with a broader graphics-layer matrix sweep or start the design/implementation slice for an actual offscreen
+  buffer command model.
