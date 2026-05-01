@@ -8027,10 +8027,13 @@ What changed:
 
 - Magic Jewel now has `scripts/jbr-skia-screenshot-parity-suite.sh`, a named-case wrapper around the window-only old/new
   parity script.
+- Magic Jewel now has `MAGIC_JEWEL_SWING_ISLAND=false`, which hides the embedded SwingPanel island for focused
+  geometry-only parity scenes.
 - The suite writes `suite.tsv` with case status, whole-window average delta, whole-window bad-pixel ratio,
   Compose-canvas bad-pixel ratio, report path, and diff-image path.
 - Initial named cases cover:
   - `parity-rich`
+  - `parity-geometry-clean`
   - `parity-runtime-effect-pure-color`
   - `parity-runtime-effect-uniform-only`
   - `parity-runtime-effect-child-only`
@@ -8049,6 +8052,11 @@ Verification:
   - command: `CASES=parity-rich DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-screenshot-parity-suite.sh`
   - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-055348/suite.tsv`
   - metrics: `avg_delta=1.646`, `bad_pixel_ratio=0.03910`, `compose_bad_pixel_ratio=0.06235`.
+- Clean-geometry parity row passed:
+  - command: `CASES=parity-geometry-clean DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-061323/suite.tsv`
+  - metrics: `avg_delta=2.197`, `bad_pixel_ratio=0.05687`, `compose_bad_pixel_ratio=0.09083`.
+  - report signals: no Swing progress frames, no image refs, `jbr_command_frames=298`.
 - RuntimeEffect parity rows passed:
   - command: `CASES="parity-runtime-effect-pure-color parity-runtime-effect-uniform-only parity-runtime-effect-child-only" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-screenshot-parity-suite.sh`
   - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-055435/suite.tsv`
