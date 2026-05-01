@@ -7590,9 +7590,9 @@ Verification:
   - `./gradlew --no-daemon --no-configuration-cache :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`
 - CMP `ui-graphics` desktop sources compile:
   - `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:compileKotlinDesktop`
-- CMP command-recorder class test was attempted:
-  - `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest`
-  - This currently fails before the new test runs because the broader `:compose:ui:ui` desktop compile cannot resolve existing `org.jetbrains.skiko.jbr.*` command-rendering imports in `ComposeSceneMediator.desktop.kt` / `SwingSkiaLayerComponent.desktop.kt`.
+- CMP command-recorder class tests pass when CMP resolves the locally published ABI 84 Skiko snapshot:
+  - `./gradlew --no-daemon --no-configuration-cache :skiko:publishToMavenLocal`
+  - `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest`
 - Magic Jewel sample sources and scripts validate:
   - `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon --no-configuration-cache compileKotlin`
   - `bash -n scripts/jbr-skia-interop-report.sh && bash -n scripts/jbr-skia-command-probe-suite.sh && bash -n scripts/assert-jbr-skia-command-window-screenshot.sh`
