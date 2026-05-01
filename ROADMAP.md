@@ -138,6 +138,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   - [x] JBR emits explicit shader/effect cache-hit markers for descriptor uses that reuse handles from previous frames, and Magic Jewel can assert those markers on stable descriptor rows.
   - [x] Skiko clears CMP-owned command descriptor/image caches on JBR surface changes, with a resize probe proving descriptors are redefined for the new surface.
   - [x] Resize descriptor-redefine probe now also asserts cache-hit recovery after the post-resize fresh define.
+  - [x] Forced context-change descriptor probe exercises the `contextChanged` cache-clear path without relying on physical
+    multi-monitor migration.
   - [x] Missing CMP command-cache clear hook is a structured Skiko fallback (`command-cache-clear-unavailable`) instead of a silent stale-handle risk.
   - [ ] Implement JBR-owned shader/effect handles: Skiko/CMP serializes descriptors or create requests, JBR constructs objects inside its Skia runtime, draw commands reference versioned handles, and handles are scoped/evicted by destination context.
   - [x] Implement a concrete generic-shader MVP: CMP serializes a `RuntimeEffect` descriptor with ASCII SKSL source and raw float uniforms; JBR compiles/caches it inside the destination context and draw commands reference the JBR-owned handle.

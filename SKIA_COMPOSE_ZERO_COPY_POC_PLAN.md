@@ -9000,3 +9000,42 @@ Next checkpoint:
 
 - Add a true context-migration probe when we can reliably move the Magic Jewel window between displays/graphics configs,
   or add a JBR/Skiko test hook that forces a context identity change without depending on physical monitor topology.
+
+## Checkpoint: Forced Context-Change Descriptor Recovery
+
+Status: Skiko and Magic Jewel now have a deterministic context-change validation path that does not depend on the machine
+having multiple active displays or on moving the test window between macOS Spaces.
+
+What changed:
+
+- Skiko gained a test-only `skiko.jbr.interop.forceContextChangeOnceForTesting` switch. After the first real JBR surface
+  identity has been observed, Skiko applies a persistent synthetic context-id offset to subsequent surface identities.
+- The forced identity change emits `SKIKO_JBR_INTEROP_FORCED_CONTEXT_CHANGE oldContextId=...`.
+- `noteSurfaceIdentity(...)` now clears command caches when either `contextChanged` or `surfaceChanged` is true. Before
+  this checkpoint, a synthetic context-only change would close the Skiko direct context but would not exercise the CMP
+  command-cache clear hook.
+- Magic Jewel gained `MAGIC_JEWEL_FORCE_CONTEXT_CHANGE` launcher/report plumbing and a
+  `commands-forced-context-descriptor-redefine` command-suite row.
+- The forced-context row requires `contextChanged=true`, `surfaceChanged=false`, at least one
+  `SKIKO_JBR_INTEROP_COMMAND_CACHES_CLEARED reason=contextChanged`, a second JBR effect-handle define, and resumed
+  effect-handle cache-hit markers.
+
+Verification:
+
+- Rebuilt Skiko AWT artifacts:
+  - command: `./gradlew --no-daemon --no-configuration-cache compileKotlinAwt publishAwtPublicationToMavenLocal`
+- Focused forced context-change descriptor row passed:
+  - command: `CASES="commands-forced-context-descriptor-redefine" DURATION_SECONDS=6 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-095701/suite.tsv`
+  - result: `status=passed`, `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`,
+    `jbr_command_frames=491`
+  - observed markers: `SKIKO_JBR_INTEROP_FORCED_CONTEXT_CHANGE`, `SKIKO_JBR_INTEROP_COMMAND_CACHES_CLEARED reason=contextChanged`,
+    `SKIKO_JBR_INTEROP_SURFACE_CHANGED ... contextChanged=true surfaceChanged=false`
+  - observed counts: `skiko_surface_change_markers=1`, `skiko_command_cache_clear_markers=1`,
+    `jbr_effect_handle_define_frames=2`, `jbr_effect_handle_use_frames=1192`,
+    `jbr_effect_handle_cache_hit_frames=1190`
+
+Next checkpoint:
+
+- Run a broader lifecycle/default-suite subset with the new context and cache-hit rows included, then decide whether the
+  next functionality slice should target remaining graphics-layer effects or typed path/image-filter descriptor expansion.
