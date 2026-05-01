@@ -1595,29 +1595,42 @@ public class JBRSkiaService extends JBRSkia {
             int payloadIntCount
     ) {
         int payloadStart = record.argsStart() + 5;
-        if (payloadIntCount < 5) return false;
+        if (payloadIntCount < 7) return false;
         int skslLength = commands[payloadStart];
         int uniformFloatCount = commands[payloadStart + 1];
-        int namedUniformCount = commands[payloadStart + 2];
+        int childCount = commands[payloadStart + 2];
+        int namedUniformCount = commands[payloadStart + 3];
+        int namedChildCount = commands[payloadStart + 4];
         if (skslLength <= 0
                 || skslLength > 4096
                 || uniformFloatCount < 0
                 || uniformFloatCount > 256
+                || childCount < 0
+                || childCount > 8
                 || namedUniformCount < 0
                 || namedUniformCount > 16
-                || payloadIntCount < 5 + skslLength + uniformFloatCount) {
+                || namedChildCount < 0
+                || namedChildCount > 8
+                || payloadIntCount < 7 + childCount * 2 + skslLength + uniformFloatCount) {
             return false;
         }
         int schemaEnd = record.recordEnd() - skslLength - uniformFloatCount;
-        int skslStart = validateRuntimeEffectUniformSchema(
+        int childSchemaStart = validateRuntimeEffectUniformSchema(
                 commands,
-                payloadStart + 5,
+                payloadStart + 7 + childCount * 2,
                 schemaEnd,
                 namedUniformCount,
                 uniformFloatCount
         );
+        int skslStart = validateRuntimeEffectChildSchema(
+                commands,
+                childSchemaStart,
+                schemaEnd,
+                namedChildCount,
+                childCount
+        );
         if (skslStart < 0 || skslStart + skslLength + uniformFloatCount != record.recordEnd()) return false;
-        long expectedHash = commandHandle(commands[payloadStart + 3], commands[payloadStart + 4]);
+        long expectedHash = commandHandle(commands[payloadStart + 5], commands[payloadStart + 6]);
         if (shaderSourceHash(commands, skslStart, skslLength) != expectedHash) return false;
         for (int index = 0; index < skslLength; index++) {
             int code = commands[skslStart + index];
@@ -3539,6 +3552,15 @@ public class JBRSkiaService extends JBRSkia {
                             logEffectHandleDefine("java2d", contextPtr, handle, descriptorType, descriptorVersion, payloadIntCount, false);
                         } else if (descriptorType == COMMAND_EFFECT_DESCRIPTOR_RUNTIME_COLOR_FILTER) {
                             if (!validateRuntimeColorFilterDescriptorPayload(commands, record, payloadIntCount)) return false;
+                            int childCount = commands[offset + 2];
+                            for (int index = 0; index < childCount; index++) {
+                                long childHandle = cacheKey(
+                                        commands[offset + 7 + index * 2],
+                                        commands[offset + 8 + index * 2]
+                                );
+                                ColorFilterDescriptor child = COLOR_FILTER_CACHE.get(new ColorFilterCacheKey(contextPtr, childHandle));
+                                if (child == null || isImageFilterDescriptor(child)) return false;
+                            }
                             int[] payload = new int[payloadIntCount];
                             System.arraycopy(commands, offset, payload, 0, payloadIntCount);
                             offset += payloadIntCount;

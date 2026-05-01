@@ -79,7 +79,7 @@
 
 #include "MTLSurfaceDataBase.h"
 
-static constexpr jint ABI_ID = 91;
+static constexpr jint ABI_ID = 92;
 static constexpr jint COMMAND_STREAM_MAGIC = 1246972723;
 static constexpr jint COMMAND_STREAM_HEADER_SIZE = 6;
 static constexpr jint COMMAND_STREAM_FLAGS_NONE = 0;
@@ -224,6 +224,7 @@ struct ColorFilterDescriptor {
     SkScalar dy = 0;
     std::vector<jint> payload;
     std::shared_ptr<ColorFilterDescriptor> child;
+    std::vector<std::shared_ptr<ColorFilterDescriptor>> children;
 };
 
 struct ShaderDescriptor {
@@ -383,31 +384,30 @@ static SkScalar skScalarFromRawBits(jint bits) {
 
 static sk_sp<SkColorFilter> makeDescriptorRuntimeColorFilter(const ColorFilterDescriptor& descriptor);
 
-static bool setDescriptorColorFilter(SkPaint* paint, const ColorFilterDescriptor& descriptor) {
+static sk_sp<SkColorFilter> makeDescriptorColorFilter(const ColorFilterDescriptor& descriptor) {
     if (descriptor.type == COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER) {
         if (descriptor.blendMode != COMMAND_BLEND_MODE_SRC_IN) {
-            return false;
+            return nullptr;
         }
-        paint->setColorFilter(SkColorFilters::Blend(descriptor.argb, SkBlendMode::kSrcIn));
-        return true;
+        return SkColorFilters::Blend(descriptor.argb, SkBlendMode::kSrcIn);
     }
     if (descriptor.type == COMMAND_EFFECT_DESCRIPTOR_COLOR_MATRIX_FILTER) {
-        paint->setColorFilter(SkColorFilters::Matrix(descriptor.matrix.data()));
-        return true;
+        return SkColorFilters::Matrix(descriptor.matrix.data());
     }
     if (descriptor.type == COMMAND_EFFECT_DESCRIPTOR_LIGHTING_FILTER) {
-        paint->setColorFilter(SkColorFilters::Lighting(descriptor.argb, static_cast<SkColor>(descriptor.blendMode)));
-        return true;
+        return SkColorFilters::Lighting(descriptor.argb, static_cast<SkColor>(descriptor.blendMode));
     }
     if (descriptor.type == COMMAND_EFFECT_DESCRIPTOR_RUNTIME_COLOR_FILTER) {
-        sk_sp<SkColorFilter> colorFilter = makeDescriptorRuntimeColorFilter(descriptor);
-        if (!colorFilter) {
-            return false;
-        }
-        paint->setColorFilter(std::move(colorFilter));
-        return true;
+        return makeDescriptorRuntimeColorFilter(descriptor);
     }
-    return false;
+    return nullptr;
+}
+
+static bool setDescriptorColorFilter(SkPaint* paint, const ColorFilterDescriptor& descriptor) {
+    sk_sp<SkColorFilter> colorFilter = makeDescriptorColorFilter(descriptor);
+    if (!colorFilter) return false;
+    paint->setColorFilter(std::move(colorFilter));
+    return true;
 }
 
 static SkTileMode skTileModeFromCommand(jint tileMode) {
@@ -760,30 +760,39 @@ static sk_sp<SkShader> makeDescriptorShader(const ShaderDescriptor& descriptor, 
 }
 
 static sk_sp<SkColorFilter> makeDescriptorRuntimeColorFilter(const ColorFilterDescriptor& descriptor) {
-    if (descriptor.type != COMMAND_EFFECT_DESCRIPTOR_RUNTIME_COLOR_FILTER || descriptor.payload.size() < 5) {
+    if (descriptor.type != COMMAND_EFFECT_DESCRIPTOR_RUNTIME_COLOR_FILTER || descriptor.payload.size() < 7) {
         return nullptr;
     }
     const jint skslLength = descriptor.payload[0];
     const jint uniformFloatCount = descriptor.payload[1];
-    const jint namedUniformCount = descriptor.payload[2];
+    const jint childCount = descriptor.payload[2];
+    const jint namedUniformCount = descriptor.payload[3];
+    const jint namedChildCount = descriptor.payload[4];
     if (skslLength <= 0 ||
             skslLength > 4096 ||
             uniformFloatCount < 0 ||
             uniformFloatCount > 256 ||
+            childCount < 0 ||
+            childCount > 8 ||
             namedUniformCount < 0 ||
             namedUniformCount > 16 ||
-            descriptor.payload.size() < static_cast<size_t>(5 + skslLength + uniformFloatCount)) {
+            namedChildCount < 0 ||
+            namedChildCount > 8 ||
+            descriptor.children.size() != static_cast<size_t>(childCount) ||
+            descriptor.payload.size() < static_cast<size_t>(7 + childCount * 2 + skslLength + uniformFloatCount)) {
         return nullptr;
     }
     const int schemaEnd = static_cast<int>(descriptor.payload.size()) - skslLength - uniformFloatCount;
-    const int skslStartInt = runtimeEffectUniformSchemaEnd(
-            descriptor.payload, 5, schemaEnd, namedUniformCount, uniformFloatCount);
+    const int childSchemaStart = runtimeEffectUniformSchemaEnd(
+            descriptor.payload, 7 + childCount * 2, schemaEnd, namedUniformCount, uniformFloatCount);
+    const int skslStartInt = runtimeEffectChildSchemaEnd(
+            descriptor.payload, childSchemaStart, schemaEnd, namedChildCount, childCount);
     if (skslStartInt < 0 ||
             skslStartInt + skslLength + uniformFloatCount != static_cast<int>(descriptor.payload.size())) {
         return nullptr;
     }
     const size_t skslStart = static_cast<size_t>(skslStartInt);
-    const uint64_t expectedHash = imageCacheKey(descriptor.payload[3], descriptor.payload[4]);
+    const uint64_t expectedHash = imageCacheKey(descriptor.payload[5], descriptor.payload[6]);
     if (shaderSourceHash(descriptor.payload, skslStart, skslLength) != expectedHash) return nullptr;
     std::string sksl;
     sksl.reserve(static_cast<size_t>(skslLength));
@@ -812,7 +821,17 @@ static sk_sp<SkColorFilter> makeDescriptorRuntimeColorFilter(const ColorFilterDe
                 descriptor.payload.data() + skslStart + skslLength,
                 static_cast<size_t>(uniformFloatCount) * sizeof(jint));
     }
-    return result.effect->makeColorFilter(uniformData);
+    std::vector<sk_sp<SkColorFilter>> children;
+    children.reserve(static_cast<size_t>(childCount));
+    for (const auto& childDescriptor : descriptor.children) {
+        if (!childDescriptor || isImageFilterDescriptorType(childDescriptor->type)) {
+            return nullptr;
+        }
+        sk_sp<SkColorFilter> child = makeDescriptorColorFilter(*childDescriptor);
+        if (!child) return nullptr;
+        children.push_back(std::move(child));
+    }
+    return result.effect->makeColorFilter(uniformData, children.data(), static_cast<size_t>(childCount));
 }
 
 static jsize recordLengthFromBytes(jint recordByteLength) {
@@ -3136,7 +3155,7 @@ static bool drawCommandList(SkCanvas* canvas,
                         return false;
                     }
                 } else if (descriptorType == COMMAND_EFFECT_DESCRIPTOR_RUNTIME_COLOR_FILTER) {
-                    if (payloadIntCount < 5) {
+                    if (payloadIntCount < 7) {
                         return false;
                     }
                     descriptor.payload.reserve(static_cast<size_t>(payloadIntCount));
@@ -3145,23 +3164,44 @@ static bool drawCommandList(SkCanvas* canvas,
                     }
                     const jint skslLength = descriptor.payload[0];
                     const jint uniformFloatCount = descriptor.payload[1];
-                    const jint namedUniformCount = descriptor.payload[2];
+                    const jint childCount = descriptor.payload[2];
+                    const jint namedUniformCount = descriptor.payload[3];
+                    const jint namedChildCount = descriptor.payload[4];
                     if (skslLength <= 0 ||
                             skslLength > 4096 ||
                             uniformFloatCount < 0 ||
                             uniformFloatCount > 256 ||
+                            childCount < 0 ||
+                            childCount > 8 ||
                             namedUniformCount < 0 ||
                             namedUniformCount > 16 ||
-                            descriptor.payload.size() < static_cast<size_t>(5 + skslLength + uniformFloatCount)) {
+                            namedChildCount < 0 ||
+                            namedChildCount > 8 ||
+                            descriptor.payload.size() < static_cast<size_t>(7 + childCount * 2 + skslLength + uniformFloatCount)) {
                         return false;
                     }
+                    descriptor.children.reserve(static_cast<size_t>(childCount));
+                    for (jint index = 0; index < childCount; index++) {
+                        const size_t handleOffset = static_cast<size_t>(7 + index * 2);
+                        const uint64_t childHandle = imageCacheKey(
+                                descriptor.payload[handleOffset],
+                                descriptor.payload[handleOffset + 1]);
+                        std::lock_guard<std::mutex> lock(gColorFilterCacheMutex);
+                        auto child = gColorFiltersByKey.find(ColorFilterScopedKey{imageCacheContextKey, childHandle});
+                        if (child == gColorFiltersByKey.end() || isImageFilterDescriptorType(child->second.type)) {
+                            return false;
+                        }
+                        descriptor.children.push_back(std::make_shared<ColorFilterDescriptor>(child->second));
+                    }
                     const int schemaEnd = static_cast<int>(descriptor.payload.size()) - skslLength - uniformFloatCount;
-                    const int skslStart = runtimeEffectUniformSchemaEnd(
-                            descriptor.payload, 5, schemaEnd, namedUniformCount, uniformFloatCount);
+                    const int childSchemaStart = runtimeEffectUniformSchemaEnd(
+                            descriptor.payload, 7 + childCount * 2, schemaEnd, namedUniformCount, uniformFloatCount);
+                    const int skslStart = runtimeEffectChildSchemaEnd(
+                            descriptor.payload, childSchemaStart, schemaEnd, namedChildCount, childCount);
                     if (skslStart < 0 || skslStart + skslLength + uniformFloatCount != static_cast<int>(descriptor.payload.size())) {
                         return false;
                     }
-                    const uint64_t expectedHash = imageCacheKey(descriptor.payload[3], descriptor.payload[4]);
+                    const uint64_t expectedHash = imageCacheKey(descriptor.payload[5], descriptor.payload[6]);
                     if (shaderSourceHash(descriptor.payload, static_cast<size_t>(skslStart), skslLength) != expectedHash) {
                         return false;
                     }

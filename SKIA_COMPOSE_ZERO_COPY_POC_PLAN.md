@@ -8756,3 +8756,50 @@ Next checkpoint:
 
 - Add ABI 92 child color-filter descriptor handles across Runtime API, JBR, CMP, Skiko compatibility gates, and Magic
   Jewel probes.
+
+## Checkpoint: ABI 92 RuntimeEffect ColorFilter Child Handles
+
+Status: RuntimeEffect-backed Compose color filters can now carry child color-filter handles through the typed descriptor
+path, letting JBR reconstruct a child-backed `SkRuntimeEffect` color filter inside the destination Skia runtime without
+sharing Skiko-owned `SkColorFilter*` pointers.
+
+What changed:
+
+- Bumped the JBR private API, public Runtime API mirror, Skiko compatibility gate, and CMP command stream to ABI 92.
+- CMP's desktop/skiko `RuntimeEffectColorFilter(...)` factory now accepts positional child color filters and named child
+  metadata via `RuntimeEffectColorFilterChild(name, colorFilter)`, keeps those children alive for the old Skiko path, and
+  serializes child descriptor handles for the JBR command path.
+- The RuntimeEffect color-filter descriptor payload now includes child-handle pairs and named child schema entries before
+  the SKSL/uniform payload, matching the shader RuntimeEffect descriptor shape while staying type-safe for color filters.
+- JBR Java validation rejects malformed child counts, missing child descriptors, image-filter descriptors used as color
+  filter children, and malformed named child schema metadata.
+- JBR native replay resolves child color-filter descriptors recursively, compiles the color-filter RuntimeEffect inside
+  JBR-owned Skia, and calls `SkRuntimeEffect::makeColorFilter(uniformData, children, childCount)`.
+- Magic Jewel adds `MAGIC_JEWEL_COMPOSE_RUNTIME_EFFECT_COLOR_FILTER_CHILD` and a
+  `commands-runtime-effect-color-filter-child` command-suite row that asserts descriptor-handle creation without
+  picture fallback.
+- `ROADMAP.md` records ABI 92 and the focused live command-probe report path.
+
+Verification:
+
+- CMP focused recorder tests passed:
+  - command: `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesRuntimeEffectColorFilterDescriptorRectInStrictMode --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesRuntimeEffectColorFilterDescriptorWithNamedChildInStrictMode --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.runtimeEffectColorFilterKeepsJbrSkiaMetadata`
+- JBR local API/native artifact rebuild passed:
+  - command: `./scripts/rebuild-jbr-skia-local-artifacts.sh`
+- Skiko AWT publication after ABI 92 compatibility update passed:
+  - command: `./gradlew --no-daemon --no-configuration-cache compileKotlinAwt publishAwtPublicationToMavenLocal`
+- Magic Jewel Kotlin compile passed:
+  - command: `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon --no-configuration-cache compileKotlin`
+- Focused Magic Jewel RuntimeEffect color-filter child row passed with no fallback:
+  - command: `CASES="commands-runtime-effect-color-filter-child" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-090456/suite.tsv`
+  - result: `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, `jbr_command_frames=186`
+- Broader ABI 92 descriptor regression subset passed with no fallback:
+  - command: `CASES="commands-runtime-effect-shader commands-runtime-effect-color-filter commands-runtime-effect-color-filter-child commands-image-color-matrix-filter commands-color-filter-handle commands-color-matrix-filter commands-lighting-filter commands-graphics-layer-color-filter commands-graphics-layer-color-matrix-filter" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-090711/suite.tsv`
+  - result: `9/9` rows passed with `fallback_new_count=0`, `unsupported=none`, and `jbr_picture_frames=0`
+
+Next checkpoint:
+
+- Add screenshot parity coverage for the child color-filter RuntimeEffect row, then run a broader ABI 92 descriptor
+  regression subset before moving on to the remaining shader/effect diagnostics and lifecycle-marker gaps.
