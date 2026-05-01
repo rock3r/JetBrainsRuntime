@@ -10440,3 +10440,19 @@ Next checkpoint:
 
 - Run the broad screenshot parity suite with the offset/chained renderEffect paint rows included, then run the default
   broad command sweep again if visual parity remains green.
+
+## Checkpoint: Broad Screenshot Parity With Offset/Chained RenderEffect Paint
+
+Status: completed with the updated screenshot-parity default case list.
+
+Verification:
+
+- Broad Magic Jewel screenshot parity suite passed:
+  - command: `DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-192628/suite.tsv`
+  - result: 25/25 rows passed. The two new offset/chained renderEffect + blend/color-matrix rows passed, and every row
+    kept exact bottom-swatches parity.
+
+Next checkpoint:
+
+- Run the default broad command sweep with the offset/chained renderEffect paint rows included.
