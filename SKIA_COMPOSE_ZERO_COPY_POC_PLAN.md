@@ -10208,3 +10208,30 @@ Next checkpoint:
 - Broaden graphics-layer image-filter/effect combinations. The current CMP guard still rejects renderEffect combined with
   blend/color-filter paint metadata (`graphicsLayer:renderEffectPaint`), so the next tractable slice is to add a focused
   fallback row for that combination, then decide whether nested saveLayers can support it without an ABI bump.
+
+## Checkpoint: Graphics-Layer RenderEffect/Paint Fallback Probe
+
+Status: completed as a precise fallback baseline before attempting nested saveLayer support.
+
+What changed:
+
+- Magic Jewel's command-probe suite now includes `commands-graphics-layer-render-effect-color-filter-fallback`.
+- The row enables a graphics-layer blur renderEffect plus tint/SrcIn color filter and expects the current CMP strict
+  recorder to reject the combination with `graphicsLayer:renderEffectPaint`.
+- Magic Jewel `README.md` documents this row as a graphics-layer render-effect/color-filter fallback probe.
+- `ROADMAP.md` records the fallback baseline and adds the follow-up implementation item.
+
+Verification:
+
+- Magic Jewel command-suite syntax passed:
+  - command: `bash -n scripts/jbr-skia-command-probe-suite.sh`
+- Focused Magic Jewel expected-fallback row passed:
+  - command: `CASES="commands-graphics-layer-render-effect-color-filter-fallback" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-174104/suite.tsv`
+  - result: `status=passed`, `unsupported=graphicsLayer:childCommands:312,graphicsLayer:renderEffectPaint:312,graphicsLayer:624`,
+    `jbr_picture_frames=311`, `jbr_command_frames=0`
+
+Next checkpoint:
+
+- Attempt command replay for this combination by nesting the existing image-filter saveLayer with the existing
+  color-filter/blend saveLayer records, then validate command mode and screenshot parity.
