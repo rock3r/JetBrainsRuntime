@@ -229,6 +229,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   - [x] Improve graphics-layer shadow fidelity by replaying separate ambient and spot blur passes from Compose's ambient/spot shadow colors.
   - [x] Replace blur-approximation graphics-layer shadows with a high-word-gated direct shadow command that lets JBR
     call `SkShadowUtils::DrawShadow` against the destination Skia canvas for rectangular, rounded, and generic outlines.
+  - [x] Thread Compose's dynamic root-light geometry into command recording so direct shadows use the same light center,
+    z adjustment, radius, and ambient/spot alpha factors as Skiko render-node replay.
   - [x] Validate `CompositingStrategy.ModulateAlpha` graphics-layer replay stays on the command path.
   - [x] Support simple `CompositingStrategy.Offscreen` graphics-layer replay by clipping layer contents to bounds inside the command saveLayer.
   - [x] Support first 3D/camera graphics-layer replay by flattening Compose's layer transform into `COMMAND_CONCAT_MATRIX33`.
@@ -256,7 +258,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 ## Validation Harness
 
 - [x] Focused CMP recorder tests for command encodings.
-- [x] Full CMP command-recorder regression gate: `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest` passed for ABI 90.
+- [x] Full CMP command-recorder regression gate: `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest` passed for ABI 99 after dynamic shadow-lighting context threading.
 - [x] Live animation regression gate: `CASES=commands-live-animation DURATION_SECONDS=6 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh` passed for ABI 90 at `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-045238/commands-live-animation/report.md`.
 - [x] RuntimeEffect conformance gate: `CASES="commands-runtime-effect-pure-color commands-runtime-effect-uniform-only commands-runtime-effect-child-only commands-runtime-effect-shader commands-runtime-effect-build-fallback" DURATION_SECONDS=6 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh` passed for ABI 90 at `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-050347/suite.tsv`.
 - [x] RuntimeEffect color-filter descriptor gate: `CASES="commands-runtime-effect-color-filter" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh` passed for ABI 91 at `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-083405/suite.tsv`.

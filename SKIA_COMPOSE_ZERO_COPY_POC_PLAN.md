@@ -10696,3 +10696,37 @@ Next checkpoint:
 
 - Commit this direct-shadow/crash-hardening slice across JBR, Runtime API, Skiko, CMP, and Magic Jewel, then run a broad
   command/screenshot sweep with the direct shadow command included before choosing the next remaining graphics-layer gap.
+
+## Checkpoint: Dynamic Root Lighting for Direct Shadow Commands
+
+Status: completed as a CMP-only fidelity refinement on top of `COMMAND_DRAW_SHADOW_PATH`.
+
+What changed:
+
+- CMP command recording now carries an explicit `JbrSkiaCommandShadowContext` for graphics-layer shadow replay.
+- Nested graphics-layer command recordings inherit the active shadow context, so layer-local recording still emits shadow
+  payloads using the root scene's lighting configuration.
+- `ComposeSceneMediator.renderJbrSkiaCommandFrameInfo(...)` computes the same style of root-light geometry used by
+  Skiko render-node replay: window-relative light X/Y, density-scaled light radius, dynamic light Z adjustment based on
+  the smallest container dimension, and the ambient/spot shadow alpha factors.
+- The JBR and Skiko ABI did not need to change; the existing direct-shadow payload already had fields for light position,
+  radius, and alpha-scaled colors.
+
+Verification:
+
+- Focused CMP shadow recorder tests passed:
+  - command: `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.nestedRecordingReplaysRectangularLayerShadow --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.nestedRecordingReplaysLayerShadowPathBeforeShadowFill`
+- Full CMP command-recorder suite passed:
+  - command: `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest`
+- Broad Magic Jewel command-probe suite passed with direct-shadow rows included:
+  - command: `DURATION_SECONDS=3 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-223956/suite.tsv`
+- Focused Magic Jewel shadow screenshot parity suite passed with dynamic lighting:
+  - command: `CASES="parity-graphics-layer-shadow parity-graphics-layer-round-shadow parity-graphics-layer-path-shadow" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-230926/suite.tsv`
+  - result: all three rows passed; exact bottom swatches remained at `0.00000` bad-pixel ratio.
+
+Next checkpoint:
+
+- Commit the CMP dynamic-lighting slice, then continue with the remaining graphics-layer/image-filter or compatibility
+  gaps from `ROADMAP.md`.
