@@ -10183,3 +10183,28 @@ Next checkpoint:
 
 - Run a compact graphics-layer matrix after the two-pass shadow change, then move to broader image-filter/effect surfaces
   if the matrix stays green.
+
+## Checkpoint: Compact Graphics-Layer Matrix After Two-Pass Shadows
+
+Status: completed as the grouped regression sweep for the two-pass shadow replay change.
+
+What changed:
+
+- No code changed in this checkpoint; this validates the complete current graphics-layer command subset after the
+  ambient/spot shadow replay change.
+- The compact matrix includes transforms, near-camera perspective, clips, Offscreen/ModulateAlpha, and rectangular,
+  rounded, and generic-path shadow rows.
+- `ROADMAP.md` records the post-shadow matrix pass.
+
+Verification:
+
+- Compact Magic Jewel graphics-layer command matrix passed:
+  - command: `CASES="commands-graphics-layer commands-graphics-layer-modulate-alpha commands-graphics-layer-offscreen commands-graphics-layer-rotationx commands-graphics-layer-rotationy commands-graphics-layer-rotationxy commands-graphics-layer-near-camera commands-graphics-layer-clip commands-graphics-layer-round-clip commands-graphics-layer-path-clip commands-graphics-layer-shadow commands-graphics-layer-round-shadow commands-graphics-layer-path-shadow" DURATION_SECONDS=3 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-173302/suite.tsv`
+  - result: all thirteen rows passed with `fallbacks=0`, `unsupported=none`, and `jbr_picture_frames=0`.
+
+Next checkpoint:
+
+- Broaden graphics-layer image-filter/effect combinations. The current CMP guard still rejects renderEffect combined with
+  blend/color-filter paint metadata (`graphicsLayer:renderEffectPaint`), so the next tractable slice is to add a focused
+  fallback row for that combination, then decide whether nested saveLayers can support it without an ABI bump.

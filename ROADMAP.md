@@ -349,6 +349,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Compact graphics-layer matrix with rotationX and rotationY in the supported command set passed at `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-165236/suite.tsv`.
 - [x] Compact graphics-layer matrix with combined rotation in the supported command set passed at `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-170137/suite.tsv`.
 - [x] Compact graphics-layer matrix with near-camera perspective in the supported command set passed at `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-171313/suite.tsv`.
+- [x] Compact graphics-layer matrix passed after the two-pass ambient/spot shadow replay change at `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-173302/suite.tsv`.
 - [x] Persist old/new screenshots and pass/fail thresholds in the Magic Jewel report.
 - [x] Make the parity suite window-only end to end: launch old/new renderers, capture the Magic Jewel window by id/title, crop no whole-screen screenshots, and keep the capture metadata in the report.
 - [x] Add deterministic animation-phase controls for parity runs so animated progress, blend probes, gradients, and Swing islands can be compared at repeatable frame phases.
