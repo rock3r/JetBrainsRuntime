@@ -8270,3 +8270,60 @@ Known notes:
   remain intentionally higher than the bottom swatch region.
 - The bottom swatch region is the first near-exact color-ownership gate in the mixed screenshot suite. Future rows should
   add more such isolated regions instead of tightening the full Compose canvas too aggressively.
+
+## Checkpoint: Descriptor Handle Lifecycle Markers
+
+Status: JBR now emits structured effect/shader handle lifecycle markers from command streams before native submission, and
+Magic Jewel can assert those markers from the full process log.
+
+What changed:
+
+- `JBRSkiaService` now scans command streams submitted through:
+  - `renderCommandFrame(int[])`
+  - `renderCommandBufferFrame(byte[])`
+  - `renderCommandDirectFrame(ByteBuffer)`
+- When it sees descriptor lifecycle records, it emits:
+  - `JBR_SKIA_INTEROP_EFFECT_HANDLE_DEFINE backend=... contextId=0x... handle=0x... type=... version=... payloadInts=... legacy=...`
+  - `JBR_SKIA_INTEROP_EFFECT_HANDLE_EVICT backend=... contextId=0x... handle=0x... removed=...`
+  - `JBR_SKIA_INTEROP_SHADER_HANDLE_DEFINE backend=... contextId=0x... handle=0x... type=... version=... payloadInts=...`
+  - `JBR_SKIA_INTEROP_SHADER_HANDLE_EVICT backend=... contextId=0x... handle=0x... removed=...`
+- Marker emission happens before native submission, so the currently active Metal/native command path is observable. The
+  Java2D fallback path also emits the same marker family while interpreting commands.
+- Magic Jewel report summaries now include:
+  - `jbr_effect_handle_define_frames`
+  - `jbr_effect_handle_evict_frames`
+  - `jbr_shader_handle_define_frames`
+  - `jbr_shader_handle_evict_frames`
+- Descriptor marker counts use the full new-renderer log rather than only the sampled measurement window, because handle
+  defines commonly happen during warmup/first frame.
+- The command-probe suite now asserts JBR-side descriptor define markers for the focused effect/shader descriptor cases.
+- `ROADMAP.md` records this as descriptor-handle observability work; reuse, eviction, context migration, and old/new
+  fallback probes remain open as separate lifecycle semantics.
+
+Verification:
+
+- Magic Jewel script syntax passed:
+  - `bash -n scripts/jbr-skia-interop-report.sh`
+  - `bash -n scripts/test-jbr-skia-report-validation.sh`
+  - `bash -n scripts/jbr-skia-command-probe-suite.sh`
+- Report parser tests passed:
+  - command: `./scripts/test-jbr-skia-report-validation.sh`
+  - result: `JBR_SKIA_REPORT_VALIDATION_TESTS passed`
+- Rebuilt local patched artifacts after the JBR change:
+  - command: `./scripts/rebuild-jbr-skia-local-artifacts.sh`
+  - output artifacts: `/tmp/jbr-api-shim.jar`, `/tmp/jbr-skia-run/desktop`, `/tmp/jbr-skia-native/libjbrskiainterop.dylib`.
+- Focused descriptor marker smoke passed:
+  - command: `CASES="commands-color-filter-handle commands-runtime-effect-pure-color" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-070251/suite.tsv`
+  - `commands-color-filter-handle`: `jbr_effect_handle_define_frames=1`
+  - `commands-runtime-effect-pure-color`: `jbr_shader_handle_define_frames=1`
+- Broader descriptor subset passed:
+  - command: `CASES="commands-image-shader commands-composite-shader commands-runtime-effect-shader commands-runtime-effect-uniform-only commands-runtime-effect-child-only commands-image-color-matrix-filter commands-color-matrix-filter commands-lighting-filter" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`
+  - suite: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260501-070506/suite.tsv`
+
+Known notes:
+
+- `commands-image-shader` still validates cached image refs, not shader descriptor handles, so it does not require a
+  shader-handle marker.
+- This slice improves lifecycle observability. It does not yet add explicit descriptor cache-hit, eviction, or
+  context-migration invalidation probes.
