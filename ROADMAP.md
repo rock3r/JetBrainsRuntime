@@ -289,6 +289,10 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   - Note: the current diff is useful as a smoke/parity guard but is not pixel-perfect. The remaining deltas are dominated by animation phase/AA/text-sensitive regions, while the command path reports zero fallback, zero unsupported commands, and JBR command replay for the row.
 - [x] Skiko exact-bit compatibility guard: `JbrSkiaInteropTest.rejectsMissingShaderDescriptorColorFilterCommandCapability` models an old JBR that advertises every previous high-word capability but omits `COMMAND_CAP64_HIGH_SHADER_DESCRIPTOR_COLOR_FILTER`, and verifies `command-capability-mismatch` fallback.
   - Validation: `./gradlew --no-daemon --no-configuration-cache awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest` passed in `/Users/rock3r/src/skiko-jbr-skia-poc/skiko`.
+- [x] Broaden wrapped shader + color-filter coverage to a normal gradient shader family.
+  - CMP recorder regression: linear-gradient shader + tint color-filter records a child linear-gradient descriptor, a color-filter descriptor, a wrapper shader descriptor, and a shader-ref rect command.
+  - Magic Jewel live probe: `CASES="commands-linear-gradient-shader-color-filter" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh` passed at `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260502-004855/suite.tsv`.
+  - Validation note: `:compose:ui:ui-graphics:compileKotlinDesktop` passed; `compileTestKotlinDesktop` remains blocked by the existing local `compose.ui` command-delegate wiring failure before the new recorder test can execute.
 - [x] Golden/diff screenshot harness for the full mixed Swing/Jewel/Compose Magic Jewel scene.
 - [x] Capture the app window only in old/new renderer modes, with deterministic sizing, theme, font inputs, animation phase, and seeded content.
 - [x] Add configurable per-region screenshot parity gates for header controls, Compose canvas, Swing island, and right probe strip.

@@ -10889,6 +10889,22 @@ What changed:
 Validation:
 - `./gradlew --no-daemon --no-configuration-cache awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest` passed in `/Users/rock3r/src/skiko-jbr-skia-poc/skiko`.
 
+## Checkpoint: Linear-Gradient Shader + Color-Filter Wrapper Probe
+
+Status: completed for the first non-RuntimeEffect wrapped-shader family.
+
+What changed:
+- CMP has a recorder regression for a normal `LinearGradientShader` with `ColorFilter.tint(..., BlendMode.SrcIn)`, proving the generic `ShaderDescriptor.ColorFiltered` path is not RuntimeEffect-specific.
+- Magic Jewel adds `MAGIC_JEWEL_COMPOSE_LINEAR_GRADIENT_SHADER_COLOR_FILTER` / `magic.jewel.compose.linearGradientShaderColorFilter` and a named command-probe row, `commands-linear-gradient-shader-color-filter`.
+- The Magic Jewel row asserts at least two shader handle definitions, at least one shader handle use, and at least one effect handle definition, so it proves the child shader, wrapper shader, and tint descriptor all reach JBR-owned replay.
+
+Validation:
+- Magic Jewel compile passed: `./gradlew --no-daemon --no-configuration-cache :compileKotlin`.
+- Magic Jewel focused command probe passed:
+  `CASES="commands-linear-gradient-shader-color-filter" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`.
+- Suite result: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260502-004855/suite.tsv`.
+- CMP `:compose:ui:ui-graphics:compileKotlinDesktop` passed. `:compose:ui:ui-graphics:compileTestKotlinDesktop` is still blocked by the existing local `compose.ui` command-delegate wiring failure before the new recorder test can execute.
+
 Next:
-- Broaden wrapped-shader coverage beyond the RuntimeEffect probe once parity is stable.
+- Continue broadening wrapped-shader coverage to image and composite shader families, then add focused parity rows for the stable cases.
 - Add old-artifact matrix coverage for the new high-word shader color-filter capability when an actual pre-wrapper JBR artifact bundle is available.
