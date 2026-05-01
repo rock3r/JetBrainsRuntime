@@ -11004,3 +11004,26 @@ Validation:
 
 Next:
 - Continue the next functional command-replay gap after wrapped shader/color-filter coverage, likely either remaining descriptor lifecycle/version matrix coverage or a high-value graphics/image-filter surface still falling back to picture replay.
+
+## Checkpoint: Image Draw Color-Filter Screenshot Parity
+
+Status: completed for tint and color-matrix image draws.
+
+What changed:
+- Magic Jewel's command suite now asserts `commands-image-filter` produces image references, so the tint image draw row cannot pass without exercising the image command path.
+- Magic Jewel's screenshot parity suite now includes:
+  - `parity-image-filter`
+  - `parity-image-color-matrix-filter`
+- The README documents image draw color-filter parity coverage separately from shader-plus-color-filter coverage.
+- `ROADMAP.md` records that image draw tint/color-matrix color-filter rows replay through command mode and have old/new screenshot parity coverage.
+
+Validation:
+- Focused command probe passed:
+  `CASES="commands-image-filter commands-image-color-matrix-filter" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`
+- Command suite result: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260502-012429/suite.tsv`.
+- Focused screenshot parity passed:
+  `CASES="parity-image-filter parity-image-color-matrix-filter" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-screenshot-parity-suite.sh`
+- Screenshot suite result: `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260502-012646/suite.tsv`.
+
+Next:
+- Reconcile the remaining color-filter roadmap umbrella with the already-passing RuntimeEffect/generic-shader/image-draw rows, then keep closing descriptor lifecycle and compatibility-matrix gaps.

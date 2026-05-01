@@ -255,6 +255,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Add narrow tint color-filter cached-image support through a versioned command instead of picture fallback.
 - [x] Expand color-matrix/lighting color-filter command coverage to solid rectangles, saveLayer/graphics-layer paints, and cached images through typed descriptors.
 - [ ] Expand color-filter command coverage to image filters, runtime effects, and generic shaders.
+  - [x] Image draw tint/color-matrix color-filter rows replay through command mode with no picture fallback and now have old/new screenshot parity rows.
   - [x] RuntimeEffect shader paints with typed color-filter descriptors replay through a wrapped shader descriptor.
   - [x] Expand the same wrapped-shader path to screenshot parity rows and broader shader families.
 - [x] Add narrow dash path-effect stroked-line support through a versioned command instead of picture fallback.
