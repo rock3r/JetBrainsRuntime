@@ -11689,3 +11689,31 @@ Validation:
 - Suite TSV: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260502-185632/suite.tsv`.
 - All 30 rows reported `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, and positive
   `jbr_command_frames`.
+
+## Checkpoint: Bundled Native Bridge Load Path
+
+Status: completed as the runtime half of production image integration; JBR build wiring remains open.
+
+Changes:
+- `JBRSkiaService` now calls `System.loadLibrary("jbrskiainterop")` when
+  `sun.java2d.skia.interop.library` is absent or blank. The explicit absolute-path property remains supported for the
+  local patched-module harness.
+- Magic Jewel's `run-jbr-skia.sh` still defaults to `/tmp/jbr-skia-native/libjbrskiainterop.dylib`, but an explicitly
+  empty `JBR_SKIA_LIB=` now omits the property so a real JBR image can exercise its bundled native bridge.
+- Magic Jewel README documents that `JBR_SKIA_LIB=` is for image-bundled validation. The current patched-class harness
+  has no bundled bridge in the runtime library path, so the no-explicit-property run is expected to produce no JBR native
+  command frames until JBR image build integration lands.
+
+Validation:
+- Local artifact rebuild passed via Magic Jewel's `./scripts/rebuild-jbr-skia-local-artifacts.sh`.
+- Explicit local dylib command replay passed:
+  `CASES=commands-core-primitives SKIKO_VERSION=0.0.0-SNAPSHOT DURATION_SECONDS=2 WARMUP_SECONDS=1 ./scripts/jbr-skia-command-probe-suite.sh`
+- Suite TSV: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260502-191032/suite.tsv`.
+- The row reported `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, and `jbr_command_frames=628`.
+- A no-explicit-property local patched run with `JBR_SKIA_LIB=` reached Skiko command recording but logged
+  `no jbrskiainterop in system library path` and produced `jbr_command_frames=0`, confirming the remaining work is
+  packaging the native bridge into a real JBR image rather than another command-stream ABI change.
+
+Next:
+- Wire `libjbrskiainterop` into the JBR build/image behind the existing `--with-skia-interop` configure surface, then
+  rerun the same `JBR_SKIA_LIB=` probe and require native command frames without an explicit library property.

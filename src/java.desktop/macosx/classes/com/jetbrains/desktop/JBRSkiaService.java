@@ -4879,11 +4879,12 @@ public class JBRSkiaService extends JBRSkia {
 
     private static boolean loadNativeBridge() {
         String library = System.getProperty(NATIVE_LIBRARY_PROPERTY);
-        if (library == null || library.isBlank()) {
-            return false;
-        }
         try {
-            System.load(library);
+            if (library == null || library.isBlank()) {
+                System.loadLibrary("jbrskiainterop");
+            } else {
+                System.load(library);
+            }
             return true;
         } catch (RuntimeException | UnsatisfiedLinkError e) {
             System.err.println("JBR Skia interop native bridge unavailable: " + e.getMessage());

@@ -710,10 +710,16 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260502-175743/suite.tsv`.
 - [x] Skiko command-stream ABI preflight now turns old-CMP ABI 99 command buffers into structured `abi-mismatch`
   fallback before JBR native replay sees them.
+- [x] JBR now attempts to load a bundled `libjbrskiainterop` with `System.loadLibrary("jbrskiainterop")` when no
+  explicit native library property is set, while Magic Jewel still defaults to the local out-of-build dylib for patched
+  harness runs. Explicit-dylib command replay passed at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260502-191032/suite.tsv`.
 
 ## Productionization Later
 
 - [ ] Replace local patched-class/dylib launch wiring with real JBR build integration.
+  - [x] Add the runtime load path for a bundled native bridge and a Magic Jewel opt-out for the explicit local dylib.
+  - [ ] Wire `libjbrskiainterop` into the JBR image so no explicit `sun.java2d.skia.interop.library` property is needed.
 - [ ] Decide final Skiko artifact shape for Skia-less JBR interop.
 - [ ] Font/typeface ownership through the JBR Skia runtime.
 - [ ] JBR-owned generic shader factory and handles for non-serialized shader families.
