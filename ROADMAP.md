@@ -703,6 +703,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260502-164746/matrix.tsv`.
 - [x] Artifact matrix optional-row self-check passed using a freshly packaged current ABI 101 bundle at
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260502-201003/matrix.tsv`.
+- [x] Refreshed ABI 101 artifact matrix self-check passed after the CMP Compose-first text metadata cleanup at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260502-204103/matrix.tsv`.
 - [x] Magic Jewel artifact matrix/bundle scripts now default to the sibling umbrella CMP output root; dry-run and bundle
   creation passed without `CURRENT_CMP_OUT` / `CMP_OUT` overrides.
 - [x] Magic Jewel report-validation unit harness passed after artifact harness cleanup.

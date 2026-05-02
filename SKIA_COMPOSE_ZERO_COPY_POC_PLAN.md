@@ -11935,3 +11935,19 @@ Validation:
 Next:
 - Continue narrowing the remaining Skiko JNI/native dependencies in command recording. Larger remaining sources include
   paragraph layout, shader construction, image helpers, graphics-layer recording, and fallback surfaces.
+
+## Checkpoint: Refreshed ABI 101 Artifact Bundle After CMP Text Metadata Cleanup
+
+Status: completed.
+
+Validation:
+- Packaged the current ABI 101 local artifacts after the CMP Compose-first text metadata cleanup:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-bundles/20260502-204049`.
+- Ran the Magic Jewel artifact matrix with that bundle wired into the optional artifact rows and expected as compatible:
+  `OLD_ARTIFACT_BUNDLE=/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-bundles/20260502-204049 OLD_JBR_EXPECTED_REASON=none OLD_API_EXPECTED_REASON=none OLD_SKIKO_EXPECTED_REASON=none OLD_CMP_EXPECTED_REASON=none DURATION_SECONDS=2 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-artifact-matrix.sh`.
+- Matrix TSV: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260502-204103/matrix.tsv`.
+- All current and bundle-fed rows passed; compatible rows reported `fallback_new_count=0` and positive
+  `jbr_command_frames`, while the deliberate missing-public-API row still produced the expected structured fallback.
+
+Next:
+- Treat this as the current known-good ABI 101 packaged baseline.
