@@ -11951,3 +11951,24 @@ Validation:
 
 Next:
 - Treat this as the current known-good ABI 101 packaged baseline.
+
+## Checkpoint: Native Text Live Gate Tightening
+
+Status: completed as a Magic Jewel harness hardening step.
+
+Changes:
+- The `commands-native-text` Magic Jewel command-probe row now requires simple text commands in addition to paragraph
+  text commands.
+- This keeps the ABI 101 simple-text font-family/style metadata path under a standing live replay gate, while the
+  paragraph command path remains covered by the existing paragraph text expectation.
+
+Validation:
+- Ran the focused Magic Jewel native-text command probe with the stricter gate:
+  `CASES=commands-native-text DURATION_SECONDS=3 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`.
+- Suite TSV: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260502-220852/suite.tsv`.
+- The row reported `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, `jbr_command_frames=587`,
+  `max_text_commands=9`, and `max_paragraph_text_commands=6`.
+
+Next:
+- Continue native text/font ownership work from this stronger live baseline, especially screenshot-level font/style and
+  typeface fallback semantics before making native text the default fidelity path.
