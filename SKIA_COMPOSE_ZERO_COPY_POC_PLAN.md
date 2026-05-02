@@ -11126,3 +11126,24 @@ Validation:
 
 Next:
 - Continue with remaining fallback-marker hardening and broader rendering-surface gaps.
+
+## Checkpoint: CMP Runtime-Reflective JBR Command Delegate
+
+Status: completed.
+
+What changed:
+- CMP no longer imports or implements patched Skiko's `org.jetbrains.skiko.jbr.JbrSkiaCommandRenderDelegate` at compile time.
+- `ComposeSceneMediator` now exposes a local `JbrSkiaCommandFrameData` model with `FullScene` / `InteropOnly` frame-kind metadata.
+- `SwingSkiaLayerComponent` builds a runtime `Proxy` that implements both `SkikoRenderDelegate` and Skiko's optional JBR command delegate only when the patched Skiko JBR classes are present.
+- The CMP version catalog is back on the normal Skiko coordinate (`0.146.2`), avoiding the broad API mismatch from trying to compile all CMP modules against the local older `0.0.0-SNAPSHOT` Skiko artifact.
+
+Validation:
+- CMP desktop compile gate passed:
+  `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui:compileKotlinDesktop :compose:ui:ui-graphics:compileTestKotlinDesktop`
+- Magic Jewel live command replay passed after the reflective bridge change:
+  `CASES=commands-live-animation DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`
+- Suite result: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260502-022941/suite.tsv`.
+- Runtime markers stayed on the command path: `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=903`.
+
+Next:
+- Commit the CMP and roadmap/plan updates, then continue with the next renderer-coverage gap from `ROADMAP.md`.

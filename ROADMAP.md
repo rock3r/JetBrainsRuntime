@@ -19,6 +19,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] The `commands-live-animation` case can force one test-only tiny `FullScene` command stream and assert the `SKIKO_JBR_INTEROP_TINY_FULL_SCENE_INJECTED` marker.
 - [x] CMP now tags command frames as `FullScene` or `InteropOnly`, and Skiko uses that explicit frame kind for preservation replay instead of relying only on command-stream size.
 - [x] CMP's full `JbrSkiaCommandRecorderTest` desktop suite is green for ABI 99, so command-stream golden expectations are a usable regression gate again.
+- [x] CMP's JBR command-frame adapter is runtime-reflective, so `compose.ui` compiles against the normal Skiko coordinate while patched Skiko still receives the optional command delegate when present.
 
 ## Command ABI Coverage
 
@@ -629,6 +630,10 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Reduce redundant image-cache clear/define churn for stable fallback images.
 - [x] Replace whole-cache churn with oldest-entry eviction in CMP recorder.
 - [x] Add long-running quiet-machine benchmark pass for stable/dynamic image-cache workloads.
+- [x] CMP compile gate after removing the direct patched-Skiko dependency:
+  `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui:compileKotlinDesktop :compose:ui:ui-graphics:compileTestKotlinDesktop` passed in `/Users/rock3r/src/cmp-jbr-skia-poc`.
+- [x] Magic Jewel runtime gate after the reflective CMP bridge change:
+  `CASES=commands-live-animation DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh` passed at `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260502-022941/suite.tsv`.
 
 ## Productionization Later
 
