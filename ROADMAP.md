@@ -171,6 +171,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   - [x] RuntimeEffect color-filter descriptor MVP: CMP serializes a named-uniform color-filter descriptor, Skiko requires the ABI 91 capability bit, and JBR compiles/applies it inside the destination context.
   - [x] Skiko prerequisite for RuntimeEffect color-filter child support: `RuntimeEffect.makeColorFilter(Data?, Array<ColorFilter?>?)` now wraps Skia's child color-filter overload.
   - [x] RuntimeEffect color-filter child handles: CMP serializes child color-filter descriptor handles plus named child schema, Skiko requires ABI 92, and JBR reconstructs the child-backed color filter inside the destination context.
+  - [x] Magic Jewel compatibility matrix can mask JBR's advertised high command capabilities and now has a launch-level row that removes only `COMMAND_CAP64_HIGH_SHADER_DESCRIPTOR_COLOR_FILTER`.
   - [ ] Extend Skia runtime effects via descriptor payloads: remaining shader-family fallback markers and parity coverage for child color-filter descriptors.
   - [x] RuntimeEffect shader + color-filter descriptor command row passes through CMP -> Skiko -> JBR native replay with no picture fallback.
   - [x] Add old/new screenshot parity coverage for shader + color-filter descriptor composition.

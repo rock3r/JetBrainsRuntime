@@ -11072,3 +11072,23 @@ Validation:
 
 Next:
 - Continue with compatibility/version hardening where it can be validated with current local artifacts; defer old-artifact matrix rows that require an actual pre-wrapper artifact bundle.
+
+## Checkpoint: Exact Shader Color-Filter Capability Fallback Row
+
+Status: completed.
+
+What changed:
+- JBR has a test-only `sun.java2d.skia.interop.commandCapabilitiesHighMaskForTest` property that masks advertised high-word command capabilities before Skiko performs compatibility checks.
+- Magic Jewel propagates this as `JBR_SKIA_COMMAND_CAPABILITIES_HIGH_MASK_FOR_TEST`.
+- The launch-level compatibility matrix now includes `shader-color-filter-capability-missing`, which masks high-word capabilities to `2047` so only `COMMAND_CAP64_HIGH_SHADER_DESCRIPTOR_COLOR_FILTER` is missing from the current `4095` high-word set.
+
+Validation:
+- Local JBR artifacts rebuilt successfully:
+  `./scripts/rebuild-jbr-skia-local-artifacts.sh`
+- Compatibility matrix passed:
+  `DURATION_SECONDS=3 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-compatibility-matrix.sh`
+- Matrix result: `/Users/rock3r/src/magic-jewel/out/jbr-skia-compatibility-matrix/20260502-020745`.
+- Exact row result: `shader-color-filter-capability-missing` passed with `JBR_SKIA_COMMAND_CAPABILITIES_HIGH_MASK_FOR_TEST=2047`, `fallback_new_count=1`, and `jbr_command_frames=0`.
+
+Next:
+- Commit the JBR/Magic Jewel compatibility hook and continue with the remaining version/fallback hardening that does not need old artifact bundles.
