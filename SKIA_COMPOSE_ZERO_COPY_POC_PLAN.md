@@ -11651,3 +11651,23 @@ Notes:
 - RuntimeEffect color filters cover both direct color-filter descriptors and child color-filter descriptors.
 - Generic shader coverage covers image, composite, linear-gradient, and RuntimeEffect shader descriptors wrapped with
   typed color-filter handles.
+
+## Checkpoint: Blend-Mode Coverage Closure
+
+Status: completed for the remaining blend-mode command coverage row.
+
+Ground truth:
+- JBR validates every supported fill blend-mode token individually in `JBRSkiaApiTest`, including Plus, Multiply,
+  Screen, Overlay, Darken, Lighten, Difference, Exclusion, ColorDodge, ColorBurn, Hardlight, Softlight, Hue,
+  Saturation, Color, and Luminosity.
+- JBR native replay maps those same command tokens to Skia `SkBlendMode` values, and Java2D fallback gates the same
+  supported set.
+- CMP command recording maps the same Compose `BlendMode` set for primitive fill rectangles and graphics-layer
+  saveLayer paint paths; unsupported blend modes still take structured fallback rather than semantic guessing.
+
+Validation:
+- Focused Magic Jewel command-probe suite passed:
+  `CASES="commands-blend-mode commands-graphics-layer-blend-mode commands-graphics-layer-render-effect-blend-mode commands-graphics-layer-render-effect-blend-color-filter commands-graphics-layer-render-effect-blend-color-matrix-filter commands-graphics-layer-blend-color-filter commands-graphics-layer-blend-color-matrix-filter" SKIKO_VERSION=0.0.0-SNAPSHOT DURATION_SECONDS=2 WARMUP_SECONDS=1 ./scripts/jbr-skia-command-probe-suite.sh`
+- Suite TSV: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260502-185229/suite.tsv`.
+- All 7 rows reported `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, and positive
+  `jbr_command_frames`.

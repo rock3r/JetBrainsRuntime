@@ -241,7 +241,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Add `BlendMode.Saturation` fill-rectangle command replay and screenshot-region validation.
 - [x] Add `BlendMode.Color` fill-rectangle command replay and screenshot-region validation.
 - [x] Add `BlendMode.Luminosity` fill-rectangle command replay and screenshot-region validation.
-- [ ] Continue blend-mode command coverage mode-by-mode only after each mode has exact Skia-vs-Java2D semantics documented.
+- [x] Continue blend-mode command coverage mode-by-mode only after each mode has exact Skia-vs-Java2D semantics documented:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260502-185229/suite.tsv`.
 - [ ] Command-recorded graphics layers:
   - [x] Mark Skiko `GraphicsLayer`/`RenderNode` draws as an explicit strict fallback while command replay cannot encode layer contents/effects.
   - [x] Replace the simple 2D graphics-layer fallback with nested command recording for layer-local content plus alpha, translation, scale, rotationZ, and balanced save/saveLayer/restore replay.
