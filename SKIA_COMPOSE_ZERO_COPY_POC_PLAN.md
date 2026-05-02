@@ -11879,3 +11879,19 @@ Validation:
 Next:
 - Keep this bundle as the known-good current ABI 101 baseline. Real old/new packaged artifact coverage still needs
   separately versioned old Skiko/CMP/JBR artifacts rather than reusing the current bundle as both sides.
+
+## Checkpoint: ABI 101 Compatibility Matrix
+
+Status: completed.
+
+Validation:
+- Ran the launch-level Magic Jewel compatibility matrix after the ABI 101 text metadata work:
+  `DURATION_SECONDS=2 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-compatibility-matrix.sh`.
+- Matrix TSV: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260502-201302/matrix.tsv`.
+- The happy row reported `fallback_new_count=0` and positive `jbr_command_frames`.
+- ABI/native ABI mismatch, exact low/high capability mismatch, `draw-points-capability-missing`, and public API missing
+  rows all produced the expected single structured fallback with `jbr_command_frames=0`.
+
+Next:
+- Continue with the next implementation surface; the current launch-level gates agree that ABI 101 negotiation is strict
+  and fallback-safe.

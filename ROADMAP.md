@@ -693,6 +693,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260502-162858/suite.tsv`.
 - [x] Full launch-level compatibility matrix passed after descriptor validator hardening at
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260502-163211/matrix.tsv`.
+- [x] Full launch-level compatibility matrix passed after ABI 101 native-text style metadata at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260502-201302/matrix.tsv`.
 - [x] Required current-artifact matrix rows passed with the umbrella CMP output root at
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260502-164541/matrix.tsv`.
 - [x] Artifact matrix optional-row self-check passed using the freshly packaged current ABI 100 bundle at
