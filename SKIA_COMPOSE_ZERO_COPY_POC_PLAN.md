@@ -12052,3 +12052,24 @@ Validation:
 
 Next:
 - Continue closing migration and native-object ownership gaps with the default command suite green again.
+
+## Checkpoint: Forced-Context Native Text Screenshot Parity
+
+Status: completed.
+
+Changes:
+- Added a `parity-forced-context-native-text` row to the Magic Jewel screenshot parity suite.
+- The row mirrors the native-text visual thresholds while requiring the forced context-change marker and Skiko
+  command-cache clear, so visual parity is checked after the migration invalidation path has run.
+
+Validation:
+- Ran the focused screenshot parity row:
+  `CASES=parity-forced-context-native-text DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-screenshot-parity-suite.sh`.
+- Suite TSV: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260502-225104/suite.tsv`.
+- The row passed with `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=443`,
+  `skiko_context_change_markers=1`, `skiko_command_cache_clear_markers=1`, `avg_delta=3.229`,
+  `bad_pixel_ratio=0.06048`, `compose_bad_pixel_ratio=0.08925`, and exact bottom-swatch parity.
+
+Next:
+- Keep extending forced-context visual coverage to other destination-scoped native caches where the command-only rows do
+  not already provide enough confidence.
