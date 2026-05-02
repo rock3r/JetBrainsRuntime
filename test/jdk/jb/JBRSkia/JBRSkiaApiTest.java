@@ -453,12 +453,11 @@ public class JBRSkiaApiTest {
                 0, 0, 2000, 2000, 10000, 20000, 30000, 40000, 2, 2, 1001, 1, 4,
                 0xffff0000, 0xff00ff00, 0xff0000ff, 0xffffffff
         }, "invalid image alpha");
-        assertInvalidCommandStream(new int[] {
-                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 9,
-                JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
-                JBRSkia.COMMAND_DRAW_TEXT_UTF16, 36, JBRSkia.COMMAND_RECORD_FLAGS_NONE,
-                0, 12000, 0, 0xff000000, 0, 0
-        }, "invalid text font size");
+        assertInvalidCommandStream(textStreamWith(11, 0), "invalid text font size");
+        assertInvalidCommandStream(textStreamWith(13, 0), "invalid text font weight");
+        assertInvalidCommandStream(textStreamWith(14, 0), "invalid text font width");
+        assertInvalidCommandStream(textStreamWith(15, 3), "invalid text font slant");
+        assertInvalidCommandStream(textStreamWith(16, 257), "invalid text font family length");
         assertInvalidCommandStream(new int[] {
                 JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 21,
                 JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
@@ -581,6 +580,12 @@ public class JBRSkiaApiTest {
                 JBRSkia.COMMAND_DRAW_TEXT_UTF16, 64, JBRSkia.COMMAND_RECORD_FLAG_ANTIALIAS,
                 1250, 18500, 13000, 0xff000000, 400, 5, 0, 0, 4, 'C', 'a', 'f', '\u00e9'
         };
+    }
+
+    private static int[] textStreamWith(int index, int value) {
+        int[] commands = validTextStream();
+        commands[index] = value;
+        return commands;
     }
 
     private static int[] validLinearGradientStrokeStream() {

@@ -11972,3 +11972,25 @@ Validation:
 Next:
 - Continue native text/font ownership work from this stronger live baseline, especially screenshot-level font/style and
   typeface fallback semantics before making native text the default fidelity path.
+
+## Checkpoint: Simple Text Metadata Validator Fixtures
+
+Status: completed as JBR-side validator hardening.
+
+Changes:
+- `JBRSkiaApiTest` now has focused invalid command-stream fixtures for the ABI 101 simple-text metadata fields:
+  non-positive font size, out-of-range font weight, out-of-range font width, out-of-range font slant, and overlong
+  font-family metadata length.
+- The previous malformed text-size invalid row is now represented as a real ABI 101 text command mutation, so it tests
+  the intended font-size guard rather than failing only because the old record shape is too short.
+
+Validation:
+- Compile-only smoke for `JBRSkiaApiTest.java` passed using local stubs for `JBRApi` and `JBRSkiaService` plus the real
+  `JBRSkia.java` constants:
+  `javac -d /tmp/jbr-skia-api-test-classes /tmp/jbr-skia-api-compile-stubs/com/jetbrains/exported/JBRApi.java /tmp/jbr-skia-api-compile-stubs/com/jetbrains/desktop/JBRSkiaService.java src/java.desktop/share/classes/com/jetbrains/desktop/JBRSkia.java test/jdk/jb/JBRSkia/JBRSkiaApiTest.java`.
+- Full jtreg/JBR execution remains blocked in this worktree by the missing JDK 26/27 boot JDK, same as the production
+  image build.
+
+Next:
+- Continue tightening native text/font ownership with live visual parity and broader fallback semantics while preserving
+  strict ABI validation for malformed command streams.

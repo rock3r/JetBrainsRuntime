@@ -225,6 +225,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   resolved Skia typeface when metadata is otherwise unavailable.
 - [x] Tighten the Magic Jewel native-text command probe so it requires both simple text commands and paragraph text
   commands, keeping ABI 101 simple font-style metadata covered by live command replay.
+- [x] Add JBR command-stream validator fixtures for invalid simple-text font size, weight, width, slant, and family
+  length metadata.
 - [x] Rebuild ABI 43 local artifacts and pass a native-text Magic Jewel command smoke with paragraph commands and screenshot assertion.
 - [x] Add narrow image-shader rectangle support without sharing raw `SkShader*` pointers.
 - [x] Add narrow linear-gradient stroked-rectangle support without sharing raw `SkShader*` pointers.
