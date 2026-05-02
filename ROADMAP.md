@@ -650,6 +650,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Off-center-pivot 3D graphics-layer command/parity rows passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260502-134726/suite.tsv`
   and `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260502-134810/suite.tsv`.
+- [x] Expanded graphics-layer command matrix with the off-center-pivot row included passed 30/30 rows at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260502-135031/suite.tsv`.
 
 ## Productionization Later
 

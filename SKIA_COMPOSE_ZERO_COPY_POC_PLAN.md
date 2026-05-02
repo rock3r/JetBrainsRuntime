@@ -11310,3 +11310,17 @@ Validation:
 Next:
 - Commit and push the Magic Jewel harness update plus this roadmap/plan checkpoint, then continue with the remaining
   graphics-layer/image-filter or generic shader/effect gaps.
+
+## Checkpoint: Expanded Graphics-Layer Matrix With Off-Center Pivot Row
+
+Status: completed as a follow-on regression gate after adding the off-center-pivot 3D row.
+
+Validation:
+- Expanded graphics-layer command matrix passed with the new off-center-pivot row included:
+  `CASES="commands-graphics-layer commands-graphics-layer-modulate-alpha commands-graphics-layer-offscreen commands-graphics-layer-render-effect commands-graphics-layer-offset-effect commands-graphics-layer-chained-render-effect commands-graphics-layer-render-effect-color-filter commands-graphics-layer-render-effect-blend-mode commands-graphics-layer-render-effect-color-matrix-filter commands-graphics-layer-render-effect-blend-color-filter commands-graphics-layer-render-effect-blend-color-matrix-filter commands-graphics-layer-offset-effect-blend-color-matrix-filter commands-graphics-layer-chained-render-effect-blend-color-matrix-filter commands-graphics-layer-near-camera-chained-render-effect-blend-color-matrix-filter commands-graphics-layer-rotationx commands-graphics-layer-rotationy commands-graphics-layer-rotationxy commands-graphics-layer-near-camera commands-graphics-layer-offcenter-pivot commands-graphics-layer-clip commands-graphics-layer-round-clip commands-graphics-layer-path-clip commands-graphics-layer-blend-mode commands-graphics-layer-color-filter commands-graphics-layer-color-matrix-filter commands-graphics-layer-blend-color-filter commands-graphics-layer-blend-color-matrix-filter commands-graphics-layer-shadow commands-graphics-layer-round-shadow commands-graphics-layer-path-shadow" DURATION_SECONDS=3 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`
+- Suite result: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260502-135031/suite.tsv`.
+- Result summary: 30/30 rows passed; every row had `fallback_new_count=0` and `jbr_picture_frames=0`.
+- The off-center-pivot row in the matrix reported `jbr_command_frames=521`.
+
+Next:
+- Continue with the remaining graphics-layer/image-filter or generic shader/effect gaps.
