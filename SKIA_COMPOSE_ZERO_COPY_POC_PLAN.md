@@ -11389,3 +11389,17 @@ Validation:
 Next:
 - Commit and push this JBR validator hardening, then continue with the remaining descriptor lifecycle/version or renderer
   surface gaps.
+
+## Checkpoint: Compatibility Matrix After Descriptor Validator Hardening
+
+Status: completed as a regression gate after tightening JBR-side effect descriptor child-reference validation.
+
+Validation:
+- Full Magic Jewel launch-level compatibility matrix passed:
+  `SKIKO_VERSION=0.0.0-SNAPSHOT DURATION_SECONDS=3 WARMUP_SECONDS=1 ./scripts/jbr-skia-compatibility-matrix.sh`
+- Matrix TSV: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260502-163211/matrix.tsv`.
+- Happy path stayed on command replay with `fallback_new_count=0` and `jbr_command_frames=327`.
+- Every forced ABI/native/capability/public-API mismatch row emitted one structured fallback and zero command frames.
+
+Next:
+- Continue with the remaining descriptor lifecycle/version or renderer surface gaps.

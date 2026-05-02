@@ -665,6 +665,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   rebuilding `/tmp/jbr-skia-run/desktop`.
 - [x] Focused Magic Jewel descriptor/effect live rows passed after effect child-reference validator hardening at
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260502-162858/suite.tsv`.
+- [x] Full launch-level compatibility matrix passed after descriptor validator hardening at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260502-163211/matrix.tsv`.
 
 ## Productionization Later
 
