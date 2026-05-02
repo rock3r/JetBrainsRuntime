@@ -12187,3 +12187,23 @@ Validation:
 Next:
 - Continue tightening exact compatibility rows and lifecycle assertions around the remaining shader/effect ownership
   work.
+
+## Checkpoint: Skiko Text-Font Capability Unit Gate
+
+Status: completed.
+
+Changes:
+- Added `rejectsMissingTextFontFamilyCommandCapability` to Skiko `JbrSkiaInteropTest`.
+- The test uses a fake JBR service with only low-word `COMMAND_CAP64_TEXT_FONT_FAMILY` removed, and asserts Skiko
+  discovery falls back with `command-capability-mismatch`, the masked low-word capability value, the full high-word
+  capability value, and the stable fallback marker.
+- This mirrors the Magic Jewel launch-level `text-font-family-capability-missing` matrix row at unit-test speed.
+
+Validation:
+- Focused test passed:
+  `./gradlew --no-daemon --no-configuration-cache :awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest.rejectsMissingTextFontFamilyCommandCapability`.
+- Full Skiko interop test class passed:
+  `./gradlew --no-daemon --no-configuration-cache :awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`.
+
+Next:
+- Continue exact unit and launch-level compatibility coverage as new ABI/capability slices are added.

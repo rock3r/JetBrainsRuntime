@@ -741,6 +741,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Launch-level compatibility matrix now checks exact missing low-word `COMMAND_CAP64_TEXT_FONT_FAMILY` fallback for
   ABI 101 native text metadata; 22/22 rows passed at
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260502-235145/matrix.tsv`.
+- [x] Skiko unit coverage now rejects an exact missing low-word `COMMAND_CAP64_TEXT_FONT_FAMILY` capability; full
+  `JbrSkiaInteropTest` passed after adding the row.
 - [x] Skiko exact high-word command capability unit gate now rejects each missing high-word bit independently; focused
   `JbrSkiaInteropTest` passed after adding the coverage.
 - [x] Native metadata now comes from the loaded JBR bridge when a native library is present, so an older dylib without
