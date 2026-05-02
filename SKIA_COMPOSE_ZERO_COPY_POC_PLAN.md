@@ -11561,3 +11561,11 @@ Validation:
 Remaining:
 - The full old/new packaged artifact matrix item remains open until separately versioned old Skiko and old CMP artifact
   roots are available for the optional `old-skiko-current-jbr` and `old-cmp-current-jbr` rows.
+
+Post-change broad validation:
+- Broad Magic Jewel command-probe suite passed after rebuilding current artifacts with the native metadata JNI entry
+  points:
+  `DURATION_SECONDS=2 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`
+- Suite TSV: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260502-175743/suite.tsv`.
+- Summary: `total=75`, `failed=0`, `fallback_rows=5`, `picture_rows=1`.
+- Supported rows stayed on command replay; only the expected invalid-gradient row used picture fallback.

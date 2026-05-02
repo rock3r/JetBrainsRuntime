@@ -692,6 +692,9 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Native metadata now comes from the loaded JBR bridge when a native library is present, so an older dylib without
   current metadata symbols trips `native-abi-mismatch` during discovery instead of producing command frames with
   `rendered=false`.
+- [x] Broad Magic Jewel command-probe sweep passed after the native metadata bridge change:
+  75/75 rows passed at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260502-175743/suite.tsv`.
 
 ## Productionization Later
 
