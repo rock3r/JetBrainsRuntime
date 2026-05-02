@@ -51,13 +51,13 @@ public class JBRSkiaApiTest {
     }
 
     public static void main(String[] args) throws Exception {
-        assertEquals(90, JBRSkia.ABI_ID, "ABI_ID");
+        assertEquals(100, JBRSkia.ABI_ID, "ABI_ID");
         assertEquals(3, JBRSkia.NATIVE_ABI_VERSION, "NATIVE_ABI_VERSION");
-        assertEquals("skia=m147-64a2414108;flags=macos-release-metal-poc:1;abi=90;native=3", JBRSkia.BUILD_ID, "BUILD_ID");
+        assertEquals("skia=m147-64a2414108;flags=macos-release-metal-poc:1;abi=100;native=3", JBRSkia.BUILD_ID, "BUILD_ID");
 
-        assertReflectiveStaticEquals(90, JBRSkia.class.getDeclaredField("ABI_ID"));
+        assertReflectiveStaticEquals(100, JBRSkia.class.getDeclaredField("ABI_ID"));
         assertReflectiveStaticEquals(3, JBRSkia.class.getDeclaredField("NATIVE_ABI_VERSION"));
-        assertReflectiveStaticEquals("skia=m147-64a2414108;flags=macos-release-metal-poc:1;abi=90;native=3", JBRSkia.class.getDeclaredField("BUILD_ID"));
+        assertReflectiveStaticEquals("skia=m147-64a2414108;flags=macos-release-metal-poc:1;abi=100;native=3", JBRSkia.class.getDeclaredField("BUILD_ID"));
 
         if (TestJBRSkia.INSTANCE != null) {
             throw new AssertionError("JBRSkia service must be unavailable before native runtime is wired");
@@ -186,7 +186,16 @@ public class JBRSkiaApiTest {
         return JBRSkia.COMMAND_CAP64_HIGH_SAVE_LAYER_IMAGE_FILTER_REF
                 | JBRSkia.COMMAND_CAP64_HIGH_EFFECT_DESCRIPTOR_OFFSET_IMAGE_FILTER
                 | JBRSkia.COMMAND_CAP64_HIGH_EFFECT_DESCRIPTOR_CHAIN_IMAGE_FILTER
-                | JBRSkia.COMMAND_CAP64_HIGH_SHADER_DESCRIPTOR_REF;
+                | JBRSkia.COMMAND_CAP64_HIGH_SHADER_DESCRIPTOR_REF
+                | JBRSkia.COMMAND_CAP64_HIGH_EFFECT_DESCRIPTOR_RUNTIME_COLOR_FILTER
+                | JBRSkia.COMMAND_CAP64_HIGH_STROKE_RECT_DASH_PATH_EFFECT
+                | JBRSkia.COMMAND_CAP64_HIGH_STROKE_ROUND_RECT_DASH_PATH_EFFECT
+                | JBRSkia.COMMAND_CAP64_HIGH_STROKE_PATH_DASH_PATH_EFFECT
+                | JBRSkia.COMMAND_CAP64_HIGH_PATH_EFFECT_DESCRIPTOR_REF
+                | JBRSkia.COMMAND_CAP64_HIGH_CONCAT_MATRIX33
+                | JBRSkia.COMMAND_CAP64_HIGH_DRAW_SHADOW_PATH
+                | JBRSkia.COMMAND_CAP64_HIGH_SHADER_DESCRIPTOR_COLOR_FILTER
+                | JBRSkia.COMMAND_CAP64_HIGH_DRAW_POINTS;
     }
 
     private static void assertCommandStreamValidation() {
@@ -207,6 +216,7 @@ public class JBRSkiaApiTest {
         assertValidCommandStream(validTextStream(), "valid text stream");
         assertValidCommandStream(validLatin1TextStream(), "valid Latin-1 text stream");
         assertValidCommandStream(validLinearGradientStrokeStream(), "valid linear-gradient stroke stream");
+        assertValidCommandStream(validDrawPointsStream(), "valid draw-points stream");
         assertValidCommandStream(validLinearGradientStrokeRoundRectStream(), "valid linear-gradient stroke round-rect stream");
         assertValidCommandStream(validRadialGradientStrokeStream(), "valid radial-gradient stroke stream");
         assertValidCommandStream(validRadialGradientStrokeRoundRectStream(), "valid radial-gradient stroke round-rect stream");
@@ -561,6 +571,15 @@ public class JBRSkiaApiTest {
                 JBRSkia.COMMAND_STROKE_RECT_LINEAR_GRADIENT, 84, JBRSkia.COMMAND_RECORD_FLAG_ANTIALIAS,
                 1, 2, 11, 12, 12000, 1, 0, 4000,
                 1, 2, 11, 12, 1, 2, 0xff22d3ee, 0, 0xfff97316, 1000
+        };
+    }
+
+    private static int[] validDrawPointsStream() {
+        return new int[] {
+                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 13,
+                JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
+                JBRSkia.COMMAND_DRAW_POINTS, 52, JBRSkia.COMMAND_RECORD_FLAG_ANTIALIAS,
+                0xffffffff, 4, 1, 2, 4500, 2, 1, 3, 12, 12
         };
     }
 

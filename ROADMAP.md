@@ -101,12 +101,14 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] ABI 93: dash path-effect metadata can stroke rectangles through a structured command, extending dash support beyond line-only replay.
 - [x] ABI 94: dash path-effect metadata can stroke rounded rectangles through a structured command.
 - [x] ABI 95-98: path-effect metadata extends structured replay through dashed path strokes and path-effect draw-path refs.
-- [x] ABI 99 remains the current command-stream version; graphics-layer shadows add a high-word-gated
+- [x] ABI 99: graphics-layer shadows add a high-word-gated
   `COMMAND_DRAW_SHADOW_PATH` op backed by JBR-owned `SkShadowUtils::DrawShadow` for rectangular, rounded, and
   generic path outlines without requiring a stream ABI bump.
 - [x] High-word capability `COMMAND_CAP64_HIGH_SHADER_DESCRIPTOR_COLOR_FILTER`: shader descriptors can wrap typed
   color-filter descriptor handles through `COMMAND_SHADER_DESCRIPTOR_COLOR_FILTER`, so shader fills preserve Compose
   paint color filters inside JBR-owned Skia without requiring a stream ABI bump.
+- [x] ABI 100: `drawPoints(PointMode.Points)` records `COMMAND_DRAW_POINTS` with strict high-word capability
+  negotiation and JBR-owned Skia point-mode replay; `PointMode.Lines`/`Polygon` continue to lower to line commands.
 - [x] RuntimeEffect builder failures emit parseable JBR markers, and Magic Jewel has a bad-child-name probe/report assertion.
   - [x] Native RuntimeEffect shader replay rejects child type mismatches before assigning `SkRuntimeEffectBuilder`
     children, and Magic Jewel has a post-recording child-type corruption probe that asserts `stage=child-type` fallback
@@ -210,6 +212,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Add narrow radial-gradient stroked rounded-rectangle support without sharing raw `SkShader*` pointers.
 - [x] Add narrow sweep-gradient stroked-rectangle support without sharing raw `SkShader*` pointers.
 - [x] Add narrow sweep-gradient stroked rounded-rectangle support without sharing raw `SkShader*` pointers.
+- [x] Add dedicated `drawPoints(PointMode.Points)` command replay without falling back to picture mode.
 - [x] Add narrow `BlendMode.Plus` solid fill-rectangle support through a versioned command instead of picture fallback.
 - [x] Expand blend-mode command coverage beyond `Plus` fill rectangles with the first additional exact Skia mapping: `BlendMode.Multiply`.
 - [x] Add `BlendMode.Screen` fill-rectangle command replay and screenshot-region validation.
@@ -274,7 +277,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Investigate observed text alignment drift in Magic Jewel/Jewel labels on the command path.
 - [x] Add screenshot-region assertions for the Plus/Multiply blend-mode probe.
 - [x] `drawPoints(PointMode.Lines/Polygon)` now reuses existing stroke-line command replay, with CMP recorder tests and a Magic Jewel `commands-point-lines` live row.
-- [ ] Add a dedicated command for `drawPoints(PointMode.Points)` dot/cap semantics; it remains an explicit fallback.
+- [x] Add a dedicated command for `drawPoints(PointMode.Points)` dot/cap semantics, with a Magic Jewel `commands-point-dots` live row.
 
 ## Validation Harness
 

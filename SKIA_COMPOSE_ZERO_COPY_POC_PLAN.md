@@ -11209,3 +11209,31 @@ Validation:
 
 Next:
 - Commit the CMP, Magic Jewel, and roadmap/plan updates, then continue with either point-dot semantics or another small renderer fallback surface.
+
+## Checkpoint: drawPoints Point-Dot Replay
+
+Status: completed.
+
+What changed:
+- ABI 100 adds `COMMAND_DRAW_POINTS` for `Canvas.drawPoints(PointMode.Points, ...)` and raw point-dot drawing.
+- JBR private API and public Runtime API mirror expose `COMMAND_CAP64_HIGH_DRAW_POINTS` and `COMMAND_DRAW_POINTS`.
+- JBR validates point-count, record length, antialias flags, and stroke metadata before replay.
+- Native JBR replay uses JBR-owned Skia `drawPoints(kPoints_PointMode, ...)` on the current paint-scope canvas.
+- CMP records `PointMode.Points` / raw points through the new command instead of emitting `points` / `rawPoints` unsupported markers.
+- Skiko requires the new high-word capability, with a focused missing-capability fallback test.
+- Magic Jewel has a `commands-point-dots` row that draws round-capped point dots through Compose.
+
+Validation:
+- Skiko ABI/fallback tests passed:
+  `./gradlew --no-daemon --no-configuration-cache :awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`
+- Focused CMP recorder tests passed:
+  `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesPointRecords --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesPointLineRecords --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesRawPointPolygonRecords`
+- Local artifact refresh passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/scripts/rebuild-jbr-skia-local-artifacts.sh`
+- Magic Jewel live probe passed:
+  `CASES=commands-point-dots DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`
+- Suite result: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260502-130938/suite.tsv`.
+- Runtime markers: `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, `jbr_command_frames=232`, `screenshot_status=passed`.
+
+Next:
+- Commit the JBR, JBR API, Skiko, CMP, and Magic Jewel updates, then continue with the next roadmap item.

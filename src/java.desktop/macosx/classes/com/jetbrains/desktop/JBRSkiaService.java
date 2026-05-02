@@ -154,7 +154,8 @@ public class JBRSkiaService extends JBRSkia {
                     | COMMAND_CAP64_HIGH_PATH_EFFECT_DESCRIPTOR_REF
                     | COMMAND_CAP64_HIGH_CONCAT_MATRIX33
                     | COMMAND_CAP64_HIGH_DRAW_SHADOW_PATH
-                    | COMMAND_CAP64_HIGH_SHADER_DESCRIPTOR_COLOR_FILTER;
+                    | COMMAND_CAP64_HIGH_SHADER_DESCRIPTOR_COLOR_FILTER
+                    | COMMAND_CAP64_HIGH_DRAW_POINTS;
     private static final boolean NATIVE_BRIDGE_AVAILABLE = loadNativeBridge();
     private static final AtomicLong NEXT_SCOPE_ID = new AtomicLong(1);
     private static final int MAX_CACHED_IMAGES = 256;
@@ -385,6 +386,7 @@ public class JBRSkiaService extends JBRSkia {
         if (op == COMMAND_STROKE_PATH_DASH_PATH_EFFECT) return -27;
         if (op == COMMAND_DRAW_PATH_PATH_EFFECT_REF) return -28;
         if (op == COMMAND_DRAW_SHADOW_PATH) return -29;
+        if (op == COMMAND_DRAW_POINTS) return -30;
         if (op == COMMAND_FILL_RECT_IMAGE_SHADER) return 14;
         if (op == COMMAND_CLEAR) return 4;
         if (op == COMMAND_CLEAR_RECT) return 7;
@@ -482,6 +484,9 @@ public class JBRSkiaService extends JBRSkia {
         }
         if (expectedLength == -29 && record.op() == COMMAND_DRAW_SHADOW_PATH) {
             return record.recordLength() >= 17;
+        }
+        if (expectedLength == -30 && record.op() == COMMAND_DRAW_POINTS) {
+            return record.recordLength() >= 11;
         }
         return expectedLength == record.recordLength();
     }
@@ -704,6 +709,19 @@ public class JBRSkiaService extends JBRSkia {
             int width = commands[record.argsStart() + 5];
             int height = commands[record.argsStart() + 6];
             return width >= 0 && height >= 0;
+        }
+        if (record.op() == COMMAND_DRAW_POINTS) {
+            int strokeWidth = commands[record.argsStart() + 1];
+            int strokeCap = commands[record.argsStart() + 2];
+            int strokeJoin = commands[record.argsStart() + 3];
+            int strokeMiter = commands[record.argsStart() + 4];
+            int pointCount = commands[record.argsStart() + 5];
+            return (record.recordFlags() == COMMAND_RECORD_FLAGS_NONE
+                    || record.recordFlags() == COMMAND_RECORD_FLAG_ANTIALIAS)
+                    && pointCount >= 1
+                    && pointCount <= 4096
+                    && record.recordLength() == 9 + pointCount * 2
+                    && isValidStrokeMetadata(strokeWidth, strokeCap, strokeJoin, strokeMiter);
         }
         if (record.op() == COMMAND_STROKE_LINE_DASH_PATH_EFFECT
                 || record.op() == COMMAND_STROKE_RECT_DASH_PATH_EFFECT) {
@@ -4147,6 +4165,31 @@ public class JBRSkiaService extends JBRSkia {
                             current.fill(path);
                         } finally {
                             current.setComposite(previousComposite);
+                        }
+                    } else if (op == COMMAND_DRAW_POINTS) {
+                        if (offset + 6 > recordEnd) return false;
+                        applyAntialiasing(current, antiAlias);
+                        current.setColor(new Color(commands[offset++], true));
+                        int strokeWidth = Math.max(1, commands[offset++]);
+                        int strokeCap = commands[offset++];
+                        int strokeJoin = commands[offset++];
+                        float strokeMiter = commands[offset++] / 1000f;
+                        int pointCount = commands[offset++];
+                        if (pointCount < 1 || pointCount > 4096 || offset + pointCount * 2 != recordEnd) {
+                            return false;
+                        }
+                        java.awt.Stroke previous = current.getStroke();
+                        java.awt.BasicStroke stroke = basicStroke(strokeWidth, strokeCap, strokeJoin, strokeMiter);
+                        if (stroke == null) return false;
+                        try {
+                            current.setStroke(stroke);
+                            for (int pointIndex = 0; pointIndex < pointCount; pointIndex++) {
+                                int x = commands[offset++];
+                                int y = commands[offset++];
+                                current.drawLine(x, y, x, y);
+                            }
+                        } finally {
+                            current.setStroke(previous);
                         }
                     } else if (op == COMMAND_FILL_OVAL) {
                         if (offset + 5 != recordEnd) return false;
