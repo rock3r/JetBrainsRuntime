@@ -638,6 +638,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [ ] Full launch-level old/new packaged artifact matrix with real old bundles supplied for every optional row.
 - [x] Real ABI 99 JBR-side old-artifact matrix rows passed for old public API, old native dylib, and old desktop patch:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260502-175232/matrix.tsv`.
+- [x] Real ABI 99 CMP old-artifact matrix row passed after Skiko command-stream ABI preflight:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260502-183016/matrix.tsv`.
 - [x] Stronger JBR context identity separate from per-surface identity for production cache keys.
 - [x] Skiko distinguishes same-context surface replacement from context migration.
 - [x] Magic Jewel strict resize validation for `contextChanged=false surfaceChanged=true`.
@@ -695,6 +697,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Broad Magic Jewel command-probe sweep passed after the native metadata bridge change:
   75/75 rows passed at
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260502-175743/suite.tsv`.
+- [x] Skiko command-stream ABI preflight now turns old-CMP ABI 99 command buffers into structured `abi-mismatch`
+  fallback before JBR native replay sees them.
 
 ## Productionization Later
 

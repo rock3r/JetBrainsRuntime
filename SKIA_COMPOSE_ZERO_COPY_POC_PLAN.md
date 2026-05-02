@@ -11569,3 +11569,31 @@ Post-change broad validation:
 - Suite TSV: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260502-175743/suite.tsv`.
 - Summary: `total=75`, `failed=0`, `fallback_rows=5`, `picture_rows=1`.
 - Supported rows stayed on command replay; only the expected invalid-gradient row used picture fallback.
+
+## Checkpoint: Skiko Command-Stream ABI Preflight
+
+Status: completed after a real ABI 99 CMP artifact row exposed another render-false mismatch path.
+
+What changed:
+- Skiko now checks the command stream header before handing a command frame to JBR.
+- A current ABI stream proceeds normally.
+- A stream with the wrong command-stream ABI logs the structured `abi-mismatch` fallback and returns to picture replay
+  before JBR native replay is called.
+- A malformed/short stream logs the existing `command-stream-invalid` fallback before replay.
+- Skiko's synthetic fallback command stream header was updated to ABI 100.
+
+Validation:
+- Skiko focused interop tests passed:
+  `./gradlew --no-daemon --no-configuration-cache :awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`
+- Republished Skiko locally:
+  `./gradlew --no-daemon --no-configuration-cache :publishToMavenLocal`
+- Built real ABI 99 CMP UI desktop jars from detached worktree `c3821214032d`.
+- Magic Jewel artifact matrix passed for the real old-CMP row:
+  `OLD_CMP_OUT=/Users/rock3r/src/jbr-skia-zero-copy/old-artifacts/cmp-abi99/out/compose-multiplatform-core OLD_CMP_EXPECTED_REASON=abi-mismatch SKIKO_VERSION=0.0.0-SNAPSHOT DURATION_SECONDS=2 WARMUP_SECONDS=1 ./scripts/jbr-skia-artifact-matrix.sh`
+- Matrix TSV: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260502-183016/matrix.tsv`.
+- `old-cmp-current-jbr` produced the expected `abi-mismatch` fallback with `fallback_new_count=1` and
+  `jbr_command_frames=0`.
+
+Remaining:
+- The full old/new packaged artifact matrix item remains open until a separately versioned old Skiko artifact can be
+  supplied for `old-skiko-current-jbr`.
