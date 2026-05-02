@@ -11373,6 +11373,8 @@ What changed:
   - chained path-effect descriptors with missing path-effect child handles.
 - `JBRSkiaApiTest` has valid RuntimeEffect color-filter child coverage plus invalid fixtures for those child-reference
   cases.
+- Follow-up validator fixtures also cover valid offset-with-input image-filter descriptors and valid chained path-effect
+  descriptors, so the test suite proves supported child-reference shapes still pass.
 
 Validation:
 - `git diff --check` passed in the JBR worktree.

@@ -243,6 +243,8 @@ public class JBRSkiaApiTest {
         assertValidCommandStream(validFillRectColorMatrixFilterHandleStream(), "valid fill rect color-matrix filter handle stream");
         assertValidCommandStream(validFillRectLightingFilterHandleStream(), "valid fill rect lighting filter handle stream");
         assertValidCommandStream(validRuntimeColorFilterChildDescriptorStream(), "valid runtime color-filter child descriptor stream");
+        assertValidCommandStream(validOffsetImageFilterWithInputDescriptorStream(), "valid offset image-filter child descriptor stream");
+        assertValidCommandStream(validChainedPathEffectDescriptorStream(), "valid chained path-effect descriptor stream");
         assertValidCommandStream(validSaveLayerColorMatrixFilterHandleStream(), "valid saveLayer color-matrix filter handle stream");
         assertValidCommandStream(validSaveLayerBlendColorMatrixFilterHandleStream(), "valid saveLayer blend/color-matrix filter handle stream");
         assertValidCommandStream(validColorFilterHandleEvictStream(), "valid color-filter handle evict stream");
@@ -1224,6 +1226,26 @@ public class JBRSkiaApiTest {
         };
     }
 
+    private static int[] validOffsetImageFilterWithInputDescriptorStream() {
+        return new int[] {
+                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 23,
+                JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
+                JBRSkia.COMMAND_DEFINE_EFFECT_DESCRIPTOR, 44, JBRSkia.COMMAND_RECORD_FLAGS_NONE,
+                0x00000041, 0x00000042,
+                JBRSkia.COMMAND_EFFECT_DESCRIPTOR_BLUR_IMAGE_FILTER,
+                JBRSkia.COMMAND_EFFECT_DESCRIPTOR_VERSION_1,
+                3,
+                f(1f), f(1f), 0,
+                JBRSkia.COMMAND_DEFINE_EFFECT_DESCRIPTOR, 48, JBRSkia.COMMAND_RECORD_FLAGS_NONE,
+                0x00000043, 0x00000044,
+                JBRSkia.COMMAND_EFFECT_DESCRIPTOR_OFFSET_IMAGE_FILTER_WITH_INPUT,
+                JBRSkia.COMMAND_EFFECT_DESCRIPTOR_VERSION_1,
+                4,
+                0x00000041, 0x00000042,
+                f(2f), f(3f)
+        };
+    }
+
     private static int[] invalidChainPathEffectMissingChildHandleStream() {
         return new int[] {
                 JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 12,
@@ -1235,6 +1257,30 @@ public class JBRSkiaApiTest {
                 4,
                 0x00000053, 0x00000054,
                 0x00000055, 0x00000056
+        };
+    }
+
+    private static int[] validChainedPathEffectDescriptorStream() {
+        return new int[] {
+                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 30,
+                JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
+                JBRSkia.COMMAND_DEFINE_EFFECT_DESCRIPTOR, 36, JBRSkia.COMMAND_RECORD_FLAGS_NONE,
+                0x00000051, 0x00000052,
+                JBRSkia.COMMAND_EFFECT_DESCRIPTOR_CORNER_PATH_EFFECT,
+                JBRSkia.COMMAND_EFFECT_DESCRIPTOR_VERSION_1,
+                1, f(2f),
+                JBRSkia.COMMAND_DEFINE_EFFECT_DESCRIPTOR, 36, JBRSkia.COMMAND_RECORD_FLAGS_NONE,
+                0x00000053, 0x00000054,
+                JBRSkia.COMMAND_EFFECT_DESCRIPTOR_CORNER_PATH_EFFECT,
+                JBRSkia.COMMAND_EFFECT_DESCRIPTOR_VERSION_1,
+                1, f(4f),
+                JBRSkia.COMMAND_DEFINE_EFFECT_DESCRIPTOR, 48, JBRSkia.COMMAND_RECORD_FLAGS_NONE,
+                0x00000055, 0x00000056,
+                JBRSkia.COMMAND_EFFECT_DESCRIPTOR_CHAIN_PATH_EFFECT,
+                JBRSkia.COMMAND_EFFECT_DESCRIPTOR_VERSION_1,
+                4,
+                0x00000051, 0x00000052,
+                0x00000053, 0x00000054
         };
     }
 

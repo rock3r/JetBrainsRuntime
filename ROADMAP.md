@@ -194,6 +194,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
       handle rejection.
     - [x] Harden JBR command-stream validator coverage for effect descriptors with child handles: input image filters,
       RuntimeEffect color-filter children, and chained path effects.
+    - [x] Add positive JBR validator fixtures for supported input image-filter and chained path-effect child references.
   - [ ] Long term: revisit true generic shader support only after Skiko's fast path no longer creates Skia C++ objects in a separate bundled runtime.
 - [x] Strict recorder fallback for invalid gradient stops and excessive gradient color counts.
 - [x] Strict recorder fallback for invalid rounded-rectangle radii with gradient paints.
