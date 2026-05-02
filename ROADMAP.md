@@ -183,7 +183,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   - [x] Add RuntimeEffect conformance probes in Magic Jewel: one pure color shader, one child-shader composition, one uniform animation, one builder/compile-failure fallback, and one old-runtime capability fallback.
   - [x] Add Magic Jewel probes that force invalid descriptor-handle fallback without relying on raw Skiko `SkShader*` or `SkRuntimeEffect*` pointers.
   - [x] Add Magic Jewel probes that force handle creation, reuse, context migration, and eviction without relying on raw Skiko `SkShader*` or `SkRuntimeEffect*` pointers.
-  - [ ] Add ABI/version tests for shader/effect handle creation, use-after-free rejection, context migration invalidation, and old/new fallback markers.
+  - [x] Add ABI/version tests for shader/effect handle creation, use-after-free rejection, context migration invalidation, and old/new fallback markers.
     - [x] Add a descriptor-version corruption probe that mutates a shader descriptor version after recording and asserts
       structured `command-stream-invalid` fallback instead of partial rendering.
     - [x] Add a descriptor use-after-evict probe that removes a shader handle immediately before use and asserts
@@ -197,6 +197,9 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
     - [x] Add positive JBR validator fixtures for supported input image-filter and chained path-effect child references.
     - [x] Add JBR validator fixtures for evicted effect handles reused as later image-filter/path-effect descriptor
       children.
+    - [x] Full old/new packaged artifact matrix covers real old JBR API/native/desktop, old Skiko, and old CMP fallback
+      markers:
+      `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260502-183840/matrix.tsv`.
   - [ ] Long term: revisit true generic shader support only after Skiko's fast path no longer creates Skia C++ objects in a separate bundled runtime.
 - [x] Strict recorder fallback for invalid gradient stops and excessive gradient color counts.
 - [x] Strict recorder fallback for invalid rounded-rectangle radii with gradient paints.

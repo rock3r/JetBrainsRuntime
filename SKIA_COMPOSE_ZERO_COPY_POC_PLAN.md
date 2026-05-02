@@ -11625,3 +11625,11 @@ Validation:
 Next:
 - Remove the temporary old-artifact worktrees after committing this checkpoint, then continue with the remaining
   descriptor lifecycle/version and renderer-surface gaps.
+
+Roadmap closure:
+- The narrower ABI/version testing row for shader/effect handle creation, use-after-free rejection, context migration
+  invalidation, and old/new fallback markers is now complete. The command-probe and validator coverage already covered
+  descriptor version corruption, use-after-evict rejection, child-handle validation, resize/context migration
+  redefinition, and handle lifecycle marker assertions; the full artifact matrix adds the real old/new fallback marker
+  coverage. The broader lifecycle-command umbrella remains open for future explicit create/use/cache/evict command
+  lifecycle APIs.
