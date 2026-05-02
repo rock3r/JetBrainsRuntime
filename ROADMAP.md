@@ -190,6 +190,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
       structured `command-stream-invalid` fallback instead of stale-handle replay.
     - [x] Add JBR validator fixtures for shader descriptor type/version/payload rejection plus undefined and evicted
       shader-handle use.
+    - [x] Add JBR validator fixtures for shader+color-filter wrapper descriptors, including missing shader/effect
+      handle rejection.
   - [ ] Long term: revisit true generic shader support only after Skiko's fast path no longer creates Skia C++ objects in a separate bundled runtime.
 - [x] Strict recorder fallback for invalid gradient stops and excessive gradient color counts.
 - [x] Strict recorder fallback for invalid rounded-rectangle radii with gradient paints.

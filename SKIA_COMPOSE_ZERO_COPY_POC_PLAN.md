@@ -11338,6 +11338,8 @@ What changed:
   - descriptor payload/record length mismatch,
   - fill using an undefined shader handle,
   - composite shader descriptor referencing undefined child shader handles,
+  - valid shader+color-filter wrapper descriptor construction,
+  - shader+color-filter wrapper descriptors referencing undefined shader or effect handles,
   - fill using a shader handle after `COMMAND_EVICT_SHADER_HANDLE`.
 - These tests cover the descriptor lifecycle/version paths that the live Magic Jewel fallback rows exercise at launch
   time, but at the lower JBR validator contract boundary.
