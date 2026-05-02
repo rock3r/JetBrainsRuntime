@@ -11912,3 +11912,26 @@ Validation:
 
 Next:
 - Resume implementation work with the current command, compatibility, artifact, and visual gates all green for ABI 101.
+
+## Checkpoint: Compose-First Native Text Metadata Recording
+
+Status: completed as a CMP-side ownership cleanup.
+
+Changes:
+- CMP now derives native text command metadata from Compose `TextStyle` first: explicit `fontWeight`, `fontStyle`, and
+  generic font-family names are serialized without asking the resolved Skia typeface.
+- The resolved Skia typeface is still used as a fallback source when Compose metadata is absent, preserving current
+  custom/resolved-font behavior while reducing unnecessary Skiko-native typeface probing in the command recorder.
+- Simple and paragraph native text paths now share the same metadata extraction helper.
+
+Validation:
+- Focused CMP recorder tests passed:
+  `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesSimpleTextRecord --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesLatin1TextRecord --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesParagraphTextRecord`.
+- Focused Magic Jewel native-text command probe passed:
+  `CASES=commands-native-text DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`.
+- Suite TSV: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260502-203911/suite.tsv`.
+- The row reported `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, and `jbr_command_frames=403`.
+
+Next:
+- Continue narrowing the remaining Skiko JNI/native dependencies in command recording. Larger remaining sources include
+  paragraph layout, shader construction, image helpers, graphics-layer recording, and fallback surfaces.

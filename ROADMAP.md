@@ -221,6 +221,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Add simple native text font style metadata without sharing Skia `SkTypeface*` pointers.
 - [x] Resolve default-family simple native text through JBR's font manager so empty-family records still honor style
   metadata without a Skiko-owned typeface.
+- [x] Prefer Compose text style and generic-family metadata when recording native text commands, only consulting the
+  resolved Skia typeface when metadata is otherwise unavailable.
 - [x] Rebuild ABI 43 local artifacts and pass a native-text Magic Jewel command smoke with paragraph commands and screenshot assertion.
 - [x] Add narrow image-shader rectangle support without sharing raw `SkShader*` pointers.
 - [x] Add narrow linear-gradient stroked-rectangle support without sharing raw `SkShader*` pointers.
