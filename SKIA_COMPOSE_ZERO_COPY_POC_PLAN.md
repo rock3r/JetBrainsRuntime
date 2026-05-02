@@ -11671,3 +11671,21 @@ Validation:
 - Suite TSV: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260502-185229/suite.tsv`.
 - All 7 rows reported `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, and positive
   `jbr_command_frames`.
+
+## Checkpoint: Graphics-Layer Coverage Closure
+
+Status: completed for the current graphics-layer command replay roadmap bucket.
+
+Ground truth:
+- CMP's real desktop render path builds `JbrSkiaCommandShadowContext` from the root container size, density, and content
+  offset before recording, so shadow replay receives dynamic root-lighting metadata rather than a fixed test-only light.
+- Graphics-layer replay covers nested layer-local command recording, alpha, ModulateAlpha, Offscreen, rectangular/round/path
+  clips, blend modes, tint/color-matrix filters, blur/offset/chained image-filter descriptors, direct shadows, and
+  rotationX/rotationY/near-camera/off-center-pivot transforms.
+
+Validation:
+- Focused Magic Jewel graphics-layer command-probe suite passed:
+  `CASES="commands-graphics-layer commands-graphics-layer-modulate-alpha commands-graphics-layer-offscreen commands-graphics-layer-clip commands-graphics-layer-round-clip commands-graphics-layer-path-clip commands-graphics-layer-blend-mode commands-graphics-layer-color-filter commands-graphics-layer-color-matrix-filter commands-graphics-layer-render-effect commands-graphics-layer-offset-effect commands-graphics-layer-chained-render-effect commands-graphics-layer-render-effect-color-filter commands-graphics-layer-render-effect-blend-mode commands-graphics-layer-render-effect-color-matrix-filter commands-graphics-layer-render-effect-blend-color-filter commands-graphics-layer-render-effect-blend-color-matrix-filter commands-graphics-layer-offset-effect-blend-color-matrix-filter commands-graphics-layer-chained-render-effect-blend-color-matrix-filter commands-graphics-layer-near-camera-chained-render-effect-blend-color-matrix-filter commands-graphics-layer-shadow commands-graphics-layer-round-shadow commands-graphics-layer-path-shadow commands-graphics-layer-rotationx commands-graphics-layer-rotationy commands-graphics-layer-rotationxy commands-graphics-layer-near-camera commands-graphics-layer-offcenter-pivot commands-graphics-layer-blend-color-filter commands-graphics-layer-blend-color-matrix-filter" SKIKO_VERSION=0.0.0-SNAPSHOT DURATION_SECONDS=2 WARMUP_SECONDS=1 ./scripts/jbr-skia-command-probe-suite.sh`
+- Suite TSV: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260502-185632/suite.tsv`.
+- All 30 rows reported `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, and positive
+  `jbr_command_frames`.

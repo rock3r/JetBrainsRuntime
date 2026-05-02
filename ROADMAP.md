@@ -243,7 +243,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Add `BlendMode.Luminosity` fill-rectangle command replay and screenshot-region validation.
 - [x] Continue blend-mode command coverage mode-by-mode only after each mode has exact Skia-vs-Java2D semantics documented:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260502-185229/suite.tsv`.
-- [ ] Command-recorded graphics layers:
+- [x] Command-recorded graphics layers:
   - [x] Mark Skiko `GraphicsLayer`/`RenderNode` draws as an explicit strict fallback while command replay cannot encode layer contents/effects.
   - [x] Replace the simple 2D graphics-layer fallback with nested command recording for layer-local content plus alpha, translation, scale, rotationZ, and balanced save/saveLayer/restore replay.
   - [x] Support rectangular graphics-layer clips by replaying the layer outline through existing `COMMAND_CLIP_RECT` inside the saved layer scope.
@@ -268,7 +268,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   - [x] Support first 3D/camera graphics-layer replay by flattening Compose's layer transform into `COMMAND_CONCAT_MATRIX33`.
   - [x] Add Magic Jewel command and screenshot parity coverage for off-center-pivot near-camera 3D graphics-layer
     transforms.
-  - [ ] Extend graphics-layer command replay beyond the current subset: dynamic root-lighting parity, broader image-filter surfaces, and combined/edge-case 3D camera transform coverage.
+  - [x] Extend graphics-layer command replay beyond the current subset: dynamic root-lighting parity, broader image-filter surfaces, and combined/edge-case 3D camera transform coverage:
+    `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260502-185632/suite.tsv`.
   - [x] Add render-effect descriptors for graphics-layer `RenderEffect` once the JBR-owned effect-handle ABI can construct the needed Skia image filters.
   - [x] Add an explicit expected-fallback row for graphics-layer `RenderEffect` combined with paint color-filter metadata.
   - [x] Support graphics-layer `RenderEffect` combined with tint/SrcIn color-filter metadata through nested image-filter and color-filter saveLayer command replay.
