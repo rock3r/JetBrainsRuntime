@@ -211,7 +211,14 @@ public class JBRSkiaService extends JBRSkia {
 
     @Override
     public int getNativeAbiVersion() {
-        return NATIVE_ABI_VERSION;
+        if (!NATIVE_BRIDGE_AVAILABLE) {
+            return NATIVE_ABI_VERSION;
+        }
+        try {
+            return nativeGetNativeAbiVersion();
+        } catch (UnsatisfiedLinkError e) {
+            return -1;
+        }
     }
 
     private static long maskedCommandCapabilitiesHigh() {
@@ -240,12 +247,26 @@ public class JBRSkiaService extends JBRSkia {
 
     @Override
     public int getNativeCommandStreamAbiId() {
-        return ABI_ID;
+        if (!NATIVE_BRIDGE_AVAILABLE) {
+            return ABI_ID;
+        }
+        try {
+            return nativeGetCommandStreamAbiId();
+        } catch (UnsatisfiedLinkError e) {
+            return -1;
+        }
     }
 
     @Override
     public String getNativeBuildId() {
-        return BUILD_ID;
+        if (!NATIVE_BRIDGE_AVAILABLE) {
+            return BUILD_ID;
+        }
+        try {
+            return nativeGetBuildId();
+        } catch (UnsatisfiedLinkError e) {
+            return "native-metadata-unavailable";
+        }
     }
 
     @Override
@@ -4872,6 +4893,12 @@ public class JBRSkiaService extends JBRSkia {
 
     private static native boolean nativeRenderDiagnosticFrame(long nativeOpsPtr, long metalTexturePtr,
                                                              int width, int height, long frameTimeNanos);
+
+    private static native int nativeGetNativeAbiVersion();
+
+    private static native int nativeGetCommandStreamAbiId();
+
+    private static native String nativeGetBuildId();
 
     private static native long nativeGetContextId(long nativeOpsPtr);
 

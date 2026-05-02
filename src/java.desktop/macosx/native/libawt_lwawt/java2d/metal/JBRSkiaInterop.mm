@@ -85,6 +85,8 @@
 #include "MTLSurfaceDataBase.h"
 
 static constexpr jint ABI_ID = 100;
+static constexpr jint NATIVE_ABI_VERSION = 3;
+static constexpr const char* BUILD_ID = "skia=m147-64a2414108;flags=macos-release-metal-poc:1;abi=100;native=3";
 static constexpr jint COMMAND_STREAM_MAGIC = 1246972723;
 static constexpr jint COMMAND_STREAM_HEADER_SIZE = 6;
 static constexpr jint COMMAND_STREAM_FLAGS_NONE = 0;
@@ -4114,6 +4116,24 @@ Java_com_jetbrains_desktop_JBRSkiaService_nativeGetContextId
         (JNIEnv* env, jclass cls, jlong nativeOpsPtr) {
     MTLContext* mtlc = getContextFromNativeOps(nativeOpsPtr);
     return mtlc == nil ? 0 : static_cast<jlong>(reinterpret_cast<uintptr_t>((__bridge void*) mtlc));
+}
+
+extern "C" JNIEXPORT jint JNICALL
+Java_com_jetbrains_desktop_JBRSkiaService_nativeGetNativeAbiVersion
+        (JNIEnv* env, jclass cls) {
+    return NATIVE_ABI_VERSION;
+}
+
+extern "C" JNIEXPORT jint JNICALL
+Java_com_jetbrains_desktop_JBRSkiaService_nativeGetCommandStreamAbiId
+        (JNIEnv* env, jclass cls) {
+    return ABI_ID;
+}
+
+extern "C" JNIEXPORT jstring JNICALL
+Java_com_jetbrains_desktop_JBRSkiaService_nativeGetBuildId
+        (JNIEnv* env, jclass cls) {
+    return env->NewStringUTF(BUILD_ID);
 }
 
 extern "C" JNIEXPORT jboolean JNICALL

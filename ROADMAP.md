@@ -636,6 +636,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Magic Jewel launch-level resize validation for surface identity changes.
 - [x] Unit-tested Skiko surface identity tracker.
 - [ ] Full launch-level old/new packaged artifact matrix with real old bundles supplied for every optional row.
+- [x] Real ABI 99 JBR-side old-artifact matrix rows passed for old public API, old native dylib, and old desktop patch:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260502-175232/matrix.tsv`.
 - [x] Stronger JBR context identity separate from per-surface identity for production cache keys.
 - [x] Skiko distinguishes same-context surface replacement from context migration.
 - [x] Magic Jewel strict resize validation for `contextChanged=false surfaceChanged=true`.
@@ -687,6 +689,9 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260502-172551/suite.tsv`.
 - [x] Skiko exact high-word command capability unit gate now rejects each missing high-word bit independently; focused
   `JbrSkiaInteropTest` passed after adding the coverage.
+- [x] Native metadata now comes from the loaded JBR bridge when a native library is present, so an older dylib without
+  current metadata symbols trips `native-abi-mismatch` during discovery instead of producing command frames with
+  `rendered=false`.
 
 ## Productionization Later
 

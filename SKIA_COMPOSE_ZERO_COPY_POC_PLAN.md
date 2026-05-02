@@ -11529,3 +11529,35 @@ Validation:
 
 Next:
 - Continue with remaining descriptor lifecycle/version checks and the larger renderer-surface gaps.
+
+## Checkpoint: Native Metadata From Loaded Bridge
+
+Status: completed after real ABI 99 native artifact testing exposed a render-false mismatch path.
+
+What changed:
+- `JBRSkiaService` now asks the loaded native bridge for native ABI version, command-stream ABI id, and build id when a
+  native bridge library is present.
+- The native bridge exports metadata JNI entry points for those values.
+- If an older dylib loads but does not provide the metadata entry points, Java reports unavailable metadata, causing
+  Skiko discovery to use the structured `native-abi-mismatch` fallback instead of emitting command frames that always
+  return `rendered=false`.
+
+Validation:
+- Rebuilt current local artifacts with `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/scripts/rebuild-jbr-skia-local-artifacts.sh`.
+- Built real ABI 99 JBR-side artifacts from detached worktrees:
+  - JBR: `2d17097ad51`
+  - JBR API: `7218190`
+  - desktop patch: `/tmp/jbr-skia-run/abi99/desktop`
+  - API shim: `/tmp/jbr-api-shim-abi99.jar`
+  - native dylib: `/tmp/jbr-skia-native/abi99/libjbrskiainterop.dylib`
+- Magic Jewel artifact matrix passed for current artifacts plus real ABI 99 JBR-side old rows:
+  `OLD_JBR_API_SHIM=/tmp/jbr-api-shim-abi99.jar OLD_DESKTOP_PATCH=/tmp/jbr-skia-run/abi99/desktop OLD_JBR_SKIA_LIB=/tmp/jbr-skia-native/abi99/libjbrskiainterop.dylib OLD_API_EXPECTED_REASON=abi-mismatch OLD_JBR_EXPECTED_REASON=native-abi-mismatch SKIKO_VERSION=0.0.0-SNAPSHOT DURATION_SECONDS=2 WARMUP_SECONDS=1 ./scripts/jbr-skia-artifact-matrix.sh`
+- Matrix TSV: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260502-175232/matrix.tsv`.
+- `current-all` stayed on command replay with `fallback_new_count=0` and `jbr_command_frames=743`.
+- `old-api-current-runtime` produced the expected `abi-mismatch` fallback.
+- `old-native-current-api` and `old-desktop-current-runtime` produced the expected `native-abi-mismatch` fallback with
+  zero command frames.
+
+Remaining:
+- The full old/new packaged artifact matrix item remains open until separately versioned old Skiko and old CMP artifact
+  roots are available for the optional `old-skiko-current-jbr` and `old-cmp-current-jbr` rows.
