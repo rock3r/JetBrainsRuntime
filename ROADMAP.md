@@ -722,7 +722,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   - [x] Add a guarded `libjbrskiainterop` Java.desktop native-library make target for macOS external Skia roots.
   - [x] Validate the external `--with-skia-interop=<Skia release root>` shape during configure before native linking.
   - [ ] Wire `libjbrskiainterop` into the JBR image so no explicit `sun.java2d.skia.interop.library` property is needed.
-- [ ] Decide final Skiko artifact shape for Skia-less JBR interop.
+- [x] Decide final Skiko artifact shape for Skia-less JBR interop.
 - [ ] Font/typeface ownership through the JBR Skia runtime.
 - [ ] JBR-owned generic shader factory and handles for non-serialized shader families.
 - [x] Extend path-effect descriptors beyond corner to stamped path effects.

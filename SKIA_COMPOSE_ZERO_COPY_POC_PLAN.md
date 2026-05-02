@@ -11764,3 +11764,27 @@ Validation:
 
 Next:
 - Re-run full configure with a JDK 26/27 boot JDK so the new shape guard executes before the Java.desktop native build.
+
+## Checkpoint: Skiko Artifact Shape Decision
+
+Status: completed as a packaging decision; implementation of a genuinely Skia-less JBR-only runtime remains gated on
+removing the remaining Skiko JNI dependencies from command recording.
+
+Decision:
+- Keep `org.jetbrains.skiko:skiko-awt` as the JVM/Kotlin API artifact used by Compose and Skiko callers.
+- Keep the normal `skiko-awt-runtime-*` native artifacts for apps that need the old SwingGraphics fallback, direct Skiko
+  surfaces, or any recording helper still backed by Skiko JNI.
+- Do not publish an empty or marker-only `skiko-awt-runtime-jbr-*` artifact yet. That would make dependency graphs look
+  Skia-less while the current recorder can still need Skiko native code for fallback and some helper surfaces.
+- Package the native command replay bridge in JBR as `libjbrskiainterop`; Skiko remains the reflective ABI/metadata gate
+  and command-buffer sender.
+
+Ground truth:
+- Skiko's publication model already separates `skiko-awt` from platform runtime artifacts with constraints rather than a
+  hard runtime dependency, so a future JBR-only distribution can omit `skiko-awt-runtime-*` once the remaining JNI-backed
+  recording surfaces are gone.
+- Skiko `JBR-INTEROP.md` now records the ABI 100 gate and this artifact-shape decision.
+
+Next:
+- Track and remove the specific Skiko JNI calls still needed during Compose Swing command recording before claiming a
+  runnable Skia-less Skiko runtime.
