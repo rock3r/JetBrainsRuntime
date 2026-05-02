@@ -11375,6 +11375,8 @@ What changed:
   cases.
 - Follow-up validator fixtures also cover valid offset-with-input image-filter descriptors and valid chained path-effect
   descriptors, so the test suite proves supported child-reference shapes still pass.
+- Additional invalid fixtures cover child references after `COMMAND_EVICT_COLOR_FILTER_HANDLE`, proving evicted image-filter
+  and path-effect handles cannot be reused as descriptor children later in the same stream.
 
 Validation:
 - `git diff --check` passed in the JBR worktree.
