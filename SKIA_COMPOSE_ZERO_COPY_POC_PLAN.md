@@ -11051,3 +11051,24 @@ Validation:
 
 Next:
 - Keep tightening compatibility/version coverage, especially old/new fallback rows for newer high-word descriptor capabilities when reusable old artifact bundles are available.
+
+## Checkpoint: Short Broad Command Sweep After Descriptor Rows
+
+Status: completed.
+
+What changed:
+- No product code changes in this checkpoint; this was a broad validation pass after adding image draw color-filter parity rows and shader descriptor resize/context rows to the default Magic Jewel command suite.
+
+Validation:
+- Broad command probe passed:
+  `DURATION_SECONDS=2 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`
+- Suite result: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260502-013411/suite.tsv`.
+- The newly added default rows passed inside the broad sweep:
+  - `commands-image-filter`
+  - `commands-image-color-matrix-filter`
+  - `commands-resize-shader-descriptor-redefine`
+  - `commands-forced-context-shader-descriptor-redefine`
+- The only picture replay in the sweep remained the intentional `commands-invalid-gradient-fallback` row.
+
+Next:
+- Continue with compatibility/version hardening where it can be validated with current local artifacts; defer old-artifact matrix rows that require an actual pre-wrapper artifact bundle.
