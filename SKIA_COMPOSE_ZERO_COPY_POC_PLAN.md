@@ -11110,3 +11110,19 @@ Validation:
 
 Next:
 - Continue reducing stale naming/checklist ambiguity around rows that now replay in command mode, then return to remaining rendering-surface gaps.
+
+## Checkpoint: RuntimeEffect Child Color-Filter Parity Recheck
+
+Status: completed.
+
+What changed:
+- No product code changes; this reconciles roadmap wording with existing Magic Jewel coverage.
+- `ROADMAP.md` now separates the still-open RuntimeEffect shader-family fallback-marker work from the completed child color-filter screenshot parity coverage.
+
+Validation:
+- Focused screenshot parity passed:
+  `CASES="parity-runtime-effect-color-filter-child" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-screenshot-parity-suite.sh`
+- Suite result: `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260502-021903/suite.tsv`.
+
+Next:
+- Continue with remaining fallback-marker hardening and broader rendering-surface gaps.
