@@ -73,6 +73,8 @@ public class JBRSkiaService extends JBRSkia {
     private static final String PROPERTY = "sun.java2d.skia.interop";
     private static final String NATIVE_DIAGNOSTIC_PROPERTY = "sun.java2d.skia.interop.nativeDiagnostic";
     private static final String NATIVE_LIBRARY_PROPERTY = "sun.java2d.skia.interop.library";
+    private static final String COMMAND_CAPABILITIES_MASK_PROPERTY =
+            "sun.java2d.skia.interop.commandCapabilitiesMaskForTest";
     private static final String COMMAND_CAPABILITIES_HIGH_MASK_PROPERTY =
             "sun.java2d.skia.interop.commandCapabilitiesHighMaskForTest";
     private static final long COMMAND_CAPABILITIES =
@@ -197,7 +199,7 @@ public class JBRSkiaService extends JBRSkia {
 
     @Override
     public long getCommandCapabilities64() {
-        return COMMAND_CAPABILITIES;
+        return maskedCommandCapabilities();
     }
 
     @Override
@@ -219,6 +221,18 @@ public class JBRSkiaService extends JBRSkia {
             return COMMAND_CAPABILITIES_HIGH & Long.decode(mask);
         } catch (NumberFormatException ignored) {
             return COMMAND_CAPABILITIES_HIGH;
+        }
+    }
+
+    private static long maskedCommandCapabilities() {
+        String mask = System.getProperty(COMMAND_CAPABILITIES_MASK_PROPERTY);
+        if (mask == null || mask.isBlank()) {
+            return COMMAND_CAPABILITIES;
+        }
+        try {
+            return COMMAND_CAPABILITIES & Long.decode(mask);
+        } catch (NumberFormatException ignored) {
+            return COMMAND_CAPABILITIES;
         }
     }
 

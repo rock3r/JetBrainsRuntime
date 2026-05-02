@@ -11166,3 +11166,25 @@ Validation:
 
 Next:
 - Commit the Magic Jewel matrix and roadmap/plan updates, then continue with renderer functionality gaps rather than benchmark polish.
+
+## Checkpoint: Low-Word Exact Capability Matrix Rows
+
+Status: completed.
+
+What changed:
+- JBR now has a test-only `sun.java2d.skia.interop.commandCapabilitiesMaskForTest` property that masks advertised low-word command capabilities before Skiko performs compatibility checks.
+- Magic Jewel propagates this as `JBR_SKIA_COMMAND_CAPABILITIES_MASK_FOR_TEST` through the report and launch scripts.
+- The compatibility matrix now has exact low-word rows for missing color-matrix descriptors, lighting descriptors, saveLayer color-filter refs, image color-filter refs, and saveLayer blend+color-filter refs.
+- The matrix still includes the high-word exact rows from the previous checkpoint, so low and high capability families are both guarded at launch level.
+
+Validation:
+- Local patched JBR/API/native artifacts rebuilt successfully:
+  `./scripts/rebuild-jbr-skia-local-artifacts.sh`
+- Expanded compatibility matrix passed:
+  `DURATION_SECONDS=2 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-compatibility-matrix.sh`
+- Matrix TSV: `/Users/rock3r/src/magic-jewel/out/jbr-skia-compatibility-matrix/20260502-024402/matrix.tsv`.
+- Happy path stayed on command replay with `command_frames=720`.
+- Every forced mismatch row emitted one structured fallback and zero command frames.
+
+Next:
+- Commit the JBR, Magic Jewel, and roadmap/plan updates, then continue with the remaining renderer-surface gaps.
