@@ -11895,3 +11895,20 @@ Validation:
 Next:
 - Continue with the next implementation surface; the current launch-level gates agree that ABI 101 negotiation is strict
   and fallback-safe.
+
+## Checkpoint: Broad Screenshot Parity After ABI 101
+
+Status: completed.
+
+Validation:
+- Ran Magic Jewel's default screenshot parity suite after the ABI 101 text metadata work:
+  `DURATION_SECONDS=3 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-screenshot-parity-suite.sh`.
+- Suite TSV: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260502-202158/suite.tsv`.
+- The suite passed across rich, clean geometry, native text, point dots, path/image/color-filter/shader/RuntimeEffect,
+  graphics-layer effect/shadow/offscreen/3D, and near-camera/off-center pivot rows.
+- The native-text row remained stable at `avg_delta=3.229`, `bad_pixel_ratio=0.06048`, and
+  `compose_bottom_swatches_bad_pixel_ratio=0.00000`; the broader suite preserved exact bottom-swatch parity in every
+  reported row.
+
+Next:
+- Resume implementation work with the current command, compatibility, artifact, and visual gates all green for ABI 101.
