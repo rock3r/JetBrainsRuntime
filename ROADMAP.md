@@ -682,6 +682,9 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260502-165516/suite.tsv`.
   Supported rows stayed on command replay; five intentional fallback rows remained structured, and only the
   invalid-gradient row used picture replay as expected.
+- [x] Broad Magic Jewel screenshot parity sweep passed after descriptor validator hardening and artifact harness cleanup:
+  35/35 rows passed with exact bottom-swatch parity at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260502-172551/suite.tsv`.
 
 ## Productionization Later
 

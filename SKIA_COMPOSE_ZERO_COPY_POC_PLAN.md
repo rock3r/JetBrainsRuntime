@@ -11493,3 +11493,21 @@ Validation:
 Next:
 - Continue with the remaining compatibility and rendering-surface gaps, keeping the 75-row command sweep as the broad
   live regression baseline.
+
+## Checkpoint: Broad Screenshot Parity After Descriptor Validator Hardening
+
+Status: completed as the broad visual regression gate after descriptor validator and artifact harness cleanup.
+
+Validation:
+- Broad Magic Jewel screenshot parity suite passed:
+  `SKIKO_VERSION=0.0.0-SNAPSHOT DURATION_SECONDS=2 WARMUP_SECONDS=1 ./scripts/jbr-skia-screenshot-parity-suite.sh`
+- Suite TSV: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260502-172551/suite.tsv`.
+- Summary: `total=35`, `failed=0`, `bottom_swatches_nonzero=0`, `max_avg_delta=3.229`,
+  `max_compose_bad_pixel_ratio=0.10955`.
+- The sweep covered text, point dots, path effects, image/color-filter refs, shader/color-filter wrappers,
+  RuntimeEffect shader and color-filter descriptors, renderEffect graphics layers, direct shadows, 3D transforms,
+  near-camera stress, and off-center pivot rows.
+
+Next:
+- Continue with the remaining compatibility and rendering-surface gaps. The command and screenshot sweeps now both cover
+  the descriptor-validator hardening baseline.
