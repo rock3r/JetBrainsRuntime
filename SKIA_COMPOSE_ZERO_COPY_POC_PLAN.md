@@ -11717,3 +11717,32 @@ Validation:
 Next:
 - Wire `libjbrskiainterop` into the JBR build/image behind the existing `--with-skia-interop` configure surface, then
   rerun the same `JBR_SKIA_LIB=` probe and require native command frames without an explicit library property.
+
+## Checkpoint: JBR Native Bridge Make Target
+
+Status: completed for first source-level make wiring; full image validation still needs a local JDK 26/27 boot JDK.
+
+Changes:
+- `make/modules/java.desktop/lib/AwtLibraries.gmk` now adds a macOS-only `BUILD_LIBJBRSKIAINTEROP` target when
+  `SKIA_INTEROP_ENABLED=true`.
+- The target builds `libjbrskiainterop` from the existing `JBRSkiaInterop.mm` source, links against `libawt_lwawt` and
+  the same pinned m147 Skia static archives used by the Magic Jewel local rebuild helper, and includes the Skia core,
+  Ganesh/Metal, paragraph, unicode, generated Skia, Java2D Metal, and generated Java header surfaces needed by the bridge.
+- `--with-skia-interop=<Skia release root>` is the validated shape for this checkpoint. `--with-skia-interop=bundled`
+  is still a placeholder for a future vendored Skia location under the JBR tree.
+
+Validation:
+- `git diff --check` passed.
+- `bash configure --help=short` still lists `--with-skia-interop`.
+- A full `bash configure --with-conf-name=skia-interop-poc --with-skia-interop=<m147 root>` regenerated configure
+  support but stopped at the known machine prerequisite: this JBR source requires a boot JDK 26 or 27, while the local
+  `/usr/libexec/java_home` candidates are JDK 21.
+- Standalone build-style Objective-C++ compilation of `JBRSkiaInterop.mm` passed against the m147 Skia root when supplied
+  with the generated Java headers from the local patched harness, matching the header surface the real JBR build should
+  provide under `$(SUPPORT_OUTPUTDIR)/headers/java.desktop`.
+
+Next:
+- Obtain or point configure at a JDK 26/27 boot JDK and build the `java.desktop` native target to prove the new make
+  target links inside the JBR image.
+- After the image contains `libjbrskiainterop`, rerun Magic Jewel with `JBR_SKIA_LIB=` and require positive
+  `jbr_command_frames` without an explicit native-library property.

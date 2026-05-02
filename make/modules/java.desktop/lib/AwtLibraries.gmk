@@ -621,6 +621,84 @@ ifeq ($(call isTargetOs, macosx), true)
   ))
 
   TARGETS += $(BUILD_LIBAWT_LWAWT)
+
+  ifeq ($(SKIA_INTEROP_ENABLED), true)
+    ifeq ($(SKIA_INTEROP_PATH), bundled)
+      JBR_SKIA_INTEROP_ROOT := $(TOPDIR)/src/$(MODULE)/macosx/native/libjbrskiainterop/skia
+    else
+      JBR_SKIA_INTEROP_ROOT := $(SKIA_INTEROP_PATH)
+    endif
+    JBR_SKIA_INTEROP_OUT := $(JBR_SKIA_INTEROP_ROOT)/out/Release-macos-arm64
+
+    JBR_SKIA_INTEROP_CFLAGS := \
+        -I$(JBR_SKIA_INTEROP_ROOT) \
+        -I$(JBR_SKIA_INTEROP_ROOT)/include \
+        -I$(JBR_SKIA_INTEROP_ROOT)/include/core \
+        -I$(JBR_SKIA_INTEROP_ROOT)/include/config \
+        -I$(JBR_SKIA_INTEROP_ROOT)/include/effects \
+        -I$(JBR_SKIA_INTEROP_ROOT)/include/gpu \
+        -I$(JBR_SKIA_INTEROP_ROOT)/include/private \
+        -I$(JBR_SKIA_INTEROP_ROOT)/include/utils \
+        -I$(JBR_SKIA_INTEROP_ROOT)/modules/skparagraph/include \
+        -I$(JBR_SKIA_INTEROP_ROOT)/modules/skunicode/include \
+        -I$(JBR_SKIA_INTEROP_ROOT)/src \
+        -I$(JBR_SKIA_INTEROP_OUT)/gen \
+        #
+
+    JBR_SKIA_INTEROP_STATIC_LIBS := \
+        $(JBR_SKIA_INTEROP_OUT)/libskia.a \
+        $(JBR_SKIA_INTEROP_OUT)/libskparagraph.a \
+        $(JBR_SKIA_INTEROP_OUT)/libskunicode_icu.a \
+        $(JBR_SKIA_INTEROP_OUT)/libskunicode_core.a \
+        $(JBR_SKIA_INTEROP_OUT)/libskshaper.a \
+        $(JBR_SKIA_INTEROP_OUT)/libskresources.a \
+        $(JBR_SKIA_INTEROP_OUT)/libskia_ganesh_ext.a \
+        $(JBR_SKIA_INTEROP_OUT)/libharfbuzz.a \
+        $(JBR_SKIA_INTEROP_OUT)/libicu.a \
+        $(JBR_SKIA_INTEROP_OUT)/libpng.a \
+        $(JBR_SKIA_INTEROP_OUT)/libjpeg.a \
+        $(JBR_SKIA_INTEROP_OUT)/libwebp.a \
+        $(JBR_SKIA_INTEROP_OUT)/libskcms.a \
+        $(JBR_SKIA_INTEROP_OUT)/libzlib.a \
+        $(JBR_SKIA_INTEROP_OUT)/libexpat.a \
+        $(JBR_SKIA_INTEROP_OUT)/libwuffs.a \
+        #
+
+    $(eval $(call SetupJdkLibrary, BUILD_LIBJBRSKIAINTEROP, \
+        NAME := jbrskiainterop, \
+        LINK_TYPE := C++, \
+        OPTIMIZATION := LOW, \
+        EXTRA_FILES := \
+            $(TOPDIR)/src/$(MODULE)/macosx/native/libawt_lwawt/java2d/metal/JBRSkiaInterop.mm, \
+        EXTRA_HEADER_DIRS := \
+            libawt_lwawt/java2d/metal \
+            libawt/java2d \
+            common/awt/debug \
+            java.base:libjava \
+            java.base:libjvm, \
+        CXXFLAGS := $(JBR_SKIA_INTEROP_CFLAGS), \
+        DISABLED_WARNINGS_clang := deprecated-declarations extra-tokens \
+            objc-method-access sign-compare undef unused-function unused-variable, \
+        JDK_LIBS := libawt_lwawt java.base:libjava, \
+        LIBS_macosx := \
+            $(JBR_SKIA_INTEROP_STATIC_LIBS) \
+            -framework AppKit \
+            -framework CoreFoundation \
+            -framework CoreGraphics \
+            -framework CoreText \
+            -framework Foundation \
+            -framework ImageIO \
+            -framework Metal \
+            -framework QuartzCore \
+            -framework UniformTypeIdentifiers \
+            -lz \
+            -lc++, \
+    ))
+
+    $(BUILD_LIBJBRSKIAINTEROP): $(BUILD_LIBAWT_LWAWT)
+
+    TARGETS += $(BUILD_LIBJBRSKIAINTEROP)
+  endif
 endif
 
 ################################################################################
