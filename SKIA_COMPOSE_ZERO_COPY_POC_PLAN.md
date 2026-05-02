@@ -11407,3 +11407,19 @@ Validation:
 
 Next:
 - Continue with the remaining descriptor lifecycle/version or renderer surface gaps.
+
+## Checkpoint: Current Artifact Matrix After Validator Hardening
+
+Status: completed for the required current-artifact rows.
+
+Validation:
+- Magic Jewel artifact matrix passed with the umbrella CMP output root:
+  `CURRENT_CMP_OUT=/Users/rock3r/src/jbr-skia-zero-copy/cmp/out/compose-multiplatform-core SKIKO_VERSION=0.0.0-SNAPSHOT DURATION_SECONDS=3 WARMUP_SECONDS=1 ./scripts/jbr-skia-artifact-matrix.sh`
+- Matrix TSV: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260502-164541/matrix.tsv`.
+- `current-all` passed with `fallback_new_count=0` and `jbr_command_frames=284`.
+- `missing-public-api` passed with expected `public-api-missing`, one structured fallback, and zero command frames.
+- Optional old-artifact rows were skipped because no `OLD_*` artifact paths or bundle were supplied.
+
+Next:
+- Keep the current-artifact row green as the default smoke. Full old/new packaged artifact coverage still needs real old
+  bundles supplied for every optional row.
