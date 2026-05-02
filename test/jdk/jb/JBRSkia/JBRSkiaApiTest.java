@@ -251,6 +251,13 @@ public class JBRSkiaApiTest {
         assertValidCommandStream(validImageRefColorMatrixFilterHandleStream(), "valid image-ref color-matrix filter handle stream");
         assertValidCommandStream(validCompositeShaderDescriptorStream(), "valid composite shader descriptor stream");
         assertValidCommandStream(validRuntimeEffectShaderDescriptorStream(), "valid runtime-effect shader descriptor stream");
+        assertInvalidCommandStream(invalidUnknownShaderDescriptorTypeStream(), "unknown shader descriptor type");
+        assertInvalidCommandStream(invalidShaderDescriptorVersionStream(), "unsupported shader descriptor version");
+        assertInvalidCommandStream(invalidShaderDescriptorPayloadCountStream(), "shader descriptor payload count mismatch");
+        assertInvalidCommandStream(invalidShaderDescriptorRecordLengthStream(), "shader descriptor record length mismatch");
+        assertInvalidCommandStream(invalidUndefinedShaderFillStream(), "undefined shader handle fill");
+        assertInvalidCommandStream(invalidCompositeShaderChildHandleStream(), "undefined composite shader child handle");
+        assertInvalidCommandStream(invalidEvictedShaderHandleStream(), "evicted shader handle fill");
         assertInvalidCommandStream(invalidRuntimeEffectShaderHashStream(), "invalid runtime-effect shader source hash stream");
         assertInvalidCommandStream(invalidRuntimeEffectUniformSchemaStream(), "invalid runtime-effect uniform schema stream");
         assertInvalidCommandStream(invalidRuntimeEffectChildSchemaStream(), "invalid runtime-effect child schema stream");
@@ -912,6 +919,90 @@ public class JBRSkiaApiTest {
         commands[offset++] = 12000;
         commands[offset++] = 1000;
         return commands;
+    }
+
+    private static int[] validLinearGradientShaderDescriptorRecordOnlyStream() {
+        return new int[] {
+                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 18,
+                JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
+                JBRSkia.COMMAND_DEFINE_SHADER_DESCRIPTOR, 72, JBRSkia.COMMAND_RECORD_FLAGS_NONE,
+                0x00000021, 0x00000022,
+                JBRSkia.COMMAND_SHADER_DESCRIPTOR_LINEAR_GRADIENT,
+                JBRSkia.COMMAND_SHADER_DESCRIPTOR_VERSION_1,
+                10,
+                1000, 2000, 11000, 12000, 0, 2,
+                0xffff0000, 250,
+                0xff0000ff, 750
+        };
+    }
+
+    private static int[] invalidUnknownShaderDescriptorTypeStream() {
+        int[] commands = validLinearGradientShaderDescriptorRecordOnlyStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 5] = 99;
+        return commands;
+    }
+
+    private static int[] invalidShaderDescriptorVersionStream() {
+        int[] commands = validLinearGradientShaderDescriptorRecordOnlyStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 6] = 2;
+        return commands;
+    }
+
+    private static int[] invalidShaderDescriptorPayloadCountStream() {
+        int[] commands = validLinearGradientShaderDescriptorRecordOnlyStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 7] = 9;
+        return commands;
+    }
+
+    private static int[] invalidShaderDescriptorRecordLengthStream() {
+        int[] commands = validLinearGradientShaderDescriptorRecordOnlyStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 1] = 68;
+        return commands;
+    }
+
+    private static int[] invalidUndefinedShaderFillStream() {
+        return new int[] {
+                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 10,
+                JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
+                JBRSkia.COMMAND_FILL_RECT_SHADER_REF, 40, JBRSkia.COMMAND_RECORD_FLAG_ANTIALIAS,
+                0x00000021, 0x00000022,
+                1000, 2000, 11000, 12000, 1000
+        };
+    }
+
+    private static int[] invalidCompositeShaderChildHandleStream() {
+        return new int[] {
+                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 13,
+                JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
+                JBRSkia.COMMAND_DEFINE_SHADER_DESCRIPTOR, 52, JBRSkia.COMMAND_RECORD_FLAGS_NONE,
+                0x00000025, 0x00000026,
+                JBRSkia.COMMAND_SHADER_DESCRIPTOR_COMPOSITE,
+                JBRSkia.COMMAND_SHADER_DESCRIPTOR_VERSION_1,
+                5,
+                0x00000021, 0x00000022,
+                0x00000023, 0x00000024,
+                JBRSkia.COMMAND_BLEND_MODE_SRC_OVER
+        };
+    }
+
+    private static int[] invalidEvictedShaderHandleStream() {
+        return new int[] {
+                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 33,
+                JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
+                JBRSkia.COMMAND_DEFINE_SHADER_DESCRIPTOR, 72, JBRSkia.COMMAND_RECORD_FLAGS_NONE,
+                0x00000021, 0x00000022,
+                JBRSkia.COMMAND_SHADER_DESCRIPTOR_LINEAR_GRADIENT,
+                JBRSkia.COMMAND_SHADER_DESCRIPTOR_VERSION_1,
+                10,
+                1000, 2000, 11000, 12000, 0, 2,
+                0xffff0000, 250,
+                0xff0000ff, 750,
+                JBRSkia.COMMAND_EVICT_SHADER_HANDLE, 20, JBRSkia.COMMAND_RECORD_FLAGS_NONE,
+                0x00000021, 0x00000022,
+                JBRSkia.COMMAND_FILL_RECT_SHADER_REF, 40, JBRSkia.COMMAND_RECORD_FLAG_ANTIALIAS,
+                0x00000021, 0x00000022,
+                1000, 2000, 11000, 12000, 1000
+        };
     }
 
     private static int[] invalidRuntimeEffectShaderHashStream() {

@@ -11324,3 +11324,31 @@ Validation:
 
 Next:
 - Continue with the remaining graphics-layer/image-filter or generic shader/effect gaps.
+
+## Checkpoint: Shader Descriptor Validator Fixtures
+
+Status: completed as JBR-side ABI contract-test hardening.
+
+What changed:
+- `JBRSkiaApiTest` now has focused invalid-stream fixtures for shader descriptor validation:
+  - unknown shader descriptor type,
+  - unsupported shader descriptor version,
+  - descriptor payload/record length mismatch,
+  - fill using an undefined shader handle,
+  - composite shader descriptor referencing undefined child shader handles,
+  - fill using a shader handle after `COMMAND_EVICT_SHADER_HANDLE`.
+- These tests cover the descriptor lifecycle/version paths that the live Magic Jewel fallback rows exercise at launch
+  time, but at the lower JBR validator contract boundary.
+
+Validation:
+- `git diff --check` passed in the JBR worktree.
+- Refreshed local JBR artifacts with `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/scripts/rebuild-jbr-skia-local-artifacts.sh`.
+- Compiled `JBRSkiaApiTest.java` against `/tmp/jbr-skia-run/desktop` plus a tiny local `JBRApi` test stub.
+- Ran an isolated reflection smoke over the new shader descriptor fixtures against `JBRSkiaService.isValidCommandStreamForTesting(...)`; all new fixtures produced the expected valid/invalid result.
+- Caveat: a full ad hoc `JBRSkiaApiTest` run against the temporary patched classes still fails earlier on the pre-existing
+  `validImageRefColorMatrixFilterHandleStream()` fixture, so this slice verified only the new shader descriptor cases
+  outside jtreg. The canonical in-tree jtreg path still needs a configured JBR build image.
+
+Next:
+- Commit and push the JBR test/docs update, then continue with the remaining descriptor lifecycle/version or renderer
+  surface gaps.

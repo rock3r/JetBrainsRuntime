@@ -188,6 +188,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
       structured `command-stream-invalid` fallback instead of partial rendering.
     - [x] Add a descriptor use-after-evict probe that removes a shader handle immediately before use and asserts
       structured `command-stream-invalid` fallback instead of stale-handle replay.
+    - [x] Add JBR validator fixtures for shader descriptor type/version/payload rejection plus undefined and evicted
+      shader-handle use.
   - [ ] Long term: revisit true generic shader support only after Skiko's fast path no longer creates Skia C++ objects in a separate bundled runtime.
 - [x] Strict recorder fallback for invalid gradient stops and excessive gradient color counts.
 - [x] Strict recorder fallback for invalid rounded-rectangle radii with gradient paints.
@@ -652,6 +654,9 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   and `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260502-134810/suite.tsv`.
 - [x] Expanded graphics-layer command matrix with the off-center-pivot row included passed 30/30 rows at
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260502-135031/suite.tsv`.
+- [x] JBR shader descriptor validator fixtures compile and pass in an isolated local smoke against
+  `JBRSkiaService.isValidCommandStreamForTesting(...)`; full ad hoc `JBRSkiaApiTest` still needs a configured JBR build
+  image because the temporary patched-class run fails earlier on an existing image-ref color-matrix fixture.
 
 ## Productionization Later
 
