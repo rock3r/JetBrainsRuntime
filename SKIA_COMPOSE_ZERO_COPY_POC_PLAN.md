@@ -12256,3 +12256,38 @@ Validation:
 
 Next:
 - Continue with remaining screen/context invalidation hardening and compatibility matrix coverage from `ROADMAP.md`.
+
+## Checkpoint: Opaque Shader Fallback Probe
+
+Status: completed as a Magic Jewel strict-recorder fallback coverage step.
+
+Changes:
+- Added `MAGIC_JEWEL_COMPOSE_OPAQUE_SHADER` / `magic.jewel.compose.opaqueShader` to Magic Jewel.
+- The opt-in scene draws a raw `org.jetbrains.skia.Shader.makeColor(...).asComposeShader()` paint, which CMP cannot
+  serialize into a JBR-owned shader descriptor.
+- Added `commands-opaque-shader-fallback` to the default Magic Jewel command-probe suite.
+- The row requires the strict recorder's `shader` unsupported reason and picture replay, proving opaque/raw Skia shader
+  objects stay on structured fallback instead of crossing the ABI or guessing replay semantics.
+- Magic Jewel README documents the new probe and `ROADMAP.md` records the live opaque-shader fallback gate.
+
+Validation:
+- Magic Jewel compile passed:
+  `./gradlew --no-daemon --no-configuration-cache compileKotlin`.
+- Focused command-probe row passed:
+  `CASES=commands-opaque-shader-fallback DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`.
+- Focused suite TSV: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-003139/suite.tsv`.
+- The focused row reported `fallback_new_count=0`,
+  `unsupported=shader:407,graphicsLayer:childCommands:407,graphicsLayer:407`, `jbr_picture_frames=407`, and
+  `jbr_command_frames=0`.
+- Ran Magic Jewel's default command-probe suite with short timing after adding the new fallback row:
+  `DURATION_SECONDS=2 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`.
+- Suite TSV: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-003255/suite.tsv`.
+- All 78 rows passed. Supported rows stayed on command replay with zero unsupported reasons and zero picture frames.
+  The new `commands-opaque-shader-fallback` row reported
+  `unsupported=shader:414,graphicsLayer:childCommands:414,graphicsLayer:414`, `jbr_picture_frames=414`, and
+  `jbr_command_frames=0`; the existing `commands-invalid-gradient-fallback` row remained the expected
+  `sweepGradientStops` picture fallback.
+
+Next:
+- Continue closing remaining shader-family fallback markers and decide whether the next increment should be another
+  live fallback row or an implementation slice for a currently unsupported shader/effect family.
