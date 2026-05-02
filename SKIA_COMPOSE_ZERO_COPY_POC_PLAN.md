@@ -12162,3 +12162,28 @@ Validation:
 
 Next:
 - Continue turning implicit shader/effect and migration assumptions into explicit harness gates or product validation.
+
+## Checkpoint: Exact Text-Font Capability Compatibility Row
+
+Status: completed as a Magic Jewel compatibility-matrix hardening step.
+
+Changes:
+- Added `text-font-family-capability-missing` to `jbr-skia-compatibility-matrix.sh`.
+- The row masks out only low-word `COMMAND_CAP64_TEXT_FONT_FAMILY` with
+  `JBR_SKIA_COMMAND_CAPABILITIES_MASK_FOR_TEST=-1099511627777` and requires a structured
+  `command-capability-mismatch` fallback with zero JBR command frames.
+- Magic Jewel README now lists native text font-family metadata among exact low-word capability removals covered by the
+  matrix.
+- `ROADMAP.md` records the exact ABI 101 native-text capability fallback row.
+
+Validation:
+- Ran the full launch-level compatibility matrix:
+  `DURATION_SECONDS=3 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-compatibility-matrix.sh`.
+- Matrix TSV: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260502-235145/matrix.tsv`.
+- All 22 rows passed. The happy path reported `fallback_new_count=0` and `jbr_command_frames=352`.
+- The new `text-font-family-capability-missing` row reported `fallback_new_count=1` and `jbr_command_frames=0`,
+  matching the strict fallback contract for an old runtime missing ABI 101 native text metadata capability.
+
+Next:
+- Continue tightening exact compatibility rows and lifecycle assertions around the remaining shader/effect ownership
+  work.
