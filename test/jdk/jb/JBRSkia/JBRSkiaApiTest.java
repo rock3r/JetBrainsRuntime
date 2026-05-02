@@ -215,6 +215,7 @@ public class JBRSkiaApiTest {
         assertValidCommandStream(validImageCacheStream(), "valid image cache stream");
         assertValidCommandStream(validTextStream(), "valid text stream");
         assertValidCommandStream(validLatin1TextStream(), "valid Latin-1 text stream");
+        assertValidCommandStream(validParagraphTextStream(), "valid paragraph text stream");
         assertValidCommandStream(validLinearGradientStrokeStream(), "valid linear-gradient stroke stream");
         assertValidCommandStream(validDrawPointsStream(), "valid draw-points stream");
         assertValidCommandStream(validLinearGradientStrokeRoundRectStream(), "valid linear-gradient stroke round-rect stream");
@@ -458,6 +459,11 @@ public class JBRSkiaApiTest {
         assertInvalidCommandStream(textStreamWith(14, 0), "invalid text font width");
         assertInvalidCommandStream(textStreamWith(15, 3), "invalid text font slant");
         assertInvalidCommandStream(textStreamWith(16, 257), "invalid text font family length");
+        assertInvalidCommandStream(paragraphStreamWith(12, 0), "invalid paragraph font size");
+        assertInvalidCommandStream(paragraphStreamWith(14, 0), "invalid paragraph font weight");
+        assertInvalidCommandStream(paragraphStreamWith(15, 0), "invalid paragraph font width");
+        assertInvalidCommandStream(paragraphStreamWith(16, 3), "invalid paragraph font slant");
+        assertInvalidCommandStream(paragraphStreamWith(17, 257), "invalid paragraph font family length");
         assertInvalidCommandStream(new int[] {
                 JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 21,
                 JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
@@ -584,6 +590,24 @@ public class JBRSkiaApiTest {
 
     private static int[] textStreamWith(int index, int value) {
         int[] commands = validTextStream();
+        commands[index] = value;
+        return commands;
+    }
+
+    private static int[] validParagraphTextStream() {
+        return new int[] {
+                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 32,
+                JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
+                JBRSkia.COMMAND_DRAW_PARAGRAPH_UTF16, 128, JBRSkia.COMMAND_RECORD_FLAG_ANTIALIAS,
+                1250, 2500, 120000, 13000, 0xff000000, 700, 5, 1,
+                5, 'I', 'n', 't', 'e', 'r',
+                2, 1, 1500, 1, 1, 3, 2500, 1, 0xffff0000, 5,
+                'H', 'i', ' ', 0xd83d, 0xde80
+        };
+    }
+
+    private static int[] paragraphStreamWith(int index, int value) {
+        int[] commands = validParagraphTextStream();
         commands[index] = value;
         return commands;
     }

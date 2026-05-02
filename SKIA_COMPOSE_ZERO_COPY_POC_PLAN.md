@@ -11973,7 +11973,7 @@ Next:
 - Continue native text/font ownership work from this stronger live baseline, especially screenshot-level font/style and
   typeface fallback semantics before making native text the default fidelity path.
 
-## Checkpoint: Simple Text Metadata Validator Fixtures
+## Checkpoint: Text Metadata Validator Fixtures
 
 Status: completed as JBR-side validator hardening.
 
@@ -11981,6 +11981,8 @@ Changes:
 - `JBRSkiaApiTest` now has focused invalid command-stream fixtures for the ABI 101 simple-text metadata fields:
   non-positive font size, out-of-range font weight, out-of-range font width, out-of-range font slant, and overlong
   font-family metadata length.
+- The test now also covers a valid paragraph text command stream and analogous invalid paragraph font metadata
+  mutations, matching the live native-text probe's simple-plus-paragraph command expectations.
 - The previous malformed text-size invalid row is now represented as a real ABI 101 text command mutation, so it tests
   the intended font-size guard rather than failing only because the old record shape is too short.
 
