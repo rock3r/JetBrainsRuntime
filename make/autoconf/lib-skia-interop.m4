@@ -51,6 +51,29 @@ AC_DEFUN_ONCE([LIB_SETUP_SKIA_INTEROP],
         AC_MSG_RESULT([no])
         AC_MSG_ERROR([Can't find Skia interop source path '${SKIA_INTEROP_PATH}'])
       fi
+
+      AC_MSG_CHECKING([for Skia interop headers and macOS arm64 archives])
+      skia_interop_missing=
+      for skia_interop_file in \
+          include/core/SkCanvas.h \
+          include/gpu/ganesh/SkSurfaceGanesh.h \
+          modules/skparagraph/include/Paragraph.h \
+          modules/skunicode/include/SkUnicode_icu.h \
+          out/Release-macos-arm64/libskia.a \
+          out/Release-macos-arm64/libskparagraph.a \
+          out/Release-macos-arm64/libskunicode_icu.a \
+          out/Release-macos-arm64/libskunicode_core.a \
+          out/Release-macos-arm64/libskia_ganesh_ext.a; do
+        if test ! -f "${SKIA_INTEROP_PATH}/${skia_interop_file}"; then
+          skia_interop_missing="${skia_interop_missing} ${skia_interop_file}"
+        fi
+      done
+      if test "x${skia_interop_missing}" = x; then
+        AC_MSG_RESULT([yes])
+      else
+        AC_MSG_RESULT([no])
+        AC_MSG_ERROR([Skia interop path '${SKIA_INTEROP_PATH}' is missing:${skia_interop_missing}])
+      fi
     fi
   fi
 

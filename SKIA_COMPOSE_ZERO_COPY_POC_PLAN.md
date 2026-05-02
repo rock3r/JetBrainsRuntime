@@ -11746,3 +11746,21 @@ Next:
   target links inside the JBR image.
 - After the image contains `libjbrskiainterop`, rerun Magic Jewel with `JBR_SKIA_LIB=` and require positive
   `jbr_command_frames` without an explicit native-library property.
+
+## Checkpoint: Skia Interop Configure Shape Guard
+
+Status: completed for external Skia release roots.
+
+Changes:
+- `--with-skia-interop=<path>` now validates the headers and macOS arm64 static archives consumed by the
+  `libjbrskiainterop` make target, including core Skia, Ganesh surface headers, paragraph/unicode headers, and the key
+  `out/Release-macos-arm64` archives.
+- This keeps malformed or wrong-platform Skia roots from reaching a much later native link failure.
+- `--with-skia-interop=bundled` remains a future vendored-source placeholder and is not declared complete by this guard.
+
+Validation:
+- `git diff --check` passed.
+- `bash configure --help=short` regenerated configure support and still lists `--with-skia-interop`.
+
+Next:
+- Re-run full configure with a JDK 26/27 boot JDK so the new shape guard executes before the Java.desktop native build.
