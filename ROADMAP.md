@@ -229,6 +229,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   weight, width, slant, and family length metadata.
 - [x] Add CMP ui-text desktop tests that verify generic family, font weight, and italic style metadata in recorded
   simple-text and paragraph-text command payloads.
+- [x] Add a Magic Jewel forced-context native-text command probe that requires simple/paragraph text commands,
+  `contextChanged=true`, and command-cache clearing without falling back to picture replay.
 - [x] Rebuild ABI 43 local artifacts and pass a native-text Magic Jewel command smoke with paragraph commands and screenshot assertion.
 - [x] Add narrow image-shader rectangle support without sharing raw `SkShader*` pointers.
 - [x] Add narrow linear-gradient stroked-rectangle support without sharing raw `SkShader*` pointers.
@@ -736,6 +738,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260502-194216/suite.tsv`.
 - [x] Focused native-text command probe passed with the stricter simple-text and paragraph-text command gates:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260502-220852/suite.tsv`.
+- [x] Forced-context native-text command probe passed with command-cache invalidation and continued JBR command replay:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260502-221924/suite.tsv`.
 - [x] Skiko command-stream ABI preflight now turns old-CMP ABI 99 command buffers into structured `abi-mismatch`
   fallback before JBR native replay sees them.
 - [x] JBR now attempts to load a bundled `libjbrskiainterop` with `System.loadLibrary("jbrskiainterop")` when no

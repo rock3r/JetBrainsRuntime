@@ -12014,3 +12014,24 @@ Validation:
 Next:
 - Continue native text/font parity work, with both live Magic Jewel gates and CMP payload-level tests now guarding the
   Compose-first metadata path.
+
+## Checkpoint: Forced-Context Native Text Replay
+
+Status: completed as a Magic Jewel harness hardening step.
+
+Changes:
+- Added a `commands-forced-context-native-text` command-probe row.
+- The row enables native text, surrogate-pair paragraph text, and the forced context-change test hook; it requires simple
+  text commands, paragraph text commands, a `contextChanged=true` surface marker, and a Skiko command-cache clear.
+
+Validation:
+- Ran the focused forced-context native-text probe:
+  `CASES=commands-forced-context-native-text DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`.
+- Suite TSV: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260502-221924/suite.tsv`.
+- The row reported `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, `jbr_command_frames=362`,
+  `max_text_commands=9`, `max_paragraph_text_commands=6`, `skiko_surface_change_markers=1`,
+  `skiko_context_change_markers=1`, and `skiko_command_cache_clear_markers=1`.
+
+Next:
+- Continue screen/context migration hardening for other renderer surfaces, especially any path that keeps destination
+  scoped handles or cached native objects alive across context changes.
