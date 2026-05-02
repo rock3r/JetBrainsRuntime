@@ -716,6 +716,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Broad Magic Jewel command-probe sweep passed after the native metadata bridge change:
   75/75 rows passed at
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260502-175743/suite.tsv`.
+- [x] Short broad Magic Jewel command-probe sweep passed after ABI 101 native-text style metadata:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260502-194216/suite.tsv`.
 - [x] Skiko command-stream ABI preflight now turns old-CMP ABI 99 command buffers into structured `abi-mismatch`
   fallback before JBR native replay sees them.
 - [x] JBR now attempts to load a bundled `libjbrskiainterop` with `System.loadLibrary("jbrskiainterop")` when no

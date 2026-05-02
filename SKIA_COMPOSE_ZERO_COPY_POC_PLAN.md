@@ -11844,3 +11844,21 @@ Validation:
 Next:
 - Continue native text parity work with screenshot-level font/style/baseline checks before making native text a default
   replacement for text-as-image replay.
+
+## Checkpoint: Short Broad Command Sweep After ABI 101 Text Metadata
+
+Status: completed as a regression sweep.
+
+Validation:
+- Ran Magic Jewel's default command-probe suite with short row duration after ABI 101 simple text style metadata and the
+  default-family native replay polish:
+  `DURATION_SECONDS=2 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`.
+- Suite TSV: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260502-194216/suite.tsv`.
+- The suite passed. Supported rows stayed on command replay with `fallback_new_count=0`, `unsupported=none`,
+  `jbr_picture_frames=0`, and positive `jbr_command_frames`.
+- Intentional fallback rows remained structured. The invalid-gradient row used picture replay with expected unsupported
+  reasons (`sweepGradientStops`, `graphicsLayer:childCommands`, `graphicsLayer`).
+
+Next:
+- Continue with the remaining roadmap buckets: production JBR image packaging, deeper font/typeface parity, remaining
+  generic shader/effect lifecycle semantics, and screen/context migration hardening.
