@@ -3045,12 +3045,10 @@ static bool drawCommandList(SkCanvas* canvas,
                 if (!appendUtf16CommandText(text, commands, offset, charCount)) {
                     return false;
                 }
-                sk_sp<SkTypeface> typeface;
-                if (!fontFamily.empty()) {
-                    typeface = coreTextFontMgr()->matchFamilyStyle(
-                            fontFamily.c_str(),
-                            SkFontStyle(fontWeight, fontWidth, static_cast<SkFontStyle::Slant>(fontSlant)));
-                }
+                SkFontStyle fontStyle(fontWeight, fontWidth, static_cast<SkFontStyle::Slant>(fontSlant));
+                sk_sp<SkTypeface> typeface = fontFamily.empty()
+                        ? coreTextFontMgr()->legacyMakeTypeface(nullptr, fontStyle)
+                        : coreTextFontMgr()->matchFamilyStyle(fontFamily.c_str(), fontStyle);
                 SkFont font(typeface, fontSize);
                 font.setEdging((recordFlags & COMMAND_RECORD_FLAG_ANTIALIAS) != 0
                         ? SkFont::Edging::kAntiAlias

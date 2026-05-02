@@ -11818,3 +11818,24 @@ Validation:
 Next:
 - Continue removing remaining command-recording dependencies on Skiko-owned native objects, with typeface/font fallback
   semantics still on the watch list for no-family text and screenshot-level font parity.
+
+## Checkpoint: Default-Family Simple Native Text Style Resolution
+
+Status: completed as an ABI-neutral native replay polish.
+
+Changes:
+- JBR native replay now resolves empty-family `COMMAND_DRAW_TEXT_UTF16` records through the CoreText-backed Skia font
+  manager with the requested `fontWeight`, `fontWidth`, and `fontSlant`.
+- This replaces the previous `SkFont(nullptr, size)` path for no-family simple text, so style metadata is still applied
+  by a JBR-owned `SkTypeface` without crossing any Skiko font/typeface pointer.
+
+Validation:
+- Local artifact rebuild passed via Magic Jewel's `./scripts/rebuild-jbr-skia-local-artifacts.sh`.
+- Focused Magic Jewel native-text command probe passed:
+  `CASES=commands-native-text DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`.
+- Suite TSV: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260502-193931/suite.tsv`.
+- The row reported `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, and `jbr_command_frames=375`.
+
+Next:
+- Continue native text parity work with screenshot-level font/style/baseline checks before making native text a default
+  replacement for text-as-image replay.
