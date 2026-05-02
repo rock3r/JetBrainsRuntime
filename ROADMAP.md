@@ -273,6 +273,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Add paragraph-row screenshot assertions for native-text layout probes.
 - [x] Investigate observed text alignment drift in Magic Jewel/Jewel labels on the command path.
 - [x] Add screenshot-region assertions for the Plus/Multiply blend-mode probe.
+- [x] `drawPoints(PointMode.Lines/Polygon)` now reuses existing stroke-line command replay, with CMP recorder tests and a Magic Jewel `commands-point-lines` live row.
+- [ ] Add a dedicated command for `drawPoints(PointMode.Points)` dot/cap semantics; it remains an explicit fallback.
 
 ## Validation Harness
 
@@ -636,6 +638,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   `CASES=commands-live-animation DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh` passed at `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260502-022941/suite.tsv`.
 - [x] Launch-level compatibility matrix now checks single-missing high-word capabilities for image-filter refs, offset/chained image-filter descriptors, shader descriptors, RuntimeEffect color filters, path effects, concat matrices, direct shadows, and shader+color-filter wrappers. All rows passed at `/Users/rock3r/src/magic-jewel/out/jbr-skia-compatibility-matrix/20260502-023224/matrix.tsv`.
 - [x] JBR and Magic Jewel now support a low-word capability mask test hook, and the compatibility matrix checks single-missing low-word rows for color-matrix/lighting descriptors plus saveLayer/image color-filter ref families. The expanded low/high matrix passed at `/Users/rock3r/src/magic-jewel/out/jbr-skia-compatibility-matrix/20260502-024402/matrix.tsv`.
+- [x] Point-line replay gate: focused CMP recorder tests passed, and `CASES=commands-point-lines DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh` passed at `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260502-030049/suite.tsv`.
 
 ## Productionization Later
 

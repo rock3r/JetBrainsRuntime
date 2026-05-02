@@ -11188,3 +11188,24 @@ Validation:
 
 Next:
 - Commit the JBR, Magic Jewel, and roadmap/plan updates, then continue with the remaining renderer-surface gaps.
+
+## Checkpoint: drawPoints Line/Polygon Replay
+
+Status: completed for `PointMode.Lines` and `PointMode.Polygon`; `PointMode.Points` remains an explicit fallback.
+
+What changed:
+- CMP no longer marks every `Canvas.drawPoints(...)` call unsupported.
+- `PointMode.Lines` and `PointMode.Polygon` now record through the existing `COMMAND_STROKE_LINE` path, preserving stroke width/cap/join/miter metadata and avoiding a command ABI bump.
+- `PointMode.Points` and raw point-dot drawing still emit explicit `points` / `rawPoints` unsupported markers until we add a command that can preserve Skia point-cap semantics directly.
+- Magic Jewel has a new `commands-point-lines` row that draws both line-pair and polygon point modes through the live Compose canvas.
+
+Validation:
+- Focused CMP recorder tests passed:
+  `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesPointLineRecords --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesRawPointPolygonRecords`
+- Magic Jewel live probe passed:
+  `CASES=commands-point-lines DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`
+- Suite result: `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260502-030049/suite.tsv`.
+- Runtime markers: `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, `jbr_command_frames=292`.
+
+Next:
+- Commit the CMP, Magic Jewel, and roadmap/plan updates, then continue with either point-dot semantics or another small renderer fallback surface.
