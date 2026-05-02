@@ -12035,3 +12035,20 @@ Validation:
 Next:
 - Continue screen/context migration hardening for other renderer surfaces, especially any path that keeps destination
   scoped handles or cached native objects alive across context changes.
+
+## Checkpoint: Short Broad Command Sweep After Forced-Context Native Text
+
+Status: completed.
+
+Validation:
+- Ran Magic Jewel's default command-probe suite with short timing after adding `commands-forced-context-native-text` to
+  the default case list:
+  `DURATION_SECONDS=2 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`.
+- Suite TSV: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260502-222056/suite.tsv`.
+- All rows passed. The new forced-context native-text row reported `fallback_new_count=0`, `unsupported=none`,
+  `jbr_picture_frames=0`, and positive `jbr_command_frames`.
+- Intentional fallback rows remained structured: RuntimeEffect build/child-type and invalid descriptor rows produced
+  their expected single fallback, and the invalid-gradient row used picture replay with the expected unsupported markers.
+
+Next:
+- Continue closing migration and native-object ownership gaps with the default command suite green again.
