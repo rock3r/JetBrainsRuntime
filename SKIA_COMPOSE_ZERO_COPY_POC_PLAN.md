@@ -11380,6 +11380,11 @@ Validation:
 - Compiled `JBRSkiaApiTest.java` against `/tmp/jbr-skia-run/desktop` plus the local `JBRApi` test stub.
 - Reflected `assertCommandStreamValidation()` against `JBRSkiaService.isValidCommandStreamForTesting(...)`; all command
   validator fixtures passed.
+- Focused Magic Jewel descriptor/effect live rows passed after the stricter validator rebuild:
+  `CASES="commands-runtime-effect-color-filter-child commands-graphics-layer-offset-effect commands-graphics-layer-chained-render-effect commands-path-effect-fallback commands-invalid-descriptor-use-after-evict-fallback" DURATION_SECONDS=3 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`
+- Suite result: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260502-162858/suite.tsv`.
+- Supported rows stayed on command replay with `fallback_new_count=0`, `unsupported=none`, and `jbr_picture_frames=0`;
+  the intentional stale-handle row emitted one structured fallback and zero command frames.
 
 Next:
 - Commit and push this JBR validator hardening, then continue with the remaining descriptor lifecycle/version or renderer

@@ -663,6 +663,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   reflected `assertCommandStreamValidation()` after fixing a stale image-ref color-matrix command-count fixture.
 - [x] JBR effect descriptor child-reference validator hardening passes reflected `assertCommandStreamValidation()` after
   rebuilding `/tmp/jbr-skia-run/desktop`.
+- [x] Focused Magic Jewel descriptor/effect live rows passed after effect child-reference validator hardening at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260502-162858/suite.tsv`.
 
 ## Productionization Later
 
