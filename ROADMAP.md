@@ -677,6 +677,11 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Magic Jewel artifact matrix/bundle scripts now default to the sibling umbrella CMP output root; dry-run and bundle
   creation passed without `CURRENT_CMP_OUT` / `CMP_OUT` overrides.
 - [x] Magic Jewel report-validation unit harness passed after artifact harness cleanup.
+- [x] Broad Magic Jewel command-probe sweep passed after descriptor validator hardening and artifact harness cleanup:
+  75/75 rows passed at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260502-165516/suite.tsv`.
+  Supported rows stayed on command replay; five intentional fallback rows remained structured, and only the
+  invalid-gradient row used picture replay as expected.
 
 ## Productionization Later
 

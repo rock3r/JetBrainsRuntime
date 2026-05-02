@@ -11475,3 +11475,21 @@ Validation:
 
 Next:
 - Continue with the remaining compatibility and rendering-surface gaps.
+
+## Checkpoint: Broad Command Sweep After Descriptor Validator Hardening
+
+Status: completed as the broad live command-mode regression gate after descriptor validator and artifact harness
+cleanup.
+
+Validation:
+- Broad Magic Jewel command-probe suite passed:
+  `DURATION_SECONDS=2 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`
+- Suite TSV: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260502-165516/suite.tsv`.
+- Summary: `total=75`, `failed=0`, `fallback_rows=5`, `picture_rows=1`.
+- Supported command rows stayed on JBR command replay with zero new fallback frames and zero JBR picture frames.
+- The expected structured-fallback rows remained bounded; only `commands-invalid-gradient-fallback` used picture replay,
+  with the expected `sweepGradientStops`, `graphicsLayer:childCommands`, and `graphicsLayer` unsupported markers.
+
+Next:
+- Continue with the remaining compatibility and rendering-surface gaps, keeping the 75-row command sweep as the broad
+  live regression baseline.
