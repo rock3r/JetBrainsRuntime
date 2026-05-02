@@ -379,6 +379,9 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-061514/suite.tsv`.
 - [x] Default named screenshot parity suite passed with native-text row included:
   `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-062821/suite.tsv`.
+- [x] Focused native-text screenshot parity passed after ABI 101 simple text style metadata and JBR default-family style
+  resolution:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260502-194040/suite.tsv`.
 - [x] Graphics-layer effects screenshot parity row passed with focused probe scoping:
   `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-055842/suite.tsv`.
 - [x] Shadowless screenshot parity subset passed for clean geometry, native text, RuntimeEffect pure/uniform/child/shader
