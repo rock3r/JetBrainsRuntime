@@ -242,6 +242,7 @@ public class JBRSkiaApiTest {
         assertValidCommandStream(validFillRectTintColorFilterHandleStream(), "valid fill rect tint color-filter handle stream");
         assertValidCommandStream(validFillRectColorMatrixFilterHandleStream(), "valid fill rect color-matrix filter handle stream");
         assertValidCommandStream(validFillRectLightingFilterHandleStream(), "valid fill rect lighting filter handle stream");
+        assertValidCommandStream(validRuntimeColorFilterChildDescriptorStream(), "valid runtime color-filter child descriptor stream");
         assertValidCommandStream(validSaveLayerColorMatrixFilterHandleStream(), "valid saveLayer color-matrix filter handle stream");
         assertValidCommandStream(validSaveLayerBlendColorMatrixFilterHandleStream(), "valid saveLayer blend/color-matrix filter handle stream");
         assertValidCommandStream(validColorFilterHandleEvictStream(), "valid color-filter handle evict stream");
@@ -437,6 +438,10 @@ public class JBRSkiaApiTest {
                 JBRSkia.COMMAND_FILL_RECT_COLOR_FILTER_REF, 40, JBRSkia.COMMAND_RECORD_FLAG_ANTIALIAS,
                 0xffff00ff, 0xff00ffff, JBRSkia.COMMAND_BLEND_MODE_SRC_IN, 3, 4, 10, 20
         }, "evicted effect descriptor handle");
+        assertInvalidCommandStream(invalidRuntimeColorFilterMissingChildHandleStream(), "undefined runtime color-filter child handle");
+        assertInvalidCommandStream(invalidRuntimeColorFilterImageFilterChildStream(), "image-filter runtime color-filter child handle");
+        assertInvalidCommandStream(invalidOffsetImageFilterMissingChildHandleStream(), "undefined offset image-filter child handle");
+        assertInvalidCommandStream(invalidChainPathEffectMissingChildHandleStream(), "undefined chained path-effect child handle");
         assertInvalidCommandStream(new int[] {
                 JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 20,
                 JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
@@ -1117,6 +1122,119 @@ public class JBRSkiaApiTest {
                 2, 0xffb0d0ff, 0xff101820,
                 JBRSkia.COMMAND_FILL_RECT_COLOR_FILTER_REF, 40, JBRSkia.COMMAND_RECORD_FLAG_ANTIALIAS,
                 0xffff00ff, 0x00000003, 0x00000004, 3, 4, 10, 20
+        };
+    }
+
+    private static int[] validRuntimeColorFilterChildDescriptorStream() {
+        return runtimeColorFilterChildDescriptorStream(true, false);
+    }
+
+    private static int[] invalidRuntimeColorFilterMissingChildHandleStream() {
+        return runtimeColorFilterChildDescriptorStream(false, false);
+    }
+
+    private static int[] invalidRuntimeColorFilterImageFilterChildStream() {
+        return runtimeColorFilterChildDescriptorStream(true, true);
+    }
+
+    private static int[] runtimeColorFilterChildDescriptorStream(boolean defineChild, boolean imageFilterChild) {
+        String sksl = "half4 main(half4 c){return c;}";
+        long sourceHash = shaderSourceHash(sksl);
+        int payloadIntCount = 7 + 2 + sksl.length();
+        int childRecordLength = 10;
+        int childImageFilterRecordLength = 11;
+        int defineRecordLength = 8 + payloadIntCount;
+        int fillRecordLength = 10;
+        int commandIntCount = (defineChild ? (imageFilterChild ? childImageFilterRecordLength : childRecordLength) : 0)
+                + defineRecordLength
+                + fillRecordLength;
+        int[] commands = new int[JBRSkia.COMMAND_STREAM_HEADER_SIZE + commandIntCount];
+        int offset = 0;
+        commands[offset++] = JBRSkia.COMMAND_STREAM_MAGIC;
+        commands[offset++] = JBRSkia.ABI_ID;
+        commands[offset++] = JBRSkia.COMMAND_STREAM_FLAGS_NONE;
+        commands[offset++] = commandIntCount;
+        commands[offset++] = JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER;
+        commands[offset++] = JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB;
+        if (defineChild) {
+            commands[offset++] = JBRSkia.COMMAND_DEFINE_EFFECT_DESCRIPTOR;
+            commands[offset++] = (imageFilterChild ? childImageFilterRecordLength : childRecordLength) * Integer.BYTES;
+            commands[offset++] = JBRSkia.COMMAND_RECORD_FLAGS_NONE;
+            commands[offset++] = 0x00000031;
+            commands[offset++] = 0x00000032;
+            commands[offset++] = imageFilterChild
+                    ? JBRSkia.COMMAND_EFFECT_DESCRIPTOR_BLUR_IMAGE_FILTER
+                    : JBRSkia.COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER;
+            commands[offset++] = JBRSkia.COMMAND_EFFECT_DESCRIPTOR_VERSION_1;
+            if (imageFilterChild) {
+                commands[offset++] = 3;
+                commands[offset++] = f(1f);
+                commands[offset++] = f(1f);
+                commands[offset++] = 0;
+            } else {
+                commands[offset++] = 2;
+                commands[offset++] = 0xff00ffff;
+                commands[offset++] = JBRSkia.COMMAND_BLEND_MODE_SRC_IN;
+            }
+        }
+        commands[offset++] = JBRSkia.COMMAND_DEFINE_EFFECT_DESCRIPTOR;
+        commands[offset++] = defineRecordLength * Integer.BYTES;
+        commands[offset++] = JBRSkia.COMMAND_RECORD_FLAGS_NONE;
+        commands[offset++] = 0x00000033;
+        commands[offset++] = 0x00000034;
+        commands[offset++] = JBRSkia.COMMAND_EFFECT_DESCRIPTOR_RUNTIME_COLOR_FILTER;
+        commands[offset++] = JBRSkia.COMMAND_EFFECT_DESCRIPTOR_VERSION_1;
+        commands[offset++] = payloadIntCount;
+        commands[offset++] = sksl.length();
+        commands[offset++] = 0;
+        commands[offset++] = 1;
+        commands[offset++] = 0;
+        commands[offset++] = 0;
+        commands[offset++] = (int) (sourceHash >> 32);
+        commands[offset++] = (int) sourceHash;
+        commands[offset++] = 0x00000031;
+        commands[offset++] = 0x00000032;
+        for (int index = 0; index < sksl.length(); index++) {
+            commands[offset++] = sksl.charAt(index);
+        }
+        commands[offset++] = JBRSkia.COMMAND_FILL_RECT_COLOR_FILTER_REF;
+        commands[offset++] = fillRecordLength * Integer.BYTES;
+        commands[offset++] = JBRSkia.COMMAND_RECORD_FLAG_ANTIALIAS;
+        commands[offset++] = 0xffff00ff;
+        commands[offset++] = 0x00000033;
+        commands[offset++] = 0x00000034;
+        commands[offset++] = 3;
+        commands[offset++] = 4;
+        commands[offset++] = 10;
+        commands[offset++] = 20;
+        return commands;
+    }
+
+    private static int[] invalidOffsetImageFilterMissingChildHandleStream() {
+        return new int[] {
+                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 12,
+                JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
+                JBRSkia.COMMAND_DEFINE_EFFECT_DESCRIPTOR, 48, JBRSkia.COMMAND_RECORD_FLAGS_NONE,
+                0x00000041, 0x00000042,
+                JBRSkia.COMMAND_EFFECT_DESCRIPTOR_OFFSET_IMAGE_FILTER_WITH_INPUT,
+                JBRSkia.COMMAND_EFFECT_DESCRIPTOR_VERSION_1,
+                4,
+                0x00000043, 0x00000044,
+                f(2f), f(3f)
+        };
+    }
+
+    private static int[] invalidChainPathEffectMissingChildHandleStream() {
+        return new int[] {
+                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 12,
+                JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
+                JBRSkia.COMMAND_DEFINE_EFFECT_DESCRIPTOR, 48, JBRSkia.COMMAND_RECORD_FLAGS_NONE,
+                0x00000051, 0x00000052,
+                JBRSkia.COMMAND_EFFECT_DESCRIPTOR_CHAIN_PATH_EFFECT,
+                JBRSkia.COMMAND_EFFECT_DESCRIPTOR_VERSION_1,
+                4,
+                0x00000053, 0x00000054,
+                0x00000055, 0x00000056
         };
     }
 

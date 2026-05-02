@@ -192,6 +192,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
       shader-handle use.
     - [x] Add JBR validator fixtures for shader+color-filter wrapper descriptors, including missing shader/effect
       handle rejection.
+    - [x] Harden JBR command-stream validator coverage for effect descriptors with child handles: input image filters,
+      RuntimeEffect color-filter children, and chained path effects.
   - [ ] Long term: revisit true generic shader support only after Skiko's fast path no longer creates Skia C++ objects in a separate bundled runtime.
 - [x] Strict recorder fallback for invalid gradient stops and excessive gradient color counts.
 - [x] Strict recorder fallback for invalid rounded-rectangle radii with gradient paints.
@@ -659,6 +661,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] JBR shader descriptor validator fixtures compile and pass in an isolated local smoke against
   `JBRSkiaService.isValidCommandStreamForTesting(...)`; the full command-stream validator fixture set also passes by
   reflected `assertCommandStreamValidation()` after fixing a stale image-ref color-matrix command-count fixture.
+- [x] JBR effect descriptor child-reference validator hardening passes reflected `assertCommandStreamValidation()` after
+  rebuilding `/tmp/jbr-skia-run/desktop`.
 
 ## Productionization Later
 

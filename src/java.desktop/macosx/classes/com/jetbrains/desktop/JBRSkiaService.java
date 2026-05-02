@@ -59,6 +59,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.ArrayDeque;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -265,6 +266,7 @@ public class JBRSkiaService extends JBRSkia {
         }
         int offset = COMMAND_STREAM_HEADER_SIZE;
         Set<Long> colorFilterHandles = new HashSet<>();
+        Map<Long, Integer> effectDescriptorTypes = new HashMap<>();
         Set<Long> shaderHandles = new HashSet<>();
         while (offset < commandEnd) {
             CommandRecord record = readCommandRecord(commands, offset, commandEnd);
@@ -274,9 +276,19 @@ public class JBRSkiaService extends JBRSkia {
                 return false;
             }
             if (record.op() == COMMAND_DEFINE_COLOR_FILTER_TINT || record.op() == COMMAND_DEFINE_EFFECT_DESCRIPTOR) {
-                colorFilterHandles.add(commandHandle(commands[record.argsStart()], commands[record.argsStart() + 1]));
+                if (record.op() == COMMAND_DEFINE_EFFECT_DESCRIPTOR
+                        && !validateEffectDescriptorReferences(commands, record, effectDescriptorTypes)) {
+                    return false;
+                }
+                long handle = commandHandle(commands[record.argsStart()], commands[record.argsStart() + 1]);
+                colorFilterHandles.add(handle);
+                effectDescriptorTypes.put(handle, record.op() == COMMAND_DEFINE_COLOR_FILTER_TINT
+                        ? COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER
+                        : commands[record.argsStart() + 2]);
             } else if (record.op() == COMMAND_EVICT_COLOR_FILTER_HANDLE) {
-                colorFilterHandles.remove(commandHandle(commands[record.argsStart()], commands[record.argsStart() + 1]));
+                long handle = commandHandle(commands[record.argsStart()], commands[record.argsStart() + 1]);
+                colorFilterHandles.remove(handle);
+                effectDescriptorTypes.remove(handle);
             } else if (record.op() == COMMAND_DEFINE_SHADER_DESCRIPTOR) {
                 if (!validateShaderDescriptorReferences(commands, record, shaderHandles, colorFilterHandles)) {
                     return false;
@@ -1691,6 +1703,58 @@ public class JBRSkiaService extends JBRSkia {
             }
         }
         return true;
+    }
+
+    private static boolean validateEffectDescriptorReferences(
+            int[] commands,
+            CommandRecord record,
+            Map<Long, Integer> effectDescriptorTypes
+    ) {
+        int descriptorType = commands[record.argsStart() + 2];
+        int payloadIntCount = commands[record.argsStart() + 4];
+        int payloadStart = record.argsStart() + 5;
+        if ((descriptorType == COMMAND_EFFECT_DESCRIPTOR_BLUR_IMAGE_FILTER_WITH_INPUT
+                || descriptorType == COMMAND_EFFECT_DESCRIPTOR_OFFSET_IMAGE_FILTER_WITH_INPUT)
+                && payloadIntCount >= 2) {
+            long childHandle = commandHandle(commands[payloadStart], commands[payloadStart + 1]);
+            return isImageFilterDescriptorType(effectDescriptorTypes.get(childHandle));
+        }
+        if (descriptorType == COMMAND_EFFECT_DESCRIPTOR_RUNTIME_COLOR_FILTER && payloadIntCount >= 7) {
+            int childCount = commands[payloadStart + 2];
+            if (childCount < 0 || childCount > 8 || payloadIntCount < 7 + childCount * 2) {
+                return false;
+            }
+            for (int index = 0; index < childCount; index++) {
+                long childHandle = commandHandle(
+                        commands[payloadStart + 7 + index * 2],
+                        commands[payloadStart + 8 + index * 2]
+                );
+                Integer childType = effectDescriptorTypes.get(childHandle);
+                if (childType == null || isImageFilterDescriptorType(childType)) return false;
+            }
+        }
+        if (descriptorType == COMMAND_EFFECT_DESCRIPTOR_CHAIN_PATH_EFFECT && payloadIntCount == 4) {
+            long outerHandle = commandHandle(commands[payloadStart], commands[payloadStart + 1]);
+            long innerHandle = commandHandle(commands[payloadStart + 2], commands[payloadStart + 3]);
+            return isPathEffectDescriptorType(effectDescriptorTypes.get(outerHandle))
+                    && isPathEffectDescriptorType(effectDescriptorTypes.get(innerHandle));
+        }
+        return true;
+    }
+
+    private static boolean isImageFilterDescriptorType(Integer descriptorType) {
+        return descriptorType != null
+                && (descriptorType == COMMAND_EFFECT_DESCRIPTOR_BLUR_IMAGE_FILTER
+                || descriptorType == COMMAND_EFFECT_DESCRIPTOR_OFFSET_IMAGE_FILTER
+                || descriptorType == COMMAND_EFFECT_DESCRIPTOR_BLUR_IMAGE_FILTER_WITH_INPUT
+                || descriptorType == COMMAND_EFFECT_DESCRIPTOR_OFFSET_IMAGE_FILTER_WITH_INPUT);
+    }
+
+    private static boolean isPathEffectDescriptorType(Integer descriptorType) {
+        return descriptorType != null
+                && (descriptorType == COMMAND_EFFECT_DESCRIPTOR_CORNER_PATH_EFFECT
+                || descriptorType == COMMAND_EFFECT_DESCRIPTOR_STAMPED_PATH_EFFECT
+                || descriptorType == COMMAND_EFFECT_DESCRIPTOR_CHAIN_PATH_EFFECT);
     }
 
     private static boolean validateShaderDescriptorPayload(

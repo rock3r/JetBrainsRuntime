@@ -11358,3 +11358,29 @@ Validation:
 Next:
 - Commit and push the JBR test/docs update, then continue with the remaining descriptor lifecycle/version or renderer
   surface gaps.
+
+## Checkpoint: Effect Descriptor Child-Reference Validator Hardening
+
+Status: completed as JBR-side command-stream validator hardening.
+
+What changed:
+- `JBRSkiaService.isValidCommandStreamForTesting(...)` now tracks effect descriptor handle types in addition to handle
+  existence.
+- The test validator now rejects:
+  - blur/offset image-filter descriptors with missing input image-filter handles,
+  - RuntimeEffect color-filter descriptors with missing child color-filter handles,
+  - RuntimeEffect color-filter descriptors that reference image-filter handles as children,
+  - chained path-effect descriptors with missing path-effect child handles.
+- `JBRSkiaApiTest` has valid RuntimeEffect color-filter child coverage plus invalid fixtures for those child-reference
+  cases.
+
+Validation:
+- `git diff --check` passed in the JBR worktree.
+- Refreshed local JBR artifacts with `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/scripts/rebuild-jbr-skia-local-artifacts.sh`.
+- Compiled `JBRSkiaApiTest.java` against `/tmp/jbr-skia-run/desktop` plus the local `JBRApi` test stub.
+- Reflected `assertCommandStreamValidation()` against `JBRSkiaService.isValidCommandStreamForTesting(...)`; all command
+  validator fixtures passed.
+
+Next:
+- Commit and push this JBR validator hardening, then continue with the remaining descriptor lifecycle/version or renderer
+  surface gaps.
