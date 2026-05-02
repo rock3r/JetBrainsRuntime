@@ -11423,3 +11423,22 @@ Validation:
 Next:
 - Keep the current-artifact row green as the default smoke. Full old/new packaged artifact coverage still needs real old
   bundles supplied for every optional row.
+
+## Checkpoint: Artifact Bundle Optional-Row Self-Check
+
+Status: completed for a same-version artifact bundle self-check.
+
+Validation:
+- Packaged the current ABI 100 local artifacts:
+  `CMP_OUT=/Users/rock3r/src/jbr-skia-zero-copy/cmp/out/compose-multiplatform-core SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/package-jbr-skia-artifact-bundle.sh`
+- Bundle: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-bundles/20260502-164733`.
+- Ran the artifact matrix with that bundle supplied as `OLD_ARTIFACT_BUNDLE` and all optional expected reasons set to
+  `none`, because the bundle is the current artifact set:
+  `CURRENT_CMP_OUT=/Users/rock3r/src/jbr-skia-zero-copy/cmp/out/compose-multiplatform-core OLD_ARTIFACT_BUNDLE=/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-bundles/20260502-164733 OLD_JBR_EXPECTED_REASON=none OLD_API_EXPECTED_REASON=none OLD_SKIKO_EXPECTED_REASON=none OLD_CMP_EXPECTED_REASON=none SKIKO_VERSION=0.0.0-SNAPSHOT DURATION_SECONDS=3 WARMUP_SECONDS=1 ./scripts/jbr-skia-artifact-matrix.sh`
+- Matrix TSV: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260502-164746/matrix.tsv`.
+- All optional rows passed with `fallback_new_count=0` and nonzero command frames; the deliberate
+  `missing-public-api` row still produced the expected structured fallback.
+
+Next:
+- Keep this bundle as a known-good current ABI 100 replay baseline. Full old/new packaged artifact coverage still needs
+  a genuinely older incompatible bundle for negative rows.
