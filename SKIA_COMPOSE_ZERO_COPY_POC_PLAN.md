@@ -11996,3 +11996,21 @@ Validation:
 Next:
 - Continue tightening native text/font ownership with live visual parity and broader fallback semantics while preserving
   strict ABI validation for malformed command streams.
+
+## Checkpoint: CMP Text Metadata Payload Tests
+
+Status: completed.
+
+Changes:
+- CMP `DesktopParagraphTest` now verifies that native simple-text command recording serializes Compose generic
+  `FontFamily`, `FontWeight`, and italic `FontStyle` metadata into the ABI 101 payload.
+- The same test coverage now exists for the paragraph text command path by using surrogate-pair text that forces
+  paragraph-command recording instead of the Latin-1 simple-text command.
+
+Validation:
+- Focused CMP ui-text desktop tests passed:
+  `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-text:desktopTest --tests androidx.compose.ui.text.DesktopParagraphTest.paint_withGenericFontStyle_recordsJbrSkiaSimpleTextMetadata --tests androidx.compose.ui.text.DesktopParagraphTest.paint_withGenericFontStyle_recordsJbrSkiaParagraphTextMetadata --tests androidx.compose.ui.text.DesktopParagraphTest.paint_withFillDrawStyle_recordsJbrSkiaSimpleTextWhenNativeTextIsEnabled --tests androidx.compose.ui.text.DesktopParagraphTest.paint_withLatin1Text_recordsJbrSkiaSimpleText`.
+
+Next:
+- Continue native text/font parity work, with both live Magic Jewel gates and CMP payload-level tests now guarding the
+  Compose-first metadata path.

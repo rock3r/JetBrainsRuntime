@@ -227,6 +227,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   commands, keeping ABI 101 simple font-style metadata covered by live command replay.
 - [x] Add JBR command-stream validator fixtures for valid paragraph text plus invalid simple/paragraph font size,
   weight, width, slant, and family length metadata.
+- [x] Add CMP ui-text desktop tests that verify generic family, font weight, and italic style metadata in recorded
+  simple-text and paragraph-text command payloads.
 - [x] Rebuild ABI 43 local artifacts and pass a native-text Magic Jewel command smoke with paragraph commands and screenshot assertion.
 - [x] Add narrow image-shader rectangle support without sharing raw `SkShader*` pointers.
 - [x] Add narrow linear-gradient stroked-rectangle support without sharing raw `SkShader*` pointers.
