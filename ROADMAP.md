@@ -233,6 +233,9 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   `contextChanged=true`, and command-cache clearing without falling back to picture replay.
 - [x] Add a Magic Jewel forced-context dynamic image-cache command probe that requires cached image refs, single-key
   CMP/JBR image evictions, `contextChanged=true`, command-cache clearing, and zero whole-cache clears.
+- [x] Add a Magic Jewel forced-context cached-image screenshot parity row that freezes image refs for deterministic
+  visual comparison while requiring command replay, `contextChanged=true`, command-cache clearing, and zero whole-cache
+  image clears.
 - [x] Rebuild ABI 43 local artifacts and pass a native-text Magic Jewel command smoke with paragraph commands and screenshot assertion.
 - [x] Add narrow image-shader rectangle support without sharing raw `SkShader*` pointers.
 - [x] Add narrow linear-gradient stroked-rectangle support without sharing raw `SkShader*` pointers.

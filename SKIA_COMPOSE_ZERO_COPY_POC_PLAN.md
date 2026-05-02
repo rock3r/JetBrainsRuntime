@@ -12207,3 +12207,32 @@ Validation:
 
 Next:
 - Continue exact unit and launch-level compatibility coverage as new ABI/capability slices are added.
+
+## Checkpoint: Forced-Context Image-Ref Screenshot Parity
+
+Status: completed as a Magic Jewel window-capture parity hardening step.
+
+Changes:
+- Added `parity-forced-context-image-refs` to the default Magic Jewel screenshot parity suite.
+- The row freezes the image-cache workload for deterministic old/new screenshots while requiring cached image refs,
+  `MAGIC_JEWEL_FORCE_CONTEXT_CHANGE=true`, a `contextChanged=true` surface marker, command-cache clearing, command
+  replay, and zero whole-cache image-cache clears.
+- The dynamic eviction/churn assertion remains in `commands-forced-context-dynamic-images`, because screenshot parity
+  intentionally freezes the scene and therefore keeps image refs stable across frames.
+- Magic Jewel README now documents the split between the visual image-ref row and the live dynamic image-cache eviction
+  row.
+- `ROADMAP.md` records the forced-context cached-image visual parity gate.
+
+Validation:
+- Ran the focused window-only screenshot parity row:
+  `CASES=parity-forced-context-image-refs DURATION_SECONDS=3 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-screenshot-parity-suite.sh`.
+- Suite TSV: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260503-000856/suite.tsv`.
+- Report: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260503-000856/parity-forced-context-image-refs/report/report.md`.
+- The row passed with `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, `jbr_command_frames=214`,
+  `max_image_refs=275`, `max_image_cache_clears=0`, `jbr_image_cache_clear_frames=0`,
+  `skiko_context_change_markers=1`, `skiko_command_cache_clear_markers=1`, `avg_delta=2.129`,
+  `bad_pixel_ratio=0.05050`, `compose_bad_pixel_ratio=0.07527`, and exact bottom-swatch parity.
+
+Next:
+- Continue converting remaining migration/cache ownership assumptions into explicit screenshot or command-suite gates,
+  then run the default screenshot parity suite once the added visual rows are stable.
