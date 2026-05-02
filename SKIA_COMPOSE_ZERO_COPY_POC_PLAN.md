@@ -11237,3 +11237,26 @@ Validation:
 
 Next:
 - Commit the JBR, JBR API, Skiko, CMP, and Magic Jewel updates, then continue with the next roadmap item.
+
+## Checkpoint: ABI 100 Capability Matrix Refresh
+
+Status: completed.
+
+What changed:
+- Magic Jewel's launch-level compatibility matrix now computes exact high-word missing-capability masks from the ABI 100
+  high-word capability set (`8191`) instead of the previous ABI 99 mask (`4095`).
+- Added an exact `draw-points-capability-missing` row that masks only `COMMAND_CAP64_HIGH_DRAW_POINTS` and verifies
+  Skiko takes the structured `command-capability-mismatch` fallback before any command replay.
+- Magic Jewel docs now list draw-points capability fallback coverage in the compatibility matrix description.
+
+Validation:
+- Expanded compatibility matrix passed:
+  `SKIKO_VERSION=0.0.0-SNAPSHOT DURATION_SECONDS=3 WARMUP_SECONDS=1 ./scripts/jbr-skia-compatibility-matrix.sh`
+- Matrix TSV: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260502-132955/matrix.tsv`.
+- Happy path stayed on command replay with `command_frames=801`.
+- `draw-points-capability-missing` emitted one structured fallback and zero command frames.
+- Every forced mismatch row emitted one structured fallback and zero command frames.
+
+Next:
+- Commit and push the Magic Jewel matrix update plus this roadmap/plan checkpoint, then continue with the next renderer
+  surface gap.

@@ -642,6 +642,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Launch-level compatibility matrix now checks single-missing high-word capabilities for image-filter refs, offset/chained image-filter descriptors, shader descriptors, RuntimeEffect color filters, path effects, concat matrices, direct shadows, and shader+color-filter wrappers. All rows passed at `/Users/rock3r/src/magic-jewel/out/jbr-skia-compatibility-matrix/20260502-023224/matrix.tsv`.
 - [x] JBR and Magic Jewel now support a low-word capability mask test hook, and the compatibility matrix checks single-missing low-word rows for color-matrix/lighting descriptors plus saveLayer/image color-filter ref families. The expanded low/high matrix passed at `/Users/rock3r/src/magic-jewel/out/jbr-skia-compatibility-matrix/20260502-024402/matrix.tsv`.
 - [x] Point-line replay gate: focused CMP recorder tests passed, and `CASES=commands-point-lines DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh` passed at `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260502-030049/suite.tsv`.
+- [x] Point-dot replay gate: focused Skiko/CMP tests passed, local artifacts rebuilt, and `CASES=commands-point-dots DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh` passed at `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260502-130938/suite.tsv`.
+- [x] ABI 100 exact high-word compatibility matrix now includes `COMMAND_CAP64_HIGH_DRAW_POINTS`; the expanded matrix passed at `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260502-132955/matrix.tsv`.
 
 ## Productionization Later
 
