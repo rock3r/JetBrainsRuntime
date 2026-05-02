@@ -634,6 +634,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui:compileKotlinDesktop :compose:ui:ui-graphics:compileTestKotlinDesktop` passed in `/Users/rock3r/src/cmp-jbr-skia-poc`.
 - [x] Magic Jewel runtime gate after the reflective CMP bridge change:
   `CASES=commands-live-animation DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh` passed at `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260502-022941/suite.tsv`.
+- [x] Launch-level compatibility matrix now checks single-missing high-word capabilities for image-filter refs, offset/chained image-filter descriptors, shader descriptors, RuntimeEffect color filters, path effects, concat matrices, direct shadows, and shader+color-filter wrappers. All rows passed at `/Users/rock3r/src/magic-jewel/out/jbr-skia-compatibility-matrix/20260502-023224/matrix.tsv`.
 
 ## Productionization Later
 

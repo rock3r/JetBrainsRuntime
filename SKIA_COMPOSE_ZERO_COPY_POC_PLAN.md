@@ -11147,3 +11147,22 @@ Validation:
 
 Next:
 - Commit the CMP and roadmap/plan updates, then continue with the next renderer-coverage gap from `ROADMAP.md`.
+
+## Checkpoint: Expanded Exact High-Capability Matrix Rows
+
+Status: completed.
+
+What changed:
+- Magic Jewel's launch-level compatibility matrix now exercises single-missing high-word capability fallbacks in addition to the broad high-word mismatch row.
+- New exact rows cover missing image-filter refs, offset image-filter descriptors, chained image-filter descriptors, shader descriptor refs, RuntimeEffect color-filter descriptors, path-effect descriptors, concat matrices, direct shadows, and shader+color-filter wrappers.
+- The README now documents that the matrix is a forward-compatibility guard for each high-word descriptor/capability family, not only a generic capability mismatch smoke test.
+
+Validation:
+- Expanded compatibility matrix passed:
+  `DURATION_SECONDS=2 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-compatibility-matrix.sh`
+- Matrix TSV: `/Users/rock3r/src/magic-jewel/out/jbr-skia-compatibility-matrix/20260502-023224/matrix.tsv`.
+- Happy path stayed on command replay with `command_frames=643`.
+- Every forced mismatch row emitted one structured fallback and zero command frames.
+
+Next:
+- Commit the Magic Jewel matrix and roadmap/plan updates, then continue with renderer functionality gaps rather than benchmark polish.
