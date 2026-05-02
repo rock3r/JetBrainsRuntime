@@ -635,11 +635,14 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Magic Jewel parser coverage for `SKIKO_JBR_INTEROP_SURFACE_CHANGED`.
 - [x] Magic Jewel launch-level resize validation for surface identity changes.
 - [x] Unit-tested Skiko surface identity tracker.
-- [ ] Full launch-level old/new packaged artifact matrix with real old bundles supplied for every optional row.
+- [x] Full launch-level old/new packaged artifact matrix with real old bundles supplied for every optional row:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260502-183840/matrix.tsv`.
 - [x] Real ABI 99 JBR-side old-artifact matrix rows passed for old public API, old native dylib, and old desktop patch:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260502-175232/matrix.tsv`.
 - [x] Real ABI 99 CMP old-artifact matrix row passed after Skiko command-stream ABI preflight:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260502-183016/matrix.tsv`.
+- [x] Real ABI 99 Skiko old-artifact matrix row passed with `OLD_SKIKO_VERSION=0.0.0-abi99-SNAPSHOT`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260502-183840/matrix.tsv`.
 - [x] Stronger JBR context identity separate from per-surface identity for production cache keys.
 - [x] Skiko distinguishes same-context surface replacement from context migration.
 - [x] Magic Jewel strict resize validation for `contextChanged=false surfaceChanged=true`.

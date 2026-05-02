@@ -11594,6 +11594,34 @@ Validation:
 - `old-cmp-current-jbr` produced the expected `abi-mismatch` fallback with `fallback_new_count=1` and
   `jbr_command_frames=0`.
 
-Remaining:
-- The full old/new packaged artifact matrix item remains open until a separately versioned old Skiko artifact can be
-  supplied for `old-skiko-current-jbr`.
+Follow-up:
+- The separately versioned old Skiko artifact was supplied in the next checkpoint, closing the full old/new packaged
+  artifact matrix item.
+
+## Checkpoint: Full Old/New Packaged Artifact Matrix
+
+Status: completed for the launch-level packaged-artifact compatibility guard.
+
+What changed:
+- Published the ABI 99 Skiko worktree at commit `6fd533f90` under the non-colliding Maven version
+  `0.0.0-abi99-SNAPSHOT`.
+- Rebuilt the ABI 99 CMP UI desktop jars from detached worktree `c3821214032d` into
+  `/Users/rock3r/src/jbr-skia-zero-copy/old-artifacts/cmp-abi99/out/compose-multiplatform-core`.
+- Reused the real ABI 99 JBR-side artifacts:
+  - desktop patch: `/tmp/jbr-skia-run/abi99/desktop`
+  - API shim: `/tmp/jbr-api-shim-abi99.jar`
+  - native dylib: `/tmp/jbr-skia-native/abi99/libjbrskiainterop.dylib`
+
+Validation:
+- Magic Jewel artifact matrix passed with all optional old-artifact rows required:
+  `OLD_JBR_API_SHIM=/tmp/jbr-api-shim-abi99.jar OLD_DESKTOP_PATCH=/tmp/jbr-skia-run/abi99/desktop OLD_JBR_SKIA_LIB=/tmp/jbr-skia-native/abi99/libjbrskiainterop.dylib OLD_SKIKO_VERSION=0.0.0-abi99-SNAPSHOT OLD_CMP_OUT=/Users/rock3r/src/jbr-skia-zero-copy/old-artifacts/cmp-abi99/out/compose-multiplatform-core OLD_API_EXPECTED_REASON=abi-mismatch OLD_JBR_EXPECTED_REASON=native-abi-mismatch OLD_SKIKO_EXPECTED_REASON=abi-mismatch OLD_CMP_EXPECTED_REASON=abi-mismatch REQUIRE_OLD_ARTIFACT_ROWS=true SKIKO_VERSION=0.0.0-SNAPSHOT DURATION_SECONDS=2 WARMUP_SECONDS=1 ./scripts/jbr-skia-artifact-matrix.sh`
+- Matrix TSV: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260502-183840/matrix.tsv`.
+- `current-all` stayed on command replay with `fallback_new_count=0` and `jbr_command_frames=515`.
+- `missing-public-api` produced `public-api-missing`.
+- `old-api-current-runtime`, `old-skiko-current-jbr`, and `old-cmp-current-jbr` produced `abi-mismatch`.
+- `old-native-current-api` and `old-desktop-current-runtime` produced `native-abi-mismatch`.
+- Every negative row reported `fallback_new_count=1` and `jbr_command_frames=0`.
+
+Next:
+- Remove the temporary old-artifact worktrees after committing this checkpoint, then continue with the remaining
+  descriptor lifecycle/version and renderer-surface gaps.
