@@ -276,10 +276,13 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Add narrow tint color-filter `saveLayer` support through a versioned command instead of picture fallback.
 - [x] Add narrow tint color-filter cached-image support through a versioned command instead of picture fallback.
 - [x] Expand color-matrix/lighting color-filter command coverage to solid rectangles, saveLayer/graphics-layer paints, and cached images through typed descriptors.
-- [ ] Expand color-filter command coverage to image filters, runtime effects, and generic shaders.
+- [x] Expand color-filter command coverage to image filters, runtime effects, and generic shaders.
   - [x] Image draw tint/color-matrix color-filter rows replay through command mode with no picture fallback and now have old/new screenshot parity rows.
   - [x] RuntimeEffect shader paints with typed color-filter descriptors replay through a wrapped shader descriptor.
   - [x] Expand the same wrapped-shader path to screenshot parity rows and broader shader families.
+  - [x] Focused color-filter command matrix passed for image filters, RuntimeEffect color filters, shader-plus-filter
+    wrappers, and graphics-layer renderEffect/filter stacks:
+    `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260502-184719/suite.tsv`.
 - [x] Add narrow dash path-effect stroked-line support through a versioned command instead of picture fallback.
 - [x] Extend dash path-effect command replay to stroked rectangles with ABI 93 validation and native/Java2D replay.
 - [x] Extend dash path-effect command replay to stroked rounded rectangles with ABI 94 validation and native/Java2D replay.

@@ -11633,3 +11633,21 @@ Roadmap closure:
   redefinition, and handle lifecycle marker assertions; the full artifact matrix adds the real old/new fallback marker
   coverage. The broader lifecycle-command umbrella remains open for future explicit create/use/cache/evict command
   lifecycle APIs.
+
+## Checkpoint: Color-Filter Coverage Closure
+
+Status: completed for the roadmap row covering image filters, RuntimeEffect filters, and generic shader wrappers.
+
+Validation:
+- Focused Magic Jewel command-probe suite passed:
+  `CASES="commands-image-filter commands-image-color-matrix-filter commands-runtime-effect-color-filter commands-runtime-effect-color-filter-child commands-image-shader-color-filter commands-composite-shader-color-filter commands-linear-gradient-shader-color-filter commands-runtime-effect-shader-color-filter commands-graphics-layer-render-effect-color-filter commands-graphics-layer-render-effect-color-matrix-filter commands-graphics-layer-render-effect-blend-color-filter commands-graphics-layer-render-effect-blend-color-matrix-filter" SKIKO_VERSION=0.0.0-SNAPSHOT DURATION_SECONDS=2 WARMUP_SECONDS=1 ./scripts/jbr-skia-command-probe-suite.sh`
+- Suite TSV: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260502-184719/suite.tsv`.
+- All 12 rows reported `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, and positive
+  `jbr_command_frames`.
+
+Notes:
+- Image-filter coverage here is through supported RenderEffect/saveLayer and graphics-layer descriptor paths, which are
+  the image-filter surfaces currently exposed by the CMP desktop pipeline.
+- RuntimeEffect color filters cover both direct color-filter descriptors and child color-filter descriptors.
+- Generic shader coverage covers image, composite, linear-gradient, and RuntimeEffect shader descriptors wrapped with
+  typed color-filter handles.
