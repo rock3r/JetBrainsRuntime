@@ -11442,3 +11442,25 @@ Validation:
 Next:
 - Keep this bundle as a known-good current ABI 100 replay baseline. Full old/new packaged artifact coverage still needs
   a genuinely older incompatible bundle for negative rows.
+
+## Checkpoint: Artifact Script Workspace Defaults
+
+Status: completed as Magic Jewel harness cleanup.
+
+What changed:
+- Magic Jewel's artifact matrix and artifact bundle scripts now default the CMP output root to the sibling umbrella
+  worktree path, `../cmp/out/compose-multiplatform-core`, instead of the older absolute checkout path.
+- Magic Jewel README documents that sibling CMP output default in the artifact matrix section.
+
+Validation:
+- Magic Jewel `git diff --check` passed.
+- Shell syntax checks passed for `scripts/jbr-skia-artifact-matrix.sh` and
+  `scripts/package-jbr-skia-artifact-bundle.sh`.
+- `./scripts/jbr-skia-artifact-matrix.sh --dry-run` found the current artifact roots with no `CURRENT_CMP_OUT`
+  override and wrote `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260502-165202/matrix.tsv`.
+- `./scripts/package-jbr-skia-artifact-bundle.sh` found the sibling CMP output with no `CMP_OUT` override and created
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-bundles/20260502-165209`.
+
+Next:
+- Commit and push the Magic Jewel harness cleanup plus this checkpoint, then continue with the remaining compatibility
+  and rendering-surface gaps.
