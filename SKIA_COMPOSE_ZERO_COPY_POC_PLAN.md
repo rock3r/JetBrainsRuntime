@@ -11092,3 +11092,21 @@ Validation:
 
 Next:
 - Commit the JBR/Magic Jewel compatibility hook and continue with the remaining version/fallback hardening that does not need old artifact bundles.
+
+## Checkpoint: Compatibility Matrix TSV Reporting
+
+Status: completed.
+
+What changed:
+- Magic Jewel's launch-level compatibility matrix now writes `matrix.tsv` with stable columns:
+  `case`, `status`, `fallbacks`, `command_frames`, and `report`.
+- The README documents the parseable matrix output.
+
+Validation:
+- Compatibility matrix passed:
+  `DURATION_SECONDS=3 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-compatibility-matrix.sh`
+- Matrix TSV: `/Users/rock3r/src/magic-jewel/out/jbr-skia-compatibility-matrix/20260502-021312/matrix.tsv`.
+- The TSV contains all six rows: happy path, ABI mismatch, native ABI mismatch, broad high-word capability mismatch, exact shader/color-filter capability missing, and public API missing.
+
+Next:
+- Continue reducing stale naming/checklist ambiguity around rows that now replay in command mode, then return to remaining rendering-surface gaps.
