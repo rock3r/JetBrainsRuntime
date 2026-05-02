@@ -11783,8 +11783,38 @@ Ground truth:
 - Skiko's publication model already separates `skiko-awt` from platform runtime artifacts with constraints rather than a
   hard runtime dependency, so a future JBR-only distribution can omit `skiko-awt-runtime-*` once the remaining JNI-backed
   recording surfaces are gone.
-- Skiko `JBR-INTEROP.md` now records the ABI 100 gate and this artifact-shape decision.
+- Skiko `JBR-INTEROP.md` now records the ABI 101 gate and this artifact-shape decision.
 
 Next:
 - Track and remove the specific Skiko JNI calls still needed during Compose Swing command recording before claiming a
   runnable Skia-less Skiko runtime.
+
+## Checkpoint: ABI 101 Simple Native Text Font Style Metadata
+
+Status: completed.
+
+Changes:
+- `COMMAND_DRAW_TEXT_UTF16` now carries `fontWeight`, `fontWidth`, and `fontSlant` alongside the existing font-family
+  and size metadata.
+- JBR validates the new style fields before replay and resolves family-backed styled typefaces through its own Skia
+  font manager, keeping `SkTypeface*` ownership on the JBR side.
+- CMP records the default font style metadata for the simple native-text path; paragraph text continues to use its
+  existing styled paragraph payload.
+- Skiko and the public JBR API mirror now gate on ABI 101, and Skiko's command-stream preflight uses the shared stream
+  ABI constant.
+
+Validation:
+- Skiko focused ABI/gating tests passed:
+  `./gradlew --no-daemon --no-configuration-cache :awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`.
+- CMP focused recorder tests passed:
+  `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesSimpleTextRecord --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesLatin1TextRecord --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.recordsFrameMetadata --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesParagraphTextRecord`.
+- Local artifact rebuild passed via Magic Jewel's `./scripts/rebuild-jbr-skia-local-artifacts.sh`.
+- After publishing patched Skiko `0.0.0-SNAPSHOT` to Maven local, the focused Magic Jewel native-text command probe
+  passed:
+  `CASES=commands-native-text DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`.
+- Suite TSV: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260502-193545/suite.tsv`.
+- The row reported `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, and `jbr_command_frames=673`.
+
+Next:
+- Continue removing remaining command-recording dependencies on Skiko-owned native objects, with typeface/font fallback
+  semantics still on the watch list for no-family text and screenshot-level font parity.

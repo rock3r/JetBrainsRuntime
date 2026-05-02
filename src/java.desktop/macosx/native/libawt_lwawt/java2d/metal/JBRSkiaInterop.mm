@@ -84,9 +84,9 @@
 
 #include "MTLSurfaceDataBase.h"
 
-static constexpr jint ABI_ID = 100;
+static constexpr jint ABI_ID = 101;
 static constexpr jint NATIVE_ABI_VERSION = 3;
-static constexpr const char* BUILD_ID = "skia=m147-64a2414108;flags=macos-release-metal-poc:1;abi=100;native=3";
+static constexpr const char* BUILD_ID = "skia=m147-64a2414108;flags=macos-release-metal-poc:1;abi=101;native=3";
 static constexpr jint COMMAND_STREAM_MAGIC = 1246972723;
 static constexpr jint COMMAND_STREAM_HEADER_SIZE = 6;
 static constexpr jint COMMAND_STREAM_FLAGS_NONE = 0;
@@ -3015,13 +3015,16 @@ static bool drawCommandList(SkCanvas* canvas,
                 break;
             }
             case COMMAND_DRAW_TEXT_UTF16: {
-                if ((recordFlags & ~COMMAND_RECORD_FLAG_ANTIALIAS) != 0 || offset + 6 > recordEnd) {
+                if ((recordFlags & ~COMMAND_RECORD_FLAG_ANTIALIAS) != 0 || offset + 9 > recordEnd) {
                     return false;
                 }
                 const SkScalar x = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
                 const SkScalar baseline = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
                 const SkScalar fontSize = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
                 const SkColor color = skColorFromArgb(commands[offset++]);
+                const jint fontWeight = commands[offset++];
+                const jint fontWidth = commands[offset++];
+                const jint fontSlant = commands[offset++];
                 const jint familyCharCount = commands[offset++];
                 if (familyCharCount < 0 || familyCharCount > 256 || offset + familyCharCount >= recordEnd) {
                     return false;
@@ -3031,7 +3034,11 @@ static bool drawCommandList(SkCanvas* canvas,
                     return false;
                 }
                 const jint charCount = commands[offset++];
-                if (fontSize <= 0.0f || charCount < 0 || charCount > 4096 || offset + charCount != recordEnd) {
+                if (fontSize <= 0.0f ||
+                        fontWeight < 1 || fontWeight > 1000 ||
+                        fontWidth < 1 || fontWidth > 9 ||
+                        fontSlant < 0 || fontSlant > 2 ||
+                        charCount < 0 || charCount > 4096 || offset + charCount != recordEnd) {
                     return false;
                 }
                 std::string text;
@@ -3040,7 +3047,9 @@ static bool drawCommandList(SkCanvas* canvas,
                 }
                 sk_sp<SkTypeface> typeface;
                 if (!fontFamily.empty()) {
-                    typeface = coreTextFontMgr()->matchFamilyStyle(fontFamily.c_str(), SkFontStyle());
+                    typeface = coreTextFontMgr()->matchFamilyStyle(
+                            fontFamily.c_str(),
+                            SkFontStyle(fontWeight, fontWidth, static_cast<SkFontStyle::Slant>(fontSlant)));
                 }
                 SkFont font(typeface, fontSize);
                 font.setEdging((recordFlags & COMMAND_RECORD_FLAG_ANTIALIAS) != 0
