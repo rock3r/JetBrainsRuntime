@@ -12291,3 +12291,43 @@ Validation:
 Next:
 - Continue closing remaining shader-family fallback markers and decide whether the next increment should be another
   live fallback row or an implementation slice for a currently unsupported shader/effect family.
+
+## Checkpoint: Transformed Shader Fallback Probe
+
+Status: completed as the second live shader-family strict-fallback row.
+
+Changes:
+- Added `MAGIC_JEWEL_COMPOSE_TRANSFORMED_SHADER` / `magic.jewel.compose.transformedShader` to Magic Jewel.
+- The opt-in scene uses a public `ShaderBrush.transform` wrapper around a linear-gradient shader. CMP currently cannot
+  serialize transformed shader wrappers as JBR-owned descriptors, so strict command recording must report `shader`
+  unsupported and use picture replay.
+- Added `commands-transformed-shader-fallback` to the default Magic Jewel command-probe suite next to the opaque shader
+  and invalid-gradient fallback rows.
+- Magic Jewel README documents the transformed shader fallback row, and `ROADMAP.md` now records both opaque and
+  transformed live shader fallback gates.
+
+Validation:
+- Magic Jewel compile passed:
+  `./gradlew --no-daemon --no-configuration-cache compileKotlin`.
+- Focused transformed-shader row passed:
+  `CASES=commands-transformed-shader-fallback DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`.
+- Focused suite TSV: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-010410/suite.tsv`.
+- The focused row reported `fallback_new_count=0`,
+  `unsupported=shader:379,graphicsLayer:childCommands:379,graphicsLayer:379`, `jbr_picture_frames=379`, and
+  `jbr_command_frames=0`.
+- Ran a compact fallback subset:
+  `CASES="commands-opaque-shader-fallback commands-transformed-shader-fallback commands-invalid-gradient-fallback" DURATION_SECONDS=3 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`.
+- Subset suite TSV: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-010446/suite.tsv`.
+- All three fallback rows passed; opaque and transformed shader rows reported `shader` unsupported reasons while
+  invalid-gradient stayed on `sweepGradientStops`.
+- Ran Magic Jewel's default command-probe suite with short timing after adding the new fallback row:
+  `DURATION_SECONDS=2 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`.
+- Suite TSV: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-010605/suite.tsv`.
+- All 79 rows passed. Supported rows stayed on command replay with zero unsupported reasons and zero picture frames.
+  The new `commands-transformed-shader-fallback` row reported
+  `unsupported=shader:413,graphicsLayer:childCommands:413,graphicsLayer:413`, `jbr_picture_frames=412`, and
+  `jbr_command_frames=0`.
+
+Next:
+- Continue closing remaining live shader fallback probes, then decide whether to implement transform-aware shader
+  descriptors or leave transformed wrappers as explicit fallback until a full generic shader/effect plan lands.

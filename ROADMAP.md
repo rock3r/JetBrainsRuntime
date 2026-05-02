@@ -207,8 +207,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Strict recorder fallback for invalid rounded-rectangle radii with gradient paints.
 - [x] Strict recorder fallback for transformed gradient shaders.
 - [x] Strict recorder fallback for composite/opaque shader wrappers.
-- [x] Live Magic Jewel fallback probe for opaque raw Skia shaders, asserting the strict recorder reports `shader`
-  unsupported markers and uses picture replay instead of guessing descriptor semantics.
+- [x] Live Magic Jewel fallback probes for opaque raw Skia shaders and transformed shader wrappers, asserting the strict
+  recorder reports `shader` unsupported markers and uses picture replay instead of guessing descriptor semantics.
 - [x] Linear-gradient stroke paint graduated from strict fallback to serialized command replay.
 - [x] More strict shader fallback tests for nonfinite gradient metadata that survives shader construction.
 - [x] Live Magic Jewel recorder-level fallback probes for color filters and path effects.
