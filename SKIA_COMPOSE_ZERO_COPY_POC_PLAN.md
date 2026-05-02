@@ -11330,6 +11330,8 @@ Next:
 Status: completed as JBR-side ABI contract-test hardening.
 
 What changed:
+- Fixed the stale `validImageRefColorMatrixFilterHandleStream()` command-count fixture so the stream's header matches
+  the actual effect-descriptor, image-define, and draw-image-ref records.
 - `JBRSkiaApiTest` now has focused invalid-stream fixtures for shader descriptor validation:
   - unknown shader descriptor type,
   - unsupported shader descriptor version,
@@ -11344,10 +11346,12 @@ Validation:
 - `git diff --check` passed in the JBR worktree.
 - Refreshed local JBR artifacts with `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/scripts/rebuild-jbr-skia-local-artifacts.sh`.
 - Compiled `JBRSkiaApiTest.java` against `/tmp/jbr-skia-run/desktop` plus a tiny local `JBRApi` test stub.
-- Ran an isolated reflection smoke over the new shader descriptor fixtures against `JBRSkiaService.isValidCommandStreamForTesting(...)`; all new fixtures produced the expected valid/invalid result.
-- Caveat: a full ad hoc `JBRSkiaApiTest` run against the temporary patched classes still fails earlier on the pre-existing
-  `validImageRefColorMatrixFilterHandleStream()` fixture, so this slice verified only the new shader descriptor cases
-  outside jtreg. The canonical in-tree jtreg path still needs a configured JBR build image.
+- Ran a reflection smoke over `assertCommandStreamValidation()` against `JBRSkiaService.isValidCommandStreamForTesting(...)`;
+  all command-stream validator fixtures, including the new shader descriptor cases, passed.
+- Ran an isolated reflection smoke over the new shader descriptor fixtures; all produced the expected valid/invalid result.
+- Caveat: this was a local patched-class validator smoke, not a canonical jtreg run. The full `JBRSkiaApiTest.main`
+  path enters the scope/native smoke after command validation and still needs a configured JBR build image for the
+  standard in-tree test workflow.
 
 Next:
 - Commit and push the JBR test/docs update, then continue with the remaining descriptor lifecycle/version or renderer

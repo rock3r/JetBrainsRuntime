@@ -655,8 +655,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Expanded graphics-layer command matrix with the off-center-pivot row included passed 30/30 rows at
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260502-135031/suite.tsv`.
 - [x] JBR shader descriptor validator fixtures compile and pass in an isolated local smoke against
-  `JBRSkiaService.isValidCommandStreamForTesting(...)`; full ad hoc `JBRSkiaApiTest` still needs a configured JBR build
-  image because the temporary patched-class run fails earlier on an existing image-ref color-matrix fixture.
+  `JBRSkiaService.isValidCommandStreamForTesting(...)`; the full command-stream validator fixture set also passes by
+  reflected `assertCommandStreamValidation()` after fixing a stale image-ref color-matrix command-count fixture.
 
 ## Productionization Later
 

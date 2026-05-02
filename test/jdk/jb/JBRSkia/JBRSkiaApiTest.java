@@ -1132,7 +1132,7 @@ public class JBRSkiaApiTest {
 
     private static int[] validImageRefColorMatrixFilterHandleStream() {
         return new int[] {
-                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 59,
+                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 56,
                 JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
                 JBRSkia.COMMAND_DEFINE_EFFECT_DESCRIPTOR, 112, JBRSkia.COMMAND_RECORD_FLAGS_NONE,
                 0x00000007, 0x00000008,
