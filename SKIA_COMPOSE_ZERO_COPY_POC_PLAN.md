@@ -12139,3 +12139,26 @@ Validation:
 Next:
 - Continue with remaining `ROADMAP.md` productionization gaps, especially screen/context invalidation hardening and
   generic shader/effect ownership semantics.
+
+## Checkpoint: Native Text Parity Simple-Command Gate
+
+Status: completed as a Magic Jewel harness hardening step.
+
+Changes:
+- Tightened `parity-native-text` so it now requires simple text commands in addition to paragraph text commands.
+- The forced-context native-text parity row already had the same simple-text gate; Magic Jewel README now documents
+  that native-text visual parity covers both simple and paragraph command paths.
+- This keeps the ABI 101 simple text font-family/style metadata payload guarded by both live command probes and
+  window-only visual parity probes.
+
+Validation:
+- Ran focused native-text parity rows:
+  `CASES="parity-native-text parity-forced-context-native-text" DURATION_SECONDS=3 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-screenshot-parity-suite.sh`.
+- Suite TSV: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260502-234852/suite.tsv`.
+- Both rows passed. `parity-native-text` reported `max_text_commands=9`, `max_paragraph_text_commands=6`,
+  `fallback_new_count=0`, `jbr_picture_frames=0`, and `bad_pixel_ratio=0.06048`.
+- `parity-forced-context-native-text` reported the same text-command counts while preserving the context-change and
+  command-cache-clear assertions.
+
+Next:
+- Continue turning implicit shader/effect and migration assumptions into explicit harness gates or product validation.

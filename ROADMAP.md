@@ -735,6 +735,9 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260502-232933/suite.tsv`.
   The forced-context native-text row kept command replay active with `contextChanged=true`, command-cache clearing, and
   exact bottom-swatch parity.
+- [x] Native-text parity rows now require simple text commands as well as paragraph text commands; focused
+  `parity-native-text` and `parity-forced-context-native-text` rows passed at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260502-234852/suite.tsv`.
 - [x] Skiko exact high-word command capability unit gate now rejects each missing high-word bit independently; focused
   `JbrSkiaInteropTest` passed after adding the coverage.
 - [x] Native metadata now comes from the loaded JBR bridge when a native library is present, so an older dylib without
