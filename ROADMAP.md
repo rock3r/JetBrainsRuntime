@@ -730,6 +730,11 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260502-172551/suite.tsv`.
 - [x] Broad Magic Jewel screenshot parity sweep passed after ABI 101 native-text style metadata:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260502-202158/suite.tsv`.
+- [x] Broad Magic Jewel screenshot parity sweep passed after adding the forced-context native-text parity default row:
+  36/36 rows passed at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260502-232933/suite.tsv`.
+  The forced-context native-text row kept command replay active with `contextChanged=true`, command-cache clearing, and
+  exact bottom-swatch parity.
 - [x] Skiko exact high-word command capability unit gate now rejects each missing high-word bit independently; focused
   `JbrSkiaInteropTest` passed after adding the coverage.
 - [x] Native metadata now comes from the loaded JBR bridge when a native library is present, so an older dylib without

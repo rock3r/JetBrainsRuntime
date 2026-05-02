@@ -12119,3 +12119,23 @@ Validation:
 Next:
 - Continue with remaining screen/context migration hardening and generic shader/effect lifecycle gaps from
   `ROADMAP.md`.
+
+## Checkpoint: Broad Screenshot Parity After Forced-Context Native Text
+
+Status: completed.
+
+Validation:
+- Ran Magic Jewel's default window-only screenshot parity suite after adding `parity-forced-context-native-text` to the
+  default case list:
+  `DURATION_SECONDS=3 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-screenshot-parity-suite.sh`.
+- Suite TSV: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260502-232933/suite.tsv`.
+- All 36 rows passed, covering rich, geometry-clean, native text, forced-context native text, point dots,
+  path/image/filter/shader/RuntimeEffect, graphics-layer effect/shadow/offscreen/3D, near-camera, and off-center pivot
+  parity rows.
+- The forced-context native-text row passed with `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=246`,
+  `skiko_context_change_markers=1`, `skiko_command_cache_clear_markers=1`, `avg_delta=3.229`,
+  `bad_pixel_ratio=0.06048`, `compose_bad_pixel_ratio=0.08925`, and exact bottom-swatch parity.
+
+Next:
+- Continue with remaining `ROADMAP.md` productionization gaps, especially screen/context invalidation hardening and
+  generic shader/effect ownership semantics.
