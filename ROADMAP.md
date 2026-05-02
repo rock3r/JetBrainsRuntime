@@ -746,6 +746,11 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260502-221924/suite.tsv`.
 - [x] Short broad Magic Jewel command-probe sweep passed after adding the forced-context native-text default row:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260502-222056/suite.tsv`.
+- [x] Short broad Magic Jewel command-probe sweep passed after adding the forced-context dynamic image-cache default row:
+  77/77 rows passed at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260502-225719/suite.tsv`.
+  The new image-cache row stayed on command replay with `contextChanged=true`, command-cache clearing, JBR image
+  evictions, and zero JBR whole-cache clears.
 - [x] Skiko command-stream ABI preflight now turns old-CMP ABI 99 command buffers into structured `abi-mismatch`
   fallback before JBR native replay sees them.
 - [x] JBR now attempts to load a bundled `libjbrskiainterop` with `System.loadLibrary("jbrskiainterop")` when no

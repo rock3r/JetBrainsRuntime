@@ -12099,3 +12099,23 @@ Validation:
 Next:
 - Continue extending migration coverage toward any remaining destination-scoped native caches, then run a short broad
   command sweep with the new forced-context image row in the default case list.
+
+## Checkpoint: Short Broad Command Sweep After Forced-Context Image Cache
+
+Status: completed.
+
+Validation:
+- Ran Magic Jewel's default command-probe suite with short timing after adding
+  `commands-forced-context-dynamic-images` to the default case list:
+  `DURATION_SECONDS=2 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`.
+- Suite TSV: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260502-225719/suite.tsv`.
+- All 77 rows passed. The new forced-context dynamic image-cache row reported `fallback_new_count=0`,
+  `unsupported=none`, `jbr_picture_frames=0`, `jbr_command_frames=377`, `jbr_image_cache_clear_frames=0`,
+  `jbr_image_cache_evict_frames=2377`, `skiko_context_change_markers=1`, and
+  `skiko_command_cache_clear_markers=1`.
+- The tail `commands-save-layer-filter` row remained on command replay, and the intentional
+  `commands-invalid-gradient-fallback` row used picture replay with the expected unsupported reasons.
+
+Next:
+- Continue with remaining screen/context migration hardening and generic shader/effect lifecycle gaps from
+  `ROADMAP.md`.
