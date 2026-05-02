@@ -11862,3 +11862,20 @@ Validation:
 Next:
 - Continue with the remaining roadmap buckets: production JBR image packaging, deeper font/typeface parity, remaining
   generic shader/effect lifecycle semantics, and screen/context migration hardening.
+
+## Checkpoint: ABI 101 Artifact Bundle Self-Check
+
+Status: completed for the current local artifact baseline.
+
+Validation:
+- Packaged the current ABI 101 local artifacts:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-bundles/20260502-200947`.
+- Ran the Magic Jewel artifact matrix with that bundle wired into the optional artifact rows and expected as compatible:
+  `OLD_ARTIFACT_BUNDLE=/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-bundles/20260502-200947 OLD_JBR_EXPECTED_REASON=none OLD_API_EXPECTED_REASON=none OLD_SKIKO_EXPECTED_REASON=none OLD_CMP_EXPECTED_REASON=none DURATION_SECONDS=2 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-artifact-matrix.sh`.
+- Matrix TSV: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260502-201003/matrix.tsv`.
+- All required and optional rows passed; compatible bundle rows reported `fallback_new_count=0` and positive
+  `jbr_command_frames`, while the deliberate missing-public-API row still produced the expected structured fallback.
+
+Next:
+- Keep this bundle as the known-good current ABI 101 baseline. Real old/new packaged artifact coverage still needs
+  separately versioned old Skiko/CMP/JBR artifacts rather than reusing the current bundle as both sides.
