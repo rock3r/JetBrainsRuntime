@@ -11283,3 +11283,30 @@ Validation:
 Next:
 - Commit and push the Magic Jewel parity update plus this roadmap/plan checkpoint, then continue with the next rendering
   gap.
+
+## Checkpoint: Graphics-Layer Off-Center Pivot Coverage
+
+Status: completed as an edge-case 3D graphics-layer harness slice.
+
+What changed:
+- Magic Jewel has a `MAGIC_JEWEL_COMPOSE_GRAPHICS_LAYER_OFFCENTER_PIVOT` probe flag that moves the graphics-layer
+  `transformOrigin` away from the center while keeping the existing rotationX, rotationY, and near-camera perspective
+  stress path.
+- The command-probe suite includes `commands-graphics-layer-offcenter-pivot`.
+- The screenshot parity suite includes `parity-graphics-layer-offcenter-pivot`.
+- Magic Jewel report docs and README describe the new off-center-pivot 3D graphics-layer coverage.
+
+Validation:
+- Focused command row passed:
+  `CASES=commands-graphics-layer-offcenter-pivot DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`
+- Command suite result: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260502-134726/suite.tsv`.
+- Runtime markers: `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, `jbr_command_frames=299`.
+- Focused screenshot parity row passed:
+  `CASES=parity-graphics-layer-offcenter-pivot SKIKO_VERSION=0.0.0-SNAPSHOT DURATION_SECONDS=4 WARMUP_SECONDS=1 ./scripts/jbr-skia-screenshot-parity-suite.sh`
+- Parity suite result: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260502-134810/suite.tsv`.
+- Parity metrics: `avg_delta=2.191`, `bad_pixel_ratio=0.05201`, `compose_bad_pixel_ratio=0.07609`,
+  `compose_bottom_swatches_bad_pixel_ratio=0.00000`.
+
+Next:
+- Commit and push the Magic Jewel harness update plus this roadmap/plan checkpoint, then continue with the remaining
+  graphics-layer/image-filter or generic shader/effect gaps.

@@ -253,6 +253,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   - [x] Validate `CompositingStrategy.ModulateAlpha` graphics-layer replay stays on the command path.
   - [x] Support simple `CompositingStrategy.Offscreen` graphics-layer replay by clipping layer contents to bounds inside the command saveLayer.
   - [x] Support first 3D/camera graphics-layer replay by flattening Compose's layer transform into `COMMAND_CONCAT_MATRIX33`.
+  - [x] Add Magic Jewel command and screenshot parity coverage for off-center-pivot near-camera 3D graphics-layer
+    transforms.
   - [ ] Extend graphics-layer command replay beyond the current subset: dynamic root-lighting parity, broader image-filter surfaces, and combined/edge-case 3D camera transform coverage.
   - [x] Add render-effect descriptors for graphics-layer `RenderEffect` once the JBR-owned effect-handle ABI can construct the needed Skia image filters.
   - [x] Add an explicit expected-fallback row for graphics-layer `RenderEffect` combined with paint color-filter metadata.
@@ -645,6 +647,9 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Point-dot replay gate: focused Skiko/CMP tests passed, local artifacts rebuilt, and `CASES=commands-point-dots DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh` passed at `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260502-130938/suite.tsv`.
 - [x] ABI 100 exact high-word compatibility matrix now includes `COMMAND_CAP64_HIGH_DRAW_POINTS`; the expanded matrix passed at `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260502-132955/matrix.tsv`.
 - [x] Point-dot old/new screenshot parity row: `CASES=parity-point-dots SKIKO_VERSION=0.0.0-SNAPSHOT DURATION_SECONDS=4 WARMUP_SECONDS=1 ./scripts/jbr-skia-screenshot-parity-suite.sh` passed at `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260502-134126/suite.tsv`.
+- [x] Off-center-pivot 3D graphics-layer command/parity rows passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260502-134726/suite.tsv`
+  and `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260502-134810/suite.tsv`.
 
 ## Productionization Later
 
