@@ -11511,3 +11511,21 @@ Validation:
 Next:
 - Continue with the remaining compatibility and rendering-surface gaps. The command and screenshot sweeps now both cover
   the descriptor-validator hardening baseline.
+
+## Checkpoint: Skiko Exact High-Capability Unit Gate
+
+Status: completed as Skiko-side unit coverage for exact high-word command capability negotiation.
+
+What changed:
+- `JbrSkiaInteropTest` now rejects each missing high-word command capability independently instead of relying only on
+  launch-level compatibility rows for the full high-word matrix.
+- The loop covers image-filter refs/descriptors, shader descriptor refs, RuntimeEffect color-filter descriptors,
+  path-effect stroke/descriptor support, concat matrices, direct shadows, shader color-filter descriptors, and
+  `drawPoints`.
+
+Validation:
+- Skiko focused interop tests passed:
+  `./gradlew --no-daemon --no-configuration-cache :awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`
+
+Next:
+- Continue with remaining descriptor lifecycle/version checks and the larger renderer-surface gaps.
