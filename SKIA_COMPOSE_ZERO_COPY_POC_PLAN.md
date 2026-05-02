@@ -11464,3 +11464,14 @@ Validation:
 Next:
 - Commit and push the Magic Jewel harness cleanup plus this checkpoint, then continue with the remaining compatibility
   and rendering-surface gaps.
+
+## Checkpoint: Report Validation Harness Recheck
+
+Status: completed after the artifact harness cleanup.
+
+Validation:
+- Magic Jewel report-validation unit harness passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/scripts/test-jbr-skia-report-validation.sh`
+
+Next:
+- Continue with the remaining compatibility and rendering-surface gaps.

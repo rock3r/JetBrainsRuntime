@@ -676,6 +676,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260502-164746/matrix.tsv`.
 - [x] Magic Jewel artifact matrix/bundle scripts now default to the sibling umbrella CMP output root; dry-run and bundle
   creation passed without `CURRENT_CMP_OUT` / `CMP_OUT` overrides.
+- [x] Magic Jewel report-validation unit harness passed after artifact harness cleanup.
 
 ## Productionization Later
 
