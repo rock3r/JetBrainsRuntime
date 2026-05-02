@@ -644,6 +644,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Point-line replay gate: focused CMP recorder tests passed, and `CASES=commands-point-lines DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh` passed at `/Users/rock3r/src/magic-jewel/out/jbr-skia-command-probe-suite/20260502-030049/suite.tsv`.
 - [x] Point-dot replay gate: focused Skiko/CMP tests passed, local artifacts rebuilt, and `CASES=commands-point-dots DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh` passed at `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260502-130938/suite.tsv`.
 - [x] ABI 100 exact high-word compatibility matrix now includes `COMMAND_CAP64_HIGH_DRAW_POINTS`; the expanded matrix passed at `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260502-132955/matrix.tsv`.
+- [x] Point-dot old/new screenshot parity row: `CASES=parity-point-dots SKIKO_VERSION=0.0.0-SNAPSHOT DURATION_SECONDS=4 WARMUP_SECONDS=1 ./scripts/jbr-skia-screenshot-parity-suite.sh` passed at `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260502-134126/suite.tsv`.
 
 ## Productionization Later
 

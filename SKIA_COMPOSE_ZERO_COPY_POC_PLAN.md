@@ -11260,3 +11260,26 @@ Validation:
 Next:
 - Commit and push the Magic Jewel matrix update plus this roadmap/plan checkpoint, then continue with the next renderer
   surface gap.
+
+## Checkpoint: drawPoints Point-Dot Screenshot Parity
+
+Status: completed.
+
+What changed:
+- Magic Jewel's old/new screenshot parity suite has a focused `parity-point-dots` row.
+- The row enables `MAGIC_JEWEL_COMPOSE_POINT_DOTS=true` so the deterministic old SwingGraphics capture and the JBR-owned
+  command replay capture both exercise `drawPoints(PointMode.Points)` dot/cap rendering.
+- Magic Jewel docs list point-dot parity coverage alongside the existing native-text, path-effect, shader/effect, and
+  graphics-layer parity rows.
+
+Validation:
+- Focused screenshot parity row passed:
+  `CASES=parity-point-dots SKIKO_VERSION=0.0.0-SNAPSHOT DURATION_SECONDS=4 WARMUP_SECONDS=1 ./scripts/jbr-skia-screenshot-parity-suite.sh`
+- Suite result: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260502-134126/suite.tsv`.
+- Parity metrics: `avg_delta=2.122`, `bad_pixel_ratio=0.05042`, `compose_bad_pixel_ratio=0.07521`.
+- Runtime markers in the row stayed on command replay with zero fallback, zero unsupported commands, and zero picture
+  frames.
+
+Next:
+- Commit and push the Magic Jewel parity update plus this roadmap/plan checkpoint, then continue with the next rendering
+  gap.
