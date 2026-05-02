@@ -12236,3 +12236,23 @@ Validation:
 Next:
 - Continue converting remaining migration/cache ownership assumptions into explicit screenshot or command-suite gates,
   then run the default screenshot parity suite once the added visual rows are stable.
+
+## Checkpoint: Broad Screenshot Parity With Forced-Context Image Refs
+
+Status: completed.
+
+Validation:
+- Ran Magic Jewel's default window-only screenshot parity suite after adding
+  `parity-forced-context-image-refs` to the default case list:
+  `DURATION_SECONDS=3 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-screenshot-parity-suite.sh`.
+- Suite TSV: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260503-001054/suite.tsv`.
+- All 37 rows passed. Coverage now includes rich, geometry-clean, native text, forced-context native text,
+  forced-context cached-image refs, point dots, path/image/filter/shader/RuntimeEffect, graphics-layer
+  effect/shadow/offscreen/3D, near-camera, and off-center pivot parity rows.
+- The new forced-context cached-image row passed with `fallback_new_count=0`, `jbr_picture_frames=0`,
+  `jbr_command_frames=219`, `max_image_refs=275`, `jbr_image_cache_clear_frames=0`,
+  `skiko_context_change_markers=1`, `skiko_command_cache_clear_markers=1`, `avg_delta=2.129`,
+  `bad_pixel_ratio=0.05050`, `compose_bad_pixel_ratio=0.07527`, and exact bottom-swatch parity.
+
+Next:
+- Continue with remaining screen/context invalidation hardening and compatibility matrix coverage from `ROADMAP.md`.
