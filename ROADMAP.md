@@ -231,6 +231,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   simple-text and paragraph-text command payloads.
 - [x] Add a Magic Jewel forced-context native-text command probe that requires simple/paragraph text commands,
   `contextChanged=true`, and command-cache clearing without falling back to picture replay.
+- [x] Add a Magic Jewel forced-context dynamic image-cache command probe that requires cached image refs, single-key
+  CMP/JBR image evictions, `contextChanged=true`, command-cache clearing, and zero whole-cache clears.
 - [x] Rebuild ABI 43 local artifacts and pass a native-text Magic Jewel command smoke with paragraph commands and screenshot assertion.
 - [x] Add narrow image-shader rectangle support without sharing raw `SkShader*` pointers.
 - [x] Add narrow linear-gradient stroked-rectangle support without sharing raw `SkShader*` pointers.

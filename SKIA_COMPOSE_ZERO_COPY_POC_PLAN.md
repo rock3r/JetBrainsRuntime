@@ -12073,3 +12073,29 @@ Validation:
 Next:
 - Keep extending forced-context visual coverage to other destination-scoped native caches where the command-only rows do
   not already provide enough confidence.
+
+## Checkpoint: Forced-Context Dynamic Image Cache Replay
+
+Status: completed as a Magic Jewel harness hardening step.
+
+Changes:
+- Added a `commands-forced-context-dynamic-images` command-probe row to the default Magic Jewel command suite.
+- The row combines dynamic cached-image churn with `MAGIC_JEWEL_FORCE_CONTEXT_CHANGE=true`, then requires cached image
+  refs, CMP-side single-key evictions, JBR-side native image-cache evictions, a `contextChanged=true` surface marker,
+  command-cache clearing, and zero whole-cache image-cache clears.
+- Magic Jewel README now documents the row next to the existing descriptor/text forced-context probes.
+- `ROADMAP.md` now records this as completed screen/context migration coverage for destination-scoped image objects.
+
+Validation:
+- Ran the focused command probe:
+  `CASES=commands-forced-context-dynamic-images DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`.
+- Suite TSV: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260502-225529/suite.tsv`.
+- The row passed with `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, `jbr_command_frames=160`,
+  `jbr_image_cache_clear_frames=0`, `jbr_image_cache_evict_frames=1305`, `skiko_surface_change_markers=1`,
+  `skiko_context_change_markers=1`, and `skiko_command_cache_clear_markers=1`.
+- The command-recorder log included post-migration frames with `imageRefs=269`, `imageCacheEvicts=261`, and
+  `imageCacheClears=0`, so dynamic image churn is using single-key eviction instead of a whole-cache flush.
+
+Next:
+- Continue extending migration coverage toward any remaining destination-scoped native caches, then run a short broad
+  command sweep with the new forced-context image row in the default case list.
