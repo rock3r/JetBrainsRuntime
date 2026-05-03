@@ -13744,3 +13744,20 @@ Validation:
 
 Next:
 - Continue remaining shader-family coverage and descriptor lifecycle hardening.
+
+## Checkpoint: Broad Command Sweep After Perlin Lifecycle Rows
+
+Status: completed for the expanded Magic Jewel default command-probe suite.
+
+Validation:
+- Ran the short broad Magic Jewel command-probe sweep after adding the Perlin/noise screenshot parity and descriptor
+  lifecycle rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-212324/suite.tsv`.
+- The expanded default suite passed end to end with `DURATION_SECONDS=2` and `WARMUP_SECONDS=1`.
+- Supported command rows stayed on JBR command replay with zero fallback and zero picture frames.
+- Intentional raw shader/effect fallback sentinels retained structured unsupported reasons and picture replay.
+- The new `commands-resize-noise-shader-descriptor-redefine` and
+  `commands-forced-context-noise-shader-descriptor-redefine` rows both passed inside the default sweep.
+
+Next:
+- Continue remaining shader-family coverage and descriptor lifecycle hardening.

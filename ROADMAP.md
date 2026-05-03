@@ -1027,6 +1027,10 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-212142/suite.tsv`.
   Resize and forced-context probes required command-cache clearing, second shader-handle definitions, cache-hit recovery,
   zero fallback, and zero picture frames.
+- [x] Short broad Magic Jewel command-probe sweep passed after adding Perlin/noise parity and lifecycle rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-212324/suite.tsv`.
+  The expanded default suite passed end to end; supported rows stayed on command replay and raw shader/effect sentinel
+  rows stayed on intentional picture fallback.
 - [x] Focused solid color shader screenshot parity passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260503-150944/suite.tsv`.
   The `parity-color-shader` row reported `fallback_new_count=0`, `jbr_picture_frames=0`,
