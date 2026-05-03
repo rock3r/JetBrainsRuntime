@@ -36,7 +36,7 @@ import java.nio.ByteBuffer;
  * so downstream compile-only clients cannot accidentally inline stale values.
  */
 public abstract class JBRSkia {
-    public static final int ABI_ID = Integer.parseInt("102");
+    public static final int ABI_ID = Integer.parseInt("103");
     public static final int NATIVE_ABI_VERSION = Integer.parseInt("3");
     public static final String SKIA_REVISION = "m147-" + "64a2414108";
     public static final String SKIA_FLAGS_HASH = "macos-release-metal-poc:" + Integer.parseInt("1");
@@ -131,6 +131,8 @@ public abstract class JBRSkia {
     public static final long COMMAND_CAP64_HIGH_DRAW_POINTS = Long.parseLong("4096");
     /** Supports shader descriptors that wrap child shader handles in a local transform matrix. */
     public static final long COMMAND_CAP64_HIGH_SHADER_DESCRIPTOR_TRANSFORM = Long.parseLong("8192");
+    /** Supports JBR-owned font-data descriptors for simple native text replay. */
+    public static final long COMMAND_CAP64_HIGH_DEFINE_FONT_DATA = Long.parseLong("16384");
     public static final int COMMAND_CLEAR = Integer.parseInt("1");
     public static final int COMMAND_FILL_RECT = Integer.parseInt("2");
     public static final int COMMAND_STROKE_LINE = Integer.parseInt("3");
@@ -198,6 +200,7 @@ public abstract class JBRSkia {
     public static final int COMMAND_CONCAT_MATRIX33 = Integer.parseInt("63");
     public static final int COMMAND_DRAW_SHADOW_PATH = Integer.parseInt("64");
     public static final int COMMAND_DRAW_POINTS = Integer.parseInt("65");
+    public static final int COMMAND_DEFINE_FONT_DATA = Integer.parseInt("66");
     public static final int COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER = Integer.parseInt("1");
     public static final int COMMAND_EFFECT_DESCRIPTOR_COLOR_MATRIX_FILTER = Integer.parseInt("2");
     public static final int COMMAND_EFFECT_DESCRIPTOR_LIGHTING_FILTER = Integer.parseInt("3");

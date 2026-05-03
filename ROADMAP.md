@@ -957,6 +957,19 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   The renamed custom-font text rows stayed image-backed on command replay with zero fallback and zero picture frames;
   generic-family native-text rows stayed mixed image/native command replay; intentional raw shader/effect fallback rows
   retained structured unsupported reasons and picture replay.
+- [x] ABI 103: added a JBR-owned font-data descriptor command for simple native text using Skiko/CMP loaded
+  byte-array fonts, without exposing Skiko `SkTypeface*` pointers across the boundary.
+- [x] CMP now emits `COMMAND_DEFINE_FONT_DATA` before simple native text records whose family is a single
+  `LoadedFont`, and keeps paragraph text plus desktop resource/file-backed fonts image-backed until broader
+  font/layout parity is proven.
+- [x] Focused ABI 103 validation passed:
+  Skiko `JbrSkiaInteropTest`, CMP graphics `writesFontDataRecord`/metadata tests, CMP text loaded-font and
+  file-backed guard tests, local JBR API/desktop/native artifact rebuild, and Magic Jewel focused text command rows.
+- [x] Focused Magic Jewel text command subset passed after publishing ABI 103 Skiko locally:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-123653/suite.tsv`.
+  `commands-native-custom-font-text-image` reported `fallback_new_count=0`, `unsupported=none`,
+  `jbr_picture_frames=0`, and `jbr_command_frames=724`; `commands-native-generic-font-text` reported
+  `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, and `jbr_command_frames=497`.
 - [x] Focused transformed shader screenshot parity passed after ABI 102 descriptor replay:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260503-023351/suite.tsv`.
 - [x] Broad Magic Jewel screenshot parity sweep passed after adding the transformed shader descriptor row:
@@ -992,6 +1005,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Decide final Skiko artifact shape for Skia-less JBR interop.
 - [ ] Font/typeface ownership through the JBR Skia runtime.
   - [x] Keep Skiko-owned loaded/file-backed fonts on image replay until JBR owns font descriptors or data handles.
+  - [x] Add ABI 103 JBR-owned font-data descriptors for simple native text backed by CMP loaded font bytes.
 - [ ] JBR-owned generic shader factory and handles for non-serialized shader families.
 - [x] Extend path-effect descriptors beyond corner to stamped path effects.
 - [x] Extend path-effect descriptors to chained path effects.

@@ -12507,6 +12507,51 @@ Validation:
 Next:
 - Continue the next shader/effect ownership item.
 
+## Checkpoint: ABI 103 Loaded Font-Data Descriptor Replay
+
+Status: completed for simple native text backed by CMP/Skiko loaded byte-array fonts.
+
+Changes:
+- Bumped the command-stream ABI to 103 across JBR private API/native, the public Runtime API mirror, Skiko
+  compatibility discovery, and CMP command-stream recording.
+- Added high-word capability `COMMAND_CAP64_HIGH_DEFINE_FONT_DATA` and command `COMMAND_DEFINE_FONT_DATA`.
+- JBR validates font-data descriptor records as bounded byte payloads, stores them in the Java2D fallback path as
+  derived AWT fonts, and stores them in native replay as JBR-owned Skia typefaces keyed by command handles.
+- CMP records a `COMMAND_DEFINE_FONT_DATA` descriptor before simple native text when the Compose font family is a
+  single Skiko `LoadedFont`; the following text command carries a `jbr-font-data:<high>:<low>` family handle.
+- Paragraph native text and desktop resource/file-backed fonts remain image-backed in this slice, preserving the
+  previous custom-font fidelity guard until layout and font fallback semantics are broadened.
+
+Validation:
+- Skiko ABI/capability tests passed:
+  `./gradlew --no-daemon --no-configuration-cache :awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`.
+- CMP graphics recorder tests passed:
+  `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesFontDataRecord --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.recordsFrameMetadata`.
+- CMP text tests passed:
+  `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-text:desktopTest --tests androidx.compose.ui.text.DesktopParagraphTest.paint_withLoadedFontFamily_recordsFontDataSimpleTextWhenNativeTextIsEnabled --tests androidx.compose.ui.text.DesktopParagraphTest.paint_withFileBackedFontFamily_recordsTextImageWhenNativeTextIsEnabled --tests androidx.compose.ui.text.DesktopParagraphTest.paint_withGenericFontStyle_recordsJbrSkiaSimpleTextMetadata --tests androidx.compose.ui.text.DesktopParagraphTest.paint_withGenericFontStyle_recordsJbrSkiaParagraphTextMetadata`.
+- Local artifact rebuild passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/scripts/rebuild-jbr-skia-local-artifacts.sh`.
+- Published the updated Skiko `0.0.0-SNAPSHOT` to Maven local:
+  `./gradlew --no-daemon --no-configuration-cache publishToMavenLocal`.
+- Focused Magic Jewel command subset passed:
+  `CASES="commands-native-custom-font-text-image commands-native-generic-font-text" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`.
+- Suite TSV:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-123653/suite.tsv`.
+- `commands-native-custom-font-text-image` reported `fallback_new_count=0`, `unsupported=none`,
+  `jbr_picture_frames=0`, and `jbr_command_frames=724`.
+- `commands-native-generic-font-text` reported `fallback_new_count=0`, `unsupported=none`,
+  `jbr_picture_frames=0`, and `jbr_command_frames=497`.
+
+Notes:
+- The first Magic Jewel probe after rebuilding JBR failed with `abi-mismatch` because the Maven-local Skiko snapshot was
+  stale; publishing Skiko locally fixed the runtime gate and the focused rows passed.
+- The CMP tests had to switch opcode assertions from raw `IntArray` membership to record-length scanning because font
+  data payload bytes can legitimately equal command ids.
+
+Next:
+- Add exact compatibility-matrix coverage for the new high-word `COMMAND_CAP64_HIGH_DEFINE_FONT_DATA` missing row, then
+  continue font/typeface ownership or the remaining shader/effect descriptor work.
+
 ## Checkpoint: File-Backed Font Native-Text Guard
 
 Status: completed for the current CMP native-text recorder ownership boundary.

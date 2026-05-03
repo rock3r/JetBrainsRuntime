@@ -30,6 +30,7 @@
 #include <chrono>
 #include <cmath>
 #include <cstdio>
+#include <cstdlib>
 #include <cstring>
 #include <functional>
 #include <memory>
@@ -84,9 +85,9 @@
 
 #include "MTLSurfaceDataBase.h"
 
-static constexpr jint ABI_ID = 102;
+static constexpr jint ABI_ID = 103;
 static constexpr jint NATIVE_ABI_VERSION = 3;
-static constexpr const char* BUILD_ID = "skia=m147-64a2414108;flags=macos-release-metal-poc:1;abi=102;native=3";
+static constexpr const char* BUILD_ID = "skia=m147-64a2414108;flags=macos-release-metal-poc:1;abi=103;native=3";
 static constexpr jint COMMAND_STREAM_MAGIC = 1246972723;
 static constexpr jint COMMAND_STREAM_HEADER_SIZE = 6;
 static constexpr jint COMMAND_STREAM_FLAGS_NONE = 0;
@@ -169,6 +170,7 @@ static constexpr jint COMMAND_DRAW_PATH_PATH_EFFECT_REF = 62;
 static constexpr jint COMMAND_CONCAT_MATRIX33 = 63;
 static constexpr jint COMMAND_DRAW_SHADOW_PATH = 64;
 static constexpr jint COMMAND_DRAW_POINTS = 65;
+static constexpr jint COMMAND_DEFINE_FONT_DATA = 66;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER = 1;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_COLOR_MATRIX_FILTER = 2;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_LIGHTING_FILTER = 3;
@@ -286,6 +288,8 @@ static std::mutex gColorFilterCacheMutex;
 static std::unordered_map<ColorFilterScopedKey, ColorFilterDescriptor, ColorFilterScopedKeyHash> gColorFiltersByKey;
 static std::mutex gShaderCacheMutex;
 static std::unordered_map<ColorFilterScopedKey, ShaderDescriptor, ColorFilterScopedKeyHash> gShadersByKey;
+static std::mutex gFontDataCacheMutex;
+static std::unordered_map<uint64_t, sk_sp<SkTypeface>> gFontDataTypefacesByKey;
 static std::mutex gParagraphDependenciesMutex;
 static sk_sp<skia::textlayout::FontCollection> gParagraphFontCollection;
 static sk_sp<SkUnicode> gParagraphUnicode;
@@ -310,6 +314,9 @@ typedef struct _JBRSkiaMTLGraphicsConfigInfo {
     MTLContext* context;
     jint displayID;
 } JBRSkiaMTLGraphicsConfigInfo;
+
+static uint64_t imageCacheKey(jint high, jint low);
+static bool parseFontDataHandle(const std::string& fontFamily, uint64_t* handle);
 
 static sk_sp<SkFontMgr> coreTextFontMgr() {
     std::scoped_lock lock(gParagraphDependenciesMutex);
@@ -339,6 +346,14 @@ static std::vector<SkString> commandFontFamilyCandidates(const std::string& font
 }
 
 static sk_sp<SkTypeface> matchCommandTypeface(const std::string& fontFamily, const SkFontStyle& fontStyle) {
+    uint64_t fontDataHandle = 0;
+    if (parseFontDataHandle(fontFamily, &fontDataHandle)) {
+        std::scoped_lock lock(gFontDataCacheMutex);
+        auto found = gFontDataTypefacesByKey.find(fontDataHandle);
+        if (found != gFontDataTypefacesByKey.end() && found->second != nullptr) {
+            return found->second;
+        }
+    }
     sk_sp<SkFontMgr> fontMgr = coreTextFontMgr();
     if (!fontFamily.empty()) {
         std::vector<SkString> candidates = commandFontFamilyCandidates(fontFamily);
@@ -609,7 +624,6 @@ static bool readGradientStops(const std::vector<jint>& payload,
     return true;
 }
 
-static uint64_t imageCacheKey(jint high, jint low);
 static uint64_t shaderSourceHash(const std::vector<jint>& payload, size_t skslStart, jint skslLength);
 static uint64_t asciiStringHash(const char* data, size_t length);
 static int runtimeEffectUniformSchemaEnd(const std::vector<jint>& payload,
@@ -1094,6 +1108,29 @@ static bool isValidStrokeMetadata(jint strokeWidth, jint strokeCap, jint strokeJ
 static uint64_t imageCacheKey(jint high, jint low) {
     return (static_cast<uint64_t>(static_cast<uint32_t>(high)) << 32)
             | static_cast<uint32_t>(low);
+}
+
+static bool parseFontDataHandle(const std::string& fontFamily, uint64_t* handle) {
+    static constexpr const char* prefix = "jbr-font-data:";
+    static constexpr size_t prefixLength = 14;
+    if (fontFamily.rfind(prefix, 0) != 0) {
+        return false;
+    }
+    size_t separator = fontFamily.find(':', prefixLength);
+    if (separator == std::string::npos || separator + 1 >= fontFamily.size()) {
+        return false;
+    }
+    char* end = nullptr;
+    long high = std::strtol(fontFamily.substr(prefixLength, separator - prefixLength).c_str(), &end, 10);
+    if (end == nullptr || *end != '\0') {
+        return false;
+    }
+    long low = std::strtol(fontFamily.substr(separator + 1).c_str(), &end, 10);
+    if (end == nullptr || *end != '\0') {
+        return false;
+    }
+    *handle = imageCacheKey(static_cast<jint>(high), static_cast<jint>(low));
+    return true;
 }
 
 static uint64_t shaderSourceHash(const std::vector<jint>& payload, size_t skslStart, jint skslLength) {
@@ -3062,6 +3099,33 @@ static bool drawCommandList(SkCanvas* canvas,
                                dstLeft, dstTop, dstRight, dstBottom, alpha1000)) {
                     return false;
                 }
+                break;
+            }
+            case COMMAND_DEFINE_FONT_DATA: {
+                if (recordFlags != COMMAND_RECORD_FLAGS_NONE || offset + 3 > recordEnd) {
+                    return false;
+                }
+                const uint64_t handle = imageCacheKey(commands[offset], commands[offset + 1]);
+                offset += 2;
+                const jint byteCount = commands[offset++];
+                if (byteCount <= 0 || byteCount > 1048576 || offset + byteCount != recordEnd) {
+                    return false;
+                }
+                std::vector<uint8_t> data(static_cast<size_t>(byteCount));
+                for (jint index = 0; index < byteCount; index++) {
+                    const jint value = commands[offset++];
+                    if (value < 0 || value > 255) {
+                        return false;
+                    }
+                    data[static_cast<size_t>(index)] = static_cast<uint8_t>(value);
+                }
+                sk_sp<SkData> skData = SkData::MakeWithCopy(data.data(), data.size());
+                sk_sp<SkTypeface> typeface = coreTextFontMgr()->makeFromData(skData);
+                if (typeface == nullptr) {
+                    return false;
+                }
+                std::scoped_lock lock(gFontDataCacheMutex);
+                gFontDataTypefacesByKey[handle] = typeface;
                 break;
             }
             case COMMAND_DRAW_TEXT_UTF16: {
