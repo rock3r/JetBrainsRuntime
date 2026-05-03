@@ -12706,6 +12706,28 @@ Validation:
 - The screenshot row reported `fallbacks=0`, `jbr_picture_frames=0`, `jbr_command_frames=437`,
   `bad_pixel_ratio=0.05150`, `compose_bottom_labels_bad_pixel_ratio=0.09956`, and
   `compose_paragraph_probes_bad_pixel_ratio=0.11319`.
+- Added same-context resize generic-family native-text rows to the Magic Jewel command and screenshot parity suites.
+  These rows set `MAGIC_JEWEL_AUTO_RESIZE_DELAY_MILLIS=500` so old/new capture happens after the synthetic resize.
+- The command screenshot assertion now caps text-box width requirements for resized windows, because Magic Jewel's label
+  column stays fixed while the window grows.
+- A broad command sweep at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-104020/suite.tsv`
+  completed 91 per-row validations successfully, including the forced-context generic-family row; the harness process
+  itself exited nonzero after the script was edited in place during the running shell, so the later focused runs below
+  are the formal gates for the new resize row.
+- Focused same-context resize generic-family command row passed:
+  `CASES=commands-resize-native-generic-font-text DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`.
+- Resize generic-family command suite TSV:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-111927/suite.tsv`.
+- The command row reported `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, and
+  `jbr_command_frames=287`.
+- Focused same-context resize generic-family screenshot parity row passed:
+  `CASES=parity-resize-native-generic-font-text DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-screenshot-parity-suite.sh`.
+- Resize generic-family screenshot suite TSV:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260503-112005/suite.tsv`.
+- The screenshot row reported `fallbacks=0`, `jbr_picture_frames=0`, `jbr_command_frames=416`,
+  `bad_pixel_ratio=0.04885`, `compose_bottom_labels_bad_pixel_ratio=0.08581`, and
+  `compose_paragraph_probes_bad_pixel_ratio=0.08908`.
 - Re-ran the focused native-text visual subset with the generic row included:
   `CASES="parity-native-text parity-native-generic-font-text parity-forced-context-native-text" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-screenshot-parity-suite.sh`.
 - Native-text subset TSV:
