@@ -12425,3 +12425,36 @@ Validation:
 Next:
 - Continue closing the remaining shader/effect fallback markers and lifecycle assertions while keeping the broad
   command, compatibility, and screenshot-parity sweeps green after each ABI slice.
+
+## Checkpoint: Composite Opaque-Child Shader Fallback Probe
+
+Status: completed as a live shader-family fallback hardening row.
+
+Changes:
+- Added `MAGIC_JEWEL_COMPOSE_COMPOSITE_OPAQUE_SHADER` / `magic.jewel.compose.compositeOpaqueShader` to Magic Jewel.
+- The opt-in scene builds a `CompositeShader` with a serializable linear-gradient destination child and an opaque
+  raw-Skia source child created through `org.jetbrains.skia.Shader.makeColor(...).asComposeShader()`.
+- Added `commands-composite-opaque-shader-fallback` to the default Magic Jewel command-probe suite.
+- The row asserts the strict recorder reports `shader` unsupported markers and uses picture replay, proving descriptor
+  replay does not serialize only the known half of a composite shader tree when another child is owned by Skiko's
+  bundled Skia runtime.
+
+Validation:
+- Magic Jewel compile passed:
+  `./gradlew --no-daemon --no-configuration-cache compileKotlin`.
+- Focused command-probe row passed:
+  `CASES=commands-composite-opaque-shader-fallback DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`.
+- Focused suite TSV: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-025620/suite.tsv`.
+- The focused row reported `fallback_new_count=0`,
+  `unsupported=shader:373,graphicsLayer:childCommands:373,graphicsLayer:373`, `jbr_picture_frames=373`, and
+  `jbr_command_frames=0`.
+- Ran a compact fallback subset:
+  `CASES="commands-opaque-shader-fallback commands-composite-opaque-shader-fallback commands-invalid-gradient-fallback" DURATION_SECONDS=3 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`.
+- Subset suite TSV: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-025656/suite.tsv`.
+- All three fallback rows passed; the composite opaque-child row reported
+  `unsupported=shader:158,graphicsLayer:childCommands:158,graphicsLayer:158`, `jbr_picture_frames=158`, and
+  `jbr_command_frames=0`.
+
+Next:
+- Continue closing remaining shader/effect fallback markers or promote another fallback family into a JBR-owned
+  descriptor slice when the serialization boundary is clear.
