@@ -13960,3 +13960,29 @@ Validation:
 
 Next:
 - Continue remaining shader-family coverage and descriptor lifecycle hardening.
+
+## Checkpoint: Raw Image Shader Fallback Sentinel
+
+Status: completed for raw Skia image-shader ownership-boundary coverage.
+
+Changes:
+- Added `MAGIC_JEWEL_COMPOSE_RAW_IMAGE_SHADER` / `magic.jewel.compose.rawImageShader`.
+- Added `commands-raw-image-shader-fallback` to the default Magic Jewel command-probe suite.
+- The probe constructs a raw Skia raster image, calls `Image.makeShader(...)`, and wraps that raw Skiko shader as a
+  Compose shader. This is separate from the descriptor-backed Compose `ImageShader` row.
+- The row asserts structured `shader` fallback and picture replay so raw Skiko-owned image shaders do not cross the JBR
+  command ABI.
+
+Validation:
+- Magic Jewel Kotlin compile passed against `SKIKO_VERSION=0.0.0-SNAPSHOT`.
+- Script syntax passed:
+  `bash -n scripts/jbr-skia-interop-report.sh scripts/jbr-skia-command-probe-suite.sh`.
+- Focused descriptor-backed/raw image-shader subset passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260504-001237/suite.tsv`.
+- `commands-image-shader` reported `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, and positive JBR
+  command frames.
+- `commands-raw-image-shader-fallback` reported structured `shader` unsupported markers, positive JBR picture replay,
+  and `jbr_command_frames=0`.
+
+Next:
+- Continue remaining shader-family coverage and descriptor lifecycle hardening.

@@ -197,6 +197,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
     kind, base frequency, octave count, and tile size.
   - [x] Magic Jewel raw linear/radial/sweep gradient shader fallback sentinels prove raw Skiko-owned gradient shaders
     still stay on structured `shader` fallback instead of crossing the command ABI.
+  - [x] Magic Jewel raw image-shader fallback sentinel proves raw Skiko-owned image shaders stay picture-backed while
+    descriptor-backed Compose `ImageShader` stays on JBR command replay.
   - [x] Add old/new screenshot parity coverage for shader + color-filter descriptor composition.
   - [ ] Add shader/effect lifecycle commands for create, use, context-scoped cache hit, compile failure, eviction, and context migration invalidation; never pass raw Skiko `SkShader*`, `SkImageFilter*`, or `SkRuntimeEffect*` pointers across the ABI.
   - [x] Add RuntimeEffect conformance probes in Magic Jewel: one pure color shader, one child-shader composition, one uniform animation, one builder/compile-failure fallback, and one old-runtime capability fallback.
@@ -1052,6 +1054,10 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260504-000159/suite.tsv`.
   Descriptor-backed color/noise/turbulence stayed on JBR command replay, while raw gradient/noise/opaque/picture shader
   rows stayed picture-backed with zero JBR command frames.
+- [x] Focused image-shader ownership subset passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260504-001237/suite.tsv`.
+  Descriptor-backed Compose `ImageShader` replay stayed on JBR commands; raw Skia image shader stayed on structured
+  `shader` fallback with picture replay.
 - [x] Current artifact matrix passed after ABI 105 Perlin/noise work:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260503-224852/matrix.tsv`.
   The current artifact row stayed on command replay, and the missing public API row reported the expected structured
