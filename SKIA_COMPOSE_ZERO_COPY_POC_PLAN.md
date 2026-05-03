@@ -12541,6 +12541,12 @@ Validation:
   `jbr_picture_frames=0`, and `jbr_command_frames=724`.
 - `commands-native-generic-font-text` reported `fallback_new_count=0`, `unsupported=none`,
   `jbr_picture_frames=0`, and `jbr_command_frames=497`.
+- Launch-level compatibility matrix passed after adding the exact ABI 103 font-data high-word row:
+  `DURATION_SECONDS=2 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-compatibility-matrix.sh`.
+- Matrix TSV:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260503-124228/matrix.tsv`.
+- All 24 rows passed. The `happy` row reported `fallback_new_count=0` and `jbr_command_frames=367`; every negative
+  row, including `font-data-capability-missing`, reported `fallback_new_count=1` and `jbr_command_frames=0`.
 
 Notes:
 - The first Magic Jewel probe after rebuilding JBR failed with `abi-mismatch` because the Maven-local Skiko snapshot was
@@ -12551,6 +12557,9 @@ Notes:
 Next:
 - Add exact compatibility-matrix coverage for the new high-word `COMMAND_CAP64_HIGH_DEFINE_FONT_DATA` missing row, then
   continue font/typeface ownership or the remaining shader/effect descriptor work.
+- Add focused old-vs-command screenshot parity for Magic Jewel toolbar/button chrome. The row must specifically catch
+  primary button text color and text centering regressions, since the current live screenshot showed the `Pulse` button
+  rendered with dark, off-center text on the JBR command path.
 
 ## Checkpoint: File-Backed Font Native-Text Guard
 

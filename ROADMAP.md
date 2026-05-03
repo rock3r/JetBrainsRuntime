@@ -970,6 +970,13 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   `commands-native-custom-font-text-image` reported `fallback_new_count=0`, `unsupported=none`,
   `jbr_picture_frames=0`, and `jbr_command_frames=724`; `commands-native-generic-font-text` reported
   `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, and `jbr_command_frames=497`.
+- [x] Launch-level compatibility matrix passed after ABI 103 font-data descriptor replay, including the exact
+  `font-data-capability-missing` high-word row:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260503-124228/matrix.tsv`.
+  All 24 rows passed; every negative row reported one structured fallback and zero JBR command frames.
+- [ ] Add focused screenshot parity coverage for Magic Jewel toolbar/button rendering, including primary button text
+  color and text centering, so command replay is compared against the old SwingGraphics renderer for UI chrome
+  fidelity regressions.
 - [x] Focused transformed shader screenshot parity passed after ABI 102 descriptor replay:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260503-023351/suite.tsv`.
 - [x] Broad Magic Jewel screenshot parity sweep passed after adding the transformed shader descriptor row:
