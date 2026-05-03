@@ -12566,6 +12566,24 @@ Validation:
 Next:
 - Keep this matrix as the strict launch-level ABI/capability gate while continuing implementation slices.
 
+## Checkpoint: Native Text Parity Refresh After Raw Fallback Probes
+
+Status: completed as a focused visual refresh; native text remains opt-in.
+
+Validation:
+- Ran Magic Jewel's focused native-text screenshot parity rows on the latest ABI 102 artifacts:
+  `CASES="parity-native-text parity-forced-context-native-text" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-screenshot-parity-suite.sh`.
+- Suite TSV: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260503-085916/suite.tsv`.
+- Both `parity-native-text` and `parity-forced-context-native-text` passed with `avg_delta=3.229`,
+  `bad_pixel_ratio=0.06048`, `compose_bad_pixel_ratio=0.08925`, and exact bottom-swatch parity.
+- This keeps ABI 101/102 native text visually guarded in the current text-aware envelope, but does not change the
+  product default: fidelity-first text-as-image replay remains the default until typography drift is reduced or
+  explicitly scoped.
+
+Next:
+- Continue native text/font parity work with focused metrics, especially baseline/style/typeface fallback semantics,
+  before considering native text as the default command-mode text path.
+
 ## Checkpoint: Raw Discrete Path-Effect Fallback Probe
 
 Status: completed as a named live fallback row for raw Skia-owned discrete path effects.

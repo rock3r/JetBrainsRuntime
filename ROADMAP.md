@@ -430,6 +430,11 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260502-194040/suite.tsv`.
 - [x] Forced-context native-text screenshot parity passed with context-change and command-cache-clear markers:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260502-225104/suite.tsv`.
+- [x] Focused native-text and forced-context native-text screenshot parity rows passed on the latest ABI 102 artifacts
+  after the raw color/path fallback probes:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260503-085916/suite.tsv`.
+  Both rows reported `avg_delta=3.229`, `bad_pixel_ratio=0.06048`, `compose_bad_pixel_ratio=0.08925`, and exact
+  bottom-swatch parity, keeping native text in the current text-aware parity envelope.
 - [x] Graphics-layer effects screenshot parity row passed with focused probe scoping:
   `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-055842/suite.tsv`.
 - [x] Shadowless screenshot parity subset passed for clean geometry, native text, RuntimeEffect pure/uniform/child/shader
