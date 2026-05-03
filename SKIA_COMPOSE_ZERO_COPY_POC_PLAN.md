@@ -12589,6 +12589,40 @@ Notes:
 Next:
 - Continue font/typeface ownership or the remaining shader/effect descriptor work.
 
+## Checkpoint: Native Bridge LoadLibrary Harness
+
+Status: completed for local validation of the no-explicit-library-property path.
+
+Changes:
+- Magic Jewel `run-jbr-skia.sh` now accepts `JBR_SKIA_LIB=` to omit
+  `-Dsun.java2d.skia.interop.library=...`.
+- The local harness can pair that with `JBR_SKIA_LIBRARY_PATH=/tmp/jbr-skia-native`; because `JBRSkiaService` is
+  boot-loaded from `java.desktop`, the script adds the rebuilt bridge directory to `sun.boot.library.path` as well as
+  `java.library.path`.
+- Added the default command-probe row `commands-native-bridge-load-library`, which exercises
+  `System.loadLibrary("jbrskiainterop")` without the explicit interop-library property.
+- The report records `JBR_SKIA_LIB` and `JBR_SKIA_LIBRARY_PATH` so load-path mode is visible in artifacts.
+
+Validation:
+- Script syntax passed:
+  `bash -n scripts/run-jbr-skia.sh scripts/jbr-skia-interop-report.sh scripts/jbr-skia-command-probe-suite.sh`.
+- Focused command row passed:
+  `CASES=commands-native-bridge-load-library DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`.
+- Suite TSV:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-131203/suite.tsv`.
+- The row reported `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, and
+  `jbr_command_frames=280`.
+
+Notes:
+- A first attempt using only `java.library.path` failed because boot-loaded classes search `sun.boot.library.path`;
+  the failing report is preserved at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-130955/commands-native-bridge-load-library/report.md`.
+- This is still a harness stand-in. The real productionization item remains packaging `libjbrskiainterop` into the JBR
+  image so its standard boot library path contains the dylib without harness-provided path overrides.
+
+Next:
+- Wire `libjbrskiainterop` into the JBR image packaging, or continue shader/effect descriptor ownership.
+
 ## Checkpoint: File-Backed Font Native-Text Guard
 
 Status: completed for the current CMP native-text recorder ownership boundary.

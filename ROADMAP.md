@@ -1012,6 +1012,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   - [x] Add the runtime load path for a bundled native bridge and a Magic Jewel opt-out for the explicit local dylib.
   - [x] Add a guarded `libjbrskiainterop` Java.desktop native-library make target for macOS external Skia roots.
   - [x] Validate the external `--with-skia-interop=<Skia release root>` shape during configure before native linking.
+  - [x] Add a Magic Jewel command row that omits `sun.java2d.skia.interop.library` and validates the boot-loaded
+    `System.loadLibrary("jbrskiainterop")` path via `sun.boot.library.path` in the local harness.
   - [ ] Wire `libjbrskiainterop` into the JBR image so no explicit `sun.java2d.skia.interop.library` property is needed.
 - [x] Decide final Skiko artifact shape for Skia-less JBR interop.
 - [ ] Font/typeface ownership through the JBR Skia runtime.
