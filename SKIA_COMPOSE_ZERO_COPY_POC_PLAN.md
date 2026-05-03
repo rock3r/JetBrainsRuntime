@@ -13485,6 +13485,10 @@ Validation:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-181507/suite.tsv`.
 - The broad sweep covered supported command replay rows, intentional raw-object fallback rows, popup/menu rows, loaded
   font-data/resource/system font rows, descriptor eviction, resize, and forced-context invalidation.
+- Launch-level Magic Jewel compatibility matrix passed with background windows enabled:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260503-185038/matrix.tsv`.
+- The matrix kept the happy row on command replay and every ABI/API/capability mismatch row on structured fallback,
+  including exact high-word rows for draw-points and font-data capability removal.
 
 Next:
 - Continue remaining shader/effect lifecycle and screen/context migration hardening.

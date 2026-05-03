@@ -1084,6 +1084,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
     `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-181305/suite.tsv`.
   - [x] Short broad Magic Jewel command-probe sweep passed with background windows enabled:
     `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-181507/suite.tsv`.
+  - [x] Launch-level Magic Jewel compatibility matrix passed with background windows enabled:
+    `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260503-185038/matrix.tsv`.
 - [ ] JBR-owned generic shader factory and handles for non-serialized shader families.
   - [x] Add a first solid-color shader factory descriptor (`COMMAND_SHADER_DESCRIPTOR_COLOR`) with strict high-word
     capability gating and live fallback contrast against raw Skia color shaders.
