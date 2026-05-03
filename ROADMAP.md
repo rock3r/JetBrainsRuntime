@@ -1207,6 +1207,11 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Extend path-effect descriptors beyond corner to stamped path effects.
 - [x] Extend path-effect descriptors to chained path effects.
 - [ ] Screen migration/context invalidation hardening beyond the current synthetic descriptor context-change probes.
+  - [x] Add old/new screenshot parity rows for Perlin/noise shader descriptor redefinition across same-context resize and
+    forced destination context migration. Focused rows passed at
+    `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260504-011432/suite.tsv`
+    with zero fallback, zero picture frames, positive command frames, command-cache clearing, and second JBR
+    shader-handle definitions.
 - [x] Real menu stress tests beyond popup-window coverage.
 - [ ] JCEF/shared-texture exploration after Compose is solid.
 - [ ] Windows/Linux backend adapter investigation after macOS MVP.

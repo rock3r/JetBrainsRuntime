@@ -14034,3 +14034,27 @@ Validation:
 
 Next:
 - Continue remaining shader-family coverage and descriptor lifecycle hardening.
+
+## Checkpoint: Perlin Noise Migration Screenshot Parity
+
+Status: completed for screenshot parity coverage of JBR-owned Perlin/noise shader descriptor redefinition across
+same-context resize and forced destination context migration.
+
+Changes:
+- Added Magic Jewel screenshot parity rows:
+  `parity-resize-noise-shader`, `parity-forced-context-noise-shader`, `parity-resize-turbulence-shader`, and
+  `parity-forced-context-turbulence-shader`.
+- The rows require surface-change markers, command-cache clearing, second JBR shader-handle definitions, shader-handle
+  use/cache-hit markers, zero fallback, and zero JBR picture frames while comparing focused old/new shader probe regions.
+- Documented the new rows in Magic Jewel's README.
+
+Validation:
+- Magic Jewel screenshot parity script syntax passed:
+  `bash -n scripts/jbr-skia-screenshot-parity-suite.sh`.
+- Focused migration parity subset passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260504-011432/suite.tsv`.
+- All four rows reported `fallback_new_count=0`, `jbr_picture_frames=0`, positive `jbr_command_frames`, and focused
+  noise/turbulence shader-region bad-pixel ratios under their gates.
+
+Next:
+- Continue remaining shader-family coverage and descriptor lifecycle hardening.
