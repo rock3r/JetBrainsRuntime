@@ -12454,6 +12454,14 @@ Validation:
 - All three fallback rows passed; the composite opaque-child row reported
   `unsupported=shader:158,graphicsLayer:childCommands:158,graphicsLayer:158`, `jbr_picture_frames=158`, and
   `jbr_command_frames=0`.
+- Ran Magic Jewel's short default command-probe sweep after adding the composite opaque-child row:
+  `DURATION_SECONDS=2 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`.
+- Broad suite TSV: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-025935/suite.tsv`.
+- All 80 rows passed. Supported rows stayed on command replay with zero unsupported reasons and zero picture frames.
+  The new `commands-composite-opaque-shader-fallback` row reported
+  `unsupported=shader:374,graphicsLayer:childCommands:374,graphicsLayer:374`, `jbr_picture_frames=374`, and
+  `jbr_command_frames=0`; the existing opaque shader and invalid-gradient rows remained the expected picture fallback
+  guards.
 
 Next:
 - Continue closing remaining shader/effect fallback markers or promote another fallback family into a JBR-owned
