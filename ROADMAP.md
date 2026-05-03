@@ -223,6 +223,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   recorder reports `shader` unsupported markers and uses picture replay instead of serializing only the known child.
 - [x] Live Magic Jewel fallback probe for Skia Perlin/noise shaders, asserting the strict recorder reports `shader`
   unsupported markers until JBR owns an explicit descriptor for that family.
+- [x] Live Magic Jewel fallback probe for Skia turbulence shaders, asserting the strict recorder reports `shader`
+  unsupported markers until JBR owns an explicit descriptor for that Perlin variant.
 - [x] Live Magic Jewel fallback probe for Skia picture shaders, asserting the strict recorder reports `shader`
   unsupported markers until JBR owns an explicit descriptor for recorded-picture shader content.
 - [x] Live Magic Jewel fallback probe for raw Skia RuntimeEffect shaders, asserting the strict recorder reports `shader`

@@ -13565,3 +13565,32 @@ Validation:
 
 Next:
 - Continue remaining shader/effect lifecycle and physical screen/context migration hardening.
+
+## Checkpoint: Turbulence Shader Fallback Probe
+
+Status: completed as a named live fallback row for Skia turbulence shaders.
+
+Changes:
+- Added `MAGIC_JEWEL_COMPOSE_TURBULENCE_SHADER` / `magic.jewel.compose.turbulenceShader` to Magic Jewel.
+- The opt-in scene draws a raw Skia `Shader.makeTurbulence(...)` through Compose paint interop.
+- Added `commands-turbulence-shader-fallback` to the default Magic Jewel command-probe suite.
+- The row asserts the strict recorder reports `shader` unsupported markers and uses picture replay, matching the
+  existing fractal-noise, picture-shader, and raw RuntimeEffect fallback boundaries.
+
+Validation:
+- Magic Jewel compile passed:
+  `./gradlew --no-daemon --no-configuration-cache compileKotlin`.
+- Magic Jewel script syntax passed:
+  `bash -n scripts/jbr-skia-interop-report.sh scripts/jbr-skia-command-probe-suite.sh`.
+- Focused turbulence fallback row passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-192910/suite.tsv`.
+- The focused row reported `fallback_new_count=0`,
+  `unsupported=shader:357,graphicsLayer:childCommands:357,graphicsLayer:357`, `jbr_picture_frames=357`, and
+  `jbr_command_frames=0`.
+- Compact shader fallback subset passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-192949/suite.tsv`.
+- The subset covered fractal-noise, turbulence, picture-shader, and raw RuntimeEffect shader fallback rows; all stayed on
+  intentional picture replay with zero command frames.
+
+Next:
+- Continue remaining shader/effect lifecycle and physical screen/context migration hardening.
