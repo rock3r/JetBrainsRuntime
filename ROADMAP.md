@@ -1035,6 +1035,9 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-220540/suite.tsv`.
   Raw Skia fractal-noise and turbulence shaders stayed on structured `shader` unsupported markers with picture replay,
   while descriptor-backed helpers remain on JBR command replay.
+- [x] Short broad Magic Jewel command-probe sweep passed after restoring raw Perlin/noise fallback sentinels:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-220815/suite.tsv`.
+  The expanded default suite covered descriptor-backed Perlin replay plus raw Perlin fallback in one green run.
 - [x] Short broad Magic Jewel command-probe sweep passed after adding Perlin/noise parity and lifecycle rows:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-212324/suite.tsv`.
   The expanded default suite passed end to end; supported rows stayed on command replay and raw shader/effect sentinel

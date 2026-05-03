@@ -13813,3 +13813,18 @@ Validation:
 
 Next:
 - Continue remaining shader-family coverage and descriptor lifecycle hardening.
+
+## Checkpoint: Broad Command Sweep With Raw Perlin Sentinels
+
+Status: completed for the expanded default command-probe suite after restoring raw Perlin/noise fallback rows.
+
+Validation:
+- Ran the short broad Magic Jewel command-probe sweep:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-220815/suite.tsv`.
+- The expanded default suite passed end to end with `DURATION_SECONDS=2` and `WARMUP_SECONDS=1`.
+- Descriptor-backed fractal-noise and turbulence rows stayed on JBR command replay.
+- Raw fractal-noise and turbulence rows stayed on structured `shader` fallback with picture replay and zero JBR command
+  frames.
+
+Next:
+- Continue remaining shader-family coverage and descriptor lifecycle hardening.
