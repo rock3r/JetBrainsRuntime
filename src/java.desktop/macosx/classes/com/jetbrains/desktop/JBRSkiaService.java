@@ -4384,15 +4384,25 @@ public class JBRSkiaService extends JBRSkia {
             return value.toString();
         }
 
-    private static java.awt.Font deriveCommandFont(
+        private static java.awt.Font deriveCommandFont(
                 java.awt.Font previousFont,
                 String fontFamily,
                 int fontStyle,
                 int fontSize1000
         ) {
-            String family = fontFamily.isEmpty() ? previousFont.getFamily() : fontFamily;
+            String family = commandAwtFontFamily(fontFamily, previousFont.getFamily());
             return new java.awt.Font(family, fontStyle, Math.max(1, Math.round(fontSize1000 / 1000f)))
                     .deriveFont(fontSize1000 / 1000f);
+    }
+
+    private static String commandAwtFontFamily(String fontFamily, String defaultFamily) {
+            return switch (fontFamily) {
+                case "" -> defaultFamily;
+                case "sans-serif" -> java.awt.Font.SANS_SERIF;
+                case "serif" -> java.awt.Font.SERIF;
+                case "monospace" -> java.awt.Font.MONOSPACED;
+                default -> fontFamily;
+            };
     }
 
     private static int fontStyleFromCommand(int fontWeight, int fontSlant) {

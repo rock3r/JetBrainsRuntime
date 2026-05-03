@@ -12621,6 +12621,46 @@ Next:
 - Continue native text/font parity work with focused metrics, especially baseline/style/typeface fallback semantics,
   before considering native text as the default command-mode text path.
 
+## Checkpoint: JBR Generic-Family Native Text Resolution
+
+Status: completed for the current macOS native text command path.
+
+Changes:
+- JBR native replay now maps Compose generic family names to JBR-owned macOS/CoreText candidate families:
+  `sans-serif` -> `.AppleSystemUIFont`/Helvetica, `serif` -> `.AppleSystemUIFontSerif`/Times,
+  `monospace` -> `.AppleSystemUIFontMonospaced`/Menlo/Courier, and `cursive` -> Apple Chancery/Snell Roundhand.
+- Simple text tries those candidates through JBR's CoreText `SkFontMgr` and falls back to JBR's default typeface if
+  none match.
+- Paragraph text passes the same candidate list to SkParagraph, so JBR resolves generic-family paragraphs inside the
+  destination Skia runtime instead of relying on raw Skiko `SkTypeface*` ownership.
+- Java2D fallback now maps Compose generic family names to AWT logical font families.
+- Magic Jewel added `MAGIC_JEWEL_GENERIC_FONT_TEXT` / `magic.jewel.genericFontText`, with monospace simple text and
+  serif paragraph text probes.
+- Added `commands-native-generic-font-text` to Magic Jewel's command-probe suite.
+
+Validation:
+- Magic Jewel compile passed:
+  `./gradlew --no-daemon --no-configuration-cache compileKotlin`.
+- Rebuilt local JBR API/classes/native bridge artifacts:
+  `./scripts/rebuild-jbr-skia-local-artifacts.sh`.
+- Focused generic-family native text command row passed:
+  `CASES=commands-native-generic-font-text DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`.
+- Focused suite TSV:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-092457/suite.tsv`.
+- The focused row reported `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, and
+  `jbr_command_frames=282`.
+- Compact native-text subset passed:
+  `CASES="commands-native-text commands-native-generic-font-text commands-forced-context-native-text" DURATION_SECONDS=3 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`.
+- Subset suite TSV:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-092536/suite.tsv`.
+- All three rows passed with zero fallback and zero picture frames; the generic-family row reported
+  `jbr_command_frames=311`, and the forced-context native-text row stayed on command replay with
+  `jbr_command_frames=362`.
+
+Next:
+- Continue native text/font ownership work with visual parity, baseline/style metrics, and any remaining platform font
+  family semantics that can be reconstructed through JBR-owned font managers.
+
 ## Checkpoint: Raw Discrete Path-Effect Fallback Probe
 
 Status: completed as a named live fallback row for raw Skia-owned discrete path effects.

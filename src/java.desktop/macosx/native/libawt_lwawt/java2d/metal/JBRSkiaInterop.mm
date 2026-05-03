@@ -319,6 +319,39 @@ static sk_sp<SkFontMgr> coreTextFontMgr() {
     return gCoreTextFontMgr;
 }
 
+static std::vector<SkString> commandFontFamilyCandidates(const std::string& fontFamily) {
+    if (fontFamily.empty()) {
+        return {};
+    }
+    if (fontFamily == "sans-serif") {
+        return {SkString(".AppleSystemUIFont"), SkString("Helvetica Neue"), SkString("Helvetica")};
+    }
+    if (fontFamily == "serif") {
+        return {SkString(".AppleSystemUIFontSerif"), SkString("Times"), SkString("Times New Roman")};
+    }
+    if (fontFamily == "monospace") {
+        return {SkString(".AppleSystemUIFontMonospaced"), SkString("Menlo"), SkString("Courier")};
+    }
+    if (fontFamily == "cursive") {
+        return {SkString("Apple Chancery"), SkString("Snell Roundhand")};
+    }
+    return {SkString(fontFamily.c_str())};
+}
+
+static sk_sp<SkTypeface> matchCommandTypeface(const std::string& fontFamily, const SkFontStyle& fontStyle) {
+    sk_sp<SkFontMgr> fontMgr = coreTextFontMgr();
+    if (!fontFamily.empty()) {
+        std::vector<SkString> candidates = commandFontFamilyCandidates(fontFamily);
+        for (const SkString& candidate : candidates) {
+            sk_sp<SkTypeface> typeface = fontMgr->matchFamilyStyle(candidate.c_str(), fontStyle);
+            if (typeface != nullptr) {
+                return typeface;
+            }
+        }
+    }
+    return fontMgr->legacyMakeTypeface(nullptr, fontStyle);
+}
+
 static sk_sp<skia::textlayout::FontCollection> paragraphFontCollection() {
     sk_sp<SkFontMgr> fontMgr = coreTextFontMgr();
     std::scoped_lock lock(gParagraphDependenciesMutex);
@@ -3063,9 +3096,7 @@ static bool drawCommandList(SkCanvas* canvas,
                     return false;
                 }
                 SkFontStyle fontStyle(fontWeight, fontWidth, static_cast<SkFontStyle::Slant>(fontSlant));
-                sk_sp<SkTypeface> typeface = fontFamily.empty()
-                        ? coreTextFontMgr()->legacyMakeTypeface(nullptr, fontStyle)
-                        : coreTextFontMgr()->matchFamilyStyle(fontFamily.c_str(), fontStyle);
+                sk_sp<SkTypeface> typeface = matchCommandTypeface(fontFamily, fontStyle);
                 SkFont font(typeface, fontSize);
                 font.setEdging((recordFlags & COMMAND_RECORD_FLAG_ANTIALIAS) != 0
                         ? SkFont::Edging::kAntiAlias
@@ -3148,9 +3179,7 @@ static bool drawCommandList(SkCanvas* canvas,
                         fontWidth,
                         static_cast<SkFontStyle::Slant>(fontSlant)));
                 if (!fontFamily.empty()) {
-                    std::vector<SkString> fontFamilies;
-                    fontFamilies.emplace_back(fontFamily.c_str());
-                    textStyle.setFontFamilies(fontFamilies);
+                    textStyle.setFontFamilies(commandFontFamilyCandidates(fontFamily));
                 }
                 if (lineHeightMultiplier1000 > 0) {
                     textStyle.setHeight(static_cast<SkScalar>(lineHeightMultiplier1000) / 1000.0f);

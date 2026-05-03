@@ -260,6 +260,9 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   weight, width, slant, and family length metadata.
 - [x] Add CMP ui-text desktop tests that verify generic family, font weight, and italic style metadata in recorded
   simple-text and paragraph-text command payloads.
+- [x] Resolve Compose generic `sans-serif`/`serif`/`monospace`/`cursive` family names through JBR-owned macOS font
+  candidates for native simple and paragraph text; Magic Jewel's generic-family command row passed with zero fallback at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-092536/suite.tsv`.
 - [x] Add a Magic Jewel forced-context native-text command probe that requires simple/paragraph text commands,
   `contextChanged=true`, and command-cache clearing without falling back to picture replay.
 - [x] Add a Magic Jewel forced-context dynamic image-cache command probe that requires cached image refs, single-key
