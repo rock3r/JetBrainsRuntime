@@ -12596,6 +12596,10 @@ Validation:
   `CASES="parity-native-resource-font-text parity-native-system-font-text" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-screenshot-parity-suite.sh`.
 - Screenshot parity suite TSV:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260503-160804/suite.tsv`.
+- Ran Magic Jewel's short default command-probe sweep with the resource/system font rows included:
+  `DURATION_SECONDS=2 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`.
+- Broad suite TSV: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-161138/suite.tsv`.
+- The default suite passed end to end.
 
 Next:
 - If resource-font native replay becomes a goal, extend CMP/JBR font-data extraction so `ResourceFont` bytes are
