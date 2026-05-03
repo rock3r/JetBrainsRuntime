@@ -12531,6 +12531,33 @@ Next:
 - Continue expanding screenshot parity alongside command coverage when adding new descriptor families, so visual
   regressions like button text color/centering and shader output drift are caught against the old SwingGraphics path.
 
+## Checkpoint: Color Shader Descriptor Resize/Context Redefine
+
+Status: completed for ABI 104 solid color shader descriptors.
+
+Changes:
+- Added `commands-resize-color-shader-descriptor-redefine` to Magic Jewel's command-probe suite.
+- Added `commands-forced-context-color-shader-descriptor-redefine` to Magic Jewel's command-probe suite.
+- The rows enable `MAGIC_JEWEL_COMPOSE_COLOR_SHADER=true` and assert command-cache clearing plus fresh JBR shader
+  handle definitions and cache-hit reuse after a same-context resize or forced destination context change.
+
+Validation:
+- Magic Jewel command-probe script syntax passed:
+  `bash -n scripts/jbr-skia-command-probe-suite.sh`.
+- Focused subset passed:
+  `CASES="commands-resize-color-shader-descriptor-redefine commands-forced-context-color-shader-descriptor-redefine" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`.
+- Focused suite TSV: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-151610/suite.tsv`.
+- The resize row reported `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`,
+  `jbr_command_frames=270`, `jbr_shader_handle_define_frames=2`, `jbr_shader_handle_cache_hit_frames=968`,
+  one same-context surface-change marker, and one command-cache clear marker.
+- The forced-context row reported `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`,
+  `jbr_command_frames=626`, `jbr_shader_handle_define_frames=2`, `jbr_shader_handle_cache_hit_frames=1381`,
+  one context-change marker, and one command-cache clear marker.
+
+Next:
+- Keep adding descriptor-family-specific resize/context rows when a new handle type or cache invalidation path is
+  introduced.
+
 ## Checkpoint: ABI 104 Solid Color Shader Descriptor Replay
 
 Status: completed as a small JBR-owned shader factory slice.

@@ -1000,6 +1000,11 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260503-150944/suite.tsv`.
   The `parity-color-shader` row reported `fallback_new_count=0`, `jbr_picture_frames=0`,
   `jbr_command_frames=291`, and `compose_shader_color_bad_pixel_ratio=0.00000`.
+- [x] Added same-context resize and forced-context redefine probes for ABI 104 solid color shader descriptors.
+  Focused subset passed at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-151610/suite.tsv`;
+  both rows reported zero fallback, zero picture frames, fresh shader handle defines, cache hits, and command-cache
+  clearing after the surface identity change.
 - [x] Add focused screenshot parity coverage for Magic Jewel toolbar/button rendering, including primary button text
   color and text centering, so command replay is compared against the old SwingGraphics renderer for UI chrome
   fidelity regressions.
