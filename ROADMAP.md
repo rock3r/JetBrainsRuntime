@@ -770,6 +770,11 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260503-022142/matrix.tsv`.
 - [x] Focused transformed shader screenshot parity passed after ABI 102 descriptor replay:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260503-023351/suite.tsv`.
+- [x] Broad Magic Jewel screenshot parity sweep passed after adding the transformed shader descriptor row:
+  38/38 rows passed at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260503-023508/suite.tsv`.
+  The transformed shader row stayed visually aligned with `avg_delta=2.110`, `bad_pixel_ratio=0.05007`,
+  `compose_bad_pixel_ratio=0.07463`, and exact bottom-swatch parity.
 - [x] Focused native-text command probe passed with the stricter simple-text and paragraph-text command gates:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260502-220852/suite.tsv`.
 - [x] Forced-context native-text command probe passed with command-cache invalidation and continued JBR command replay:

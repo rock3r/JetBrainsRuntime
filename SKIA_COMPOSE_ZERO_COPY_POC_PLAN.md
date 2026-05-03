@@ -12404,3 +12404,24 @@ Validation:
 
 Next:
 - Run the broader screenshot parity suite with the transformed shader row in the default case list.
+
+## Checkpoint: Broad Screenshot Parity With Transformed Shader
+
+Status: completed.
+
+Validation:
+- Ran Magic Jewel's default window-only screenshot parity suite after adding `parity-transformed-shader` to the
+  default case list:
+  `DURATION_SECONDS=3 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-screenshot-parity-suite.sh`.
+- Suite TSV: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260503-023508/suite.tsv`.
+- All 38 rows passed. Coverage now includes rich, geometry-clean, native text, forced-context native text,
+  forced-context cached-image refs, point dots, path/image/filter/shader/RuntimeEffect, transformed shader descriptors,
+  and graphics-layer effect/shadow/offscreen/3D/near-camera/off-center-pivot parity rows.
+- The `parity-transformed-shader` row reported `avg_delta=2.110`, `bad_pixel_ratio=0.05007`,
+  `compose_bad_pixel_ratio=0.07463`, and exact bottom-swatch parity.
+- The final graphics-layer rows also passed, including `parity-graphics-layer-offcenter-pivot` with
+  `avg_delta=2.191`, `bad_pixel_ratio=0.05201`, `compose_bad_pixel_ratio=0.07609`, and exact bottom-swatch parity.
+
+Next:
+- Continue closing the remaining shader/effect fallback markers and lifecycle assertions while keeping the broad
+  command, compatibility, and screenshot-parity sweeps green after each ABI slice.
