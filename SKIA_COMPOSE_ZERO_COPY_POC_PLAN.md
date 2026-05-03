@@ -12381,3 +12381,26 @@ Validation:
 
 Next:
 - Commit and push the coordinated JBR/JBR API/Skiko/CMP/Magic Jewel branches, then continue the next roadmap item.
+
+## Checkpoint: Transformed Shader Screenshot Parity
+
+Status: completed as focused visual coverage for ABI 102.
+
+Changes:
+- Added `parity-transformed-shader` to Magic Jewel's screenshot parity suite.
+- The row enables `MAGIC_JEWEL_COMPOSE_TRANSFORMED_SHADER=true`, requires JBR shader handle define/use markers, and
+  compares the transformed gradient wrapper against old SwingGraphics with the deterministic window-capture parity
+  harness.
+- Magic Jewel README now documents transformed shader descriptors in the visual parity coverage and the exact
+  high-word compatibility matrix coverage.
+
+Validation:
+- Focused row passed:
+  `CASES=parity-transformed-shader DURATION_SECONDS=3 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-screenshot-parity-suite.sh`.
+- Suite TSV: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260503-023351/suite.tsv`.
+- Report: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260503-023351/parity-transformed-shader/report/report.md`.
+- The row reported `avg_delta=2.110`, `bad_pixel_ratio=0.05007`,
+  `compose_bad_pixel_ratio=0.07463`, and exact bottom-swatch parity.
+
+Next:
+- Run the broader screenshot parity suite with the transformed shader row in the default case list.

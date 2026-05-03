@@ -768,6 +768,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Launch-level compatibility matrix passed after ABI 102 transformed shader descriptor replay, including the exact
   `shader-transform-capability-missing` high-word row:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260503-022142/matrix.tsv`.
+- [x] Focused transformed shader screenshot parity passed after ABI 102 descriptor replay:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260503-023351/suite.tsv`.
 - [x] Focused native-text command probe passed with the stricter simple-text and paragraph-text command gates:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260502-220852/suite.tsv`.
 - [x] Forced-context native-text command probe passed with command-cache invalidation and continued JBR command replay:
