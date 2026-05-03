@@ -13943,3 +13943,20 @@ Validation:
 
 Next:
 - Continue remaining shader-family coverage and descriptor lifecycle hardening.
+
+## Checkpoint: Compact Shader Fallback Cluster After Raw Gradient Family
+
+Status: completed for descriptor-backed shader replay plus raw shader fallback validation after adding the raw
+linear/radial/sweep gradient rows.
+
+Validation:
+- Ran a compact Magic Jewel command-probe subset covering descriptor-backed color/noise/turbulence shaders, raw
+  linear/radial/sweep gradients, raw Perlin/noise, raw opaque/composite shader trees, and picture shaders:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260504-000159/suite.tsv`.
+- Descriptor-backed color, fractal-noise, and turbulence shader rows stayed on JBR command replay with zero picture
+  frames.
+- Raw linear/radial/sweep gradient, raw Perlin/noise, opaque, composite-with-opaque-child, and picture shader rows stayed
+  on structured `shader` fallback with picture replay and zero JBR command frames.
+
+Next:
+- Continue remaining shader-family coverage and descriptor lifecycle hardening.
