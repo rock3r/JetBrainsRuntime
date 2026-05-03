@@ -12535,7 +12535,14 @@ Validation:
 - All five fallback rows passed; the picture shader row reported
   `unsupported=shader:193,graphicsLayer:childCommands:193,graphicsLayer:193`, `jbr_picture_frames=193`, and
   `jbr_command_frames=0`.
+- Ran Magic Jewel's short default command-probe sweep after adding the picture shader fallback row:
+  `DURATION_SECONDS=2 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`.
+- Broad suite TSV: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-041008/suite.tsv`.
+- All 82 rows passed. Supported rows stayed on command replay with zero unsupported reasons and zero picture frames.
+  The new `commands-picture-shader-fallback` row reported
+  `unsupported=shader:189,graphicsLayer:childCommands:189,graphicsLayer:189`, `jbr_picture_frames=189`, and
+  `jbr_command_frames=0`; the raw opaque, composite opaque-child, noise shader, and invalid-gradient fallback rows
+  remained intentional picture-fallback guards.
 
 Next:
-- Run a short default command-probe sweep with the picture shader fallback row in the default case list, then continue
-  the next shader/effect ownership item.
+- Continue the next shader/effect ownership item.
