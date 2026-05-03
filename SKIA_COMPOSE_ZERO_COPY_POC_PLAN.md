@@ -12579,6 +12579,14 @@ Validation:
 - This keeps ABI 101/102 native text visually guarded in the current text-aware envelope, but does not change the
   product default: fidelity-first text-as-image replay remains the default until typography drift is reduced or
   explicitly scoped.
+- Tightened the Magic Jewel native-text parity rows so they now hard-gate the text-heavy `composeBottomLabels` region
+  at `MAX_COMPOSE_BOTTOM_LABELS_BAD_PIXEL_RATIO=0.17`.
+- Re-ran the focused native-text parity rows after adding that threshold:
+  `CASES="parity-native-text parity-forced-context-native-text" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-screenshot-parity-suite.sh`.
+- Threshold-refresh suite TSV:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260503-090242/suite.tsv`.
+- Both rows passed with `composeBottomLabels_badPixelRatio=0.15308`, so bottom-label typography drift is now a
+  tracked regression gate instead of only broad whole-window/canvas drift.
 
 Next:
 - Continue native text/font parity work with focused metrics, especially baseline/style/typeface fallback semantics,
