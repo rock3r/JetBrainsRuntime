@@ -12592,6 +12592,51 @@ Next:
 - Continue closing the remaining shader/effect ownership boundaries, keeping raw Skia objects on picture fallback until
   each family has an explicit JBR-owned descriptor schema.
 
+## Checkpoint: Raw RuntimeEffect Color-Filter Fallback Probe
+
+Status: completed as a named live fallback row for raw Skia-owned RuntimeEffect color filters.
+
+Changes:
+- Added `MAGIC_JEWEL_COMPOSE_RAW_RUNTIME_EFFECT_COLOR_FILTER` /
+  `magic.jewel.compose.rawRuntimeEffectColorFilter` to Magic Jewel.
+- The opt-in scene creates a color filter from `org.jetbrains.skia.RuntimeEffect.makeForColorFilter(...)` via the same
+  reflective `makeColorFilter(Data?, Array<ColorFilter?>?)` shape used by CMP, then wraps it with
+  `asComposeColorFilter()`. This produces a raw Skiko-owned color filter with no CMP `RuntimeEffectColorFilter`
+  metadata.
+- Added `commands-raw-runtime-effect-color-filter-fallback` to the default Magic Jewel command-probe suite.
+- The row asserts the strict recorder reports `colorFilter` unsupported markers and uses picture replay, while the
+  metadata-backed RuntimeEffect color-filter descriptor rows continue to use JBR-owned effect descriptors.
+
+Validation:
+- Magic Jewel script syntax passed for `jbr-skia-command-probe-suite.sh` and `jbr-skia-interop-report.sh`.
+- Magic Jewel compile passed:
+  `./gradlew --no-daemon --no-configuration-cache compileKotlin`.
+- Focused command-probe row passed:
+  `CASES=commands-raw-runtime-effect-color-filter-fallback DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`.
+- Focused suite TSV: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-060055/suite.tsv`.
+- The focused row reported `fallback_new_count=0`,
+  `unsupported=colorFilter:390,graphicsLayer:childCommands:390,graphicsLayer:390`, `jbr_picture_frames=389`, and
+  `jbr_command_frames=0`.
+- Ran a compact color-filter subset:
+  `CASES="commands-runtime-effect-color-filter commands-raw-runtime-effect-color-filter-fallback commands-runtime-effect-color-filter-child commands-color-filter commands-color-matrix-filter commands-lighting-filter" DURATION_SECONDS=3 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`.
+- Subset suite TSV: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-060130/suite.tsv`.
+- All six rows passed; the metadata-backed RuntimeEffect color-filter row reported `unsupported=none`,
+  `jbr_picture_frames=0`, and positive `jbr_command_frames`, while the raw RuntimeEffect color-filter row reported
+  `unsupported=colorFilter:216,graphicsLayer:childCommands:216,graphicsLayer:216`, `jbr_picture_frames=215`, and
+  `jbr_command_frames=0`.
+- Ran Magic Jewel's short default command-probe sweep after adding the raw RuntimeEffect color-filter fallback row:
+  `DURATION_SECONDS=2 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`.
+- Broad suite TSV: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-060406/suite.tsv`.
+- All 85 rows passed. `commands-runtime-effect-color-filter` stayed on command replay with `unsupported=none`,
+  `jbr_picture_frames=0`, and `jbr_command_frames=786`; the new
+  `commands-raw-runtime-effect-color-filter-fallback` row reported
+  `unsupported=colorFilter:414,graphicsLayer:childCommands:414,graphicsLayer:414`, `jbr_picture_frames=414`, and
+  `jbr_command_frames=0`. The child color-filter descriptor row immediately after it also stayed on command replay.
+
+Next:
+- Continue closing the remaining raw Skia object ownership boundaries, and promote only explicitly serialized
+  semantics into JBR-owned descriptors.
+
 ## Checkpoint: Picture Shader Fallback Probe
 
 Status: completed as a named live fallback row for Skia picture shaders.

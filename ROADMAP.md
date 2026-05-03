@@ -221,6 +221,9 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   unsupported markers until JBR owns an explicit descriptor for recorded-picture shader content.
 - [x] Live Magic Jewel fallback probe for raw Skia RuntimeEffect shaders, asserting the strict recorder reports `shader`
   unsupported markers unless the shader was created through CMP's metadata-backed `RuntimeEffectShader` descriptor path.
+- [x] Live Magic Jewel fallback probe for raw Skia RuntimeEffect color filters, asserting the strict recorder reports
+  `colorFilter` unsupported markers unless the filter was created through CMP's metadata-backed
+  `RuntimeEffectColorFilter` descriptor path.
 - [x] Live Magic Jewel fallback probe for raw Skia-backed graphics-layer `RenderEffect`, asserting the strict recorder
   reports `graphicsLayer:renderEffect` unsupported markers until JBR owns an explicit descriptor for that image-filter
   family.
@@ -821,6 +824,16 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   `commands-runtime-effect-shader` stayed on command replay with `jbr_command_frames=608`, while
   `commands-raw-runtime-effect-shader-fallback` reported
   `unsupported=shader:386,graphicsLayer:childCommands:386,graphicsLayer:386`, `jbr_picture_frames=386`, and
+  `jbr_command_frames=0`.
+- [x] Raw Skia RuntimeEffect color-filter fallback probe passed, and the compact color-filter subset kept
+  metadata-backed RuntimeEffect color-filter descriptors separate from the raw fallback at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-060130/suite.tsv`.
+- [x] Short broad Magic Jewel command-probe sweep passed after adding the raw RuntimeEffect color-filter fallback row:
+  85/85 rows passed at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-060406/suite.tsv`.
+  `commands-runtime-effect-color-filter` stayed on command replay with `jbr_command_frames=786`, while
+  `commands-raw-runtime-effect-color-filter-fallback` reported
+  `unsupported=colorFilter:414,graphicsLayer:childCommands:414,graphicsLayer:414`, `jbr_picture_frames=414`, and
   `jbr_command_frames=0`.
 - [x] Launch-level compatibility matrix passed after ABI 102 transformed shader descriptor replay, including the exact
   `shader-transform-capability-missing` high-word row:
