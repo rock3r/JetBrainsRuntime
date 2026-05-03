@@ -12704,6 +12704,22 @@ Next:
 - Physical multi-monitor migration remains open, but the synthetic same-context resize and forced-context cache
   invalidation paths are now both covered for graphics-layer render-effect descriptors.
 
+## Checkpoint: Compatibility Matrix Refresh After Raw Fallback Probes
+
+Status: completed.
+
+Validation:
+- Ran Magic Jewel's launch-level compatibility matrix after the raw RuntimeEffect shader/color-filter fallback rows and
+  graphics-layer render-effect resize/context probes:
+  `DURATION_SECONDS=2 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-compatibility-matrix.sh`.
+- Matrix TSV: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260503-071952/matrix.tsv`.
+- All 23 rows passed. The `happy` row reported `fallback_new_count=0` and positive JBR command frames.
+- Every negative row reported `fallback_new_count=1` and `jbr_command_frames=0`, including exact high-word rows for
+  `draw-points-capability-missing` and `shader-transform-capability-missing`.
+
+Next:
+- Keep this matrix as the strict launch-level ABI/capability gate while continuing implementation slices.
+
 ## Checkpoint: Picture Shader Fallback Probe
 
 Status: completed as a named live fallback row for Skia picture shaders.
