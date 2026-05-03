@@ -1014,6 +1014,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   - [x] Validate the external `--with-skia-interop=<Skia release root>` shape during configure before native linking.
   - [x] Add a Magic Jewel command row that omits `sun.java2d.skia.interop.library` and validates the boot-loaded
     `System.loadLibrary("jbrskiainterop")` path via `sun.boot.library.path` in the local harness.
+  - [x] Short broad Magic Jewel command sweep passed with the no-explicit-library row included:
+    `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-131421/suite.tsv`.
   - [ ] Wire `libjbrskiainterop` into the JBR image so no explicit `sun.java2d.skia.interop.library` property is needed.
 - [x] Decide final Skiko artifact shape for Skia-less JBR interop.
 - [ ] Font/typeface ownership through the JBR Skia runtime.

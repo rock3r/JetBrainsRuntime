@@ -12612,6 +12612,12 @@ Validation:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-131203/suite.tsv`.
 - The row reported `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, and
   `jbr_command_frames=280`.
+- Short broad command sweep passed with the new default row included:
+  `DURATION_SECONDS=2 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`.
+- Broad suite TSV:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-131421/suite.tsv`.
+- All rows passed. The `commands-native-bridge-load-library` row reported `fallback_new_count=0`, `unsupported=none`,
+  `jbr_picture_frames=0`, and `jbr_command_frames=745`.
 
 Notes:
 - A first attempt using only `java.library.path` failed because boot-loaded classes search `sun.boot.library.path`;
