@@ -188,6 +188,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   - [x] RuntimeEffect shader + color-filter descriptor command row passes through CMP -> Skiko -> JBR native replay with no picture fallback.
   - [x] Transform-aware shader descriptors pass through CMP -> Skiko -> JBR native replay with no picture fallback,
     and the compatibility matrix has an exact high-word missing row for `COMMAND_CAP64_HIGH_SHADER_DESCRIPTOR_TRANSFORM`.
+  - [x] Solid-color shader descriptors pass through CMP -> Skiko -> JBR native replay with no picture fallback, and
+    the compatibility matrix has an exact high-word missing row for `COMMAND_CAP64_HIGH_SHADER_DESCRIPTOR_COLOR`.
   - [x] Add old/new screenshot parity coverage for shader + color-filter descriptor composition.
   - [ ] Add shader/effect lifecycle commands for create, use, context-scoped cache hit, compile failure, eviction, and context migration invalidation; never pass raw Skiko `SkShader*`, `SkImageFilter*`, or `SkRuntimeEffect*` pointers across the ABI.
   - [x] Add RuntimeEffect conformance probes in Magic Jewel: one pure color shader, one child-shader composition, one uniform animation, one builder/compile-failure fallback, and one old-runtime capability fallback.
@@ -959,6 +961,9 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   retained structured unsupported reasons and picture replay.
 - [x] ABI 103: added a JBR-owned font-data descriptor command for simple native text using Skiko/CMP loaded
   byte-array fonts, without exposing Skiko `SkTypeface*` pointers across the boundary.
+- [x] ABI 104: solid color shaders serialize as `COMMAND_SHADER_DESCRIPTOR_COLOR`, allowing descriptor-backed
+  `ColorShader(Color)` paints to replay in JBR-owned Skia while raw `SkShader.makeColor(...).asComposeShader()`
+  remains an intentional opaque-shader fallback.
 - [x] CMP now emits `COMMAND_DEFINE_FONT_DATA` before simple native text records whose family is a single
   `LoadedFont`, and keeps paragraph text plus desktop resource/file-backed fonts image-backed until broader
   font/layout parity is proven.
@@ -974,6 +979,19 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   `font-data-capability-missing` high-word row:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260503-124228/matrix.tsv`.
   All 24 rows passed; every negative row reported one structured fallback and zero JBR command frames.
+- [x] Focused ABI 104 color shader validation passed:
+  Skiko `JbrSkiaInteropTest`, CMP color-shader descriptor and raw-color fallback recorder tests, local JBR
+  API/desktop/native artifact rebuild, and Magic Jewel `commands-color-shader`.
+- [x] Focused Magic Jewel shader subset passed after ABI 104:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-141053/suite.tsv`.
+  `commands-color-shader`, `commands-composite-shader`, and `commands-transformed-shader` stayed on JBR command
+  replay with `unsupported=none`; `commands-opaque-shader-fallback` stayed on intentional picture fallback with
+  structured `shader` unsupported markers.
+- [x] Launch-level compatibility matrix passed after ABI 104, including the exact
+  `shader-color-capability-missing` high-word row:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260503-141240/matrix.tsv`.
+  All rows passed; the happy row reported positive JBR command frames and every negative row reported one structured
+  fallback with zero JBR command frames.
 - [x] Add focused screenshot parity coverage for Magic Jewel toolbar/button rendering, including primary button text
   color and text centering, so command replay is compared against the old SwingGraphics renderer for UI chrome
   fidelity regressions.
@@ -1022,6 +1040,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   - [x] Keep Skiko-owned loaded/file-backed fonts on image replay until JBR owns font descriptors or data handles.
   - [x] Add ABI 103 JBR-owned font-data descriptors for simple native text backed by CMP loaded font bytes.
 - [ ] JBR-owned generic shader factory and handles for non-serialized shader families.
+  - [x] Add a first solid-color shader factory descriptor (`COMMAND_SHADER_DESCRIPTOR_COLOR`) with strict high-word
+    capability gating and live fallback contrast against raw Skia color shaders.
 - [x] Extend path-effect descriptors beyond corner to stamped path effects.
 - [x] Extend path-effect descriptors to chained path effects.
 - [ ] Screen migration/context invalidation hardening beyond the current synthetic descriptor context-change probes.

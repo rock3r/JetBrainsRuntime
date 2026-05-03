@@ -160,7 +160,8 @@ public class JBRSkiaService extends JBRSkia {
                     | COMMAND_CAP64_HIGH_SHADER_DESCRIPTOR_COLOR_FILTER
                     | COMMAND_CAP64_HIGH_DRAW_POINTS
                     | COMMAND_CAP64_HIGH_SHADER_DESCRIPTOR_TRANSFORM
-                    | COMMAND_CAP64_HIGH_DEFINE_FONT_DATA;
+                    | COMMAND_CAP64_HIGH_DEFINE_FONT_DATA
+                    | COMMAND_CAP64_HIGH_SHADER_DESCRIPTOR_COLOR;
     private static final boolean NATIVE_BRIDGE_AVAILABLE = loadNativeBridge();
     private static final AtomicLong NEXT_SCOPE_ID = new AtomicLong(1);
     private static final int MAX_CACHED_IMAGES = 256;
@@ -1859,6 +1860,9 @@ public class JBRSkiaService extends JBRSkia {
                     && tileModeX <= 3
                     && tileModeY >= 0
                     && tileModeY <= 3;
+        }
+        if (descriptorType == COMMAND_SHADER_DESCRIPTOR_COLOR) {
+            return payloadIntCount == 1;
         }
         if (descriptorType == COMMAND_SHADER_DESCRIPTOR_COMPOSITE) {
             int blendMode = commands[payloadStart + 4];

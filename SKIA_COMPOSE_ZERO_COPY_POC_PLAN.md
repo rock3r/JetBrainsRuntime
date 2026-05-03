@@ -12507,6 +12507,46 @@ Validation:
 Next:
 - Continue the next shader/effect ownership item.
 
+## Checkpoint: ABI 104 Solid Color Shader Descriptor Replay
+
+Status: completed as a small JBR-owned shader factory slice.
+
+Changes:
+- Bumped the command stream ABI to 104 across JBR, JBR API, Skiko, and CMP.
+- Added high-word capability `COMMAND_CAP64_HIGH_SHADER_DESCRIPTOR_COLOR` and descriptor type
+  `COMMAND_SHADER_DESCRIPTOR_COLOR`.
+- CMP now exposes desktop/skiko `ColorShader(Color)` metadata that serializes a one-int ARGB payload and records
+  shader-ref rectangle fills through the descriptor handle path.
+- Raw `org.jetbrains.skia.Shader.makeColor(...).asComposeShader()` remains an opaque shader and continues to fall back
+  under strict recording, preserving the Skiko/JBR ownership boundary.
+- Magic Jewel now has `MAGIC_JEWEL_COMPOSE_COLOR_SHADER` / `magic.jewel.compose.colorShader` and a
+  `commands-color-shader` live command row.
+- The compatibility matrix now includes the exact `shader-color-capability-missing` high-word row.
+
+Validation:
+- Skiko `JbrSkiaInteropTest` passed:
+  `./gradlew --no-daemon --no-configuration-cache :awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`.
+- CMP focused recorder tests passed:
+  `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesColorShaderDescriptorRectInStrictMode --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.rejectsUnknownOpaqueShaderInStrictMode --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesTransformedGradientShaderDescriptorRectInStrictMode`.
+- Rebuilt local JBR API/desktop/native artifacts with `./scripts/rebuild-jbr-skia-local-artifacts.sh` and published
+  Skiko `0.0.0-SNAPSHOT` to Maven local.
+- Focused Magic Jewel row passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-141011/suite.tsv`.
+  `commands-color-shader` reported `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, and
+  `jbr_command_frames=151`.
+- Compact shader subset passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-141053/suite.tsv`.
+  Color, composite, and transformed shader rows stayed on command replay; raw opaque color shader fallback still
+  reported structured `shader` unsupported markers and picture replay.
+- Launch-level compatibility matrix passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260503-141240/matrix.tsv`.
+  The happy row reported positive JBR command frames; every negative row, including
+  `shader-color-capability-missing`, reported one structured fallback and zero JBR command frames.
+
+Next:
+- Continue closing remaining shader-family ownership gaps with explicit JBR-owned descriptors or intentional raw Skia
+  fallback probes; do not pass raw Skiko shader/effect pointers across the ABI.
+
 ## Checkpoint: ABI 103 Loaded Font-Data Descriptor Replay
 
 Status: completed for simple native text backed by CMP/Skiko loaded byte-array fonts.
