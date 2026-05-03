@@ -12656,6 +12656,16 @@ Validation:
 - All three rows passed with zero fallback and zero picture frames; the generic-family row reported
   `jbr_command_frames=311`, and the forced-context native-text row stayed on command replay with
   `jbr_command_frames=362`.
+- Ran Magic Jewel's short default command-probe sweep after adding `commands-native-generic-font-text`:
+  `DURATION_SECONDS=2 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`.
+- Broad suite TSV:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-092836/suite.tsv`.
+- All 90 rows passed. The new generic-family native-text row reported `fallback_new_count=0`, `unsupported=none`,
+  `jbr_picture_frames=0`, and `jbr_command_frames=389`.
+- Descriptor-backed shader/effect/text/graphics-layer rows stayed on command replay. Intentional raw fallback rows
+  such as raw RuntimeEffect shader/color-filter, raw blend color-filter, raw discrete path effect, raw image-filter
+  RenderEffect, opaque/composite/noise/picture shaders, and invalid gradient metadata retained structured unsupported
+  reasons with picture replay.
 
 Next:
 - Continue native text/font ownership work with visual parity, baseline/style metrics, and any remaining platform font

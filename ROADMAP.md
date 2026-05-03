@@ -263,6 +263,10 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Resolve Compose generic `sans-serif`/`serif`/`monospace`/`cursive` family names through JBR-owned macOS font
   candidates for native simple and paragraph text; Magic Jewel's generic-family command row passed with zero fallback at
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-092536/suite.tsv`.
+- [x] Short broad Magic Jewel command-probe sweep passed after adding the generic-family native-text row:
+  90/90 rows passed at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-092836/suite.tsv`;
+  `commands-native-generic-font-text` stayed on command replay with `jbr_command_frames=389`.
 - [x] Add a Magic Jewel forced-context native-text command probe that requires simple/paragraph text commands,
   `contextChanged=true`, and command-cache clearing without falling back to picture replay.
 - [x] Add a Magic Jewel forced-context dynamic image-cache command probe that requires cached image refs, single-key
