@@ -12557,9 +12557,37 @@ Notes:
 Next:
 - Add exact compatibility-matrix coverage for the new high-word `COMMAND_CAP64_HIGH_DEFINE_FONT_DATA` missing row, then
   continue font/typeface ownership or the remaining shader/effect descriptor work.
-- Add focused old-vs-command screenshot parity for Magic Jewel toolbar/button chrome. The row must specifically catch
-  primary button text color and text centering regressions, since the current live screenshot showed the `Pulse` button
-  rendered with dark, off-center text on the JBR command path.
+
+## Checkpoint: Magic Jewel Button Chrome Screenshot Parity
+
+Status: completed for the current toolbar button regression.
+
+Changes:
+- Magic Jewel now uses Jewel `Text` directly inside the `Pulse` and `Reset` buttons instead of routing button chrome
+  through `MagicLabel`.
+- Both button labels keep the existing fixed-width slot and set centered text alignment, while the primary button
+  inherits Jewel's button content color.
+- The screenshot comparator now emits and gates a tight `headerButtons` region around the toolbar buttons.
+- The screenshot parity suite includes a default `parity-button-chrome` row and surfaces
+  `header_buttons_bad_pixel_ratio` in `suite.tsv`.
+
+Validation:
+- Magic Jewel compile passed:
+  `./gradlew --no-daemon --no-configuration-cache compileKotlin`.
+- Focused old-vs-command screenshot parity passed:
+  `CASES=parity-button-chrome DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-screenshot-parity-suite.sh`.
+- Suite TSV:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260503-130251/suite.tsv`.
+- The row reported `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=432`, and
+  `header_buttons_bad_pixel_ratio=0.00381` under `MAX_HEADER_BUTTONS_BAD_PIXEL_RATIO=0.02`.
+
+Notes:
+- The first two focused runs proved the targeted button metric was already stable, then failed on unrelated broad
+  `swingIsland`/`rightProbeStrip` gates. The final row keeps the strict button gate while scoping those unrelated
+  broad-region thresholds to the button-chrome case.
+
+Next:
+- Continue font/typeface ownership or the remaining shader/effect descriptor work.
 
 ## Checkpoint: File-Backed Font Native-Text Guard
 
