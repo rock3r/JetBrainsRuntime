@@ -12550,6 +12550,22 @@ Next:
 - Continue closing raw Skia object ownership boundaries, promoting only explicitly serialized semantics into
   JBR-owned descriptors.
 
+## Checkpoint: Compatibility Matrix Refresh After Raw Color/Path Fallback Probes
+
+Status: completed.
+
+Validation:
+- Ran Magic Jewel's launch-level compatibility matrix after the raw blend color-filter and raw discrete path-effect
+  fallback rows:
+  `DURATION_SECONDS=2 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-compatibility-matrix.sh`.
+- Matrix TSV: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260503-084917/matrix.tsv`.
+- All 23 rows passed. The `happy` row reported `fallback_new_count=0` and positive JBR command frames.
+- Every negative row reported `fallback_new_count=1` and `jbr_command_frames=0`, including exact high-word rows for
+  `path-effect-capability-missing`, `draw-points-capability-missing`, and `shader-transform-capability-missing`.
+
+Next:
+- Keep this matrix as the strict launch-level ABI/capability gate while continuing implementation slices.
+
 ## Checkpoint: Raw Discrete Path-Effect Fallback Probe
 
 Status: completed as a named live fallback row for raw Skia-owned discrete path effects.

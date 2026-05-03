@@ -887,6 +887,10 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260503-071952/matrix.tsv`.
   All 23 rows passed; every negative row reported one structured fallback and zero JBR command frames, including
   `draw-points-capability-missing` and `shader-transform-capability-missing`.
+- [x] Launch-level compatibility matrix passed after raw blend color-filter and raw discrete path-effect fallback probes:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260503-084917/matrix.tsv`.
+  All 23 rows passed; every negative row reported one structured fallback and zero JBR command frames, including
+  `path-effect-capability-missing`, `draw-points-capability-missing`, and `shader-transform-capability-missing`.
 - [x] Focused transformed shader screenshot parity passed after ABI 102 descriptor replay:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260503-023351/suite.tsv`.
 - [x] Broad Magic Jewel screenshot parity sweep passed after adding the transformed shader descriptor row:
