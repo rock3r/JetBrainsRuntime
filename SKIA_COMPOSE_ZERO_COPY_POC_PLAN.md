@@ -12532,6 +12532,48 @@ Next:
 - Continue the next roadmap item; if another control chrome regression appears, add a similarly narrow command
   screenshot oracle in addition to old/new parity.
 
+## Checkpoint: Loaded Font-Data Magic Jewel Probe
+
+Status: completed for command and screenshot coverage of ABI 103 loaded byte-array fonts.
+
+Changes:
+- JBR native and Java2D fallback replay now emit
+  `JBR_SKIA_INTEROP_FONT_DATA_DEFINE backend=... contextId=... handle=... bytes=...` when
+  `COMMAND_DEFINE_FONT_DATA` reconstructs a JBR-owned typeface from stream bytes.
+- Magic Jewel added `MAGIC_JEWEL_LOADED_FONT_DATA_TEXT` / `magic.jewel.loadedFontDataText`, which builds a Compose
+  loaded-font family from the packaged `magicjewel-fonts/MagicJewelResourceFont.ttf` bytes instead of the desktop
+  resource-font path.
+- The command harness now reports `jbr_font_data_define_frames` and can require
+  `EXPECT_MIN_JBR_FONT_DATA_DEFINES`.
+- Added `commands-native-loaded-font-data-text` and `parity-native-loaded-font-data-text` rows so loaded font bytes,
+  packaged resource fonts, and named system fonts are three distinct ownership checks.
+
+Validation:
+- Magic Jewel compile/resources passed:
+  `./gradlew --no-daemon --no-configuration-cache compileKotlin processResources`.
+- Report validation tests passed:
+  `bash scripts/test-jbr-skia-report-validation.sh`.
+- Rebuilt the local JBR API shim, patched `java.desktop` classes, and native bridge:
+  `./scripts/rebuild-jbr-skia-local-artifacts.sh`.
+- Focused loaded-font command row passed:
+  `CASES=commands-native-loaded-font-data-text DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`.
+- Focused command suite TSV:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-171035/suite.tsv`.
+  The row reported `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`,
+  `jbr_command_frames=131`, and `jbr_font_data_define_frames=319`.
+- Compact font ownership subset passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-171122/suite.tsv`.
+  Loaded font-data, classpath resource font, and named Menlo system font rows all stayed on command replay with zero
+  fallback and zero picture frames.
+- Focused loaded-font screenshot parity passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260503-171316/suite.tsv`.
+  The row reported `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=65`,
+  `jbr_font_data_define_frames=253`, and `bad_pixel_ratio=0.04772`.
+
+Next:
+- Keep resource-font replay image-backed until CMP can expose desktop `ResourceFont` bytes through the same explicit
+  font-data ownership path without guessing from Skiko-owned typefaces.
+
 ## Checkpoint: ABI 104 Broad Sweep and Color Shader Screenshot Parity
 
 Status: completed after the solid color shader descriptor slice.

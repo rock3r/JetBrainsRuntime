@@ -3132,6 +3132,11 @@ static bool drawCommandList(SkCanvas* canvas,
                 }
                 std::scoped_lock lock(gFontDataCacheMutex);
                 gFontDataTypefacesByKey[handle] = typeface;
+                std::fprintf(stderr,
+                             "JBR_SKIA_INTEROP_FONT_DATA_DEFINE backend=native contextId=%p handle=0x%016llx bytes=%d\n",
+                             imageCacheContextKey,
+                             static_cast<unsigned long long>(handle),
+                             byteCount);
                 break;
             }
             case COMMAND_DRAW_TEXT_UTF16: {

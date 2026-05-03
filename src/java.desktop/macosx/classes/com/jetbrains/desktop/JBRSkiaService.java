@@ -3718,6 +3718,9 @@ public class JBRSkiaService extends JBRSkia {
                         }
                         try {
                             fontDataFonts.put(handle, Font.createFont(Font.TRUETYPE_FONT, new ByteArrayInputStream(data)));
+                            System.err.println("JBR_SKIA_INTEROP_FONT_DATA_DEFINE backend=java2d contextId=0x"
+                                    + Long.toHexString(contextPtr) + " handle=0x"
+                                    + Long.toHexString(handle) + " bytes=" + byteCount);
                         } catch (Exception ignored) {
                             return false;
                         }
