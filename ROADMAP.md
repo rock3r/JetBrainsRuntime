@@ -1112,6 +1112,11 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [ ] JBR-owned generic shader factory and handles for non-serialized shader families.
   - [x] Add a first solid-color shader factory descriptor (`COMMAND_SHADER_DESCRIPTOR_COLOR`) with strict high-word
     capability gating and live fallback contrast against raw Skia color shaders.
+  - [x] Add explicit Magic Jewel turbulence-shader fallback coverage so raw Skia turbulence shaders remain picture-backed
+    until JBR owns a descriptor family for them. Focused fallback replay passed at
+    `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-192910/suite.tsv`;
+    the short broad command sweep with turbulence included passed at
+    `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-193253/suite.tsv`.
 - [x] Extend path-effect descriptors beyond corner to stamped path effects.
 - [x] Extend path-effect descriptors to chained path effects.
 - [ ] Screen migration/context invalidation hardening beyond the current synthetic descriptor context-change probes.

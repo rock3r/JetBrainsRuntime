@@ -13591,6 +13591,12 @@ Validation:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-192949/suite.tsv`.
 - The subset covered fractal-noise, turbulence, picture-shader, and raw RuntimeEffect shader fallback rows; all stayed on
   intentional picture replay with zero command frames.
+- Short broad Magic Jewel command-probe sweep passed with the turbulence row included:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-193253/suite.tsv`.
+- The broad sweep covered current command replay rows, cache lifecycle rows, loaded/resource/system font rows,
+  graphics-layer render-effect combinations, and the intentional raw shader/effect fallback sentinels. Command rows stayed
+  on command replay with zero picture frames, while turbulence/noise/picture/raw shader fallback rows reported explicit
+  unsupported markers with picture replay and zero command frames.
 
 Next:
 - Continue remaining shader/effect lifecycle and physical screen/context migration hardening.
