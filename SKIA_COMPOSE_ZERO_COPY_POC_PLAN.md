@@ -12331,3 +12331,53 @@ Validation:
 Next:
 - Continue closing remaining live shader fallback probes, then decide whether to implement transform-aware shader
   descriptors or leave transformed wrappers as explicit fallback until a full generic shader/effect plan lands.
+
+## Checkpoint: ABI 102 Transform-Aware Shader Descriptor Replay
+
+Status: completed for focused command replay.
+
+Changes:
+- Bumped the command stream ABI to 102 across JBR private API/native, the public Runtime API mirror, Skiko discovery,
+  Skiko command preflight, and CMP command recording.
+- Added high-word capability `COMMAND_CAP64_HIGH_SHADER_DESCRIPTOR_TRANSFORM` and shader descriptor type
+  `COMMAND_SHADER_DESCRIPTOR_TRANSFORM`.
+- CMP now preserves `TransformShader` child-shader metadata plus the local 3x3 matrix, records a transform descriptor
+  payload `[childHandleHigh, childHandleLow, m00, m01, m02, m10, m11, m12, m20, m21, m22]`, and routes transformed
+  fill rects through shader-handle command replay.
+- JBR Java and native validators require the transformed descriptor payload length and a previously defined child shader
+  handle. Native replay reconstructs the child shader inside JBR's Skia runtime and applies
+  `SkShader::makeWithLocalMatrix`.
+- Magic Jewel's transformed shader row has graduated from `commands-transformed-shader-fallback` to
+  `commands-transformed-shader`, while opaque/raw Skia shaders remain a deliberate strict fallback.
+- The Magic Jewel compatibility matrix now has an exact `shader-transform-capability-missing` row that masks the new
+  high-word bit with `JBR_SKIA_COMMAND_CAPABILITIES_HIGH_MASK_FOR_TEST=8191`.
+
+Validation:
+- CMP focused recorder test passed:
+  `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesTransformedGradientShaderDescriptorRectInStrictMode`.
+- Skiko focused interop suite passed:
+  `./gradlew --no-daemon --no-configuration-cache :awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`.
+- Rebuilt local artifacts:
+  `/tmp/jbr-api-shim.jar`, `/tmp/jbr-skia-run/desktop`, and `/tmp/jbr-skia-native/libjbrskiainterop.dylib`.
+- Published the ABI 102 Skiko `0.0.0-SNAPSHOT` to Maven local.
+- Focused Magic Jewel transformed-shader command replay passed:
+  `CASES=commands-transformed-shader DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`.
+- Suite TSV: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-015032/suite.tsv`.
+- The focused row reported `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, and
+  `jbr_command_frames=337`.
+- Focused missing-capability validation passed at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-015032/shader-transform-capability-missing/report.md`;
+  the masked run reported `validation_status=passed`, `fallback_new_count=1`, and `jbr_command_frames=0`.
+- Short broad Magic Jewel command-probe suite passed:
+  `DURATION_SECONDS=2 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`.
+- Broad suite TSV: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-015241/suite.tsv`.
+- All default rows passed. The ABI 102 `commands-transformed-shader` row reported `fallback_new_count=0`,
+  `unsupported=none`, `jbr_picture_frames=0`, and `jbr_command_frames=684`.
+- Launch-level compatibility matrix passed:
+  `DURATION_SECONDS=3 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-compatibility-matrix.sh`.
+- Matrix TSV: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260503-022142/matrix.tsv`.
+- All rows passed. The new `shader-transform-capability-missing` row reported `fallback_new_count=1` and
+  `jbr_command_frames=0`.
+
+Next:
+- Commit and push the coordinated JBR/JBR API/Skiko/CMP/Magic Jewel branches, then continue the next roadmap item.

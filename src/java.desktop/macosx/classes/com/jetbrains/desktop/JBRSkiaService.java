@@ -156,7 +156,8 @@ public class JBRSkiaService extends JBRSkia {
                     | COMMAND_CAP64_HIGH_CONCAT_MATRIX33
                     | COMMAND_CAP64_HIGH_DRAW_SHADOW_PATH
                     | COMMAND_CAP64_HIGH_SHADER_DESCRIPTOR_COLOR_FILTER
-                    | COMMAND_CAP64_HIGH_DRAW_POINTS;
+                    | COMMAND_CAP64_HIGH_DRAW_POINTS
+                    | COMMAND_CAP64_HIGH_SHADER_DESCRIPTOR_TRANSFORM;
     private static final boolean NATIVE_BRIDGE_AVAILABLE = loadNativeBridge();
     private static final AtomicLong NEXT_SCOPE_ID = new AtomicLong(1);
     private static final int MAX_CACHED_IMAGES = 256;
@@ -1719,6 +1720,10 @@ public class JBRSkiaService extends JBRSkia {
             long colorFilterHandle = commandHandle(commands[payloadStart + 2], commands[payloadStart + 3]);
             return shaderHandles.contains(shaderHandle) && colorFilterHandles.contains(colorFilterHandle);
         }
+        if (descriptorType == COMMAND_SHADER_DESCRIPTOR_TRANSFORM && payloadIntCount == 11) {
+            long childHandle = commandHandle(commands[payloadStart], commands[payloadStart + 1]);
+            return shaderHandles.contains(childHandle);
+        }
         if (descriptorType == COMMAND_SHADER_DESCRIPTOR_RUNTIME_EFFECT && payloadIntCount >= 7) {
             int childCount = commands[payloadStart + 2];
             if (childCount < 0 || childCount > 8 || payloadIntCount < 7 + childCount * 2) {
@@ -1837,6 +1842,9 @@ public class JBRSkiaService extends JBRSkia {
         }
         if (descriptorType == COMMAND_SHADER_DESCRIPTOR_COLOR_FILTER) {
             return payloadIntCount == 4;
+        }
+        if (descriptorType == COMMAND_SHADER_DESCRIPTOR_TRANSFORM) {
+            return payloadIntCount == 11;
         }
         if (descriptorType == COMMAND_SHADER_DESCRIPTOR_RUNTIME_EFFECT) {
             if (payloadIntCount < 7) return false;
@@ -4002,6 +4010,11 @@ public class JBRSkiaService extends JBRSkia {
                             child = SHADER_CACHE.get(new ColorFilterCacheKey(contextPtr, childHandle));
                             colorFilter = COLOR_FILTER_CACHE.get(new ColorFilterCacheKey(contextPtr, colorFilterHandle));
                             if (child == null || colorFilter == null || !isColorFilterDescriptor(colorFilter)) return false;
+                        } else if (descriptorType == COMMAND_SHADER_DESCRIPTOR_TRANSFORM) {
+                            long childHandle = cacheKey(commands[offset++], commands[offset++]);
+                            child = SHADER_CACHE.get(new ColorFilterCacheKey(contextPtr, childHandle));
+                            if (child == null) return false;
+                            offset = recordEnd;
                         } else if (descriptorType == COMMAND_SHADER_DESCRIPTOR_RUNTIME_EFFECT) {
                             int childCount = commands[offset + 2];
                             int namedUniformCount = commands[offset + 3];

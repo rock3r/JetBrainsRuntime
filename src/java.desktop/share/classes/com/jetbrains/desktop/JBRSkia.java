@@ -36,7 +36,7 @@ import java.nio.ByteBuffer;
  * so downstream compile-only clients cannot accidentally inline stale values.
  */
 public abstract class JBRSkia {
-    public static final int ABI_ID = Integer.parseInt("101");
+    public static final int ABI_ID = Integer.parseInt("102");
     public static final int NATIVE_ABI_VERSION = Integer.parseInt("3");
     public static final String SKIA_REVISION = "m147-" + "64a2414108";
     public static final String SKIA_FLAGS_HASH = "macos-release-metal-poc:" + Integer.parseInt("1");
@@ -129,6 +129,8 @@ public abstract class JBRSkia {
     public static final long COMMAND_CAP64_HIGH_SHADER_DESCRIPTOR_COLOR_FILTER = Long.parseLong("2048");
     /** Supports drawPoints(PointMode.Points)-style stroked point clouds with cap metadata. */
     public static final long COMMAND_CAP64_HIGH_DRAW_POINTS = Long.parseLong("4096");
+    /** Supports shader descriptors that wrap child shader handles in a local transform matrix. */
+    public static final long COMMAND_CAP64_HIGH_SHADER_DESCRIPTOR_TRANSFORM = Long.parseLong("8192");
     public static final int COMMAND_CLEAR = Integer.parseInt("1");
     public static final int COMMAND_FILL_RECT = Integer.parseInt("2");
     public static final int COMMAND_STROKE_LINE = Integer.parseInt("3");
@@ -216,6 +218,8 @@ public abstract class JBRSkia {
     public static final int COMMAND_SHADER_DESCRIPTOR_RUNTIME_EFFECT = Integer.parseInt("6");
     /** Shader descriptor type whose payload is shader-handle high/low and color-filter-handle high/low. */
     public static final int COMMAND_SHADER_DESCRIPTOR_COLOR_FILTER = Integer.parseInt("7");
+    /** Shader descriptor type whose payload is child shader-handle high/low followed by a 3x3 fixed1000 matrix. */
+    public static final int COMMAND_SHADER_DESCRIPTOR_TRANSFORM = Integer.parseInt("8");
     public static final int COMMAND_SHADER_DESCRIPTOR_VERSION_1 = Integer.parseInt("1");
     public static final int COMMAND_BLEND_MODE_PLUS = Integer.parseInt("1");
     public static final int COMMAND_BLEND_MODE_SRC_IN = Integer.parseInt("2");

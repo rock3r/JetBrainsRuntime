@@ -111,6 +111,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   negotiation and JBR-owned Skia point-mode replay; `PointMode.Lines`/`Polygon` continue to lower to line commands.
 - [x] ABI 101: simple native text commands carry font weight/width/slant metadata so JBR resolves styled typefaces
   inside its own Skia runtime for family-backed `COMMAND_DRAW_TEXT_UTF16` replay.
+- [x] ABI 102: transformed shader wrappers serialize as `COMMAND_SHADER_DESCRIPTOR_TRANSFORM`, preserving a child
+  shader handle plus fixed1000 local 3x3 matrix for JBR-owned `SkShader::makeWithLocalMatrix` replay.
 - [x] RuntimeEffect builder failures emit parseable JBR markers, and Magic Jewel has a bad-child-name probe/report assertion.
   - [x] Native RuntimeEffect shader replay rejects child type mismatches before assigning `SkRuntimeEffectBuilder`
     children, and Magic Jewel has a post-recording child-type corruption probe that asserts `stage=child-type` fallback
@@ -180,6 +182,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   - [ ] Extend Skia runtime effects via descriptor payloads: remaining shader-family fallback markers.
   - [x] RuntimeEffect child color-filter descriptors have old/new screenshot parity coverage.
   - [x] RuntimeEffect shader + color-filter descriptor command row passes through CMP -> Skiko -> JBR native replay with no picture fallback.
+  - [x] Transform-aware shader descriptors pass through CMP -> Skiko -> JBR native replay with no picture fallback,
+    and the compatibility matrix has an exact high-word missing row for `COMMAND_CAP64_HIGH_SHADER_DESCRIPTOR_TRANSFORM`.
   - [x] Add old/new screenshot parity coverage for shader + color-filter descriptor composition.
   - [ ] Add shader/effect lifecycle commands for create, use, context-scoped cache hit, compile failure, eviction, and context migration invalidation; never pass raw Skiko `SkShader*`, `SkImageFilter*`, or `SkRuntimeEffect*` pointers across the ABI.
   - [x] Add RuntimeEffect conformance probes in Magic Jewel: one pure color shader, one child-shader composition, one uniform animation, one builder/compile-failure fallback, and one old-runtime capability fallback.
@@ -207,8 +211,9 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Strict recorder fallback for invalid rounded-rectangle radii with gradient paints.
 - [x] Strict recorder fallback for transformed gradient shaders.
 - [x] Strict recorder fallback for composite/opaque shader wrappers.
-- [x] Live Magic Jewel fallback probes for opaque raw Skia shaders and transformed shader wrappers, asserting the strict
-  recorder reports `shader` unsupported markers and uses picture replay instead of guessing descriptor semantics.
+- [x] Live Magic Jewel fallback probe for opaque raw Skia shaders, asserting the strict recorder reports `shader`
+  unsupported markers and uses picture replay instead of guessing descriptor semantics.
+- [x] Transformed shader wrappers graduated from strict fallback to transform-aware shader descriptor command replay.
 - [x] Linear-gradient stroke paint graduated from strict fallback to serialized command replay.
 - [x] More strict shader fallback tests for nonfinite gradient metadata that survives shader construction.
 - [x] Live Magic Jewel recorder-level fallback probes for color filters and path effects.
@@ -758,6 +763,11 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260502-175743/suite.tsv`.
 - [x] Short broad Magic Jewel command-probe sweep passed after ABI 101 native-text style metadata:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260502-194216/suite.tsv`.
+- [x] Short broad Magic Jewel command-probe sweep passed after ABI 102 transformed shader descriptor replay:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-015241/suite.tsv`.
+- [x] Launch-level compatibility matrix passed after ABI 102 transformed shader descriptor replay, including the exact
+  `shader-transform-capability-missing` high-word row:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260503-022142/matrix.tsv`.
 - [x] Focused native-text command probe passed with the stricter simple-text and paragraph-text command gates:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260502-220852/suite.tsv`.
 - [x] Forced-context native-text command probe passed with command-cache invalidation and continued JBR command replay:

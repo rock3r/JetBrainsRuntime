@@ -51,13 +51,13 @@ public class JBRSkiaApiTest {
     }
 
     public static void main(String[] args) throws Exception {
-        assertEquals(101, JBRSkia.ABI_ID, "ABI_ID");
+        assertEquals(102, JBRSkia.ABI_ID, "ABI_ID");
         assertEquals(3, JBRSkia.NATIVE_ABI_VERSION, "NATIVE_ABI_VERSION");
-        assertEquals("skia=m147-64a2414108;flags=macos-release-metal-poc:1;abi=101;native=3", JBRSkia.BUILD_ID, "BUILD_ID");
+        assertEquals("skia=m147-64a2414108;flags=macos-release-metal-poc:1;abi=102;native=3", JBRSkia.BUILD_ID, "BUILD_ID");
 
-        assertReflectiveStaticEquals(101, JBRSkia.class.getDeclaredField("ABI_ID"));
+        assertReflectiveStaticEquals(102, JBRSkia.class.getDeclaredField("ABI_ID"));
         assertReflectiveStaticEquals(3, JBRSkia.class.getDeclaredField("NATIVE_ABI_VERSION"));
-        assertReflectiveStaticEquals("skia=m147-64a2414108;flags=macos-release-metal-poc:1;abi=101;native=3", JBRSkia.class.getDeclaredField("BUILD_ID"));
+        assertReflectiveStaticEquals("skia=m147-64a2414108;flags=macos-release-metal-poc:1;abi=102;native=3", JBRSkia.class.getDeclaredField("BUILD_ID"));
 
         if (TestJBRSkia.INSTANCE != null) {
             throw new AssertionError("JBRSkia service must be unavailable before native runtime is wired");
@@ -195,7 +195,8 @@ public class JBRSkiaApiTest {
                 | JBRSkia.COMMAND_CAP64_HIGH_CONCAT_MATRIX33
                 | JBRSkia.COMMAND_CAP64_HIGH_DRAW_SHADOW_PATH
                 | JBRSkia.COMMAND_CAP64_HIGH_SHADER_DESCRIPTOR_COLOR_FILTER
-                | JBRSkia.COMMAND_CAP64_HIGH_DRAW_POINTS;
+                | JBRSkia.COMMAND_CAP64_HIGH_DRAW_POINTS
+                | JBRSkia.COMMAND_CAP64_HIGH_SHADER_DESCRIPTOR_TRANSFORM;
     }
 
     private static void assertCommandStreamValidation() {
@@ -256,6 +257,7 @@ public class JBRSkiaApiTest {
         assertValidCommandStream(validCompositeShaderDescriptorStream(), "valid composite shader descriptor stream");
         assertValidCommandStream(validRuntimeEffectShaderDescriptorStream(), "valid runtime-effect shader descriptor stream");
         assertValidCommandStream(validShaderColorFilterDescriptorStream(), "valid shader color-filter descriptor stream");
+        assertValidCommandStream(validTransformedShaderDescriptorStream(), "valid transformed shader descriptor stream");
         assertInvalidCommandStream(invalidUnknownShaderDescriptorTypeStream(), "unknown shader descriptor type");
         assertInvalidCommandStream(invalidShaderDescriptorVersionStream(), "unsupported shader descriptor version");
         assertInvalidCommandStream(invalidShaderDescriptorPayloadCountStream(), "shader descriptor payload count mismatch");
@@ -264,6 +266,8 @@ public class JBRSkiaApiTest {
         assertInvalidCommandStream(invalidCompositeShaderChildHandleStream(), "undefined composite shader child handle");
         assertInvalidCommandStream(invalidShaderColorFilterMissingShaderHandleStream(), "undefined shader color-filter shader handle");
         assertInvalidCommandStream(invalidShaderColorFilterMissingEffectHandleStream(), "undefined shader color-filter effect handle");
+        assertInvalidCommandStream(invalidTransformedShaderMissingChildHandleStream(), "undefined transformed shader child handle");
+        assertInvalidCommandStream(invalidTransformedShaderPayloadCountStream(), "transformed shader payload count mismatch");
         assertInvalidCommandStream(invalidEvictedShaderHandleStream(), "evicted shader handle fill");
         assertInvalidCommandStream(invalidRuntimeEffectShaderHashStream(), "invalid runtime-effect shader source hash stream");
         assertInvalidCommandStream(invalidRuntimeEffectUniformSchemaStream(), "invalid runtime-effect uniform schema stream");
@@ -1095,6 +1099,55 @@ public class JBRSkiaApiTest {
                 0x00000021, 0x00000022,
                 0x00000031, 0x00000032
         };
+    }
+
+    private static int[] validTransformedShaderDescriptorStream() {
+        return new int[] {
+                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 47,
+                JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
+                JBRSkia.COMMAND_DEFINE_SHADER_DESCRIPTOR, 72, JBRSkia.COMMAND_RECORD_FLAGS_NONE,
+                0x00000021, 0x00000022,
+                JBRSkia.COMMAND_SHADER_DESCRIPTOR_LINEAR_GRADIENT,
+                JBRSkia.COMMAND_SHADER_DESCRIPTOR_VERSION_1,
+                10,
+                1000, 2000, 11000, 12000, 0, 2,
+                0xffff0000, 250,
+                0xff0000ff, 750,
+                JBRSkia.COMMAND_DEFINE_SHADER_DESCRIPTOR, 76, JBRSkia.COMMAND_RECORD_FLAGS_NONE,
+                0x00000041, 0x00000042,
+                JBRSkia.COMMAND_SHADER_DESCRIPTOR_TRANSFORM,
+                JBRSkia.COMMAND_SHADER_DESCRIPTOR_VERSION_1,
+                11,
+                0x00000021, 0x00000022,
+                1000, 0, 3000,
+                0, 1000, 4000,
+                0, 0, 1000,
+                JBRSkia.COMMAND_FILL_RECT_SHADER_REF, 40, JBRSkia.COMMAND_RECORD_FLAG_ANTIALIAS,
+                0x00000041, 0x00000042,
+                1000, 2000, 11000, 12000, 1000
+        };
+    }
+
+    private static int[] invalidTransformedShaderMissingChildHandleStream() {
+        return new int[] {
+                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 19,
+                JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
+                JBRSkia.COMMAND_DEFINE_SHADER_DESCRIPTOR, 76, JBRSkia.COMMAND_RECORD_FLAGS_NONE,
+                0x00000041, 0x00000042,
+                JBRSkia.COMMAND_SHADER_DESCRIPTOR_TRANSFORM,
+                JBRSkia.COMMAND_SHADER_DESCRIPTOR_VERSION_1,
+                11,
+                0x00000021, 0x00000022,
+                1000, 0, 3000,
+                0, 1000, 4000,
+                0, 0, 1000
+        };
+    }
+
+    private static int[] invalidTransformedShaderPayloadCountStream() {
+        int[] commands = validTransformedShaderDescriptorStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 18 + 7] = 10;
+        return commands;
     }
 
     private static int[] invalidEvictedShaderHandleStream() {

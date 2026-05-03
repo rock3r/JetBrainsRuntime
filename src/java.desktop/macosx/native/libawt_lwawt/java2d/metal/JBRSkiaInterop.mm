@@ -84,9 +84,9 @@
 
 #include "MTLSurfaceDataBase.h"
 
-static constexpr jint ABI_ID = 101;
+static constexpr jint ABI_ID = 102;
 static constexpr jint NATIVE_ABI_VERSION = 3;
-static constexpr const char* BUILD_ID = "skia=m147-64a2414108;flags=macos-release-metal-poc:1;abi=101;native=3";
+static constexpr const char* BUILD_ID = "skia=m147-64a2414108;flags=macos-release-metal-poc:1;abi=102;native=3";
 static constexpr jint COMMAND_STREAM_MAGIC = 1246972723;
 static constexpr jint COMMAND_STREAM_HEADER_SIZE = 6;
 static constexpr jint COMMAND_STREAM_FLAGS_NONE = 0;
@@ -188,6 +188,7 @@ static constexpr jint COMMAND_SHADER_DESCRIPTOR_IMAGE = 4;
 static constexpr jint COMMAND_SHADER_DESCRIPTOR_COMPOSITE = 5;
 static constexpr jint COMMAND_SHADER_DESCRIPTOR_RUNTIME_EFFECT = 6;
 static constexpr jint COMMAND_SHADER_DESCRIPTOR_COLOR_FILTER = 7;
+static constexpr jint COMMAND_SHADER_DESCRIPTOR_TRANSFORM = 8;
 static constexpr jint COMMAND_SHADER_DESCRIPTOR_VERSION_1 = 1;
 static constexpr jint COMMAND_BLEND_MODE_PLUS = 1;
 static constexpr jint COMMAND_BLEND_MODE_SRC_IN = 2;
@@ -694,6 +695,22 @@ static sk_sp<SkShader> makeDescriptorShader(const ShaderDescriptor& descriptor, 
         sk_sp<SkColorFilter> colorFilter = makeDescriptorColorFilter(*descriptor.colorFilter);
         if (!shader || !colorFilter) return nullptr;
         return shader->makeWithColorFilter(colorFilter);
+    }
+    if (descriptor.type == COMMAND_SHADER_DESCRIPTOR_TRANSFORM) {
+        if (descriptor.payload.size() != 11 || !descriptor.child) return nullptr;
+        sk_sp<SkShader> child = makeDescriptorShader(*descriptor.child, imageCacheContextKey, depth + 1);
+        if (!child) return nullptr;
+        const SkMatrix matrix = SkMatrix::MakeAll(
+                static_cast<SkScalar>(descriptor.payload[2]) / 1000.0f,
+                static_cast<SkScalar>(descriptor.payload[3]) / 1000.0f,
+                static_cast<SkScalar>(descriptor.payload[4]) / 1000.0f,
+                static_cast<SkScalar>(descriptor.payload[5]) / 1000.0f,
+                static_cast<SkScalar>(descriptor.payload[6]) / 1000.0f,
+                static_cast<SkScalar>(descriptor.payload[7]) / 1000.0f,
+                static_cast<SkScalar>(descriptor.payload[8]) / 1000.0f,
+                static_cast<SkScalar>(descriptor.payload[9]) / 1000.0f,
+                static_cast<SkScalar>(descriptor.payload[10]) / 1000.0f);
+        return child->makeWithLocalMatrix(matrix);
     }
     if (descriptor.type == COMMAND_SHADER_DESCRIPTOR_RUNTIME_EFFECT) {
         if (descriptor.payload.size() < 7) return nullptr;
@@ -3571,6 +3588,15 @@ static bool drawCommandList(SkCanvas* canvas,
                         auto colorFilter = gColorFiltersByKey.find(ColorFilterScopedKey{imageCacheContextKey, colorFilterHandle});
                         if (colorFilter == gColorFiltersByKey.end()) return false;
                         descriptor.colorFilter = std::make_shared<ColorFilterDescriptor>(colorFilter->second);
+                    }
+                } else if (descriptorType == COMMAND_SHADER_DESCRIPTOR_TRANSFORM) {
+                    if (payloadIntCount != 11) return false;
+                    const uint64_t childHandle = imageCacheKey(descriptor.payload[0], descriptor.payload[1]);
+                    {
+                        std::lock_guard<std::mutex> lock(gShaderCacheMutex);
+                        auto child = gShadersByKey.find(ColorFilterScopedKey{imageCacheContextKey, childHandle});
+                        if (child == gShadersByKey.end()) return false;
+                        descriptor.child = std::make_shared<ShaderDescriptor>(child->second);
                     }
                 } else if (descriptorType == COMMAND_SHADER_DESCRIPTOR_RUNTIME_EFFECT) {
                     if (payloadIntCount < 7) return false;
