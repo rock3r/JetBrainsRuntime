@@ -13986,3 +13986,33 @@ Validation:
 
 Next:
 - Continue remaining shader-family coverage and descriptor lifecycle hardening.
+
+## Checkpoint: Broad Command Sweep With Raw Image And Gradient Sentinels
+
+Status: completed for the expanded default command-probe suite after adding raw image and raw gradient shader fallback
+sentinels.
+
+Validation:
+- Ran the short broad Magic Jewel command-probe sweep:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260504-001728/suite.tsv`.
+- The expanded default suite passed end to end with `DURATION_SECONDS=2` and `WARMUP_SECONDS=1`.
+- Descriptor-backed image, solid-color, fractal-noise, and turbulence shader rows stayed on command replay:
+  `unsupported=none`, `jbr_picture_frames=0`, and positive `jbr_command_frames`.
+- Raw image and raw linear/radial/sweep gradient shader rows stayed on structured `shader` fallback with picture replay
+  and zero JBR command frames:
+  - `commands-raw-image-shader-fallback`: `unsupported=shader:370,graphicsLayer:childCommands:370,graphicsLayer:370`,
+    `jbr_picture_frames=370`, `jbr_command_frames=0`.
+  - `commands-raw-linear-gradient-shader-fallback`:
+    `unsupported=shader:176,graphicsLayer:childCommands:176,graphicsLayer:176`, `jbr_picture_frames=176`,
+    `jbr_command_frames=0`.
+  - `commands-raw-radial-gradient-shader-fallback`:
+    `unsupported=shader:376,graphicsLayer:childCommands:376,graphicsLayer:376`, `jbr_picture_frames=375`,
+    `jbr_command_frames=0`.
+  - `commands-raw-sweep-gradient-shader-fallback`:
+    `unsupported=shader:379,graphicsLayer:childCommands:379,graphicsLayer:379`, `jbr_picture_frames=379`,
+    `jbr_command_frames=0`.
+- Graphics-layer render-effect, shadow, rotation, and filter rows stayed on command replay. Intentional raw/opaque/picture
+  shader and invalid-gradient fallback sentinels retained picture replay with explicit unsupported reasons.
+
+Next:
+- Continue remaining shader-family coverage and descriptor lifecycle hardening.
