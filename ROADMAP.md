@@ -228,6 +228,9 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Live Magic Jewel fallback probe for raw Skia RuntimeEffect color filters, asserting the strict recorder reports
   `colorFilter` unsupported markers unless the filter was created through CMP's metadata-backed
   `RuntimeEffectColorFilter` descriptor path.
+- [x] Live Magic Jewel fallback probe for raw Skia blend color filters, asserting
+  `ColorFilter.makeBlend(...).asComposeColorFilter()` reports `colorFilter` unsupported markers while metadata-backed
+  Compose tint/color-matrix/lighting/RuntimeEffect descriptors continue through command replay.
 - [x] Live Magic Jewel fallback probe for raw Skia-backed graphics-layer `RenderEffect`, asserting the strict recorder
   reports `graphicsLayer:renderEffect` unsupported markers until JBR owns an explicit descriptor for that image-filter
   family.
@@ -839,6 +842,15 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   `commands-raw-runtime-effect-color-filter-fallback` reported
   `unsupported=colorFilter:414,graphicsLayer:childCommands:414,graphicsLayer:414`, `jbr_picture_frames=414`, and
   `jbr_command_frames=0`.
+- [x] Raw blend color-filter fallback probe passed, and the compact color-filter subset kept descriptor-backed
+  tint/handle/color-matrix/lighting/RuntimeEffect rows on command replay at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-073512/suite.tsv`.
+- [x] Short broad Magic Jewel command-probe sweep passed after adding the raw blend color-filter fallback row:
+  88/88 rows passed at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-073756/suite.tsv`.
+  `commands-raw-blend-color-filter-fallback` reported
+  `unsupported=colorFilter:207,graphicsLayer:childCommands:207,graphicsLayer:207`, `jbr_picture_frames=208`, and
+  `jbr_command_frames=0`; adjacent metadata-backed color-filter rows stayed on command replay.
 - [x] Forced-context descriptor subset passed for effect descriptors, shader descriptors, and graphics-layer
   render-effect descriptors at
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-063838/suite.tsv`.
