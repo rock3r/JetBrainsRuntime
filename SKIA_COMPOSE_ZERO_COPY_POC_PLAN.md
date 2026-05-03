@@ -13460,3 +13460,27 @@ Validation:
 Next:
 - Keep packaged-resource and named-system-font rows in both command and screenshot parity suites while continuing the
   remaining shader/effect ownership work.
+
+## Checkpoint: Non-Focus-Stealing Probe Windows
+
+Status: completed.
+
+Changes:
+- Magic Jewel report, command-probe, screenshot-parity, and matrix runs now default `MAGIC_JEWEL_BACKGROUND_WINDOW=true`.
+- Under that flag the app marks its main JFrame and popup-window JDialog as non-focusable/non-auto-request-focus, and
+  Gradle launches the JVM with `apple.awt.UIElement=true`.
+- `MAGIC_JEWEL_BACKGROUND_WINDOW=false` remains available for interactive debugging runs that should behave like a normal
+  foreground app.
+
+Validation:
+- Magic Jewel compile passed:
+  `./gradlew --no-daemon --no-configuration-cache compileKotlin`.
+- Harness script syntax passed:
+  `bash -n scripts/jbr-skia-interop-report.sh scripts/jbr-skia-command-probe-suite.sh scripts/jbr-skia-compatibility-matrix.sh scripts/jbr-skia-screenshot-parity-suite.sh`.
+- Focused popup-window command replay passed with background windows enabled:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-181305/suite.tsv`.
+- The row reported `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, `jbr_command_frames=872`,
+  and a passing popup-window screenshot assertion.
+
+Next:
+- Resume the short broad Magic Jewel command sweep with the quieter automation-window default.
