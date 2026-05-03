@@ -193,6 +193,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   - [x] Perlin/noise shader descriptors pass through CMP -> Skiko -> JBR native replay for `FractalNoiseShader(...)`
     and `TurbulenceShader(...)`, replacing the former raw Skia fallback rows with JBR-owned
     `COMMAND_SHADER_DESCRIPTOR_PERLIN_NOISE` replay.
+  - [x] JBR command-stream validator fixtures reject malformed Perlin/noise shader descriptor payloads for invalid
+    kind, base frequency, octave count, and tile size.
   - [x] Add old/new screenshot parity coverage for shader + color-filter descriptor composition.
   - [ ] Add shader/effect lifecycle commands for create, use, context-scoped cache hit, compile failure, eviction, and context migration invalidation; never pass raw Skiko `SkShader*`, `SkImageFilter*`, or `SkRuntimeEffect*` pointers across the ABI.
   - [x] Add RuntimeEffect conformance probes in Magic Jewel: one pure color shader, one child-shader composition, one uniform animation, one builder/compile-failure fallback, and one old-runtime capability fallback.

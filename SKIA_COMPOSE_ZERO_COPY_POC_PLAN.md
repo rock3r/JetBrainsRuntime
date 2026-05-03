@@ -13856,3 +13856,23 @@ Validation:
 
 Next:
 - Continue remaining shader-family coverage and descriptor lifecycle hardening.
+
+## Checkpoint: Perlin Noise Descriptor Validator Hardening
+
+Status: completed for JBR-side malformed Perlin/noise shader descriptor payload coverage.
+
+Changes:
+- Added negative `JBRSkiaApiTest` command-stream fixtures for ABI 105 `COMMAND_SHADER_DESCRIPTOR_PERLIN_NOISE`.
+- The new fixtures start from the valid descriptor stream and corrupt one Perlin-specific field at a time:
+  invalid noise kind, zero base frequency, octave count above the accepted range, and tile size above the accepted range.
+
+Validation:
+- Rebuilt local JBR API shim, patched `java.desktop` classes, and native bridge with:
+  `bash ./scripts/rebuild-jbr-skia-local-artifacts.sh`.
+- Compiled `JBRSkiaApiTest.java` against the refreshed patched desktop classes with a temporary local `JBRApi` test stub
+  that supplies `internalService()` for source checking.
+- Caveat: `jtreg` is not installed in this environment, so this was a local patched-class source/ABI smoke rather than a
+  canonical jtreg run.
+
+Next:
+- Continue remaining shader-family coverage and descriptor lifecycle hardening.

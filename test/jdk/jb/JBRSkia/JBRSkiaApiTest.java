@@ -278,6 +278,10 @@ public class JBRSkiaApiTest {
         assertInvalidCommandStream(invalidRuntimeEffectShaderHashStream(), "invalid runtime-effect shader source hash stream");
         assertInvalidCommandStream(invalidRuntimeEffectUniformSchemaStream(), "invalid runtime-effect uniform schema stream");
         assertInvalidCommandStream(invalidRuntimeEffectChildSchemaStream(), "invalid runtime-effect child schema stream");
+        assertInvalidCommandStream(invalidPerlinNoiseShaderKindStream(), "invalid Perlin noise shader kind stream");
+        assertInvalidCommandStream(invalidPerlinNoiseShaderFrequencyStream(), "invalid Perlin noise shader frequency stream");
+        assertInvalidCommandStream(invalidPerlinNoiseShaderOctavesStream(), "invalid Perlin noise shader octave stream");
+        assertInvalidCommandStream(invalidPerlinNoiseShaderTileSizeStream(), "invalid Perlin noise shader tile-size stream");
         assertValidCommandStream(new int[] {
                 JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 3,
                 JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
@@ -1215,6 +1219,30 @@ public class JBRSkiaApiTest {
                 0x00000041, 0x00000042,
                 1000, 2000, 11000, 12000, 1000
         };
+    }
+
+    private static int[] invalidPerlinNoiseShaderKindStream() {
+        int[] commands = validPerlinNoiseShaderDescriptorStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 8] = 2;
+        return commands;
+    }
+
+    private static int[] invalidPerlinNoiseShaderFrequencyStream() {
+        int[] commands = validPerlinNoiseShaderDescriptorStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 9] = 0;
+        return commands;
+    }
+
+    private static int[] invalidPerlinNoiseShaderOctavesStream() {
+        int[] commands = validPerlinNoiseShaderDescriptorStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 11] = 17;
+        return commands;
+    }
+
+    private static int[] invalidPerlinNoiseShaderTileSizeStream() {
+        int[] commands = validPerlinNoiseShaderDescriptorStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 13] = 4097;
+        return commands;
     }
 
     private static int[] invalidRuntimeEffectShaderHashStream() {
