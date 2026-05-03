@@ -12666,6 +12666,17 @@ Validation:
   such as raw RuntimeEffect shader/color-filter, raw blend color-filter, raw discrete path effect, raw image-filter
   RenderEffect, opaque/composite/noise/picture shaders, and invalid gradient metadata retained structured unsupported
   reasons with picture replay.
+- Added `parity-native-generic-font-text` to Magic Jewel's screenshot parity suite. The row enables
+  `MAGIC_JEWEL_GENERIC_FONT_TEXT=true` with native text and disables the heavier paragraph-layout stress labels so
+  generic `monospace` and `serif` family resolution has its own old/new visual tripwire.
+- Focused generic-family native-text screenshot parity passed:
+  `CASES=parity-native-generic-font-text DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-screenshot-parity-suite.sh`.
+- Screenshot parity suite TSV:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260503-101144/suite.tsv`.
+- The row reported `fallbacks=0`, `jbr_picture_frames=0`, `jbr_command_frames=1569`,
+  `bad_pixel_ratio=0.05282`, `compose_bad_pixel_ratio=0.07480`,
+  `compose_bottom_labels_bad_pixel_ratio=0.11174`, and
+  `compose_paragraph_probes_bad_pixel_ratio=0.10834`.
 
 Next:
 - Continue native text/font ownership work with visual parity, baseline/style metrics, and any remaining platform font

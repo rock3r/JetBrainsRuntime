@@ -267,6 +267,9 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   90/90 rows passed at
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-092836/suite.tsv`;
   `commands-native-generic-font-text` stayed on command replay with `jbr_command_frames=389`.
+- [x] Generic-family native-text screenshot parity row passed at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260503-101144/suite.tsv`
+  with zero fallback, zero picture frames, and `jbr_command_frames=1569`.
 - [x] Add a Magic Jewel forced-context native-text command probe that requires simple/paragraph text commands,
   `contextChanged=true`, and command-cache clearing without falling back to picture replay.
 - [x] Add a Magic Jewel forced-context dynamic image-cache command probe that requires cached image refs, single-key
