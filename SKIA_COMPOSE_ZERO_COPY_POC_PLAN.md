@@ -13600,3 +13600,30 @@ Validation:
 
 Next:
 - Continue remaining shader/effect lifecycle and physical screen/context migration hardening.
+
+## Checkpoint: Stable Shader Descriptor Define Gates
+
+Status: completed for focused Magic Jewel command-probe hardening.
+
+Changes:
+- Tightened Magic Jewel command-probe rows so stable shader descriptor cases now assert exact maximum JBR shader handle
+  definition counts, not only minimum handle use:
+  - `commands-color-shader` requires exactly one shader handle define.
+  - `commands-image-shader-color-filter` requires exactly two shader handle defines.
+  - `commands-transformed-shader` requires exactly two shader handle defines.
+- These gates protect the descriptor cache lifecycle by failing if CMP/JBR start redefining stable shader handles every
+  frame.
+
+Validation:
+- Magic Jewel command-probe script syntax passed:
+  `bash -n scripts/jbr-skia-command-probe-suite.sh`.
+- Focused shader descriptor subset passed:
+  `CASES="commands-color-shader commands-image-shader-color-filter commands-transformed-shader" DURATION_SECONDS=3 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`.
+- Suite TSV:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-201312/suite.tsv`.
+- The rows reported `fallback_new_count=0`, `unsupported=none`, and `jbr_picture_frames=0`; shader handle define
+  counts were one for the solid color descriptor and two for the image+color-filter and transformed-shader descriptor
+  trees.
+
+Next:
+- Continue remaining shader/effect lifecycle and physical screen/context migration hardening.

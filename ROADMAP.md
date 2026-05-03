@@ -1117,6 +1117,9 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
     `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-192910/suite.tsv`;
     the short broad command sweep with turbulence included passed at
     `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-193253/suite.tsv`.
+  - [x] Harden stable shader descriptor rows with exact max JBR shader-handle define gates for solid color,
+    image+color-filter, and transformed shader descriptors. Focused command replay passed at
+    `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-201312/suite.tsv`.
 - [x] Extend path-effect descriptors beyond corner to stamped path effects.
 - [x] Extend path-effect descriptors to chained path effects.
 - [ ] Screen migration/context invalidation hardening beyond the current synthetic descriptor context-change probes.
