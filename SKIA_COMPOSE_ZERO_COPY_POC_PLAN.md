@@ -12637,6 +12637,36 @@ Next:
 - Continue closing the remaining raw Skia object ownership boundaries, and promote only explicitly serialized
   semantics into JBR-owned descriptors.
 
+## Checkpoint: Forced Context Graphics-Layer RenderEffect Redefine
+
+Status: completed for the current graphics-layer image-filter descriptor path.
+
+Changes:
+- Added `commands-forced-context-graphics-layer-render-effect` to Magic Jewel's command-probe suite.
+- The row combines `MAGIC_JEWEL_COMPOSE_GRAPHICS_LAYER=true`,
+  `MAGIC_JEWEL_COMPOSE_GRAPHICS_LAYER_RENDER_EFFECT=true`, and `MAGIC_JEWEL_FORCE_CONTEXT_CHANGE=true`.
+- It asserts a real destination-context change, command-cache clearing, at least two JBR effect-handle defines, effect
+  handle use, and cache-hit recovery after the post-change redefine.
+
+Validation:
+- Magic Jewel command-probe script syntax passed:
+  `bash -n scripts/jbr-skia-command-probe-suite.sh`.
+- Focused command-probe row passed:
+  `CASES=commands-forced-context-graphics-layer-render-effect DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`.
+- Focused suite TSV: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-063801/suite.tsv`.
+- The focused row reported `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, and
+  `jbr_command_frames=303`.
+- Ran a compact forced-context subset:
+  `CASES="commands-forced-context-descriptor-redefine commands-forced-context-shader-descriptor-redefine commands-forced-context-graphics-layer-render-effect" DURATION_SECONDS=3 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`.
+- Subset suite TSV: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-063838/suite.tsv`.
+- All three rows passed. The new graphics-layer render-effect row reported `fallback_new_count=0`, `unsupported=none`,
+  `jbr_picture_frames=0`, and `jbr_command_frames=331`, alongside the existing effect-descriptor and shader-descriptor
+  forced-context redefine rows.
+
+Next:
+- Physical multi-monitor migration remains a later manual/system integration concern, but the synthetic context-change
+  cache-clear/redefine path is now covered for the current descriptor-backed command replay families.
+
 ## Checkpoint: Picture Shader Fallback Probe
 
 Status: completed as a named live fallback row for Skia picture shaders.

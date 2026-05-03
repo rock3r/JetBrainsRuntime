@@ -166,6 +166,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
     multi-monitor migration.
   - [x] Shader descriptor redefine probes now mirror the effect-handle resize/context-change rows, requiring RuntimeEffect
     shader handles to be redefined after same-context resize and forced context migration.
+  - [x] Graphics-layer render-effect descriptors now have a forced context-change probe that requires command-cache
+    clearing, effect-handle redefinition, and cache-hit recovery after the new destination context is established.
   - [x] Missing CMP command-cache clear hook is a structured Skiko fallback (`command-cache-clear-unavailable`) instead of a silent stale-handle risk.
   - [x] Graphics-layer blur, offset, and chained render-effect rows now assert JBR effect-handle define/use/cache-hit
     markers, proving ABI 82-84 image-filter descriptors are consumed by replay and reused across frames.
@@ -835,6 +837,11 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   `commands-raw-runtime-effect-color-filter-fallback` reported
   `unsupported=colorFilter:414,graphicsLayer:childCommands:414,graphicsLayer:414`, `jbr_picture_frames=414`, and
   `jbr_command_frames=0`.
+- [x] Forced-context descriptor subset passed for effect descriptors, shader descriptors, and graphics-layer
+  render-effect descriptors at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-063838/suite.tsv`.
+  The new `commands-forced-context-graphics-layer-render-effect` row reported `unsupported=none`,
+  `jbr_picture_frames=0`, and `jbr_command_frames=331`.
 - [x] Launch-level compatibility matrix passed after ABI 102 transformed shader descriptor replay, including the exact
   `shader-transform-capability-missing` high-word row:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260503-022142/matrix.tsv`.
@@ -875,7 +882,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [ ] JBR-owned generic shader factory and handles for non-serialized shader families.
 - [x] Extend path-effect descriptors beyond corner to stamped path effects.
 - [x] Extend path-effect descriptors to chained path effects.
-- [ ] Screen migration/context invalidation hardening.
+- [ ] Screen migration/context invalidation hardening beyond the current synthetic descriptor context-change probes.
 - [x] Real menu stress tests beyond popup-window coverage.
 - [ ] JCEF/shared-texture exploration after Compose is solid.
 - [ ] Windows/Linux backend adapter investigation after macOS MVP.
