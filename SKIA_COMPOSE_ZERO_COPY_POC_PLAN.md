@@ -12506,3 +12506,36 @@ Validation:
 
 Next:
 - Continue the next shader/effect ownership item.
+
+## Checkpoint: Picture Shader Fallback Probe
+
+Status: completed as a named live fallback row for Skia picture shaders.
+
+Changes:
+- Added `MAGIC_JEWEL_COMPOSE_PICTURE_SHADER` / `magic.jewel.compose.pictureShader` to Magic Jewel.
+- The opt-in scene records a tiny Skia `Picture` with `PictureRecorder`, turns it into a shader with
+  `Picture.makeShader(...)`, and uses that shader through Compose paint interop.
+- Added `commands-picture-shader-fallback` to the default Magic Jewel command-probe suite.
+- The row asserts the strict recorder reports `shader` unsupported markers and uses picture replay, keeping recorded
+  picture shader content behind explicit fallback until JBR owns a negotiated descriptor for that family.
+
+Validation:
+- Magic Jewel script syntax passed for `jbr-skia-command-probe-suite.sh` and `jbr-skia-interop-report.sh`.
+- Magic Jewel compile passed:
+  `./gradlew --no-daemon --no-configuration-cache compileKotlin`.
+- Focused command-probe row passed:
+  `CASES=commands-picture-shader-fallback DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`.
+- Focused suite TSV: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-040634/suite.tsv`.
+- The focused row reported `fallback_new_count=0`,
+  `unsupported=shader:378,graphicsLayer:childCommands:378,graphicsLayer:378`, `jbr_picture_frames=378`, and
+  `jbr_command_frames=0`.
+- Ran a compact fallback subset:
+  `CASES="commands-opaque-shader-fallback commands-composite-opaque-shader-fallback commands-noise-shader-fallback commands-picture-shader-fallback commands-invalid-gradient-fallback" DURATION_SECONDS=3 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`.
+- Subset suite TSV: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-040709/suite.tsv`.
+- All five fallback rows passed; the picture shader row reported
+  `unsupported=shader:193,graphicsLayer:childCommands:193,graphicsLayer:193`, `jbr_picture_frames=193`, and
+  `jbr_command_frames=0`.
+
+Next:
+- Run a short default command-probe sweep with the picture shader fallback row in the default case list, then continue
+  the next shader/effect ownership item.
