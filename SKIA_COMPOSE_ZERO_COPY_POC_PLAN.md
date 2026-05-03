@@ -13627,3 +13627,28 @@ Validation:
 
 Next:
 - Continue remaining shader/effect lifecycle and physical screen/context migration hardening.
+
+## Checkpoint: Stable Effect Descriptor Define Gates
+
+Status: completed for focused Magic Jewel command-probe hardening.
+
+Changes:
+- Tightened stable shader+color-filter wrapper rows so they cap both shader-handle and effect-handle definitions:
+  image shader + color filter, composite shader + color filter, and linear-gradient shader + color filter now assert
+  exact descriptor-tree sizes.
+- Tightened graphics-layer render-effect rows so blur, offset, chained, tint/blend/color-matrix combinations, and
+  near-camera chained stress coverage assert exact maximum JBR effect-handle definitions.
+- Left dynamic RuntimeEffect shader/color-filter rows uncapped because their animated inputs intentionally produce new
+  descriptors across frames.
+
+Validation:
+- Magic Jewel command-probe script syntax passed:
+  `bash -n scripts/jbr-skia-command-probe-suite.sh`.
+- Final compact descriptor-gate subset passed:
+  `CASES="commands-image-shader-color-filter commands-composite-shader-color-filter commands-linear-gradient-shader-color-filter commands-graphics-layer-render-effect commands-graphics-layer-offset-effect commands-graphics-layer-chained-render-effect commands-graphics-layer-render-effect-color-filter commands-graphics-layer-render-effect-blend-mode commands-graphics-layer-render-effect-color-matrix-filter commands-graphics-layer-render-effect-blend-color-filter commands-graphics-layer-render-effect-blend-color-matrix-filter commands-graphics-layer-offset-effect-blend-color-matrix-filter commands-graphics-layer-chained-render-effect-blend-color-matrix-filter commands-graphics-layer-near-camera-chained-render-effect-blend-color-matrix-filter" DURATION_SECONDS=2 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`.
+- Suite TSV:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-202638/suite.tsv`.
+- All rows reported `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, and nonzero command frames.
+
+Next:
+- Continue remaining shader/effect lifecycle and physical screen/context migration hardening.
