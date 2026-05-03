@@ -951,6 +951,12 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Focused custom-font image and generic-family native-text screenshot parity subset passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260503-113538/suite.tsv`.
   Both rows stayed on JBR command replay with zero fallback and zero picture frames.
+- [x] Short broad Magic Jewel command-probe sweep passed after the file-backed font native-text guard:
+  92/92 rows passed at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-113919/suite.tsv`.
+  The renamed custom-font text rows stayed image-backed on command replay with zero fallback and zero picture frames;
+  generic-family native-text rows stayed mixed image/native command replay; intentional raw shader/effect fallback rows
+  retained structured unsupported reasons and picture replay.
 - [x] Focused transformed shader screenshot parity passed after ABI 102 descriptor replay:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260503-023351/suite.tsv`.
 - [x] Broad Magic Jewel screenshot parity sweep passed after adding the transformed shader descriptor row:

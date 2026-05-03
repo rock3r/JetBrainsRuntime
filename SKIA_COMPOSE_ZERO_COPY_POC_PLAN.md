@@ -12538,6 +12538,13 @@ Validation:
 - Screenshot parity suite TSV:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260503-113538/suite.tsv`.
 - Both focused parity rows reported zero fallback, zero JBR picture frames, and positive JBR command frames.
+- Short broad Magic Jewel command-probe sweep passed:
+  `DURATION_SECONDS=2 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`.
+- Broad command suite TSV:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-113919/suite.tsv`.
+- All 92 rows passed. The renamed custom-font text rows stayed image-backed on command replay with zero fallback and
+  zero picture frames; generic-family native-text rows stayed mixed image/native command replay; intentional raw
+  shader/effect fallback rows retained structured unsupported reasons and picture replay.
 
 Next:
 - Continue font/typeface ownership by defining a JBR-owned loaded-font descriptor or data-handle path before promoting
