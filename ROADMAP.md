@@ -1072,6 +1072,12 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
     `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-161138/suite.tsv`.
   - [x] Short broad Magic Jewel command-probe sweep passed with the loaded-font-data row included:
     `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-171850/suite.tsv`.
+  - [x] CMP now deduplicates `COMMAND_DEFINE_FONT_DATA` by handle until the recorder's interop caches are cleared,
+    avoiding repeated byte-array font definitions on every frame while preserving context/surface invalidation behavior.
+    Focused loaded-font-data command replay passed at
+    `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-180117/suite.tsv`
+    with `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=300`, and
+    `jbr_font_data_define_frames=1`.
 - [ ] JBR-owned generic shader factory and handles for non-serialized shader families.
   - [x] Add a first solid-color shader factory descriptor (`COMMAND_SHADER_DESCRIPTOR_COLOR`) with strict high-word
     capability gating and live fallback contrast against raw Skia color shaders.

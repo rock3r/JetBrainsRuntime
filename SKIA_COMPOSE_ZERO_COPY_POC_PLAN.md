@@ -13437,3 +13437,26 @@ Validation:
 
 Next:
 - Continue the next shader/effect ownership item.
+
+## Checkpoint: Loaded Font-Data Define Deduplication
+
+Status: completed.
+
+Changes:
+- CMP now tracks defined font-data handles alongside the existing image, shader, and color-filter descriptor caches.
+- `COMMAND_DEFINE_FONT_DATA` is emitted once per font-data handle until the recorder interop caches are cleared; cache
+  clearing still happens on surface/context identity changes and in focused tests.
+- Added CMP recorder coverage proving repeated `defineFontData(handle, bytes)` calls do not re-emit opcode 66 until
+  `clearImageCacheForTesting()` resets the interop caches.
+
+Validation:
+- CMP focused tests passed:
+  `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesFontDataRecord --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.deduplicatesFontDataRecordsUntilCacheClear`.
+- Focused Magic Jewel loaded-font-data command replay passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-180117/suite.tsv`.
+- The focused row reported `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`,
+  `jbr_command_frames=300`, and `jbr_font_data_define_frames=1`.
+
+Next:
+- Keep packaged-resource and named-system-font rows in both command and screenshot parity suites while continuing the
+  remaining shader/effect ownership work.
