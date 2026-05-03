@@ -13717,3 +13717,30 @@ Validation:
 
 Next:
 - Continue remaining shader-family coverage and descriptor lifecycle hardening.
+
+## Checkpoint: Perlin Noise Descriptor Resize/Context Redefine
+
+Status: completed for Perlin/noise shader handle lifecycle coverage in Magic Jewel.
+
+Changes:
+- Added `commands-resize-noise-shader-descriptor-redefine` to exercise same-context surface replacement for the ABI 105
+  Perlin/noise shader descriptor path.
+- Added `commands-forced-context-noise-shader-descriptor-redefine` to exercise forced destination-context migration for
+  the same descriptor path.
+- Both rows require Skiko/CMP command-cache clearing, at least two JBR shader-handle definitions, and cache-hit recovery
+  after the fresh definition.
+- Documented the new lifecycle rows next to the existing RuntimeEffect, solid-color shader, and graphics-layer
+  render-effect redefine rows.
+
+Validation:
+- Magic Jewel command-probe script syntax passed:
+  `bash -n scripts/jbr-skia-command-probe-suite.sh`.
+- Focused Magic Jewel lifecycle subset passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-212142/suite.tsv`.
+- The resize row reported `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, and
+  `jbr_command_frames=719`.
+- The forced-context row reported `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, and
+  `jbr_command_frames=344`.
+
+Next:
+- Continue remaining shader-family coverage and descriptor lifecycle hardening.

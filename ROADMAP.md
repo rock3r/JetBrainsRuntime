@@ -1023,6 +1023,10 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260503-211813/suite.tsv`.
   `parity-noise-shader` and `parity-turbulence-shader` stayed on command replay with zero fallback and zero picture
   frames, and their focused shader probe regions stayed under the initial parity gates.
+- [x] Focused Perlin/noise descriptor lifecycle rows passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-212142/suite.tsv`.
+  Resize and forced-context probes required command-cache clearing, second shader-handle definitions, cache-hit recovery,
+  zero fallback, and zero picture frames.
 - [x] Focused solid color shader screenshot parity passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260503-150944/suite.tsv`.
   The `parity-color-shader` row reported `fallback_new_count=0`, `jbr_picture_frames=0`,
