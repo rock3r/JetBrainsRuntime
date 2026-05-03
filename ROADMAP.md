@@ -275,6 +275,11 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-101926/suite.tsv`
   and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260503-102017/suite.tsv`.
+- [x] Forced-context generic-family native-text command and screenshot rows passed with command-cache clearing and no
+  fallback at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-103534/suite.tsv`
+  and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260503-103617/suite.tsv`.
 - [x] Focused native-text screenshot parity subset passed after adding generic-family resolution:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260503-101448/suite.tsv`.
   Baseline native text, generic-family native text, and forced-context native text all kept zero fallback and zero

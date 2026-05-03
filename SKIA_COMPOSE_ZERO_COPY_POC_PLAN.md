@@ -12692,6 +12692,20 @@ Validation:
 - The row passed with `fallbacks=0`, `jbr_picture_frames=0`, `jbr_command_frames=495`,
   `bad_pixel_ratio=0.05315`, `compose_bottom_labels_bad_pixel_ratio=0.09956`, and
   `compose_paragraph_probes_bad_pixel_ratio=0.11319`.
+- Added forced-context generic-family native-text rows to the Magic Jewel command and screenshot parity suites.
+- Focused forced-context generic-family command row passed:
+  `CASES=commands-forced-context-native-generic-font-text DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`.
+- Forced-context generic-family command suite TSV:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-103534/suite.tsv`.
+- The command row reported `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`,
+  `jbr_command_frames=308`, `skiko_context_change_markers=1`, and `skiko_command_cache_clear_markers=1`.
+- Focused forced-context generic-family screenshot parity row passed:
+  `CASES=parity-forced-context-native-generic-font-text DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-screenshot-parity-suite.sh`.
+- Forced-context generic-family screenshot suite TSV:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260503-103617/suite.tsv`.
+- The screenshot row reported `fallbacks=0`, `jbr_picture_frames=0`, `jbr_command_frames=437`,
+  `bad_pixel_ratio=0.05150`, `compose_bottom_labels_bad_pixel_ratio=0.09956`, and
+  `compose_paragraph_probes_bad_pixel_ratio=0.11319`.
 - Re-ran the focused native-text visual subset with the generic row included:
   `CASES="parity-native-text parity-native-generic-font-text parity-forced-context-native-text" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-screenshot-parity-suite.sh`.
 - Native-text subset TSV:
