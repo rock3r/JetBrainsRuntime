@@ -12553,10 +12553,36 @@ Validation:
 - The forced-context row reported `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`,
   `jbr_command_frames=626`, `jbr_shader_handle_define_frames=2`, `jbr_shader_handle_cache_hit_frames=1381`,
   one context-change marker, and one command-cache clear marker.
+- Ran Magic Jewel's short default command-probe sweep after inserting the color-shader redefine rows:
+  `DURATION_SECONDS=2 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`.
+- Broad suite TSV: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-151907/suite.tsv`.
+- The default suite passed end to end, including both new color-shader resize/context rows.
 
 Next:
 - Keep adding descriptor-family-specific resize/context rows when a new handle type or cache invalidation path is
   introduced.
+
+## Planned: Packaged Resource and Named System Font Coverage
+
+Status: planned.
+
+Rationale:
+- Current Magic Jewel coverage distinguishes generic-family native text from custom/file-backed loaded fonts, but it
+  does not separately prove the common application path where a font is bundled inside the app/JAR resources.
+- Generic family names exercise platform font resolution, but they do not prove an explicit installed system font name
+  behaves correctly as its own case.
+
+Planned coverage:
+- Add a Magic Jewel scene toggle for a font loaded from a packaged resource in the application JAR.
+- Add command and screenshot parity rows that validate the packaged-resource font ownership decision, either native
+  font-data descriptor replay if bytes are available to CMP/JBR, or image replay if the font remains Skiko-owned.
+- Add a separate Magic Jewel scene toggle for one concrete installed macOS system font family, distinct from generic
+  `sans-serif`/`serif`/`monospace`.
+- Add command and screenshot parity rows for that named system font, with explicit gates for native text commands and
+  old/new visual parity.
+
+Next:
+- Implement these font rows before broadening font/typeface ownership beyond the current loaded-font descriptor slice.
 
 ## Checkpoint: ABI 104 Solid Color Shader Descriptor Replay
 

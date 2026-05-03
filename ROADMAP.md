@@ -1005,6 +1005,9 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-151610/suite.tsv`;
   both rows reported zero fallback, zero picture frames, fresh shader handle defines, cache hits, and command-cache
   clearing after the surface identity change.
+- [x] Short broad Magic Jewel command-probe sweep passed after adding the ABI 104 color-shader redefine rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-151907/suite.tsv`.
+  The default suite passed end to end, including both new color-shader resize/context rows.
 - [x] Add focused screenshot parity coverage for Magic Jewel toolbar/button rendering, including primary button text
   color and text centering, so command replay is compared against the old SwingGraphics renderer for UI chrome
   fidelity regressions.
@@ -1052,6 +1055,9 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [ ] Font/typeface ownership through the JBR Skia runtime.
   - [x] Keep Skiko-owned loaded/file-backed fonts on image replay until JBR owns font descriptors or data handles.
   - [x] Add ABI 103 JBR-owned font-data descriptors for simple native text backed by CMP loaded font bytes.
+  - [ ] Add explicit Magic Jewel command and screenshot coverage for fonts loaded from packaged JAR resources.
+  - [ ] Add explicit Magic Jewel command and screenshot coverage for a concrete installed system font family, separate
+    from generic `sans-serif`/`serif`/`monospace` family coverage.
 - [ ] JBR-owned generic shader factory and handles for non-serialized shader families.
   - [x] Add a first solid-color shader factory descriptor (`COMMAND_SHADER_DESCRIPTOR_COLOR`) with strict high-word
     capability gating and live fallback contrast against raw Skia color shaders.
