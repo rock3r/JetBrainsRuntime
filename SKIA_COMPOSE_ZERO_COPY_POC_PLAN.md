@@ -13918,3 +13918,28 @@ Validation:
 
 Next:
 - Continue remaining shader-family coverage and descriptor lifecycle hardening.
+
+## Checkpoint: Raw Gradient Family Fallback Sentinels
+
+Status: completed for raw Skia linear, radial, and sweep gradient shader ownership-boundary coverage.
+
+Changes:
+- Added `MAGIC_JEWEL_COMPOSE_RAW_RADIAL_GRADIENT_SHADER` /
+  `magic.jewel.compose.rawRadialGradientShader`.
+- Added `MAGIC_JEWEL_COMPOSE_RAW_SWEEP_GRADIENT_SHADER` / `magic.jewel.compose.rawSweepGradientShader`.
+- Added `commands-raw-radial-gradient-shader-fallback` and `commands-raw-sweep-gradient-shader-fallback` to the default
+  Magic Jewel command-probe suite.
+- The raw gradient helpers use reflection to support both the older Skiko integer-color gradient factory API and the
+  current `Gradient` object API while keeping the probe itself explicitly raw-Skiko-owned.
+
+Validation:
+- Magic Jewel Kotlin compile passed against `SKIKO_VERSION=0.0.0-SNAPSHOT`.
+- Script syntax passed:
+  `bash -n scripts/jbr-skia-interop-report.sh scripts/jbr-skia-command-probe-suite.sh`.
+- Focused raw gradient-family fallback subset passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-235846/suite.tsv`.
+- Raw linear, radial, and sweep rows all reported structured `shader` unsupported markers, positive JBR picture replay,
+  and zero JBR command frames.
+
+Next:
+- Continue remaining shader-family coverage and descriptor lifecycle hardening.
