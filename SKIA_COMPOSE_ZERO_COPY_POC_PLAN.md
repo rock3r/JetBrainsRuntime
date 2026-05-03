@@ -12507,6 +12507,48 @@ Validation:
 Next:
 - Continue the next shader/effect ownership item.
 
+## Checkpoint: Raw Graphics-Layer RenderEffect Fallback Probe
+
+Status: completed as a named live fallback row for raw Skia-backed graphics-layer render effects.
+
+Changes:
+- Added `MAGIC_JEWEL_COMPOSE_GRAPHICS_LAYER_RAW_IMAGE_FILTER_EFFECT` /
+  `magic.jewel.compose.graphicsLayerRawImageFilterEffect` to Magic Jewel.
+- The opt-in scene applies `org.jetbrains.skia.ImageFilter.makeDropShadow(...).asComposeRenderEffect()` to the existing
+  graphics-layer probe. This is a raw `SkiaBackedRenderEffect`, so CMP has no JBR-owned image-filter descriptor for it.
+- Added `commands-graphics-layer-raw-image-filter-effect-fallback` to the default Magic Jewel command-probe suite.
+- The row asserts the strict recorder reports `graphicsLayer:renderEffect` unsupported markers and uses picture replay,
+  while supported `BlurEffect`, `OffsetEffect`, and chained render-effect descriptor rows remain on command replay.
+
+Validation:
+- Magic Jewel script syntax passed for `jbr-skia-command-probe-suite.sh` and `jbr-skia-interop-report.sh`.
+- Magic Jewel compile passed:
+  `./gradlew --no-daemon --no-configuration-cache compileKotlin`.
+- Focused command-probe row passed:
+  `CASES=commands-graphics-layer-raw-image-filter-effect-fallback DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`.
+- Focused suite TSV: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-044654/suite.tsv`.
+- The focused row reported `fallback_new_count=0`,
+  `unsupported=graphicsLayer:childCommands:360,graphicsLayer:renderEffect:360,graphicsLayer:360`,
+  `jbr_picture_frames=360`, and `jbr_command_frames=0`.
+- Ran a compact fallback subset:
+  `CASES="commands-graphics-layer-raw-image-filter-effect-fallback commands-opaque-shader-fallback commands-composite-opaque-shader-fallback commands-noise-shader-fallback commands-picture-shader-fallback commands-invalid-gradient-fallback" DURATION_SECONDS=3 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`.
+- Subset suite TSV: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-044731/suite.tsv`.
+- All six fallback rows passed; the raw render-effect row reported
+  `unsupported=graphicsLayer:childCommands:329,graphicsLayer:renderEffect:329,graphicsLayer:329`,
+  `jbr_picture_frames=330`, and `jbr_command_frames=0`.
+- Ran Magic Jewel's short default command-probe sweep after adding the raw render-effect fallback row:
+  `DURATION_SECONDS=2 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`.
+- Broad suite TSV: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-044947/suite.tsv`.
+- All 83 rows passed. Supported rows stayed on command replay with zero unsupported reasons and zero picture frames.
+  The new `commands-graphics-layer-raw-image-filter-effect-fallback` row reported
+  `unsupported=graphicsLayer:childCommands:382,graphicsLayer:renderEffect:382,graphicsLayer:382`,
+  `jbr_picture_frames=381`, and `jbr_command_frames=0`; the supported graphics-layer render-effect descriptor rows
+  stayed on command replay before and after the fallback row.
+
+Next:
+- Continue closing the remaining shader/effect ownership boundaries, promoting raw families to JBR-owned descriptors
+  only when the serialized semantics are explicit.
+
 ## Checkpoint: Picture Shader Fallback Probe
 
 Status: completed as a named live fallback row for Skia picture shaders.

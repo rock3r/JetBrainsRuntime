@@ -219,6 +219,9 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   unsupported markers until JBR owns an explicit descriptor for that family.
 - [x] Live Magic Jewel fallback probe for Skia picture shaders, asserting the strict recorder reports `shader`
   unsupported markers until JBR owns an explicit descriptor for recorded-picture shader content.
+- [x] Live Magic Jewel fallback probe for raw Skia-backed graphics-layer `RenderEffect`, asserting the strict recorder
+  reports `graphicsLayer:renderEffect` unsupported markers until JBR owns an explicit descriptor for that image-filter
+  family.
 - [x] Transformed shader wrappers graduated from strict fallback to transform-aware shader descriptor command replay.
 - [x] Linear-gradient stroke paint graduated from strict fallback to serialized command replay.
 - [x] More strict shader fallback tests for nonfinite gradient metadata that survives shader construction.
@@ -795,6 +798,17 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-041008/suite.tsv`.
   Supported rows stayed on command replay; the raw opaque, composite opaque-child, noise shader, picture shader, and
   invalid-gradient rows remained intentional picture-fallback guards.
+- [x] Raw Skia-backed graphics-layer RenderEffect fallback probe passed, and the compact fallback subset kept raw
+  RenderEffect, raw opaque shader, composite opaque-child shader, noise shader, picture shader, and invalid-gradient
+  rows green at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-044731/suite.tsv`.
+- [x] Short broad Magic Jewel command-probe sweep passed after adding the raw graphics-layer RenderEffect fallback row:
+  83/83 rows passed at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-044947/suite.tsv`.
+  Supported graphics-layer blur/offset/chained render effects stayed on command replay, while
+  `commands-graphics-layer-raw-image-filter-effect-fallback` reported
+  `unsupported=graphicsLayer:childCommands:382,graphicsLayer:renderEffect:382,graphicsLayer:382`,
+  `jbr_picture_frames=381`, and `jbr_command_frames=0`.
 - [x] Launch-level compatibility matrix passed after ABI 102 transformed shader descriptor replay, including the exact
   `shader-transform-capability-missing` high-word row:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260503-022142/matrix.tsv`.
