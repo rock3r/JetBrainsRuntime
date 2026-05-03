@@ -13828,3 +13828,18 @@ Validation:
 
 Next:
 - Continue remaining shader-family coverage and descriptor lifecycle hardening.
+
+## Checkpoint: ABI 105 Current Artifact Matrix
+
+Status: completed for the current local artifact launch paths after ABI 105 Perlin/noise shader work.
+
+Validation:
+- Ran Magic Jewel's artifact matrix with current local JBR API shim, desktop patch, native bridge, Skiko snapshot, and CMP
+  output root:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260503-224852/matrix.tsv`.
+- `current-all` passed with `fallback_new_count=0` and positive JBR command frames.
+- `missing-public-api` passed with the expected `public-api-missing` fallback and zero JBR command frames.
+- Optional old-artifact rows were skipped because no `OLD_*` artifact bundle inputs were provided for this run.
+
+Next:
+- Continue remaining shader-family coverage and descriptor lifecycle hardening.
