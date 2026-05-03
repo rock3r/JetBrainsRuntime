@@ -12677,6 +12677,21 @@ Validation:
   `bad_pixel_ratio=0.05282`, `compose_bad_pixel_ratio=0.07480`,
   `compose_bottom_labels_bad_pixel_ratio=0.11174`, and
   `compose_paragraph_probes_bad_pixel_ratio=0.10834`.
+- Extended the Magic Jewel generic-family text probe to cover all four Compose generic names:
+  `sans-serif`, `serif`, `monospace`, and `cursive`.
+- Re-ran the focused generic-family native text command row:
+  `CASES=commands-native-generic-font-text DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`.
+- Four-family command suite TSV:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-101926/suite.tsv`.
+- The row passed with `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, and
+  `jbr_command_frames=552`.
+- Re-ran the focused generic-family native text screenshot parity row:
+  `CASES=parity-native-generic-font-text DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-screenshot-parity-suite.sh`.
+- Four-family screenshot parity suite TSV:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260503-102017/suite.tsv`.
+- The row passed with `fallbacks=0`, `jbr_picture_frames=0`, `jbr_command_frames=495`,
+  `bad_pixel_ratio=0.05315`, `compose_bottom_labels_bad_pixel_ratio=0.09956`, and
+  `compose_paragraph_probes_bad_pixel_ratio=0.11319`.
 - Re-ran the focused native-text visual subset with the generic row included:
   `CASES="parity-native-text parity-native-generic-font-text parity-forced-context-native-text" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-screenshot-parity-suite.sh`.
 - Native-text subset TSV:
