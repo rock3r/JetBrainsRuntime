@@ -13843,3 +13843,16 @@ Validation:
 
 Next:
 - Continue remaining shader-family coverage and descriptor lifecycle hardening.
+
+## Checkpoint: ABI 105 Artifact Bundle
+
+Status: completed for reusable local ABI 105 artifact packaging.
+
+Validation:
+- Packaged the current JBR API shim, desktop patch, native bridge, Skiko version, and CMP output root with:
+  `SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/package-jbr-skia-artifact-bundle.sh`.
+- Bundle manifest:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-bundles/20260503-225027/manifest.properties`.
+
+Next:
+- Continue remaining shader-family coverage and descriptor lifecycle hardening.
