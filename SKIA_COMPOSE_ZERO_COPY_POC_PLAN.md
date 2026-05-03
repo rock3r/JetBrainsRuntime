@@ -12692,6 +12692,13 @@ Validation:
 - All six rows passed. The new graphics-layer render-effect resize row reported `fallback_new_count=0`,
   `unsupported=none`, `jbr_picture_frames=0`, and `jbr_command_frames=335`, alongside the existing effect-descriptor,
   shader-descriptor, and forced-context graphics-layer render-effect redefine rows.
+- Ran Magic Jewel's short default command-probe sweep after adding the graphics-layer render-effect resize row:
+  `DURATION_SECONDS=2 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`.
+- Broad suite TSV: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-064722/suite.tsv`.
+- All 87 rows passed. The new `commands-resize-graphics-layer-render-effect` row reported `fallback_new_count=0`,
+  `unsupported=none`, `jbr_picture_frames=0`, and `jbr_command_frames=729`; the adjacent
+  `commands-forced-context-graphics-layer-render-effect` row also stayed on command replay with
+  `jbr_command_frames=638`.
 
 Next:
 - Physical multi-monitor migration remains open, but the synthetic same-context resize and forced-context cache

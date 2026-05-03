@@ -849,6 +849,11 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-064338/suite.tsv`.
   The new `commands-resize-graphics-layer-render-effect` row reported `unsupported=none`, `jbr_picture_frames=0`,
   and `jbr_command_frames=335`.
+- [x] Short broad Magic Jewel command-probe sweep passed after adding the graphics-layer render-effect resize row:
+  87/87 rows passed at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-064722/suite.tsv`.
+  `commands-resize-graphics-layer-render-effect` reported `unsupported=none`, `jbr_picture_frames=0`, and
+  `jbr_command_frames=729`; `commands-forced-context-graphics-layer-render-effect` also remained on command replay.
 - [x] Launch-level compatibility matrix passed after ABI 102 transformed shader descriptor replay, including the exact
   `shader-transform-capability-missing` high-word row:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260503-022142/matrix.tsv`.
