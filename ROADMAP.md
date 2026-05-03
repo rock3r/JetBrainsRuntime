@@ -1027,6 +1027,10 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-212142/suite.tsv`.
   Resize and forced-context probes required command-cache clearing, second shader-handle definitions, cache-hit recovery,
   zero fallback, and zero picture frames.
+- [x] Focused turbulence descriptor lifecycle rows passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-220107/suite.tsv`.
+  The resize and forced-context turbulence probes exercise the second ABI 105 Perlin descriptor kind with the same
+  cache-clear/redefine/cache-hit expectations.
 - [x] Short broad Magic Jewel command-probe sweep passed after adding Perlin/noise parity and lifecycle rows:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-212324/suite.tsv`.
   The expanded default suite passed end to end; supported rows stayed on command replay and raw shader/effect sentinel

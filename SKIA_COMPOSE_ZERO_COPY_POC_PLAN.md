@@ -13761,3 +13761,27 @@ Validation:
 
 Next:
 - Continue remaining shader-family coverage and descriptor lifecycle hardening.
+
+## Checkpoint: Turbulence Descriptor Resize/Context Redefine
+
+Status: completed for lifecycle coverage of the turbulence variant of ABI 105 Perlin/noise descriptors.
+
+Changes:
+- Added `commands-resize-turbulence-shader-descriptor-redefine` to the Magic Jewel command-probe suite.
+- Added `commands-forced-context-turbulence-shader-descriptor-redefine` to the Magic Jewel command-probe suite.
+- Both rows use the same cache-clear, second shader-handle define, and cache-hit recovery assertions as the fractal-noise
+  lifecycle rows.
+- Documented the turbulence lifecycle rows alongside the existing descriptor redefine probes.
+
+Validation:
+- Magic Jewel command-probe script syntax passed:
+  `bash -n scripts/jbr-skia-command-probe-suite.sh`.
+- Focused Magic Jewel turbulence lifecycle subset passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-220107/suite.tsv`.
+- The resize row reported `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, and
+  `jbr_command_frames=154`.
+- The forced-context row reported `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, and
+  `jbr_command_frames=247`.
+
+Next:
+- Continue remaining shader-family coverage and descriptor lifecycle hardening.
