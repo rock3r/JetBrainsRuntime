@@ -13785,3 +13785,31 @@ Validation:
 
 Next:
 - Continue remaining shader-family coverage and descriptor lifecycle hardening.
+
+## Checkpoint: Raw Perlin Noise Shader Fallback Sentinels
+
+Status: completed for raw Skia Perlin/noise ownership-boundary coverage.
+
+Changes:
+- Added `MAGIC_JEWEL_COMPOSE_RAW_NOISE_SHADER` / `magic.jewel.compose.rawNoiseShader`.
+- Added `MAGIC_JEWEL_COMPOSE_RAW_TURBULENCE_SHADER` / `magic.jewel.compose.rawTurbulenceShader`.
+- Magic Jewel now draws raw `org.jetbrains.skia.Shader.makeFractalNoise(...).asComposeShader()` and
+  `Shader.makeTurbulence(...).asComposeShader()` probes separately from the descriptor-backed Compose helpers.
+- Added `commands-raw-noise-shader-fallback` and `commands-raw-turbulence-shader-fallback` to the default command-probe
+  suite.
+- These rows assert structured `shader` fallback and picture replay, preserving the rule that raw Skiko-owned shader
+  objects never cross the JBR command ABI.
+
+Validation:
+- Magic Jewel script syntax and Kotlin compile passed:
+  `bash -n scripts/jbr-skia-interop-report.sh scripts/jbr-skia-command-probe-suite.sh` and
+  `./gradlew --no-daemon --no-configuration-cache compileKotlin`.
+- Focused raw Perlin fallback subset passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-220540/suite.tsv`.
+- Raw fractal-noise fallback reported structured `shader` unsupported markers, `jbr_picture_frames=162`, and
+  `jbr_command_frames=0`.
+- Raw turbulence fallback reported structured `shader` unsupported markers, `jbr_picture_frames=321`, and
+  `jbr_command_frames=0`.
+
+Next:
+- Continue remaining shader-family coverage and descriptor lifecycle hardening.
