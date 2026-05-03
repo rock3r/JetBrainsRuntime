@@ -1019,6 +1019,10 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260503-210129/matrix.tsv`.
   The happy row stayed on command replay; every negative row reported one structured fallback and zero JBR command
   frames.
+- [x] Focused Perlin/noise screenshot parity passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260503-211813/suite.tsv`.
+  `parity-noise-shader` and `parity-turbulence-shader` stayed on command replay with zero fallback and zero picture
+  frames, and their focused shader probe regions stayed under the initial parity gates.
 - [x] Focused solid color shader screenshot parity passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260503-150944/suite.tsv`.
   The `parity-color-shader` row reported `fallback_new_count=0`, `jbr_picture_frames=0`,

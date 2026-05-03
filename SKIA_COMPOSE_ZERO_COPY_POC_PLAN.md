@@ -13693,3 +13693,27 @@ Validation:
 Next:
 - Continue remaining shader-family parity and lifecycle coverage, with screenshot parity for Perlin/noise descriptors as
   the next visual guard.
+
+## Checkpoint: Perlin Noise Shader Screenshot Parity
+
+Status: completed for focused old/new visual coverage of ABI 105 Perlin/noise descriptor replay.
+
+Changes:
+- Added screenshot comparator regions for the fractal-noise and turbulence shader probe rectangles.
+- Added `parity-noise-shader` and `parity-turbulence-shader` to the Magic Jewel screenshot parity suite.
+- The new rows enable the JBR-owned Perlin/noise descriptor scenes, require shader-handle define/use markers, and gate the
+  focused shader regions independently from the broader whole-window and Compose-canvas metrics.
+- Documented the new parity rows and their per-region threshold environment variables in Magic Jewel's README.
+
+Validation:
+- Script syntax passed:
+  `bash -n scripts/compare-jbr-skia-window-screenshots.sh scripts/jbr-skia-screenshot-parity-suite.sh`.
+- Focused Magic Jewel screenshot parity passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260503-211813/suite.tsv`.
+- `parity-noise-shader` reported `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=497`, and
+  `compose_shader_noise_bad_pixel_ratio=0.05233`.
+- `parity-turbulence-shader` reported `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=271`, and
+  `compose_shader_turbulence_bad_pixel_ratio=0.07712`.
+
+Next:
+- Continue remaining shader-family coverage and descriptor lifecycle hardening.
