@@ -12507,6 +12507,30 @@ Validation:
 Next:
 - Continue the next shader/effect ownership item.
 
+## Checkpoint: ABI 104 Broad Sweep and Color Shader Screenshot Parity
+
+Status: completed after the solid color shader descriptor slice.
+
+Validation:
+- Ran Magic Jewel's short default command-probe sweep after ABI 104:
+  `DURATION_SECONDS=2 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`.
+- Broad suite TSV: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-142844/suite.tsv`.
+- The default suite passed end to end. `commands-color-shader` stayed on JBR command replay with
+  `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, and positive JBR command frames; raw
+  shader/effect fallback rows retained their structured unsupported reasons and picture replay.
+- Added a `composeShaderColor` screenshot comparison region plus a `parity-color-shader` suite row.
+- The parity row enables `MAGIC_JEWEL_COMPOSE_COLOR_SHADER=true`, requires JBR shader handle define/use markers,
+  and gates the solid color shader output with `MAX_COMPOSE_SHADER_COLOR_BAD_PIXEL_RATIO`.
+- Focused screenshot parity passed:
+  `CASES=parity-color-shader DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-screenshot-parity-suite.sh`.
+- Focused suite TSV: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260503-150944/suite.tsv`.
+- The row reported `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=291`, and
+  `compose_shader_color_bad_pixel_ratio=0.00000`.
+
+Next:
+- Continue expanding screenshot parity alongside command coverage when adding new descriptor families, so visual
+  regressions like button text color/centering and shader output drift are caught against the old SwingGraphics path.
+
 ## Checkpoint: ABI 104 Solid Color Shader Descriptor Replay
 
 Status: completed as a small JBR-owned shader factory slice.

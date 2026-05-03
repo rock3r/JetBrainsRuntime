@@ -992,6 +992,14 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260503-141240/matrix.tsv`.
   All rows passed; the happy row reported positive JBR command frames and every negative row reported one structured
   fallback with zero JBR command frames.
+- [x] Short broad Magic Jewel command-probe sweep passed after ABI 104:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-142844/suite.tsv`.
+  The default suite passed end to end; supported descriptor/graphics-layer rows stayed on command replay, while raw
+  shader/effect fallback rows retained structured unsupported reasons and picture replay.
+- [x] Focused solid color shader screenshot parity passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260503-150944/suite.tsv`.
+  The `parity-color-shader` row reported `fallback_new_count=0`, `jbr_picture_frames=0`,
+  `jbr_command_frames=291`, and `compose_shader_color_bad_pixel_ratio=0.00000`.
 - [x] Add focused screenshot parity coverage for Magic Jewel toolbar/button rendering, including primary button text
   color and text centering, so command replay is compared against the old SwingGraphics renderer for UI chrome
   fidelity regressions.
