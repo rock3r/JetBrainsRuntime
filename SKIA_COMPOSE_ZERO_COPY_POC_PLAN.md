@@ -12550,6 +12550,49 @@ Next:
 - Continue closing raw Skia object ownership boundaries, promoting only explicitly serialized semantics into
   JBR-owned descriptors.
 
+## Checkpoint: Raw Discrete Path-Effect Fallback Probe
+
+Status: completed as a named live fallback row for raw Skia-owned discrete path effects.
+
+Changes:
+- Added `MAGIC_JEWEL_COMPOSE_RAW_DISCRETE_PATH_EFFECT` / `magic.jewel.compose.rawDiscretePathEffect` to Magic Jewel.
+- The opt-in scene creates `org.jetbrains.skia.PathEffect.makeDiscrete(...).asComposePathEffect()`, which is a raw
+  Skiko-owned path effect with no CMP dash/corner/stamped/chained descriptor metadata.
+- Added `commands-raw-discrete-path-effect-fallback` to the default Magic Jewel command-probe suite.
+- The row asserts the strict recorder reports `pathEffect` unsupported markers and uses picture replay, while
+  metadata-backed Compose path-effect descriptors continue through command replay.
+
+Validation:
+- Magic Jewel command-probe script syntax passed:
+  `bash -n scripts/jbr-skia-command-probe-suite.sh`.
+- Magic Jewel compile passed:
+  `./gradlew --no-daemon --no-configuration-cache compileKotlin`.
+- Focused command-probe row passed:
+  `CASES=commands-raw-discrete-path-effect-fallback DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`.
+- Focused suite TSV: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-081315/suite.tsv`.
+- The focused row reported `fallback_new_count=0`,
+  `unsupported=graphicsLayer:childCommands:294,pathEffect:294,graphicsLayer:294`, `jbr_picture_frames=293`, and
+  `jbr_command_frames=0`.
+- Ran a compact path-effect subset:
+  `CASES="commands-path-effect-fallback commands-raw-discrete-path-effect-fallback commands-blend-mode commands-gradient-stroke" DURATION_SECONDS=3 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`.
+- Subset suite TSV: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-081347/suite.tsv`.
+- All four rows passed. `commands-path-effect-fallback` reported `unsupported=none`, `jbr_picture_frames=0`, and
+  `jbr_command_frames=317`; the raw discrete row reported
+  `unsupported=graphicsLayer:childCommands:154,pathEffect:154,graphicsLayer:154`, `jbr_picture_frames=154`, and
+  `jbr_command_frames=0`.
+- Ran Magic Jewel's short default command-probe sweep after adding the raw discrete path-effect fallback row:
+  `DURATION_SECONDS=2 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`.
+- Broad suite TSV: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-081524/suite.tsv`.
+- All 89 rows passed. `commands-path-effect-fallback` stayed on command replay with `unsupported=none`,
+  `jbr_picture_frames=0`, and `jbr_command_frames=772`, while
+  `commands-raw-discrete-path-effect-fallback` reported
+  `unsupported=graphicsLayer:childCommands:164,pathEffect:164,graphicsLayer:164`, `jbr_picture_frames=164`, and
+  `jbr_command_frames=0`.
+
+Next:
+- Continue closing raw Skia object ownership boundaries, promoting only explicitly serialized semantics into
+  JBR-owned descriptors.
+
 ## Checkpoint: Raw Graphics-Layer RenderEffect Fallback Probe
 
 Status: completed as a named live fallback row for raw Skia-backed graphics-layer render effects.

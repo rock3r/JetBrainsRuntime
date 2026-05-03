@@ -234,6 +234,9 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Live Magic Jewel fallback probe for raw Skia-backed graphics-layer `RenderEffect`, asserting the strict recorder
   reports `graphicsLayer:renderEffect` unsupported markers until JBR owns an explicit descriptor for that image-filter
   family.
+- [x] Live Magic Jewel fallback probe for raw Skia discrete path effects, asserting
+  `PathEffect.makeDiscrete(...).asComposePathEffect()` reports `pathEffect` unsupported markers while
+  Compose-created dash/corner/stamped/chained path-effect descriptors continue through command replay.
 - [x] Transformed shader wrappers graduated from strict fallback to transform-aware shader descriptor command replay.
 - [x] Linear-gradient stroke paint graduated from strict fallback to serialized command replay.
 - [x] More strict shader fallback tests for nonfinite gradient metadata that survives shader construction.
@@ -851,6 +854,16 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   `commands-raw-blend-color-filter-fallback` reported
   `unsupported=colorFilter:207,graphicsLayer:childCommands:207,graphicsLayer:207`, `jbr_picture_frames=208`, and
   `jbr_command_frames=0`; adjacent metadata-backed color-filter rows stayed on command replay.
+- [x] Raw discrete path-effect fallback probe passed, and the compact path-effect subset kept descriptor-backed
+  dash/corner/stamped/chained path effects on command replay at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-081347/suite.tsv`.
+- [x] Short broad Magic Jewel command-probe sweep passed after adding the raw discrete path-effect fallback row:
+  89/89 rows passed at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-081524/suite.tsv`.
+  `commands-path-effect-fallback` reported `unsupported=none`, `jbr_picture_frames=0`, and `jbr_command_frames=772`,
+  while `commands-raw-discrete-path-effect-fallback` reported
+  `unsupported=graphicsLayer:childCommands:164,pathEffect:164,graphicsLayer:164`, `jbr_picture_frames=164`, and
+  `jbr_command_frames=0`.
 - [x] Forced-context descriptor subset passed for effect descriptors, shader descriptors, and graphics-layer
   render-effect descriptors at
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-063838/suite.tsv`.
