@@ -13518,3 +13518,30 @@ Validation:
 
 Next:
 - Continue remaining shader/effect lifecycle and physical screen/context migration hardening.
+
+## Checkpoint: Resize Loaded Font-Data Redefinition
+
+Status: completed.
+
+Changes:
+- Added `commands-resize-native-loaded-font-data-text` to Magic Jewel's command-probe suite.
+- Added `parity-resize-native-loaded-font-data-text` to Magic Jewel's screenshot-parity suite.
+- Both rows enable loaded byte-array font native text plus same-context automatic JFrame resize, and require command-cache
+  clearing plus at least two JBR font-data define markers.
+
+Validation:
+- Magic Jewel command/parity script syntax passed:
+  `bash -n scripts/jbr-skia-command-probe-suite.sh scripts/jbr-skia-screenshot-parity-suite.sh`.
+- Focused resize loaded-font-data command replay passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-190729/suite.tsv`.
+- The command row reported `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`,
+  `jbr_command_frames=356`, `jbr_font_data_define_frames=2`, one same-context surface-change marker, and one
+  command-cache clear marker.
+- Focused resize loaded-font-data screenshot parity passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260503-190951/suite.tsv`.
+- The parity row reported `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=272`, the expected
+  same-context surface-change/cache-clear markers, and the button oracle still found white primary text with no dark
+  primary-button text.
+
+Next:
+- Continue remaining shader/effect lifecycle and physical screen/context migration hardening.
