@@ -14058,3 +14058,27 @@ Validation:
 
 Next:
 - Continue remaining shader-family coverage and descriptor lifecycle hardening.
+
+## Checkpoint: Full Screenshot Parity With Shader Migration Rows
+
+Status: completed for the default Magic Jewel old/new screenshot parity suite after adding Perlin/noise shader migration
+rows.
+
+Changes:
+- Tuned the parity-only loaded font-data row to allow the small number of identical startup font-data defines observed
+  during frozen old/new screenshot capture, while leaving the command-probe row as the exact steady-state dedup gate.
+- Aligned the resize generic-font parity row with the existing resize loaded-font header-button tolerance.
+
+Validation:
+- Focused loaded font-data parity row passed after the parity-specific cap:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260504-012410/suite.tsv`.
+- Focused resize generic-font parity row passed after the resize header-button tolerance alignment:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260504-012939/suite.tsv`.
+- Full default Magic Jewel screenshot parity suite passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260504-013025/suite.tsv`.
+- The full run covered Pulse/button chrome, packaged resource font, concrete system font, resize/forced-context font rows,
+  point dots, Perlin/noise steady and migration rows, RuntimeEffect rows, and graphics-layer rows with zero fallback, zero
+  JBR picture frames, and positive JBR command frames.
+
+Next:
+- Continue remaining shader-family coverage and descriptor lifecycle hardening.
