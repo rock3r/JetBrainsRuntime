@@ -1025,6 +1025,11 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260503-210129/matrix.tsv`.
   The happy row stayed on command replay; every negative row reported one structured fallback and zero JBR command
   frames.
+- [x] Launch-level compatibility matrix passed after the raw image/gradient shader sentinel sweep:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260504-010143/matrix.tsv`.
+  The matrix revalidated the exact `draw-points-capability-missing`, `font-data-capability-missing`,
+  `shader-color-capability-missing`, and `shader-perlin-noise-capability-missing` high-word rows: happy stayed on
+  command replay, while every negative row produced one structured fallback and zero JBR command frames.
 - [x] Focused Perlin/noise screenshot parity passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260503-211813/suite.tsv`.
   `parity-noise-shader` and `parity-turbulence-shader` stayed on command replay with zero fallback and zero picture

@@ -14016,3 +14016,21 @@ Validation:
 
 Next:
 - Continue remaining shader-family coverage and descriptor lifecycle hardening.
+
+## Checkpoint: Compatibility Matrix After Raw Shader Sentinels
+
+Status: completed for launch-level ABI/capability fallback validation after the raw image and raw gradient shader
+sentinels joined the default command-probe suite.
+
+Validation:
+- Ran the Magic Jewel compatibility matrix with current ABI 105 local artifacts and background windows enabled:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260504-010143/matrix.tsv`.
+- The happy row stayed on command replay with `fallback_new_count=0` and positive JBR command frames.
+- ABI mismatch, native-ABI mismatch, public-API missing, low-word missing-capability, and high-word missing-capability
+  rows all reported one structured fallback and zero JBR command frames.
+- The matrix revalidated exact high-word missing rows for the recent command families, including
+  `draw-points-capability-missing`, `font-data-capability-missing`, `shader-color-capability-missing`, and
+  `shader-perlin-noise-capability-missing`.
+
+Next:
+- Continue remaining shader-family coverage and descriptor lifecycle hardening.
