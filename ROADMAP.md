@@ -780,6 +780,11 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Noise shader fallback probe passed, and the compact shader fallback subset kept raw opaque, composite opaque-child,
   noise shader, and invalid-gradient rows green at
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-033152/suite.tsv`.
+- [x] Short broad Magic Jewel command-probe sweep passed after adding the noise shader fallback row:
+  81/81 rows passed at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-033433/suite.tsv`.
+  Supported rows stayed on command replay; the raw opaque, composite opaque-child, noise shader, and invalid-gradient
+  rows remained intentional picture-fallback guards.
 - [x] Launch-level compatibility matrix passed after ABI 102 transformed shader descriptor replay, including the exact
   `shader-transform-capability-missing` high-word row:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260503-022142/matrix.tsv`.

@@ -12495,7 +12495,14 @@ Validation:
 - All four fallback rows passed; the noise row reported
   `unsupported=shader:211,graphicsLayer:childCommands:211,graphicsLayer:211`, `jbr_picture_frames=211`, and
   `jbr_command_frames=0`.
+- Ran Magic Jewel's short default command-probe sweep after adding the noise shader fallback row:
+  `DURATION_SECONDS=2 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`.
+- Broad suite TSV: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-033433/suite.tsv`.
+- All 81 rows passed. Supported rows stayed on command replay with zero unsupported reasons and zero picture frames.
+  The new `commands-noise-shader-fallback` row reported
+  `unsupported=shader:355,graphicsLayer:childCommands:355,graphicsLayer:355`, `jbr_picture_frames=354`, and
+  `jbr_command_frames=0`; the opaque shader, composite opaque-child shader, and invalid-gradient fallback rows remained
+  intentional picture-fallback guards.
 
 Next:
-- Run a short default command-probe sweep with the noise fallback row in the default case list, then continue the next
-  shader/effect ownership item.
+- Continue the next shader/effect ownership item.
