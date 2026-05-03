@@ -12466,3 +12466,36 @@ Validation:
 Next:
 - Continue closing remaining shader/effect fallback markers or promote another fallback family into a JBR-owned
   descriptor slice when the serialization boundary is clear.
+
+## Checkpoint: Noise Shader Fallback Probe
+
+Status: completed as a named live fallback row for Skia Perlin/noise shaders.
+
+Changes:
+- Added `MAGIC_JEWEL_COMPOSE_NOISE_SHADER` / `magic.jewel.compose.noiseShader` to Magic Jewel.
+- The opt-in scene draws a paint backed by `org.jetbrains.skia.Shader.makeFractalNoise(...).asComposeShader()`, which
+  is a raw Skiko-owned Skia shader with no JBR-owned descriptor payload.
+- Added `commands-noise-shader-fallback` to the default Magic Jewel command-probe suite.
+- The row asserts the strict recorder reports `shader` unsupported markers and uses picture replay, keeping
+  Perlin/noise shaders behind explicit fallback until JBR owns a negotiated descriptor for that family.
+
+Validation:
+- Magic Jewel script syntax passed for `jbr-skia-command-probe-suite.sh` and `jbr-skia-interop-report.sh`.
+- Magic Jewel compile passed:
+  `./gradlew --no-daemon --no-configuration-cache compileKotlin`.
+- Focused command-probe row passed:
+  `CASES=commands-noise-shader-fallback DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`.
+- Focused suite TSV: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-033116/suite.tsv`.
+- The focused row reported `fallback_new_count=0`,
+  `unsupported=shader:394,graphicsLayer:childCommands:394,graphicsLayer:394`, `jbr_picture_frames=394`, and
+  `jbr_command_frames=0`.
+- Ran a compact fallback subset:
+  `CASES="commands-opaque-shader-fallback commands-composite-opaque-shader-fallback commands-noise-shader-fallback commands-invalid-gradient-fallback" DURATION_SECONDS=3 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`.
+- Subset suite TSV: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-033152/suite.tsv`.
+- All four fallback rows passed; the noise row reported
+  `unsupported=shader:211,graphicsLayer:childCommands:211,graphicsLayer:211`, `jbr_picture_frames=211`, and
+  `jbr_command_frames=0`.
+
+Next:
+- Run a short default command-probe sweep with the noise fallback row in the default case list, then continue the next
+  shader/effect ownership item.

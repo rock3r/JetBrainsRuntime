@@ -215,6 +215,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   unsupported markers and uses picture replay instead of guessing descriptor semantics.
 - [x] Live Magic Jewel fallback probe for composite shader trees with an opaque/raw Skia child, asserting the strict
   recorder reports `shader` unsupported markers and uses picture replay instead of serializing only the known child.
+- [x] Live Magic Jewel fallback probe for Skia Perlin/noise shaders, asserting the strict recorder reports `shader`
+  unsupported markers until JBR owns an explicit descriptor for that family.
 - [x] Transformed shader wrappers graduated from strict fallback to transform-aware shader descriptor command replay.
 - [x] Linear-gradient stroke paint graduated from strict fallback to serialized command replay.
 - [x] More strict shader fallback tests for nonfinite gradient metadata that survives shader construction.
@@ -775,6 +777,9 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-025935/suite.tsv`.
   Supported rows stayed on command replay; the opaque shader, composite opaque-child shader, and invalid-gradient rows
   remained intentional picture-fallback guards.
+- [x] Noise shader fallback probe passed, and the compact shader fallback subset kept raw opaque, composite opaque-child,
+  noise shader, and invalid-gradient rows green at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-033152/suite.tsv`.
 - [x] Launch-level compatibility matrix passed after ABI 102 transformed shader descriptor replay, including the exact
   `shader-transform-capability-missing` high-word row:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260503-022142/matrix.tsv`.
