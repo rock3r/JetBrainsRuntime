@@ -1042,6 +1042,9 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Short broad Magic Jewel command-probe sweep passed after restoring raw Perlin/noise fallback sentinels:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-220815/suite.tsv`.
   The expanded default suite covered descriptor-backed Perlin replay plus raw Perlin fallback in one green run.
+- [x] Short broad Magic Jewel command-probe sweep passed after adding the raw linear-gradient shader fallback sentinel:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-231216/suite.tsv`.
+  The new raw-gradient row stayed on structured `shader` fallback with picture replay and zero JBR command frames.
 - [x] Current artifact matrix passed after ABI 105 Perlin/noise work:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260503-224852/matrix.tsv`.
   The current artifact row stayed on command replay, and the missing public API row reported the expected structured

@@ -13900,3 +13900,21 @@ Validation:
 
 Next:
 - Continue remaining shader-family coverage and descriptor lifecycle hardening.
+
+## Checkpoint: Broad Command Sweep With Raw Linear Gradient Sentinel
+
+Status: completed for the expanded default command-probe suite after adding the raw linear-gradient shader fallback row.
+
+Validation:
+- Ran the short broad Magic Jewel command-probe sweep:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-231216/suite.tsv`.
+- The expanded default suite passed end to end with `DURATION_SECONDS=2` and `WARMUP_SECONDS=1`.
+- Descriptor-backed shader rows stayed on JBR command replay.
+- Raw linear-gradient, raw Perlin/noise, raw RuntimeEffect, opaque, composite-with-opaque-child, and picture shader rows
+  stayed on structured `shader` fallback with picture replay and zero JBR command frames.
+- The new raw linear-gradient row reported
+  `unsupported=shader:435,graphicsLayer:childCommands:435,graphicsLayer:435`, `jbr_picture_frames=434`, and
+  `jbr_command_frames=0`.
+
+Next:
+- Continue remaining shader-family coverage and descriptor lifecycle hardening.
