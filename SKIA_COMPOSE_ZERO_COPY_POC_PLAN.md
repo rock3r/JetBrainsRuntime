@@ -12569,6 +12569,14 @@ Validation:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260503-171316/suite.tsv`.
   The row reported `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=65`,
   `jbr_font_data_define_frames=253`, and `bad_pixel_ratio=0.04772`.
+- Ran Magic Jewel's short broad command-probe sweep after adding the loaded-font-data default row:
+  `DURATION_SECONDS=2 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`.
+- Broad suite TSV:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-171850/suite.tsv`.
+- All 99 rows passed. The loaded-font row reported `fallback_new_count=0`, `unsupported=none`,
+  `jbr_picture_frames=0`, `jbr_command_frames=144`, and `jbr_font_data_define_frames=144`; resource/system font
+  rows also stayed on command replay, while intentional raw shader/effect/invalid-gradient rows retained structured
+  picture fallback.
 
 Next:
 - Keep resource-font replay image-backed until CMP can expose desktop `ResourceFont` bytes through the same explicit
