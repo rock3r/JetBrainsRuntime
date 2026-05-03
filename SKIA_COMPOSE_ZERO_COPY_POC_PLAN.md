@@ -13554,6 +13554,14 @@ Validation:
   eviction:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-191922/suite.tsv`.
 - All four rows reported `fallback_new_count=0`, `unsupported=none`, and `jbr_picture_frames=0`.
+- Magic Jewel report validation now supports `EXPECT_MAX_JBR_FONT_DATA_DEFINES`, mirroring the existing max gates for
+  image, effect, and shader handle defines.
+- Synthetic report validation passed:
+  `bash scripts/test-jbr-skia-report-validation.sh`.
+- Focused steady-state loaded-font-data command replay passed with the new exact max gate:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-192439/suite.tsv`.
+- The row reported `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, `jbr_command_frames=265`, and
+  `jbr_font_data_define_frames=1`.
 
 Next:
 - Continue remaining shader/effect lifecycle and physical screen/context migration hardening.

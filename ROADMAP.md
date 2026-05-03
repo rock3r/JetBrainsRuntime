@@ -1104,6 +1104,9 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   - [x] Compact Magic Jewel cache-lifecycle subset passed across loaded font-data normal/resize/forced-context rows and
     descriptor eviction:
     `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-191922/suite.tsv`.
+  - [x] Magic Jewel report validation now supports `EXPECT_MAX_JBR_FONT_DATA_DEFINES`, and the steady-state loaded
+    font-data row requires exactly one JBR font-data define. Focused command replay passed at
+    `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-192439/suite.tsv`.
 - [ ] JBR-owned generic shader factory and handles for non-serialized shader families.
   - [x] Add a first solid-color shader factory descriptor (`COMMAND_SHADER_DESCRIPTOR_COLOR`) with strict high-word
     capability gating and live fallback contrast against raw Skia color shaders.
