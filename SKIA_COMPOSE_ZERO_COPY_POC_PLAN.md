@@ -13876,3 +13876,27 @@ Validation:
 
 Next:
 - Continue remaining shader-family coverage and descriptor lifecycle hardening.
+
+## Checkpoint: Raw Linear Gradient Shader Fallback Sentinel
+
+Status: completed for raw Skia gradient shader ownership-boundary coverage.
+
+Changes:
+- Added `MAGIC_JEWEL_COMPOSE_RAW_LINEAR_GRADIENT_SHADER` / `magic.jewel.compose.rawLinearGradientShader`.
+- Added `commands-raw-linear-gradient-shader-fallback` to the default Magic Jewel command-probe suite.
+- The probe creates a raw `org.jetbrains.skia.Shader.makeLinearGradient(...)` object and wraps it as a Compose shader,
+  separate from Compose-owned gradient descriptors and shader-plus-color-filter rows.
+- The row asserts structured `shader` fallback and picture replay, preserving the rule that raw Skiko-owned shader
+  objects do not cross the JBR command ABI.
+
+Validation:
+- Magic Jewel Kotlin compile passed against both the default resolved Skiko API and `SKIKO_VERSION=0.0.0-SNAPSHOT`.
+- Script syntax passed:
+  `bash -n scripts/jbr-skia-interop-report.sh scripts/jbr-skia-command-probe-suite.sh`.
+- Focused raw linear-gradient fallback row passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-230820/suite.tsv`.
+- The row reported `unsupported=shader:204,graphicsLayer:childCommands:204,graphicsLayer:204`, `jbr_picture_frames=203`,
+  and `jbr_command_frames=0`.
+
+Next:
+- Continue remaining shader-family coverage and descriptor lifecycle hardening.
