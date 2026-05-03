@@ -13542,6 +13542,11 @@ Validation:
 - The parity row reported `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=272`, the expected
   same-context surface-change/cache-clear markers, and the button oracle still found white primary text with no dark
   primary-button text.
+- Refreshed local harness artifacts with `./scripts/rebuild-jbr-skia-local-artifacts.sh`, then ran a compact
+  post-rebuild font-data subset:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-191346/suite.tsv`.
+- The post-rebuild subset covered normal, resize, and forced-context loaded font-data rows; all stayed at
+  `fallback_new_count=0`, `unsupported=none`, and `jbr_picture_frames=0`.
 
 Next:
 - Continue remaining shader/effect lifecycle and physical screen/context migration hardening.
