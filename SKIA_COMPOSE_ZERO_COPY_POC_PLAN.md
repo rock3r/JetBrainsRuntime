@@ -12587,6 +12587,13 @@ Validation:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260503-090242/suite.tsv`.
 - Both rows passed with `composeBottomLabels_badPixelRatio=0.15308`, so bottom-label typography drift is now a
   tracked regression gate instead of only broad whole-window/canvas drift.
+- Extended Magic Jewel's screenshot parity `suite.tsv` and console summary with
+  `compose_bottom_labels_bad_pixel_ratio`, so the native-text drift metric is visible without opening each report.
+- Re-ran the focused native-text parity rows after adding the TSV column:
+  `CASES="parity-native-text parity-forced-context-native-text" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-screenshot-parity-suite.sh`.
+- TSV-column validation suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260503-090707/suite.tsv`.
+- Both rows passed and reported `compose_bottom_labels_bad_pixel_ratio=0.15308` in `suite.tsv`.
 
 Next:
 - Continue native text/font parity work with focused metrics, especially baseline/style/typeface fallback semantics,

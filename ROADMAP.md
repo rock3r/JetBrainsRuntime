@@ -438,6 +438,9 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Native-text screenshot parity now hard-gates the text-heavy `composeBottomLabels` region at 0.17; the focused
   native-text and forced-context native-text rows passed with `composeBottomLabels_badPixelRatio=0.15308` at
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260503-090242/suite.tsv`.
+- [x] Magic Jewel screenshot parity `suite.tsv` now surfaces `compose_bottom_labels_bad_pixel_ratio`; the focused
+  native-text rows passed with the new TSV column at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260503-090707/suite.tsv`.
 - [x] Graphics-layer effects screenshot parity row passed with focused probe scoping:
   `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-055842/suite.tsv`.
 - [x] Shadowless screenshot parity subset passed for clean geometry, native text, RuntimeEffect pure/uniform/child/shader
