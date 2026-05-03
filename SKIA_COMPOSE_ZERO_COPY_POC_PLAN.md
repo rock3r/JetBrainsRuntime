@@ -13547,6 +13547,9 @@ Validation:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-191346/suite.tsv`.
 - The post-rebuild subset covered normal, resize, and forced-context loaded font-data rows; all stayed at
   `fallback_new_count=0`, `unsupported=none`, and `jbr_picture_frames=0`.
+- Added CMP recorder coverage for font-data handle LRU eviction after the 1,024-entry cache threshold. The focused
+  desktop tests passed:
+  `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.deduplicatesFontDataRecordsUntilCacheClear --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.evictsOldestFontDataHandleBeforeRedefiningAfterThreshold --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesFontDataRecord`.
 
 Next:
 - Continue remaining shader/effect lifecycle and physical screen/context migration hardening.
