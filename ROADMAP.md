@@ -1086,6 +1086,11 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
     `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-181507/suite.tsv`.
   - [x] Launch-level Magic Jewel compatibility matrix passed with background windows enabled:
     `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260503-185038/matrix.tsv`.
+  - [x] Added forced-context loaded-font-data command and screenshot rows proving CMP/JBR re-define byte-array font handles
+    after destination context migration. Focused command replay passed at
+    `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-190205/suite.tsv`
+    with `jbr_font_data_define_frames=2`; focused screenshot parity passed at
+    `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260503-190258/suite.tsv`.
 - [ ] JBR-owned generic shader factory and handles for non-serialized shader families.
   - [x] Add a first solid-color shader factory descriptor (`COMMAND_SHADER_DESCRIPTOR_COLOR`) with strict high-word
     capability gating and live fallback contrast against raw Skia color shaders.

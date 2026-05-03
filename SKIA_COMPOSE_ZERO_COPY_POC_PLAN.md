@@ -13492,3 +13492,29 @@ Validation:
 
 Next:
 - Continue remaining shader/effect lifecycle and screen/context migration hardening.
+
+## Checkpoint: Forced-Context Loaded Font-Data Redefinition
+
+Status: completed.
+
+Changes:
+- Added `commands-forced-context-native-loaded-font-data-text` to Magic Jewel's command-probe suite.
+- Added `parity-forced-context-native-loaded-font-data-text` to Magic Jewel's screenshot-parity suite.
+- Both rows enable loaded byte-array font native text plus forced destination context migration, and require command-cache
+  clearing plus at least two JBR font-data define markers.
+
+Validation:
+- Magic Jewel command-probe script syntax passed:
+  `bash -n scripts/jbr-skia-command-probe-suite.sh scripts/jbr-skia-screenshot-parity-suite.sh`.
+- Focused forced-context loaded-font-data command replay passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-190205/suite.tsv`.
+- The command row reported `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`,
+  `jbr_command_frames=149`, `jbr_font_data_define_frames=2`, one surface/context change marker, and one command-cache
+  clear marker.
+- Focused forced-context loaded-font-data screenshot parity passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260503-190258/suite.tsv`.
+- The parity row reported `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=147`, and the expected
+  context-change/cache-clear markers.
+
+Next:
+- Continue remaining shader/effect lifecycle and physical screen/context migration hardening.
