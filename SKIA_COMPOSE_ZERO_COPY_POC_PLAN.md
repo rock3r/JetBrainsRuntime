@@ -12549,6 +12549,49 @@ Next:
 - Continue closing the remaining shader/effect ownership boundaries, promoting raw families to JBR-owned descriptors
   only when the serialized semantics are explicit.
 
+## Checkpoint: Raw RuntimeEffect Shader Fallback Probe
+
+Status: completed as a named live fallback row for raw Skia-owned RuntimeEffect shaders.
+
+Changes:
+- Added `MAGIC_JEWEL_COMPOSE_RAW_RUNTIME_EFFECT_SHADER` / `magic.jewel.compose.rawRuntimeEffectShader` to Magic Jewel.
+- The opt-in scene creates a shader with
+  `org.jetbrains.skia.RuntimeEffect.makeForShader(...).makeShader(...).asComposeShader()`, which is a raw Skiko-owned
+  Skia shader with no CMP `RuntimeEffectShader` metadata.
+- Added `commands-raw-runtime-effect-shader-fallback` to the default Magic Jewel command-probe suite.
+- The row asserts the strict recorder reports `shader` unsupported markers and uses picture replay, while the
+  metadata-backed `commands-runtime-effect-shader` row continues to use JBR-owned RuntimeEffect shader descriptors.
+
+Validation:
+- Magic Jewel script syntax passed for `jbr-skia-command-probe-suite.sh` and `jbr-skia-interop-report.sh`.
+- Magic Jewel compile passed:
+  `./gradlew --no-daemon --no-configuration-cache compileKotlin`.
+- Focused command-probe row passed:
+  `CASES=commands-raw-runtime-effect-shader-fallback DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`.
+- Focused suite TSV: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-052339/suite.tsv`.
+- The focused row reported `fallback_new_count=0`,
+  `unsupported=shader:385,graphicsLayer:childCommands:385,graphicsLayer:385`, `jbr_picture_frames=384`, and
+  `jbr_command_frames=0`.
+- Ran a compact shader subset:
+  `CASES="commands-runtime-effect-shader commands-raw-runtime-effect-shader-fallback commands-opaque-shader-fallback commands-composite-opaque-shader-fallback commands-noise-shader-fallback commands-picture-shader-fallback" DURATION_SECONDS=3 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`.
+- Subset suite TSV: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-052415/suite.tsv`.
+- All six rows passed; the metadata-backed RuntimeEffect row reported `unsupported=none`, `jbr_picture_frames=0`, and
+  positive `jbr_command_frames`, while the raw RuntimeEffect row reported
+  `unsupported=shader:186,graphicsLayer:childCommands:186,graphicsLayer:186`, `jbr_picture_frames=186`, and
+  `jbr_command_frames=0`.
+- Ran Magic Jewel's short default command-probe sweep after adding the raw RuntimeEffect shader fallback row:
+  `DURATION_SECONDS=2 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`.
+- Broad suite TSV: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-052633/suite.tsv`.
+- All 84 rows passed. `commands-runtime-effect-shader` stayed on command replay with `unsupported=none`,
+  `jbr_picture_frames=0`, and `jbr_command_frames=608`; the new
+  `commands-raw-runtime-effect-shader-fallback` row reported
+  `unsupported=shader:386,graphicsLayer:childCommands:386,graphicsLayer:386`, `jbr_picture_frames=386`, and
+  `jbr_command_frames=0`.
+
+Next:
+- Continue closing the remaining shader/effect ownership boundaries, keeping raw Skia objects on picture fallback until
+  each family has an explicit JBR-owned descriptor schema.
+
 ## Checkpoint: Picture Shader Fallback Probe
 
 Status: completed as a named live fallback row for Skia picture shaders.

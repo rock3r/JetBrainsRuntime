@@ -219,6 +219,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   unsupported markers until JBR owns an explicit descriptor for that family.
 - [x] Live Magic Jewel fallback probe for Skia picture shaders, asserting the strict recorder reports `shader`
   unsupported markers until JBR owns an explicit descriptor for recorded-picture shader content.
+- [x] Live Magic Jewel fallback probe for raw Skia RuntimeEffect shaders, asserting the strict recorder reports `shader`
+  unsupported markers unless the shader was created through CMP's metadata-backed `RuntimeEffectShader` descriptor path.
 - [x] Live Magic Jewel fallback probe for raw Skia-backed graphics-layer `RenderEffect`, asserting the strict recorder
   reports `graphicsLayer:renderEffect` unsupported markers until JBR owns an explicit descriptor for that image-filter
   family.
@@ -809,6 +811,17 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   `commands-graphics-layer-raw-image-filter-effect-fallback` reported
   `unsupported=graphicsLayer:childCommands:382,graphicsLayer:renderEffect:382,graphicsLayer:382`,
   `jbr_picture_frames=381`, and `jbr_command_frames=0`.
+- [x] Raw Skia RuntimeEffect shader fallback probe passed, and the compact shader subset kept metadata-backed
+  RuntimeEffect command replay separate from raw RuntimeEffect, raw opaque shader, composite opaque-child shader, noise
+  shader, and picture shader fallback rows at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-052415/suite.tsv`.
+- [x] Short broad Magic Jewel command-probe sweep passed after adding the raw RuntimeEffect shader fallback row:
+  84/84 rows passed at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-052633/suite.tsv`.
+  `commands-runtime-effect-shader` stayed on command replay with `jbr_command_frames=608`, while
+  `commands-raw-runtime-effect-shader-fallback` reported
+  `unsupported=shader:386,graphicsLayer:childCommands:386,graphicsLayer:386`, `jbr_picture_frames=386`, and
+  `jbr_command_frames=0`.
 - [x] Launch-level compatibility matrix passed after ABI 102 transformed shader descriptor replay, including the exact
   `shader-transform-capability-missing` high-word row:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260503-022142/matrix.tsv`.
