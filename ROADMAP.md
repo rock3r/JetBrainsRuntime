@@ -374,6 +374,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   and chained path-effect descriptors.
 - [x] Add screenshot-level text-presence assertions using stable pixel regions for top/bottom Magic Jewel labels.
 - [x] Add screenshot-level text placement assertions using stable dark-pixel bounding boxes.
+- [x] Add Magic Jewel primary-button screenshot assertions for white text and centered placement, so `Pulse`-style
+  provided-content-color regressions are caught by command-mode screenshots and old/new parity.
 - [x] Add paragraph-row screenshot assertions for native-text layout probes.
 - [x] Investigate observed text alignment drift in Magic Jewel/Jewel labels on the command path.
 - [x] Add screenshot-region assertions for the Plus/Multiply blend-mode probe.

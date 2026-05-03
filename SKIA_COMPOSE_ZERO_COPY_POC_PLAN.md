@@ -12507,6 +12507,31 @@ Validation:
 Next:
 - Continue the next shader/effect ownership item.
 
+## Checkpoint: Primary Button Text Screenshot Gate
+
+Status: completed for the Magic Jewel command-mode screenshot oracle.
+
+Changes:
+- Added a focused primary-button text region to Magic Jewel's command screenshot assertion.
+- The assertion now counts white and dark pixels inside the `Pulse` label area, reports
+  `screenshot_primaryButtonWhiteText`, `screenshot_primaryButtonDarkText`, and `screenshot_primaryButtonTextBox`,
+  and fails if the label loses its white provided content color or drifts away from the center of the primary button.
+- This complements the existing `parity-button-chrome` old/new screenshot row, which already hard-gates the broad
+  toolbar button region against the SwingGraphics renderer.
+
+Validation:
+- Re-ran the focused native-text button parity row:
+  `CASES=parity-button-chrome JBR_SKIA_NATIVE_TEXT=true DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-screenshot-parity-suite.sh`.
+- Suite TSV:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260503-165528/suite.tsv`.
+- The row passed with `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=1140`,
+  `header_buttons_bad_pixel_ratio=0.00381`, `screenshot_primaryButtonWhiteText=405`, and
+  `screenshot_primaryButtonDarkText=0`.
+
+Next:
+- Continue the next roadmap item; if another control chrome regression appears, add a similarly narrow command
+  screenshot oracle in addition to old/new parity.
+
 ## Checkpoint: ABI 104 Broad Sweep and Color Shader Screenshot Parity
 
 Status: completed after the solid color shader descriptor slice.
