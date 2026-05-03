@@ -12603,6 +12603,19 @@ Validation:
 - Both rows passed with `fallbacks=0`, `jbr_picture_frames=0`, positive `jbr_command_frames`, and
   `compose_bottom_labels_bad_pixel_ratio=0.15308`, so screenshot parity summaries now expose whether a visual pass
   actually stayed on command replay.
+- Added a separate `composeParagraphProbes` screenshot parity region to isolate centered/bold, italic/right-aligned,
+  RTL, ellipsis, and decorated paragraph text drift from the broader bottom-label region.
+- Magic Jewel's screenshot parity `suite.tsv` and console summary now include
+  `compose_paragraph_probes_bad_pixel_ratio`.
+- The focused native-text rows now hard-gate that region at
+  `MAX_COMPOSE_PARAGRAPH_PROBES_BAD_PIXEL_RATIO=0.19`.
+- Re-ran the focused native-text parity rows with the paragraph-probe gate enabled:
+  `CASES="parity-native-text parity-forced-context-native-text" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-screenshot-parity-suite.sh`.
+- Paragraph-probe validation suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260503-091848/suite.tsv`.
+- Both rows passed with `fallbacks=0`, `jbr_picture_frames=0`, positive `jbr_command_frames`,
+  `compose_bottom_labels_bad_pixel_ratio=0.15308`, and
+  `compose_paragraph_probes_bad_pixel_ratio=0.17241`.
 
 Next:
 - Continue native text/font parity work with focused metrics, especially baseline/style/typeface fallback semantics,

@@ -444,6 +444,9 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Magic Jewel screenshot parity `suite.tsv` now surfaces transport counters (`fallbacks`, `jbr_picture_frames`,
   `jbr_command_frames`) alongside visual metrics; focused native-text rows passed at
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260503-091021/suite.tsv`.
+- [x] Native-text screenshot parity now emits and hard-gates the `composeParagraphProbes` region at 0.19; the focused
+  native-text and forced-context native-text rows passed with `compose_paragraph_probes_bad_pixel_ratio=0.17241` at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260503-091848/suite.tsv`.
 - [x] Graphics-layer effects screenshot parity row passed with focused probe scoping:
   `/Users/rock3r/src/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260501-055842/suite.tsv`.
 - [x] Shadowless screenshot parity subset passed for clean geometry, native text, RuntimeEffect pure/uniform/child/shader
