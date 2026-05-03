@@ -941,6 +941,16 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260503-102247/matrix.tsv`.
   All 23 rows passed; the happy row stayed on command replay and every mismatch row reported one structured fallback
   with zero command frames.
+- [x] CMP now keeps file-backed/custom loaded font families on text-image command replay when native text is enabled,
+  while allowing default, generic, and single-identity system font families onto JBR native text commands.
+- [x] Magic Jewel custom-font/native-text command rows now assert image refs, and generic-family native-text rows now
+  assert mixed frames with image refs plus 3 simple native text commands and 1 paragraph native text command.
+- [x] Focused custom-font image and generic-family native-text command subset passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-113359/suite.tsv`.
+  All four rows reported `fallback_new_count=0`, `unsupported=none`, and `jbr_picture_frames=0`.
+- [x] Focused custom-font image and generic-family native-text screenshot parity subset passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260503-113538/suite.tsv`.
+  Both rows stayed on JBR command replay with zero fallback and zero picture frames.
 - [x] Focused transformed shader screenshot parity passed after ABI 102 descriptor replay:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260503-023351/suite.tsv`.
 - [x] Broad Magic Jewel screenshot parity sweep passed after adding the transformed shader descriptor row:
@@ -975,6 +985,7 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   - [ ] Wire `libjbrskiainterop` into the JBR image so no explicit `sun.java2d.skia.interop.library` property is needed.
 - [x] Decide final Skiko artifact shape for Skia-less JBR interop.
 - [ ] Font/typeface ownership through the JBR Skia runtime.
+  - [x] Keep Skiko-owned loaded/file-backed fonts on image replay until JBR owns font descriptors or data handles.
 - [ ] JBR-owned generic shader factory and handles for non-serialized shader families.
 - [x] Extend path-effect descriptors beyond corner to stamped path effects.
 - [x] Extend path-effect descriptors to chained path effects.

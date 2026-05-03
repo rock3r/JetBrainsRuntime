@@ -12507,6 +12507,42 @@ Validation:
 Next:
 - Continue the next shader/effect ownership item.
 
+## Checkpoint: File-Backed Font Native-Text Guard
+
+Status: completed for the current CMP native-text recorder ownership boundary.
+
+Changes:
+- CMP now records JBR native text only for default, Compose generic, and single-identity `SystemFont` families.
+- File-backed/custom loaded font families now return to the existing text-as-image command path when
+  `compose.jbr.skia.command.nativeText=true`, avoiding any attempt to reconstruct Skiko-owned typefaces in JBR.
+- Magic Jewel renamed the native custom-font rows to `commands-native-custom-font-text-image` and
+  `parity-native-custom-font-text-image`, with legacy aliases kept for older invocations.
+- Generic-family native-text Magic Jewel rows now assert mixed frames: custom Jewel labels remain image refs, while
+  the generic `sans-serif`/`serif`/`monospace`/`cursive` labels produce 3 simple native text commands and 1 paragraph
+  native text command.
+
+Validation:
+- CMP focused native-text tests passed:
+  `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-text:desktopTest --tests androidx.compose.ui.text.DesktopParagraphTest.paint_withFileBackedFontFamily_recordsTextImageWhenNativeTextIsEnabled --tests androidx.compose.ui.text.DesktopParagraphTest.paint_withGenericFontStyle_recordsJbrSkiaSimpleTextMetadata --tests androidx.compose.ui.text.DesktopParagraphTest.paint_withGenericFontStyle_recordsJbrSkiaParagraphTextMetadata`.
+- Existing CMP graphics paragraph recorder gate passed:
+  `SKIKO_VERSION=0.0.0-SNAPSHOT ./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesParagraphTextRecord`.
+- Magic Jewel script syntax passed for `jbr-skia-command-probe-suite.sh` and `jbr-skia-screenshot-parity-suite.sh`.
+- Focused Magic Jewel command subset passed:
+  `CASES="commands-native-custom-font-text-image commands-native-generic-font-text commands-forced-context-native-custom-font-text-image commands-forced-context-native-generic-font-text" DURATION_SECONDS=3 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`.
+- Command suite TSV:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-113359/suite.tsv`.
+- All four focused rows reported zero fallback, `unsupported=none`, zero JBR picture frames, and positive JBR command
+  frames.
+- Focused Magic Jewel screenshot parity subset passed:
+  `CASES="parity-native-custom-font-text-image parity-native-generic-font-text" DURATION_SECONDS=3 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-screenshot-parity-suite.sh`.
+- Screenshot parity suite TSV:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260503-113538/suite.tsv`.
+- Both focused parity rows reported zero fallback, zero JBR picture frames, and positive JBR command frames.
+
+Next:
+- Continue font/typeface ownership by defining a JBR-owned loaded-font descriptor or data-handle path before promoting
+  custom/file-backed fonts to native text replay.
+
 ## Checkpoint: Raw Blend Color-Filter Fallback Probe
 
 Status: completed as a named live fallback row for raw Skia-owned blend color filters.
