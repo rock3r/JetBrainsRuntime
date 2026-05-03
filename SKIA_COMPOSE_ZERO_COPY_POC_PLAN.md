@@ -12667,6 +12667,36 @@ Next:
 - Physical multi-monitor migration remains a later manual/system integration concern, but the synthetic context-change
   cache-clear/redefine path is now covered for the current descriptor-backed command replay families.
 
+## Checkpoint: Resize Graphics-Layer RenderEffect Redefine
+
+Status: completed for the current same-context graphics-layer image-filter descriptor resize path.
+
+Changes:
+- Added `commands-resize-graphics-layer-render-effect` to Magic Jewel's command-probe suite.
+- The row combines `MAGIC_JEWEL_COMPOSE_GRAPHICS_LAYER=true`,
+  `MAGIC_JEWEL_COMPOSE_GRAPHICS_LAYER_RENDER_EFFECT=true`, and `MAGIC_JEWEL_AUTO_RESIZE=true`.
+- It asserts a same-context surface resize, command-cache clearing, at least two JBR effect-handle defines, effect
+  handle use, and cache-hit recovery after the resized surface receives a fresh descriptor definition.
+
+Validation:
+- Magic Jewel command-probe script syntax passed:
+  `bash -n scripts/jbr-skia-command-probe-suite.sh`.
+- Focused command-probe row passed:
+  `CASES=commands-resize-graphics-layer-render-effect DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`.
+- Focused suite TSV: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-064300/suite.tsv`.
+- The focused row reported `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, and
+  `jbr_command_frames=618`.
+- Ran a compact resize/context subset:
+  `CASES="commands-resize-descriptor-redefine commands-forced-context-descriptor-redefine commands-resize-shader-descriptor-redefine commands-forced-context-shader-descriptor-redefine commands-resize-graphics-layer-render-effect commands-forced-context-graphics-layer-render-effect" DURATION_SECONDS=3 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`.
+- Subset suite TSV: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-064338/suite.tsv`.
+- All six rows passed. The new graphics-layer render-effect resize row reported `fallback_new_count=0`,
+  `unsupported=none`, `jbr_picture_frames=0`, and `jbr_command_frames=335`, alongside the existing effect-descriptor,
+  shader-descriptor, and forced-context graphics-layer render-effect redefine rows.
+
+Next:
+- Physical multi-monitor migration remains open, but the synthetic same-context resize and forced-context cache
+  invalidation paths are now both covered for graphics-layer render-effect descriptors.
+
 ## Checkpoint: Picture Shader Fallback Probe
 
 Status: completed as a named live fallback row for Skia picture shaders.

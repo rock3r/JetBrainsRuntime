@@ -168,6 +168,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
     shader handles to be redefined after same-context resize and forced context migration.
   - [x] Graphics-layer render-effect descriptors now have a forced context-change probe that requires command-cache
     clearing, effect-handle redefinition, and cache-hit recovery after the new destination context is established.
+  - [x] Graphics-layer render-effect descriptors also have a same-context resize probe that requires command-cache
+    clearing, effect-handle redefinition, and cache-hit recovery after the resized surface is established.
   - [x] Missing CMP command-cache clear hook is a structured Skiko fallback (`command-cache-clear-unavailable`) instead of a silent stale-handle risk.
   - [x] Graphics-layer blur, offset, and chained render-effect rows now assert JBR effect-handle define/use/cache-hit
     markers, proving ABI 82-84 image-filter descriptors are consumed by replay and reused across frames.
@@ -842,6 +844,11 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-063838/suite.tsv`.
   The new `commands-forced-context-graphics-layer-render-effect` row reported `unsupported=none`,
   `jbr_picture_frames=0`, and `jbr_command_frames=331`.
+- [x] Resize/context descriptor subset passed for effect descriptors, shader descriptors, and graphics-layer
+  render-effect descriptors at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-064338/suite.tsv`.
+  The new `commands-resize-graphics-layer-render-effect` row reported `unsupported=none`, `jbr_picture_frames=0`,
+  and `jbr_command_frames=335`.
 - [x] Launch-level compatibility matrix passed after ABI 102 transformed shader descriptor replay, including the exact
   `shader-transform-capability-missing` high-word row:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260503-022142/matrix.tsv`.
