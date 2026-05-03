@@ -1055,9 +1055,15 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [ ] Font/typeface ownership through the JBR Skia runtime.
   - [x] Keep Skiko-owned loaded/file-backed fonts on image replay until JBR owns font descriptors or data handles.
   - [x] Add ABI 103 JBR-owned font-data descriptors for simple native text backed by CMP loaded font bytes.
-  - [ ] Add explicit Magic Jewel command and screenshot coverage for fonts loaded from packaged JAR resources.
-  - [ ] Add explicit Magic Jewel command and screenshot coverage for a concrete installed system font family, separate
+  - [x] Add explicit Magic Jewel command and screenshot coverage for fonts loaded from packaged JAR resources.
+  - [x] Add explicit Magic Jewel command and screenshot coverage for a concrete installed system font family, separate
     from generic `sans-serif`/`serif`/`monospace` family coverage.
+  - [x] Focused packaged-resource and named-system-font command probes passed:
+    `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-160555/suite.tsv`.
+    The resource-font row stayed image-backed on command replay with zero fallback; the Menlo system-font row emitted
+    one native text command per frame with zero fallback.
+  - [x] Focused packaged-resource and named-system-font screenshot parity passed:
+    `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260503-160804/suite.tsv`.
 - [ ] JBR-owned generic shader factory and handles for non-serialized shader families.
   - [x] Add a first solid-color shader factory descriptor (`COMMAND_SHADER_DESCRIPTOR_COLOR`) with strict high-word
     capability gating and live fallback contrast against raw Skia color shaders.

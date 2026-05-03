@@ -12562,9 +12562,9 @@ Next:
 - Keep adding descriptor-family-specific resize/context rows when a new handle type or cache invalidation path is
   introduced.
 
-## Planned: Packaged Resource and Named System Font Coverage
+## Checkpoint: Packaged Resource and Named System Font Coverage
 
-Status: planned.
+Status: completed for explicit Magic Jewel command and screenshot probes.
 
 Rationale:
 - Current Magic Jewel coverage distinguishes generic-family native text from custom/file-backed loaded fonts, but it
@@ -12572,17 +12572,34 @@ Rationale:
 - Generic family names exercise platform font resolution, but they do not prove an explicit installed system font name
   behaves correctly as its own case.
 
-Planned coverage:
-- Add a Magic Jewel scene toggle for a font loaded from a packaged resource in the application JAR.
-- Add command and screenshot parity rows that validate the packaged-resource font ownership decision, either native
-  font-data descriptor replay if bytes are available to CMP/JBR, or image replay if the font remains Skiko-owned.
-- Add a separate Magic Jewel scene toggle for one concrete installed macOS system font family, distinct from generic
-  `sans-serif`/`serif`/`monospace`.
-- Add command and screenshot parity rows for that named system font, with explicit gates for native text commands and
-  old/new visual parity.
+Changes:
+- Added `MAGIC_JEWEL_RESOURCE_FONT_TEXT` / `magic.jewel.resourceFontText`.
+- Added `MAGIC_JEWEL_SYSTEM_FONT_TEXT` / `magic.jewel.systemFontText`.
+- Magic Jewel copies `/System/Library/Fonts/Monaco.ttf` into app resources as
+  `magicjewel-fonts/MagicJewelResourceFont.ttf` by default, with `MAGIC_JEWEL_RESOURCE_FONT_FILE` /
+  `magicJewelResourceFontFile` available as an override.
+- Added `commands-native-resource-font-text` and `parity-native-resource-font-text`.
+- Added `commands-native-system-font-text` and `parity-native-system-font-text`.
+
+Validation:
+- Magic Jewel compile/resource processing passed:
+  `./gradlew --no-daemon --no-configuration-cache compileKotlin processResources`.
+- Focused command subset passed:
+  `CASES="commands-native-resource-font-text commands-native-system-font-text" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-command-probe-suite.sh`.
+- Command suite TSV: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-160555/suite.tsv`.
+- The resource-font row reported `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, and positive
+  JBR command frames while staying image-backed (`textCommands=0`, image refs present). This records the current
+  ownership boundary for classpath resource fonts.
+- The Menlo system-font row reported `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, positive
+  JBR command frames, and one native text command per CMP recorder frame.
+- Focused screenshot parity subset passed:
+  `CASES="parity-native-resource-font-text parity-native-system-font-text" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-screenshot-parity-suite.sh`.
+- Screenshot parity suite TSV:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260503-160804/suite.tsv`.
 
 Next:
-- Implement these font rows before broadening font/typeface ownership beyond the current loaded-font descriptor slice.
+- If resource-font native replay becomes a goal, extend CMP/JBR font-data extraction so `ResourceFont` bytes are
+  visible to the command metadata path rather than only to Skia paragraph rasterization.
 
 ## Checkpoint: ABI 104 Solid Color Shader Descriptor Replay
 
