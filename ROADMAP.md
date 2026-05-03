@@ -190,6 +190,9 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
     and the compatibility matrix has an exact high-word missing row for `COMMAND_CAP64_HIGH_SHADER_DESCRIPTOR_TRANSFORM`.
   - [x] Solid-color shader descriptors pass through CMP -> Skiko -> JBR native replay with no picture fallback, and
     the compatibility matrix has an exact high-word missing row for `COMMAND_CAP64_HIGH_SHADER_DESCRIPTOR_COLOR`.
+  - [x] Perlin/noise shader descriptors pass through CMP -> Skiko -> JBR native replay for `FractalNoiseShader(...)`
+    and `TurbulenceShader(...)`, replacing the former raw Skia fallback rows with JBR-owned
+    `COMMAND_SHADER_DESCRIPTOR_PERLIN_NOISE` replay.
   - [x] Add old/new screenshot parity coverage for shader + color-filter descriptor composition.
   - [ ] Add shader/effect lifecycle commands for create, use, context-scoped cache hit, compile failure, eviction, and context migration invalidation; never pass raw Skiko `SkShader*`, `SkImageFilter*`, or `SkRuntimeEffect*` pointers across the ABI.
   - [x] Add RuntimeEffect conformance probes in Magic Jewel: one pure color shader, one child-shader composition, one uniform animation, one builder/compile-failure fallback, and one old-runtime capability fallback.
@@ -968,6 +971,9 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] ABI 104: solid color shaders serialize as `COMMAND_SHADER_DESCRIPTOR_COLOR`, allowing descriptor-backed
   `ColorShader(Color)` paints to replay in JBR-owned Skia while raw `SkShader.makeColor(...).asComposeShader()`
   remains an intentional opaque-shader fallback.
+- [x] ABI 105: fractal-noise and turbulence shaders serialize as `COMMAND_SHADER_DESCRIPTOR_PERLIN_NOISE`, allowing
+  JBR-owned `SkShaders::MakeFractalNoise` / `SkShaders::MakeTurbulence` replay while still rejecting unknown raw
+  `SkShader*` objects.
 - [x] CMP now emits `COMMAND_DEFINE_FONT_DATA` before simple native text records whose family is a single
   `LoadedFont`, and keeps paragraph text plus desktop resource/file-backed fonts image-backed until broader
   font/layout parity is proven.
@@ -1000,6 +1006,19 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-142844/suite.tsv`.
   The default suite passed end to end; supported descriptor/graphics-layer rows stayed on command replay, while raw
   shader/effect fallback rows retained structured unsupported reasons and picture replay.
+- [x] Focused ABI 105 Perlin/noise descriptor validation passed:
+  Skiko `JbrSkiaInteropTest`, CMP `writesPerlinNoiseShaderDescriptorRectInStrictMode`/color descriptor recorder tests,
+  local JBR API/desktop/native artifact rebuild, Skiko local snapshot publish, and Magic Jewel
+  `commands-noise-shader` / `commands-turbulence-shader`.
+- [x] Focused Magic Jewel Perlin/noise descriptor rows passed after ABI 105:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-205930/suite.tsv`.
+  Both rows reported `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, and positive
+  `jbr_command_frames`.
+- [x] Launch-level compatibility matrix passed after ABI 105, including the exact
+  `shader-perlin-noise-capability-missing` high-word row:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260503-210129/matrix.tsv`.
+  The happy row stayed on command replay; every negative row reported one structured fallback and zero JBR command
+  frames.
 - [x] Focused solid color shader screenshot parity passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260503-150944/suite.tsv`.
   The `parity-color-shader` row reported `fallback_new_count=0`, `jbr_picture_frames=0`,

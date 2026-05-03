@@ -161,7 +161,8 @@ public class JBRSkiaService extends JBRSkia {
                     | COMMAND_CAP64_HIGH_DRAW_POINTS
                     | COMMAND_CAP64_HIGH_SHADER_DESCRIPTOR_TRANSFORM
                     | COMMAND_CAP64_HIGH_DEFINE_FONT_DATA
-                    | COMMAND_CAP64_HIGH_SHADER_DESCRIPTOR_COLOR;
+                    | COMMAND_CAP64_HIGH_SHADER_DESCRIPTOR_COLOR
+                    | COMMAND_CAP64_HIGH_SHADER_DESCRIPTOR_PERLIN_NOISE;
     private static final boolean NATIVE_BRIDGE_AVAILABLE = loadNativeBridge();
     private static final AtomicLong NEXT_SCOPE_ID = new AtomicLong(1);
     private static final int MAX_CACHED_IMAGES = 256;
@@ -1863,6 +1864,25 @@ public class JBRSkiaService extends JBRSkia {
         }
         if (descriptorType == COMMAND_SHADER_DESCRIPTOR_COLOR) {
             return payloadIntCount == 1;
+        }
+        if (descriptorType == COMMAND_SHADER_DESCRIPTOR_PERLIN_NOISE) {
+            if (payloadIntCount != 7) return false;
+            int kind = commands[payloadStart];
+            int baseFrequencyX1000000 = commands[payloadStart + 1];
+            int baseFrequencyY1000000 = commands[payloadStart + 2];
+            int numOctaves = commands[payloadStart + 3];
+            int tileWidth = commands[payloadStart + 5];
+            int tileHeight = commands[payloadStart + 6];
+            return kind >= 0
+                    && kind <= 1
+                    && baseFrequencyX1000000 > 0
+                    && baseFrequencyY1000000 > 0
+                    && numOctaves >= 1
+                    && numOctaves <= 16
+                    && tileWidth >= 0
+                    && tileHeight >= 0
+                    && tileWidth <= 4096
+                    && tileHeight <= 4096;
         }
         if (descriptorType == COMMAND_SHADER_DESCRIPTOR_COMPOSITE) {
             int blendMode = commands[payloadStart + 4];

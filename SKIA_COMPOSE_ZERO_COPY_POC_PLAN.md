@@ -13652,3 +13652,44 @@ Validation:
 
 Next:
 - Continue remaining shader/effect lifecycle and physical screen/context migration hardening.
+
+## Checkpoint: ABI 105 Perlin Noise Shader Descriptors
+
+Status: completed for JBR-owned fractal-noise and turbulence shader descriptor replay.
+
+Changes:
+- Bumped the command-stream ABI to 105 across JBR, the public Runtime API mirror, Skiko, and CMP.
+- Added high-word capability `COMMAND_CAP64_HIGH_SHADER_DESCRIPTOR_PERLIN_NOISE` and descriptor type
+  `COMMAND_SHADER_DESCRIPTOR_PERLIN_NOISE`.
+- CMP now exposes skiko-side `FractalNoiseShader(...)` and `TurbulenceShader(...)` helpers that preserve descriptor
+  metadata next to the normal Skia shader object.
+- CMP records Perlin/noise shader descriptors with fixed-point base frequencies, octave count, seed, and optional tile
+  size, then draws through the existing shader-handle rectangle command.
+- JBR Java/native validation checks descriptor kind, payload length, frequency range, octave range, and tile bounds before
+  replay.
+- JBR native replay rebuilds the shader inside the destination runtime with `SkShaders::MakeFractalNoise` or
+  `SkShaders::MakeTurbulence`.
+- Magic Jewel's previous fractal-noise and turbulence fallback rows now expect command replay with shader-handle
+  define/use/cache-hit markers.
+
+Validation:
+- Skiko focused ABI/capability tests passed:
+  `./gradlew --no-daemon --no-configuration-cache :awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`.
+- CMP focused recorder tests passed:
+  `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesPerlinNoiseShaderDescriptorRectInStrictMode --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesColorShaderDescriptorRectInStrictMode`.
+- Rebuilt local JBR API/desktop/native artifacts with:
+  `bash ./scripts/rebuild-jbr-skia-local-artifacts.sh`.
+- Published the patched Skiko `0.0.0-SNAPSHOT` to Maven local with:
+  `./gradlew --no-daemon --no-configuration-cache publishToMavenLocal`.
+- Focused Magic Jewel live descriptor rows passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-205930/suite.tsv`.
+- `commands-noise-shader` and `commands-turbulence-shader` both reported `fallback_new_count=0`, `unsupported=none`,
+  `jbr_picture_frames=0`, and positive `jbr_command_frames`.
+- Full launch-level compatibility matrix passed, including the exact
+  `shader-perlin-noise-capability-missing` row:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260503-210129/matrix.tsv`.
+- The happy row stayed on command replay; every negative row reported one structured fallback and zero JBR command frames.
+
+Next:
+- Continue remaining shader-family parity and lifecycle coverage, with screenshot parity for Perlin/noise descriptors as
+  the next visual guard.

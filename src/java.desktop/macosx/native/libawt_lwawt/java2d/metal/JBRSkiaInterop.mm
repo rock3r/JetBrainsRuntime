@@ -76,6 +76,7 @@
 #include "include/effects/SkDashPathEffect.h"
 #include "include/effects/SkGradient.h"
 #include "include/effects/SkImageFilters.h"
+#include "include/effects/SkPerlinNoiseShader.h"
 #include "modules/skparagraph/include/FontCollection.h"
 #include "modules/skparagraph/include/Paragraph.h"
 #include "modules/skparagraph/include/ParagraphBuilder.h"
@@ -86,9 +87,9 @@
 
 #include "MTLSurfaceDataBase.h"
 
-static constexpr jint ABI_ID = 104;
+static constexpr jint ABI_ID = 105;
 static constexpr jint NATIVE_ABI_VERSION = 3;
-static constexpr const char* BUILD_ID = "skia=m147-64a2414108;flags=macos-release-metal-poc:1;abi=104;native=3";
+static constexpr const char* BUILD_ID = "skia=m147-64a2414108;flags=macos-release-metal-poc:1;abi=105;native=3";
 static constexpr jint COMMAND_STREAM_MAGIC = 1246972723;
 static constexpr jint COMMAND_STREAM_HEADER_SIZE = 6;
 static constexpr jint COMMAND_STREAM_FLAGS_NONE = 0;
@@ -193,6 +194,7 @@ static constexpr jint COMMAND_SHADER_DESCRIPTOR_RUNTIME_EFFECT = 6;
 static constexpr jint COMMAND_SHADER_DESCRIPTOR_COLOR_FILTER = 7;
 static constexpr jint COMMAND_SHADER_DESCRIPTOR_TRANSFORM = 8;
 static constexpr jint COMMAND_SHADER_DESCRIPTOR_COLOR = 9;
+static constexpr jint COMMAND_SHADER_DESCRIPTOR_PERLIN_NOISE = 10;
 static constexpr jint COMMAND_SHADER_DESCRIPTOR_VERSION_1 = 1;
 static constexpr jint COMMAND_BLEND_MODE_PLUS = 1;
 static constexpr jint COMMAND_BLEND_MODE_SRC_IN = 2;
@@ -732,6 +734,27 @@ static sk_sp<SkShader> makeDescriptorShader(const ShaderDescriptor& descriptor, 
     if (descriptor.type == COMMAND_SHADER_DESCRIPTOR_COLOR) {
         if (descriptor.payload.size() != 1) return nullptr;
         return SkShaders::Color(static_cast<SkColor>(descriptor.payload[0]));
+    }
+    if (descriptor.type == COMMAND_SHADER_DESCRIPTOR_PERLIN_NOISE) {
+        if (descriptor.payload.size() != 7) return nullptr;
+        const jint kind = descriptor.payload[0];
+        const SkScalar baseFrequencyX = static_cast<SkScalar>(descriptor.payload[1]) / 1000000.0f;
+        const SkScalar baseFrequencyY = static_cast<SkScalar>(descriptor.payload[2]) / 1000000.0f;
+        const jint numOctaves = descriptor.payload[3];
+        const SkScalar seed = static_cast<SkScalar>(descriptor.payload[4]) / 1000.0f;
+        const jint tileWidth = descriptor.payload[5];
+        const jint tileHeight = descriptor.payload[6];
+        if (kind < 0 || kind > 1 ||
+                baseFrequencyX <= 0.0f || baseFrequencyY <= 0.0f ||
+                numOctaves < 1 || numOctaves > 16 ||
+                tileWidth < 0 || tileHeight < 0 || tileWidth > 4096 || tileHeight > 4096) {
+            return nullptr;
+        }
+        const SkISize tileSize = SkISize::Make(tileWidth, tileHeight);
+        if (kind == 0) {
+            return SkShaders::MakeFractalNoise(baseFrequencyX, baseFrequencyY, numOctaves, seed, &tileSize);
+        }
+        return SkShaders::MakeTurbulence(baseFrequencyX, baseFrequencyY, numOctaves, seed, &tileSize);
     }
     if (descriptor.type == COMMAND_SHADER_DESCRIPTOR_COMPOSITE) {
         if (descriptor.payload.size() != 5 || !descriptor.dst || !descriptor.src) return nullptr;
@@ -3665,6 +3688,18 @@ static bool drawCommandList(SkCanvas* canvas,
                             tileModeX < 0 || tileModeX > 3 || tileModeY < 0 || tileModeY > 3) return false;
                 } else if (descriptorType == COMMAND_SHADER_DESCRIPTOR_COLOR) {
                     if (payloadIntCount != 1) return false;
+                } else if (descriptorType == COMMAND_SHADER_DESCRIPTOR_PERLIN_NOISE) {
+                    if (payloadIntCount != 7) return false;
+                    const jint kind = descriptor.payload[0];
+                    const jint baseFrequencyX1000000 = descriptor.payload[1];
+                    const jint baseFrequencyY1000000 = descriptor.payload[2];
+                    const jint numOctaves = descriptor.payload[3];
+                    const jint tileWidth = descriptor.payload[5];
+                    const jint tileHeight = descriptor.payload[6];
+                    if (kind < 0 || kind > 1 ||
+                            baseFrequencyX1000000 <= 0 || baseFrequencyY1000000 <= 0 ||
+                            numOctaves < 1 || numOctaves > 16 ||
+                            tileWidth < 0 || tileHeight < 0 || tileWidth > 4096 || tileHeight > 4096) return false;
                 } else if (descriptorType == COMMAND_SHADER_DESCRIPTOR_COMPOSITE) {
                     if (payloadIntCount != 5) return false;
                     const uint64_t dstHandle = imageCacheKey(descriptor.payload[0], descriptor.payload[1]);
