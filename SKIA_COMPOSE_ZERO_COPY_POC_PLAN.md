@@ -12677,6 +12677,15 @@ Validation:
   `bad_pixel_ratio=0.05282`, `compose_bad_pixel_ratio=0.07480`,
   `compose_bottom_labels_bad_pixel_ratio=0.11174`, and
   `compose_paragraph_probes_bad_pixel_ratio=0.10834`.
+- Re-ran the focused native-text visual subset with the generic row included:
+  `CASES="parity-native-text parity-native-generic-font-text parity-forced-context-native-text" DURATION_SECONDS=4 WARMUP_SECONDS=1 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-screenshot-parity-suite.sh`.
+- Native-text subset TSV:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260503-101448/suite.tsv`.
+- All three rows passed with `fallbacks=0` and `jbr_picture_frames=0`. The generic-family row reported
+  `jbr_command_frames=232`, `bad_pixel_ratio=0.05118`, `compose_bottom_labels_bad_pixel_ratio=0.11174`, and
+  `compose_paragraph_probes_bad_pixel_ratio=0.10834`; the baseline and forced-context native-text rows retained the
+  existing `compose_bottom_labels_bad_pixel_ratio=0.15308` and `compose_paragraph_probes_bad_pixel_ratio=0.17241`
+  gates.
 
 Next:
 - Continue native text/font ownership work with visual parity, baseline/style metrics, and any remaining platform font

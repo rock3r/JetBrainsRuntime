@@ -270,6 +270,10 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Generic-family native-text screenshot parity row passed at
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260503-101144/suite.tsv`
   with zero fallback, zero picture frames, and `jbr_command_frames=1569`.
+- [x] Focused native-text screenshot parity subset passed after adding generic-family resolution:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260503-101448/suite.tsv`.
+  Baseline native text, generic-family native text, and forced-context native text all kept zero fallback and zero
+  picture frames.
 - [x] Add a Magic Jewel forced-context native-text command probe that requires simple/paragraph text commands,
   `contextChanged=true`, and command-cache clearing without falling back to picture replay.
 - [x] Add a Magic Jewel forced-context dynamic image-cache command probe that requires cached image refs, single-key
