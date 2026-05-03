@@ -13481,6 +13481,10 @@ Validation:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-181305/suite.tsv`.
 - The row reported `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, `jbr_command_frames=872`,
   and a passing popup-window screenshot assertion.
+- Short broad Magic Jewel command-probe sweep passed with background windows enabled:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-181507/suite.tsv`.
+- The broad sweep covered supported command replay rows, intentional raw-object fallback rows, popup/menu rows, loaded
+  font-data/resource/system font rows, descriptor eviction, resize, and forced-context invalidation.
 
 Next:
-- Resume the short broad Magic Jewel command sweep with the quieter automation-window default.
+- Continue remaining shader/effect lifecycle and screen/context migration hardening.
