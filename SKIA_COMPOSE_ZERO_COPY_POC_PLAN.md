@@ -69,6 +69,8 @@ Stable shader + color-filter wrapper gates were tightened:
   are expected to lower to the dedicated gradient commands; wrapped gradients continue to cover descriptor handles.
   Focused command replay passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260504-200226/suite.tsv`.
+- Full default command-probe sweep passed after adding the ShaderBrush gradient row:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260504-200434/suite.tsv`.
 
 ## Next Work
 
