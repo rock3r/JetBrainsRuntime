@@ -1224,6 +1224,9 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   - [x] Harden stable RuntimeEffect child-shader and wrapped linear-gradient shader+color-filter rows with exact
     shader/effect handle define gates plus shader cache-hit assertions. Focused command replay passed at
     `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260504-024649/suite.tsv`.
+  - [x] Harden stable image/composite/linear-gradient shader+color-filter wrapper rows with shader cache-hit and
+    nested effect-handle use gates. Focused command replay passed at
+    `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260504-124614/suite.tsv`.
   - [x] Full default Magic Jewel command-probe suite passed after the RuntimeEffect lifecycle gate tightening:
     `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260504-024849/suite.tsv`.
     The run covered 112 rows with stable 8-column TSV output; supported rows stayed command-backed and raw
