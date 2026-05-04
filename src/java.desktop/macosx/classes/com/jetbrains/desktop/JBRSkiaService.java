@@ -4861,15 +4861,27 @@ public class JBRSkiaService extends JBRSkia {
                     return;
                 }
                 long handle = commandHandle(commands[argsStart], commands[argsStart + 1]);
+                int descriptorType = commands[argsStart + 2];
+                int payloadIntCount = commands[argsStart + 4];
                 markShaderHandleDefined(backend, contextPtr, handle, frameShaderDefines);
                 logShaderHandleDefine(
                         backend,
                         contextPtr,
                         handle,
-                        commands[argsStart + 2],
+                        descriptorType,
                         commands[argsStart + 3],
-                        commands[argsStart + 4]
+                        payloadIntCount
                 );
+                if (descriptorType == COMMAND_SHADER_DESCRIPTOR_COLOR_FILTER
+                        && payloadIntCount == 4
+                        && hasRecordArgs(record, 9)) {
+                    long childHandle = commandHandle(commands[argsStart + 5], commands[argsStart + 6]);
+                    long colorFilterHandle = commandHandle(commands[argsStart + 7], commands[argsStart + 8]);
+                    logShaderHandleCacheHitIfKnown(backend, contextPtr, childHandle, record.op(), frameShaderDefines);
+                    logShaderHandleUse(backend, contextPtr, childHandle, record.op());
+                    logEffectHandleCacheHitIfKnown(backend, contextPtr, colorFilterHandle, record.op(), frameEffectDefines);
+                    logEffectHandleUse(backend, contextPtr, colorFilterHandle, record.op());
+                }
             } else if (record.op() == COMMAND_EVICT_SHADER_HANDLE) {
                 if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE || !hasRecordArgs(record, 2)) {
                     return;

@@ -13718,6 +13718,29 @@ Validation:
 Next:
 - Continue remaining shader-family coverage and descriptor lifecycle hardening.
 
+## Checkpoint: Composite Shader Color-Filter Handle Gates
+
+Status: completed for the stable composite shader + typed color-filter wrapper row.
+
+Changes:
+- JBR now logs nested shader/effect handle uses when `COMMAND_SHADER_DESCRIPTOR_COLOR_FILTER` defines a wrapping
+  shader descriptor from a child shader handle and a typed color-filter handle.
+- Magic Jewel's `commands-composite-shader-color-filter` row now requires shader-handle cache hits plus both shader and
+  effect handle use markers, while keeping exact descriptor define caps for the stable scene.
+- The row intentionally does not require effect-handle cache hits: the color-filter handle is consumed while defining
+  the wrapper shader in the same frame, and subsequent frames reuse the outer shader handle directly.
+
+Validation:
+- Rebuilt local `/tmp` JBR API/classes/native artifacts with `./scripts/rebuild-jbr-skia-local-artifacts.sh`.
+- Focused Magic Jewel command replay passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260504-122049/suite.tsv`.
+- The row reported `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, `jbr_command_frames=296`,
+  `jbr_shader_handle_cache_hit_frames=639`, `jbr_effect_handle_define_frames=1`, and
+  `jbr_effect_handle_use_frames=1`.
+
+Next:
+- Continue remaining shader-family coverage and descriptor lifecycle hardening.
+
 ## Checkpoint: Perlin Noise Descriptor Resize/Context Redefine
 
 Status: completed for Perlin/noise shader handle lifecycle coverage in Magic Jewel.
