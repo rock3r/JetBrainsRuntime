@@ -14172,6 +14172,10 @@ Validation:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260504-083256/suite.tsv`.
 - Supported rows stayed command-backed while raw shader/effect and invalid descriptor sentinels stayed on intentional
   structured fallback.
+- Magic Jewel report-validation unit coverage now exercises both positive and negative RuntimeEffect source-cache gates:
+  `EXPECT_MIN_JBR_RUNTIME_EFFECT_CACHE_HITS` and `EXPECT_MAX_JBR_RUNTIME_EFFECT_CACHE_MISSES`.
+- Report-validation tests passed:
+  `./scripts/test-jbr-skia-report-validation.sh`.
 
 Next:
 - Continue remaining shader-family coverage and descriptor lifecycle hardening.
