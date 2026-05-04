@@ -64,6 +64,11 @@ Stable shader + color-filter wrapper gates were tightened:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-bundles/20260504-193500` and self-checked
   all optional artifact-matrix rows with expected command replay:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260504-193518/matrix.tsv`.
+- Added a focused Magic Jewel `commands-gradient-shaders` row that draws explicit
+  `ShaderBrush(LinearGradientShader/RadialGradientShader/SweepGradientShader)` rects. Plain gradient shader brushes
+  are expected to lower to the dedicated gradient commands; wrapped gradients continue to cover descriptor handles.
+  Focused command replay passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260504-200226/suite.tsv`.
 
 ## Next Work
 
