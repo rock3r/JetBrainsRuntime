@@ -78,6 +78,8 @@ Stable shader + color-filter wrapper gates were tightened:
 - Added a stable RuntimeEffect color-filter row with no changing uniforms so effect-handle reuse can be asserted
   separately from the animated RuntimeEffect color-filter source-cache row. Focused command replay passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260504-221036/suite.tsv`.
+- Full default command-probe sweep passed after adding stable RuntimeEffect color-filter coverage:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260504-221229/suite.tsv`.
 
 ## Next Work
 
