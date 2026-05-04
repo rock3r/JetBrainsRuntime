@@ -42,6 +42,8 @@ Stable shader + color-filter wrapper gates were tightened:
 - Graphics-layer color-matrix and blend+color-matrix rows now require stable effect-handle define/use/cache-hit markers.
   Focused command replay passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260504-142640/suite.tsv`.
+- Compact regression subset covering the recently tightened shader/effect gates passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260504-142858/suite.tsv`.
 
 ## Next Work
 
