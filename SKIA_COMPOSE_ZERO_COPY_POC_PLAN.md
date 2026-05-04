@@ -14206,6 +14206,22 @@ Validation:
 Next:
 - Continue remaining shader-family coverage and descriptor lifecycle hardening.
 
+## Checkpoint: Compatibility Matrix After RuntimeEffect Cache Gates
+
+Status: completed for launch-level ABI/capability fallback validation after RuntimeEffect cache observability and
+surface-change gate hardening.
+
+Validation:
+- Ran the Magic Jewel compatibility matrix against the current local artifacts:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260504-100940/matrix.tsv`.
+- The happy path reported `fallback_new_count=0` and `jbr_command_frames=880`.
+- All negative rows reported `fallback_new_count=1` and `jbr_command_frames=0`, covering ABI mismatch,
+  native-ABI mismatch, broad low/high capability mismatches, exact low-word rows, exact high-word rows through
+  `shader-perlin-noise-capability-missing`, and `public-api-missing`.
+
+Next:
+- Continue remaining shader-family coverage and descriptor lifecycle hardening.
+
 ## Checkpoint: Full Screenshot Parity With Shader Migration Rows
 
 Status: completed for the default Magic Jewel old/new screenshot parity suite after adding solid color and Perlin/noise
