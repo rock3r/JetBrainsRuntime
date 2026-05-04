@@ -14180,6 +14180,32 @@ Validation:
 Next:
 - Continue remaining shader-family coverage and descriptor lifecycle hardening.
 
+## Checkpoint: RuntimeEffect Source Cache Across Surface Changes
+
+Status: completed for RuntimeEffect source-cache validation across descriptor handle invalidation.
+
+Changes:
+- Tightened `commands-resize-shader-descriptor-redefine` and `commands-forced-context-shader-descriptor-redefine`.
+- Both rows already required surface/change markers, command-cache clearing, second JBR shader-handle definitions, and
+  shader-handle cache-hit recovery.
+- They now also require RuntimeEffect source-cache hits and cap source-cache misses at one, proving resize/context-change
+  descriptor redefinition does not recompile the same validated SKSL source.
+
+Validation:
+- Focused Magic Jewel command-probe subset passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260504-100618/suite.tsv`.
+- `commands-resize-shader-descriptor-redefine` reported `fallback_new_count=0`, `jbr_picture_frames=0`,
+  `jbr_command_frames=307`, `jbr_runtime_effect_cache_miss_frames=1`, `jbr_runtime_effect_cache_hit_frames=860`,
+  `jbr_shader_handle_define_frames=2`, `skiko_surface_change_markers=1`, and
+  `skiko_command_cache_clear_markers=1`.
+- `commands-forced-context-shader-descriptor-redefine` reported `fallback_new_count=0`, `jbr_picture_frames=0`,
+  `jbr_command_frames=177`, `jbr_runtime_effect_cache_miss_frames=1`, `jbr_runtime_effect_cache_hit_frames=502`,
+  `jbr_shader_handle_define_frames=2`, `skiko_surface_change_markers=1`, and
+  `skiko_command_cache_clear_markers=1`.
+
+Next:
+- Continue remaining shader-family coverage and descriptor lifecycle hardening.
+
 ## Checkpoint: Full Screenshot Parity With Shader Migration Rows
 
 Status: completed for the default Magic Jewel old/new screenshot parity suite after adding solid color and Perlin/noise

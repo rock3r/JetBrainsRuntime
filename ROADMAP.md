@@ -1235,6 +1235,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
     `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260504-011432/suite.tsv`
     with zero fallback, zero picture frames, positive command frames, command-cache clearing, and second JBR
     shader-handle definitions.
+  - [x] RuntimeEffect shader resize/forced-context command rows now assert one successful source-cache miss plus repeated
+    cache hits, proving descriptor redefinition after surface/context invalidation does not recompile stable SKSL sources.
   - [x] Full default Magic Jewel screenshot parity suite passed with the migration shader rows included:
     `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260504-013025/suite.tsv`.
     The run kept the Pulse/button chrome oracle, resource/system font rows, resize/forced-context font rows, Perlin/noise
