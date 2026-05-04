@@ -1212,8 +1212,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
     color-filter descriptors, so animated uniform rows reuse JBR-owned compiled effects without widening the command
     ABI or passing raw Skiko pointers. Local artifacts rebuilt and focused RuntimeEffect command probes passed at
     `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260504-035157/suite.tsv`.
-  - [x] Launch-level compatibility matrix passed after the RuntimeEffect compile-cache native change:
-    `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260504-033956/matrix.tsv`.
+  - [x] Launch-level compatibility matrix passed after the bounded RuntimeEffect compile-cache native change:
+    `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260504-035747/matrix.tsv`.
     Happy stayed command-backed; all 25 negative rows reported one structured fallback and zero JBR command frames.
   - [x] Raw image and linear/radial/sweep gradient shader fallback sentinels are in the default Magic Jewel
     command-probe suite, proving raw Skiko-owned shader objects stay picture-backed while descriptor-backed image,

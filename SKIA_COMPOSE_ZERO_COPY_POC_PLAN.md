@@ -14134,8 +14134,8 @@ Validation:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260504-035157/suite.tsv`.
 - RuntimeEffect shader/color-filter rows stayed command-backed with zero fallback and zero JBR picture frames; the
   intentional build-failure rows still reported exactly one structured fallback and no JBR command frames.
-- Launch-level compatibility matrix passed after the native change:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260504-033956/matrix.tsv`.
+- Launch-level compatibility matrix passed after the bounded native cache change:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260504-035747/matrix.tsv`.
 - The matrix kept the happy path command-backed and all 25 negative rows on one structured fallback with zero JBR command
   frames; the matrix TSV had 26 data rows and 5 stable columns.
 
