@@ -14390,3 +14390,19 @@ Validation:
 
 Next:
 - Continue remaining shader-family coverage and descriptor lifecycle hardening.
+
+## Checkpoint: Compatibility Matrix After Composite Perlin/Noise Lifecycle
+
+Status: completed for launch-level ABI/capability fallback validation after composite Perlin/noise shader metadata,
+command lifecycle, and screenshot parity coverage.
+
+Validation:
+- Ran the Magic Jewel compatibility matrix against the current local artifacts:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260504-115559/matrix.tsv`.
+- The happy path reported `fallback_new_count=0` and `jbr_command_frames=773`.
+- All forced mismatch rows reported `fallback_new_count=1` and `jbr_command_frames=0`, covering ABI mismatch,
+  native-ABI mismatch, broad low/high capability mismatches, exact low-word capability rows, exact high-word rows through
+  `shader-perlin-noise-capability-missing`, and `public-api-missing`.
+
+Next:
+- Continue remaining shader-family coverage and descriptor lifecycle hardening.

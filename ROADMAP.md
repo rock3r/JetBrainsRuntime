@@ -1234,6 +1234,12 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   - [x] Launch-level compatibility matrix passed again after RuntimeEffect cache observability and lifecycle gate
     hardening:
     `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260504-100940/matrix.tsv`.
+  - [x] Launch-level compatibility matrix passed after composite Perlin/noise shader metadata and lifecycle parity
+    coverage:
+    `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260504-115559/matrix.tsv`.
+    Happy stayed command-backed; all forced ABI/capability/public-API mismatch rows reported one structured fallback and
+    zero JBR command frames, including the exact high-word `draw-points`, `font-data`, `shader-color`, and
+    `shader-perlin-noise` rows.
   - [x] Focused RuntimeEffect screenshot parity passed after the bounded native compile-cache change:
     `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260504-040822/suite.tsv`.
   - [x] Raw image and linear/radial/sweep gradient shader fallback sentinels are in the default Magic Jewel
