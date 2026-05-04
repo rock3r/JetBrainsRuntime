@@ -71,6 +71,8 @@ This is the small working roadmap for the current PoC. The full historical check
 - Focused descriptor handle-use gate subset for RuntimeEffect uniform-only and resize/forced-context descriptor redefine
   rows:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260504-212538/suite.tsv`.
+- Focused stable RuntimeEffect color-filter handle reuse probe:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260504-221036/suite.tsv`.
 
 ## Document Index
 

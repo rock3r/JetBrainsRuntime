@@ -75,6 +75,9 @@ Stable shader + color-filter wrapper gates were tightened:
   resize/forced-context descriptor redefine rows require post-redefine handle use markers in addition to define/cache
   signals. Focused command replay passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260504-212538/suite.tsv`.
+- Added a stable RuntimeEffect color-filter row with no changing uniforms so effect-handle reuse can be asserted
+  separately from the animated RuntimeEffect color-filter source-cache row. Focused command replay passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260504-221036/suite.tsv`.
 
 ## Next Work
 
