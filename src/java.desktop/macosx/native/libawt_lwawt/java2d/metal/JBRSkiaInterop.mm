@@ -292,6 +292,9 @@ static std::mutex gColorFilterCacheMutex;
 static std::unordered_map<ColorFilterScopedKey, ColorFilterDescriptor, ColorFilterScopedKeyHash> gColorFiltersByKey;
 static std::mutex gShaderCacheMutex;
 static std::unordered_map<ColorFilterScopedKey, ShaderDescriptor, ColorFilterScopedKeyHash> gShadersByKey;
+static std::mutex gRuntimeEffectCacheMutex;
+static std::unordered_map<std::string, sk_sp<SkRuntimeEffect>> gRuntimeShaderEffectsBySource;
+static std::unordered_map<std::string, sk_sp<SkRuntimeEffect>> gRuntimeColorFilterEffectsBySource;
 static std::mutex gFontDataCacheMutex;
 static std::unordered_map<uint64_t, sk_sp<SkTypeface>> gFontDataTypefacesByKey;
 static std::mutex gParagraphDependenciesMutex;
@@ -641,6 +644,68 @@ static int runtimeEffectChildSchemaEnd(const std::vector<jint>& payload,
                                        jint namedChildCount,
                                        jint childCount);
 
+static sk_sp<SkRuntimeEffect> cachedRuntimeShaderEffect(
+        const std::string& sksl,
+        uint64_t sourceHash,
+        jint uniformFloatCount,
+        jint childCount) {
+    {
+        std::lock_guard<std::mutex> lock(gRuntimeEffectCacheMutex);
+        auto cached = gRuntimeShaderEffectsBySource.find(sksl);
+        if (cached != gRuntimeShaderEffectsBySource.end()) {
+            return cached->second;
+        }
+    }
+
+    SkRuntimeEffect::Result result = SkRuntimeEffect::MakeForShader(SkString(sksl.c_str(), sksl.size()));
+    if (!result.effect || !result.errorText.isEmpty()) {
+        const uint64_t errorHash = asciiStringHash(result.errorText.c_str(), result.errorText.size());
+        std::fprintf(stderr,
+                     "JBR_SKIA_INTEROP_RUNTIME_EFFECT_COMPILE_FAILED hash=0x%016llx skslLength=%zu uniforms=%d children=%d errorLength=%zu errorHash=0x%016llx\n",
+                     static_cast<unsigned long long>(sourceHash),
+                     sksl.size(),
+                     uniformFloatCount,
+                     childCount,
+                     result.errorText.size(),
+                     static_cast<unsigned long long>(errorHash));
+        return nullptr;
+    }
+
+    std::lock_guard<std::mutex> lock(gRuntimeEffectCacheMutex);
+    auto cached = gRuntimeShaderEffectsBySource.emplace(sksl, result.effect).first;
+    return cached->second;
+}
+
+static sk_sp<SkRuntimeEffect> cachedRuntimeColorFilterEffect(
+        const std::string& sksl,
+        uint64_t sourceHash,
+        jint uniformFloatCount) {
+    {
+        std::lock_guard<std::mutex> lock(gRuntimeEffectCacheMutex);
+        auto cached = gRuntimeColorFilterEffectsBySource.find(sksl);
+        if (cached != gRuntimeColorFilterEffectsBySource.end()) {
+            return cached->second;
+        }
+    }
+
+    SkRuntimeEffect::Result result = SkRuntimeEffect::MakeForColorFilter(SkString(sksl.c_str(), sksl.size()));
+    if (!result.effect || !result.errorText.isEmpty()) {
+        const uint64_t errorHash = asciiStringHash(result.errorText.c_str(), result.errorText.size());
+        std::fprintf(stderr,
+                     "JBR_SKIA_INTEROP_RUNTIME_COLOR_FILTER_COMPILE_FAILED hash=0x%016llx skslLength=%zu uniforms=%d errorLength=%zu errorHash=0x%016llx\n",
+                     static_cast<unsigned long long>(sourceHash),
+                     sksl.size(),
+                     uniformFloatCount,
+                     result.errorText.size(),
+                     static_cast<unsigned long long>(errorHash));
+        return nullptr;
+    }
+
+    std::lock_guard<std::mutex> lock(gRuntimeEffectCacheMutex);
+    auto cached = gRuntimeColorFilterEffectsBySource.emplace(sksl, result.effect).first;
+    return cached->second;
+}
+
 static sk_sp<SkShader> makeDescriptorShader(const ShaderDescriptor& descriptor, void* imageCacheContextKey, int depth) {
     if (depth > 8) {
         return nullptr;
@@ -836,20 +901,8 @@ static sk_sp<SkShader> makeDescriptorShader(const ShaderDescriptor& descriptor, 
             if (code <= 0 || code > 127) return nullptr;
             sksl.push_back(static_cast<char>(code));
         }
-        SkRuntimeEffect::Result result = SkRuntimeEffect::MakeForShader(SkString(sksl.c_str(), sksl.size()));
-        if (!result.effect || !result.errorText.isEmpty()) {
-            const uint64_t sourceHash = imageCacheKey(descriptor.payload[5], descriptor.payload[6]);
-            const uint64_t errorHash = asciiStringHash(result.errorText.c_str(), result.errorText.size());
-            std::fprintf(stderr,
-                         "JBR_SKIA_INTEROP_RUNTIME_EFFECT_COMPILE_FAILED hash=0x%016llx skslLength=%d uniforms=%d children=%d errorLength=%zu errorHash=0x%016llx\n",
-                         static_cast<unsigned long long>(sourceHash),
-                         skslLength,
-                         uniformFloatCount,
-                         childCount,
-                         result.errorText.size(),
-                         static_cast<unsigned long long>(errorHash));
-            return nullptr;
-        }
+        sk_sp<SkRuntimeEffect> effect = cachedRuntimeShaderEffect(sksl, expectedHash, uniformFloatCount, childCount);
+        if (!effect) return nullptr;
         sk_sp<SkData> uniformData;
         if (uniformFloatCount == 0) {
             uniformData = SkData::MakeEmpty();
@@ -870,7 +923,7 @@ static sk_sp<SkShader> makeDescriptorShader(const ShaderDescriptor& descriptor, 
                 (namedUniformCount == 0 || namedUniformFloatTotal == uniformFloatCount) &&
                 (childCount == 0 || namedChildCount == childCount);
         if (canUseBuilder) {
-            SkRuntimeEffectBuilder builder(result.effect);
+            SkRuntimeEffectBuilder builder(effect);
             int uniformOffset = schemaStart;
             for (jint i = 0; i < namedUniformCount; i++) {
                 const jint floatOffset = descriptor.payload[static_cast<size_t>(uniformOffset++)];
@@ -905,7 +958,7 @@ static sk_sp<SkShader> makeDescriptorShader(const ShaderDescriptor& descriptor, 
                 for (jint charIndex = 0; charIndex < nameLength; charIndex++) {
                     name.push_back(static_cast<char>(descriptor.payload[static_cast<size_t>(childOffset++)]));
                 }
-                const SkRuntimeEffect::Child* child = result.effect->findChild(name);
+                const SkRuntimeEffect::Child* child = effect->findChild(name);
                 if (child == nullptr) {
                     std::fprintf(stderr,
                                  "JBR_SKIA_INTEROP_RUNTIME_EFFECT_BUILD_FAILED hash=0x%016llx stage=missing-child nameHash=0x%016llx skslLength=%d uniforms=%d children=%d namedUniforms=%d namedChildren=%d\n",
@@ -945,7 +998,7 @@ static sk_sp<SkShader> makeDescriptorShader(const ShaderDescriptor& descriptor, 
             }
             return shader;
         }
-        auto effectChildren = result.effect->children();
+        auto effectChildren = effect->children();
         if (effectChildren.size() != childShaders.size()) {
             std::fprintf(stderr,
                          "JBR_SKIA_INTEROP_RUNTIME_EFFECT_BUILD_FAILED hash=0x%016llx stage=child-count skslLength=%d uniforms=%d children=%d namedUniforms=%d namedChildren=%d effectChildren=%zu\n",
@@ -972,7 +1025,7 @@ static sk_sp<SkShader> makeDescriptorShader(const ShaderDescriptor& descriptor, 
                 return nullptr;
             }
         }
-        sk_sp<SkShader> shader = result.effect->makeShader(
+        sk_sp<SkShader> shader = effect->makeShader(
                 uniformData,
                 childShaders.empty() ? nullptr : childShaders.data(),
                 childShaders.size(),
@@ -1034,18 +1087,8 @@ static sk_sp<SkColorFilter> makeDescriptorRuntimeColorFilter(const ColorFilterDe
         if (code <= 0 || code > 127) return nullptr;
         sksl.push_back(static_cast<char>(code));
     }
-    SkRuntimeEffect::Result result = SkRuntimeEffect::MakeForColorFilter(SkString(sksl.c_str(), sksl.size()));
-    if (!result.effect || !result.errorText.isEmpty()) {
-        const uint64_t errorHash = asciiStringHash(result.errorText.c_str(), result.errorText.size());
-        std::fprintf(stderr,
-                     "JBR_SKIA_INTEROP_RUNTIME_COLOR_FILTER_COMPILE_FAILED hash=0x%016llx skslLength=%d uniforms=%d errorLength=%zu errorHash=0x%016llx\n",
-                     static_cast<unsigned long long>(expectedHash),
-                     skslLength,
-                     uniformFloatCount,
-                     result.errorText.size(),
-                     static_cast<unsigned long long>(errorHash));
-        return nullptr;
-    }
+    sk_sp<SkRuntimeEffect> effect = cachedRuntimeColorFilterEffect(sksl, expectedHash, uniformFloatCount);
+    if (!effect) return nullptr;
     sk_sp<SkData> uniformData;
     if (uniformFloatCount == 0) {
         uniformData = SkData::MakeEmpty();
@@ -1064,7 +1107,7 @@ static sk_sp<SkColorFilter> makeDescriptorRuntimeColorFilter(const ColorFilterDe
         if (!child) return nullptr;
         children.push_back(std::move(child));
     }
-    return result.effect->makeColorFilter(uniformData, children.data(), static_cast<size_t>(childCount));
+    return effect->makeColorFilter(uniformData, children.data(), static_cast<size_t>(childCount));
 }
 
 static jsize recordLengthFromBytes(jint recordByteLength) {

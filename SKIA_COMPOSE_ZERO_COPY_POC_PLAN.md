@@ -14111,6 +14111,29 @@ Validation:
 Next:
 - Continue remaining shader-family coverage and descriptor lifecycle hardening.
 
+## Checkpoint: RuntimeEffect Native Compile Cache
+
+Status: completed for an ABI-neutral JBR native RuntimeEffect compile-cache slice.
+
+Changes:
+- Added JBR-owned native caches for compiled RuntimeEffect shader and RuntimeEffect color-filter sources.
+- The cache keys use the validated SKSL source string after the descriptor source hash check passes; uniform payloads,
+  child descriptors, and builder binding still stay per descriptor/use.
+- This keeps animated RuntimeEffect uniform rows from recompiling the same SKSL source every replay frame without
+  widening the command ABI or passing raw Skiko `SkRuntimeEffect*` pointers across the boundary.
+- Compile/build failure reporting remains intact for invalid sources or invalid named child binding.
+
+Validation:
+- Rebuilt local artifacts through Magic Jewel's local artifact script:
+  `/tmp/jbr-api-shim.jar`, `/tmp/jbr-skia-run/desktop`, and `/tmp/jbr-skia-native/libjbrskiainterop.dylib`.
+- Focused RuntimeEffect command-probe subset passed against the rebuilt native bridge:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260504-033342/suite.tsv`.
+- RuntimeEffect shader/color-filter rows stayed command-backed with zero fallback and zero JBR picture frames; the
+  intentional build-failure rows still reported exactly one structured fallback and no JBR command frames.
+
+Next:
+- Continue remaining shader-family coverage and descriptor lifecycle hardening.
+
 ## Checkpoint: Full Screenshot Parity With Shader Migration Rows
 
 Status: completed for the default Magic Jewel old/new screenshot parity suite after adding solid color and Perlin/noise

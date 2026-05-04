@@ -1208,6 +1208,10 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
     `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260504-024849/suite.tsv`.
     The run covered 112 rows with stable 8-column TSV output; supported rows stayed command-backed and raw
     shader/effect sentinels stayed on intentional picture fallback.
+  - [x] Add ABI-neutral JBR native RuntimeEffect compile caches keyed by validated SKSL source for shader and
+    color-filter descriptors, so animated uniform rows reuse JBR-owned compiled effects without widening the command
+    ABI or passing raw Skiko pointers. Local artifacts rebuilt and focused RuntimeEffect command probes passed at
+    `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260504-033342/suite.tsv`.
   - [x] Raw image and linear/radial/sweep gradient shader fallback sentinels are in the default Magic Jewel
     command-probe suite, proving raw Skiko-owned shader objects stay picture-backed while descriptor-backed image,
     color, noise, and turbulence shaders keep command replay.
