@@ -71,6 +71,10 @@ Stable shader + color-filter wrapper gates were tightened:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260504-200226/suite.tsv`.
 - Full default command-probe sweep passed after adding the ShaderBrush gradient row:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260504-200434/suite.tsv`.
+- Tightened Magic Jewel descriptor gates so RuntimeEffect uniform-only requires shader-handle use markers, and
+  resize/forced-context descriptor redefine rows require post-redefine handle use markers in addition to define/cache
+  signals. Focused command replay passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260504-212538/suite.tsv`.
 
 ## Next Work
 
