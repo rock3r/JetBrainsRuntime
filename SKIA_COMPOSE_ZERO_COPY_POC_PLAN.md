@@ -49,6 +49,8 @@ Stable shader + color-filter wrapper gates were tightened:
 - Solid color and transformed shader rows now require stable shader-handle cache-hit markers. Focused command replay
   passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260504-155354/suite.tsv`.
+- Compact shader/effect regression subset, including the new solid color/transformed shader cache-hit gates, passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260504-160144/suite.tsv`.
 
 ## Next Work
 
