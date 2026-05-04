@@ -46,6 +46,9 @@ Stable shader + color-filter wrapper gates were tightened:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260504-142858/suite.tsv`.
 - Full default command-probe sweep passed after the effect gate tightening:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260504-143313/suite.tsv`.
+- Solid color and transformed shader rows now require stable shader-handle cache-hit markers. Focused command replay
+  passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260504-155354/suite.tsv`.
 
 ## Next Work
 
