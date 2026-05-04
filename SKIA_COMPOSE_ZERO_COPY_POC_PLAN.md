@@ -58,6 +58,8 @@ Stable shader + color-filter wrapper gates were tightened:
 - Full screenshot parity suite passed, covering button chrome, point dots, resource/system fonts, shader descriptors,
   RuntimeEffect rows, and graphics-layer effects against old SwingGraphics:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260504-185055/suite.tsv`.
+- Artifact matrix passed for the current local artifact set plus the required missing-public-API fallback row:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260504-193131/matrix.tsv`.
 
 ## Next Work
 
