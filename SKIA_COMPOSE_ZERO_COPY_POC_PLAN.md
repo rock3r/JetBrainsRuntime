@@ -14085,6 +14085,28 @@ Validation:
 Next:
 - Continue remaining shader-family coverage and descriptor lifecycle hardening.
 
+## Checkpoint: RuntimeEffect Descriptor Lifecycle Gates
+
+Status: completed for focused Magic Jewel command-probe hardening of stable RuntimeEffect descriptor reuse.
+
+Changes:
+- Tightened `commands-runtime-effect-child-only` so it requires exactly the child shader plus RuntimeEffect shader handle
+  definitions, JBR shader-handle use markers, and shader cache-hit markers.
+- Tightened `commands-linear-gradient-shader-color-filter` so it requires exactly the wrapped shader/color-filter
+  descriptor handles, JBR shader-handle use markers, and shader cache-hit markers.
+- Left animated RuntimeEffect rows uncapped because their changing uniform payloads intentionally create new descriptor
+  definitions across frames.
+- Documented the stricter stable descriptor gates in Magic Jewel's README.
+
+Validation:
+- Focused command-probe subset passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260504-024649/suite.tsv`.
+- Both rows reported `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, and positive
+  `jbr_command_frames` with the stricter lifecycle gates enabled.
+
+Next:
+- Continue remaining shader-family coverage and descriptor lifecycle hardening.
+
 ## Checkpoint: Full Screenshot Parity With Shader Migration Rows
 
 Status: completed for the default Magic Jewel old/new screenshot parity suite after adding solid color and Perlin/noise
