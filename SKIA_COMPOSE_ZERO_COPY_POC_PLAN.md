@@ -13740,6 +13740,23 @@ Validation:
 Next:
 - Continue remaining shader-family coverage and descriptor lifecycle hardening.
 
+## Checkpoint: Resource And System Font Screenshot Parity Refresh
+
+Status: completed for embedded JAR resource font and named system font old/new parity rows.
+
+Validation:
+- Focused Magic Jewel screenshot parity subset passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260504-141435/suite.tsv`.
+- Covered steady-state, same-context resize, and forced-context migration rows for:
+  `parity-native-resource-font-text`, `parity-native-system-font-text`,
+  `parity-resize-native-resource-font-text`, `parity-resize-native-system-font-text`,
+  `parity-forced-context-native-resource-font-text`, and `parity-forced-context-native-system-font-text`.
+- All rows reported `fallback_new_count=0`, `jbr_picture_frames=0`, and positive JBR command frames.
+
+Next:
+- Split the living roadmap/plan into short index files plus archived checkpoint/history files so future turns can load
+  current state without swallowing the full historical log.
+
 ## Checkpoint: Composite Shader Color-Filter Handle Gates
 
 Status: completed for the stable composite shader + typed color-filter wrapper row.

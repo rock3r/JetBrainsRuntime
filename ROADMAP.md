@@ -23,6 +23,9 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] Magic Jewel has focused old/new screenshot parity for Pulse/Reset button chrome, including primary button white-text
   and centering checks. Focused validation passed at
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260504-141220/suite.tsv`.
+- [x] Magic Jewel embedded resource-font and named system-font screenshot parity rows passed for steady-state,
+  same-context resize, and forced-context migration:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260504-141435/suite.tsv`.
 
 ## Command ABI Coverage
 
