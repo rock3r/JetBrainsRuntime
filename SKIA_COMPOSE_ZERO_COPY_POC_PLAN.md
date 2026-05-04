@@ -14059,6 +14059,33 @@ Validation:
 Next:
 - Continue remaining shader-family coverage and descriptor lifecycle hardening.
 
+## Checkpoint: Solid Color Shader Migration Screenshot Parity
+
+Status: completed for screenshot parity coverage of JBR-owned solid color shader descriptor redefinition across
+same-context resize and forced destination context migration.
+
+Changes:
+- Added Magic Jewel screenshot parity rows:
+  `parity-resize-color-shader` and `parity-forced-context-color-shader`.
+- The rows require surface-change markers, command-cache clearing, second JBR shader-handle definitions, shader-handle
+  use/cache-hit markers, zero fallback, and zero JBR picture frames while comparing the focused solid color shader probe
+  region against the old renderer.
+- The resize row uses the existing resize header-button tolerance and a resize-specific solid-color shader probe gate;
+  the steady-state `parity-color-shader` row keeps the stricter focused color gate.
+- Documented the new rows in Magic Jewel's README.
+
+Validation:
+- Focused color shader migration parity subset passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260504-020632/suite.tsv`.
+- Focused color/noise/turbulence migration parity subset passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260504-020744/suite.tsv`.
+- All six resize/forced-context shader migration rows reported `fallback_new_count=0`, `jbr_picture_frames=0`, and
+  positive `jbr_command_frames`.
+
+Next:
+- Run the broad default screenshot parity suite with the solid-color migration rows included, then continue remaining
+  shader-family coverage and descriptor lifecycle hardening.
+
 ## Checkpoint: Full Screenshot Parity With Shader Migration Rows
 
 Status: completed for the default Magic Jewel old/new screenshot parity suite after adding Perlin/noise shader migration

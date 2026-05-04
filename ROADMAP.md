@@ -1082,6 +1082,11 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-151610/suite.tsv`;
   both rows reported zero fallback, zero picture frames, fresh shader handle defines, cache hits, and command-cache
   clearing after the surface identity change.
+- [x] Added same-context resize and forced-context screenshot parity rows for ABI 104 solid color shader descriptors.
+  Focused subset passed at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260504-020744/suite.tsv`;
+  both rows stayed command-backed with zero fallback and zero picture frames while revalidating focused shader-region
+  parity after command-cache clearing and second JBR shader-handle definitions.
 - [x] Short broad Magic Jewel command-probe sweep passed after adding the ABI 104 color-shader redefine rows:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-151907/suite.tsv`.
   The default suite passed end to end, including both new color-shader resize/context rows.
@@ -1216,6 +1221,11 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
     `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260504-013025/suite.tsv`.
     The run kept the Pulse/button chrome oracle, resource/system font rows, resize/forced-context font rows, Perlin/noise
     migration rows, RuntimeEffect rows, and graphics-layer rows command-backed with zero fallback and zero picture frames.
+  - [x] Add old/new screenshot parity rows for solid color shader descriptor redefinition across same-context resize and
+    forced destination context migration. Focused rows passed at
+    `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260504-020744/suite.tsv`
+    with zero fallback, zero picture frames, positive command frames, command-cache clearing, and second JBR
+    shader-handle definitions.
 - [x] Real menu stress tests beyond popup-window coverage.
 - [ ] JCEF/shared-texture exploration after Compose is solid.
 - [ ] Windows/Linux backend adapter investigation after macOS MVP.
