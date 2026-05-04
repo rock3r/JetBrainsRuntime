@@ -20,6 +20,9 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
 - [x] CMP now tags command frames as `FullScene` or `InteropOnly`, and Skiko uses that explicit frame kind for preservation replay instead of relying only on command-stream size.
 - [x] CMP's full `JbrSkiaCommandRecorderTest` desktop suite is green for ABI 99, so command-stream golden expectations are a usable regression gate again.
 - [x] CMP's JBR command-frame adapter is runtime-reflective, so `compose.ui` compiles against the normal Skiko coordinate while patched Skiko still receives the optional command delegate when present.
+- [x] Magic Jewel has focused old/new screenshot parity for Pulse/Reset button chrome, including primary button white-text
+  and centering checks. Focused validation passed at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260504-141220/suite.tsv`.
 
 ## Command ABI Coverage
 

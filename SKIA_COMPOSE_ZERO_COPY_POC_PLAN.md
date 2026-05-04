@@ -13718,6 +13718,28 @@ Validation:
 Next:
 - Continue remaining shader-family coverage and descriptor lifecycle hardening.
 
+## Checkpoint: Button Chrome Screenshot Parity
+
+Status: completed for the focused Pulse/Reset toolbar button old/new parity guard.
+
+Notes:
+- The original visual concern was exactly the kind of regression the screenshot parity harness should catch: the primary
+  Jewel button label must keep its provided white content color and stay centered inside the button chrome when replayed
+  through JBR command mode.
+- Magic Jewel already carries a focused `parity-button-chrome` row that disables unrelated scene noise, hard-gates the
+  old/new `headerButtons` region, and the command screenshot oracle separately checks `primaryButtonWhiteText`,
+  `primaryButtonDarkText`, and the primary label bounding box.
+
+Validation:
+- Focused Magic Jewel screenshot parity passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260504-141220/suite.tsv`.
+- The row reported `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=1074`,
+  `header_buttons_bad_pixel_ratio=0.00381`, `screenshot_primaryButtonWhiteText=405`, and
+  `screenshot_primaryButtonDarkText=0`.
+
+Next:
+- Continue remaining shader-family coverage and descriptor lifecycle hardening.
+
 ## Checkpoint: Composite Shader Color-Filter Handle Gates
 
 Status: completed for the stable composite shader + typed color-filter wrapper row.
