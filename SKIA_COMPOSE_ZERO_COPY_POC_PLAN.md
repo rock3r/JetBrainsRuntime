@@ -13758,6 +13758,10 @@ Validation:
 - `commands-image-shader-color-filter`, `commands-composite-shader-color-filter`, and
   `commands-linear-gradient-shader-color-filter` all reported `fallback_new_count=0`, `unsupported=none`,
   `jbr_picture_frames=0`, and positive `jbr_command_frames`.
+- Full default Magic Jewel command-probe sweep passed after the gate tightening:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260504-124837/suite.tsv`.
+- The sweep kept supported rows command-backed with zero JBR picture frames and preserved intentional raw shader/effect
+  fallback rows with zero JBR command frames.
 
 Next:
 - Continue remaining shader-family coverage and descriptor lifecycle hardening.
