@@ -1226,6 +1226,10 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
     `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260504-020744/suite.tsv`
     with zero fallback, zero picture frames, positive command frames, command-cache clearing, and second JBR
     shader-handle definitions.
+  - [x] Full default Magic Jewel screenshot parity suite passed with the solid color shader migration rows included:
+    `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260504-021215/suite.tsv`.
+    The run covered 56 rows, including Pulse/button chrome, resource/system font rows, point dots, shader migration
+    rows, RuntimeEffect rows, and graphics-layer rows, all with zero fallback and zero JBR picture frames.
 - [x] Real menu stress tests beyond popup-window coverage.
 - [ ] JCEF/shared-texture exploration after Compose is solid.
 - [ ] Windows/Linux backend adapter investigation after macOS MVP.

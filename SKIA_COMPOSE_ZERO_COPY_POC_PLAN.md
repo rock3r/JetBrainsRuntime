@@ -14083,13 +14083,12 @@ Validation:
   positive `jbr_command_frames`.
 
 Next:
-- Run the broad default screenshot parity suite with the solid-color migration rows included, then continue remaining
-  shader-family coverage and descriptor lifecycle hardening.
+- Continue remaining shader-family coverage and descriptor lifecycle hardening.
 
 ## Checkpoint: Full Screenshot Parity With Shader Migration Rows
 
-Status: completed for the default Magic Jewel old/new screenshot parity suite after adding Perlin/noise shader migration
-rows.
+Status: completed for the default Magic Jewel old/new screenshot parity suite after adding solid color and Perlin/noise
+shader migration rows.
 
 Changes:
 - Tuned the parity-only loaded font-data row to allow the small number of identical startup font-data defines observed
@@ -14106,6 +14105,12 @@ Validation:
 - The full run covered Pulse/button chrome, packaged resource font, concrete system font, resize/forced-context font rows,
   point dots, Perlin/noise steady and migration rows, RuntimeEffect rows, and graphics-layer rows with zero fallback, zero
   JBR picture frames, and positive JBR command frames.
+- Full default Magic Jewel screenshot parity suite passed again after adding the solid color shader migration rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260504-021215/suite.tsv`.
+- The updated full run covered 56 rows, including Pulse/button chrome, packaged resource font, concrete system font,
+  resize/forced-context font rows, point dots, solid color and Perlin/noise shader migration rows, RuntimeEffect rows,
+  and graphics-layer rows with zero fallback, zero JBR picture frames, positive JBR command frames, and consistent
+  22-column suite TSV output.
 
 Next:
 - Continue remaining shader-family coverage and descriptor lifecycle hardening.
