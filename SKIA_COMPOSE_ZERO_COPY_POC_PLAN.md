@@ -14341,3 +14341,28 @@ Validation:
 
 Next:
 - Continue remaining shader-family coverage and descriptor lifecycle hardening.
+
+## Checkpoint: Composite Perlin/Noise Shader Metadata
+
+Status: completed for ABI-neutral Compose shader metadata propagation through `CompositeShader` trees whose children are
+JBR-owned Perlin/noise shader descriptors.
+
+Changes:
+- CMP now treats `jbrSkiaPerlinNoiseShader` as JBR-owned shader metadata when deciding whether a shader tree can be
+  safely serialized.
+- CMP recorder tests cover both direct metadata preservation for a composite fractal-noise/turbulence shader and strict
+  command recording of the three expected shader descriptor records before the shader-ref rectangle.
+- Magic Jewel added a focused `MAGIC_JEWEL_COMPOSE_COMPOSITE_NOISE_SHADER` scene and
+  `commands-composite-noise-shader` probe row that requires three JBR shader-handle definitions, shader handle use, and
+  shader cache hits.
+
+Validation:
+- Focused CMP graphics tests passed:
+  `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.compositeShaderKeepsJbrSkiaMetadataForPerlinNoiseChildren --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesCompositePerlinNoiseShaderDescriptorRectInStrictMode`.
+- Rebuilt local `/tmp` JBR API/classes/native artifacts with `./scripts/rebuild-jbr-skia-local-artifacts.sh`.
+- Focused Magic Jewel command replay passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260504-113529/suite.tsv`.
+- The row reported `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, and `jbr_command_frames=324`.
+
+Next:
+- Continue remaining shader-family coverage and descriptor lifecycle hardening.

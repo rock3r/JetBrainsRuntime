@@ -1244,6 +1244,11 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
     Descriptor-backed image/color/noise/turbulence shader rows reported `unsupported=none`, zero picture frames, and
     positive command frames; raw image and raw linear/radial/sweep gradient rows reported structured `shader`
     fallback, positive picture frames, and zero command frames.
+  - [x] Preserve Perlin/noise shader metadata through Compose `CompositeShader` children so composite
+    fractal-noise/turbulence trees record JBR-owned shader descriptors instead of falling back to raw shader replay.
+    CMP focused recorder tests passed, and the focused Magic Jewel command row passed at
+    `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260504-113529/suite.tsv`
+    with `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, and `jbr_command_frames=324`.
 - [x] Extend path-effect descriptors beyond corner to stamped path effects.
 - [x] Extend path-effect descriptors to chained path effects.
 - [ ] Screen migration/context invalidation hardening beyond the current synthetic descriptor context-change probes.
