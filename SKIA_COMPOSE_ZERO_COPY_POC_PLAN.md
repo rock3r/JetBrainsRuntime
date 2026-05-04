@@ -53,6 +53,8 @@ Stable shader + color-filter wrapper gates were tightened:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260504-160144/suite.tsv`.
 - Full default command-probe sweep passed after the shader cache-hit gate and shader/effect regression subset:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260504-161650/suite.tsv`.
+- Compatibility matrix passed after the shader cache/effect gate hardening:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260504-182117/matrix.tsv`.
 
 ## Next Work
 
