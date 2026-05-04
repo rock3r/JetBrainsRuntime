@@ -14103,6 +14103,10 @@ Validation:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260504-024649/suite.tsv`.
 - Both rows reported `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, and positive
   `jbr_command_frames` with the stricter lifecycle gates enabled.
+- Full default Magic Jewel command-probe suite passed after the stricter gates were included in the default case list:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260504-024849/suite.tsv`.
+- The full run covered 112 rows with stable 8-column suite TSV output; supported rows stayed command-backed and raw
+  shader/effect sentinel rows stayed on intentional picture fallback.
 
 Next:
 - Continue remaining shader-family coverage and descriptor lifecycle hardening.
