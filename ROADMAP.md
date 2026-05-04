@@ -26,6 +26,7 @@ This is the small working roadmap for the current PoC. The full historical check
 - Continue remaining shader-family hardening and fallback sentinels.
 - Continue shader/effect lifecycle coverage: create, use, context-scoped cache hit, compile/build failure, eviction,
   resize, and forced destination context migration.
+- Tighten stable effect-handle reuse gates on supported rows that still only assert descriptor definition.
 - Keep old/new screenshot parity coverage broad enough to catch text/color/placement regressions, including button
   chrome, embedded resource fonts, system fonts, point dots, shader descriptors, RuntimeEffect rows, and graphics layers.
 - Keep compatibility matrix coverage current after each ABI/capability-affecting slice.
@@ -41,6 +42,8 @@ This is the small working roadmap for the current PoC. The full historical check
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260504-141220/suite.tsv`.
 - Embedded resource-font and system-font screenshot parity subset:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260504-141435/suite.tsv`.
+- RuntimeEffect shader+color-filter and image color-matrix effect-handle gate subset:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260504-142258/suite.tsv`.
 
 ## Document Index
 

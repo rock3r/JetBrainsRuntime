@@ -36,6 +36,9 @@ Stable shader + color-filter wrapper gates were tightened:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260504-141220/suite.tsv`.
 - Embedded resource-font and system-font screenshot parity passed across steady, resize, and forced-context rows:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260504-141435/suite.tsv`.
+- RuntimeEffect shader+color-filter and image color-matrix filter rows now require stable effect-handle use/cache-hit
+  markers. Focused command replay passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260504-142258/suite.tsv`.
 
 ## Next Work
 
