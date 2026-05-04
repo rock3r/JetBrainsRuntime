@@ -14406,3 +14406,19 @@ Validation:
 
 Next:
 - Continue remaining shader-family coverage and descriptor lifecycle hardening.
+
+## Checkpoint: Composite Shader Handle Gate Tightening
+
+Status: completed for the existing composite linear/radial shader command row.
+
+Changes:
+- Magic Jewel's `commands-composite-shader` row now requires the expected three JBR shader-handle definitions, shader
+  handle use, and shader cache hits, matching the documented stable descriptor contract.
+
+Validation:
+- Focused Magic Jewel command replay passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260504-121339/suite.tsv`.
+- The row reported `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, and `jbr_command_frames=547`.
+
+Next:
+- Continue remaining shader-family coverage and descriptor lifecycle hardening.

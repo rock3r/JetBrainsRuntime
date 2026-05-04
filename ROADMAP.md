@@ -1214,6 +1214,9 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   - [x] Harden stable shader descriptor rows with exact max JBR shader-handle define gates for solid color,
     image+color-filter, and transformed shader descriptors. Focused command replay passed at
     `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-201312/suite.tsv`.
+  - [x] Tightened the existing composite linear/radial shader command row to require all three shader handles, handle
+    use, and cache hits. Focused command replay passed at
+    `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260504-121339/suite.tsv`.
   - [x] Harden stable shader+color-filter and graphics-layer render-effect rows with exact max JBR effect-handle define
     gates, while leaving animated RuntimeEffect rows uncapped. Compact command replay passed at
     `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-202638/suite.tsv`.
