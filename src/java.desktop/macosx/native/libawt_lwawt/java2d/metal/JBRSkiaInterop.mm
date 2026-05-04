@@ -654,6 +654,12 @@ static sk_sp<SkRuntimeEffect> cachedRuntimeShaderEffect(
         std::lock_guard<std::mutex> lock(gRuntimeEffectCacheMutex);
         auto cached = gRuntimeShaderEffectsBySource.find(sksl);
         if (cached != gRuntimeShaderEffectsBySource.end()) {
+            std::fprintf(stderr,
+                         "JBR_SKIA_INTEROP_RUNTIME_EFFECT_CACHE_HIT type=shader hash=0x%016llx skslLength=%zu uniforms=%d children=%d\n",
+                         static_cast<unsigned long long>(sourceHash),
+                         sksl.size(),
+                         uniformFloatCount,
+                         childCount);
             return cached->second;
         }
     }
@@ -676,6 +682,12 @@ static sk_sp<SkRuntimeEffect> cachedRuntimeShaderEffect(
     if (gRuntimeShaderEffectsBySource.size() >= MAX_CACHED_RUNTIME_EFFECTS) {
         gRuntimeShaderEffectsBySource.erase(gRuntimeShaderEffectsBySource.begin());
     }
+    std::fprintf(stderr,
+                 "JBR_SKIA_INTEROP_RUNTIME_EFFECT_CACHE_MISS type=shader hash=0x%016llx skslLength=%zu uniforms=%d children=%d\n",
+                 static_cast<unsigned long long>(sourceHash),
+                 sksl.size(),
+                 uniformFloatCount,
+                 childCount);
     auto cached = gRuntimeShaderEffectsBySource.emplace(sksl, result.effect).first;
     return cached->second;
 }
@@ -688,6 +700,11 @@ static sk_sp<SkRuntimeEffect> cachedRuntimeColorFilterEffect(
         std::lock_guard<std::mutex> lock(gRuntimeEffectCacheMutex);
         auto cached = gRuntimeColorFilterEffectsBySource.find(sksl);
         if (cached != gRuntimeColorFilterEffectsBySource.end()) {
+            std::fprintf(stderr,
+                         "JBR_SKIA_INTEROP_RUNTIME_EFFECT_CACHE_HIT type=colorFilter hash=0x%016llx skslLength=%zu uniforms=%d children=0\n",
+                         static_cast<unsigned long long>(sourceHash),
+                         sksl.size(),
+                         uniformFloatCount);
             return cached->second;
         }
     }
@@ -709,6 +726,11 @@ static sk_sp<SkRuntimeEffect> cachedRuntimeColorFilterEffect(
     if (gRuntimeColorFilterEffectsBySource.size() >= MAX_CACHED_RUNTIME_EFFECTS) {
         gRuntimeColorFilterEffectsBySource.erase(gRuntimeColorFilterEffectsBySource.begin());
     }
+    std::fprintf(stderr,
+                 "JBR_SKIA_INTEROP_RUNTIME_EFFECT_CACHE_MISS type=colorFilter hash=0x%016llx skslLength=%zu uniforms=%d children=0\n",
+                 static_cast<unsigned long long>(sourceHash),
+                 sksl.size(),
+                 uniformFloatCount);
     auto cached = gRuntimeColorFilterEffectsBySource.emplace(sksl, result.effect).first;
     return cached->second;
 }

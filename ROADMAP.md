@@ -160,6 +160,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   - [x] Magic Jewel has a descriptor eviction probe that overfills CMP's effect/shader handle caches and asserts JBR-side define/evict markers.
   - [x] Stable Magic Jewel descriptor rows assert reuse with max-count gates so unchanged effect/shader descriptors are not redefined every frame.
   - [x] JBR emits explicit shader/effect cache-hit markers for descriptor uses that reuse handles from previous frames, and Magic Jewel can assert those markers on stable descriptor rows.
+  - [x] JBR emits RuntimeEffect source-cache hit/miss markers, and Magic Jewel RuntimeEffect rows assert repeated replay
+    reuses compiled JBR-owned `SkRuntimeEffect` objects instead of recompiling stable SKSL sources every frame.
   - [x] Skiko clears CMP-owned command descriptor/image caches on JBR surface changes, with a resize probe proving descriptors are redefined for the new surface.
   - [x] Resize descriptor-redefine probe now also asserts cache-hit recovery after the post-resize fresh define.
   - [x] Forced context-change descriptor probe exercises the `contextChanged` cache-clear path without relying on physical

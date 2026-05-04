@@ -14146,6 +14146,36 @@ Validation:
 Next:
 - Continue remaining shader-family coverage and descriptor lifecycle hardening.
 
+## Checkpoint: RuntimeEffect Compile Cache Markers
+
+Status: completed for observable RuntimeEffect source-cache reuse validation.
+
+Changes:
+- Added native JBR markers for successful RuntimeEffect source-cache hits and first successful source-cache misses:
+  `JBR_SKIA_INTEROP_RUNTIME_EFFECT_CACHE_HIT` and `JBR_SKIA_INTEROP_RUNTIME_EFFECT_CACHE_MISS`.
+- The markers include shader/color-filter type, validated source hash, source length, uniform count, and child count.
+- Extended Magic Jewel reports and `summary.properties` with RuntimeEffect source-cache hit/miss counts.
+- Added `EXPECT_MIN_JBR_RUNTIME_EFFECT_CACHE_HITS` and `EXPECT_MAX_JBR_RUNTIME_EFFECT_CACHE_MISSES` gates to the report
+  harness.
+- Tightened default RuntimeEffect command-probe rows so stable and animated RuntimeEffect replay must show cache reuse and
+  at most one successful compile miss for each stable SKSL source in a fresh app launch.
+
+Validation:
+- Rebuilt local artifacts through Magic Jewel's local artifact script:
+  `/tmp/jbr-api-shim.jar`, `/tmp/jbr-skia-run/desktop`, and `/tmp/jbr-skia-native/libjbrskiainterop.dylib`.
+- Focused RuntimeEffect command-probe subset passed with the new cache gates:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260504-082909/suite.tsv`.
+- Each focused RuntimeEffect row reported `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, positive
+  `jbr_command_frames`, exactly one `jbr_runtime_effect_cache_miss_frames`, and hundreds of
+  `jbr_runtime_effect_cache_hit_frames`.
+- Full default Magic Jewel command-probe suite passed with the new cache gates:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260504-083256/suite.tsv`.
+- Supported rows stayed command-backed while raw shader/effect and invalid descriptor sentinels stayed on intentional
+  structured fallback.
+
+Next:
+- Continue remaining shader-family coverage and descriptor lifecycle hardening.
+
 ## Checkpoint: Full Screenshot Parity With Shader Migration Rows
 
 Status: completed for the default Magic Jewel old/new screenshot parity suite after adding solid color and Perlin/noise
