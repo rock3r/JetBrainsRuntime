@@ -14312,3 +14312,32 @@ Validation:
 
 Next:
 - Continue remaining shader-family coverage and descriptor lifecycle hardening.
+
+## Checkpoint: System Font Native Text Lifecycle Rows
+
+Status: completed for same-context resize and forced-context validation of concrete system-family native text.
+
+Changes:
+- Added `commands-resize-native-system-font-text` and `commands-forced-context-native-system-font-text` to Magic Jewel's
+  command-probe suite.
+- Added `parity-resize-native-system-font-text` and `parity-forced-context-native-system-font-text` to Magic Jewel's
+  old/new screenshot parity suite.
+- The rows keep the Menlo system-family probe on native text commands while requiring surface-change markers and
+  command-cache clearing after same-context resize or forced destination context migration.
+
+Validation:
+- Focused Magic Jewel command rows passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260504-111451/suite.tsv`.
+- `commands-resize-native-system-font-text` reported `fallback_new_count=0`, `unsupported=none`,
+  `jbr_picture_frames=0`, and `jbr_command_frames=151`.
+- `commands-forced-context-native-system-font-text` reported `fallback_new_count=0`, `unsupported=none`,
+  `jbr_picture_frames=0`, and `jbr_command_frames=311`.
+- Focused Magic Jewel screenshot parity rows passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260504-111706/suite.tsv`.
+- The resize parity row reported `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=573`,
+  `header_buttons_bad_pixel_ratio=0.02158`, and `compose_bottom_labels_bad_pixel_ratio=0.06996`.
+- The forced-context parity row reported `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=512`,
+  `header_buttons_bad_pixel_ratio=0.00381`, and `compose_bottom_labels_bad_pixel_ratio=0.07979`.
+
+Next:
+- Continue remaining shader-family coverage and descriptor lifecycle hardening.
