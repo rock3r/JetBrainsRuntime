@@ -14138,6 +14138,10 @@ Validation:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260504-035747/matrix.tsv`.
 - The matrix kept the happy path command-backed and all 25 negative rows on one structured fallback with zero JBR command
   frames; the matrix TSV had 26 data rows and 5 stable columns.
+- Focused RuntimeEffect screenshot parity passed after the bounded native cache change:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260504-040822/suite.tsv`.
+- The visual subset covered pure-color, uniform-only, child-only, combined shader, shader+color-filter, RuntimeEffect
+  color-filter, and RuntimeEffect child color-filter rows with zero fallback and zero JBR picture frames.
 
 Next:
 - Continue remaining shader-family coverage and descriptor lifecycle hardening.

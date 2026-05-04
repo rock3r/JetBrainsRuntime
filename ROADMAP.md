@@ -1215,6 +1215,8 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   - [x] Launch-level compatibility matrix passed after the bounded RuntimeEffect compile-cache native change:
     `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260504-035747/matrix.tsv`.
     Happy stayed command-backed; all 25 negative rows reported one structured fallback and zero JBR command frames.
+  - [x] Focused RuntimeEffect screenshot parity passed after the bounded native compile-cache change:
+    `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260504-040822/suite.tsv`.
   - [x] Raw image and linear/radial/sweep gradient shader fallback sentinels are in the default Magic Jewel
     command-probe suite, proving raw Skiko-owned shader objects stay picture-backed while descriptor-backed image,
     color, noise, and turbulence shaders keep command replay.
