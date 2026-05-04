@@ -1184,6 +1184,10 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
     `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-190729/suite.tsv`
     with `jbr_font_data_define_frames=2`; focused screenshot parity passed at
     `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260503-190951/suite.tsv`.
+  - [x] Added same-context resize and forced-context classpath resource font-data command/screenshot rows, proving
+    packaged resource font handles are redefined after surface replacement and destination context migration:
+    `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260504-110543/suite.tsv` and
+    `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260504-110706/suite.tsv`.
   - [x] Rebuilt local `/tmp` harness artifacts and reran the compact loaded-font-data normal/resize/forced-context
     command subset:
     `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260503-191346/suite.tsv`.

@@ -14283,3 +14283,32 @@ Validation:
 
 Next:
 - Continue remaining shader-family coverage and descriptor lifecycle hardening.
+
+## Checkpoint: Classpath Resource Font-Data Lifecycle Rows
+
+Status: completed for same-context resize and forced-context validation of classpath resource font-data replay.
+
+Changes:
+- Added `commands-resize-native-resource-font-text` and `commands-forced-context-native-resource-font-text` to Magic
+  Jewel's command-probe suite.
+- Added `parity-resize-native-resource-font-text` and `parity-forced-context-native-resource-font-text` to Magic
+  Jewel's old/new screenshot parity suite.
+- The new rows mirror the loaded byte-array font-data lifecycle gates, requiring command-cache clearing, surface-change
+  markers, and at least two JBR font-data define markers after surface replacement or destination context migration.
+
+Validation:
+- Focused Magic Jewel command rows passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260504-110543/suite.tsv`.
+- `commands-resize-native-resource-font-text` reported `fallback_new_count=0`, `unsupported=none`,
+  `jbr_picture_frames=0`, and `jbr_command_frames=907`.
+- `commands-forced-context-native-resource-font-text` reported `fallback_new_count=0`, `unsupported=none`,
+  `jbr_picture_frames=0`, and `jbr_command_frames=330`.
+- Focused Magic Jewel screenshot parity rows passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260504-110706/suite.tsv`.
+- The resize parity row reported `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=270`,
+  `header_buttons_bad_pixel_ratio=0.02158`, and `compose_bottom_labels_bad_pixel_ratio=0.08004`.
+- The forced-context parity row reported `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=511`,
+  `header_buttons_bad_pixel_ratio=0.00381`, and `compose_bottom_labels_bad_pixel_ratio=0.09251`.
+
+Next:
+- Continue remaining shader-family coverage and descriptor lifecycle hardening.
