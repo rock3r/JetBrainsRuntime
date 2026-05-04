@@ -1247,8 +1247,12 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   - [x] Preserve Perlin/noise shader metadata through Compose `CompositeShader` children so composite
     fractal-noise/turbulence trees record JBR-owned shader descriptors instead of falling back to raw shader replay.
     CMP focused recorder tests passed, and the focused Magic Jewel command row passed at
-    `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260504-113529/suite.tsv`
-    with `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, and `jbr_command_frames=324`.
+    `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260504-114333/suite.tsv`
+    with `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, and `jbr_command_frames=287`.
+  - [x] Added focused screenshot parity for the composite fractal-noise/turbulence descriptor row:
+    `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260504-114247/suite.tsv`
+    passed with `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=532`, and
+    `compose_shader_composite_bad_pixel_ratio=0.08628`.
 - [x] Extend path-effect descriptors beyond corner to stamped path effects.
 - [x] Extend path-effect descriptors to chained path effects.
 - [ ] Screen migration/context invalidation hardening beyond the current synthetic descriptor context-change probes.

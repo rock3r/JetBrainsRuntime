@@ -14352,17 +14352,21 @@ Changes:
   safely serialized.
 - CMP recorder tests cover both direct metadata preservation for a composite fractal-noise/turbulence shader and strict
   command recording of the three expected shader descriptor records before the shader-ref rectangle.
-- Magic Jewel added a focused `MAGIC_JEWEL_COMPOSE_COMPOSITE_NOISE_SHADER` scene and
-  `commands-composite-noise-shader` probe row that requires three JBR shader-handle definitions, shader handle use, and
-  shader cache hits.
+- Magic Jewel added a focused `MAGIC_JEWEL_COMPOSE_COMPOSITE_NOISE_SHADER` scene plus command and screenshot parity
+  rows that require three JBR shader-handle definitions, shader handle use, shader cache hits, and old/new parity in
+  the established composite shader probe region.
 
 Validation:
 - Focused CMP graphics tests passed:
   `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.compositeShaderKeepsJbrSkiaMetadataForPerlinNoiseChildren --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesCompositePerlinNoiseShaderDescriptorRectInStrictMode`.
 - Rebuilt local `/tmp` JBR API/classes/native artifacts with `./scripts/rebuild-jbr-skia-local-artifacts.sh`.
 - Focused Magic Jewel command replay passed:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260504-113529/suite.tsv`.
-- The row reported `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, and `jbr_command_frames=324`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260504-114333/suite.tsv`.
+- The row reported `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, and `jbr_command_frames=287`.
+- Focused Magic Jewel old/new screenshot parity passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260504-114247/suite.tsv`.
+- The parity row reported `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=532`, and
+  `compose_shader_composite_bad_pixel_ratio=0.08628`.
 
 Next:
 - Continue remaining shader-family coverage and descriptor lifecycle hardening.
