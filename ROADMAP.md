@@ -983,8 +983,14 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
   JBR-owned `SkShaders::MakeFractalNoise` / `SkShaders::MakeTurbulence` replay while still rejecting unknown raw
   `SkShader*` objects.
 - [x] CMP now emits `COMMAND_DEFINE_FONT_DATA` before simple native text records whose family is a single
-  `LoadedFont`, and keeps paragraph text plus desktop resource/file-backed fonts image-backed until broader
-  font/layout parity is proven.
+  `LoadedFont`, and keeps paragraph text plus true file-backed fonts image-backed until broader font/layout parity is
+  proven.
+- [x] CMP also promotes single classpath resource fonts to JBR font-data native text by loading the resource bytes from
+  the app classpath, while preserving true file-backed fonts on text-image command replay.
+- [x] Magic Jewel command and screenshot parity rows now validate both classpath resource font-data native text and
+  named system-font native text; the resource row passed at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260504-103205/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260504-103355/suite.tsv`.
 - [x] Focused ABI 103 validation passed:
   Skiko `JbrSkiaInteropTest`, CMP graphics `writesFontDataRecord`/metadata tests, CMP text loaded-font and
   file-backed guard tests, local JBR API/desktop/native artifact rebuild, and Magic Jewel focused text command rows.

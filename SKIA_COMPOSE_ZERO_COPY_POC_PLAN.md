@@ -14251,3 +14251,35 @@ Validation:
 
 Next:
 - Continue remaining shader-family coverage and descriptor lifecycle hardening.
+
+## Checkpoint: Classpath Resource Font-Data Native Text
+
+Status: completed for classpath resource fonts on the existing ABI 103 font-data path.
+
+Changes:
+- CMP now recognizes a single desktop classpath resource font in a simple native-text family, loads its bytes from the
+  application classpath, assigns the existing stable JBR font-data handle, and records `COMMAND_DEFINE_FONT_DATA`
+  before `COMMAND_DRAW_TEXT_UTF16`.
+- CMP keeps true file-backed fonts on the text-image command path when native text is enabled, so arbitrary file paths
+  are not promoted without a negotiated JBR-owned file/font descriptor.
+- CMP desktop text tests now cover loaded byte-array fonts, packaged classpath resource fonts, and true file-backed
+  fonts as separate cases.
+- Magic Jewel tightened `commands-native-resource-font-text` and `parity-native-resource-font-text` so the packaged
+  resource font must emit JBR font-data define markers and native text commands.
+- The existing `commands-native-system-font-text` and `parity-native-system-font-text` rows continue to cover concrete
+  system-family native text.
+
+Validation:
+- Focused CMP text tests passed:
+  `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-text:desktopTest --tests androidx.compose.ui.text.DesktopParagraphTest.paint_withResourceFontFamily_recordsFontDataSimpleTextWhenNativeTextIsEnabled --tests androidx.compose.ui.text.DesktopParagraphTest.paint_withFileBackedFontFamily_recordsTextImageWhenNativeTextIsEnabled --tests androidx.compose.ui.text.DesktopParagraphTest.paint_withLoadedFontFamily_recordsFontDataSimpleTextWhenNativeTextIsEnabled`.
+- Focused Magic Jewel command replay passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260504-103205/suite.tsv`.
+- The command row reported `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, and
+  `jbr_command_frames=192`.
+- Focused Magic Jewel old/new screenshot parity passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260504-103355/suite.tsv`.
+- The parity row reported `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=176`,
+  `header_buttons_bad_pixel_ratio=0.00381`, and `compose_bottom_labels_bad_pixel_ratio=0.09251`.
+
+Next:
+- Continue remaining shader-family coverage and descriptor lifecycle hardening.
