@@ -13762,6 +13762,11 @@ Validation:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260504-124837/suite.tsv`.
 - The sweep kept supported rows command-backed with zero JBR picture frames and preserved intentional raw shader/effect
   fallback rows with zero JBR command frames.
+- Launch-level compatibility matrix passed after the JBR nested handle-use marker change and stable wrapper gate
+  tightening:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260504-134603/matrix.tsv`.
+- The matrix happy path reported `fallback_new_count=0` and positive JBR command frames; every forced ABI,
+  native-ABI, capability, and public-API mismatch row reported one fallback and zero JBR command frames.
 
 Next:
 - Continue remaining shader-family coverage and descriptor lifecycle hardening.
