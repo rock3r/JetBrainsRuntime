@@ -1253,6 +1253,10 @@ This is the quick-open checklist for the local PoC. The detailed design and chec
     `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260504-114247/suite.tsv`
     passed with `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=532`, and
     `compose_shader_composite_bad_pixel_ratio=0.08628`.
+  - [x] Added same-context resize and forced-context lifecycle command rows for composite Perlin/noise shader trees:
+    `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260504-114851/suite.tsv`
+    passed with six JBR shader-handle definitions per row, command-cache clearing, and the expected surface/context
+    change markers.
 - [x] Extend path-effect descriptors beyond corner to stamped path effects.
 - [x] Extend path-effect descriptors to chained path effects.
 - [ ] Screen migration/context invalidation hardening beyond the current synthetic descriptor context-change probes.

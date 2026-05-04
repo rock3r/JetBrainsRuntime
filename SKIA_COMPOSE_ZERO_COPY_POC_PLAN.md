@@ -14355,6 +14355,8 @@ Changes:
 - Magic Jewel added a focused `MAGIC_JEWEL_COMPOSE_COMPOSITE_NOISE_SHADER` scene plus command and screenshot parity
   rows that require three JBR shader-handle definitions, shader handle use, shader cache hits, and old/new parity in
   the established composite shader probe region.
+- Magic Jewel added same-context resize and forced-context command rows for the same composite Perlin/noise shader tree,
+  requiring cache clearing and all three descriptor handles to be redefined after destination surface/context changes.
 
 Validation:
 - Focused CMP graphics tests passed:
@@ -14367,6 +14369,14 @@ Validation:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260504-114247/suite.tsv`.
 - The parity row reported `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=532`, and
   `compose_shader_composite_bad_pixel_ratio=0.08628`.
+- Focused Magic Jewel lifecycle command rows passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260504-114851/suite.tsv`.
+- `commands-resize-composite-noise-shader-descriptor-redefine` reported `fallback_new_count=0`, `unsupported=none`,
+  `jbr_picture_frames=0`, `jbr_command_frames=286`, `jbr_shader_handle_define_frames=6`,
+  `skiko_command_cache_clear_markers=1`, and same-context surface-change markers.
+- `commands-forced-context-composite-noise-shader-descriptor-redefine` reported `fallback_new_count=0`,
+  `unsupported=none`, `jbr_picture_frames=0`, `jbr_command_frames=563`, `jbr_shader_handle_define_frames=6`,
+  `skiko_command_cache_clear_markers=1`, and destination context-change markers.
 
 Next:
 - Continue remaining shader-family coverage and descriptor lifecycle hardening.
