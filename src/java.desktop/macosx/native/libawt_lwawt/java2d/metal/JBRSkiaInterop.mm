@@ -90,6 +90,7 @@
 static constexpr jint ABI_ID = 105;
 static constexpr jint NATIVE_ABI_VERSION = 3;
 static constexpr const char* BUILD_ID = "skia=m147-64a2414108;flags=macos-release-metal-poc:1;abi=105;native=3";
+static constexpr size_t MAX_CACHED_RUNTIME_EFFECTS = 1024;
 static constexpr jint COMMAND_STREAM_MAGIC = 1246972723;
 static constexpr jint COMMAND_STREAM_HEADER_SIZE = 6;
 static constexpr jint COMMAND_STREAM_FLAGS_NONE = 0;
@@ -672,6 +673,9 @@ static sk_sp<SkRuntimeEffect> cachedRuntimeShaderEffect(
     }
 
     std::lock_guard<std::mutex> lock(gRuntimeEffectCacheMutex);
+    if (gRuntimeShaderEffectsBySource.size() >= MAX_CACHED_RUNTIME_EFFECTS) {
+        gRuntimeShaderEffectsBySource.erase(gRuntimeShaderEffectsBySource.begin());
+    }
     auto cached = gRuntimeShaderEffectsBySource.emplace(sksl, result.effect).first;
     return cached->second;
 }
@@ -702,6 +706,9 @@ static sk_sp<SkRuntimeEffect> cachedRuntimeColorFilterEffect(
     }
 
     std::lock_guard<std::mutex> lock(gRuntimeEffectCacheMutex);
+    if (gRuntimeColorFilterEffectsBySource.size() >= MAX_CACHED_RUNTIME_EFFECTS) {
+        gRuntimeColorFilterEffectsBySource.erase(gRuntimeColorFilterEffectsBySource.begin());
+    }
     auto cached = gRuntimeColorFilterEffectsBySource.emplace(sksl, result.effect).first;
     return cached->second;
 }
