@@ -152,6 +152,11 @@ and no JBR command frames:
 The full default Magic Jewel command-probe sweep also passed with that new row included:
 `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260505-184958/suite.tsv`.
 
+CMP now reports concrete unsupported image-paint reasons before `drawImageRect` falls back. Focused recorder tests passed
+for unsupported image path effects while preserving image ARGB and tint color-filter replay, and Magic Jewel
+`commands-image-path-effect-fallback` passed with `pathEffect` unsupported, picture fallback, and no JBR command frames:
+`/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260505-212515/suite.tsv`.
+
 ## Key Files
 
 - Current roadmap: [`ROADMAP.md`](ROADMAP.md)

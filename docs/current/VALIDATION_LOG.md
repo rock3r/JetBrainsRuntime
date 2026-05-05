@@ -49,6 +49,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Focused Recent Rows
 
+- Focused image draw plus unsupported path-effect fallback after CMP began reporting concrete unsupported image-paint
+  reasons instead of only the outer generic `image` marker:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260505-212515/suite.tsv`.
+- CMP focused image recorder tests passed for unsupported image path-effect strict fallback plus existing image ARGB and
+  tint color-filter replay:
+  `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.rejectsImagePathEffectInStrictMode --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesImageArgbRecord --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesImageTintColorFilterRecord`
+  in `/Users/rock3r/src/jbr-skia-zero-copy/cmp`.
 - Focused path-effect descriptor plus unsupported color-filter fallback, proving descriptor path effects do not emit
   partial command frames when paint color filters are outside the supported path-effect replay surface:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260505-184635/suite.tsv`.
