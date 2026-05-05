@@ -11,7 +11,7 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 
 ## Current Snapshot
 
-- ABI 105 artifacts are current across JBR private API, JBR API mirror, Skiko, CMP, and Magic Jewel.
+- ABI 106 artifacts are current across JBR private API, JBR API mirror, Skiko, CMP, and Magic Jewel.
 - Command replay supports the current broad scene set: primitives, gradients, images, text/font-data, point dots,
   shader/effect descriptors, RuntimeEffect shaders/color filters, image filters, path effects, blend modes, shadows,
   and graphics-layer variants.
@@ -23,6 +23,23 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 
 ## Latest Completed Slice
 
+ABI 106 adds direct `Canvas.drawVertices` command replay for serialized vertex payloads:
+
+- JBR/JBR API expose `COMMAND_DRAW_VERTICES = 67` and `COMMAND_CAP64_HIGH_DRAW_VERTICES = 131072`.
+- JBR validates vertex mode, blend mode, vertex/index counts, record length, and serialized positions/texture coordinates,
+  colors, and indices before replaying through native Skia vertices.
+- CMP records supported `Canvas.drawVertices` calls instead of marking `vertices` unsupported; unsupported paint/blend
+  families still fall back structurally.
+- Magic Jewel `commands-vertices` and `parity-vertices` probe the colored triangle replay path.
+- Focused command replay passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260505-120216/suite.tsv`.
+- Focused screenshot parity passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260505-120655/suite.tsv`.
+- Focused missing-capability fallback passed:
+  `/tmp/jbr-skia-vertices-cap-missing/summary.properties`.
+
+## Previous Slice
+
 Magic Jewel broad screenshot parity is current after adding skew replay and vertices fallback coverage:
 
 - Full screenshot parity passed across 65 parity rows, including button chrome, point dots, embedded resource fonts,
@@ -31,12 +48,13 @@ Magic Jewel broad screenshot parity is current after adding skew replay and vert
 - All rows passed with `fallback_new_count=0`; command-replay rows reported `jbr_picture_frames=0` and active
   `jbr_command_frames`.
 
-## Previous Slice
+## Previous Fallback Slice
 
 Magic Jewel now has a structured fallback sentinel for `Canvas.drawVertices`:
 
-- `commands-vertices-fallback` enables a small `Canvas.drawVertices` triangle.
-- CMP still reports `vertices` as unsupported, and the row expects picture fallback until a dedicated vertices ABI exists.
+- `commands-vertices` originally enabled a small `Canvas.drawVertices` triangle as a structured fallback sentinel.
+- ABI 106 replaced this sentinel with direct serialized vertices replay; the historical fallback result remains useful as
+  pre-ABI evidence.
 - Focused fallback probe passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260505-093457/suite.tsv`.
 - Full default command-probe sweep passed after adding the skew replay and vertices fallback rows:

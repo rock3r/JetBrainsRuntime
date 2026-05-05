@@ -162,7 +162,8 @@ public class JBRSkiaService extends JBRSkia {
                     | COMMAND_CAP64_HIGH_SHADER_DESCRIPTOR_TRANSFORM
                     | COMMAND_CAP64_HIGH_DEFINE_FONT_DATA
                     | COMMAND_CAP64_HIGH_SHADER_DESCRIPTOR_COLOR
-                    | COMMAND_CAP64_HIGH_SHADER_DESCRIPTOR_PERLIN_NOISE;
+                    | COMMAND_CAP64_HIGH_SHADER_DESCRIPTOR_PERLIN_NOISE
+                    | COMMAND_CAP64_HIGH_DRAW_VERTICES;
     private static final boolean NATIVE_BRIDGE_AVAILABLE = loadNativeBridge();
     private static final AtomicLong NEXT_SCOPE_ID = new AtomicLong(1);
     private static final int MAX_CACHED_IMAGES = 256;
@@ -427,6 +428,7 @@ public class JBRSkiaService extends JBRSkia {
         if (op == COMMAND_DRAW_SHADOW_PATH) return -29;
         if (op == COMMAND_DRAW_POINTS) return -30;
         if (op == COMMAND_DEFINE_FONT_DATA) return -31;
+        if (op == COMMAND_DRAW_VERTICES) return -32;
         if (op == COMMAND_FILL_RECT_IMAGE_SHADER) return 14;
         if (op == COMMAND_CLEAR) return 4;
         if (op == COMMAND_CLEAR_RECT) return 7;
@@ -530,6 +532,9 @@ public class JBRSkiaService extends JBRSkia {
         }
         if (expectedLength == -31 && record.op() == COMMAND_DEFINE_FONT_DATA) {
             return record.recordLength() >= 7;
+        }
+        if (expectedLength == -32 && record.op() == COMMAND_DRAW_VERTICES) {
+            return record.recordLength() >= 16;
         }
         return expectedLength == record.recordLength();
     }
@@ -765,6 +770,22 @@ public class JBRSkiaService extends JBRSkia {
                     && pointCount <= 4096
                     && record.recordLength() == 9 + pointCount * 2
                     && isValidStrokeMetadata(strokeWidth, strokeCap, strokeJoin, strokeMiter);
+        }
+        if (record.op() == COMMAND_DRAW_VERTICES) {
+            int vertexMode = commands[record.argsStart()];
+            int blendMode = commands[record.argsStart() + 1];
+            int vertexCount = commands[record.argsStart() + 3];
+            int indexCount = commands[record.argsStart() + 4];
+            return (record.recordFlags() == COMMAND_RECORD_FLAGS_NONE
+                    || record.recordFlags() == COMMAND_RECORD_FLAG_ANTIALIAS)
+                    && vertexMode >= 0
+                    && vertexMode <= 2
+                    && isSupportedBlendMode(blendMode)
+                    && vertexCount >= 3
+                    && vertexCount <= 4096
+                    && indexCount >= 0
+                    && indexCount <= 8192
+                    && record.recordLength() == 8 + vertexCount * 5 + indexCount;
         }
         if (record.op() == COMMAND_STROKE_LINE_DASH_PATH_EFFECT
                 || record.op() == COMMAND_STROKE_RECT_DASH_PATH_EFFECT) {
@@ -4382,6 +4403,79 @@ public class JBRSkiaService extends JBRSkia {
                         } finally {
                             current.setStroke(previous);
                         }
+                    } else if (op == COMMAND_DRAW_VERTICES) {
+                        if (offset + 5 > recordEnd) return false;
+                        applyAntialiasing(current, antiAlias);
+                        int vertexMode = commands[offset++];
+                        int blendMode = commands[offset++];
+                        offset++; // paint ARGB is kept for native parity and future fallback refinement.
+                        int vertexCount = commands[offset++];
+                        int indexCount = commands[offset++];
+                        if (vertexMode < 0 || vertexMode > 2
+                                || !isSupportedBlendMode(blendMode)
+                                || vertexCount < 3
+                                || vertexCount > 4096
+                                || indexCount < 0
+                                || indexCount > 8192
+                                || offset + vertexCount * 5 + indexCount != recordEnd) {
+                            return false;
+                        }
+                        int positionsStart = offset;
+                        int texCoordsStart = positionsStart + vertexCount * 2;
+                        int colorsStart = texCoordsStart + vertexCount * 2;
+                        int indicesStart = colorsStart + vertexCount;
+                        Composite previousComposite = current.getComposite();
+                        try {
+                            current.setComposite(AlphaComposite.SrcOver);
+                            int triangleCount = vertexMode == 0
+                                    ? ((indexCount > 0 ? indexCount : vertexCount) / 3)
+                                    : Math.max(0, (indexCount > 0 ? indexCount : vertexCount) - 2);
+                            for (int triangleIndex = 0; triangleIndex < triangleCount; triangleIndex++) {
+                                int i0;
+                                int i1;
+                                int i2;
+                                if (indexCount > 0) {
+                                    if (vertexMode == 0) {
+                                        i0 = commands[indicesStart + triangleIndex * 3];
+                                        i1 = commands[indicesStart + triangleIndex * 3 + 1];
+                                        i2 = commands[indicesStart + triangleIndex * 3 + 2];
+                                    } else if (vertexMode == 1) {
+                                        i0 = commands[indicesStart + triangleIndex];
+                                        i1 = commands[indicesStart + triangleIndex + 1];
+                                        i2 = commands[indicesStart + triangleIndex + 2];
+                                    } else {
+                                        i0 = commands[indicesStart];
+                                        i1 = commands[indicesStart + triangleIndex + 1];
+                                        i2 = commands[indicesStart + triangleIndex + 2];
+                                    }
+                                } else if (vertexMode == 0) {
+                                    i0 = triangleIndex * 3;
+                                    i1 = triangleIndex * 3 + 1;
+                                    i2 = triangleIndex * 3 + 2;
+                                } else if (vertexMode == 1) {
+                                    i0 = triangleIndex;
+                                    i1 = triangleIndex + 1;
+                                    i2 = triangleIndex + 2;
+                                } else {
+                                    i0 = 0;
+                                    i1 = triangleIndex + 1;
+                                    i2 = triangleIndex + 2;
+                                }
+                                if (i0 < 0 || i0 >= vertexCount || i1 < 0 || i1 >= vertexCount || i2 < 0 || i2 >= vertexCount) {
+                                    return false;
+                                }
+                                Path2D triangle = new Path2D.Float();
+                                triangle.moveTo(commands[positionsStart + i0 * 2], commands[positionsStart + i0 * 2 + 1]);
+                                triangle.lineTo(commands[positionsStart + i1 * 2], commands[positionsStart + i1 * 2 + 1]);
+                                triangle.lineTo(commands[positionsStart + i2 * 2], commands[positionsStart + i2 * 2 + 1]);
+                                triangle.closePath();
+                                current.setColor(new Color(commands[colorsStart + i0], true));
+                                current.fill(triangle);
+                            }
+                        } finally {
+                            current.setComposite(previousComposite);
+                        }
+                        offset = recordEnd;
                     } else if (op == COMMAND_FILL_OVAL) {
                         if (offset + 5 != recordEnd) return false;
                         applyAntialiasing(current, antiAlias);

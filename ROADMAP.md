@@ -5,7 +5,7 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Current State
 
-- Current negotiated stream ABI: 105.
+- Current negotiated stream ABI: 106.
 - Current native ABI: 3.
 - The fast path is macOS-first: `ComposePanel(RenderSettings.SwingGraphics)` records Compose drawing into a strict
   command stream that Skiko submits to JBR for replay into a JBR-owned Skia surface during Swing painting.
@@ -35,6 +35,12 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused ABI 106 `Canvas.drawVertices` command replay:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260505-120216/suite.tsv`.
+- Focused ABI 106 `Canvas.drawVertices` screenshot parity:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260505-120655/suite.tsv`.
+- Focused missing draw-vertices high-capability fallback:
+  `/tmp/jbr-skia-vertices-cap-missing/summary.properties`.
 - Full screenshot parity suite after adding skew replay and vertices fallback rows, covering 65 parity rows including
   button chrome, point dots, resource/system fonts, shader descriptors, RuntimeEffect rows, and graphics-layer variants:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260505-110425/suite.tsv`.

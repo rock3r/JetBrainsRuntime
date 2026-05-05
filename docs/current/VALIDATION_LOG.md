@@ -5,6 +5,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Focused ABI 106 `Canvas.drawVertices` command replay:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260505-120216/suite.tsv`.
+- Focused ABI 106 `Canvas.drawVertices` screenshot parity:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260505-120655/suite.tsv`.
+- Focused missing draw-vertices high-capability fallback:
+  `/tmp/jbr-skia-vertices-cap-missing/summary.properties`.
 - Full screenshot parity suite after adding skew replay and vertices fallback rows, covering 65 parity rows including
   button chrome, point dots, resource/system fonts, shader descriptors, RuntimeEffect rows, and graphics-layer variants:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260505-110425/suite.tsv`.

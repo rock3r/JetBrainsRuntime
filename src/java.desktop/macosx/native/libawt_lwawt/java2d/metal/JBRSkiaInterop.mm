@@ -64,6 +64,7 @@
 #include "SkTileMode.h"
 #include "SkPoint3.h"
 #include "SkShadowUtils.h"
+#include "SkVertices.h"
 #include "ganesh/GrBackendSurface.h"
 #include "ganesh/GrDirectContext.h"
 #include "ganesh/mtl/GrMtlBackendContext.h"
@@ -87,9 +88,9 @@
 
 #include "MTLSurfaceDataBase.h"
 
-static constexpr jint ABI_ID = 105;
+static constexpr jint ABI_ID = 106;
 static constexpr jint NATIVE_ABI_VERSION = 3;
-static constexpr const char* BUILD_ID = "skia=m147-64a2414108;flags=macos-release-metal-poc:1;abi=105;native=3";
+static constexpr const char* BUILD_ID = "skia=m147-64a2414108;flags=macos-release-metal-poc:1;abi=106;native=3";
 static constexpr size_t MAX_CACHED_RUNTIME_EFFECTS = 1024;
 static constexpr jint COMMAND_STREAM_MAGIC = 1246972723;
 static constexpr jint COMMAND_STREAM_HEADER_SIZE = 6;
@@ -174,6 +175,7 @@ static constexpr jint COMMAND_CONCAT_MATRIX33 = 63;
 static constexpr jint COMMAND_DRAW_SHADOW_PATH = 64;
 static constexpr jint COMMAND_DRAW_POINTS = 65;
 static constexpr jint COMMAND_DEFINE_FONT_DATA = 66;
+static constexpr jint COMMAND_DRAW_VERTICES = 67;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER = 1;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_COLOR_MATRIX_FILTER = 2;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_LIGHTING_FILTER = 3;
@@ -4250,6 +4252,71 @@ static bool drawCommandList(SkCanvas* canvas,
                         SkCanvas::kPoints_PointMode,
                         SkSpan<const SkPoint>(points.data(), points.size()),
                         paint);
+                break;
+            }
+            case COMMAND_DRAW_VERTICES: {
+                if (offset + 5 > recordEnd) {
+                    return false;
+                }
+                const jint vertexMode = commands[offset++];
+                const jint commandBlendMode = commands[offset++];
+                const SkColor paintColor = skColorFromArgb(commands[offset++]);
+                const jint vertexCount = commands[offset++];
+                const jint indexCount = commands[offset++];
+                SkBlendMode blendMode;
+                if (vertexMode < 0 || vertexMode > 2 ||
+                    !skBlendMode(commandBlendMode, &blendMode) ||
+                    vertexCount < 3 || vertexCount > 4096 ||
+                    indexCount < 0 || indexCount > 8192 ||
+                    offset + vertexCount * 5 + indexCount != recordEnd) {
+                    return false;
+                }
+                std::vector<SkPoint> positions;
+                positions.reserve(static_cast<size_t>(vertexCount));
+                for (jint vertexIndex = 0; vertexIndex < vertexCount; vertexIndex++) {
+                    const SkScalar x = static_cast<SkScalar>(commands[offset++]);
+                    const SkScalar y = static_cast<SkScalar>(commands[offset++]);
+                    positions.push_back(SkPoint::Make(x, y));
+                }
+                std::vector<SkPoint> texCoords;
+                texCoords.reserve(static_cast<size_t>(vertexCount));
+                for (jint vertexIndex = 0; vertexIndex < vertexCount; vertexIndex++) {
+                    const SkScalar x = commandBitsToFloat(commands[offset++]);
+                    const SkScalar y = commandBitsToFloat(commands[offset++]);
+                    if (!std::isfinite(x) || !std::isfinite(y)) {
+                        return false;
+                    }
+                    texCoords.push_back(SkPoint::Make(x, y));
+                }
+                std::vector<SkColor> colors;
+                colors.reserve(static_cast<size_t>(vertexCount));
+                for (jint vertexIndex = 0; vertexIndex < vertexCount; vertexIndex++) {
+                    colors.push_back(skColorFromArgb(commands[offset++]));
+                }
+                std::vector<uint16_t> indices;
+                indices.reserve(static_cast<size_t>(indexCount));
+                for (jint index = 0; index < indexCount; index++) {
+                    const jint vertexIndex = commands[offset++];
+                    if (vertexIndex < 0 || vertexIndex >= vertexCount) {
+                        return false;
+                    }
+                    indices.push_back(static_cast<uint16_t>(vertexIndex));
+                }
+                SkPaint paint;
+                paint.setAntiAlias(antiAlias);
+                paint.setColor(paintColor);
+                sk_sp<SkVertices> vertices = SkVertices::MakeCopy(
+                        static_cast<SkVertices::VertexMode>(vertexMode),
+                        vertexCount,
+                        positions.data(),
+                        texCoords.data(),
+                        colors.data(),
+                        indexCount,
+                        indexCount > 0 ? indices.data() : nullptr);
+                if (!vertices) {
+                    return false;
+                }
+                canvas->drawVertices(vertices, blendMode, paint);
                 break;
             }
             case COMMAND_FILL_OVAL: {
