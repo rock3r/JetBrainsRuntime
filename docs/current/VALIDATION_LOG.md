@@ -44,6 +44,10 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Focused Recent Rows
 
+- Focused button chrome screenshot parity, covering Pulse primary-button white text and centering with
+  `primaryButtonWhiteText=405`, `primaryButtonDarkText=0`, `jbr_command_frames=666`, and
+  `screenshot_parity_region_headerButtons_badPixelRatio=0.00381`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260505-163010/suite.tsv`.
 - Focused `Canvas.drawVertices` structured fallback sentinel:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260505-093457/suite.tsv`.
 - Focused `Canvas.skew` command replay:

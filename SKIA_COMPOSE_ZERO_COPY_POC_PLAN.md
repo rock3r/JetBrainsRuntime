@@ -122,6 +122,10 @@ Magic Jewel's supported path-effect command row is now named `commands-path-effe
 `commands-path-effect-fallback` name remains a compatibility alias. Focused validation passed:
 `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260505-162211/suite.tsv`.
 
+The focused `parity-button-chrome` row passed on current artifacts and catches the Pulse primary-button content color
+and centering issue against old SwingGraphics:
+`/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260505-163010/suite.tsv`.
+
 ## Key Files
 
 - Current roadmap: [`ROADMAP.md`](ROADMAP.md)
