@@ -35,6 +35,10 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- CMP full `JbrSkiaCommandRecorderTest` class passed after descriptor/image shader stroke fallback hardening and
+  recorder-test isolation cleanup:
+  `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest`
+  in `/Users/rock3r/src/jbr-skia-zero-copy/cmp`.
 - Full default command-probe sweep after descriptor-stroke shader fallback hardening:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260505-164215/suite.tsv`.
 - Focused descriptor/image-shader stroke fallback after broadening the Magic Jewel row:

@@ -138,6 +138,11 @@ Magic Jewel then broadened the same row to exercise both generic shader descript
 unsupported stroke paint. Focused validation passed:
 `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260505-181114/suite.tsv`.
 
+CMP's full `JbrSkiaCommandRecorderTest` class passed after the descriptor/image shader fallback hardening and
+recorder-test isolation cleanup:
+`./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest`
+in `/Users/rock3r/src/jbr-skia-zero-copy/cmp`.
+
 ## Key Files
 
 - Current roadmap: [`ROADMAP.md`](ROADMAP.md)

@@ -47,6 +47,9 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Focused Recent Rows
 
+- CMP full recorder regression class after descriptor/image shader stroke fallback hardening and test-isolation cleanup:
+  `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest`
+  in `/Users/rock3r/src/jbr-skia-zero-copy/cmp` passed on 2026-05-05.
 - Focused descriptor-stroke shader fallback, proving unsupported descriptor-paint style produces structured
   `paintStyle` picture fallback instead of an incomplete command frame:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260505-163839/suite.tsv`.
