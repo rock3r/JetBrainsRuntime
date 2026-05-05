@@ -23,6 +23,20 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 
 ## Latest Completed Slice
 
+`Canvas.skew` now lowers through the existing ABI 105 3x3 concat-matrix command instead of marking the command stream
+unsupported:
+
+- CMP records `Canvas.skew(sx, sy)` as `COMMAND_CONCAT_MATRIX33` with skew terms in the matrix.
+- Magic Jewel added `commands-skew-transform` and `parity-skew-transform` rows.
+- CMP focused recorder tests passed:
+  `:compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesSkewAsConcatMatrix33Record --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.recordsCanvasSkewTransform`.
+- Focused command replay passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260505-091628/suite.tsv`.
+- Focused screenshot parity passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260505-092511/suite.tsv`.
+
+## Previous Slice
+
 Stable RuntimeEffect color-filter coverage and full screenshot parity are current:
 
 - Added a stable RuntimeEffect color-filter row with no changing uniforms so effect-handle reuse can be asserted
@@ -39,7 +53,7 @@ Stable RuntimeEffect color-filter coverage and full screenshot parity are curren
 
 ## Next Work
 
-1. Continue shader-family hardening from the current roadmap.
+1. Continue shader-family hardening and transform/graphics-layer edge cleanup from the current roadmap.
 2. Prefer small, high-signal validation slices with focused command rows first, then default sweep or compatibility
    matrix when the touched surface warrants it.
 3. Keep updating this compact plan; move verbose historical details to archive or focused docs, not back into this file.

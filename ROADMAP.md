@@ -27,6 +27,7 @@ This is the small working roadmap for the current PoC. The full historical check
 - Continue shader/effect lifecycle coverage: create, use, context-scoped cache hit, compile/build failure, eviction,
   resize, and forced destination context migration.
 - Tighten stable effect-handle reuse gates on supported rows that still only assert descriptor definition.
+- Continue closing transform/graphics-layer edge gaps as they appear in real recorder ground truth.
 - Keep old/new screenshot parity coverage broad enough to catch text/color/placement regressions, including button
   chrome, embedded resource fonts, system fonts, point dots, shader descriptors, RuntimeEffect rows, and graphics layers.
 - Keep compatibility matrix coverage current after each ABI/capability-affecting slice.
@@ -36,6 +37,9 @@ This is the small working roadmap for the current PoC. The full historical check
 
 - Full screenshot parity suite after stable RuntimeEffect color-filter coverage:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260505-082130/suite.tsv`.
+- Focused `Canvas.skew` command replay and screenshot parity:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260505-091628/suite.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260505-092511/suite.tsv`.
 - Full default command-probe sweep after adding stable RuntimeEffect color-filter coverage:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260504-221229/suite.tsv`.
 - Current compatibility matrix:

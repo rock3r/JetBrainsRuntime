@@ -18,6 +18,10 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Focused Recent Rows
 
+- Focused `Canvas.skew` command replay:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260505-091628/suite.tsv`.
+- Focused `Canvas.skew` screenshot parity:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260505-092511/suite.tsv`.
 - Focused stable RuntimeEffect color-filter screenshot parity:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260505-081922/suite.tsv`.
 - Focused stable RuntimeEffect color-filter handle reuse probe:
