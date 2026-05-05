@@ -80,6 +80,8 @@ Stable shader + color-filter wrapper gates were tightened:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260504-221036/suite.tsv`.
 - Full default command-probe sweep passed after adding stable RuntimeEffect color-filter coverage:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260504-221229/suite.tsv`.
+- Added focused screenshot parity for the stable RuntimeEffect color-filter row. Window-capture parity passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260505-081922/suite.tsv`.
 
 ## Next Work
 
