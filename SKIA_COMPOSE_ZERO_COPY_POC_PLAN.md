@@ -23,6 +23,15 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 
 ## Latest Completed Slice
 
+Magic Jewel now has a structured fallback sentinel for `Canvas.drawVertices`:
+
+- `commands-vertices-fallback` enables a small `Canvas.drawVertices` triangle.
+- CMP still reports `vertices` as unsupported, and the row expects picture fallback until a dedicated vertices ABI exists.
+- Focused fallback probe passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260505-093457/suite.tsv`.
+
+## Previous Slice
+
 `Canvas.skew` now lowers through the existing ABI 105 3x3 concat-matrix command instead of marking the command stream
 unsupported:
 
@@ -35,7 +44,7 @@ unsupported:
 - Focused screenshot parity passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260505-092511/suite.tsv`.
 
-## Previous Slice
+## Previous RuntimeEffect Slice
 
 Stable RuntimeEffect color-filter coverage and full screenshot parity are current:
 
