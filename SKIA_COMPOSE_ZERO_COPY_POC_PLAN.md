@@ -29,6 +29,8 @@ Magic Jewel now has a structured fallback sentinel for `Canvas.drawVertices`:
 - CMP still reports `vertices` as unsupported, and the row expects picture fallback until a dedicated vertices ABI exists.
 - Focused fallback probe passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260505-093457/suite.tsv`.
+- Full default command-probe sweep passed after adding the skew replay and vertices fallback rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260505-093702/suite.tsv`.
 
 ## Previous Slice
 
