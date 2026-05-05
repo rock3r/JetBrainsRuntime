@@ -35,6 +35,11 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused path-effect descriptor plus unsupported color-filter fallback:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260505-184635/suite.tsv`.
+- CMP focused recorder tests for path-effect/color-filter strict fallback and corner path-effect descriptor replay:
+  `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.rejectsPathEffectDescriptorColorFilterInStrictMode --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesCornerPathEffectDescriptorPathRecord`
+  in `/Users/rock3r/src/jbr-skia-zero-copy/cmp`.
 - CMP full `JbrSkiaCommandRecorderTest` class passed after descriptor/image shader stroke fallback hardening and
   recorder-test isolation cleanup:
   `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest`

@@ -47,6 +47,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Focused Recent Rows
 
+- Focused path-effect descriptor plus unsupported color-filter fallback, proving descriptor path effects do not emit
+  partial command frames when paint color filters are outside the supported path-effect replay surface:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260505-184635/suite.tsv`.
+- CMP focused recorder tests for the same path-effect/color-filter strict fallback and the existing corner path-effect
+  descriptor replay passed:
+  `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.rejectsPathEffectDescriptorColorFilterInStrictMode --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesCornerPathEffectDescriptorPathRecord`
+  in `/Users/rock3r/src/jbr-skia-zero-copy/cmp`.
 - CMP full recorder regression class after descriptor/image shader stroke fallback hardening and test-isolation cleanup:
   `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest`
   in `/Users/rock3r/src/jbr-skia-zero-copy/cmp` passed on 2026-05-05.

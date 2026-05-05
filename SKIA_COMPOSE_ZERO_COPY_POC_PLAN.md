@@ -143,6 +143,12 @@ recorder-test isolation cleanup:
 `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest`
 in `/Users/rock3r/src/jbr-skia-zero-copy/cmp`.
 
+Path-effect descriptor replay now has a focused unsupported color-filter fallback sentinel. CMP strict recorder tests
+passed for `rejectsPathEffectDescriptorColorFilterInStrictMode` plus the existing corner path-effect replay test, and
+Magic Jewel `commands-path-effect-color-filter-fallback` passed with `colorFilter` unsupported, JBR picture fallback,
+and no JBR command frames:
+`/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260505-184635/suite.tsv`.
+
 ## Key Files
 
 - Current roadmap: [`ROADMAP.md`](ROADMAP.md)
