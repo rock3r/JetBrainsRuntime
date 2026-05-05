@@ -149,6 +149,9 @@ Magic Jewel `commands-path-effect-color-filter-fallback` passed with `colorFilte
 and no JBR command frames:
 `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260505-184635/suite.tsv`.
 
+The full default Magic Jewel command-probe sweep also passed with that new row included:
+`/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260505-184958/suite.tsv`.
+
 ## Key Files
 
 - Current roadmap: [`ROADMAP.md`](ROADMAP.md)
