@@ -23,6 +23,16 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 
 ## Latest Completed Slice
 
+Magic Jewel broad screenshot parity is current after adding skew replay and vertices fallback coverage:
+
+- Full screenshot parity passed across 65 parity rows, including button chrome, point dots, embedded resource fonts,
+  system fonts, shader descriptors, RuntimeEffect rows, and graphics-layer variants:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260505-110425/suite.tsv`.
+- All rows passed with `fallback_new_count=0`; command-replay rows reported `jbr_picture_frames=0` and active
+  `jbr_command_frames`.
+
+## Previous Slice
+
 Magic Jewel now has a structured fallback sentinel for `Canvas.drawVertices`:
 
 - `commands-vertices-fallback` enables a small `Canvas.drawVertices` triangle.
@@ -32,7 +42,7 @@ Magic Jewel now has a structured fallback sentinel for `Canvas.drawVertices`:
 - Full default command-probe sweep passed after adding the skew replay and vertices fallback rows:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260505-093702/suite.tsv`.
 
-## Previous Slice
+## Previous Skew Slice
 
 `Canvas.skew` now lowers through the existing ABI 105 3x3 concat-matrix command instead of marking the command stream
 unsupported:

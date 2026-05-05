@@ -35,6 +35,9 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Full screenshot parity suite after adding skew replay and vertices fallback rows, covering 65 parity rows including
+  button chrome, point dots, resource/system fonts, shader descriptors, RuntimeEffect rows, and graphics-layer variants:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260505-110425/suite.tsv`.
 - Full screenshot parity suite after stable RuntimeEffect color-filter coverage:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260505-082130/suite.tsv`.
 - Focused `Canvas.skew` command replay and screenshot parity:
