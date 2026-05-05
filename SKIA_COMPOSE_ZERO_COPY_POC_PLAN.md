@@ -131,6 +131,9 @@ omitting the draw from a command frame. CMP focused tests passed, and Magic Jewe
 passed with `paintStyle` unsupported and picture fallback:
 `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260505-163839/suite.tsv`.
 
+The full default Magic Jewel command-probe sweep also passed after adding that row:
+`/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260505-164215/suite.tsv`.
+
 ## Key Files
 
 - Current roadmap: [`ROADMAP.md`](ROADMAP.md)
