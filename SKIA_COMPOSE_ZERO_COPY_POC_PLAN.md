@@ -104,6 +104,14 @@ Stable RuntimeEffect color-filter coverage and full screenshot parity are curren
 3. Keep updating this compact plan; move verbose historical details to archive or focused docs, not back into this file.
 4. Commit and push each major slice.
 
+## Current Validation Hardening
+
+Screenshot parity rows now assert JBR-owned shader/effect descriptor handle use, and stable/cache-focused rows assert
+cache hits, so old/new pixel parity cannot pass on descriptor definition alone. Focused parity subsets passed:
+
+- `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260505-151737/suite.tsv`.
+- `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260505-152630/suite.tsv`.
+
 ## Key Files
 
 - Current roadmap: [`ROADMAP.md`](ROADMAP.md)
