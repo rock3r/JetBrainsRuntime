@@ -37,6 +37,12 @@ ABI 106 adds direct `Canvas.drawVertices` command replay for serialized vertex p
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260505-120655/suite.tsv`.
 - Focused missing-capability fallback passed:
   `/tmp/jbr-skia-vertices-cap-missing/summary.properties`.
+- Full default command-probe sweep passed, including `commands-vertices`, font, shader/effect descriptor,
+  graphics-layer, and intentional fallback-sentinel rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260505-121247/suite.tsv`.
+- Compatibility matrix passed after the ABI 106 high-word mask update, including the exact missing draw-vertices
+  capability row:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260505-133924/matrix.tsv`.
 
 ## Previous Slice
 

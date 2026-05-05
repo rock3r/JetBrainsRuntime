@@ -35,6 +35,11 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Full default command-probe sweep after ABI 106 `Canvas.drawVertices` replay, including shader/effect descriptor,
+  text/font, graphics-layer, fallback-sentinel, and vertices rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260505-121247/suite.tsv`.
+- Compatibility matrix after ABI 106 high-word mask update, including the missing draw-vertices capability row:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260505-133924/matrix.tsv`.
 - Focused ABI 106 `Canvas.drawVertices` command replay:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260505-120216/suite.tsv`.
 - Focused ABI 106 `Canvas.drawVertices` screenshot parity:
