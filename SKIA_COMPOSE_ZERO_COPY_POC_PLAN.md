@@ -157,6 +157,9 @@ for unsupported image path effects while preserving image ARGB and tint color-fi
 `commands-image-path-effect-fallback` passed with `pathEffect` unsupported, picture fallback, and no JBR command frames:
 `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260505-212515/suite.tsv`.
 
+The full default Magic Jewel command-probe sweep also passed with that image path-effect fallback sentinel included:
+`/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260505-212817/suite.tsv`.
+
 ## Key Files
 
 - Current roadmap: [`ROADMAP.md`](ROADMAP.md)

@@ -5,6 +5,10 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Full default command-probe sweep after adding the image draw path-effect fallback sentinel; the new
+  `commands-image-path-effect-fallback` row passed with `pathEffect` unsupported, JBR picture fallback, and no command
+  frames while the existing shader/effect/font/layer command rows still replayed through JBR commands:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260505-212817/suite.tsv`.
 - Full default command-probe sweep after adding the path-effect/color-filter fallback sentinel:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260505-184958/suite.tsv`.
 - Full default command-probe sweep after descriptor-stroke shader fallback hardening, including the new
