@@ -115,6 +115,9 @@ cache hits, so old/new pixel parity cannot pass on descriptor definition alone. 
 Full screenshot parity also passed with those tightened gates:
 `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260505-153439/suite.tsv`.
 
+The current local artifact matrix also passed for the ABI 106 bundle and missing-public-API fallback:
+`/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260505-161806/matrix.tsv`.
+
 ## Key Files
 
 - Current roadmap: [`ROADMAP.md`](ROADMAP.md)
