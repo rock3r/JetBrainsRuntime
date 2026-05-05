@@ -134,6 +134,10 @@ passed with `paintStyle` unsupported and picture fallback:
 The full default Magic Jewel command-probe sweep also passed after adding that row:
 `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260505-164215/suite.tsv`.
 
+Magic Jewel then broadened the same row to exercise both generic shader descriptors and image-shader rects with
+unsupported stroke paint. Focused validation passed:
+`/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260505-181114/suite.tsv`.
+
 ## Key Files
 
 - Current roadmap: [`ROADMAP.md`](ROADMAP.md)

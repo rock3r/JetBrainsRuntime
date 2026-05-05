@@ -50,6 +50,8 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 - Focused descriptor-stroke shader fallback, proving unsupported descriptor-paint style produces structured
   `paintStyle` picture fallback instead of an incomplete command frame:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260505-163839/suite.tsv`.
+- Focused descriptor/image-shader stroke fallback after broadening the Magic Jewel row to cover both recorder helpers:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260505-181114/suite.tsv`.
 - Focused button chrome screenshot parity, covering Pulse primary-button white text and centering with
   `primaryButtonWhiteText=405`, `primaryButtonDarkText=0`, `jbr_command_frames=666`, and
   `screenshot_parity_region_headerButtons_badPixelRatio=0.00381`:
