@@ -118,6 +118,10 @@ Full screenshot parity also passed with those tightened gates:
 The current local artifact matrix also passed for the ABI 106 bundle and missing-public-API fallback:
 `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260505-161806/matrix.tsv`.
 
+Magic Jewel's supported path-effect command row is now named `commands-path-effect`; the historical
+`commands-path-effect-fallback` name remains a compatibility alias. Focused validation passed:
+`/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260505-162211/suite.tsv`.
+
 ## Key Files
 
 - Current roadmap: [`ROADMAP.md`](ROADMAP.md)
