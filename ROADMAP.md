@@ -35,6 +35,8 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused descriptor-stroke shader fallback, covering unsupported descriptor shader paint style:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260505-163839/suite.tsv`.
 - Focused button chrome screenshot parity re-check, covering Pulse primary-button white text and centering:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260505-163010/suite.tsv`.
 - Full screenshot parity suite with tightened descriptor handle gates:
