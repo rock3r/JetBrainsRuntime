@@ -35,6 +35,10 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Full screenshot parity suite on rebuilt ABI 106 artifacts after descriptor-eviction hardening, covering 66 rows
+  including button chrome, point dots, embedded resource fonts, system fonts, shader descriptors, RuntimeEffect rows,
+  and graphics-layer variants:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260506-103937/suite.tsv`.
 - Compatibility matrix on the rebuilt ABI 106 artifacts after descriptor-eviction hardening:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260506-102434/matrix.tsv`.
 - Local artifact matrix after clean `/tmp` rebuild-script hardening:

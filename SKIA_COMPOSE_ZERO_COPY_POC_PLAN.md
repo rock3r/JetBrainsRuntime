@@ -177,6 +177,14 @@ The compatibility matrix passed on the rebuilt ABI 106 artifacts, covering happy
 low/high-word capability, exact capability-removal, and public-API-missing fallback rows:
 `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260506-102434/matrix.tsv`.
 
+The full screenshot parity suite passed on the rebuilt ABI 106 artifacts after descriptor-eviction hardening. It covered
+66 rows including button chrome, point dots, embedded resource fonts, system fonts, shader descriptors, RuntimeEffect
+rows, and graphics-layer variants. All rows passed with `fallback_new_count=0`; command rows reported
+`jbr_picture_frames=0` and nonzero `jbr_command_frames`. The `parity-button-chrome` row retained the Pulse primary
+button guard with `primaryButtonWhiteText=405`, `primaryButtonDarkText=0`, and
+`header_buttons_bad_pixel_ratio=0.00381`; resource/system font rows also replayed through command frames:
+`/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260506-103937/suite.tsv`.
+
 ## Key Files
 
 - Current roadmap: [`ROADMAP.md`](ROADMAP.md)
