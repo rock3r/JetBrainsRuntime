@@ -35,6 +35,8 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Full default command-probe sweep after tightening descriptor eviction handle-use gates:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260506-085720/suite.tsv`.
 - Focused descriptor eviction lifecycle probe after tightening effect/shader handle use gates and rebuilding clean
   `/tmp` artifacts:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260506-085227/suite.tsv`.

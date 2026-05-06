@@ -166,6 +166,9 @@ effect and shader handles. The local rebuild script also recreates the minimal g
 `/tmp/jbr-skia-native/libjbrskiainterop.dylib`:
 `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260506-085227/suite.tsv`.
 
+The full default Magic Jewel command-probe sweep also passed with the tightened descriptor-eviction gates:
+`/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260506-085720/suite.tsv`.
+
 ## Key Files
 
 - Current roadmap: [`ROADMAP.md`](ROADMAP.md)
