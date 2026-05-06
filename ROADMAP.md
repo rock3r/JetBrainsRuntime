@@ -37,6 +37,8 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused `parity-clip-path` screenshot parity after adding a dedicated clipPath row to the default parity suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260506-180124/suite.tsv`.
 - Focused `parity-button-chrome` screenshot parity after making the Magic Jewel button label explicit, covering the
   Pulse primary-button white text and centering guard:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260506-174825/suite.tsv`.

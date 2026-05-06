@@ -133,6 +133,11 @@ After making the Magic Jewel button label explicit rather than relying on focuse
 `primaryButtonWhiteText=405`, and `primaryButtonDarkText=0`:
 `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260506-174825/suite.tsv`.
 
+Magic Jewel screenshot parity now includes a dedicated `parity-clip-path` row for the right-side clipPath diamond probe.
+Focused parity passed with `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=399`, and
+`probeRightCyan=3689` against a focused threshold of 3000:
+`/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260506-180124/suite.tsv`.
+
 Descriptor shader rect recording now marks unsupported non-fill paint styles as structural fallback instead of silently
 omitting the draw from a command frame. CMP focused tests passed, and Magic Jewel `commands-descriptor-stroke-shader-fallback`
 passed with `paintStyle` unsupported and picture fallback:

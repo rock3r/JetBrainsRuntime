@@ -103,6 +103,10 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Focused Recent Rows
 
+- Focused `parity-clip-path` screenshot parity passed after adding a dedicated clipPath row to the default parity suite.
+  The row stayed on command replay with `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=399`, and
+  `probeRightCyan=3689` against the row's focused 3000-pixel clipPath threshold:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260506-180124/suite.tsv`.
 - Focused `parity-button-chrome` screenshot parity passed after making the Magic Jewel primary button label explicit
   and centered. The row stayed on command replay with `fallback_new_count=0`, `jbr_picture_frames=0`,
   `jbr_command_frames=753`, `primaryButtonWhiteText=405`, `primaryButtonDarkText=0`, and
