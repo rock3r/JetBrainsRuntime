@@ -95,6 +95,10 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Focused Recent Rows
 
+- Magic Jewel report-validation unit tests passed after adding the machine-readable
+  `magic_jewel_background_window=true` summary guard. This pins the non-focus-stealing default used by command, matrix,
+  and parity automation:
+  `./scripts/test-jbr-skia-report-validation.sh` in `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel`.
 - Focused RuntimeEffect compile-failure fallback sentinel. Skiko's new test-only source corruption hook changed one
   RuntimeEffect SKSL source after recording and recomputed the descriptor source hash, forcing JBR native compile
   failure rather than schema rejection. `commands-runtime-effect-compile-fallback` passed with `fallback_new_count=1`,

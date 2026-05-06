@@ -37,6 +37,9 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel report-validation unit tests after adding the machine-readable `magic_jewel_background_window=true`
+  summary guard for non-focus-stealing matrix/probe windows:
+  `./scripts/test-jbr-skia-report-validation.sh` in `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel`.
 - Full default command-probe sweep after adding RuntimeEffect compile-failure fallback coverage, covering command replay
   rows, font/resource rows, shader/effect descriptors, graphics layers, saveLayer, and fallback sentinels:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260506-150452/suite.tsv`.

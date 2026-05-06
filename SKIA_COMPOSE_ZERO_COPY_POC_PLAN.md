@@ -229,6 +229,11 @@ fallback sentinels; `commands-runtime-effect-compile-fallback` reported one stru
 frames:
 `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260506-150452/suite.tsv`.
 
+Magic Jewel report summaries now expose `magic_jewel_background_window`, and report-validation tests assert the harness
+defaults it to `true`. This keeps command, matrix, and parity automation on non-focusable macOS windows unless an
+interactive debugging run opts out:
+`./scripts/test-jbr-skia-report-validation.sh` in `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel`.
+
 ## Key Files
 
 - Current roadmap: [`ROADMAP.md`](ROADMAP.md)
