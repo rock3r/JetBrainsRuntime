@@ -162,6 +162,15 @@ passed with `fallback_new_count=0`, `jbr_picture_frames=0`, and `jbr_command_fra
 chrome, classpath resource-font, system-font, clipRect/clip-out, and clipPath rows on command replay:
 `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260506-193855/suite.tsv`.
 
+Magic Jewel screenshot parity now includes a dedicated `parity-blend-modes` row for the blend-mode grid signatures.
+Focused parity passed with `fallback_new_count=0`, `jbr_picture_frames=0`, and `jbr_command_frames=931`:
+`/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260506-202616/suite.tsv`.
+
+The full default screenshot parity suite then passed after adding `parity-blend-modes`, covering 72 rows. The new row
+passed with `fallback_new_count=0`, `jbr_picture_frames=0`, and `jbr_command_frames=869`; the same sweep kept button
+chrome, classpath resource-font, system-font, draw-shapes, and clipPath rows on command replay:
+`/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260506-202700/suite.tsv`.
+
 Descriptor shader rect recording now marks unsupported non-fill paint styles as structural fallback instead of silently
 omitting the draw from a command frame. CMP focused tests passed, and Magic Jewel `commands-descriptor-stroke-shader-fallback`
 passed with `paintStyle` unsupported and picture fallback:
