@@ -53,6 +53,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Focused Recent Rows
 
+- Focused descriptor eviction lifecycle probe after tightening Magic Jewel to require JBR effect/shader handle uses as
+  well as definitions and evictions. The row passed with `jbr_command_frames=47`,
+  `jbr_effect_handle_define_frames=92859`, `jbr_effect_handle_use_frames=92859`,
+  `jbr_effect_handle_evict_frames=91836`, `jbr_shader_handle_define_frames=275544`,
+  `jbr_shader_handle_use_frames=91848`, and `jbr_shader_handle_evict_frames=274520`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260506-085227/suite.tsv`.
 - Focused image draw plus unsupported path-effect fallback after CMP began reporting concrete unsupported image-paint
   reasons instead of only the outer generic `image` marker:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260505-212515/suite.tsv`.

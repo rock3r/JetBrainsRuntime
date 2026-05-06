@@ -160,6 +160,12 @@ for unsupported image path effects while preserving image ARGB and tint color-fi
 The full default Magic Jewel command-probe sweep also passed with that image path-effect fallback sentinel included:
 `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260505-212817/suite.tsv`.
 
+Magic Jewel's `commands-descriptor-eviction` lifecycle row now requires both define and use markers before eviction for
+effect and shader handles. The local rebuild script also recreates the minimal generated native headers needed after
+`/tmp` is cleaned. Focused validation passed after rebuilding `/tmp/jbr-api-shim.jar`, `/tmp/jbr-skia-run/desktop`, and
+`/tmp/jbr-skia-native/libjbrskiainterop.dylib`:
+`/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260506-085227/suite.tsv`.
+
 ## Key Files
 
 - Current roadmap: [`ROADMAP.md`](ROADMAP.md)

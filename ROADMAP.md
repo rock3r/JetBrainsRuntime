@@ -35,6 +35,9 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused descriptor eviction lifecycle probe after tightening effect/shader handle use gates and rebuilding clean
+  `/tmp` artifacts:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260506-085227/suite.tsv`.
 - Full default command-probe sweep after adding the image draw path-effect fallback sentinel:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260505-212817/suite.tsv`.
 - Focused image draw plus unsupported path-effect fallback:
