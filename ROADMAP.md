@@ -32,9 +32,15 @@ This is the small working roadmap for the current PoC. The full historical check
   chrome, embedded resource fonts, system fonts, point dots, shader descriptors, RuntimeEffect rows, and graphics layers.
 - Keep compatibility matrix coverage current after each ABI/capability-affecting slice.
 - Keep branches committed and pushed to the user's GitHub forks at each major step.
+- Keep the top-level plan/roadmap compact. Move verbose historical narrative into `docs/history/` or focused
+  `docs/current/` ledgers when these files start to crowd agent context.
 
 ## Latest Validations
 
+- Full screenshot parity suite after adding supported saveLayer tint-filter parity coverage, covering 67 rows including
+  button chrome, point dots, embedded resource fonts, system fonts, saveLayer tint filters, shader descriptors,
+  RuntimeEffect rows, and graphics-layer variants:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260506-130350/suite.tsv`.
 - Focused saveLayer tint-filter screenshot parity:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260506-130209/suite.tsv`.
 - Full default command-probe sweep after adding the saveLayer raw color-filter fallback sentinel:

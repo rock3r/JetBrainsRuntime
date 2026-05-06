@@ -20,6 +20,8 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - Harness windows are non-focus-stealing by default via `MAGIC_JEWEL_BACKGROUND_WINDOW=true`.
 - `MagicLabel` is a test harness switch: when Compose text is disabled, it renders fixed white boxes to isolate geometry
   parity from text rasterization drift. It is not a replacement for Jewel `Text`.
+- The working docs are intentionally split: this plan and `ROADMAP.md` stay compact, validation details live in
+  `docs/current/VALIDATION_LOG.md`, and verbose historical checkpoints live in `docs/history/`.
 
 ## Latest Completed Slice
 
@@ -197,6 +199,12 @@ The full default command-probe sweep also passed with the new saveLayer fallback
 
 Magic Jewel also added focused screenshot parity for the supported saveLayer tint-filter replay path:
 `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260506-130209/suite.tsv`.
+
+The full screenshot parity suite passed with the supported saveLayer tint-filter row included by default. It covered
+67 rows including button chrome, point dots, embedded resource fonts, system fonts, saveLayer tint filters,
+shader/effect descriptors, RuntimeEffect rows, and graphics-layer variants. Command rows stayed on JBR replay with
+`jbr_picture_frames=0`, and the `parity-button-chrome` row retained the Pulse white-text guard:
+`/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260506-130350/suite.tsv`.
 
 ## Key Files
 

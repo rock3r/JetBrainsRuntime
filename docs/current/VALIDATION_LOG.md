@@ -5,6 +5,14 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Full screenshot parity suite after adding supported saveLayer tint-filter parity coverage. It covered 67 rows,
+  including `parity-button-chrome`, point dots, embedded resource fonts, system fonts, saveLayer tint filters,
+  shader descriptors, RuntimeEffect rows, and graphics-layer variants. All rows passed with `fallback_new_count=0`;
+  command rows reported `jbr_picture_frames=0` and nonzero `jbr_command_frames`. The button-chrome row retained the
+  Pulse primary-button guard with `primaryButtonWhiteText=405`, `primaryButtonDarkText=0`, and
+  `header_buttons_bad_pixel_ratio=0.00381`; the new `parity-save-layer-filter` row replayed through commands with
+  `jbr_command_frames=516`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260506-130350/suite.tsv`.
 - Full default command-probe sweep after adding the saveLayer raw color-filter fallback sentinel. The new
   `commands-save-layer-raw-color-filter-fallback` default row passed with
   `unsupportedScope:1054,saveLayer:1054,graphicsLayer:childCommands:1054,graphicsLayer:1054`,
