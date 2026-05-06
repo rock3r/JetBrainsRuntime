@@ -5,6 +5,15 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Full default screenshot parity suite after adding the dedicated `parity-draw-shapes` row. It covered 71 rows,
+  including button chrome, point dots, embedded resource fonts, system fonts, drawPath/drawArc/drawRoundRect shapes,
+  clipRect/clip-out, clipPath, stroked gradients, shader descriptors, RuntimeEffect rows, and graphics-layer variants.
+  All rows passed with `fallback_new_count=0`; command rows reported `jbr_picture_frames=0` and nonzero
+  `jbr_command_frames`. Key rows: `parity-button-chrome` `jbr_command_frames=1507`,
+  `parity-native-resource-font-text` `jbr_command_frames=794`, `parity-native-system-font-text`
+  `jbr_command_frames=820`, `parity-draw-shapes` `jbr_command_frames=1379`, `parity-clip-rects`
+  `jbr_command_frames=1022`, and `parity-clip-path` `jbr_command_frames=996`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260506-193855/suite.tsv`.
 - Full default screenshot parity suite after adding the dedicated `parity-clip-rects` clipRect/clip-out row. It covered
   70 rows, including button chrome, point dots, embedded resource fonts, system fonts, clipRect/clip-out, clipPath,
   stroked gradients, shader descriptors, RuntimeEffect rows, and graphics-layer variants. All rows passed with
@@ -112,6 +121,10 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Focused Recent Rows
 
+- Focused `parity-draw-shapes` screenshot parity passed after adding a dedicated drawPath/drawArc/drawRoundRect row to
+  the default parity suite. The row stayed on command replay with `fallback_new_count=0`, `jbr_picture_frames=0`, and
+  `jbr_command_frames=657`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260506-193802/suite.tsv`.
 - Focused `parity-clip-rects` screenshot parity passed after adding a dedicated clipRect/clip-out row to the default
   parity suite. The row stayed on command replay with `fallback_new_count=0`, `jbr_picture_frames=0`, and
   `jbr_command_frames=1043`:
