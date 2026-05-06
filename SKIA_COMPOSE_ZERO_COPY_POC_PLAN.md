@@ -192,6 +192,9 @@ paired Magic Jewel rows passed with `commands-save-layer-filter` replaying comma
 fallback with zero JBR command frames:
 `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260506-112750/suite.tsv`.
 
+The full default command-probe sweep also passed with the new saveLayer fallback row included:
+`/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260506-113037/suite.tsv`.
+
 ## Key Files
 
 - Current roadmap: [`ROADMAP.md`](ROADMAP.md)
