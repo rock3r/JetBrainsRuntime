@@ -37,9 +37,16 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
-- Full default screenshot parity suite after adding the dedicated blend-mode row, covering 72 rows including button
-  chrome, point dots, embedded resource fonts, system fonts, draw shapes, clipRect/clip-out, clipPath, blend modes,
-  shader descriptors, RuntimeEffect rows, stroked gradients, and graphics-layer variants:
+- Full default screenshot parity suite after adding the dedicated gradient-surface row, covering 73 rows including
+  button chrome, point dots, embedded resource fonts, system fonts, draw shapes, clipRect/clip-out, clipPath, blend
+  modes, gradient surfaces, shader descriptors, RuntimeEffect rows, stroked gradients, and graphics-layer variants:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260506-211425/suite.tsv`.
+- Focused `parity-gradient-surfaces` screenshot parity after adding a dedicated linear/radial/sweep gradient
+  rect/round-rect row to the default parity suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260506-211342/suite.tsv`.
+- Previous full default screenshot parity suite after adding the dedicated blend-mode row, covering 72 rows including
+  button chrome, point dots, embedded resource fonts, system fonts, draw shapes, clipRect/clip-out, clipPath, blend
+  modes, shader descriptors, RuntimeEffect rows, stroked gradients, and graphics-layer variants:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260506-202700/suite.tsv`.
 - Focused `parity-blend-modes` screenshot parity after adding a dedicated blend-mode grid row to the default parity
   suite:
