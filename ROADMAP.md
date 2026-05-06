@@ -37,6 +37,10 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Full screenshot parity suite after adding stroked linear-gradient rect coverage, covering 68 rows including button
+  chrome, point dots, embedded resource fonts, system fonts, shader descriptors, RuntimeEffect rows, stroked gradients,
+  and graphics-layer variants:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260506-170019/suite.tsv`.
 - Focused `parity-gradient-stroke` screenshot parity for the stroked linear-gradient rect command path:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260506-165828/suite.tsv`.
 - Short artifact matrix after enforcing required-row `background_window=true` in `matrix.tsv`:

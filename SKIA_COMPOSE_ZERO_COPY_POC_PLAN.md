@@ -249,6 +249,11 @@ path with a right-probe-strip gate. Focused parity passed with `fallback_new_cou
 `jbr_command_frames=753`:
 `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260506-165828/suite.tsv`.
 
+The full default screenshot parity suite also passed after adding that row, covering 68 rows. The
+`parity-gradient-stroke` row stayed on command replay with `fallback_new_count=0`, `jbr_picture_frames=0`,
+`jbr_command_frames=1120`, and `compose_bad_pixel_ratio=0.07502`:
+`/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260506-170019/suite.tsv`.
+
 ## Key Files
 
 - Current roadmap: [`ROADMAP.md`](ROADMAP.md)
