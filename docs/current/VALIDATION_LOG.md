@@ -77,6 +77,10 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Focused Recent Rows
 
+- Focused `parity-save-layer-filter` screenshot parity for the supported saveLayer tint-filter command replay path.
+  The row passed with `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=341`,
+  `avg_delta=2.131`, and `compose_bad_pixel_ratio=0.07517`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260506-130209/suite.tsv`.
 - Focused saveLayer raw color-filter fallback sentinel. CMP's recorder test
   `JbrSkiaCommandRecorderTest.saveLayerRejectsRawColorFilter` passed, then Magic Jewel's paired
   `commands-save-layer-filter commands-save-layer-raw-color-filter-fallback` subset passed. The supported tint row

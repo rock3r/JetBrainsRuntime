@@ -195,6 +195,9 @@ fallback with zero JBR command frames:
 The full default command-probe sweep also passed with the new saveLayer fallback row included:
 `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260506-113037/suite.tsv`.
 
+Magic Jewel also added focused screenshot parity for the supported saveLayer tint-filter replay path:
+`/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260506-130209/suite.tsv`.
+
 ## Key Files
 
 - Current roadmap: [`ROADMAP.md`](ROADMAP.md)
