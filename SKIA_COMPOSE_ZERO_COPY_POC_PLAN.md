@@ -169,6 +169,10 @@ effect and shader handles. The local rebuild script also recreates the minimal g
 The full default Magic Jewel command-probe sweep also passed with the tightened descriptor-eviction gates:
 `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260506-085720/suite.tsv`.
 
+The local artifact matrix passed after the rebuild-script hardening, validating the rebuilt current bundle and
+missing-public-API fallback:
+`/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260506-102206/matrix.tsv`.
+
 ## Key Files
 
 - Current roadmap: [`ROADMAP.md`](ROADMAP.md)
