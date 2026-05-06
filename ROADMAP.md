@@ -37,6 +37,9 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Full default command-probe sweep after adding RuntimeEffect compile-failure fallback coverage, covering command replay
+  rows, font/resource rows, shader/effect descriptors, graphics layers, saveLayer, and fallback sentinels:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260506-150452/suite.tsv`.
 - Focused RuntimeEffect compile-failure fallback sentinel:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260506-150134/suite.tsv`.
 - Full screenshot parity suite after tightening deterministic shader/effect descriptor rows to require JBR handle

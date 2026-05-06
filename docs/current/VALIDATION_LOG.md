@@ -5,6 +5,11 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Full default command-probe sweep after adding RuntimeEffect compile-failure fallback coverage. It covered the current
+  ABI 106 replay surface, font/resource rows, shader/effect descriptors, graphics layers, saveLayer, and fallback
+  sentinels. `commands-runtime-effect-compile-fallback` passed with `fallback_new_count=1`,
+  `jbr_runtime_effect_compile_failures=1`, and `jbr_command_frames=0`; supported command rows stayed on JBR replay:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260506-150452/suite.tsv`.
 - Full screenshot parity suite after tightening deterministic shader/effect descriptor rows to require JBR handle
   cache-hit markers. It covered 67 rows with `fallback_new_count=0`, command replay rows kept
   `jbr_picture_frames=0`, `parity-color-shader` reported `jbr_shader_handle_cache_hit_frames=1094`, and

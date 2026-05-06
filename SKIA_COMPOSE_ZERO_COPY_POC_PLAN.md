@@ -223,6 +223,12 @@ at native `SkRuntimeEffect` compilation. Magic Jewel `commands-runtime-effect-co
 structured fallback, `jbr_runtime_effect_compile_failures=1`, and `jbr_command_frames=0`:
 `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260506-150134/suite.tsv`.
 
+The full default command-probe sweep then passed with the compile-failure row included by default. It covered the ABI
+106 command replay surface, font/resource rows, shader/effect descriptor rows, graphics layers, saveLayer, and existing
+fallback sentinels; `commands-runtime-effect-compile-fallback` reported one structured fallback and no JBR command
+frames:
+`/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260506-150452/suite.tsv`.
+
 ## Key Files
 
 - Current roadmap: [`ROADMAP.md`](ROADMAP.md)
