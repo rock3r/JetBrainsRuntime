@@ -239,6 +239,11 @@ The compatibility matrix now carries a `background_window` column and fails rows
 `background_window=true`:
 `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260506-163829/matrix.tsv`.
 
+The artifact matrix now applies the same `background_window` column and guard. A short current-artifact run passed with
+`current-all` and `missing-public-api` reporting `background_window=true`; optional old-artifact rows were skipped as
+expected:
+`/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260506-165134/matrix.tsv`.
+
 ## Key Files
 
 - Current roadmap: [`ROADMAP.md`](ROADMAP.md)

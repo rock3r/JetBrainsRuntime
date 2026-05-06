@@ -37,6 +37,8 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Short artifact matrix after enforcing required-row `background_window=true` in `matrix.tsv`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260506-165134/matrix.tsv`.
 - Short compatibility matrix after enforcing per-row `background_window=true` in `matrix.tsv`:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260506-163829/matrix.tsv`.
 - Magic Jewel report-validation unit tests after adding the machine-readable `magic_jewel_background_window=true`

@@ -5,6 +5,10 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Short artifact matrix after adding the per-row non-focusable window guard to artifact validation. The required
+  `current-all` and `missing-public-api` rows passed with `background_window=true`; optional old-artifact rows were
+  skipped because no old bundle paths were supplied:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260506-165134/matrix.tsv`.
 - Short compatibility matrix after adding the per-row non-focusable window guard. The matrix TSV now includes a
   `background_window` column, and every row in this run reported `true` while preserving the existing happy-path and
   fallback expectations:
