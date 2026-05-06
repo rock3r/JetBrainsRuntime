@@ -212,6 +212,11 @@ turbulence, transformed shader, RuntimeEffect shader, RuntimeEffect shader+filte
 color-filter-child rows:
 `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260506-135456/suite.tsv`.
 
+The full screenshot parity suite then passed with those stricter default gates across 67 rows. The hardened
+`parity-color-shader` row reported `jbr_shader_handle_cache_hit_frames=1094`, and the hardened
+`parity-runtime-effect-color-filter` row reported `jbr_effect_handle_cache_hit_frames=2072`:
+`/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260506-140238/suite.tsv`.
+
 ## Key Files
 
 - Current roadmap: [`ROADMAP.md`](ROADMAP.md)

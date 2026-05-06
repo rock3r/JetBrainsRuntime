@@ -37,6 +37,9 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Full screenshot parity suite after tightening deterministic shader/effect descriptor rows to require JBR handle
+  cache-hit markers, covering 67 rows with the stricter default gates:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260506-140238/suite.tsv`.
 - Focused screenshot parity subset after tightening deterministic shader/effect descriptor rows to require JBR handle
   cache-hit markers as well as define/use markers:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260506-135456/suite.tsv`.

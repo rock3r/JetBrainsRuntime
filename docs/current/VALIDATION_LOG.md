@@ -5,6 +5,11 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Full screenshot parity suite after tightening deterministic shader/effect descriptor rows to require JBR handle
+  cache-hit markers. It covered 67 rows with `fallback_new_count=0`, command replay rows kept
+  `jbr_picture_frames=0`, `parity-color-shader` reported `jbr_shader_handle_cache_hit_frames=1094`, and
+  `parity-runtime-effect-color-filter` reported `jbr_effect_handle_cache_hit_frames=2072`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260506-140238/suite.tsv`.
 - Full screenshot parity suite after adding supported saveLayer tint-filter parity coverage. It covered 67 rows,
   including `parity-button-chrome`, point dots, embedded resource fonts, system fonts, saveLayer tint filters,
   shader descriptors, RuntimeEffect rows, and graphics-layer variants. All rows passed with `fallback_new_count=0`;
