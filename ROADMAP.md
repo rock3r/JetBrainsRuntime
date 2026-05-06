@@ -37,6 +37,9 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused screenshot parity subset after tightening deterministic shader/effect descriptor rows to require JBR handle
+  cache-hit markers as well as define/use markers:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260506-135456/suite.tsv`.
 - Full screenshot parity suite after adding supported saveLayer tint-filter parity coverage, covering 67 rows including
   button chrome, point dots, embedded resource fonts, system fonts, saveLayer tint filters, shader descriptors,
   RuntimeEffect rows, and graphics-layer variants:

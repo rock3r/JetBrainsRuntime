@@ -206,6 +206,12 @@ shader/effect descriptors, RuntimeEffect rows, and graphics-layer variants. Comm
 `jbr_picture_frames=0`, and the `parity-button-chrome` row retained the Pulse white-text guard:
 `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260506-130350/suite.tsv`.
 
+Magic Jewel then tightened deterministic shader/effect screenshot parity rows so visual parity also requires JBR handle
+cache-hit markers where replay already proves descriptor reuse. Focused parity passed for solid-color, noise,
+turbulence, transformed shader, RuntimeEffect shader, RuntimeEffect shader+filter, uniform-only, color-filter, and
+color-filter-child rows:
+`/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260506-135456/suite.tsv`.
+
 ## Key Files
 
 - Current roadmap: [`ROADMAP.md`](ROADMAP.md)
