@@ -103,6 +103,11 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Focused Recent Rows
 
+- Focused `parity-button-chrome` screenshot parity passed after making the Magic Jewel primary button label explicit
+  and centered. The row stayed on command replay with `fallback_new_count=0`, `jbr_picture_frames=0`,
+  `jbr_command_frames=753`, `primaryButtonWhiteText=405`, `primaryButtonDarkText=0`, and
+  `screenshot_parity_region_headerButtons_badPixelRatio=0.00381`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260506-174825/suite.tsv`.
 - Full screenshot parity suite passed after adding the stroked linear-gradient rect row to the default set, covering 68
   rows with button chrome, point dots, embedded resource fonts, system fonts, shader descriptors, RuntimeEffect rows,
   stroked gradients, and graphics-layer variants:

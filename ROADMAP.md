@@ -37,6 +37,9 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused `parity-button-chrome` screenshot parity after making the Magic Jewel button label explicit, covering the
+  Pulse primary-button white text and centering guard:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260506-174825/suite.tsv`.
 - Full screenshot parity suite after adding stroked linear-gradient rect coverage, covering 68 rows including button
   chrome, point dots, embedded resource fonts, system fonts, shader descriptors, RuntimeEffect rows, stroked gradients,
   and graphics-layer variants:

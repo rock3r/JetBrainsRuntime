@@ -128,6 +128,11 @@ The focused `parity-button-chrome` row passed on current artifacts and catches t
 and centering issue against old SwingGraphics:
 `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260505-163010/suite.tsv`.
 
+After making the Magic Jewel button label explicit rather than relying on focused-theme content color, the focused
+`parity-button-chrome` row passed again with `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=753`,
+`primaryButtonWhiteText=405`, and `primaryButtonDarkText=0`:
+`/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260506-174825/suite.tsv`.
+
 Descriptor shader rect recording now marks unsupported non-fill paint styles as structural fallback instead of silently
 omitting the draw from a command frame. CMP focused tests passed, and Magic Jewel `commands-descriptor-stroke-shader-fallback`
 passed with `paintStyle` unsupported and picture fallback:
