@@ -37,6 +37,8 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused RuntimeEffect compile-failure fallback sentinel:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260506-150134/suite.tsv`.
 - Full screenshot parity suite after tightening deterministic shader/effect descriptor rows to require JBR handle
   cache-hit markers, covering 67 rows with the stricter default gates:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260506-140238/suite.tsv`.

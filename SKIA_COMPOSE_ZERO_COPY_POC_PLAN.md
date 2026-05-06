@@ -217,6 +217,12 @@ The full screenshot parity suite then passed with those stricter default gates a
 `parity-runtime-effect-color-filter` row reported `jbr_effect_handle_cache_hit_frames=2072`:
 `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260506-140238/suite.tsv`.
 
+RuntimeEffect compile-failure lifecycle coverage now has a focused live sentinel. Skiko can corrupt one RuntimeEffect
+SKSL source after recording while recomputing the descriptor source hash, so JBR accepts the descriptor shape and fails
+at native `SkRuntimeEffect` compilation. Magic Jewel `commands-runtime-effect-compile-fallback` passed with one
+structured fallback, `jbr_runtime_effect_compile_failures=1`, and `jbr_command_frames=0`:
+`/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260506-150134/suite.tsv`.
+
 ## Key Files
 
 - Current roadmap: [`ROADMAP.md`](ROADMAP.md)

@@ -90,6 +90,14 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Focused Recent Rows
 
+- Focused RuntimeEffect compile-failure fallback sentinel. Skiko's new test-only source corruption hook changed one
+  RuntimeEffect SKSL source after recording and recomputed the descriptor source hash, forcing JBR native compile
+  failure rather than schema rejection. `commands-runtime-effect-compile-fallback` passed with `fallback_new_count=1`,
+  `skiko_command_frames=928`, `jbr_runtime_effect_compile_failures=1`, and `jbr_command_frames=0`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260506-150134/suite.tsv`.
+- Magic Jewel report validation tests passed after switching RuntimeEffect compile/build failure summary counts to full
+  logs so early failure markers are not hidden by sampled-log summaries:
+  `./scripts/test-jbr-skia-report-validation.sh` in `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel`.
 - Focused screenshot parity subset after tightening deterministic shader/effect descriptor rows to require JBR handle
   cache-hit markers in addition to define/use markers. The subset covered `parity-color-shader`,
   `parity-noise-shader`, `parity-turbulence-shader`, `parity-transformed-shader`,
