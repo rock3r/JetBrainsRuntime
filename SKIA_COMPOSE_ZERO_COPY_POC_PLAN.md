@@ -173,6 +173,10 @@ The local artifact matrix passed after the rebuild-script hardening, validating 
 missing-public-API fallback:
 `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260506-102206/matrix.tsv`.
 
+The compatibility matrix passed on the rebuilt ABI 106 artifacts, covering happy path plus ABI, native ABI,
+low/high-word capability, exact capability-removal, and public-API-missing fallback rows:
+`/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260506-102434/matrix.tsv`.
+
 ## Key Files
 
 - Current roadmap: [`ROADMAP.md`](ROADMAP.md)

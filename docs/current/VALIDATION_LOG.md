@@ -5,6 +5,9 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Compatibility matrix on the rebuilt ABI 106 artifacts after descriptor-eviction hardening; happy path replayed
+  commands and every mismatch/removal/public-API row produced the expected structured fallback with no command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260506-102434/matrix.tsv`.
 - Local artifact matrix after hardening the rebuild script for clean `/tmp` recovery. `current-all` passed with
   `fallback_new_count=0` and `jbr_command_frames=616`; `missing-public-api` passed with one
   `public-api-missing` fallback and no command frames:

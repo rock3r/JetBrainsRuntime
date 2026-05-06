@@ -35,6 +35,8 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Compatibility matrix on the rebuilt ABI 106 artifacts after descriptor-eviction hardening:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260506-102434/matrix.tsv`.
 - Local artifact matrix after clean `/tmp` rebuild-script hardening:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260506-102206/matrix.tsv`.
 - Full default command-probe sweep after tightening descriptor eviction handle-use gates:
