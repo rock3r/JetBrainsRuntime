@@ -234,6 +234,11 @@ defaults it to `true`. This keeps command, matrix, and parity automation on non-
 interactive debugging run opts out:
 `./scripts/test-jbr-skia-report-validation.sh` in `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel`.
 
+The compatibility matrix now carries a `background_window` column and fails rows unless the summary matches
+`EXPECT_BACKGROUND_WINDOW` (default `true`). A short matrix sweep passed with every row reporting
+`background_window=true`:
+`/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260506-163829/matrix.tsv`.
+
 ## Key Files
 
 - Current roadmap: [`ROADMAP.md`](ROADMAP.md)

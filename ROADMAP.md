@@ -37,6 +37,8 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Short compatibility matrix after enforcing per-row `background_window=true` in `matrix.tsv`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260506-163829/matrix.tsv`.
 - Magic Jewel report-validation unit tests after adding the machine-readable `magic_jewel_background_window=true`
   summary guard for non-focus-stealing matrix/probe windows:
   `./scripts/test-jbr-skia-report-validation.sh` in `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel`.

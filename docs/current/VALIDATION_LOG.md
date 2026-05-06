@@ -5,6 +5,10 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Short compatibility matrix after adding the per-row non-focusable window guard. The matrix TSV now includes a
+  `background_window` column, and every row in this run reported `true` while preserving the existing happy-path and
+  fallback expectations:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260506-163829/matrix.tsv`.
 - Full default command-probe sweep after adding RuntimeEffect compile-failure fallback coverage. It covered the current
   ABI 106 replay surface, font/resource rows, shader/effect descriptors, graphics layers, saveLayer, and fallback
   sentinels. `commands-runtime-effect-compile-fallback` passed with `fallback_new_count=1`,
