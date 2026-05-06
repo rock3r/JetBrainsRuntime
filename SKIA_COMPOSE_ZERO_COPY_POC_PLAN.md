@@ -244,6 +244,11 @@ The artifact matrix now applies the same `background_window` column and guard. A
 expected:
 `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260506-165134/matrix.tsv`.
 
+Magic Jewel screenshot parity now includes `parity-gradient-stroke`, isolating the stroked linear-gradient rect command
+path with a right-probe-strip gate. Focused parity passed with `fallback_new_count=0`, `jbr_picture_frames=0`, and
+`jbr_command_frames=753`:
+`/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260506-165828/suite.tsv`.
+
 ## Key Files
 
 - Current roadmap: [`ROADMAP.md`](ROADMAP.md)

@@ -103,6 +103,10 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Focused Recent Rows
 
+- Focused `parity-gradient-stroke` screenshot parity passed after adding the stroked linear-gradient rect row to the
+  default parity suite. The row stayed on command replay with `fallback_new_count=0`, `jbr_picture_frames=0`,
+  `jbr_command_frames=753`, and `compose_bad_pixel_ratio=0.07502`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260506-165828/suite.tsv`.
 - Magic Jewel report-validation unit tests passed after adding the machine-readable
   `magic_jewel_background_window=true` summary guard. This pins the non-focus-stealing default used by command, matrix,
   and parity automation:

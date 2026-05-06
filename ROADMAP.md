@@ -37,6 +37,8 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused `parity-gradient-stroke` screenshot parity for the stroked linear-gradient rect command path:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260506-165828/suite.tsv`.
 - Short artifact matrix after enforcing required-row `background_window=true` in `matrix.tsv`:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260506-165134/matrix.tsv`.
 - Short compatibility matrix after enforcing per-row `background_window=true` in `matrix.tsv`:
