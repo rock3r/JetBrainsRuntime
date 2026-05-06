@@ -71,6 +71,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Focused Recent Rows
 
+- Focused saveLayer raw color-filter fallback sentinel. CMP's recorder test
+  `JbrSkiaCommandRecorderTest.saveLayerRejectsRawColorFilter` passed, then Magic Jewel's paired
+  `commands-save-layer-filter commands-save-layer-raw-color-filter-fallback` subset passed. The supported tint row
+  replayed with `jbr_command_frames=609`, while the raw color-filter row reported
+  `unsupportedScope:366,saveLayer:366,graphicsLayer:childCommands:366,graphicsLayer:366`,
+  `jbr_picture_frames=366`, and `jbr_command_frames=0`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260506-112750/suite.tsv`.
 - Focused descriptor eviction lifecycle probe after tightening Magic Jewel to require JBR effect/shader handle uses as
   well as definitions and evictions. The row passed with `jbr_command_frames=47`,
   `jbr_effect_handle_define_frames=92859`, `jbr_effect_handle_use_frames=92859`,

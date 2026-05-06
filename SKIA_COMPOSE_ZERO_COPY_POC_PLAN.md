@@ -185,6 +185,13 @@ button guard with `primaryButtonWhiteText=405`, `primaryButtonDarkText=0`, and
 `header_buttons_bad_pixel_ratio=0.00381`; resource/system font rows also replayed through command frames:
 `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260506-103937/suite.tsv`.
 
+Magic Jewel now has a focused `commands-save-layer-raw-color-filter-fallback` row. It asserts that a raw Skia
+`ColorFilter.makeBlend(...).asComposeColorFilter()` on `Canvas.saveLayer` stays on structured `saveLayer` fallback,
+while metadata-backed saveLayer tint continues through command replay. CMP's focused recorder test passed, and the
+paired Magic Jewel rows passed with `commands-save-layer-filter` replaying commands and the raw row producing picture
+fallback with zero JBR command frames:
+`/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260506-112750/suite.tsv`.
+
 ## Key Files
 
 - Current roadmap: [`ROADMAP.md`](ROADMAP.md)
