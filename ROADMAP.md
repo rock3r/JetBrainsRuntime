@@ -37,6 +37,10 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Full default screenshot parity suite after adding the dedicated clipPath row, covering 69 rows including button
+  chrome, point dots, embedded resource fonts, system fonts, clipPath, shader descriptors, RuntimeEffect rows, stroked
+  gradients, and graphics-layer variants:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260506-180342/suite.tsv`.
 - Focused `parity-clip-path` screenshot parity after adding a dedicated clipPath row to the default parity suite:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260506-180124/suite.tsv`.
 - Focused `parity-button-chrome` screenshot parity after making the Magic Jewel button label explicit, covering the

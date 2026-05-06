@@ -103,6 +103,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Focused Recent Rows
 
+- Full default screenshot parity suite passed after adding `parity-clip-path`, covering 69 rows with button chrome,
+  point dots, embedded resource fonts, system fonts, clipPath, shader descriptors, RuntimeEffect rows, stroked
+  gradients, and graphics-layer variants:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260506-180342/suite.tsv`.
+- In that full suite, `parity-clip-path` passed with `fallback_new_count=0`, `jbr_picture_frames=0`, and
+  `jbr_command_frames=979`; `parity-button-chrome`, `parity-native-resource-font-text`, and
+  `parity-native-system-font-text` also stayed on command replay.
 - Focused `parity-clip-path` screenshot parity passed after adding a dedicated clipPath row to the default parity suite.
   The row stayed on command replay with `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=399`, and
   `probeRightCyan=3689` against the row's focused 3000-pixel clipPath threshold:
