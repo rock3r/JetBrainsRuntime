@@ -37,6 +37,10 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Full default command-probe sweep passed after adding graphics-layer color-matrix resize and forced-context lifecycle
+  rows. The sweep covered 131 rows plus header; 105 rows reported command replay, and fallback sentinels remained
+  isolated:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260507-163006/suite.tsv`.
 - Focused command probe for graphics-layer color-matrix descriptor lifecycle passed after adding resize and forced
   destination-context rows. Both rows stayed on command replay and required surface-change, command-cache-clear,
   effect-handle redefinition, use, and cache-hit markers:

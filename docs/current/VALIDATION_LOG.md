@@ -5,6 +5,14 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Full default command-probe sweep passed after adding graphics-layer color-matrix resize and forced-context lifecycle
+  rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260507-163006/suite.tsv`.
+  The suite covered 131 rows plus header. All rows passed; 105 rows reported command replay, 20 rows reported
+  intentional JBR picture fallback sentinels, and 6 rows reported expected structural fallback. The new
+  `commands-resize-graphics-layer-color-matrix-filter` and
+  `commands-forced-context-graphics-layer-color-matrix-filter` rows both stayed on command replay with
+  `fallback_new_count=0` and `jbr_picture_frames=0`.
 - Focused command probe for graphics-layer color-matrix descriptor lifecycle passed after adding
   `commands-resize-graphics-layer-color-matrix-filter` and
   `commands-forced-context-graphics-layer-color-matrix-filter`:
