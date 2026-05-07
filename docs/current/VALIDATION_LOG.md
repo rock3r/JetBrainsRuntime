@@ -5,6 +5,17 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Full default screenshot parity suite passed after adding graphics-layer color-matrix resize and forced-context
+  lifecycle parity rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260507-180029/suite.tsv`.
+  The suite covered 77 rows plus header. All rows passed; all 77 rows reported command replay, zero rows reported
+  JBR picture fallback, and zero rows reported structural fallback. The new lifecycle rows stayed within gates:
+  `parity-resize-graphics-layer-color-matrix-filter` reported `jbr_command_frames=854`,
+  `screenshot_parity_badPixelRatio=0.04577`, `screenshot_parity_region_headerButtons_badPixelRatio=0.02158`, and
+  `screenshot_parity_region_composeCanvas_badPixelRatio=0.06496`; the forced-context row reported
+  `jbr_command_frames=530`, `screenshot_parity_badPixelRatio=0.04815`,
+  `screenshot_parity_region_headerButtons_badPixelRatio=0.00381`, and
+  `screenshot_parity_region_composeCanvas_badPixelRatio=0.07011`.
 - Focused screenshot parity for graphics-layer color-matrix descriptor lifecycle passed after adding
   `parity-resize-graphics-layer-color-matrix-filter` and
   `parity-forced-context-graphics-layer-color-matrix-filter`:

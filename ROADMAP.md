@@ -37,6 +37,10 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Full default screenshot parity suite passed after adding graphics-layer color-matrix resize and forced-context
+  lifecycle parity rows. The sweep covered 77 rows plus header; every row passed, every row stayed on command replay,
+  and no rows reported JBR picture fallback or structural fallback:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260507-180029/suite.tsv`.
 - Focused screenshot parity for graphics-layer color-matrix descriptor lifecycle passed across same-context resize and
   forced destination-context rows. Both rows stayed on command replay, required surface/cache/effect-handle markers, and
   matched old SwingGraphics within the configured parity gates:
@@ -73,9 +77,9 @@ This is the small working roadmap for the current PoC. The full historical check
 - Full default command-probe sweep covered 128 rows plus header; supported rows stayed on command replay and intentional
   fallback sentinels stayed structurally isolated:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260507-102836/suite.tsv`.
-- Full default screenshot parity suite covered 75 rows including button chrome, point dots, embedded resource fonts,
+- Full default screenshot parity suite covered 77 rows including button chrome, point dots, embedded resource fonts,
   system fonts, gradient families, shader descriptors, RuntimeEffect rows, and graphics-layer variants:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260507-093958/suite.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260507-180029/suite.tsv`.
 - Rolling validation ledger: [`docs/current/VALIDATION_LOG.md`](docs/current/VALIDATION_LOG.md).
 
 ## Document Index

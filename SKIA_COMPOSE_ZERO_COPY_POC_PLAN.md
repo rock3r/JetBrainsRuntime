@@ -49,6 +49,9 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - Latest focused graphics-layer color-matrix screenshot parity covers the same resize and forced-context rows against old
   SwingGraphics:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260507-175623/suite.tsv`.
+- Latest full screenshot parity sweep now includes those graphics-layer color-matrix lifecycle rows and passed across
+  77 rows plus header with all rows on command replay:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260507-180029/suite.tsv`.
 
 ## Latest Completed Slice
 
@@ -75,11 +78,11 @@ ABI 106 adds direct `Canvas.drawVertices` command replay for serialized vertex p
 
 ## Previous Slice
 
-Magic Jewel broad screenshot parity is current after adding skew replay and vertices fallback coverage:
+Magic Jewel broad screenshot parity is current after adding graphics-layer color-matrix lifecycle rows:
 
-- Full screenshot parity passed across 65 parity rows, including button chrome, point dots, embedded resource fonts,
+- Full screenshot parity passed across 77 parity rows, including button chrome, point dots, embedded resource fonts,
   system fonts, shader descriptors, RuntimeEffect rows, and graphics-layer variants:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260505-110425/suite.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260507-180029/suite.tsv`.
 - All rows passed with `fallback_new_count=0`; command-replay rows reported `jbr_picture_frames=0` and active
   `jbr_command_frames`.
 
@@ -147,6 +150,8 @@ Current validation gates are intentionally broad but summarized here to keep thi
   `MAGIC_JEWEL_BACKGROUND_WINDOW=true`, with per-row `background_window` report gates.
 - Graphics-layer color-matrix descriptor lifecycle now has command rows for both same-context resize and forced
   destination-context migration, plus matching focused screenshot parity rows against old SwingGraphics.
+- The full default screenshot parity suite has been rerun after adding those lifecycle rows; it passed with
+  `fallback_new_count=0`, `jbr_picture_frames=0`, and nonzero `jbr_command_frames` on all rows.
 - Detailed validation paths and row-level counts live in [`docs/current/VALIDATION_LOG.md`](docs/current/VALIDATION_LOG.md).
 
 ## Key Files
