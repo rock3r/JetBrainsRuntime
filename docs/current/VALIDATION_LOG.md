@@ -5,6 +5,11 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Full compatibility matrix after adding the exact dash path-effect high-word capability removals. It covered 30 rows
+  plus the header. The `happy` row stayed on command replay with `jbr_command_frames=407`; every forced mismatch row,
+  including the new dash path-effect rows plus draw-points, draw-vertices, and public-API-missing, reported
+  `fallback_new_count=1`, `jbr_command_frames=0`, and `background_window=true`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260507-120041/matrix.tsv`.
 - Focused compatibility matrix after adding exact missing-capability rows for the dash path-effect replay bits
   (`COMMAND_CAP64_HIGH_STROKE_RECT_DASH_PATH_EFFECT`, `COMMAND_CAP64_HIGH_STROKE_ROUND_RECT_DASH_PATH_EFFECT`, and
   `COMMAND_CAP64_HIGH_STROKE_PATH_DASH_PATH_EFFECT`). The new `CASES`-filtered matrix subset passed; each row reported

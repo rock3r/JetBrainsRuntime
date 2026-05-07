@@ -37,6 +37,10 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Full compatibility matrix after adding the exact dash path-effect high-word capability removals, covering 30 rows
+  plus the header. The happy path replayed commands (`jbr_command_frames=407`), every forced mismatch/fallback row
+  reported one structured fallback and zero command frames, and every row kept `background_window=true`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260507-120041/matrix.tsv`.
 - Focused compatibility matrix for the three exact dash path-effect high-word capability removals
   (`stroke-rect`, `stroke-round-rect`, and `stroke-path`). Each row passed with one structured
   `command-capability-mismatch` fallback, zero JBR command frames, and `background_window=true`:
