@@ -5,6 +5,17 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Focused screenshot parity for graphics-layer color-matrix descriptor lifecycle passed after adding
+  `parity-resize-graphics-layer-color-matrix-filter` and
+  `parity-forced-context-graphics-layer-color-matrix-filter`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260507-175623/suite.tsv`.
+  The resize row reported `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=319`,
+  `jbr_effect_handle_define_frames=8`, `jbr_effect_handle_cache_hit_frames=720`,
+  `skiko_surface_change_markers=1`, `skiko_command_cache_clear_markers=1`, and
+  `screenshot_parity_badPixelRatio=0.04577`. The forced-context row reported `jbr_command_frames=440`,
+  `jbr_effect_handle_define_frames=10`, `jbr_effect_handle_cache_hit_frames=844`,
+  `skiko_surface_change_markers=1`, `skiko_command_cache_clear_markers=1`, and
+  `screenshot_parity_badPixelRatio=0.04815`.
 - Full default command-probe sweep passed after adding graphics-layer color-matrix resize and forced-context lifecycle
   rows:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260507-163006/suite.tsv`.

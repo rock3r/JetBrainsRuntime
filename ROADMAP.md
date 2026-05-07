@@ -37,6 +37,10 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused screenshot parity for graphics-layer color-matrix descriptor lifecycle passed across same-context resize and
+  forced destination-context rows. Both rows stayed on command replay, required surface/cache/effect-handle markers, and
+  matched old SwingGraphics within the configured parity gates:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260507-175623/suite.tsv`.
 - Full default command-probe sweep passed after adding graphics-layer color-matrix resize and forced-context lifecycle
   rows. The sweep covered 131 rows plus header; 105 rows reported command replay, and fallback sentinels remained
   isolated:

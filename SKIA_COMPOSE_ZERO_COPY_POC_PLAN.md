@@ -46,6 +46,9 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - Latest focused graphics-layer color-matrix lifecycle probe covers same-context resize and forced destination context
   migration with effect-handle redefinition/use/cache-hit gates:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260507-162709/suite.tsv`.
+- Latest focused graphics-layer color-matrix screenshot parity covers the same resize and forced-context rows against old
+  SwingGraphics:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260507-175623/suite.tsv`.
 
 ## Latest Completed Slice
 
@@ -143,7 +146,7 @@ Current validation gates are intentionally broad but summarized here to keep thi
 - Command, compatibility, artifact, and screenshot harnesses default to non-focusable macOS windows via
   `MAGIC_JEWEL_BACKGROUND_WINDOW=true`, with per-row `background_window` report gates.
 - Graphics-layer color-matrix descriptor lifecycle now has command rows for both same-context resize and forced
-  destination-context migration, matching the existing render-effect lifecycle coverage.
+  destination-context migration, plus matching focused screenshot parity rows against old SwingGraphics.
 - Detailed validation paths and row-level counts live in [`docs/current/VALIDATION_LOG.md`](docs/current/VALIDATION_LOG.md).
 
 ## Key Files
