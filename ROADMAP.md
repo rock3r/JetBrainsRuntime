@@ -37,6 +37,9 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused `parity-button-chrome` screenshot parity passed on current artifacts after the full command sweep. It kept the
+  new renderer on command replay and rechecked the Pulse button white-text/centering guard:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260507-162055/suite.tsv`.
 - Full default command-probe sweep passed after adding the graphics-layer raw color-filter fallback sentinel. The sweep
   covered 129 rows plus header; supported rows stayed on command replay, intentional picture-fallback sentinels stayed
   isolated, and expected structural fallback rows remained bounded:

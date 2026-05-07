@@ -5,6 +5,11 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Focused `parity-button-chrome` screenshot parity passed on current artifacts after the full command sweep:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260507-162055/suite.tsv`.
+  The row stayed on command replay with `fallback_new_count=0`, `jbr_picture_frames=0`,
+  `jbr_command_frames=346`, `screenshot_primaryButtonWhiteText=405`, `screenshot_primaryButtonDarkText=0`, and
+  `screenshot_parity_region_headerButtons_badPixelRatio=0.00381`.
 - Full default command-probe sweep passed after adding the graphics-layer raw color-filter fallback sentinel:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260507-151511/suite.tsv`.
   The suite covered 129 rows plus header. All rows passed; 103 rows reported command replay, 20 rows reported

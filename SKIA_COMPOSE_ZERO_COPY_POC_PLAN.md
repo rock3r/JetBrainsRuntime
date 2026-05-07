@@ -41,6 +41,8 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260507-145018/matrix.tsv`.
 - Latest focused fallback sentinel covers raw Skia-backed graphics-layer color filters:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260507-150427/suite.tsv`.
+- Latest focused button chrome screenshot parity reconfirmed primary-button white text and centering on command replay:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260507-162055/suite.tsv`.
 
 ## Latest Completed Slice
 
@@ -132,7 +134,8 @@ Current validation gates are intentionally broad but summarized here to keep thi
 - Screenshot parity asserts old/new pixel parity plus JBR-owned shader/effect handle definition, use, cache-hit, and
   context-invalidation markers on descriptor rows.
 - `parity-button-chrome` explicitly guards the Pulse primary-button white text and centering regression seen in manual
-  screenshots.
+  screenshots. The latest focused run reported `screenshot_primaryButtonWhiteText=405`,
+  `screenshot_primaryButtonDarkText=0`, and `screenshot_parity_region_headerButtons_badPixelRatio=0.00381`.
 - Resource-font and system-font rows cover JAR-embedded font loading and locally available system font loading.
 - Command, compatibility, artifact, and screenshot harnesses default to non-focusable macOS windows via
   `MAGIC_JEWEL_BACKGROUND_WINDOW=true`, with per-row `background_window` report gates.
