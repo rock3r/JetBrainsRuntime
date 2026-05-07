@@ -5,6 +5,11 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Focused Magic Jewel command probe passed for `commands-graphics-layer-raw-color-filter-fallback`, added as a
+  sentinel for raw Skia-backed `ColorFilter` values on graphics layers. The row reported
+  `graphicsLayer:childCommands:365,graphicsLayer:colorFilter:365,graphicsLayer:365`, `jbr_picture_frames=364`,
+  `jbr_command_frames=0`, and `validation_status=passed`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260507-150427/suite.tsv`.
 - Current local artifact matrix passed after the latest rebuild-script stub fix. `current-all` replayed commands with
   `jbr_command_frames=654`, `fallback_new_count=0`, and `background_window=true`; `missing-public-api` reported the
   expected structured fallback with `fallback_new_count=1`, `jbr_command_frames=0`, and `background_window=true`.

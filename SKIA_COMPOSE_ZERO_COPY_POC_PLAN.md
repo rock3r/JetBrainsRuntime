@@ -39,6 +39,8 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - Local artifact rebuild plus headless direct `JBRSkiaApiTest` execution passed against the patched classes/native bridge.
 - Latest local artifact matrix passed on rebuilt ABI 106 artifacts:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260507-145018/matrix.tsv`.
+- Latest focused fallback sentinel covers raw Skia-backed graphics-layer color filters:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260507-150427/suite.tsv`.
 
 ## Latest Completed Slice
 

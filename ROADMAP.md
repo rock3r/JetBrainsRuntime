@@ -37,6 +37,9 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused command probe for the new graphics-layer raw color-filter fallback sentinel passed. The row reported
+  `graphicsLayer:colorFilter` unsupported, JBR picture replay, and zero JBR command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260507-150427/suite.tsv`.
 - Current local artifact matrix passed on rebuilt ABI 106 artifacts. `current-all` replayed commands
   (`jbr_command_frames=654`), `missing-public-api` fell back structurally, and both rows kept `background_window=true`:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260507-145018/matrix.tsv`.
