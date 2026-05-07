@@ -37,6 +37,10 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused screenshot parity for stable RuntimeEffect color-filter lifecycle passed across same-context resize and forced
+  destination-context rows. Both rows stayed on command replay, required surface/cache/effect-handle markers, and
+  matched old SwingGraphics within parity gates:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260507-195934/suite.tsv`.
 - Full default command-probe sweep passed after adding stable RuntimeEffect color-filter resize and forced-context
   lifecycle rows. The sweep covered 133 rows plus header; 107 rows reported command replay, 20 rows reported
   intentional JBR picture fallback sentinels, and 6 rows reported expected structural fallback:

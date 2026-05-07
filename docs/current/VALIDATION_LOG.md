@@ -5,6 +5,19 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Focused screenshot parity for stable RuntimeEffect color-filter lifecycle passed after adding
+  `parity-resize-runtime-effect-stable-color-filter` and
+  `parity-forced-context-runtime-effect-stable-color-filter`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260507-195934/suite.tsv`.
+  The resize row reported `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=386`,
+  `jbr_runtime_effect_cache_hit_frames=739`, `jbr_effect_handle_define_frames=42`,
+  `jbr_effect_handle_use_frames=740`, `jbr_effect_handle_cache_hit_frames=733`,
+  `skiko_surface_change_markers=1`, `skiko_command_cache_clear_markers=1`, and
+  `screenshot_parity_badPixelRatio=0.04467`. The forced-context row reported `jbr_command_frames=294`,
+  `jbr_runtime_effect_cache_hit_frames=605`, `jbr_effect_handle_define_frames=54`,
+  `jbr_effect_handle_use_frames=606`, `jbr_effect_handle_cache_hit_frames=597`,
+  `skiko_surface_change_markers=1`, `skiko_command_cache_clear_markers=1`, and
+  `screenshot_parity_badPixelRatio=0.04668`.
 - Full default command-probe sweep passed after adding stable RuntimeEffect color-filter resize and forced-context
   lifecycle rows:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260507-184927/suite.tsv`.
