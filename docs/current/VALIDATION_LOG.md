@@ -5,6 +5,17 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Full compatibility matrix after adding exact low-word gradient fill/stroke capability removals. It covered 45 rows
+  plus the header. The `happy` row stayed on command replay with `jbr_command_frames=287`; representative gradient
+  rows including `fill-rect-linear-gradient-capability-missing`, `fill-path-sweep-gradient-capability-missing`,
+  `stroke-rect-linear-gradient-capability-missing`, and `stroke-round-rect-sweep-gradient-capability-missing` each
+  reported `fallback_new_count=1`, `jbr_command_frames=0`, and `background_window=true`, as did the existing
+  `public-api-missing` row:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260507-123106/matrix.tsv`.
+- Focused compatibility matrix after adding the 15 exact low-word gradient fill/stroke capability rows. Every new row
+  reported one structured `command-capability-mismatch` fallback, zero JBR command frames, and
+  `background_window=true`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260507-122221/matrix.tsv`.
 - Full compatibility matrix after adding the exact dash path-effect high-word capability removals. It covered 30 rows
   plus the header. The `happy` row stayed on command replay with `jbr_command_frames=407`; every forced mismatch row,
   including the new dash path-effect rows plus draw-points, draw-vertices, and public-API-missing, reported
