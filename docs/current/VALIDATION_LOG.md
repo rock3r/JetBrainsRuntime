@@ -5,6 +5,10 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Full default command-probe sweep passed after adding the graphics-layer raw color-filter fallback sentinel:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260507-151511/suite.tsv`.
+  The suite covered 129 rows plus header. All rows passed; 103 rows reported command replay, 20 rows reported
+  intentional JBR picture fallback sentinels, and 6 rows reported expected structural fallback.
 - Focused Magic Jewel command probe passed for `commands-graphics-layer-raw-color-filter-fallback`, added as a
   sentinel for raw Skia-backed `ColorFilter` values on graphics layers. The row reported
   `graphicsLayer:childCommands:365,graphicsLayer:colorFilter:365,graphicsLayer:365`, `jbr_picture_frames=364`,

@@ -37,6 +37,10 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Full default command-probe sweep passed after adding the graphics-layer raw color-filter fallback sentinel. The sweep
+  covered 129 rows plus header; supported rows stayed on command replay, intentional picture-fallback sentinels stayed
+  isolated, and expected structural fallback rows remained bounded:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260507-151511/suite.tsv`.
 - Focused command probe for the new graphics-layer raw color-filter fallback sentinel passed. The row reported
   `graphicsLayer:colorFilter` unsupported, JBR picture replay, and zero JBR command frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260507-150427/suite.tsv`.
