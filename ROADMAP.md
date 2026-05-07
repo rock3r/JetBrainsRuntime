@@ -37,6 +37,10 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused command probe for stable RuntimeEffect color-filter lifecycle passed after adding same-context resize and
+  forced destination-context rows. Both rows stayed on command replay and required surface-change, command-cache-clear,
+  effect-handle redefinition/use/cache-hit, and RuntimeEffect source-cache-hit markers:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260507-184642/suite.tsv`.
 - Full default screenshot parity suite passed after adding graphics-layer color-matrix resize and forced-context
   lifecycle parity rows. The sweep covered 77 rows plus header; every row passed, every row stayed on command replay,
   and no rows reported JBR picture fallback or structural fallback:

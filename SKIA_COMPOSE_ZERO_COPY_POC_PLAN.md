@@ -52,6 +52,9 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - Latest full screenshot parity sweep now includes those graphics-layer color-matrix lifecycle rows and passed across
   77 rows plus header with all rows on command replay:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260507-180029/suite.tsv`.
+- Latest focused RuntimeEffect color-filter lifecycle probe covers stable color-filter handles across same-context resize
+  and forced destination-context migration:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260507-184642/suite.tsv`.
 
 ## Latest Completed Slice
 
@@ -152,6 +155,8 @@ Current validation gates are intentionally broad but summarized here to keep thi
   destination-context migration, plus matching focused screenshot parity rows against old SwingGraphics.
 - The full default screenshot parity suite has been rerun after adding those lifecycle rows; it passed with
   `fallback_new_count=0`, `jbr_picture_frames=0`, and nonzero `jbr_command_frames` on all rows.
+- Stable RuntimeEffect color-filter descriptors now have command lifecycle rows for same-context resize and forced
+  destination-context migration, with effect-handle redefinition/use/cache-hit and RuntimeEffect source-cache-hit gates.
 - Detailed validation paths and row-level counts live in [`docs/current/VALIDATION_LOG.md`](docs/current/VALIDATION_LOG.md).
 
 ## Key Files
