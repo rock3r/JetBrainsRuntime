@@ -37,6 +37,15 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Full compatibility matrix after adding the remaining exact low-word capability removals for image shaders,
+  blend/color filters, line dash path effects, saveLayer variants, color-filter handles, and effect descriptors,
+  covering 57 rows plus the header. The happy path replayed commands (`jbr_command_frames=168`), every forced
+  mismatch/fallback row reported one structured fallback and zero command frames, and every row kept
+  `background_window=true`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260507-131028/matrix.tsv`.
+- Focused compatibility matrix for those 12 remaining exact low-word capability removals. Each row passed with one
+  structured `command-capability-mismatch` fallback, zero JBR command frames, and `background_window=true`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260507-130532/matrix.tsv`.
 - Full compatibility matrix after adding exact low-word gradient fill/stroke capability removals, covering 45 rows
   plus the header. The happy path replayed commands (`jbr_command_frames=287`), every forced mismatch/fallback row
   reported one structured fallback and zero command frames, and every row kept `background_window=true`:

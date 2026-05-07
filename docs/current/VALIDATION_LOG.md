@@ -5,6 +5,17 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Full compatibility matrix after adding the remaining exact low-word capability removals for image shaders,
+  blend/color filters, line dash path effects, saveLayer variants, color-filter handles, and effect descriptors. It
+  covered 57 rows plus the header. The `happy` row stayed on command replay with `jbr_command_frames=168`;
+  representative rows including `fill-rect-image-shader-capability-missing`,
+  `fill-rect-blend-mode-capability-missing`, `define-effect-descriptor-capability-missing`, and
+  `save-layer-blend-color-filter-capability-missing` each reported `fallback_new_count=1`, `jbr_command_frames=0`,
+  and `background_window=true`, as did the existing `public-api-missing` row:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260507-131028/matrix.tsv`.
+- Focused compatibility matrix for those 12 remaining exact low-word capability removals. Every new row reported one
+  structured `command-capability-mismatch` fallback, zero JBR command frames, and `background_window=true`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260507-130532/matrix.tsv`.
 - Full compatibility matrix after adding exact low-word gradient fill/stroke capability removals. It covered 45 rows
   plus the header. The `happy` row stayed on command replay with `jbr_command_frames=287`; representative gradient
   rows including `fill-rect-linear-gradient-capability-missing`, `fill-path-sweep-gradient-capability-missing`,

@@ -31,6 +31,9 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - Latest full compatibility matrix also includes exact low-word gradient fill/stroke removals and passed across
   45 rows plus the header:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260507-123106/matrix.tsv`.
+- Latest full compatibility matrix now covers the complete current exact low-word row set and passed across
+  57 rows plus the header:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260507-131028/matrix.tsv`.
 
 ## Latest Completed Slice
 
