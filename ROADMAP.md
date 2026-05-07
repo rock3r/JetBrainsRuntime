@@ -37,6 +37,13 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Full default command-probe sweep after the current shader/effect/font/graphics-layer parity hardening, covering 128
+  rows plus the header. Supported rows including `commands-point-dots`, gradient surfaces/paths/shaders,
+  embedded resource fonts, system fonts, stable RuntimeEffect color filters, graphics-layer render effects, and
+  saveLayer filters stayed on command replay with `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`,
+  and positive `jbr_command_frames`; intentional fallback sentinels stayed structurally isolated with zero command
+  frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260507-102836/suite.tsv`.
 - Full default screenshot parity suite after adding the explicit gradient shader-brush row, covering 75 rows including
   button chrome, point dots, embedded resource fonts, system fonts, draw shapes, clipRect/clip-out, clipPath, blend
   modes, gradient surfaces, gradient paths, explicit gradient shader brushes, shader descriptors, RuntimeEffect rows,

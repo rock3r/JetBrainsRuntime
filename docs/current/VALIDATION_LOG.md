@@ -5,6 +5,18 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Full default command-probe sweep after the current shader/effect/font/graphics-layer parity hardening. It covered 128
+  rows plus the header. Supported rows stayed on command replay with `fallback_new_count=0`, `unsupported=none`,
+  `jbr_picture_frames=0`, and positive `jbr_command_frames`; intentional fallback sentinels stayed structurally
+  isolated with zero command frames. Key rows: `commands-point-dots` `jbr_command_frames=1822`,
+  `commands-gradient-surfaces` `jbr_command_frames=834`, `commands-gradient-paths` `jbr_command_frames=1472`,
+  `commands-gradient-shaders` `jbr_command_frames=1846`, `commands-native-resource-font-text`
+  `jbr_command_frames=1206`, `commands-native-system-font-text` `jbr_command_frames=1409`,
+  `commands-runtime-effect-stable-color-filter` `jbr_command_frames=1251`,
+  `commands-graphics-layer-render-effect` `jbr_command_frames=1342`, and `commands-save-layer-filter`
+  `jbr_command_frames=850`. The expected `commands-runtime-effect-compile-fallback` row passed with
+  `fallback_new_count=1` and `jbr_command_frames=0`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260507-102836/suite.tsv`.
 - Full default screenshot parity suite after adding the dedicated `parity-gradient-shaders` row. It covered 75 rows,
   including button chrome, point dots, embedded resource fonts, system fonts, draw shapes, clipRect/clip-out, clipPath,
   blend modes, gradient surfaces, gradient paths, explicit gradient shader brushes, stroked gradients, shader

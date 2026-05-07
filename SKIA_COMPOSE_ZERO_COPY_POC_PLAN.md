@@ -22,6 +22,8 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   parity from text rasterization drift. It is not a replacement for Jewel `Text`.
 - The working docs are intentionally split: this plan and `ROADMAP.md` stay compact, validation details live in
   `docs/current/VALIDATION_LOG.md`, and verbose historical checkpoints live in `docs/history/`.
+- Latest full command-probe sweep covered 128 rows plus the header and passed on current artifacts:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260507-102836/suite.tsv`.
 
 ## Latest Completed Slice
 
