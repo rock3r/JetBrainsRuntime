@@ -5,9 +5,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Rebuilt local artifacts with `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/scripts/rebuild-jbr-skia-local-artifacts.sh`,
+  then compiled and ran `test/jdk/jb/JBRSkia/JBRSkiaApiTest.java` against the patched classes and native bridge using
+  headless mode, `--patch-module java.base=/tmp/jbr-skia-run/java-base`,
+  `--patch-module java.desktop=/tmp/jbr-skia-run/desktop`, and
+  `-Dsun.java2d.skia.interop.library=/tmp/jbr-skia-native/libjbrskiainterop.dylib`. The run exited 0.
 - JBR API test source expectation fixed to match current `JBRSkia.ABI_ID = 106`; source grep confirmed no remaining
-  stale `105` ABI assertions in `test/jdk/jb/JBRSkia` or the JBR Skia API/service sources. A local JBR image was not
-  present at `/tmp/jbr-skia-run/desktop`, so jtreg execution still needs a rebuilt artifact image.
+  stale `105` ABI assertions in `test/jdk/jb/JBRSkia` or the JBR Skia API/service sources.
 - Full Skiko `JbrSkiaInteropTest` class passed after adding per-bit low-word capability rejection:
   `./gradlew --no-daemon --no-configuration-cache :awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`
   in `/Users/rock3r/src/jbr-skia-zero-copy/skiko/skiko`.

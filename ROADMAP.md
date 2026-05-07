@@ -37,9 +37,11 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Rebuilt local artifacts with `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/scripts/rebuild-jbr-skia-local-artifacts.sh`,
+  then compiled and ran `test/jdk/jb/JBRSkia/JBRSkiaApiTest.java` against the patched classes and
+  `/tmp/jbr-skia-native/libjbrskiainterop.dylib` using headless mode and explicit module patches. The run exited 0.
 - JBR API test source expectation fixed to match current `JBRSkia.ABI_ID = 106`; source grep confirms no remaining
-  stale `105` ABI assertions in `test/jdk/jb/JBRSkia` or the JBR Skia API/service sources. A local JBR image was not
-  present at `/tmp/jbr-skia-run/desktop`, so jtreg execution still needs a rebuilt artifact image.
+  stale `105` ABI assertions in `test/jdk/jb/JBRSkia` or the JBR Skia API/service sources.
 - Full Skiko `JbrSkiaInteropTest` class after adding per-bit low-word capability rejection:
   `./gradlew --no-daemon --no-configuration-cache :awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`
   in `/Users/rock3r/src/jbr-skia-zero-copy/skiko/skiko`.

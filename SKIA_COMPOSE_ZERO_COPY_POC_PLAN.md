@@ -36,6 +36,7 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260507-131028/matrix.tsv`.
 - Skiko unit coverage now rejects every missing low-word command-capability bit, mirroring the existing high-word loop.
 - JBR API test source now asserts ABI 106 consistently with `JBRSkia.BUILD_ID`.
+- Local artifact rebuild plus headless direct `JBRSkiaApiTest` execution passed against the patched classes/native bridge.
 
 ## Latest Completed Slice
 
