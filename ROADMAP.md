@@ -37,6 +37,10 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Full default command-probe sweep passed after adding stable RuntimeEffect color-filter resize and forced-context
+  lifecycle rows. The sweep covered 133 rows plus header; 107 rows reported command replay, 20 rows reported
+  intentional JBR picture fallback sentinels, and 6 rows reported expected structural fallback:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260507-184927/suite.tsv`.
 - Focused command probe for stable RuntimeEffect color-filter lifecycle passed after adding same-context resize and
   forced destination-context rows. Both rows stayed on command replay and required surface-change, command-cache-clear,
   effect-handle redefinition/use/cache-hit, and RuntimeEffect source-cache-hit markers:

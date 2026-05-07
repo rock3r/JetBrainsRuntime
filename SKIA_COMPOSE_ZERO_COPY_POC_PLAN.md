@@ -55,6 +55,9 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - Latest focused RuntimeEffect color-filter lifecycle probe covers stable color-filter handles across same-context resize
   and forced destination-context migration:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260507-184642/suite.tsv`.
+- Latest full command-probe sweep includes those RuntimeEffect color-filter lifecycle rows and passed across
+  133 rows plus header:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260507-184927/suite.tsv`.
 
 ## Latest Completed Slice
 

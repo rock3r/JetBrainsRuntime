@@ -5,6 +5,18 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Full default command-probe sweep passed after adding stable RuntimeEffect color-filter resize and forced-context
+  lifecycle rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260507-184927/suite.tsv`.
+  The suite covered 133 rows plus header. All rows passed; 107 rows reported command replay, 20 rows reported
+  intentional JBR picture fallback sentinels, and 6 rows reported expected structural fallback. The new resize row
+  reported `jbr_command_frames=590`, `jbr_runtime_effect_cache_hit_frames=1010`,
+  `jbr_effect_handle_define_frames=2`, `jbr_effect_handle_use_frames=1011`,
+  `jbr_effect_handle_cache_hit_frames=1009`, `skiko_surface_change_markers=1`, and
+  `skiko_command_cache_clear_markers=1`. The new forced-context row reported `jbr_command_frames=277`,
+  `jbr_runtime_effect_cache_hit_frames=567`, `jbr_effect_handle_define_frames=2`,
+  `jbr_effect_handle_use_frames=568`, `jbr_effect_handle_cache_hit_frames=566`,
+  `skiko_surface_change_markers=1`, and `skiko_command_cache_clear_markers=1`.
 - Focused command probe for stable RuntimeEffect color-filter lifecycle passed after adding
   `commands-resize-runtime-effect-stable-color-filter` and
   `commands-forced-context-runtime-effect-stable-color-filter`:
