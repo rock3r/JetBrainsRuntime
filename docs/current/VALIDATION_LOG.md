@@ -5,6 +5,9 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Full Skiko `JbrSkiaInteropTest` class passed after adding per-bit low-word capability rejection:
+  `./gradlew --no-daemon --no-configuration-cache :awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`
+  in `/Users/rock3r/src/jbr-skia-zero-copy/skiko/skiko`.
 - Skiko focused `JbrSkiaInteropTest` coverage passed after adding the low-word counterpart to the existing
   per-high-bit missing-capability rejection loop:
   `./gradlew --no-daemon --no-configuration-cache :awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest.rejectsEachMissingLowCommandCapability --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest.rejectsEachMissingHighCommandCapability`

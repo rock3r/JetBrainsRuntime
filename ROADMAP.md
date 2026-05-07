@@ -37,6 +37,9 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Full Skiko `JbrSkiaInteropTest` class after adding per-bit low-word capability rejection:
+  `./gradlew --no-daemon --no-configuration-cache :awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`
+  in `/Users/rock3r/src/jbr-skia-zero-copy/skiko/skiko`.
 - Skiko focused `JbrSkiaInteropTest` coverage after adding per-bit low-word capability rejection:
   `./gradlew --no-daemon --no-configuration-cache :awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest.rejectsEachMissingLowCommandCapability --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest.rejectsEachMissingHighCommandCapability`
   in `/Users/rock3r/src/jbr-skia-zero-copy/skiko/skiko`.
