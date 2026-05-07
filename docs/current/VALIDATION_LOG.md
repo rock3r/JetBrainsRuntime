@@ -5,6 +5,11 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Focused compatibility matrix after adding exact missing-capability rows for the dash path-effect replay bits
+  (`COMMAND_CAP64_HIGH_STROKE_RECT_DASH_PATH_EFFECT`, `COMMAND_CAP64_HIGH_STROKE_ROUND_RECT_DASH_PATH_EFFECT`, and
+  `COMMAND_CAP64_HIGH_STROKE_PATH_DASH_PATH_EFFECT`). The new `CASES`-filtered matrix subset passed; each row reported
+  `fallback_new_count=1`, `jbr_command_frames=0`, and `background_window=true`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260507-115729/matrix.tsv`.
 - Full default command-probe sweep after the current shader/effect/font/graphics-layer parity hardening. It covered 128
   rows plus the header. Supported rows stayed on command replay with `fallback_new_count=0`, `unsupported=none`,
   `jbr_picture_frames=0`, and positive `jbr_command_frames`; intentional fallback sentinels stayed structurally

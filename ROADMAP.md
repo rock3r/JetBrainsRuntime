@@ -37,6 +37,10 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused compatibility matrix for the three exact dash path-effect high-word capability removals
+  (`stroke-rect`, `stroke-round-rect`, and `stroke-path`). Each row passed with one structured
+  `command-capability-mismatch` fallback, zero JBR command frames, and `background_window=true`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260507-115729/matrix.tsv`.
 - Full default command-probe sweep after the current shader/effect/font/graphics-layer parity hardening, covering 128
   rows plus the header. Supported rows including `commands-point-dots`, gradient surfaces/paths/shaders,
   embedded resource fonts, system fonts, stable RuntimeEffect color filters, graphics-layer render effects, and
