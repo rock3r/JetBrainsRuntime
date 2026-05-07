@@ -5,6 +5,10 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Skiko focused `JbrSkiaInteropTest` coverage passed after adding the low-word counterpart to the existing
+  per-high-bit missing-capability rejection loop:
+  `./gradlew --no-daemon --no-configuration-cache :awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest.rejectsEachMissingLowCommandCapability --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest.rejectsEachMissingHighCommandCapability`
+  in `/Users/rock3r/src/jbr-skia-zero-copy/skiko/skiko`.
 - Full compatibility matrix after adding the remaining exact low-word capability removals for image shaders,
   blend/color filters, line dash path effects, saveLayer variants, color-filter handles, and effect descriptors. It
   covered 57 rows plus the header. The `happy` row stayed on command replay with `jbr_command_frames=168`;

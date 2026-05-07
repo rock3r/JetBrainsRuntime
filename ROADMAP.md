@@ -37,6 +37,9 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Skiko focused `JbrSkiaInteropTest` coverage after adding per-bit low-word capability rejection:
+  `./gradlew --no-daemon --no-configuration-cache :awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest.rejectsEachMissingLowCommandCapability --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest.rejectsEachMissingHighCommandCapability`
+  in `/Users/rock3r/src/jbr-skia-zero-copy/skiko/skiko`.
 - Full compatibility matrix after adding the remaining exact low-word capability removals for image shaders,
   blend/color filters, line dash path effects, saveLayer variants, color-filter handles, and effect descriptors,
   covering 57 rows plus the header. The happy path replayed commands (`jbr_command_frames=168`), every forced

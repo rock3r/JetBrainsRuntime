@@ -34,6 +34,7 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - Latest full compatibility matrix now covers the complete current exact low-word row set and passed across
   57 rows plus the header:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260507-131028/matrix.tsv`.
+- Skiko unit coverage now rejects every missing low-word command-capability bit, mirroring the existing high-word loop.
 
 ## Latest Completed Slice
 
