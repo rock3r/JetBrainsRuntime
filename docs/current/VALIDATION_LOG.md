@@ -5,6 +5,11 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Current local artifact matrix passed after the latest rebuild-script stub fix. `current-all` replayed commands with
+  `jbr_command_frames=654`, `fallback_new_count=0`, and `background_window=true`; `missing-public-api` reported the
+  expected structured fallback with `fallback_new_count=1`, `jbr_command_frames=0`, and `background_window=true`.
+  Optional old-artifact rows were skipped because their artifact paths were not configured:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260507-145018/matrix.tsv`.
 - Rebuilt local artifacts with `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/scripts/rebuild-jbr-skia-local-artifacts.sh`,
   then compiled and ran `test/jdk/jb/JBRSkia/JBRSkiaApiTest.java` against the patched classes and native bridge using
   headless mode, `--patch-module java.base=/tmp/jbr-skia-run/java-base`,
