@@ -5,6 +5,16 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Focused command probe for graphics-layer color-matrix descriptor lifecycle passed after adding
+  `commands-resize-graphics-layer-color-matrix-filter` and
+  `commands-forced-context-graphics-layer-color-matrix-filter`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260507-162709/suite.tsv`.
+  The resize row reported `jbr_command_frames=626`, `jbr_effect_handle_define_frames=2`,
+  `jbr_effect_handle_use_frames=1317`, `jbr_effect_handle_cache_hit_frames=1315`,
+  `skiko_surface_change_markers=1`, and `skiko_command_cache_clear_markers=1`. The forced-context row reported
+  `jbr_command_frames=571`, `jbr_effect_handle_define_frames=2`, `jbr_effect_handle_use_frames=1181`,
+  `jbr_effect_handle_cache_hit_frames=1179`, `skiko_surface_change_markers=1`, and
+  `skiko_command_cache_clear_markers=1`.
 - Focused `parity-button-chrome` screenshot parity passed on current artifacts after the full command sweep:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260507-162055/suite.tsv`.
   The row stayed on command replay with `fallback_new_count=0`, `jbr_picture_frames=0`,

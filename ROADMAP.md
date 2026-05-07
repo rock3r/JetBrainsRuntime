@@ -37,6 +37,10 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused command probe for graphics-layer color-matrix descriptor lifecycle passed after adding resize and forced
+  destination-context rows. Both rows stayed on command replay and required surface-change, command-cache-clear,
+  effect-handle redefinition, use, and cache-hit markers:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260507-162709/suite.tsv`.
 - Focused `parity-button-chrome` screenshot parity passed on current artifacts after the full command sweep. It kept the
   new renderer on command replay and rechecked the Pulse button white-text/centering guard:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260507-162055/suite.tsv`.
