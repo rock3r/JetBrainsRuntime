@@ -51,11 +51,11 @@ public class JBRSkiaApiTest {
     }
 
     public static void main(String[] args) throws Exception {
-        assertEquals(105, JBRSkia.ABI_ID, "ABI_ID");
+        assertEquals(106, JBRSkia.ABI_ID, "ABI_ID");
         assertEquals(3, JBRSkia.NATIVE_ABI_VERSION, "NATIVE_ABI_VERSION");
         assertEquals("skia=m147-64a2414108;flags=macos-release-metal-poc:1;abi=106;native=3", JBRSkia.BUILD_ID, "BUILD_ID");
 
-        assertReflectiveStaticEquals(105, JBRSkia.class.getDeclaredField("ABI_ID"));
+        assertReflectiveStaticEquals(106, JBRSkia.class.getDeclaredField("ABI_ID"));
         assertReflectiveStaticEquals(3, JBRSkia.class.getDeclaredField("NATIVE_ABI_VERSION"));
         assertReflectiveStaticEquals("skia=m147-64a2414108;flags=macos-release-metal-poc:1;abi=106;native=3", JBRSkia.class.getDeclaredField("BUILD_ID"));
 

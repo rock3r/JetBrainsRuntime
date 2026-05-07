@@ -5,6 +5,9 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- JBR API test source expectation fixed to match current `JBRSkia.ABI_ID = 106`; source grep confirmed no remaining
+  stale `105` ABI assertions in `test/jdk/jb/JBRSkia` or the JBR Skia API/service sources. A local JBR image was not
+  present at `/tmp/jbr-skia-run/desktop`, so jtreg execution still needs a rebuilt artifact image.
 - Full Skiko `JbrSkiaInteropTest` class passed after adding per-bit low-word capability rejection:
   `./gradlew --no-daemon --no-configuration-cache :awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`
   in `/Users/rock3r/src/jbr-skia-zero-copy/skiko/skiko`.
