@@ -38,6 +38,9 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused RuntimeEffect shader invalid nested-child fallback passed after adding recursive shader descriptor validation
+  coverage. The row reported structured `shaderDescriptor` unsupported metadata and zero JBR command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260508-163854/suite.tsv`.
 - Full default command-probe sweep passed after adding the recursive RuntimeEffect color-filter nested-child sentinel.
   The sweep covered 139 rows plus header; all rows passed, with 108 command replay rows, 25 intentional JBR picture
   fallback rows, and 6 expected explicit fallback-marker rows:

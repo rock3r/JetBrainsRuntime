@@ -5,6 +5,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Focused RuntimeEffect shader invalid nested-child fallback passed after adding recursive shader descriptor validation
+  coverage:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260508-163854/suite.tsv`.
+  The row reported `unsupported=shaderDescriptor:199,graphicsLayer:childCommands:200,graphicsLayer:200`,
+  `jbr_picture_frames=200`, and `jbr_command_frames=0`, proving invalid nested shader descriptors do not leak through
+  a parent RuntimeEffect shader handle.
 - Full default command-probe sweep passed after adding the recursive RuntimeEffect color-filter nested-child sentinel:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260508-152515/suite.tsv`.
   The sweep covered 139 rows plus header: all 139 passed, 108 rows reported JBR command replay, 25 rows reported

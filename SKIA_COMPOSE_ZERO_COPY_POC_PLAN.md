@@ -218,6 +218,8 @@ Current validation gates are intentionally broad but summarized here to keep thi
   sentinels, with focused validation proving `colorFilterDescriptor` fallback and zero JBR command frames.
 - RuntimeEffect color-filter recursive child descriptors now have a focused invalid nested-child fallback sentinel so
   parent color-filter descriptors cannot smuggle invalid child metadata into command replay.
+- RuntimeEffect shader recursive child descriptors now have the same focused invalid nested-child fallback sentinel for
+  parent shader handles.
 - Detailed validation paths and row-level counts live in [`docs/current/VALIDATION_LOG.md`](docs/current/VALIDATION_LOG.md).
 
 ## Key Files
