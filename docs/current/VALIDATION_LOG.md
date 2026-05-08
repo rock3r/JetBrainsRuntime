@@ -5,6 +5,14 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Focused screenshot parity for plain graphics-layer replay and combined graphics-layer blend+color-filter rows passed
+  after adding the rows to the default screenshot suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260508-113917/suite.tsv`.
+  All three rows reported `fallback_new_count=0`, `jbr_picture_frames=0`, and nonzero command replay. The plain layer
+  row reported `jbr_command_frames=767`, `screenshot_parity_badPixelRatio=0.05189`, and compose-canvas ratio
+  `0.07590`; the blend+tint row reported `jbr_command_frames=744`, bad-pixel ratio `0.05280`, and compose-canvas ratio
+  `0.07743`; the blend+color-matrix row reported `jbr_command_frames=590`, bad-pixel ratio `0.05278`, and
+  compose-canvas ratio `0.07739`.
 - Focused screenshot parity for standalone graphics-layer blend mode, tint color filter, and color-matrix filter passed
   after adding the rows to the default screenshot suite. The blend row passed in the first focused run:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260508-113210/suite.tsv`;
