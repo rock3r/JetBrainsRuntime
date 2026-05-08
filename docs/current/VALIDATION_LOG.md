@@ -5,6 +5,10 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Full default command-probe sweep passed after adding RuntimeEffect schema sentinels:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260508-125344/suite.tsv`.
+  The sweep covered 136 rows plus header: all 136 passed, 108 rows reported JBR command replay, 22 rows reported
+  intentional JBR picture fallback, and 6 rows reported expected explicit fallback markers.
 - Compact RuntimeEffect command subset passed after adding the schema sentinels:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260508-124746/suite.tsv`.
   Supported uniform/child shader rows stayed on command replay, invalid uniform/child schema rows fell back with

@@ -90,6 +90,9 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - The compact RuntimeEffect command subset passed after those sentinels were added, covering supported uniform/child
   shader replay plus invalid-schema, compile, build, and child-type fallback rows:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260508-124746/suite.tsv`.
+- The full default command-probe sweep passed with those rows in the default set: 136 rows passed, with 108 command
+  replay rows, 22 intentional JBR picture fallback rows, and 6 expected explicit fallback-marker rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260508-125344/suite.tsv`.
 
 ## Latest Completed Slice
 
