@@ -205,6 +205,9 @@ Current validation gates are intentionally broad but summarized here to keep thi
 - The full default command-probe suite has been rerun after adding RuntimeEffect color-filter schema sentinels; the
   latest sweep covered 138 rows, all passed, with the new color-filter schema rows reporting `colorFilterDescriptor`
   fallback and zero JBR command frames.
+- The full default command-probe suite has since been rerun after adding the recursive nested-child color-filter
+  sentinel; the latest sweep covered 139 rows, all passed, with 108 command replay rows, 25 intentional JBR picture
+  fallback rows, and 6 expected explicit fallback-marker rows.
 - Stable RuntimeEffect color-filter descriptors now have command lifecycle rows for same-context resize and forced
   destination-context migration, with effect-handle redefinition/use/cache-hit and RuntimeEffect source-cache-hit gates.
 - Matching focused screenshot parity rows now cover those RuntimeEffect color-filter lifecycle paths against old

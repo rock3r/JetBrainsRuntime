@@ -5,6 +5,11 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Full default command-probe sweep passed after adding the recursive RuntimeEffect color-filter nested-child sentinel:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260508-152515/suite.tsv`.
+  The sweep covered 139 rows plus header: all 139 passed, 108 rows reported JBR command replay, 25 rows reported
+  intentional JBR picture fallback, and 6 rows reported expected explicit fallback markers. The new recursive
+  nested-child row reported `colorFilterDescriptor` fallback and zero command frames.
 - Compact RuntimeEffect color-filter command subset passed after adding recursive descriptor validation coverage:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260508-152047/suite.tsv`.
   Supported top-level and named-child RuntimeEffect color-filter rows stayed on command replay; invalid uniform,
