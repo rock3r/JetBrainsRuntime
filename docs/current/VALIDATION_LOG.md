@@ -5,6 +5,11 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Focused RuntimeEffect invalid uniform-schema fallback passed after adding a live Magic Jewel sentinel:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260508-124027/suite.tsv`.
+  The row reported `unsupported=shaderDescriptor:306,graphicsLayer:childCommands:306,graphicsLayer:306`,
+  `jbr_picture_frames=306`, and `jbr_command_frames=0`, proving invalid descriptor metadata falls back structurally
+  instead of emitting a partial command stream.
 - Full expanded default screenshot parity suite passed after adding the latest graphics-layer parity rows:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260508-114354/suite.tsv`.
   The suite covered 90 rows plus header. All 90 rows passed, all 90 rows reported command replay, zero rows reported

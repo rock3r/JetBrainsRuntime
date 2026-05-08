@@ -84,6 +84,9 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   parity rows. All 90 rows passed, all 90 rows stayed on command replay, and zero rows reported structural or JBR
   picture fallback:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260508-114354/suite.tsv`.
+- RuntimeEffect invalid uniform-schema fallback now has a live Magic Jewel command sentinel. The focused row passed with
+  `shaderDescriptor` unsupported, JBR picture fallback, and zero JBR command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260508-124027/suite.tsv`.
 
 ## Latest Completed Slice
 
@@ -197,6 +200,8 @@ Current validation gates are intentionally broad but summarized here to keep thi
   destination-context migration, with effect-handle redefinition/use/cache-hit and RuntimeEffect source-cache-hit gates.
 - Matching focused screenshot parity rows now cover those RuntimeEffect color-filter lifecycle paths against old
   SwingGraphics.
+- RuntimeEffect invalid uniform-schema metadata now has a live fallback sentinel so descriptor validation failures stay
+  structural (`shaderDescriptor`) rather than producing incomplete command streams.
 - Detailed validation paths and row-level counts live in [`docs/current/VALIDATION_LOG.md`](docs/current/VALIDATION_LOG.md).
 
 ## Key Files
