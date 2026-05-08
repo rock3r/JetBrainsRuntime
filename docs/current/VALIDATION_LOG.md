@@ -5,6 +5,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Full expanded default screenshot parity suite passed after adding the latest graphics-layer parity rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260508-114354/suite.tsv`.
+  The suite covered 90 rows plus header. All 90 rows passed, all 90 rows reported command replay, zero rows reported
+  JBR picture fallback, and zero rows reported structural fallback. The higher-delta render-effect plus blend
+  graphics-layer cluster stayed within its row gates while remaining command-only; keep those rows as sensitive
+  sentinels for future blend/effect drift.
 - Focused screenshot parity for plain graphics-layer replay and combined graphics-layer blend+color-filter rows passed
   after adding the rows to the default screenshot suite:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260508-113917/suite.tsv`.

@@ -38,6 +38,10 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Full expanded default screenshot parity suite passed after adding the latest graphics-layer parity rows. The sweep
+  covered 90 rows plus header; every row passed, every row stayed on command replay, and no rows reported JBR picture
+  fallback or structural fallback:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260508-114354/suite.tsv`.
 - Focused screenshot parity for plain graphics-layer replay plus combined graphics-layer blend+tint and
   blend+color-matrix rows passed after adding the rows to the default screenshot suite:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260508-113917/suite.tsv`.
