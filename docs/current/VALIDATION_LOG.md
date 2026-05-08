@@ -5,6 +5,11 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Compact RuntimeEffect color-filter command subset passed after adding recursive descriptor validation coverage:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260508-152047/suite.tsv`.
+  Supported top-level and named-child RuntimeEffect color-filter rows stayed on command replay; invalid uniform,
+  invalid child-schema, and invalid nested-child rows all reported `colorFilterDescriptor` fallback with zero command
+  frames; raw RuntimeEffect color filters remained on structured `colorFilter` fallback.
 - Focused RuntimeEffect color-filter invalid nested-child fallback passed after adding recursive descriptor validation
   coverage:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260508-151749/suite.tsv`.

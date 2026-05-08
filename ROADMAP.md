@@ -38,6 +38,8 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Compact RuntimeEffect color-filter command subset passed after adding recursive descriptor validation coverage:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260508-152047/suite.tsv`.
 - Focused RuntimeEffect color-filter invalid nested-child fallback passed after adding recursive descriptor validation
   coverage. The row reported structured `colorFilterDescriptor` unsupported metadata and zero JBR command frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260508-151749/suite.tsv`.
