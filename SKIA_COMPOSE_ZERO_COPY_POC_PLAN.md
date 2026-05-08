@@ -202,6 +202,9 @@ Current validation gates are intentionally broad but summarized here to keep thi
 - Plain graphics-layer replay and combined blend+color-filter fields now have direct old/new screenshot parity rows.
 - The full default screenshot parity suite has been rerun after adding those lifecycle rows; the latest expanded run
   covered 90 rows, all with `fallback_new_count=0`, `jbr_picture_frames=0`, and nonzero `jbr_command_frames`.
+- The full default command-probe suite has been rerun after adding RuntimeEffect color-filter schema sentinels; the
+  latest sweep covered 138 rows, all passed, with the new color-filter schema rows reporting `colorFilterDescriptor`
+  fallback and zero JBR command frames.
 - Stable RuntimeEffect color-filter descriptors now have command lifecycle rows for same-context resize and forced
   destination-context migration, with effect-handle redefinition/use/cache-hit and RuntimeEffect source-cache-hit gates.
 - Matching focused screenshot parity rows now cover those RuntimeEffect color-filter lifecycle paths against old

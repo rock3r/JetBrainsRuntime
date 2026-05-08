@@ -38,6 +38,10 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Full default command-probe sweep passed after adding RuntimeEffect color-filter schema sentinels. The sweep covered
+  138 rows plus header; all rows passed, with 108 command replay rows, 24 intentional JBR picture fallback rows, and
+  6 expected explicit fallback-marker rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260508-140744/suite.tsv`.
 - Focused RuntimeEffect color-filter invalid uniform-schema and named-child-schema fallbacks passed after adding live
   Magic Jewel sentinels. Both rows stayed off command replay, reported structured `colorFilterDescriptor`
   unsupported metadata, and fell back through JBR picture replay:

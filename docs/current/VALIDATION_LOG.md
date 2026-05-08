@@ -5,6 +5,11 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Full default command-probe sweep passed after adding RuntimeEffect color-filter schema sentinels:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260508-140744/suite.tsv`.
+  The sweep covered 138 rows plus header: all 138 passed, 108 rows reported JBR command replay, 24 rows reported
+  intentional JBR picture fallback, and 6 rows reported expected explicit fallback markers. The new color-filter
+  schema rows reported `colorFilterDescriptor` fallback with zero command frames.
 - Focused RuntimeEffect color-filter invalid uniform-schema and named-child-schema fallbacks passed after adding live
   Magic Jewel sentinels:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260508-140448/suite.tsv`.
