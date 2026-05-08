@@ -208,6 +208,8 @@ Current validation gates are intentionally broad but summarized here to keep thi
   SwingGraphics.
 - RuntimeEffect invalid uniform-schema and named-child-schema metadata now have live fallback sentinels so descriptor
   validation failures stay structural (`shaderDescriptor`) rather than producing incomplete command streams.
+- RuntimeEffect color-filter invalid uniform-schema and named-child-schema metadata now have matching live fallback
+  sentinels, with focused validation proving `colorFilterDescriptor` fallback and zero JBR command frames.
 - Detailed validation paths and row-level counts live in [`docs/current/VALIDATION_LOG.md`](docs/current/VALIDATION_LOG.md).
 
 ## Key Files

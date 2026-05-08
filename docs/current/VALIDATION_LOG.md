@@ -5,6 +5,15 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Focused RuntimeEffect color-filter invalid uniform-schema and named-child-schema fallbacks passed after adding live
+  Magic Jewel sentinels:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260508-140448/suite.tsv`.
+  The uniform row reported
+  `unsupported=colorFilterDescriptor:364,graphicsLayer:childCommands:364,graphicsLayer:364`,
+  `jbr_picture_frames=365`, and `jbr_command_frames=0`; the named-child row reported
+  `unsupported=colorFilterDescriptor:518,graphicsLayer:childCommands:518,graphicsLayer:518`,
+  `jbr_picture_frames=518`, and `jbr_command_frames=0`. Both rows prove invalid RuntimeEffect color-filter metadata
+  falls back structurally instead of producing partial effect-handle command replay.
 - Full default command-probe sweep passed after adding RuntimeEffect schema sentinels:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260508-125344/suite.tsv`.
   The sweep covered 136 rows plus header: all 136 passed, 108 rows reported JBR command replay, 22 rows reported

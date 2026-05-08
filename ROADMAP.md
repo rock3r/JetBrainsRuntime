@@ -38,6 +38,10 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused RuntimeEffect color-filter invalid uniform-schema and named-child-schema fallbacks passed after adding live
+  Magic Jewel sentinels. Both rows stayed off command replay, reported structured `colorFilterDescriptor`
+  unsupported metadata, and fell back through JBR picture replay:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260508-140448/suite.tsv`.
 - Focused RuntimeEffect invalid uniform-schema and named-child-schema fallbacks passed after adding live Magic Jewel
   sentinels. Both rows stayed off command replay, reported structured `shaderDescriptor` unsupported metadata, and
   fell back through JBR picture replay:
