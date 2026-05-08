@@ -5,6 +5,21 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Full default command-probe sweep passed after tightening the stable RuntimeEffect color-filter command row to require
+  JBR RuntimeEffect source-cache hits and at most one source-cache miss:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260508-191427/suite.tsv`.
+  The sweep covered 140 rows plus header: all 140 passed, 108 rows reported JBR command replay, 26 rows reported
+  intentional JBR picture fallback, and 6 rows reported expected explicit fallback markers. The tightened
+  `commands-runtime-effect-stable-color-filter` row stayed on command replay and reported one JBR effect-handle
+  definition, 845 effect-handle uses, 844 effect-handle cache hits, 844 RuntimeEffect source-cache hits, and one
+  RuntimeEffect source-cache miss.
+- Focused RuntimeEffect command subset passed while calibrating the stable color-filter source-cache gate:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260508-191301/suite.tsv`.
+  The subset covered `commands-runtime-effect-stable-color-filter`,
+  `commands-runtime-effect-shader-color-filter`, and `commands-runtime-effect-color-filter-child`; all three stayed on
+  command replay with zero fallback and zero JBR picture frames. Earlier calibration reruns showed shader/effect
+  handle cache-hit markers on the animated shader-plus-color-filter and child color-filter rows can vary by run, so
+  only the stable color-filter RuntimeEffect source-cache gate was retained.
 - Full default command-probe sweep passed after adding the recursive RuntimeEffect shader nested-child sentinel:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260508-164715/suite.tsv`.
   The sweep covered 140 rows plus header: all 140 passed, 108 rows reported JBR command replay, 26 rows reported

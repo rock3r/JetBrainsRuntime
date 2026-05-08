@@ -22,8 +22,9 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   parity from text rasterization drift. It is not a replacement for Jewel `Text`.
 - The working docs are intentionally split: this plan and `ROADMAP.md` stay compact, validation details live in
   `docs/current/VALIDATION_LOG.md`, and verbose historical checkpoints live in `docs/history/`.
-- Latest full command-probe sweep covered 131 rows plus the header and passed on current artifacts:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260507-163006/suite.tsv`.
+- Latest full command-probe sweep covered 140 rows plus the header and passed on current artifacts after tightening the
+  stable RuntimeEffect color-filter command row to require JBR RuntimeEffect source-cache reuse:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260508-191427/suite.tsv`.
 - Latest focused compatibility matrix covers the exact dash path-effect high-word capability removals:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260507-115729/matrix.tsv`.
 - Latest full compatibility matrix includes those rows and passed across 30 rows plus the header:
@@ -211,6 +212,10 @@ Current validation gates are intentionally broad but summarized here to keep thi
 - The full default command-probe suite has since been rerun again after adding the recursive nested-child shader
   sentinel; the latest sweep covered 140 rows, all passed, with 108 command replay rows, 26 intentional JBR picture
   fallback rows, and 6 expected explicit fallback-marker rows.
+- The full default command-probe suite has since been rerun after tightening the stable RuntimeEffect color-filter row
+  to require JBR RuntimeEffect source-cache hits and at most one source-cache miss. The latest sweep again covered 140
+  rows, all passed, with 108 command replay rows, 26 intentional JBR picture fallback rows, and 6 expected explicit
+  fallback-marker rows.
 - Stable RuntimeEffect color-filter descriptors now have command lifecycle rows for same-context resize and forced
   destination-context migration, with effect-handle redefinition/use/cache-hit and RuntimeEffect source-cache-hit gates.
 - Matching focused screenshot parity rows now cover those RuntimeEffect color-filter lifecycle paths against old

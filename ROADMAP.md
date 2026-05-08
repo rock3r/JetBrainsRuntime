@@ -38,6 +38,15 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Full default command-probe sweep passed after tightening the stable RuntimeEffect color-filter command row to require
+  JBR RuntimeEffect source-cache reuse. The sweep covered 140 rows plus header; all rows passed, with 108 command replay
+  rows, 26 intentional JBR picture fallback rows, and 6 expected explicit fallback-marker rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260508-191427/suite.tsv`.
+- Focused RuntimeEffect command subset passed while calibrating the source-cache gate. The supported stable
+  color-filter, shader-plus-color-filter, and child color-filter rows all stayed on command replay with zero fallback;
+  only the stable color-filter source-cache gate was retained because animated shader/effect handle cache-hit markers
+  vary across short runs:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260508-191301/suite.tsv`.
 - Full default command-probe sweep passed after adding the recursive RuntimeEffect shader nested-child sentinel. The
   sweep covered 140 rows plus header; all rows passed, with 108 command replay rows, 26 intentional JBR picture
   fallback rows, and 6 expected explicit fallback-marker rows:
