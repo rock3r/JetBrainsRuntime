@@ -5,6 +5,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Focused RuntimeEffect color-filter invalid nested-child fallback passed after adding recursive descriptor validation
+  coverage:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260508-151749/suite.tsv`.
+  The row reported `unsupported=colorFilterDescriptor:373,graphicsLayer:childCommands:373,graphicsLayer:373`,
+  `jbr_picture_frames=373`, and `jbr_command_frames=0`, proving invalid nested color-filter descriptors do not leak
+  through a parent RuntimeEffect color-filter handle.
 - Full default command-probe sweep passed after adding RuntimeEffect color-filter schema sentinels:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260508-140744/suite.tsv`.
   The sweep covered 138 rows plus header: all 138 passed, 108 rows reported JBR command replay, 24 rows reported

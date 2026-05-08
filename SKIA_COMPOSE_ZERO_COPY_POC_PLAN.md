@@ -213,6 +213,8 @@ Current validation gates are intentionally broad but summarized here to keep thi
   validation failures stay structural (`shaderDescriptor`) rather than producing incomplete command streams.
 - RuntimeEffect color-filter invalid uniform-schema and named-child-schema metadata now have matching live fallback
   sentinels, with focused validation proving `colorFilterDescriptor` fallback and zero JBR command frames.
+- RuntimeEffect color-filter recursive child descriptors now have a focused invalid nested-child fallback sentinel so
+  parent color-filter descriptors cannot smuggle invalid child metadata into command replay.
 - Detailed validation paths and row-level counts live in [`docs/current/VALIDATION_LOG.md`](docs/current/VALIDATION_LOG.md).
 
 ## Key Files
