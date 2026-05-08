@@ -38,6 +38,9 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused screenshot parity for rectangular, rounded, and generic-path graphics-layer clips passed after adding the rows
+  to the default screenshot suite. All three rows stayed on command replay with no fallback:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260508-112646/suite.tsv`.
 - Focused screenshot parity for graphics-layer `ModulateAlpha` passed after adding the row to the default screenshot
   suite. It stayed on command replay and matched old SwingGraphics within its graphics-layer probe gates:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260508-112203/suite.tsv`.

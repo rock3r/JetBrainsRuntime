@@ -5,6 +5,14 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Focused screenshot parity for rectangular, rounded, and generic-path graphics-layer clips passed after adding the rows
+  to the default screenshot suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260508-112646/suite.tsv`.
+  All three rows reported `fallback_new_count=0`, `jbr_picture_frames=0`, and nonzero command replay. The rectangular
+  row reported `jbr_command_frames=1071`, `screenshot_parity_badPixelRatio=0.05189`, and
+  `screenshot_parity_region_composeCanvas_badPixelRatio=0.07590`; the rounded row reported
+  `jbr_command_frames=728`, `screenshot_parity_badPixelRatio=0.05204`, and compose-canvas ratio `0.07614`; the path
+  row reported `jbr_command_frames=732`, `screenshot_parity_badPixelRatio=0.05213`, and compose-canvas ratio `0.07630`.
 - Focused screenshot parity for graphics-layer `CompositingStrategy.ModulateAlpha` passed after adding the row to the
   default screenshot suite:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260508-112203/suite.tsv`.
