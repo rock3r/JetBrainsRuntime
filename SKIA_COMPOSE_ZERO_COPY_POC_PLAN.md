@@ -23,8 +23,12 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - The working docs are intentionally split: this plan and `ROADMAP.md` stay compact, validation details live in
   `docs/current/VALIDATION_LOG.md`, and verbose historical checkpoints live in `docs/history/`.
 - Latest full command-probe sweep covered 140 rows plus the header and passed on current artifacts after tightening the
-  stable RuntimeEffect color-filter command row to require JBR RuntimeEffect source-cache reuse:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260508-191427/suite.tsv`.
+  stable RuntimeEffect color-filter lifecycle command rows to require JBR RuntimeEffect source-cache reuse with at most
+  one miss:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260508-203502/suite.tsv`.
+- Latest full screenshot parity suite covered 90 rows plus the header and passed after applying the same stable
+  RuntimeEffect source-cache gate to the base, resize, and forced-context parity rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260508-213258/suite.tsv`.
 - Latest focused compatibility matrix covers the exact dash path-effect high-word capability removals:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260507-115729/matrix.tsv`.
 - Latest full compatibility matrix includes those rows and passed across 30 rows plus the header:
@@ -216,6 +220,9 @@ Current validation gates are intentionally broad but summarized here to keep thi
   to require JBR RuntimeEffect source-cache hits and at most one source-cache miss. The latest sweep again covered 140
   rows, all passed, with 108 command replay rows, 26 intentional JBR picture fallback rows, and 6 expected explicit
   fallback-marker rows.
+- The stable RuntimeEffect color-filter lifecycle command and parity rows now require source-cache hits and at most one
+  source-cache miss. The latest command sweep covered 140 rows, and the latest screenshot parity sweep covered 90 rows;
+  both passed with the lifecycle rows on command replay and without structural fallback.
 - Stable RuntimeEffect color-filter descriptors now have command lifecycle rows for same-context resize and forced
   destination-context migration, with effect-handle redefinition/use/cache-hit and RuntimeEffect source-cache-hit gates.
 - Matching focused screenshot parity rows now cover those RuntimeEffect color-filter lifecycle paths against old

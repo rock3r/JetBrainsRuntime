@@ -5,6 +5,20 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Full default screenshot parity suite passed after extending stable RuntimeEffect color-filter parity rows to require
+  RuntimeEffect source-cache hits and at most one source-cache miss:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260508-213258/suite.tsv`.
+  The suite covered 90 rows plus header. All 90 rows passed, all 90 rows reported command replay, and zero rows
+  reported JBR picture or structural fallback. The tightened stable RuntimeEffect parity rows reported source-cache
+  hit/miss counts of 1031/1 for the base row, 916/1 for same-context resize, and 1048/1 for forced destination-context
+  migration.
+- Full default command-probe sweep passed after extending the stable RuntimeEffect color-filter lifecycle command rows
+  to require at most one RuntimeEffect source-cache miss:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260508-203502/suite.tsv`.
+  The sweep covered 140 rows plus header: all 140 passed, 108 rows reported JBR command replay, 26 rows reported
+  intentional JBR picture fallback, and 6 rows reported expected explicit fallback markers. The tightened lifecycle
+  rows reported source-cache hit/miss counts of 1004/1 for same-context resize and 894/1 for forced destination-context
+  migration.
 - Full default command-probe sweep passed after tightening the stable RuntimeEffect color-filter command row to require
   JBR RuntimeEffect source-cache hits and at most one source-cache miss:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260508-191427/suite.tsv`.
