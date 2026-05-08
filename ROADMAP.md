@@ -38,6 +38,10 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Full default screenshot parity suite passed after extending every supported RuntimeEffect parity row to require
+  RuntimeEffect source-cache reuse with at most one miss. The suite covered 90 rows plus header; all rows passed, all
+  rows stayed on command replay, and zero rows reported structural or JBR picture fallback:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260508-222824/suite.tsv`.
 - Full default screenshot parity suite passed after extending stable RuntimeEffect color-filter parity rows to require
   RuntimeEffect source-cache reuse with at most one miss. The suite covered 90 rows plus header; all rows passed, all
   rows stayed on command replay, and zero rows reported structural or JBR picture fallback:

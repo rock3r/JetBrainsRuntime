@@ -26,9 +26,9 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   stable RuntimeEffect color-filter lifecycle command rows to require JBR RuntimeEffect source-cache reuse with at most
   one miss:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260508-203502/suite.tsv`.
-- Latest full screenshot parity suite covered 90 rows plus the header and passed after applying the same stable
-  RuntimeEffect source-cache gate to the base, resize, and forced-context parity rows:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260508-213258/suite.tsv`.
+- Latest full screenshot parity suite covered 90 rows plus the header and passed after extending every supported
+  RuntimeEffect parity row to require source-cache hits with at most one miss:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260508-222824/suite.tsv`.
 - Latest focused compatibility matrix covers the exact dash path-effect high-word capability removals:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260507-115729/matrix.tsv`.
 - Latest full compatibility matrix includes those rows and passed across 30 rows plus the header:
