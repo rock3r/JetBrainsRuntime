@@ -63,6 +63,11 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - Latest full screenshot parity sweep includes the RuntimeEffect color-filter lifecycle rows and passed across
   79 rows plus header with all rows on command replay:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260507-200201/suite.tsv`.
+- Explicit graphics-layer scale/translation coverage is now in the Magic Jewel command and screenshot default suites.
+  Focused command and parity rows passed, and the full screenshot parity sweep passed across 80 rows plus header:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260507-205517/suite.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260508-090559/suite.tsv`, and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260508-103324/suite.tsv`.
 
 ## Latest Completed Slice
 
@@ -161,6 +166,8 @@ Current validation gates are intentionally broad but summarized here to keep thi
   `MAGIC_JEWEL_BACKGROUND_WINDOW=true`, with per-row `background_window` report gates.
 - Graphics-layer color-matrix descriptor lifecycle now has command rows for both same-context resize and forced
   destination-context migration, plus matching focused screenshot parity rows against old SwingGraphics.
+- Graphics-layer transform coverage now includes explicit scale/translation command and screenshot parity rows, in
+  addition to rotation, near-camera, and off-center-pivot rows.
 - The full default screenshot parity suite has been rerun after adding those lifecycle rows; it passed with
   `fallback_new_count=0`, `jbr_picture_frames=0`, and nonzero `jbr_command_frames` on all rows.
 - Stable RuntimeEffect color-filter descriptors now have command lifecycle rows for same-context resize and forced

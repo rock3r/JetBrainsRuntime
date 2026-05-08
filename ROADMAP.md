@@ -29,7 +29,8 @@ This is the small working roadmap for the current PoC. The full historical check
 - Tighten stable effect-handle reuse gates on supported rows that still only assert descriptor definition.
 - Continue closing transform/graphics-layer edge gaps as they appear in real recorder ground truth.
 - Keep old/new screenshot parity coverage broad enough to catch text/color/placement regressions, including button
-  chrome, embedded resource fonts, system fonts, point dots, shader descriptors, RuntimeEffect rows, and graphics layers.
+  chrome, embedded resource fonts, system fonts, point dots, shader descriptors, RuntimeEffect rows, and graphics-layer
+  transforms.
 - Keep compatibility matrix coverage current after each ABI/capability-affecting slice.
 - Keep branches committed and pushed to the user's GitHub forks at each major step.
 - Keep the top-level plan/roadmap compact. Move verbose historical narrative into `docs/history/` or focused
@@ -37,6 +38,21 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Full default screenshot parity suite passed after adding explicit graphics-layer scale/translation coverage. The
+  sweep covered 80 rows plus header; every row passed, every row stayed on command replay, and no rows reported JBR
+  picture fallback or structural fallback:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260508-103324/suite.tsv`.
+- Focused command and screenshot probes for explicit graphics-layer scale/translation passed. The command row stayed on
+  JBR command replay with no fallback:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260507-205517/suite.tsv`;
+  the parity row matched old SwingGraphics within gates:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260508-090559/suite.tsv`.
+- The full command-probe sweep reached and passed the new `commands-graphics-layer-scale-translate` default row before
+  an existing later row hit the sandbox Gradle-wrapper lock. The interrupted row and remaining default tail passed in
+  focused reruns:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260508-090642/suite.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260508-102926/suite.tsv`, and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260508-103013/suite.tsv`.
 - Full default screenshot parity suite passed after adding stable RuntimeEffect color-filter resize and forced-context
   lifecycle rows. The sweep covered 79 rows plus header; every row passed, every row stayed on command replay, and no
   rows reported JBR picture fallback or structural fallback:

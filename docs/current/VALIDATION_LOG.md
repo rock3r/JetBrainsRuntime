@@ -5,6 +5,33 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Full default screenshot parity suite passed after adding explicit graphics-layer scale/translation coverage:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260508-103324/suite.tsv`.
+  The suite covered 80 rows plus header. All rows passed; all 80 rows reported command replay, zero rows reported
+  JBR picture fallback, and zero rows reported structural fallback. The new
+  `parity-graphics-layer-scale-translate` row reported `fallback_new_count=0`, `jbr_picture_frames=0`,
+  `jbr_command_frames=905`, `screenshot_parity_badPixelRatio=0.05192`,
+  `screenshot_parity_region_headerButtons_badPixelRatio=0.00381`, and
+  `screenshot_parity_region_composeCanvas_badPixelRatio=0.07596`.
+- Focused screenshot parity for explicit graphics-layer scale/translation passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260508-090559/suite.tsv`.
+  The row reported `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=607`,
+  `screenshot_parity_badPixelRatio=0.05192`, `screenshot_parity_region_headerButtons_badPixelRatio=0.00381`, and
+  `screenshot_parity_region_composeCanvas_badPixelRatio=0.07596`.
+- Focused command probe for explicit graphics-layer scale/translation passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260507-205517/suite.tsv`.
+  The row reported `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, and
+  `jbr_command_frames=289`.
+- The full command-probe sweep after adding explicit graphics-layer scale/translation reached and passed the new
+  default row in the long run:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260508-090642/suite.tsv`.
+  That run covered 126 rows before an existing later row was interrupted by the sandbox Gradle wrapper lock; all 126
+  recorded rows passed. The new `commands-graphics-layer-scale-translate` row reported `fallback_new_count=0`,
+  `unsupported=none`, `jbr_picture_frames=0`, and `jbr_command_frames=428`. The interrupted existing row
+  `commands-graphics-layer-blend-color-filter` passed in a focused rerun:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260508-102926/suite.tsv`.
+  The remaining default tail rows passed as a subset:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260508-103013/suite.tsv`.
 - Full default screenshot parity suite passed after adding stable RuntimeEffect color-filter resize and forced-context
   lifecycle rows:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260507-200201/suite.tsv`.
