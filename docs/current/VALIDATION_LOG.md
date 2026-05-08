@@ -5,6 +5,18 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Full default command-probe sweep passed after adding the RuntimeEffect color-filter compile-failure sentinel:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260509-002725/suite.tsv`.
+  The sweep covered 141 rows plus header: all 141 passed, 108 rows reported JBR command replay, 26 rows reported
+  intentional JBR picture fallback, and 7 rows reported expected explicit fallback markers. The new
+  `commands-runtime-effect-color-filter-compile-fallback` row reported one explicit fallback marker, 943 Skiko command
+  frames, zero JBR command frames, zero JBR picture frames, one JBR RuntimeEffect compile-failure marker, and the JBR
+  log line `JBR_SKIA_INTEROP_RUNTIME_COLOR_FILTER_COMPILE_FAILED`.
+- Focused `commands-runtime-effect-color-filter-compile-fallback` probe passed after extending Skiko's test-only
+  RuntimeEffect source corruption hook to runtime color-filter descriptors:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260509-002549/suite.tsv`.
+  The row reported one explicit fallback marker, 959 Skiko command frames, zero JBR command frames, zero JBR picture
+  frames, and one JBR RuntimeEffect compile-failure marker.
 - Full default command-probe sweep passed after tightening `commands-runtime-effect-shader-color-filter` to require
   at most one RuntimeEffect source-cache miss:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260508-232038/suite.tsv`.

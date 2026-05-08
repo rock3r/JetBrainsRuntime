@@ -22,10 +22,9 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   parity from text rasterization drift. It is not a replacement for Jewel `Text`.
 - The working docs are intentionally split: this plan and `ROADMAP.md` stay compact, validation details live in
   `docs/current/VALIDATION_LOG.md`, and verbose historical checkpoints live in `docs/history/`.
-- Latest full command-probe sweep covered 140 rows plus the header and passed on current artifacts after tightening the
-  RuntimeEffect shader-plus-color-filter command row to require JBR RuntimeEffect source-cache reuse with at most one
-  miss:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260508-232038/suite.tsv`.
+- Latest full command-probe sweep covered 141 rows plus the header and passed on current artifacts after adding the
+  RuntimeEffect color-filter compile-failure sentinel:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260509-002725/suite.tsv`.
 - Latest full screenshot parity suite covered 90 rows plus the header and passed after extending every supported
   RuntimeEffect parity row to require source-cache hits with at most one miss:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260508-222824/suite.tsv`.
