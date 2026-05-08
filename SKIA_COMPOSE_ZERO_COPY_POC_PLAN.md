@@ -68,6 +68,8 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260507-205517/suite.tsv`,
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260508-090559/suite.tsv`, and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260508-103324/suite.tsv`.
+- Graphics-layer `ModulateAlpha` now has focused screenshot parity in the default screenshot suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260508-112203/suite.tsv`.
 
 ## Latest Completed Slice
 
@@ -168,6 +170,8 @@ Current validation gates are intentionally broad but summarized here to keep thi
   destination-context migration, plus matching focused screenshot parity rows against old SwingGraphics.
 - Graphics-layer transform coverage now includes explicit scale/translation command and screenshot parity rows, in
   addition to rotation, near-camera, and off-center-pivot rows.
+- Graphics-layer compositing strategy coverage now has both command and screenshot coverage for ModulateAlpha and
+  Offscreen.
 - The full default screenshot parity suite has been rerun after adding those lifecycle rows; it passed with
   `fallback_new_count=0`, `jbr_picture_frames=0`, and nonzero `jbr_command_frames` on all rows.
 - Stable RuntimeEffect color-filter descriptors now have command lifecycle rows for same-context resize and forced

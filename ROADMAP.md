@@ -38,6 +38,9 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused screenshot parity for graphics-layer `ModulateAlpha` passed after adding the row to the default screenshot
+  suite. It stayed on command replay and matched old SwingGraphics within its graphics-layer probe gates:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260508-112203/suite.tsv`.
 - Full default screenshot parity suite passed after adding explicit graphics-layer scale/translation coverage. The
   sweep covered 80 rows plus header; every row passed, every row stayed on command replay, and no rows reported JBR
   picture fallback or structural fallback:

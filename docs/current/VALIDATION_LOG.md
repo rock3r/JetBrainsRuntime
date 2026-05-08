@@ -5,6 +5,15 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Focused screenshot parity for graphics-layer `CompositingStrategy.ModulateAlpha` passed after adding the row to the
+  default screenshot suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260508-112203/suite.tsv`.
+  The row reported `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=491`,
+  `screenshot_parity_badPixelRatio=0.06560`,
+  `screenshot_parity_region_headerButtons_badPixelRatio=0.00381`, and
+  `screenshot_parity_region_composeCanvas_badPixelRatio=0.09900`. The row uses a dedicated right-probe-strip gate
+  because ModulateAlpha intentionally changes alpha compositing in the probe-heavy right side of the scene; the
+  command markers and screenshot assertion both stayed clean.
 - Full default screenshot parity suite passed after adding explicit graphics-layer scale/translation coverage:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260508-103324/suite.tsv`.
   The suite covered 80 rows plus header. All rows passed; all 80 rows reported command replay, zero rows reported
