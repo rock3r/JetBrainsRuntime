@@ -5,6 +5,11 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Compact recursive RuntimeEffect schema subset passed after adding shader and color-filter nested-child sentinels:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260508-164220/suite.tsv`.
+  Supported shader/color-filter child rows stayed on command replay; invalid shader uniform/child/nested-child rows
+  reported `shaderDescriptor` fallback with zero command frames, and the invalid color-filter nested-child row reported
+  `colorFilterDescriptor` fallback with zero command frames.
 - Focused RuntimeEffect shader invalid nested-child fallback passed after adding recursive shader descriptor validation
   coverage:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260508-163854/suite.tsv`.

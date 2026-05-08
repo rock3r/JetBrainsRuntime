@@ -38,6 +38,8 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Compact recursive RuntimeEffect schema subset passed after adding shader and color-filter nested-child sentinels:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260508-164220/suite.tsv`.
 - Focused RuntimeEffect shader invalid nested-child fallback passed after adding recursive shader descriptor validation
   coverage. The row reported structured `shaderDescriptor` unsupported metadata and zero JBR command frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260508-163854/suite.tsv`.
