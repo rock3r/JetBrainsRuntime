@@ -73,6 +73,10 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - Rectangular, rounded, and generic-path graphics-layer clips now have focused screenshot parity in the default
   screenshot suite:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260508-112646/suite.tsv`.
+- Standalone graphics-layer blend mode, tint color filter, and color-matrix filter now have focused screenshot parity
+  in the default screenshot suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260508-113210/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260508-113353/suite.tsv`.
 
 ## Latest Completed Slice
 
@@ -177,6 +181,8 @@ Current validation gates are intentionally broad but summarized here to keep thi
   Offscreen.
 - Graphics-layer clip coverage now has command and screenshot parity rows for rectangular, rounded, and generic-path
   clipping.
+- Standalone graphics-layer blend mode and color-filter fields now have old/new screenshot parity rows separate from
+  the render-effect combination rows.
 - The full default screenshot parity suite has been rerun after adding those lifecycle rows; it passed with
   `fallback_new_count=0`, `jbr_picture_frames=0`, and nonzero `jbr_command_frames` on all rows.
 - Stable RuntimeEffect color-filter descriptors now have command lifecycle rows for same-context resize and forced

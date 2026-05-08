@@ -5,6 +5,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Focused screenshot parity for standalone graphics-layer blend mode, tint color filter, and color-matrix filter passed
+  after adding the rows to the default screenshot suite. The blend row passed in the first focused run:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260508-113210/suite.tsv`;
+  the standalone color-filter and color-matrix rows passed after removing descriptor-handle gates that do not apply to
+  this inline graphics-layer field path:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260508-113353/suite.tsv`.
+  All three rows reported `fallback_new_count=0`, `jbr_picture_frames=0`, and nonzero command replay.
 - Focused screenshot parity for rectangular, rounded, and generic-path graphics-layer clips passed after adding the rows
   to the default screenshot suite:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260508-112646/suite.tsv`.

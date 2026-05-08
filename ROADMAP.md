@@ -38,6 +38,10 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused screenshot parity for standalone graphics-layer blend mode, tint color filter, and color-matrix filter passed
+  after adding the rows to the default screenshot suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260508-113210/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260508-113353/suite.tsv`.
 - Focused screenshot parity for rectangular, rounded, and generic-path graphics-layer clips passed after adding the rows
   to the default screenshot suite. All three rows stayed on command replay with no fallback:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260508-112646/suite.tsv`.
