@@ -42,6 +42,9 @@ This is the small working roadmap for the current PoC. The full historical check
   sentinels. Both rows stayed off command replay, reported structured `shaderDescriptor` unsupported metadata, and
   fell back through JBR picture replay:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260508-124449/suite.tsv`.
+- Compact RuntimeEffect command subset passed after adding the schema sentinels, covering supported uniform/child
+  shader replay and invalid-schema, compile, build, and child-type fallback rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260508-124746/suite.tsv`.
 - Full expanded default screenshot parity suite passed after adding the latest graphics-layer parity rows. The sweep
   covered 90 rows plus header; every row passed, every row stayed on command replay, and no rows reported JBR picture
   fallback or structural fallback:

@@ -5,6 +5,11 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Compact RuntimeEffect command subset passed after adding the schema sentinels:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260508-124746/suite.tsv`.
+  Supported uniform/child shader rows stayed on command replay, invalid uniform/child schema rows fell back with
+  `shaderDescriptor`, and compile/build/child-type JBR failure rows produced the expected fallback markers with zero
+  JBR command frames.
 - Focused RuntimeEffect invalid uniform-schema and named-child-schema fallbacks passed after adding live Magic Jewel
   sentinels:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260508-124449/suite.tsv`.

@@ -87,6 +87,9 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - RuntimeEffect invalid uniform-schema and named-child-schema fallbacks now have live Magic Jewel command sentinels.
   The focused rows passed with `shaderDescriptor` unsupported, JBR picture fallback, and zero JBR command frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260508-124449/suite.tsv`.
+- The compact RuntimeEffect command subset passed after those sentinels were added, covering supported uniform/child
+  shader replay plus invalid-schema, compile, build, and child-type fallback rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260508-124746/suite.tsv`.
 
 ## Latest Completed Slice
 
