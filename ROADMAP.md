@@ -38,10 +38,10 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
-- Focused RuntimeEffect invalid uniform-schema fallback passed after adding a live Magic Jewel sentinel. The row stayed
-  off command replay, reported structured `shaderDescriptor` unsupported metadata, and fell back through JBR picture
-  replay:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260508-124027/suite.tsv`.
+- Focused RuntimeEffect invalid uniform-schema and named-child-schema fallbacks passed after adding live Magic Jewel
+  sentinels. Both rows stayed off command replay, reported structured `shaderDescriptor` unsupported metadata, and
+  fell back through JBR picture replay:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260508-124449/suite.tsv`.
 - Full expanded default screenshot parity suite passed after adding the latest graphics-layer parity rows. The sweep
   covered 90 rows plus header; every row passed, every row stayed on command replay, and no rows reported JBR picture
   fallback or structural fallback:
