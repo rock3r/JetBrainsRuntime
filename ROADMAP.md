@@ -38,6 +38,10 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Full default command-probe sweep passed after tightening the RuntimeEffect shader-plus-color-filter command row to
+  require source-cache reuse with at most one miss. The sweep covered 140 rows plus header; all rows passed, with 108
+  command replay rows, 26 intentional JBR picture fallback rows, and 6 expected explicit fallback-marker rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260508-232038/suite.tsv`.
 - Full default screenshot parity suite passed after extending every supported RuntimeEffect parity row to require
   RuntimeEffect source-cache reuse with at most one miss. The suite covered 90 rows plus header; all rows passed, all
   rows stayed on command replay, and zero rows reported structural or JBR picture fallback:

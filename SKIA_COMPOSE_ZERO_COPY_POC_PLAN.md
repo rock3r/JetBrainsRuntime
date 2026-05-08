@@ -23,9 +23,9 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - The working docs are intentionally split: this plan and `ROADMAP.md` stay compact, validation details live in
   `docs/current/VALIDATION_LOG.md`, and verbose historical checkpoints live in `docs/history/`.
 - Latest full command-probe sweep covered 140 rows plus the header and passed on current artifacts after tightening the
-  stable RuntimeEffect color-filter lifecycle command rows to require JBR RuntimeEffect source-cache reuse with at most
-  one miss:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260508-203502/suite.tsv`.
+  RuntimeEffect shader-plus-color-filter command row to require JBR RuntimeEffect source-cache reuse with at most one
+  miss:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260508-232038/suite.tsv`.
 - Latest full screenshot parity suite covered 90 rows plus the header and passed after extending every supported
   RuntimeEffect parity row to require source-cache hits with at most one miss:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260508-222824/suite.tsv`.

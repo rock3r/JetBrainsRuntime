@@ -5,6 +5,17 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Full default command-probe sweep passed after tightening `commands-runtime-effect-shader-color-filter` to require
+  at most one RuntimeEffect source-cache miss:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260508-232038/suite.tsv`.
+  The sweep covered 140 rows plus header: all 140 passed, 108 rows reported JBR command replay, 26 rows reported
+  intentional JBR picture fallback, and 6 rows reported expected explicit fallback markers. The tightened
+  shader-plus-color-filter row stayed on command replay with zero fallback and reported one effect-handle definition,
+  741 effect-handle uses, 740 effect-handle cache hits, 1482 shader-handle definitions/uses, 740 RuntimeEffect
+  source-cache hits, and one RuntimeEffect source-cache miss.
+- Focused `commands-runtime-effect-shader-color-filter` probe passed after tightening the miss cap:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260508-232005/suite.tsv`.
+  The row stayed on command replay with zero fallback and reported 868 RuntimeEffect source-cache hits with one miss.
 - Full default screenshot parity suite passed after extending every supported RuntimeEffect parity row to require
   RuntimeEffect source-cache hits and at most one source-cache miss:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260508-222824/suite.tsv`.
