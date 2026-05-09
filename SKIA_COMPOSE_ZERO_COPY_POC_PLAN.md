@@ -22,13 +22,13 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   parity from text rasterization drift. It is not a replacement for Jewel `Text`.
 - The working docs are intentionally split: this plan and `ROADMAP.md` stay compact, validation details live in
   `docs/current/VALIDATION_LOG.md`, and verbose historical checkpoints live in `docs/history/`.
-- Latest full command-probe sweep covered 143 rows plus the header and passed on current artifacts after adding
-  RuntimeEffect source-cache eviction observability and the Magic Jewel eviction sentinel:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260509-095817/suite.tsv`.
-- Latest focused RuntimeEffect source-cache eviction row uses the test-only
-  `JBR_SKIA_RUNTIME_EFFECT_CACHE_LIMIT_FOR_TEST=2` override and passed with zero fallback, 472 JBR command frames, and
-  1675 `JBR_SKIA_INTEROP_RUNTIME_EFFECT_CACHE_EVICT` markers:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260509-095725/suite.tsv`.
+- Latest full command-probe sweep covered 144 rows plus the header and passed on current artifacts after adding the
+  RuntimeEffect shader source-cache eviction sentinel:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260509-111217/suite.tsv`.
+- Latest focused RuntimeEffect shader source-cache eviction row uses the test-only
+  `JBR_SKIA_RUNTIME_EFFECT_CACHE_LIMIT_FOR_TEST=2` override and passed with zero fallback, 316 JBR command frames, and
+  1813 `JBR_SKIA_INTEROP_RUNTIME_EFFECT_CACHE_EVICT type=shader` markers:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260509-111136/suite.tsv`.
 - Latest full screenshot parity suite covered 90 rows plus the header and passed after extending every supported
   RuntimeEffect parity row to require source-cache hits with at most one miss:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260508-222824/suite.tsv`.
@@ -226,9 +226,9 @@ Current validation gates are intentionally broad but summarized here to keep thi
 - The stable RuntimeEffect color-filter lifecycle command and parity rows now require source-cache hits and at most one
   source-cache miss. The latest command sweep covered 140 rows, and the latest screenshot parity sweep covered 90 rows;
   both passed with the lifecycle rows on command replay and without structural fallback.
-- RuntimeEffect source-cache eviction now has native JBR observability and a focused Magic Jewel command sentinel. The
-  latest command sweep covered 143 rows, all passed, with 109 command replay rows, 26 intentional JBR picture fallback
-  rows, and 8 expected explicit fallback-marker rows.
+- RuntimeEffect shader and color-filter source-cache eviction now have native JBR observability plus focused Magic Jewel
+  command sentinels. The latest command sweep covered 144 rows, all passed, with 110 command replay rows, 26
+  intentional JBR picture fallback rows, and 8 expected explicit fallback-marker rows.
 - Stable RuntimeEffect color-filter descriptors now have command lifecycle rows for same-context resize and forced
   destination-context migration, with effect-handle redefinition/use/cache-hit and RuntimeEffect source-cache-hit gates.
 - Matching focused screenshot parity rows now cover those RuntimeEffect color-filter lifecycle paths against old

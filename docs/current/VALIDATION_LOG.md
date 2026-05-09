@@ -5,6 +5,19 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Full default command-probe sweep passed after adding the RuntimeEffect shader source-cache eviction sentinel:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260509-111217/suite.tsv`.
+  The sweep covered 144 rows plus header: all 144 passed, 110 rows reported JBR command replay, 26 rows reported
+  intentional JBR picture fallback, and 8 rows reported expected explicit fallback markers. The new
+  `commands-runtime-effect-shader-source-cache-eviction` row stayed on command replay with zero fallback and reported
+  444 JBR command frames, 976 RuntimeEffect source-cache hits, 1955 misses, 1953 source-cache evicts, 980 shader-handle
+  definitions, 2931 shader-handle uses, and 1952 shader-handle cache hits.
+- Focused `commands-runtime-effect-shader-source-cache-eviction` probe passed using the existing RuntimeEffect
+  pure-color, uniform-only, and child-only shader sources against `JBR_SKIA_RUNTIME_EFFECT_CACHE_LIMIT_FOR_TEST=2`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260509-111136/suite.tsv`.
+  The row stayed on command replay with zero fallback and reported 316 JBR command frames, 906 RuntimeEffect
+  source-cache hits, 1815 misses, 1813 source-cache evicts, 910 shader-handle definitions, 2721 shader-handle uses,
+  and 1812 shader-handle cache hits. The log includes `JBR_SKIA_INTEROP_RUNTIME_EFFECT_CACHE_EVICT type=shader ... limit=2`.
 - Full default command-probe sweep passed after adding native RuntimeEffect source-cache eviction observability and the
   Magic Jewel eviction sentinel:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260509-095817/suite.tsv`.

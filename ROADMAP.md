@@ -38,6 +38,14 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Full default command-probe sweep passed after adding the RuntimeEffect shader source-cache eviction sentinel. The
+  sweep covered 144 rows plus header; all rows passed, with 110 command replay rows, 26 intentional JBR picture
+  fallback rows, and 8 expected explicit fallback-marker rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260509-111217/suite.tsv`.
+- Focused `commands-runtime-effect-shader-source-cache-eviction` passed with
+  `JBR_SKIA_RUNTIME_EFFECT_CACHE_LIMIT_FOR_TEST=2`, zero fallback, 316 JBR command frames, and 1813 shader
+  `JBR_SKIA_INTEROP_RUNTIME_EFFECT_CACHE_EVICT` markers:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260509-111136/suite.tsv`.
 - Full default command-probe sweep passed after adding RuntimeEffect source-cache eviction observability. The sweep
   covered 143 rows plus header; all rows passed, with 109 command replay rows, 26 intentional JBR picture fallback
   rows, and 8 expected explicit fallback-marker rows:
