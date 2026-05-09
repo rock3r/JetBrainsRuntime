@@ -28,9 +28,9 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - Latest focused RuntimeEffect source-cache eviction subset uses the test-only
   `JBR_SKIA_RUNTIME_EFFECT_CACHE_LIMIT_FOR_TEST=2` override and passed with typed shader and color-filter evict gates:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260509-122623/suite.tsv`.
-- Latest full screenshot parity suite covered 104 rows plus the header and passed after adding descriptor handle
-  eviction parity:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260509-203120/suite.tsv`.
+- Latest full screenshot parity suite covered 106 rows plus the header and passed after adding RuntimeEffect
+  source-cache eviction parity:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260509-214152/suite.tsv`.
 - Latest focused compatibility matrix covers the exact dash path-effect high-word capability removals:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260507-115729/matrix.tsv`.
 - Latest full compatibility matrix includes those rows and passed across 30 rows plus the header:
@@ -103,8 +103,9 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 
 ## Latest Completed Slice
 
-Descriptor-backed paint color-filter, shader, graphics-layer renderEffect, and handle-eviction parity now covers tint,
-color-matrix, lighting, image, composite, standalone offset image-filter, chained image-filter, and descriptor churn:
+Descriptor-backed paint color-filter, shader, RuntimeEffect source-cache eviction, graphics-layer renderEffect, and
+handle-eviction parity now covers tint, color-matrix, lighting, image, composite, standalone offset image-filter,
+chained image-filter, descriptor churn, and RuntimeEffect source-cache churn:
 
 - Magic Jewel adds `parity-color-filter-handle`, `parity-resize-color-filter-handle`, and
   `parity-forced-context-color-filter-handle` to the default screenshot parity suite.
@@ -117,6 +118,10 @@ color-matrix, lighting, image, composite, standalone offset image-filter, chaine
   gates without relying only on blended combination rows for visual coverage.
 - Magic Jewel adds `parity-descriptor-eviction`, which draws enough unique effect and composite-shader descriptors to
   force JBR handle eviction while staying on command replay.
+- Magic Jewel adds `parity-runtime-effect-shader-source-cache-eviction` and
+  `parity-runtime-effect-source-cache-eviction`, which force the RuntimeEffect source cache below the row's source set
+  and require typed shader/color-filter source-cache eviction markers while staying visually aligned with old
+  SwingGraphics.
 - These rows isolate the descriptor-backed tint color-filter path from unrelated effect families and require JBR
   effect-handle definition, use, and cache-hit markers.
 - The resize and forced-context rows require surface-change, command-cache-clear, and effect-handle redefinition
@@ -126,9 +131,10 @@ color-matrix, lighting, image, composite, standalone offset image-filter, chaine
   and `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260509-165647/suite.tsv`
   and `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260509-180914/suite.tsv`
   and `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260509-191929/suite.tsv`
-  and `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260509-202925/suite.tsv`.
-- Full default screenshot parity passed across 104 rows plus header with all rows on command replay and zero fallback:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260509-203120/suite.tsv`.
+  and `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260509-202925/suite.tsv`
+  and `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260509-214028/suite.tsv`.
+- Full default screenshot parity passed across 106 rows plus header with all rows on command replay and zero fallback:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260509-214152/suite.tsv`.
 
 ## Previous Slice
 

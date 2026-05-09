@@ -38,6 +38,14 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Full default screenshot parity suite passed after adding RuntimeEffect source-cache eviction parity rows. The suite
+  covered 106 rows plus header; all rows passed, all rows stayed on command replay, and zero rows reported structural
+  or JBR picture fallback:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260509-214152/suite.tsv`.
+- Focused RuntimeEffect shader and color-filter source-cache eviction parity passed. The shader row reported 1029 JBR
+  command frames, 3337 RuntimeEffect source-cache evicts, and 4995 shader-handle cache hits; the color-filter row
+  reported 1015 JBR command frames, 3251 RuntimeEffect source-cache evicts, and 4866 effect-handle cache hits:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260509-214028/suite.tsv`.
 - Full default screenshot parity suite passed after adding descriptor handle eviction parity. The suite covered 104 rows
   plus header; all rows passed, all rows stayed on command replay, and zero rows reported structural or JBR picture
   fallback:

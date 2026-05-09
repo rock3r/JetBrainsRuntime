@@ -5,6 +5,23 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Full default screenshot parity suite passed after adding RuntimeEffect source-cache eviction parity:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260509-214152/suite.tsv`.
+  The suite covered 106 rows plus header: all 106 passed, all 106 reported JBR command replay, zero rows reported
+  structural fallback, and zero rows reported JBR picture fallback. `parity-runtime-effect-shader-source-cache-eviction`
+  reported 958 JBR command frames, `fallback_new_count=0`, `jbr_picture_frames=0`, `avg_delta=2.084`, and
+  `bad_pixel_ratio=0.04931`; its report recorded 1460 RuntimeEffect source-cache hits, 2923 misses, 2921 evicts,
+  16 shader-handle defines, 4383 shader-handle uses, and 4371 shader-handle cache hits.
+  `parity-runtime-effect-source-cache-eviction` reported 1026 JBR command frames, `fallback_new_count=0`,
+  `jbr_picture_frames=0`, `avg_delta=2.118`, and `bad_pixel_ratio=0.05032`; its report recorded 1612 RuntimeEffect
+  source-cache hits, 3227 misses, 3225 evicts, 36 effect-handle defines, 4839 effect-handle uses, and 4827
+  effect-handle cache hits.
+- Focused RuntimeEffect source-cache eviction parity subset passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260509-214028/suite.tsv`.
+  The shader and color-filter rows stayed on command replay with zero fallback and zero JBR picture frames while
+  requiring typed source-cache eviction markers. The shader row reported 1029 JBR command frames, 3337 RuntimeEffect
+  source-cache evicts, and 4995 shader-handle cache hits. The color-filter row reported 1015 JBR command frames, 3251
+  RuntimeEffect source-cache evicts, and 4866 effect-handle cache hits.
 - Full default screenshot parity suite passed after adding descriptor handle eviction parity:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260509-203120/suite.tsv`.
   The suite covered 104 rows plus header: all 104 passed, all 104 reported JBR command replay, zero rows reported
