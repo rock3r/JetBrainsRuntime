@@ -38,6 +38,13 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Full default screenshot parity suite passed after adding descriptor handle eviction parity. The suite covered 104 rows
+  plus header; all rows passed, all rows stayed on command replay, and zero rows reported structural or JBR picture
+  fallback:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260509-203120/suite.tsv`.
+- Focused descriptor handle eviction parity passed. The row reported 46 JBR command frames, zero fallback, zero JBR
+  picture frames, and strict effect/shader handle define/use/evict gates:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260509-202925/suite.tsv`.
 - Full default screenshot parity suite passed after adding standalone graphics-layer offset and chained renderEffect
   parity rows. The suite covered 103 rows plus header; all rows passed, all rows stayed on command replay, and zero
   rows reported structural or JBR picture fallback:

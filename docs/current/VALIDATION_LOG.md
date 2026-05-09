@@ -5,6 +5,19 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Full default screenshot parity suite passed after adding descriptor handle eviction parity:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260509-203120/suite.tsv`.
+  The suite covered 104 rows plus header: all 104 passed, all 104 reported JBR command replay, zero rows reported
+  structural fallback, and zero rows reported JBR picture fallback. `parity-descriptor-eviction` reported 34 JBR
+  command frames, `fallback_new_count=0`, `jbr_picture_frames=0`, `avg_delta=2.164`, and
+  `bad_pixel_ratio=0.05120`; its report recorded 68503 effect-handle defines, 68178 effect-handle uses, 65431
+  effect-handle evicts, 201900 shader-handle defines, 67300 shader-handle uses, and 198828 shader-handle evicts.
+- Focused descriptor handle eviction parity subset passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260509-202925/suite.tsv`.
+  The row stayed on command replay with zero fallback and zero JBR picture frames while requiring at least 1024
+  effect-handle defines/uses, at least one effect-handle evict, at least 1024 shader-handle defines/uses, and at least
+  one shader-handle evict. The focused run reported 46 JBR command frames, 75029 effect-handle evicts, and 229128
+  shader-handle evicts.
 - Full default screenshot parity suite passed after adding standalone graphics-layer offset and chained renderEffect
   parity rows:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260509-192048/suite.tsv`.
