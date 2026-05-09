@@ -38,6 +38,10 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Full default command-probe sweep passed after adding the RuntimeEffect color-filter child-type build-failure
+  sentinel. The sweep covered 142 rows plus header; all rows passed, with 108 command replay rows, 26 intentional JBR
+  picture fallback rows, and 8 expected explicit fallback-marker rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260509-013113/suite.tsv`.
 - Full default command-probe sweep passed after adding the RuntimeEffect color-filter compile-failure sentinel. The
   sweep covered 141 rows plus header; all rows passed, with 108 command replay rows, 26 intentional JBR picture
   fallback rows, and 7 expected explicit fallback-marker rows:

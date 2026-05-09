@@ -1138,7 +1138,45 @@ static sk_sp<SkColorFilter> makeDescriptorRuntimeColorFilter(const ColorFilterDe
         if (!child) return nullptr;
         children.push_back(std::move(child));
     }
-    return effect->makeColorFilter(uniformData, children.data(), static_cast<size_t>(childCount));
+    auto effectChildren = effect->children();
+    if (effectChildren.size() != children.size()) {
+        std::fprintf(stderr,
+                     "JBR_SKIA_INTEROP_RUNTIME_COLOR_FILTER_BUILD_FAILED hash=0x%016llx stage=child-count skslLength=%d uniforms=%d children=%d namedUniforms=%d namedChildren=%d effectChildren=%zu\n",
+                     static_cast<unsigned long long>(expectedHash),
+                     skslLength,
+                     uniformFloatCount,
+                     childCount,
+                     namedUniformCount,
+                     namedChildCount,
+                     effectChildren.size());
+        return nullptr;
+    }
+    for (size_t i = 0; i < effectChildren.size(); i++) {
+        if (effectChildren[i].type != SkRuntimeEffect::ChildType::kColorFilter) {
+            std::fprintf(stderr,
+                         "JBR_SKIA_INTEROP_RUNTIME_COLOR_FILTER_BUILD_FAILED hash=0x%016llx stage=positional-child-type childIndex=%zu skslLength=%d uniforms=%d children=%d namedUniforms=%d namedChildren=%d\n",
+                         static_cast<unsigned long long>(expectedHash),
+                         i,
+                         skslLength,
+                         uniformFloatCount,
+                         childCount,
+                         namedUniformCount,
+                         namedChildCount);
+            return nullptr;
+        }
+    }
+    sk_sp<SkColorFilter> colorFilter = effect->makeColorFilter(uniformData, children.data(), static_cast<size_t>(childCount));
+    if (!colorFilter) {
+        std::fprintf(stderr,
+                     "JBR_SKIA_INTEROP_RUNTIME_COLOR_FILTER_BUILD_FAILED hash=0x%016llx stage=make-color-filter skslLength=%d uniforms=%d children=%d namedUniforms=%d namedChildren=%d\n",
+                     static_cast<unsigned long long>(expectedHash),
+                     skslLength,
+                     uniformFloatCount,
+                     childCount,
+                     namedUniformCount,
+                     namedChildCount);
+    }
+    return colorFilter;
 }
 
 static jsize recordLengthFromBytes(jint recordByteLength) {
