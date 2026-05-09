@@ -24,8 +24,8 @@ This is the small working roadmap for the current PoC. The full historical check
 ## Current Priorities
 
 - Continue remaining shader-family hardening and fallback sentinels.
-- Continue shader/effect lifecycle coverage: create, use, context-scoped cache hit, compile/build failure, eviction,
-  resize, and forced destination context migration.
+- Continue shader/effect lifecycle coverage: create, use, context-scoped cache hit, compile/build failure, descriptor
+  eviction, resize, and forced destination context migration.
 - Tighten stable effect-handle reuse gates on supported rows that still only assert descriptor definition.
 - Continue closing transform/graphics-layer edge gaps as they appear in real recorder ground truth.
 - Keep old/new screenshot parity coverage broad enough to catch text/color/placement regressions, including button
@@ -38,6 +38,18 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Full default command-probe sweep passed after adding RuntimeEffect source-cache eviction observability. The sweep
+  covered 143 rows plus header; all rows passed, with 109 command replay rows, 26 intentional JBR picture fallback
+  rows, and 8 expected explicit fallback-marker rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260509-095817/suite.tsv`.
+- Focused `commands-runtime-effect-source-cache-eviction` passed with
+  `JBR_SKIA_RUNTIME_EFFECT_CACHE_LIMIT_FOR_TEST=2`, zero fallback, 472 JBR command frames, and 1675
+  `JBR_SKIA_INTEROP_RUNTIME_EFFECT_CACHE_EVICT` markers:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260509-095725/suite.tsv`.
+- Magic Jewel report-validator regression tests passed after adding the strict
+  `EXPECT_MIN_JBR_RUNTIME_EFFECT_CACHE_EVICTS` gate:
+  `./scripts/test-jbr-skia-report-validation.sh` in
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel`.
 - Full default command-probe sweep passed after adding the RuntimeEffect color-filter child-type build-failure
   sentinel. The sweep covered 142 rows plus header; all rows passed, with 108 command replay rows, 26 intentional JBR
   picture fallback rows, and 8 expected explicit fallback-marker rows:

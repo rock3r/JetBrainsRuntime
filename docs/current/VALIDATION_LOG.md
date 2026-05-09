@@ -5,6 +5,27 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Full default command-probe sweep passed after adding native RuntimeEffect source-cache eviction observability and the
+  Magic Jewel eviction sentinel:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260509-095817/suite.tsv`.
+  The sweep covered 143 rows plus header: all 143 passed, 109 rows reported JBR command replay, 26 rows reported
+  intentional JBR picture fallback, and 8 rows reported expected explicit fallback markers. The new
+  `commands-runtime-effect-source-cache-eviction` row stayed on command replay with zero fallback and reported 363 JBR
+  command frames, 734 RuntimeEffect source-cache hits, 1471 misses, 1469 source-cache evicts, 1472 effect-handle
+  definitions, 2205 effect-handle uses, 448 effect-handle evicts, and 734 effect-handle cache hits.
+- Focused `commands-runtime-effect-source-cache-eviction` probe passed after adding the JBR
+  `JBR_SKIA_INTEROP_RUNTIME_EFFECT_CACHE_EVICT` marker and the test-only
+  `JBR_SKIA_RUNTIME_EFFECT_CACHE_LIMIT_FOR_TEST=2` override:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260509-095725/suite.tsv`.
+  The row stayed on command replay with zero fallback and reported 472 JBR command frames, 837 RuntimeEffect
+  source-cache hits, 1677 misses, 1675 source-cache evicts, 1676 effect-handle definitions, 2514 effect-handle uses,
+  and 839 effect-handle cache hits. The log alternated three color-filter RuntimeEffect sources against a test cache
+  limit of two, producing eviction lines such as
+  `JBR_SKIA_INTEROP_RUNTIME_EFFECT_CACHE_EVICT type=colorFilter ... limit=2`.
+- Magic Jewel report-validator regression tests passed after adding strict command validation for
+  `EXPECT_MIN_JBR_RUNTIME_EFFECT_CACHE_EVICTS`:
+  `./scripts/test-jbr-skia-report-validation.sh` in
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel`.
 - Focused RuntimeEffect color-filter cache-marker subset passed after teaching JBR color-filter RuntimeEffect cache
   logs to report the real descriptor child count:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260509-023557/suite.tsv`.

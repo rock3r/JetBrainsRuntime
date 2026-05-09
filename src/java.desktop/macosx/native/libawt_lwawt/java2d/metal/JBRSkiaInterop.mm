@@ -646,6 +646,7 @@ static int runtimeEffectChildSchemaEnd(const std::vector<jint>& payload,
                                        int schemaEnd,
                                        jint namedChildCount,
                                        jint childCount);
+static size_t runtimeEffectCacheLimitForTesting();
 
 static sk_sp<SkRuntimeEffect> cachedRuntimeShaderEffect(
         const std::string& sksl,
@@ -681,8 +682,16 @@ static sk_sp<SkRuntimeEffect> cachedRuntimeShaderEffect(
     }
 
     std::lock_guard<std::mutex> lock(gRuntimeEffectCacheMutex);
-    if (gRuntimeShaderEffectsBySource.size() >= MAX_CACHED_RUNTIME_EFFECTS) {
-        gRuntimeShaderEffectsBySource.erase(gRuntimeShaderEffectsBySource.begin());
+    const size_t cacheLimit = runtimeEffectCacheLimitForTesting();
+    if (gRuntimeShaderEffectsBySource.size() >= cacheLimit) {
+        const auto evicted = gRuntimeShaderEffectsBySource.begin();
+        const uint64_t evictedHash = asciiStringHash(evicted->first.data(), evicted->first.size());
+        std::fprintf(stderr,
+                     "JBR_SKIA_INTEROP_RUNTIME_EFFECT_CACHE_EVICT type=shader hash=0x%016llx skslLength=%zu limit=%zu\n",
+                     static_cast<unsigned long long>(evictedHash),
+                     evicted->first.size(),
+                     cacheLimit);
+        gRuntimeShaderEffectsBySource.erase(evicted);
     }
     std::fprintf(stderr,
                  "JBR_SKIA_INTEROP_RUNTIME_EFFECT_CACHE_MISS type=shader hash=0x%016llx skslLength=%zu uniforms=%d children=%d\n",
@@ -727,8 +736,16 @@ static sk_sp<SkRuntimeEffect> cachedRuntimeColorFilterEffect(
     }
 
     std::lock_guard<std::mutex> lock(gRuntimeEffectCacheMutex);
-    if (gRuntimeColorFilterEffectsBySource.size() >= MAX_CACHED_RUNTIME_EFFECTS) {
-        gRuntimeColorFilterEffectsBySource.erase(gRuntimeColorFilterEffectsBySource.begin());
+    const size_t cacheLimit = runtimeEffectCacheLimitForTesting();
+    if (gRuntimeColorFilterEffectsBySource.size() >= cacheLimit) {
+        const auto evicted = gRuntimeColorFilterEffectsBySource.begin();
+        const uint64_t evictedHash = asciiStringHash(evicted->first.data(), evicted->first.size());
+        std::fprintf(stderr,
+                     "JBR_SKIA_INTEROP_RUNTIME_EFFECT_CACHE_EVICT type=colorFilter hash=0x%016llx skslLength=%zu limit=%zu\n",
+                     static_cast<unsigned long long>(evictedHash),
+                     evicted->first.size(),
+                     cacheLimit);
+        gRuntimeColorFilterEffectsBySource.erase(evicted);
     }
     std::fprintf(stderr,
                  "JBR_SKIA_INTEROP_RUNTIME_EFFECT_CACHE_MISS type=colorFilter hash=0x%016llx skslLength=%zu uniforms=%d children=%d\n",
@@ -1293,6 +1310,19 @@ static uint64_t asciiStringHash(const char* data, size_t length) {
         hash *= 1099511628211ULL;
     }
     return hash;
+}
+
+static size_t runtimeEffectCacheLimitForTesting() {
+    const char* value = std::getenv("JBR_SKIA_RUNTIME_EFFECT_CACHE_LIMIT_FOR_TEST");
+    if (value == nullptr || value[0] == '\0') {
+        return MAX_CACHED_RUNTIME_EFFECTS;
+    }
+    char* end = nullptr;
+    const unsigned long parsed = std::strtoul(value, &end, 10);
+    if (end == value || end == nullptr || *end != '\0' || parsed == 0 || parsed > MAX_CACHED_RUNTIME_EFFECTS) {
+        return MAX_CACHED_RUNTIME_EFFECTS;
+    }
+    return static_cast<size_t>(parsed);
 }
 
 static bool isValidRuntimeEffectUniformName(const std::vector<jint>& payload, int offset, jint length) {
