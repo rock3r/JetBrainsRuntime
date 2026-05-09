@@ -38,6 +38,13 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Full default command-probe sweep passed after tightening RuntimeEffect source-cache eviction rows to require typed
+  native evict markers. The sweep covered 144 rows plus header; all rows passed, with 110 command replay rows, 26
+  intentional JBR picture fallback rows, and 8 expected explicit fallback-marker rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260509-122742/suite.tsv`.
+- Focused typed RuntimeEffect source-cache eviction subset passed. The shader row reported 985 `type=shader` evict
+  markers, and the color-filter row reported 1207 `type=colorFilter` evict markers:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260509-122623/suite.tsv`.
 - Full default command-probe sweep passed after adding the RuntimeEffect shader source-cache eviction sentinel. The
   sweep covered 144 rows plus header; all rows passed, with 110 command replay rows, 26 intentional JBR picture
   fallback rows, and 8 expected explicit fallback-marker rows:
