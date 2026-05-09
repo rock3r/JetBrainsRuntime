@@ -5,6 +5,17 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Full default screenshot parity suite passed after adding static image-shader and composite-shader parity rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260509-181039/suite.tsv`.
+  The suite covered 101 rows plus header: all 101 passed, all 101 reported JBR command replay, zero rows reported
+  structural fallback, and zero rows reported JBR picture fallback. `parity-image-shader` reported 1013 JBR command
+  frames, `fallback_new_count=0`, `jbr_picture_frames=0`, `avg_delta=2.678`, and `bad_pixel_ratio=0.06777`;
+  `parity-composite-shader` reported 1015 JBR command frames, `avg_delta=2.596`, and `bad_pixel_ratio=0.06710`.
+- Focused image-shader and composite-shader parity subset passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260509-180914/suite.tsv`.
+  Both rows stayed on command replay with zero fallback and zero JBR picture frames. `parity-image-shader` reported
+  633 JBR command frames and image refs; `parity-composite-shader` reported 616 JBR command frames and required
+  shader-handle definition, use, and cache-hit markers.
 - Full default screenshot parity suite passed after adding static descriptor-backed color-matrix and lighting
   color-filter parity rows:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260509-165808/suite.tsv`.

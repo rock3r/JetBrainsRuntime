@@ -38,6 +38,13 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Full default screenshot parity suite passed after adding static image-shader and composite-shader parity rows. The
+  suite covered 101 rows plus header; all rows passed, all rows stayed on command replay, and zero rows reported
+  structural or JBR picture fallback:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260509-181039/suite.tsv`.
+- Focused image-shader and composite-shader parity passed. The rows reported 633 and 616 JBR command frames
+  respectively, both with zero fallback and zero JBR picture frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260509-180914/suite.tsv`.
 - Full default screenshot parity suite passed after adding static descriptor-backed color-matrix and lighting
   color-filter parity rows. The suite covered 99 rows plus header; all rows passed, all rows stayed on command replay,
   and zero rows reported structural or JBR picture fallback:
