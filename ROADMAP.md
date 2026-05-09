@@ -38,6 +38,14 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Full default screenshot parity suite passed after adding RuntimeEffect pure-color shader lifecycle parity rows for
+  same-context resize and forced destination context migration. The suite covered 92 rows plus header; all rows passed,
+  all rows stayed on command replay, and zero rows reported structural or JBR picture fallback:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260509-134708/suite.tsv`.
+- Focused RuntimeEffect pure-color shader lifecycle parity passed for the new resize and forced-context rows. The
+  resize row reported 591 JBR command frames and the forced-context row reported 444 JBR command frames, both with zero
+  fallback and zero JBR picture frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260509-134544/suite.tsv`.
 - Full default command-probe sweep passed after tightening RuntimeEffect source-cache eviction rows to require typed
   native evict markers. The sweep covered 144 rows plus header; all rows passed, with 110 command replay rows, 26
   intentional JBR picture fallback rows, and 8 expected explicit fallback-marker rows:
