@@ -22,9 +22,9 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   parity from text rasterization drift. It is not a replacement for Jewel `Text`.
 - The working docs are intentionally split: this plan and `ROADMAP.md` stay compact, validation details live in
   `docs/current/VALIDATION_LOG.md`, and verbose historical checkpoints live in `docs/history/`.
-- Latest full command-probe sweep covered 144 rows plus the header and passed on current artifacts after tightening
-  RuntimeEffect source-cache eviction rows to require typed native evict markers:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260509-122742/suite.tsv`.
+- Latest full command-probe sweep covered 145 rows plus the header and passed after adding the RuntimeEffect
+  color-filter child-count build-failure sentinel:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260509-225942/suite.tsv`.
 - Latest focused RuntimeEffect source-cache eviction subset uses the test-only
   `JBR_SKIA_RUNTIME_EFFECT_CACHE_LIMIT_FOR_TEST=2` override and passed with typed shader and color-filter evict gates:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260509-122623/suite.tsv`.
@@ -103,9 +103,10 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 
 ## Latest Completed Slice
 
-Descriptor-backed paint color-filter, shader, RuntimeEffect source-cache eviction, graphics-layer renderEffect, and
-handle-eviction parity now covers tint, color-matrix, lighting, image, composite, standalone offset image-filter,
-chained image-filter, descriptor churn, and RuntimeEffect source-cache churn:
+Descriptor-backed paint color-filter, shader, RuntimeEffect source-cache eviction and build-failure fallback,
+graphics-layer renderEffect, and handle-eviction parity now covers tint, color-matrix, lighting, image, composite,
+standalone offset image-filter, chained image-filter, descriptor churn, RuntimeEffect source-cache churn, and
+RuntimeEffect color-filter child-count failure:
 
 - Magic Jewel adds `parity-color-filter-handle`, `parity-resize-color-filter-handle`, and
   `parity-forced-context-color-filter-handle` to the default screenshot parity suite.
@@ -122,6 +123,9 @@ chained image-filter, descriptor churn, and RuntimeEffect source-cache churn:
   `parity-runtime-effect-source-cache-eviction`, which force the RuntimeEffect source cache below the row's source set
   and require typed shader/color-filter source-cache eviction markers while staying visually aligned with old
   SwingGraphics.
+- Magic Jewel adds `commands-runtime-effect-color-filter-build-fallback`, which records a RuntimeEffect color-filter
+  source that declares a child color filter but omits the child descriptor handle, requiring JBR to report
+  `runtime-effect-build-failed` with `stage=child-count`.
 - These rows isolate the descriptor-backed tint color-filter path from unrelated effect families and require JBR
   effect-handle definition, use, and cache-hit markers.
 - The resize and forced-context rows require surface-change, command-cache-clear, and effect-handle redefinition
@@ -135,6 +139,11 @@ chained image-filter, descriptor churn, and RuntimeEffect source-cache churn:
   and `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260509-214028/suite.tsv`.
 - Full default screenshot parity passed across 106 rows plus header with all rows on command replay and zero fallback:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260509-214152/suite.tsv`.
+- Focused RuntimeEffect fallback subset passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260509-225248/suite.tsv`.
+- Full default command-probe sweep passed across 145 rows plus header with 110 command replay rows, 26 intentional
+  JBR picture fallback rows, and 9 expected explicit fallback-marker rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260509-225942/suite.tsv`.
 
 ## Previous Slice
 

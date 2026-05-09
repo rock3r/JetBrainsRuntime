@@ -38,6 +38,14 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Full default command-probe sweep passed after adding the RuntimeEffect color-filter child-count build-failure
+  sentinel. The sweep covered 145 rows plus header; all rows passed, with 110 command replay rows, 26 intentional JBR
+  picture fallback rows, and 9 expected explicit fallback-marker rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260509-225942/suite.tsv`.
+- Focused RuntimeEffect compile/build fallback subset passed across shader and color-filter families. The new
+  `commands-runtime-effect-color-filter-build-fallback` row reported one explicit `runtime-effect-build-failed`
+  marker, `stage=child-count`, zero JBR command frames, and zero JBR picture frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260509-225248/suite.tsv`.
 - Full default screenshot parity suite passed after adding RuntimeEffect source-cache eviction parity rows. The suite
   covered 106 rows plus header; all rows passed, all rows stayed on command replay, and zero rows reported structural
   or JBR picture fallback:

@@ -5,6 +5,25 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Full default command-probe sweep passed after adding the RuntimeEffect color-filter child-count build-failure
+  sentinel:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260509-225942/suite.tsv`.
+  The sweep covered 145 rows plus header: all 145 passed, 110 rows reported JBR command replay, 26 rows reported
+  intentional JBR picture fallback, and 9 rows reported expected explicit fallback markers. The new
+  `commands-runtime-effect-color-filter-build-fallback` row reported one explicit fallback marker, `unsupported=none`,
+  zero JBR picture frames, zero JBR command frames, and 7744 RuntimeEffect build-failure markers. Its report recorded
+  `MAGIC_JEWEL_COMPOSE_RUNTIME_EFFECT_COLOR_FILTER_BAD_CHILD=true`, and the native log reported
+  `JBR_SKIA_INTEROP_RUNTIME_COLOR_FILTER_BUILD_FAILED ... stage=child-count ... children=0 ... effectChildren=1`.
+- Focused RuntimeEffect compile/build fallback subset passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260509-225248/suite.tsv`.
+  Shader and color-filter compile/build/child-type rows all reported one expected explicit fallback marker with
+  `unsupported=none`, zero JBR picture frames, and zero JBR command frames. The new color-filter child-count row
+  specifically proved that a source-declared child without a matching descriptor handle fails in JBR native build,
+  not in recorder schema validation.
+- Magic Jewel report-validator regression tests passed after adding a synthetic RuntimeEffect color-filter
+  `stage=child-count` build-failure marker:
+  `./scripts/test-jbr-skia-report-validation.sh` in
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel`.
 - Full default screenshot parity suite passed after adding RuntimeEffect source-cache eviction parity:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260509-214152/suite.tsv`.
   The suite covered 106 rows plus header: all 106 passed, all 106 reported JBR command replay, zero rows reported
