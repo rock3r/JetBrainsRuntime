@@ -5,6 +5,20 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Full default screenshot parity suite passed after adding graphics-layer render-effect lifecycle parity rows for
+  same-context resize and forced destination context migration:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260509-144511/suite.tsv`.
+  The suite covered 94 rows plus header: all 94 passed, all 94 reported JBR command replay, zero rows reported
+  structural fallback, and zero rows reported JBR picture fallback. The new
+  `parity-resize-graphics-layer-render-effect` row reported 649 JBR command frames, `fallback_new_count=0`,
+  `jbr_picture_frames=0`, and `bad_pixel_ratio=0.04557`; the new
+  `parity-forced-context-graphics-layer-render-effect` row reported 1320 JBR command frames,
+  `fallback_new_count=0`, `jbr_picture_frames=0`, and `bad_pixel_ratio=0.04801`.
+- Focused graphics-layer render-effect lifecycle parity subset passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260509-144352/suite.tsv`.
+  `parity-resize-graphics-layer-render-effect` stayed on command replay with zero fallback, zero JBR picture frames,
+  and 1271 JBR command frames. `parity-forced-context-graphics-layer-render-effect` stayed on command replay with zero
+  fallback, zero JBR picture frames, and 1291 JBR command frames.
 - Full default screenshot parity suite passed after adding RuntimeEffect pure-color shader lifecycle parity rows for
   same-context resize and forced destination context migration:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260509-134708/suite.tsv`.
