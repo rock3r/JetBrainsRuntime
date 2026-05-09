@@ -19,6 +19,10 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260509-012953/suite.tsv`.
   The row reported one explicit fallback marker, 963 Skiko command frames, zero JBR command frames, zero JBR picture
   frames, and one JBR RuntimeEffect build-failure marker with `stage=positional-child-type`.
+- Magic Jewel report-validator regression tests passed after broadening RuntimeEffect compile/build marker matching to
+  include color-filter markers:
+  `./scripts/test-jbr-skia-report-validation.sh` in
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel`.
 - Full default command-probe sweep passed after adding the RuntimeEffect color-filter compile-failure sentinel:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260509-002725/suite.tsv`.
   The sweep covered 141 rows plus header: all 141 passed, 108 rows reported JBR command replay, 26 rows reported
