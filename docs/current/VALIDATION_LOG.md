@@ -5,6 +5,19 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Full default screenshot parity suite passed after adding static descriptor-backed color-matrix and lighting
+  color-filter parity rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260509-165808/suite.tsv`.
+  The suite covered 99 rows plus header: all 99 passed, all 99 reported JBR command replay, zero rows reported
+  structural fallback, and zero rows reported JBR picture fallback. `parity-color-matrix-filter` reported 656 JBR
+  command frames, `fallback_new_count=0`, `jbr_picture_frames=0`, `avg_delta=2.204`, and
+  `bad_pixel_ratio=0.05265`; `parity-lighting-filter` reported 1060 JBR command frames, `avg_delta=2.204`, and
+  `bad_pixel_ratio=0.05265`.
+- Focused descriptor-backed color-matrix and lighting color-filter parity subset passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260509-165647/suite.tsv`.
+  Both rows stayed on command replay with zero fallback and zero JBR picture frames while requiring effect-handle
+  definition, use, and cache-hit markers. `parity-color-matrix-filter` reported 841 JBR command frames;
+  `parity-lighting-filter` reported 1613 JBR command frames.
 - Full default screenshot parity suite passed after adding descriptor-backed tint color-filter lifecycle parity rows for
   static replay, same-context resize, and forced destination context migration:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260509-155200/suite.tsv`.
