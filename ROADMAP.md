@@ -38,6 +38,14 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Full default screenshot parity suite passed after adding descriptor-backed tint color-filter lifecycle parity rows for
+  static replay, same-context resize, and forced destination context migration. The suite covered 97 rows plus header;
+  all rows passed, all rows stayed on command replay, and zero rows reported structural or JBR picture fallback:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260509-155200/suite.tsv`.
+- Focused descriptor-backed tint color-filter lifecycle parity passed for the new static, resize, and forced-context
+  rows. The rows reported 615, 1463, and 820 JBR command frames respectively, all with zero fallback and zero JBR
+  picture frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260509-154845/suite.tsv`.
 - Full default screenshot parity suite passed after adding graphics-layer render-effect lifecycle parity rows for
   same-context resize and forced destination context migration. The suite covered 94 rows plus header; all rows passed,
   all rows stayed on command replay, and zero rows reported structural or JBR picture fallback:

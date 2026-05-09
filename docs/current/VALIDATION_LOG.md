@@ -5,6 +5,21 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Full default screenshot parity suite passed after adding descriptor-backed tint color-filter lifecycle parity rows for
+  static replay, same-context resize, and forced destination context migration:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260509-155200/suite.tsv`.
+  The suite covered 97 rows plus header: all 97 passed, all 97 reported JBR command replay, zero rows reported
+  structural fallback, and zero rows reported JBR picture fallback. The new `parity-color-filter-handle` row reported
+  1478 JBR command frames, `fallback_new_count=0`, `jbr_picture_frames=0`, `avg_delta=2.206`, and
+  `bad_pixel_ratio=0.05271`; `parity-resize-color-filter-handle` reported 878 JBR command frames,
+  `avg_delta=1.922`, and `bad_pixel_ratio=0.04650`; `parity-forced-context-color-filter-handle` reported 925 JBR
+  command frames, `avg_delta=2.065`, and `bad_pixel_ratio=0.04897`.
+- Focused descriptor-backed tint color-filter lifecycle parity subset passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260509-154845/suite.tsv`.
+  `parity-color-filter-handle`, `parity-resize-color-filter-handle`, and
+  `parity-forced-context-color-filter-handle` all stayed on command replay with zero fallback and zero JBR picture
+  frames, reporting 615, 1463, and 820 JBR command frames respectively. The resize and forced-context rows also
+  required surface-change, command-cache-clear, effect-handle redefinition/use, and effect-handle cache-hit markers.
 - Full default screenshot parity suite passed after adding graphics-layer render-effect lifecycle parity rows for
   same-context resize and forced destination context migration:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260509-144511/suite.tsv`.

@@ -28,9 +28,9 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - Latest focused RuntimeEffect source-cache eviction subset uses the test-only
   `JBR_SKIA_RUNTIME_EFFECT_CACHE_LIMIT_FOR_TEST=2` override and passed with typed shader and color-filter evict gates:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260509-122623/suite.tsv`.
-- Latest full screenshot parity suite covered 94 rows plus the header and passed after adding graphics-layer
-  render-effect lifecycle parity rows for same-context resize and forced destination context migration:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260509-144511/suite.tsv`.
+- Latest full screenshot parity suite covered 97 rows plus the header and passed after adding descriptor-backed tint
+  color-filter lifecycle parity rows for static replay, same-context resize, and forced destination context migration:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260509-155200/suite.tsv`.
 - Latest focused compatibility matrix covers the exact dash path-effect high-word capability removals:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260507-115729/matrix.tsv`.
 - Latest full compatibility matrix includes those rows and passed across 30 rows plus the header:
@@ -103,26 +103,19 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 
 ## Latest Completed Slice
 
-ABI 106 adds direct `Canvas.drawVertices` command replay for serialized vertex payloads:
+Descriptor-backed tint color-filter lifecycle parity now covers static replay, same-context resize, and forced
+destination context migration:
 
-- JBR/JBR API expose `COMMAND_DRAW_VERTICES = 67` and `COMMAND_CAP64_HIGH_DRAW_VERTICES = 131072`.
-- JBR validates vertex mode, blend mode, vertex/index counts, record length, and serialized positions/texture coordinates,
-  colors, and indices before replaying through native Skia vertices.
-- CMP records supported `Canvas.drawVertices` calls instead of marking `vertices` unsupported; unsupported paint/blend
-  families still fall back structurally.
-- Magic Jewel `commands-vertices` and `parity-vertices` probe the colored triangle replay path.
-- Focused command replay passed:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260505-120216/suite.tsv`.
+- Magic Jewel adds `parity-color-filter-handle`, `parity-resize-color-filter-handle`, and
+  `parity-forced-context-color-filter-handle` to the default screenshot parity suite.
+- These rows isolate the descriptor-backed tint color-filter path from unrelated effect families and require JBR
+  effect-handle definition, use, and cache-hit markers.
+- The resize and forced-context rows require surface-change, command-cache-clear, and effect-handle redefinition
+  markers, proving descriptor handles are rebuilt against the right destination context.
 - Focused screenshot parity passed:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260505-120655/suite.tsv`.
-- Focused missing-capability fallback passed:
-  `/tmp/jbr-skia-vertices-cap-missing/summary.properties`.
-- Full default command-probe sweep passed, including `commands-vertices`, font, shader/effect descriptor,
-  graphics-layer, and intentional fallback-sentinel rows:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260505-121247/suite.tsv`.
-- Compatibility matrix passed after the ABI 106 high-word mask update, including the exact missing draw-vertices
-  capability row:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260505-133924/matrix.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260509-154845/suite.tsv`.
+- Full default screenshot parity passed across 97 rows plus header with all rows on command replay and zero fallback:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260509-155200/suite.tsv`.
 
 ## Previous Slice
 
