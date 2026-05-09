@@ -697,16 +697,18 @@ static sk_sp<SkRuntimeEffect> cachedRuntimeShaderEffect(
 static sk_sp<SkRuntimeEffect> cachedRuntimeColorFilterEffect(
         const std::string& sksl,
         uint64_t sourceHash,
-        jint uniformFloatCount) {
+        jint uniformFloatCount,
+        jint childCount) {
     {
         std::lock_guard<std::mutex> lock(gRuntimeEffectCacheMutex);
         auto cached = gRuntimeColorFilterEffectsBySource.find(sksl);
         if (cached != gRuntimeColorFilterEffectsBySource.end()) {
             std::fprintf(stderr,
-                         "JBR_SKIA_INTEROP_RUNTIME_EFFECT_CACHE_HIT type=colorFilter hash=0x%016llx skslLength=%zu uniforms=%d children=0\n",
+                         "JBR_SKIA_INTEROP_RUNTIME_EFFECT_CACHE_HIT type=colorFilter hash=0x%016llx skslLength=%zu uniforms=%d children=%d\n",
                          static_cast<unsigned long long>(sourceHash),
                          sksl.size(),
-                         uniformFloatCount);
+                         uniformFloatCount,
+                         childCount);
             return cached->second;
         }
     }
@@ -729,10 +731,11 @@ static sk_sp<SkRuntimeEffect> cachedRuntimeColorFilterEffect(
         gRuntimeColorFilterEffectsBySource.erase(gRuntimeColorFilterEffectsBySource.begin());
     }
     std::fprintf(stderr,
-                 "JBR_SKIA_INTEROP_RUNTIME_EFFECT_CACHE_MISS type=colorFilter hash=0x%016llx skslLength=%zu uniforms=%d children=0\n",
+                 "JBR_SKIA_INTEROP_RUNTIME_EFFECT_CACHE_MISS type=colorFilter hash=0x%016llx skslLength=%zu uniforms=%d children=%d\n",
                  static_cast<unsigned long long>(sourceHash),
                  sksl.size(),
-                 uniformFloatCount);
+                 uniformFloatCount,
+                 childCount);
     auto cached = gRuntimeColorFilterEffectsBySource.emplace(sksl, result.effect).first;
     return cached->second;
 }
@@ -1118,7 +1121,7 @@ static sk_sp<SkColorFilter> makeDescriptorRuntimeColorFilter(const ColorFilterDe
         if (code <= 0 || code > 127) return nullptr;
         sksl.push_back(static_cast<char>(code));
     }
-    sk_sp<SkRuntimeEffect> effect = cachedRuntimeColorFilterEffect(sksl, expectedHash, uniformFloatCount);
+    sk_sp<SkRuntimeEffect> effect = cachedRuntimeColorFilterEffect(sksl, expectedHash, uniformFloatCount, childCount);
     if (!effect) return nullptr;
     sk_sp<SkData> uniformData;
     if (uniformFloatCount == 0) {

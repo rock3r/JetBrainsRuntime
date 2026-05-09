@@ -5,6 +5,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Focused RuntimeEffect color-filter cache-marker subset passed after teaching JBR color-filter RuntimeEffect cache
+  logs to report the real descriptor child count:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260509-023557/suite.tsv`.
+  `commands-runtime-effect-color-filter` and `commands-runtime-effect-color-filter-child` stayed on command replay
+  with zero fallback, and `commands-runtime-effect-color-filter-child-type-fallback` still reported one explicit
+  fallback marker with zero JBR command frames. The child row log now reports
+  `JBR_SKIA_INTEROP_RUNTIME_EFFECT_CACHE_* type=colorFilter ... children=1`.
 - Full default command-probe sweep passed after adding the RuntimeEffect color-filter child-type build-failure
   sentinel:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260509-013113/suite.tsv`.
