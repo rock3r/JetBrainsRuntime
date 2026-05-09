@@ -38,6 +38,13 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Full default screenshot parity suite passed after adding standalone graphics-layer offset and chained renderEffect
+  parity rows. The suite covered 103 rows plus header; all rows passed, all rows stayed on command replay, and zero
+  rows reported structural or JBR picture fallback:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260509-192048/suite.tsv`.
+- Focused standalone graphics-layer offset and chained renderEffect parity passed. The rows reported 1825 and 1943
+  JBR command frames respectively, both with zero fallback and zero JBR picture frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260509-191929/suite.tsv`.
 - Full default screenshot parity suite passed after adding static image-shader and composite-shader parity rows. The
   suite covered 101 rows plus header; all rows passed, all rows stayed on command replay, and zero rows reported
   structural or JBR picture fallback:

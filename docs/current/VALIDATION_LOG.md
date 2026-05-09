@@ -5,6 +5,19 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Full default screenshot parity suite passed after adding standalone graphics-layer offset and chained renderEffect
+  parity rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260509-192048/suite.tsv`.
+  The suite covered 103 rows plus header: all 103 passed, all 103 reported JBR command replay, zero rows reported
+  structural fallback, and zero rows reported JBR picture fallback. `parity-graphics-layer-offset-effect` reported
+  1420 JBR command frames, `fallback_new_count=0`, `jbr_picture_frames=0`, `avg_delta=2.189`, and
+  `bad_pixel_ratio=0.05189`; `parity-graphics-layer-chained-render-effect` reported 1528 JBR command frames,
+  `avg_delta=2.182`, and `bad_pixel_ratio=0.05159`.
+- Focused standalone graphics-layer offset and chained renderEffect parity subset passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260509-191929/suite.tsv`.
+  Both rows stayed on command replay with zero fallback and zero JBR picture frames while requiring effect-handle
+  definition, use, and cache-hit markers. `parity-graphics-layer-offset-effect` reported 1825 JBR command frames;
+  `parity-graphics-layer-chained-render-effect` reported 1943 JBR command frames.
 - Full default screenshot parity suite passed after adding static image-shader and composite-shader parity rows:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260509-181039/suite.tsv`.
   The suite covered 101 rows plus header: all 101 passed, all 101 reported JBR command replay, zero rows reported
