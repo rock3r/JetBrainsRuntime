@@ -381,6 +381,7 @@ public class JBRSkiaApiTest {
                 0xffff00ff, 0xff00ffff, JBRSkia.COMMAND_BLEND_MODE_SRC_IN, 3, 4, 10, 20
         }, "undefined color-filter handle");
         assertInvalidCommandStream(invalidFillRectColorFilterImageFilterHandleStream(), "image-filter fill color-filter handle");
+        assertInvalidCommandStream(invalidFillRectColorFilterPathEffectHandleStream(), "path-effect fill color-filter handle");
         assertInvalidCommandStream(new int[] {
                 JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 10,
                 JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
@@ -935,6 +936,20 @@ public class JBRSkiaApiTest {
                 JBRSkia.COMMAND_EFFECT_DESCRIPTOR_VERSION_1,
                 3,
                 f(1f), f(1f), 0,
+                JBRSkia.COMMAND_FILL_RECT_COLOR_FILTER_REF, 40, JBRSkia.COMMAND_RECORD_FLAG_ANTIALIAS,
+                0xffff00ff, 0x00000031, 0x00000032, 3, 4, 10, 20
+        };
+    }
+
+    private static int[] invalidFillRectColorFilterPathEffectHandleStream() {
+        return new int[] {
+                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 19,
+                JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
+                JBRSkia.COMMAND_DEFINE_EFFECT_DESCRIPTOR, 36, JBRSkia.COMMAND_RECORD_FLAGS_NONE,
+                0x00000031, 0x00000032,
+                JBRSkia.COMMAND_EFFECT_DESCRIPTOR_CORNER_PATH_EFFECT,
+                JBRSkia.COMMAND_EFFECT_DESCRIPTOR_VERSION_1,
+                1, f(4f),
                 JBRSkia.COMMAND_FILL_RECT_COLOR_FILTER_REF, 40, JBRSkia.COMMAND_RECORD_FLAG_ANTIALIAS,
                 0xffff00ff, 0x00000031, 0x00000032, 3, 4, 10, 20
         };

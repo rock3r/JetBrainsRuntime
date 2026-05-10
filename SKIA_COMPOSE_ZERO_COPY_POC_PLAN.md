@@ -39,9 +39,16 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   require the exact target-specific corruption marker rather than any generic invalid-stream fallback. The focused
   marker-gated subset passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260510-173315/suite.tsv`.
-- Latest full command-probe sweep covered 148 rows plus the header and passed after adding all three wrong-type handle
+- Latest wrong-type descriptor hardening adds a path-effect-to-color-filter live sentinel. Skiko can now rewrite one
+  fill color-filter handle use to a path-effect descriptor, Magic Jewel requires
+  `target=fillRectColorFilterPathEffect`, and JBR parser tests cover the same handle-family mismatch:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260510-231235/suite.tsv`.
+- Previous full command-probe sweep covered 148 rows plus the header and passed after adding all three wrong-type handle
   sentinels:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260510-161539/suite.tsv`.
+- Latest full command-probe sweep covered 149 rows plus the header and passed after adding the path-effect wrong-type
+  handle sentinel:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260510-231315/suite.tsv`.
 - Latest focused RuntimeEffect source-cache eviction subset uses the test-only
   `JBR_SKIA_RUNTIME_EFFECT_CACHE_LIMIT_FOR_TEST=2` override and passed with typed shader and color-filter evict gates:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260509-122623/suite.tsv`.

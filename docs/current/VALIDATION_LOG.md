@@ -5,6 +5,21 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Full default command-probe sweep passed after adding the path-effect wrong-type color-filter handle sentinel:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260510-231315/suite.tsv`.
+  The sweep covered 149 rows plus header: all 149 passed, 110 rows reported JBR command replay, 26 rows reported
+  intentional JBR picture fallback, and 13 rows reported expected explicit fallback markers. The new
+  `commands-color-filter-path-effect-wrong-type-fallback` row recorded
+  `expect_command_fallback_marker=SKIKO_JBR_INTEROP_COLOR_FILTER_HANDLE_TYPE_CORRUPTED target=fillRectColorFilterPathEffect`,
+  `validation_failures=none`, one `command-stream-invalid` fallback marker, zero JBR picture frames, and zero JBR
+  command frames. The focused sentinel passed first:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260510-231235/suite.tsv`.
+- JBR parser-only validation passed after adding `invalidFillRectColorFilterPathEffectHandleStream()` to
+  `JBRSkiaApiTest`. The test was compiled with `javac` against `/tmp/jbr-skia-run/desktop` and the local
+  `JBRApi` stub, then run headlessly with the patched `java.desktop` module and
+  `/tmp/jbr-skia-native/libjbrskiainterop.dylib`; the run exited 0.
+- Skiko `publishToMavenLocal` passed after adding the test-only
+  `skiko.jbr.interop.corruptColorFilterHandleToPathEffectTypeForTesting` hook that powers the new Magic Jewel row.
 - Focused wrong-type handle subset passed after Magic Jewel report validation learned
   `EXPECT_COMMAND_FALLBACK_MARKER` and the default wrong-type rows were tightened to require exact target-specific
   corruption markers:

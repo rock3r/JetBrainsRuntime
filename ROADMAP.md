@@ -38,6 +38,15 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Full default command-probe sweep passed after adding a path-effect wrong-type color-filter handle sentinel. The new
+  `commands-color-filter-path-effect-wrong-type-fallback` row rewrites a fill color-filter handle to a path-effect
+  descriptor, requires the target marker `target=fillRectColorFilterPathEffect`, and falls back with
+  `command-stream-invalid` before JBR replay. The sweep covered 149 rows plus header with all rows passing, 110 command
+  replay rows, 26 intentional JBR picture fallback rows, and 13 expected explicit fallback-marker rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260510-231315/suite.tsv`.
+- Direct parser validation passed after adding `JBRSkiaApiTest` coverage for a fill color-filter ref that points at a
+  path-effect descriptor handle. The test was compiled against `/tmp/jbr-skia-run/desktop` and run headlessly with the
+  patched desktop module and native bridge.
 - Focused wrong-type handle subset passed after tightening Magic Jewel report validation to require exact
   target-specific corruption markers for each `command-stream-invalid` sentinel. The three rows now assert
   `target=fillRectColorFilter`, `target=shaderColorFilter`, and `target=saveLayerImageFilter` respectively, each with
