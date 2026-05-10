@@ -5,6 +5,15 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Focused wrong-type handle subset passed after Magic Jewel report validation learned
+  `EXPECT_COMMAND_FALLBACK_MARKER` and the default wrong-type rows were tightened to require exact target-specific
+  corruption markers:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260510-173315/suite.tsv`.
+  The three rows recorded `expect_command_fallback_marker` values for `target=fillRectColorFilter`,
+  `target=shaderColorFilter`, and `target=saveLayerImageFilter`; all passed with `validation_failures=none`, one
+  `command-stream-invalid` fallback marker, zero JBR picture frames, and zero JBR command frames. The synthetic
+  report-validator regression suite also passed after adding positive and missing-marker cases:
+  `./scripts/test-jbr-skia-report-validation.sh` in Magic Jewel.
 - Full default command-probe sweep passed after adding the shader color-filter wrong-type child-handle sentinel:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260510-161539/suite.tsv`.
   The sweep covered 148 rows plus header: all 148 passed, 110 rows reported JBR command replay, 26 rows reported

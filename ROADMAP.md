@@ -38,6 +38,11 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused wrong-type handle subset passed after tightening Magic Jewel report validation to require exact
+  target-specific corruption markers for each `command-stream-invalid` sentinel. The three rows now assert
+  `target=fillRectColorFilter`, `target=shaderColorFilter`, and `target=saveLayerImageFilter` respectively, each with
+  zero JBR command frames and zero JBR picture frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260510-173315/suite.tsv`.
 - Full default command-probe sweep passed after adding the shader color-filter wrong-type child-handle sentinel. The
   wrong-type subset now covers `target=fillRectColorFilter`, `target=shaderColorFilter`, and
   `target=saveLayerImageFilter`; each row asserts structured `command-stream-invalid` fallback before replay. The sweep

@@ -35,6 +35,10 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - Latest live wrong-type descriptor subset also covers shader color-filter child handles, with target-specific Skiko
   corruption markers for `fillRectColorFilter`, `shaderColorFilter`, and `saveLayerImageFilter`:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260510-161400/suite.tsv`.
+- Magic Jewel report validation now records and enforces `EXPECT_COMMAND_FALLBACK_MARKER`, so the wrong-type handle rows
+  require the exact target-specific corruption marker rather than any generic invalid-stream fallback. The focused
+  marker-gated subset passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260510-173315/suite.tsv`.
 - Latest full command-probe sweep covered 148 rows plus the header and passed after adding all three wrong-type handle
   sentinels:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260510-161539/suite.tsv`.
