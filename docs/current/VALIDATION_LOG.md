@@ -5,6 +5,17 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Full default command-probe sweep passed after adding a live wrong-type color-filter handle sentinel:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260510-132542/suite.tsv`.
+  The sweep covered 146 rows plus header: all 146 passed, 110 rows reported JBR command replay, 26 rows reported
+  intentional JBR picture fallback, and 10 rows reported expected explicit fallback markers. The new
+  `commands-color-filter-wrong-effect-type-fallback` row rewrote one color-filter handle use to point at an
+  image-filter descriptor; its report recorded `MAGIC_JEWEL_CORRUPT_COLOR_FILTER_HANDLE_TYPE=true`, one
+  `command-stream-invalid` fallback marker, zero JBR picture frames, and zero JBR command frames. The focused sentinel
+  also passed before the broad sweep:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260510-132508/suite.tsv`.
+  After cleaning up the default row name wiring, the same focused row passed again:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260510-144306/suite.tsv`.
 - JBR command-stream parser hardening passed after tightening typed effect-handle validation for color-filter vs
   image-filter uses. Local artifact rebuild succeeded:
   `./scripts/rebuild-jbr-skia-local-artifacts.sh` in

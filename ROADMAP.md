@@ -38,6 +38,12 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Full default command-probe sweep passed after adding a live wrong-type color-filter handle sentinel. The new
+  `commands-color-filter-wrong-effect-type-fallback` row corrupts a color-filter handle use so it references an
+  image-filter descriptor and asserts structured `command-stream-invalid` fallback before replay. The sweep covered
+  146 rows plus header with all rows passing, 110 command replay rows, 26 intentional JBR picture fallback rows, and
+  10 expected explicit fallback-marker rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260510-132542/suite.tsv`.
 - JBR command-stream parser hardening passed after tightening typed effect-handle validation so color-filter refs cannot
   use image/path-effect descriptors and image-filter refs cannot use color-filter descriptors. Local artifact rebuild
   succeeded, the parser-only `JBRSkiaApiTest` validation passed against the rebuilt `/tmp/jbr-skia-run/desktop` patch,

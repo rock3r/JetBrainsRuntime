@@ -26,8 +26,12 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   effects cannot satisfy color-filter uses, color filters cannot satisfy image-filter refs, and shader color-filter
   descriptors require a real color-filter descriptor handle. Local artifact rebuild and parser-only `JBRSkiaApiTest`
   validation passed against the rebuilt `/tmp/jbr-skia-run/desktop` patch.
-- Latest full command-probe sweep covered 145 rows plus the header and passed after the typed handle gate tightening:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260510-115246/suite.tsv`.
+- Latest live command sentinel now corrupts a color-filter handle use so it references an image-filter descriptor; JBR
+  rejects the stream with structured `command-stream-invalid` fallback before replay:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260510-144306/suite.tsv`.
+- Latest full command-probe sweep covered 146 rows plus the header and passed after adding that wrong-type handle
+  sentinel:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260510-132542/suite.tsv`.
 - Latest focused RuntimeEffect source-cache eviction subset uses the test-only
   `JBR_SKIA_RUNTIME_EFFECT_CACHE_LIMIT_FOR_TEST=2` override and passed with typed shader and color-filter evict gates:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260509-122623/suite.tsv`.
