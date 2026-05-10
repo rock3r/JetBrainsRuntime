@@ -5,6 +5,14 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Full default command-probe sweep passed after adding the shader color-filter wrong-type child-handle sentinel:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260510-161539/suite.tsv`.
+  The sweep covered 148 rows plus header: all 148 passed, 110 rows reported JBR command replay, 26 rows reported
+  intentional JBR picture fallback, and 12 rows reported expected explicit fallback markers. The wrong-type subset also
+  passed with target-specific Skiko corruption markers: `target=fillRectColorFilter`,
+  `target=shaderColorFilter`, and `target=saveLayerImageFilter`; each row reported one `command-stream-invalid`
+  fallback marker, zero JBR picture frames, and zero JBR command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260510-161400/suite.tsv`.
 - Full default command-probe sweep passed after adding the symmetric wrong-type image-filter handle sentinel:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260510-144923/suite.tsv`.
   The sweep covered 147 rows plus header: all 147 passed, 110 rows reported JBR command replay, 26 rows reported

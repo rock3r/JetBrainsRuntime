@@ -32,9 +32,12 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - Latest live command sentinel now covers the opposite wrong-type direction: an image-filter handle use is rewritten to
   reference a color-filter descriptor and JBR rejects it before replay:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260510-144841/suite.tsv`.
-- Latest full command-probe sweep covered 147 rows plus the header and passed after adding both wrong-type handle
+- Latest live wrong-type descriptor subset also covers shader color-filter child handles, with target-specific Skiko
+  corruption markers for `fillRectColorFilter`, `shaderColorFilter`, and `saveLayerImageFilter`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260510-161400/suite.tsv`.
+- Latest full command-probe sweep covered 148 rows plus the header and passed after adding all three wrong-type handle
   sentinels:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260510-144923/suite.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260510-161539/suite.tsv`.
 - Latest focused RuntimeEffect source-cache eviction subset uses the test-only
   `JBR_SKIA_RUNTIME_EFFECT_CACHE_LIMIT_FOR_TEST=2` override and passed with typed shader and color-filter evict gates:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260509-122623/suite.tsv`.
