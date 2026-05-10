@@ -38,6 +38,12 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Full default command-probe sweep passed after adding the symmetric wrong-type image-filter handle sentinel. The new
+  `commands-image-filter-wrong-effect-type-fallback` row corrupts an image-filter handle use so it references a
+  color-filter descriptor and asserts structured `command-stream-invalid` fallback before replay. The sweep covered
+  147 rows plus header with all rows passing, 110 command replay rows, 26 intentional JBR picture fallback rows, and
+  11 expected explicit fallback-marker rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260510-144923/suite.tsv`.
 - Full default command-probe sweep passed after adding a live wrong-type color-filter handle sentinel. The new
   `commands-color-filter-wrong-effect-type-fallback` row corrupts a color-filter handle use so it references an
   image-filter descriptor and asserts structured `command-stream-invalid` fallback before replay. The sweep covered
