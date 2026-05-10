@@ -38,6 +38,12 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- JBR command-stream parser hardening passed after tightening typed effect-handle validation so color-filter refs cannot
+  use image/path-effect descriptors and image-filter refs cannot use color-filter descriptors. Local artifact rebuild
+  succeeded, the parser-only `JBRSkiaApiTest` validation passed against the rebuilt `/tmp/jbr-skia-run/desktop` patch,
+  and the full default command-probe sweep covered 145 rows plus header with all rows passing, 110 command replay rows,
+  26 intentional JBR picture fallback rows, and 9 expected explicit fallback-marker rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260510-115246/suite.tsv`.
 - Full default command-probe sweep passed after adding the RuntimeEffect color-filter child-count build-failure
   sentinel. The sweep covered 145 rows plus header; all rows passed, with 110 command replay rows, 26 intentional JBR
   picture fallback rows, and 9 expected explicit fallback-marker rows:

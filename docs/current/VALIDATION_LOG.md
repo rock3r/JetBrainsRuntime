@@ -5,6 +5,16 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- JBR command-stream parser hardening passed after tightening typed effect-handle validation for color-filter vs
+  image-filter uses. Local artifact rebuild succeeded:
+  `./scripts/rebuild-jbr-skia-local-artifacts.sh` in
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel`. A parser-only run compiled `JBRSkiaApiTest` against the rebuilt
+  `/tmp/jbr-skia-run/desktop` patch and invoked `assertCommandStreamValidation`; it passed all valid and invalid
+  parser fixtures, including new wrong-type handle cases for shader color filters, fill color-filter refs, image-filter
+  refs, offset image-filter children, and chained path-effect children. A full default command-probe sweep then passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260510-115246/suite.tsv`.
+  The sweep covered 145 rows plus header: all 145 passed, 110 rows reported JBR command replay, 26 rows reported
+  intentional JBR picture fallback, and 9 rows reported expected explicit fallback markers.
 - Full default command-probe sweep passed after adding the RuntimeEffect color-filter child-count build-failure
   sentinel:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260509-225942/suite.tsv`.
