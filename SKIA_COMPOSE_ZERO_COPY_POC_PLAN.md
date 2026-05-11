@@ -16,6 +16,8 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   shader/effect descriptors, RuntimeEffect shaders/color filters, image filters, path effects, blend modes, shadows,
   and graphics-layer variants.
 - Stable descriptor rows assert JBR handle definitions, uses, cache hits, and context invalidation behavior.
+- The default path-effect command row now also gates the stable descriptor-definition contract: five JBR-owned
+  path-effect descriptor definitions and no picture fallback.
 - Raw Skiko-owned shader/effect/path-effect families remain explicit fallback sentinels.
 - Harness windows are non-focus-stealing by default via `MAGIC_JEWEL_BACKGROUND_WINDOW=true`.
 - `MagicLabel` is a test harness switch: when Compose text is disabled, it renders fixed white boxes to isolate geometry
@@ -49,6 +51,9 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - Latest full command-probe sweep covered 149 rows plus the header and passed after adding the path-effect wrong-type
   handle sentinel:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260510-231315/suite.tsv`.
+- Latest focused path-effect descriptor-gate validation passed after tightening `commands-path-effect` to require
+  exactly five JBR effect-handle descriptor definitions:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260511-092433/suite.tsv`.
 - Latest focused RuntimeEffect source-cache eviction subset uses the test-only
   `JBR_SKIA_RUNTIME_EFFECT_CACHE_LIMIT_FOR_TEST=2` override and passed with typed shader and color-filter evict gates:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260509-122623/suite.tsv`.

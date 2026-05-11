@@ -26,7 +26,7 @@ This is the small working roadmap for the current PoC. The full historical check
 - Continue remaining shader-family hardening and fallback sentinels.
 - Continue shader/effect lifecycle coverage: create, use, context-scoped cache hit, compile/build failure, descriptor
   eviction, resize, and forced destination context migration.
-- Tighten stable effect-handle reuse gates on supported rows that still only assert descriptor definition.
+- Tighten stable descriptor definition/reuse gates on supported rows where real report data proves the marker contract.
 - Continue closing transform/graphics-layer edge gaps as they appear in real recorder ground truth.
 - Keep old/new screenshot parity coverage broad enough to catch text/color/placement regressions, including button
   chrome, embedded resource fonts, system fonts, point dots, shader descriptors, RuntimeEffect rows, and graphics-layer
@@ -38,6 +38,10 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused path-effect command replay passed after tightening the default `commands-path-effect` row to require exactly
+  five JBR effect-handle descriptor definitions for the dash, corner, stamped, and chained path-effect scene. The row
+  stayed on command replay with no fallback, zero JBR picture frames, and `jbr_effect_handle_define_frames=5`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260511-092433/suite.tsv`.
 - Full default command-probe sweep passed after adding a path-effect wrong-type color-filter handle sentinel. The new
   `commands-color-filter-path-effect-wrong-type-fallback` row rewrites a fill color-filter handle to a path-effect
   descriptor, requires the target marker `target=fillRectColorFilterPathEffect`, and falls back with
