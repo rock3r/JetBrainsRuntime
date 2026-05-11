@@ -38,6 +38,20 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Full default command-probe sweep passed after adding the RuntimeEffect color-filter child wrong-type handle sentinel.
+  The new `commands-runtime-effect-color-filter-child-wrong-effect-type-fallback` row rewrites the first
+  RuntimeEffect color-filter child handle to an image-filter descriptor supplied by the graphics-layer render-effect
+  scene, requires `SKIKO_JBR_INTEROP_COLOR_FILTER_HANDLE_TYPE_CORRUPTED target=runtimeEffectColorFilterChild`, and
+  falls back with `command-stream-invalid` before JBR replay. The sweep covered 154 rows plus header with all rows
+  passing, 110 command replay rows, 26 intentional JBR picture fallback rows, and 18 expected explicit fallback-marker
+  rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260511-174517/suite.tsv`.
+- Direct parser validation passed against the existing `JBRSkiaApiTest` coverage for a RuntimeEffect color-filter
+  descriptor whose color-filter child handle points at an image-filter descriptor. The test was compiled against
+  `/tmp/jbr-skia-run/desktop` and run headlessly with the patched desktop module and native bridge.
+- Focused RuntimeEffect color-filter child wrong-type sentinel passed before the full sweep, recording one
+  `command-stream-invalid` fallback marker, zero JBR picture frames, and zero JBR command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260511-174429/suite.tsv`.
 - Full default command-probe sweep passed after adding the RuntimeEffect shader child wrong-type handle sentinel. The
   new `commands-runtime-effect-shader-child-wrong-effect-type-fallback` row rewrites the first RuntimeEffect shader
   child handle to a color-filter descriptor, requires
