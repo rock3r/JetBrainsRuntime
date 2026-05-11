@@ -273,6 +273,7 @@ public class JBRSkiaApiTest {
         assertInvalidCommandStream(invalidUndefinedShaderFillStream(), "undefined shader handle fill");
         assertInvalidCommandStream(invalidFillRectShaderColorFilterHandleStream(), "color-filter fill shader handle");
         assertInvalidCommandStream(invalidCompositeShaderChildHandleStream(), "undefined composite shader child handle");
+        assertInvalidCommandStream(invalidCompositeShaderColorFilterChildHandleStream(), "color-filter composite shader child handle");
         assertInvalidCommandStream(invalidShaderColorFilterMissingShaderHandleStream(), "undefined shader color-filter shader handle");
         assertInvalidCommandStream(invalidShaderColorFilterMissingEffectHandleStream(), "undefined shader color-filter effect handle");
         assertInvalidCommandStream(invalidShaderColorFilterImageFilterHandleStream(), "image-filter shader color-filter handle");
@@ -1111,6 +1112,26 @@ public class JBRSkiaApiTest {
                 JBRSkia.COMMAND_SHADER_DESCRIPTOR_VERSION_1,
                 5,
                 0x00000021, 0x00000022,
+                0x00000023, 0x00000024,
+                JBRSkia.COMMAND_BLEND_MODE_SRC_OVER
+        };
+    }
+
+    private static int[] invalidCompositeShaderColorFilterChildHandleStream() {
+        return new int[] {
+                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 23,
+                JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
+                JBRSkia.COMMAND_DEFINE_EFFECT_DESCRIPTOR, 40, JBRSkia.COMMAND_RECORD_FLAGS_NONE,
+                0x00000031, 0x00000032,
+                JBRSkia.COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER,
+                JBRSkia.COMMAND_EFFECT_DESCRIPTOR_VERSION_1,
+                2, 0xff00ffff, JBRSkia.COMMAND_BLEND_MODE_SRC_IN,
+                JBRSkia.COMMAND_DEFINE_SHADER_DESCRIPTOR, 52, JBRSkia.COMMAND_RECORD_FLAGS_NONE,
+                0x00000025, 0x00000026,
+                JBRSkia.COMMAND_SHADER_DESCRIPTOR_COMPOSITE,
+                JBRSkia.COMMAND_SHADER_DESCRIPTOR_VERSION_1,
+                5,
+                0x00000031, 0x00000032,
                 0x00000023, 0x00000024,
                 JBRSkia.COMMAND_BLEND_MODE_SRC_OVER
         };
