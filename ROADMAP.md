@@ -38,6 +38,15 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Full default command-probe sweep passed after adding the shader wrong-type handle sentinel. The new
+  `commands-shader-wrong-effect-type-fallback` row rewrites a fill shader handle use to a color-filter descriptor,
+  requires `SKIKO_JBR_INTEROP_SHADER_HANDLE_TYPE_CORRUPTED target=fillRectShader`, and falls back with
+  `command-stream-invalid` before JBR replay. The sweep covered 150 rows plus header with all rows passing, 110 command
+  replay rows, 26 intentional JBR picture fallback rows, and 14 expected explicit fallback-marker rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260511-110320/suite.tsv`.
+- Direct parser validation passed after adding `JBRSkiaApiTest` coverage for a fill shader ref that points at a
+  color-filter descriptor handle. The test was compiled against `/tmp/jbr-skia-run/desktop` and run headlessly with the
+  patched desktop module and native bridge.
 - Full default command-probe sweep passed after tightening path-effect and resize/forced-context descriptor-definition
   gates. The sweep covered 149 rows plus header with all rows passing, 110 command replay rows, 26 intentional JBR
   picture fallback rows, and 13 expected explicit fallback-marker rows:

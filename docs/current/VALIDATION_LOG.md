@@ -5,6 +5,21 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Full default command-probe sweep passed after adding the shader wrong-type handle sentinel:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260511-110320/suite.tsv`.
+  It covered 150 rows plus header: all 150 passed, 110 rows reported JBR command replay, 26 rows reported intentional
+  JBR picture fallback, and 14 rows reported expected explicit fallback markers. The new
+  `commands-shader-wrong-effect-type-fallback` row recorded
+  `expect_command_fallback_marker=SKIKO_JBR_INTEROP_SHADER_HANDLE_TYPE_CORRUPTED target=fillRectShader`,
+  `validation_failures=none`, one `command-stream-invalid` fallback marker, zero JBR picture frames, and zero JBR
+  command frames. The focused sentinel passed first:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260511-110215/suite.tsv`.
+- JBR parser-only validation passed after adding `invalidFillRectShaderColorFilterHandleStream()` to
+  `JBRSkiaApiTest`. The test was compiled with `javac` against `/tmp/jbr-skia-run/desktop` and the local
+  `JBRApi` stub, then run headlessly with the patched `java.desktop` module and
+  `/tmp/jbr-skia-native/libjbrskiainterop.dylib`; the run exited 0.
+- Skiko `publishToMavenLocal` passed after adding the test-only
+  `skiko.jbr.interop.corruptShaderHandleTypeForTesting` hook that powers the new Magic Jewel row.
 - Full default command-probe sweep passed after tightening path-effect and resize/forced-context descriptor-definition
   gates:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260511-093809/suite.tsv`.
