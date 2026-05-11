@@ -5,6 +5,21 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Full default command-probe sweep passed after adding the RuntimeEffect shader child wrong-type handle sentinel:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260511-161739/suite.tsv`.
+  It covered 153 rows plus header: all 153 passed, 110 rows reported JBR command replay, 26 rows reported intentional
+  JBR picture fallback, and 17 rows reported expected explicit fallback markers. The new
+  `commands-runtime-effect-shader-child-wrong-effect-type-fallback` row recorded
+  `expect_command_fallback_marker=SKIKO_JBR_INTEROP_SHADER_HANDLE_TYPE_CORRUPTED target=runtimeEffectShaderChild`,
+  `validation_failures=none`, one `command-stream-invalid` fallback marker, zero JBR picture frames, and zero JBR
+  command frames. The focused sentinel passed first:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260511-161650/suite.tsv`.
+- JBR parser-only validation passed after adding `invalidRuntimeEffectShaderColorFilterChildHandleStream()` to
+  `JBRSkiaApiTest`. The test was compiled with `javac` against `/tmp/jbr-skia-run/desktop` and the local
+  `JBRApi` stub, then run headlessly with the patched `java.desktop` module and
+  `/tmp/jbr-skia-native/libjbrskiainterop.dylib`; the run exited 0.
+- Skiko `publishToMavenLocal` passed after extending the test-only
+  `skiko.jbr.interop.corruptShaderHandleTypeForTesting` hook to RuntimeEffect shader descriptor children.
 - Full default command-probe sweep passed after adding the composite shader child wrong-type handle sentinel:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260511-145503/suite.tsv`.
   It covered 152 rows plus header: all 152 passed, 110 rows reported JBR command replay, 26 rows reported intentional
