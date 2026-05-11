@@ -282,6 +282,7 @@ public class JBRSkiaApiTest {
         assertInvalidCommandStream(invalidTransformedShaderPayloadCountStream(), "transformed shader payload count mismatch");
         assertInvalidCommandStream(invalidEvictedShaderHandleStream(), "evicted shader handle fill");
         assertInvalidCommandStream(invalidRuntimeEffectShaderHashStream(), "invalid runtime-effect shader source hash stream");
+        assertInvalidCommandStream(invalidRuntimeEffectShaderColorFilterChildHandleStream(), "color-filter runtime-effect shader child handle");
         assertInvalidCommandStream(invalidRuntimeEffectUniformSchemaStream(), "invalid runtime-effect uniform schema stream");
         assertInvalidCommandStream(invalidRuntimeEffectChildSchemaStream(), "invalid runtime-effect child schema stream");
         assertInvalidCommandStream(invalidPerlinNoiseShaderKindStream(), "invalid Perlin noise shader kind stream");
@@ -1385,6 +1386,54 @@ public class JBRSkiaApiTest {
     private static int[] invalidRuntimeEffectShaderHashStream() {
         int[] commands = validRuntimeEffectShaderDescriptorStream();
         commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 13] ^= 1;
+        return commands;
+    }
+
+    private static int[] invalidRuntimeEffectShaderColorFilterChildHandleStream() {
+        String sksl = "uniform shader content;half4 main(float2 p){return content.eval(p);}";
+        long sourceHash = shaderSourceHash(sksl);
+        int payloadIntCount = 7 + 2 + sksl.length();
+        int effectRecordLength = 10;
+        int defineRecordLength = 8 + payloadIntCount;
+        int commandIntCount = effectRecordLength + defineRecordLength;
+        int[] commands = new int[JBRSkia.COMMAND_STREAM_HEADER_SIZE + commandIntCount];
+        int offset = 0;
+        commands[offset++] = JBRSkia.COMMAND_STREAM_MAGIC;
+        commands[offset++] = JBRSkia.ABI_ID;
+        commands[offset++] = JBRSkia.COMMAND_STREAM_FLAGS_NONE;
+        commands[offset++] = commandIntCount;
+        commands[offset++] = JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER;
+        commands[offset++] = JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB;
+        commands[offset++] = JBRSkia.COMMAND_DEFINE_EFFECT_DESCRIPTOR;
+        commands[offset++] = effectRecordLength * Integer.BYTES;
+        commands[offset++] = JBRSkia.COMMAND_RECORD_FLAGS_NONE;
+        commands[offset++] = 0x00000031;
+        commands[offset++] = 0x00000032;
+        commands[offset++] = JBRSkia.COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER;
+        commands[offset++] = JBRSkia.COMMAND_EFFECT_DESCRIPTOR_VERSION_1;
+        commands[offset++] = 2;
+        commands[offset++] = 0xff00ffff;
+        commands[offset++] = JBRSkia.COMMAND_BLEND_MODE_SRC_IN;
+        commands[offset++] = JBRSkia.COMMAND_DEFINE_SHADER_DESCRIPTOR;
+        commands[offset++] = defineRecordLength * Integer.BYTES;
+        commands[offset++] = JBRSkia.COMMAND_RECORD_FLAGS_NONE;
+        commands[offset++] = 0x00000033;
+        commands[offset++] = 0x00000034;
+        commands[offset++] = JBRSkia.COMMAND_SHADER_DESCRIPTOR_RUNTIME_EFFECT;
+        commands[offset++] = JBRSkia.COMMAND_SHADER_DESCRIPTOR_VERSION_1;
+        commands[offset++] = payloadIntCount;
+        commands[offset++] = sksl.length();
+        commands[offset++] = 0;
+        commands[offset++] = 1;
+        commands[offset++] = 0;
+        commands[offset++] = 0;
+        commands[offset++] = (int) (sourceHash >> 32);
+        commands[offset++] = (int) sourceHash;
+        commands[offset++] = 0x00000031;
+        commands[offset++] = 0x00000032;
+        for (int index = 0; index < sksl.length(); index++) {
+            commands[offset++] = sksl.charAt(index);
+        }
         return commands;
     }
 
