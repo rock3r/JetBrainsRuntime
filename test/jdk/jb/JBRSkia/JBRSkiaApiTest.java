@@ -277,6 +277,7 @@ public class JBRSkiaApiTest {
         assertInvalidCommandStream(invalidShaderColorFilterMissingEffectHandleStream(), "undefined shader color-filter effect handle");
         assertInvalidCommandStream(invalidShaderColorFilterImageFilterHandleStream(), "image-filter shader color-filter handle");
         assertInvalidCommandStream(invalidTransformedShaderMissingChildHandleStream(), "undefined transformed shader child handle");
+        assertInvalidCommandStream(invalidTransformedShaderColorFilterChildHandleStream(), "color-filter transformed shader child handle");
         assertInvalidCommandStream(invalidTransformedShaderPayloadCountStream(), "transformed shader payload count mismatch");
         assertInvalidCommandStream(invalidEvictedShaderHandleStream(), "evicted shader handle fill");
         assertInvalidCommandStream(invalidRuntimeEffectShaderHashStream(), "invalid runtime-effect shader source hash stream");
@@ -1251,6 +1252,27 @@ public class JBRSkiaApiTest {
                 JBRSkia.COMMAND_SHADER_DESCRIPTOR_VERSION_1,
                 11,
                 0x00000021, 0x00000022,
+                1000, 0, 3000,
+                0, 1000, 4000,
+                0, 0, 1000
+        };
+    }
+
+    private static int[] invalidTransformedShaderColorFilterChildHandleStream() {
+        return new int[] {
+                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 29,
+                JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
+                JBRSkia.COMMAND_DEFINE_EFFECT_DESCRIPTOR, 40, JBRSkia.COMMAND_RECORD_FLAGS_NONE,
+                0x00000031, 0x00000032,
+                JBRSkia.COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER,
+                JBRSkia.COMMAND_EFFECT_DESCRIPTOR_VERSION_1,
+                2, 0xff00ffff, JBRSkia.COMMAND_BLEND_MODE_SRC_IN,
+                JBRSkia.COMMAND_DEFINE_SHADER_DESCRIPTOR, 76, JBRSkia.COMMAND_RECORD_FLAGS_NONE,
+                0x00000041, 0x00000042,
+                JBRSkia.COMMAND_SHADER_DESCRIPTOR_TRANSFORM,
+                JBRSkia.COMMAND_SHADER_DESCRIPTOR_VERSION_1,
+                11,
+                0x00000031, 0x00000032,
                 1000, 0, 3000,
                 0, 1000, 4000,
                 0, 0, 1000
