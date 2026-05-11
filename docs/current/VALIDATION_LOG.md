@@ -10,6 +10,11 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260511-092433/suite.tsv`.
   The row reported `validation_failures=none`, `fallback_new_count=0`, `jbr_picture_frames=0`,
   `jbr_command_frames=149`, and `jbr_effect_handle_define_frames=5`.
+- Focused resize/forced-context descriptor lifecycle subset passed after tightening max descriptor-definition gates:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260511-092758/suite.tsv`.
+  It covered 18 rows; all 18 passed, no rows reported unsupported reasons, fallback, or JBR picture replay, and all
+  rows reported JBR command frames. Exact descriptor-definition counts were enforced at 2 for simple effect/shader
+  descriptor rows and 6 for composite-noise shader chains.
 - Full default command-probe sweep passed after adding the path-effect wrong-type color-filter handle sentinel:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260510-231315/suite.tsv`.
   The sweep covered 149 rows plus header: all 149 passed, 110 rows reported JBR command replay, 26 rows reported

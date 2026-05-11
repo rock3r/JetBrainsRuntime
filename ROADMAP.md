@@ -42,6 +42,11 @@ This is the small working roadmap for the current PoC. The full historical check
   five JBR effect-handle descriptor definitions for the dash, corner, stamped, and chained path-effect scene. The row
   stayed on command replay with no fallback, zero JBR picture frames, and `jbr_effect_handle_define_frames=5`:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260511-092433/suite.tsv`.
+- Focused resize/forced-context descriptor lifecycle subset passed after tightening max descriptor-definition gates on
+  effect, shader, RuntimeEffect stable color-filter, composite-noise shader, and graphics-layer descriptor rows. The
+  subset covered 18 rows; all 18 passed, all stayed on command replay, and the exact define counts were 2 for simple
+  descriptors and 6 for composite-noise shader chains:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260511-092758/suite.tsv`.
 - Full default command-probe sweep passed after adding a path-effect wrong-type color-filter handle sentinel. The new
   `commands-color-filter-path-effect-wrong-type-fallback` row rewrites a fill color-filter handle to a path-effect
   descriptor, requires the target marker `target=fillRectColorFilterPathEffect`, and falls back with
