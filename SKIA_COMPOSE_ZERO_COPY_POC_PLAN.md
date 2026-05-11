@@ -67,8 +67,15 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `SKIKO_JBR_INTEROP_SHADER_HANDLE_TYPE_CORRUPTED target=fillRectShader`, and JBR parser tests cover the same
   cross-cache mismatch:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260511-110215/suite.tsv`.
-- Latest full command-probe sweep covered 150 rows plus the header and passed after adding that shader wrong-type row:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260511-110320/suite.tsv`.
+- Latest transformed shader child hardening extends the same wrong-type shader handle hook to transformed shader
+  descriptor children. Skiko can rewrite the child shader handle to a color-filter descriptor, Magic Jewel requires
+  `SKIKO_JBR_INTEROP_SHADER_HANDLE_TYPE_CORRUPTED target=transformedShaderChild`, and JBR parser tests cover the
+  transformed-child cross-cache mismatch:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260511-122433/suite.tsv`.
+- Latest full command-probe sweep covered 151 rows plus the header and passed after adding that transformed shader child
+  wrong-type row: all rows passed, with 110 command replay rows, 26 intentional JBR picture fallback rows, and 15
+  expected explicit fallback-marker rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260511-122532/suite.tsv`.
 - Latest focused RuntimeEffect source-cache eviction subset uses the test-only
   `JBR_SKIA_RUNTIME_EFFECT_CACHE_LIMIT_FOR_TEST=2` override and passed with typed shader and color-filter evict gates:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260509-122623/suite.tsv`.

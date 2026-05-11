@@ -38,6 +38,19 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Full default command-probe sweep passed after adding the transformed shader child wrong-type handle sentinel. The new
+  `commands-transformed-shader-child-wrong-effect-type-fallback` row rewrites the transformed shader descriptor child
+  handle to a color-filter descriptor, requires
+  `SKIKO_JBR_INTEROP_SHADER_HANDLE_TYPE_CORRUPTED target=transformedShaderChild`, and falls back with
+  `command-stream-invalid` before JBR replay. The sweep covered 151 rows plus header with all rows passing, 110 command
+  replay rows, 26 intentional JBR picture fallback rows, and 15 expected explicit fallback-marker rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260511-122532/suite.tsv`.
+- Direct parser validation passed after adding `JBRSkiaApiTest` coverage for a transformed shader descriptor whose child
+  shader handle points at a color-filter descriptor. The test was compiled against `/tmp/jbr-skia-run/desktop` and run
+  headlessly with the patched desktop module and native bridge.
+- Focused transformed shader child wrong-type sentinel passed before the full sweep, recording one
+  `command-stream-invalid` fallback marker, zero JBR picture frames, and zero JBR command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260511-122433/suite.tsv`.
 - Full default command-probe sweep passed after adding the shader wrong-type handle sentinel. The new
   `commands-shader-wrong-effect-type-fallback` row rewrites a fill shader handle use to a color-filter descriptor,
   requires `SKIKO_JBR_INTEROP_SHADER_HANDLE_TYPE_CORRUPTED target=fillRectShader`, and falls back with
