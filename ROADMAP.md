@@ -38,6 +38,19 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Full default command-probe sweep passed after adding the chained path-effect child wrong-type handle sentinel. The new
+  `commands-chain-path-effect-child-wrong-effect-type-fallback` row rewrites the chained path-effect child handle to a
+  color-filter descriptor, requires
+  `SKIKO_JBR_INTEROP_PATH_EFFECT_HANDLE_TYPE_CORRUPTED target=chainPathEffectChild`, and falls back with
+  `command-stream-invalid` before JBR replay. The sweep covered 156 rows plus header with all rows passing, 110 command
+  replay rows, 26 intentional JBR picture fallback rows, and 20 expected explicit fallback-marker rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260511-205714/suite.tsv`.
+- Direct parser validation passed against the existing `JBRSkiaApiTest` coverage for a chained path-effect descriptor
+  whose child path-effect handle points at a color-filter descriptor. The test was compiled against
+  `/tmp/jbr-skia-run/desktop` and run headlessly with the patched desktop module and native bridge.
+- Focused chained path-effect child wrong-type sentinel passed before the full sweep, recording one
+  `command-stream-invalid` fallback marker, zero JBR picture frames, and zero JBR command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260511-205629/suite.tsv`.
 - Full default command-probe sweep passed after adding the offset image-filter child wrong-type handle sentinel. The new
   `commands-offset-image-filter-child-wrong-effect-type-fallback` row rewrites the chained render-effect offset
   image-filter child handle to a color-filter descriptor, requires

@@ -5,6 +5,21 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Full default command-probe sweep passed after adding the chained path-effect child wrong-type handle sentinel:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260511-205714/suite.tsv`.
+  It covered 156 rows plus header: all 156 passed, 110 rows reported JBR command replay, 26 rows reported intentional
+  JBR picture fallback, and 20 rows reported expected explicit fallback markers. The new
+  `commands-chain-path-effect-child-wrong-effect-type-fallback` row recorded
+  `expect_command_fallback_marker=SKIKO_JBR_INTEROP_PATH_EFFECT_HANDLE_TYPE_CORRUPTED target=chainPathEffectChild`,
+  `validation_failures=none`, one `command-stream-invalid` fallback marker, zero JBR picture frames, and zero JBR
+  command frames. The focused sentinel passed first:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260511-205629/suite.tsv`.
+- JBR parser-only validation passed against the existing `invalidChainPathEffectColorFilterChildHandleStream()`
+  coverage in `JBRSkiaApiTest`. The test was compiled with `javac` against `/tmp/jbr-skia-run/desktop` and the local
+  `JBRApi` stub, then run headlessly with the patched `java.desktop` module and
+  `/tmp/jbr-skia-native/libjbrskiainterop.dylib`; the run exited 0.
+- Skiko `publishToMavenLocal` passed after adding the test-only
+  `skiko.jbr.interop.corruptPathEffectHandleTypeForTesting` hook for chained path-effect descriptor children.
 - Full default command-probe sweep passed after adding the offset image-filter child wrong-type handle sentinel:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260511-192524/suite.tsv`.
   It covered 155 rows plus header: all 155 passed, 110 rows reported JBR command replay, 26 rows reported intentional
