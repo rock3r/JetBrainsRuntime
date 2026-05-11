@@ -5,6 +5,14 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Full default command-probe sweep passed after tightening path-effect and resize/forced-context descriptor-definition
+  gates:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260511-093809/suite.tsv`.
+  It covered 149 rows plus header: all 149 passed, 110 rows reported JBR command replay, 26 rows reported intentional
+  JBR picture fallback, and 13 rows reported expected explicit fallback markers. Spot-checked tightened rows reported
+  `validation_failures=none`, including `commands-path-effect` with `jbr_effect_handle_define_frames=5`, simple
+  resize/forced-context descriptor rows with exactly 2 definitions, and composite-noise descriptor rows with exactly 6
+  shader definitions.
 - Focused path-effect command replay passed after tightening `commands-path-effect` to require the stable descriptor
   definition contract:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260511-092433/suite.tsv`.

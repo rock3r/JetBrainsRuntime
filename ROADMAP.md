@@ -38,6 +38,10 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Full default command-probe sweep passed after tightening path-effect and resize/forced-context descriptor-definition
+  gates. The sweep covered 149 rows plus header with all rows passing, 110 command replay rows, 26 intentional JBR
+  picture fallback rows, and 13 expected explicit fallback-marker rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260511-093809/suite.tsv`.
 - Focused path-effect command replay passed after tightening the default `commands-path-effect` row to require exactly
   five JBR effect-handle descriptor definitions for the dash, corner, stamped, and chained path-effect scene. The row
   stayed on command replay with no fallback, zero JBR picture frames, and `jbr_effect_handle_define_frames=5`:

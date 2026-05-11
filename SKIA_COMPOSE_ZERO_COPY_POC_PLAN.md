@@ -58,6 +58,10 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   rows across effect, shader, RuntimeEffect stable color-filter, composite-noise shader, and graphics-layer descriptor
   families:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260511-092758/suite.tsv`.
+- Latest full command-probe sweep passed after the descriptor-definition gate tightening. It covered 149 rows plus the
+  header: all rows passed, with 110 command replay rows, 26 intentional JBR picture fallback rows, and 13 expected
+  explicit fallback-marker rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260511-093809/suite.tsv`.
 - Latest focused RuntimeEffect source-cache eviction subset uses the test-only
   `JBR_SKIA_RUNTIME_EFFECT_CACHE_LIMIT_FOR_TEST=2` override and passed with typed shader and color-filter evict gates:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260509-122623/suite.tsv`.
