@@ -38,6 +38,10 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Full screenshot parity sweep passed after the RuntimeEffect shader+color-filter lifecycle gate and focused parity
+  refresh. The sweep covered 106 rows plus header with all rows passing, all 106 rows staying on JBR command replay,
+  and zero rows reporting fallback or JBR picture replay:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260512-204525/suite.tsv`.
 - Full default command-probe sweep passed after tightening the `commands-runtime-effect-shader-color-filter` lifecycle
   gate to require at most one JBR effect-handle definition for the descriptor-backed color-filter side. The sweep
   covered 167 rows plus header with all rows passing, 110 command replay rows, 26 intentional JBR picture fallback

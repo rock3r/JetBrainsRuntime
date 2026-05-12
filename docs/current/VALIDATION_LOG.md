@@ -5,6 +5,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Full screenshot parity sweep passed after the RuntimeEffect shader+color-filter lifecycle gate and focused parity
+  refresh:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260512-204525/suite.tsv`.
+  It covered 106 rows plus header: all 106 passed, all 106 stayed on JBR command replay, and zero rows reported
+  fallback or JBR picture replay. The sweep includes button chrome, native font-data/resource/system text lifecycle,
+  shader/effect descriptor resize and forced-context rows, RuntimeEffect source-cache eviction, graphics-layer
+  transforms, clips, shadows, and render-effect/color-filter/blend-mode combinations.
 - Full default command-probe sweep passed after tightening
   `commands-runtime-effect-shader-color-filter` to cap the descriptor-backed color-filter side at one JBR effect-handle
   definition:

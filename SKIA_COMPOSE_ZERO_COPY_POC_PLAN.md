@@ -117,10 +117,12 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - Latest RuntimeEffect shader+color-filter lifecycle tightening caps the descriptor-backed color-filter side at one
   JBR effect-handle definition while leaving the animated shader side uncapped. Focused validation and a full default
   command sweep both passed; the full sweep covered 167 rows plus the header with all rows passing. Focused screenshot
-  parity for the same row also passed:
+  parity for the same row also passed, followed by a full screenshot parity sweep covering 106 passing command-replay
+  rows:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260512-191213/suite.tsv` and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260512-191321/suite.tsv`, plus
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260512-204143/suite.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260512-204143/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260512-204525/suite.tsv`.
 - Latest compatibility matrix passed after that promotion. It covered 57 rows plus the header: all rows passed, the
   happy-path row replayed commands, the 56 ABI/capability/API mismatch rows fell back with zero JBR command frames, and
   every row used a background probe window:
