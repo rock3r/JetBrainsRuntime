@@ -5,6 +5,18 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Focused descriptor use-after-evict subset passed for shader and color-filter refs:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260512-142300/suite.tsv`.
+  `commands-invalid-descriptor-use-after-evict-fallback` required
+  `SKIKO_JBR_INTEROP_DESCRIPTOR_USE_AFTER_EVICT_CORRUPTED op=58`, and
+  `commands-invalid-color-filter-descriptor-use-after-evict-fallback` required the same marker with `op=47`. Both rows
+  recorded `validation_failures=none`, one `command-stream-invalid` fallback marker, `unsupported=none`, zero JBR
+  picture frames, and zero JBR command frames.
+- JBR parser-only validation passed against the existing `invalidEvictedShaderHandleStream()` and evicted effect
+  descriptor handle coverage in `JBRSkiaApiTest`. The test was run headlessly with the patched `java.desktop` module
+  and `/tmp/jbr-skia-native/libjbrskiainterop.dylib`; the run exited 0.
+- Skiko `publishToMavenLocal` passed after extending the test-only
+  `skiko.jbr.interop.corruptDescriptorUseAfterEvictForTesting` hook to color-filter refs.
 - Focused effect descriptor missing-child sentinels passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260512-141506/suite.tsv`.
   `commands-runtime-effect-color-filter-child-missing-fallback`,

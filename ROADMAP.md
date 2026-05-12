@@ -38,6 +38,15 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused descriptor use-after-evict subset passed for both shader and color-filter refs. The existing
+  `commands-invalid-descriptor-use-after-evict-fallback` row now requires
+  `SKIKO_JBR_INTEROP_DESCRIPTOR_USE_AFTER_EVICT_CORRUPTED op=58`, and the new
+  `commands-invalid-color-filter-descriptor-use-after-evict-fallback` row requires the same marker with `op=47`.
+  Both rows recorded one `command-stream-invalid` fallback marker, `unsupported=none`, zero JBR picture frames, and
+  zero JBR command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260512-142300/suite.tsv`.
+- Direct parser validation passed against the existing `JBRSkiaApiTest` coverage for evicted shader and effect
+  descriptor handles.
 - Focused effect descriptor missing-child sentinels passed. The
   `commands-runtime-effect-color-filter-child-missing-fallback`,
   `commands-offset-image-filter-child-missing-fallback`, `commands-chain-path-effect-child-missing-fallback`, and

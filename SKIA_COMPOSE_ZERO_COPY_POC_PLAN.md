@@ -354,6 +354,8 @@ Current validation gates are intentionally broad but summarized here to keep thi
 - RuntimeEffect color-filter, offset image-filter, chained path-effect, and shader-color-filter effect children now have
   focused missing-child sentinels that rewrite a recorded child slot to an undefined effect handle and require
   pre-replay `command-stream-invalid` fallback.
+- Top-level descriptor use-after-evict coverage now includes both shader refs and color-filter refs with live marker
+  gates, proving stale handle rejection before any JBR picture or command replay.
 - Transformed, composite, and shader-color-filter descriptor children now have focused missing-child sentinels that
   rewrite a recorded child slot to an undefined shader handle and require pre-replay `command-stream-invalid` fallback.
 - Offset image-filter and chained path-effect descriptors now have focused evicted-child sentinels. The live probes
