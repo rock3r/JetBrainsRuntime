@@ -5,6 +5,20 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Full default command-probe sweep passed after tightening
+  `commands-runtime-effect-shader-color-filter` to cap the descriptor-backed color-filter side at one JBR effect-handle
+  definition:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260512-191321/suite.tsv`.
+  It covered 167 rows plus header: all 167 passed, 110 rows reported JBR command replay, 26 rows reported intentional
+  JBR picture fallback, and 31 rows reported expected explicit fallback markers. The tightened row recorded zero
+  fallback, zero JBR picture frames, 582 JBR command frames, one effect-handle definition, 946 effect-handle uses, 945
+  effect-handle cache hits, 945 RuntimeEffect source-cache hits, and one RuntimeEffect source-cache miss.
+- Focused `commands-runtime-effect-shader-color-filter` gate validation passed after adding
+  `EXPECT_MAX_JBR_EFFECT_HANDLE_DEFINES=1`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260512-191213/suite.tsv`.
+  The row stayed on command replay with zero fallback, zero JBR picture frames, 600 JBR command frames, one
+  effect-handle definition, 1150 effect-handle uses, 1149 effect-handle cache hits, 1151 RuntimeEffect source-cache
+  hits, and one RuntimeEffect source-cache miss.
 - Full compatibility matrix passed after promoting the invalid-handle sentinels into the default command suite:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260512-183854/matrix.tsv`.
   It covered 57 rows plus header: all 57 passed, the happy-path row replayed commands, and the 56 ABI/capability/API

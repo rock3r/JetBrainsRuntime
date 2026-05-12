@@ -38,6 +38,13 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Full default command-probe sweep passed after tightening the `commands-runtime-effect-shader-color-filter` lifecycle
+  gate to require at most one JBR effect-handle definition for the descriptor-backed color-filter side. The sweep
+  covered 167 rows plus header with all rows passing, 110 command replay rows, 26 intentional JBR picture fallback
+  rows, and 31 expected explicit fallback-marker rows. The tightened row recorded one effect-handle definition, 946
+  effect-handle uses, 945 effect-handle cache hits, 945 RuntimeEffect source-cache hits, one RuntimeEffect source-cache
+  miss, zero JBR picture frames, and 582 JBR command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260512-191321/suite.tsv`.
 - Full compatibility matrix passed after promoting the invalid-handle sentinels into the default command suite. The
   matrix covered 57 rows plus header: all rows passed, the happy-path row replayed commands, the 56 ABI/capability/API
   mismatch rows reported fallback with zero JBR command frames, and every row used a background probe window:
