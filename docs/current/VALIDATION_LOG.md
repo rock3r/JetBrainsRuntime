@@ -5,6 +5,20 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Full default command-probe sweep passed after adding a live unknown shader descriptor type sentinel:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260512-230029/suite.tsv`.
+  It covered 168 rows plus header: all 168 passed, 110 rows reported JBR command replay, 26 rows reported intentional
+  JBR picture fallback, and 32 rows reported expected explicit fallback markers. The new
+  `commands-invalid-shader-descriptor-type-fallback` row required
+  `SKIKO_JBR_INTEROP_SHADER_DESCRIPTOR_TYPE_CORRUPTED`, recorded one `command-stream-invalid` fallback marker,
+  `unsupported=none`, zero JBR picture frames, and zero JBR command frames.
+- Focused `commands-invalid-shader-descriptor-type-fallback` validation passed before the full sweep:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260512-225953/suite.tsv`.
+  The row rewrote one shader descriptor type after recording, matched JBR parser-only coverage for unknown shader
+  descriptor types, and failed closed before replay with zero JBR picture/command frames.
+- Skiko `publishToMavenLocal` passed after adding the test-only
+  `skiko.jbr.interop.corruptShaderDescriptorTypeForTesting` hook. Magic Jewel report-validation unit tests also passed
+  after wiring `MAGIC_JEWEL_CORRUPT_SHADER_DESCRIPTOR_TYPE` through the report and run scripts.
 - Full screenshot parity sweep passed after the RuntimeEffect shader+color-filter lifecycle gate and focused parity
   refresh:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260512-204525/suite.tsv`.

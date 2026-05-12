@@ -123,6 +123,13 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260512-191321/suite.tsv`, plus
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260512-204143/suite.tsv` and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260512-204525/suite.tsv`.
+- Latest malformed shader descriptor metadata hardening adds a live unknown descriptor-type sentinel. Skiko can now
+  corrupt one shader descriptor type after recording, Magic Jewel requires
+  `SKIKO_JBR_INTEROP_SHADER_DESCRIPTOR_TYPE_CORRUPTED`, and the row fails closed with structured
+  `command-stream-invalid` fallback before JBR replay. Focused validation passed, followed by a full default command
+  sweep covering 168 passing rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260512-225953/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260512-230029/suite.tsv`.
 - Latest compatibility matrix passed after that promotion. It covered 57 rows plus the header: all rows passed, the
   happy-path row replayed commands, the 56 ABI/capability/API mismatch rows fell back with zero JBR command frames, and
   every row used a background probe window:

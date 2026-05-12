@@ -38,6 +38,15 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Full default command-probe sweep passed after adding a live unknown shader descriptor type sentinel. The sweep
+  covered 168 rows plus header with all rows passing, 110 command replay rows, 26 intentional JBR picture fallback
+  rows, and 32 expected explicit fallback-marker rows. The new
+  `commands-invalid-shader-descriptor-type-fallback` row required
+  `SKIKO_JBR_INTEROP_SHADER_DESCRIPTOR_TYPE_CORRUPTED`, recorded one `command-stream-invalid` fallback marker,
+  `unsupported=none`, zero JBR picture frames, and zero JBR command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260512-230029/suite.tsv`.
+- Focused validation for the same unknown shader descriptor type sentinel passed before the full sweep:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260512-225953/suite.tsv`.
 - Full screenshot parity sweep passed after the RuntimeEffect shader+color-filter lifecycle gate and focused parity
   refresh. The sweep covered 106 rows plus header with all rows passing, all 106 rows staying on JBR command replay,
   and zero rows reporting fallback or JBR picture replay:
