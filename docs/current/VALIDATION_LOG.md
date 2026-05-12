@@ -5,6 +5,20 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Focused shader descriptor missing-child sentinels passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260512-140546/suite.tsv`.
+  `commands-transformed-shader-child-missing-fallback`,
+  `commands-composite-shader-child-missing-fallback`, and
+  `commands-shader-color-filter-shader-child-missing-fallback` each recorded `validation_failures=none`, one
+  `command-stream-invalid` fallback marker, `unsupported=none`, zero JBR picture frames, and zero JBR command frames.
+  The rows required `SKIKO_JBR_INTEROP_SHADER_CHILD_MISSING_CORRUPTED` markers with targets
+  `transformedShaderChild`, `compositeShaderDstChild`, and `shaderColorFilterShaderChild`.
+- JBR parser-only validation passed against the existing `invalidTransformedShaderMissingChildHandleStream()`,
+  `invalidCompositeShaderChildHandleStream()`, and `invalidShaderColorFilterMissingShaderHandleStream()` coverage in
+  `JBRSkiaApiTest`. The test was run headlessly with the patched `java.desktop` module and
+  `/tmp/jbr-skia-native/libjbrskiainterop.dylib`; the run exited 0.
+- Skiko `publishToMavenLocal` passed after adding the test-only
+  `skiko.jbr.interop.corruptShaderChildMissingForTesting` hook for shader descriptor children.
 - Focused evicted effect-child handle sentinels passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260512-135408/suite.tsv`.
   `commands-invalid-effect-child-use-after-evict-fallback` inserted an eviction for the offset image-filter child

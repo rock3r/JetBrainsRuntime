@@ -38,6 +38,17 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused shader descriptor missing-child sentinels passed. The
+  `commands-transformed-shader-child-missing-fallback`,
+  `commands-composite-shader-child-missing-fallback`, and
+  `commands-shader-color-filter-shader-child-missing-fallback` rows rewrite a descriptor child slot to an undefined
+  shader handle, require `SKIKO_JBR_INTEROP_SHADER_CHILD_MISSING_CORRUPTED target=...`, and fall back with
+  `command-stream-invalid` before JBR replay. All three rows recorded one fallback marker, `unsupported=none`, zero
+  JBR picture frames, and zero JBR command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260512-140546/suite.tsv`.
+- Direct parser validation passed against the existing `JBRSkiaApiTest` coverage for missing transformed-shader child
+  handles, missing composite-shader child handles, and missing shader-color-filter shader handles. The test was run
+  headlessly with the patched desktop module and native bridge.
 - Focused evicted effect-child handle sentinels passed. The
   `commands-invalid-effect-child-use-after-evict-fallback` and
   `commands-invalid-path-effect-child-use-after-evict-fallback` rows insert a child-handle eviction immediately before
