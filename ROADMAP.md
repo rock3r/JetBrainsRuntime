@@ -38,6 +38,17 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused evicted effect-child handle sentinels passed. The
+  `commands-invalid-effect-child-use-after-evict-fallback` and
+  `commands-invalid-path-effect-child-use-after-evict-fallback` rows insert a child-handle eviction immediately before
+  the parent offset image-filter or chained path-effect descriptor, require
+  `SKIKO_JBR_INTEROP_EFFECT_CHILD_USE_AFTER_EVICT_CORRUPTED target=...`, and fall back with
+  `command-stream-invalid` before JBR replay. Both rows recorded one fallback marker, `unsupported=none`, zero JBR
+  picture frames, and zero JBR command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260512-135408/suite.tsv`.
+- Direct parser validation passed against the existing `JBRSkiaApiTest` coverage for evicted offset image-filter child
+  handles and evicted chained path-effect child handles. The test was compiled against `/tmp/jbr-skia-run/desktop` and
+  run headlessly with the patched desktop module and native bridge.
 - Full default command-probe sweep passed after adding the chained path-effect child wrong-type handle sentinel. The new
   `commands-chain-path-effect-child-wrong-effect-type-fallback` row rewrites the chained path-effect child handle to a
   color-filter descriptor, requires

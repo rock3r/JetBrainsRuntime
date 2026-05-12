@@ -351,6 +351,9 @@ Current validation gates are intentionally broad but summarized here to keep thi
   parent color-filter descriptors cannot smuggle invalid child metadata into command replay.
 - RuntimeEffect shader recursive child descriptors now have the same focused invalid nested-child fallback sentinel for
   parent shader handles.
+- Offset image-filter and chained path-effect descriptors now have focused evicted-child sentinels. The live probes
+  insert a child-handle eviction immediately before the parent descriptor, then assert `command-stream-invalid`,
+  `unsupported=none`, and zero JBR picture/command frames.
 - RuntimeEffect color-filter build failures now have a focused child-type sentinel that corrupts a recorded
   color-filter child descriptor into a shader child and asserts JBR reports
   `JBR_SKIA_INTEROP_RUNTIME_COLOR_FILTER_BUILD_FAILED ... stage=positional-child-type` before Skiko falls back.
