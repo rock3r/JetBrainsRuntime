@@ -5,6 +5,19 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Full default command-probe sweep passed after promoting focused invalid-handle sentinels into the default case list:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260512-171413/suite.tsv`.
+  It covered 167 rows plus header: all 167 passed, 110 rows reported JBR command replay, 26 rows reported intentional
+  JBR picture fallback, and 31 rows reported expected explicit fallback markers. The promoted rows include
+  `commands-invalid-shader-descriptor-use-fallback`,
+  `commands-invalid-color-filter-descriptor-use-after-evict-fallback`,
+  `commands-invalid-effect-child-use-after-evict-fallback`,
+  `commands-invalid-path-effect-child-use-after-evict-fallback`,
+  `commands-runtime-effect-color-filter-child-missing-fallback`,
+  `commands-offset-image-filter-child-missing-fallback`, `commands-chain-path-effect-child-missing-fallback`,
+  `commands-shader-color-filter-effect-child-missing-fallback`,
+  `commands-transformed-shader-child-missing-fallback`, `commands-composite-shader-child-missing-fallback`, and
+  `commands-shader-color-filter-shader-child-missing-fallback`.
 - Full default command-probe sweep passed after tightening `commands-invalid-descriptor-use-fallback` to require the
   typed Skiko corruption marker:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260512-155150/suite.tsv`.

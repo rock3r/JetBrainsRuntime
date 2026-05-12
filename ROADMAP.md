@@ -38,6 +38,12 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Full default command-probe sweep passed after promoting focused invalid-handle sentinels into the default case list.
+  The sweep covered 167 rows plus header with all rows passing, 110 command replay rows, 26 intentional JBR picture
+  fallback rows, and 31 expected explicit fallback-marker rows. The promoted rows cover undefined shader descriptor
+  use, color-filter descriptor use-after-evict, effect-child use-after-evict, effect-child missing handles, and shader
+  child missing handles:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260512-171413/suite.tsv`.
 - Full default command-probe sweep passed after tightening the descriptor undefined-use default row to require the typed
   Skiko corruption marker. The sweep covered 156 rows plus header with all rows passing, 110 command replay rows, 26
   intentional JBR picture fallback rows, and 20 expected explicit fallback-marker rows. The tightened
