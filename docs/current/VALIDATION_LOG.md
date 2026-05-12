@@ -5,12 +5,18 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
-- Full default command-probe sweep passed after tightening `commands-invalid-descriptor-use-after-evict-fallback` to
-  require the typed Skiko corruption marker:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260512-142609/suite.tsv`.
+- Full default command-probe sweep passed after tightening `commands-invalid-descriptor-use-fallback` to require the
+  typed Skiko corruption marker:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260512-155150/suite.tsv`.
   It covered 156 rows plus header: all 156 passed, 110 rows reported JBR command replay, 26 rows reported intentional
   JBR picture fallback, and 20 rows reported expected explicit fallback markers. The tightened row recorded
-  `expect_command_fallback_marker=SKIKO_JBR_INTEROP_DESCRIPTOR_USE_AFTER_EVICT_CORRUPTED op=58`,
+  `expect_command_fallback_marker=SKIKO_JBR_INTEROP_DESCRIPTOR_USE_CORRUPTED op=47`,
+  `validation_failures=none`, one `command-stream-invalid` fallback marker, zero JBR picture frames, and zero JBR
+  command frames.
+- Focused undefined shader descriptor use sentinel passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260512-155027/suite.tsv`.
+  `commands-invalid-shader-descriptor-use-fallback` recorded
+  `expect_command_fallback_marker=SKIKO_JBR_INTEROP_DESCRIPTOR_USE_CORRUPTED op=58`,
   `validation_failures=none`, one `command-stream-invalid` fallback marker, zero JBR picture frames, and zero JBR
   command frames.
 - Focused descriptor use-after-evict subset passed for shader and color-filter refs:

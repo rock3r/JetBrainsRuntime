@@ -38,13 +38,17 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
-- Full default command-probe sweep passed after tightening the descriptor use-after-evict default row to require the
-  typed Skiko corruption marker. The sweep covered 156 rows plus header with all rows passing, 110 command replay rows,
-  26 intentional JBR picture fallback rows, and 20 expected explicit fallback-marker rows. The tightened
-  `commands-invalid-descriptor-use-after-evict-fallback` row required
-  `SKIKO_JBR_INTEROP_DESCRIPTOR_USE_AFTER_EVICT_CORRUPTED op=58`, recorded one `command-stream-invalid` fallback
-  marker, and produced zero JBR picture/command frames:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260512-142609/suite.tsv`.
+- Full default command-probe sweep passed after tightening the descriptor undefined-use default row to require the typed
+  Skiko corruption marker. The sweep covered 156 rows plus header with all rows passing, 110 command replay rows, 26
+  intentional JBR picture fallback rows, and 20 expected explicit fallback-marker rows. The tightened
+  `commands-invalid-descriptor-use-fallback` row required
+  `SKIKO_JBR_INTEROP_DESCRIPTOR_USE_CORRUPTED op=47`, recorded one `command-stream-invalid` fallback marker, and
+  produced zero JBR picture/command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260512-155150/suite.tsv`.
+- Focused undefined shader descriptor use sentinel passed. The
+  `commands-invalid-shader-descriptor-use-fallback` row rewrites a shader ref to an undefined handle, requires
+  `SKIKO_JBR_INTEROP_DESCRIPTOR_USE_CORRUPTED op=58`, and falls back with `command-stream-invalid` before JBR replay:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260512-155027/suite.tsv`.
 - Focused descriptor use-after-evict subset passed for both shader and color-filter refs. The existing
   `commands-invalid-descriptor-use-after-evict-fallback` row now requires
   `SKIKO_JBR_INTEROP_DESCRIPTOR_USE_AFTER_EVICT_CORRUPTED op=58`, and the new
@@ -52,8 +56,8 @@ This is the small working roadmap for the current PoC. The full historical check
   Both rows recorded one `command-stream-invalid` fallback marker, `unsupported=none`, zero JBR picture frames, and
   zero JBR command frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260512-142300/suite.tsv`.
-- Direct parser validation passed against the existing `JBRSkiaApiTest` coverage for evicted shader and effect
-  descriptor handles.
+- Direct parser validation passed against the existing `JBRSkiaApiTest` coverage for undefined shader/effect descriptor
+  uses and evicted shader/effect descriptor handles.
 - Focused effect descriptor missing-child sentinels passed. The
   `commands-runtime-effect-color-filter-child-missing-fallback`,
   `commands-offset-image-filter-child-missing-fallback`, `commands-chain-path-effect-child-missing-fallback`, and

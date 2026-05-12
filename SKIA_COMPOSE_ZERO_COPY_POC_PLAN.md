@@ -111,9 +111,9 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   cover the chained path-effect child cross-cache mismatch:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260511-205629/suite.tsv`.
 - Latest full command-probe sweep covered 156 rows plus the header and passed after tightening the descriptor
-  use-after-evict marker gate: all rows passed, with 110 command replay rows, 26 intentional JBR picture fallback rows, and 20
+  undefined-use marker gate: all rows passed, with 110 command replay rows, 26 intentional JBR picture fallback rows, and 20
   expected explicit fallback-marker rows:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260512-142609/suite.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260512-155150/suite.tsv`.
 - Latest focused RuntimeEffect source-cache eviction subset uses the test-only
   `JBR_SKIA_RUNTIME_EFFECT_CACHE_LIMIT_FOR_TEST=2` override and passed with typed shader and color-filter evict gates:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260509-122623/suite.tsv`.
@@ -356,6 +356,8 @@ Current validation gates are intentionally broad but summarized here to keep thi
   pre-replay `command-stream-invalid` fallback.
 - Top-level descriptor use-after-evict coverage now includes both shader refs and color-filter refs with live marker
   gates, proving stale handle rejection before any JBR picture or command replay.
+- Top-level undefined descriptor use coverage now includes both color-filter refs in the default suite and a focused
+  shader-ref sentinel, both with live marker gates and zero JBR replay.
 - Transformed, composite, and shader-color-filter descriptor children now have focused missing-child sentinels that
   rewrite a recorded child slot to an undefined shader handle and require pre-replay `command-stream-invalid` fallback.
 - Offset image-filter and chained path-effect descriptors now have focused evicted-child sentinels. The live probes
