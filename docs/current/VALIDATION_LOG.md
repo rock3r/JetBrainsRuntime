@@ -19,6 +19,11 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   The row stayed on command replay with zero fallback, zero JBR picture frames, 600 JBR command frames, one
   effect-handle definition, 1150 effect-handle uses, 1149 effect-handle cache hits, 1151 RuntimeEffect source-cache
   hits, and one RuntimeEffect source-cache miss.
+- Focused screenshot parity for the same RuntimeEffect shader+color-filter row passed after the command lifecycle gate
+  tightening:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260512-204143/suite.tsv`.
+  The row stayed on command replay with zero fallback, zero JBR picture frames, 797 JBR command frames,
+  `avg_delta=2.110`, `bad_pixel_ratio=0.05006`, and `compose_shader_linear_bad_pixel_ratio=0.06584`.
 - Full compatibility matrix passed after promoting the invalid-handle sentinels into the default command suite:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260512-183854/matrix.tsv`.
   It covered 57 rows plus header: all 57 passed, the happy-path row replayed commands, and the 56 ABI/capability/API
