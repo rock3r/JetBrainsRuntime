@@ -114,6 +114,10 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   sentinels into the default suite: all rows passed, with 110 command replay rows, 26 intentional JBR picture fallback rows, and 31
   expected explicit fallback-marker rows:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260512-171413/suite.tsv`.
+- Latest compatibility matrix passed after that promotion. It covered 57 rows plus the header: all rows passed, the
+  happy-path row replayed commands, the 56 ABI/capability/API mismatch rows fell back with zero JBR command frames, and
+  every row used a background probe window:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260512-183854/matrix.tsv`.
 - Latest focused RuntimeEffect source-cache eviction subset uses the test-only
   `JBR_SKIA_RUNTIME_EFFECT_CACHE_LIMIT_FOR_TEST=2` override and passed with typed shader and color-filter evict gates:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260509-122623/suite.tsv`.

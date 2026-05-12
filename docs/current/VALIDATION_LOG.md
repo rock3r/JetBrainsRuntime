@@ -5,6 +5,11 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Full compatibility matrix passed after promoting the invalid-handle sentinels into the default command suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260512-183854/matrix.tsv`.
+  It covered 57 rows plus header: all 57 passed, the happy-path row replayed commands, and the 56 ABI/capability/API
+  mismatch rows each reported fallback with zero JBR command frames. Every row ran with
+  `background_window=true`.
 - Full default command-probe sweep passed after promoting focused invalid-handle sentinels into the default case list:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260512-171413/suite.tsv`.
   It covered 167 rows plus header: all 167 passed, 110 rows reported JBR command replay, 26 rows reported intentional

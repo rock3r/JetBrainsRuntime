@@ -38,6 +38,10 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Full compatibility matrix passed after promoting the invalid-handle sentinels into the default command suite. The
+  matrix covered 57 rows plus header: all rows passed, the happy-path row replayed commands, the 56 ABI/capability/API
+  mismatch rows reported fallback with zero JBR command frames, and every row used a background probe window:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260512-183854/matrix.tsv`.
 - Full default command-probe sweep passed after promoting focused invalid-handle sentinels into the default case list.
   The sweep covered 167 rows plus header with all rows passing, 110 command replay rows, 26 intentional JBR picture
   fallback rows, and 31 expected explicit fallback-marker rows. The promoted rows cover undefined shader descriptor
