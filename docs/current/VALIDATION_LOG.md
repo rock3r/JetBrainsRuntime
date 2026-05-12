@@ -5,6 +5,21 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Focused effect descriptor missing-child sentinels passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260512-141506/suite.tsv`.
+  `commands-runtime-effect-color-filter-child-missing-fallback`,
+  `commands-offset-image-filter-child-missing-fallback`, `commands-chain-path-effect-child-missing-fallback`, and
+  `commands-shader-color-filter-effect-child-missing-fallback` each recorded `validation_failures=none`, one
+  `command-stream-invalid` fallback marker, `unsupported=none`, zero JBR picture frames, and zero JBR command frames.
+  The rows required `SKIKO_JBR_INTEROP_EFFECT_CHILD_MISSING_CORRUPTED` markers with targets
+  `runtimeEffectColorFilterChild`, `offsetImageFilterChild`, `chainPathEffectChild`, and
+  `shaderColorFilterEffectChild`.
+- JBR parser-only validation passed against the existing `invalidRuntimeColorFilterMissingChildHandleStream()`,
+  `invalidOffsetImageFilterMissingChildHandleStream()`, `invalidChainPathEffectMissingChildHandleStream()`, and
+  `invalidShaderColorFilterMissingEffectHandleStream()` coverage in `JBRSkiaApiTest`. The test was run headlessly with
+  the patched `java.desktop` module and `/tmp/jbr-skia-native/libjbrskiainterop.dylib`; the run exited 0.
+- Skiko `publishToMavenLocal` passed after adding the test-only
+  `skiko.jbr.interop.corruptEffectChildMissingForTesting` hook for effect descriptor children.
 - Focused shader descriptor missing-child sentinels passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260512-140546/suite.tsv`.
   `commands-transformed-shader-child-missing-fallback`,

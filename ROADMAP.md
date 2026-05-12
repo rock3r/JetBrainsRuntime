@@ -38,6 +38,17 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused effect descriptor missing-child sentinels passed. The
+  `commands-runtime-effect-color-filter-child-missing-fallback`,
+  `commands-offset-image-filter-child-missing-fallback`, `commands-chain-path-effect-child-missing-fallback`, and
+  `commands-shader-color-filter-effect-child-missing-fallback` rows rewrite an effect-child slot to an undefined
+  effect handle, require `SKIKO_JBR_INTEROP_EFFECT_CHILD_MISSING_CORRUPTED target=...`, and fall back with
+  `command-stream-invalid` before JBR replay. All four rows recorded one fallback marker, `unsupported=none`, zero JBR
+  picture frames, and zero JBR command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260512-141506/suite.tsv`.
+- Direct parser validation passed against the existing `JBRSkiaApiTest` coverage for missing RuntimeEffect
+  color-filter child handles, missing offset image-filter child handles, missing chained path-effect child handles, and
+  missing shader-color-filter effect handles.
 - Focused shader descriptor missing-child sentinels passed. The
   `commands-transformed-shader-child-missing-fallback`,
   `commands-composite-shader-child-missing-fallback`, and

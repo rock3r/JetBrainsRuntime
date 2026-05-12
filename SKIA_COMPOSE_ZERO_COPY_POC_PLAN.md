@@ -351,6 +351,9 @@ Current validation gates are intentionally broad but summarized here to keep thi
   parent color-filter descriptors cannot smuggle invalid child metadata into command replay.
 - RuntimeEffect shader recursive child descriptors now have the same focused invalid nested-child fallback sentinel for
   parent shader handles.
+- RuntimeEffect color-filter, offset image-filter, chained path-effect, and shader-color-filter effect children now have
+  focused missing-child sentinels that rewrite a recorded child slot to an undefined effect handle and require
+  pre-replay `command-stream-invalid` fallback.
 - Transformed, composite, and shader-color-filter descriptor children now have focused missing-child sentinels that
   rewrite a recorded child slot to an undefined shader handle and require pre-replay `command-stream-invalid` fallback.
 - Offset image-filter and chained path-effect descriptors now have focused evicted-child sentinels. The live probes
