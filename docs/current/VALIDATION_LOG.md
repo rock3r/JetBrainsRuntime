@@ -5,6 +5,20 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Full default command-probe sweep passed after adding a live shader descriptor record-length mismatch sentinel:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260513-153044/suite.tsv`.
+  It covered 170 rows plus header: all 170 passed, 110 rows reported JBR command replay, 26 rows reported intentional
+  JBR picture fallback, and 34 rows reported expected explicit fallback markers. The new
+  `commands-invalid-shader-descriptor-record-length-fallback` row required
+  `SKIKO_JBR_INTEROP_SHADER_DESCRIPTOR_RECORD_LENGTH_CORRUPTED`, recorded one `command-stream-invalid` fallback
+  marker, `unsupported=none`, zero JBR picture frames, and zero JBR command frames.
+- Focused `commands-invalid-shader-descriptor-record-length-fallback` validation passed before the full sweep:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260513-153009/suite.tsv`.
+  The row shortened one shader descriptor record length after recording, matching JBR parser-only record-length
+  mismatch coverage, and failed closed before replay with zero JBR picture/command frames.
+- Skiko `publishToMavenLocal` passed after adding the test-only
+  `skiko.jbr.interop.corruptShaderDescriptorRecordLengthForTesting` hook. Magic Jewel report-validation unit tests
+  also passed after wiring `MAGIC_JEWEL_CORRUPT_SHADER_DESCRIPTOR_RECORD_LENGTH` through the report and run scripts.
 - Full default command-probe sweep passed after adding a live shader descriptor payload-count mismatch sentinel:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260513-140412/suite.tsv`.
   It covered 169 rows plus header: all 169 passed, 110 rows reported JBR command replay, 26 rows reported intentional
