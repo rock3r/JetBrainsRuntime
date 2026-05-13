@@ -5,6 +5,17 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Full default command-probe sweep passed after adding a live unknown effect descriptor type sentinel:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260513-204652/suite.tsv`.
+  It covered 174 rows plus header: all 174 passed, 110 rows reported JBR command replay, 26 rows reported intentional
+  JBR picture fallback, and 38 rows reported expected explicit fallback markers. The new
+  `commands-invalid-effect-descriptor-type-fallback` row required
+  `SKIKO_JBR_INTEROP_EFFECT_DESCRIPTOR_TYPE_CORRUPTED`, recorded one `command-stream-invalid` fallback marker,
+  `unsupported=none`, zero JBR picture frames, and zero JBR command frames.
+- Focused `commands-invalid-effect-descriptor-type-fallback` validation passed before the full sweep:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260513-204604/suite.tsv`.
+  The row rewrote one effect descriptor type after recording, matching JBR parser-only unknown effect descriptor type
+  coverage, and failed closed before replay with zero JBR picture/command frames.
 - Full default command-probe sweep passed after adding live effect descriptor version, payload-count, and record-length
   mismatch sentinels:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260513-183706/suite.tsv`.
