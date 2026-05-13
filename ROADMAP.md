@@ -38,6 +38,15 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Full default command-probe sweep passed after adding a live transformed shader descriptor payload-count mismatch
+  sentinel. The sweep covered 175 rows plus header with all rows passing, 110 command replay rows, 26 intentional JBR
+  picture fallback rows, and 39 expected explicit fallback-marker rows. The new
+  `commands-invalid-transformed-shader-descriptor-payload-count-fallback` row required
+  `SKIKO_JBR_INTEROP_TRANSFORMED_SHADER_DESCRIPTOR_PAYLOAD_COUNT_CORRUPTED`, recorded one
+  `command-stream-invalid` fallback marker, `unsupported=none`, zero JBR picture frames, and zero JBR command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260513-224940/suite.tsv`.
+- Focused validation for the same transformed shader descriptor payload-count sentinel passed before the full sweep:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260513-224856/suite.tsv`.
 - Full default command-probe sweep passed after adding a live unknown effect descriptor type sentinel. The sweep covered
   174 rows plus header with all rows passing, 110 command replay rows, 26 intentional JBR picture fallback rows, and
   38 expected explicit fallback-marker rows. The new `commands-invalid-effect-descriptor-type-fallback` row required

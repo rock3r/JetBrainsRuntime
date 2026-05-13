@@ -5,6 +5,22 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Full default command-probe sweep passed after adding a live transformed shader descriptor payload-count mismatch
+  sentinel:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260513-224940/suite.tsv`.
+  It covered 175 rows plus header: all 175 passed, 110 rows reported JBR command replay, 26 rows reported intentional
+  JBR picture fallback, and 39 rows reported expected explicit fallback markers. The new
+  `commands-invalid-transformed-shader-descriptor-payload-count-fallback` row required
+  `SKIKO_JBR_INTEROP_TRANSFORMED_SHADER_DESCRIPTOR_PAYLOAD_COUNT_CORRUPTED`, recorded one
+  `command-stream-invalid` fallback marker, `unsupported=none`, zero JBR picture frames, and zero JBR command frames.
+- Focused `commands-invalid-transformed-shader-descriptor-payload-count-fallback` validation passed before the full
+  sweep:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260513-224856/suite.tsv`.
+  The row rewrote one transformed shader descriptor payload count from 11 to 10 after recording, matching JBR
+  parser-only transformed shader payload-count mismatch coverage, and failed closed before replay with zero JBR
+  picture/command frames.
+- Skiko `publishToMavenLocal` passed after adding the test-only
+  `skiko.jbr.interop.corruptTransformedShaderDescriptorPayloadCountForTesting` hook.
 - Full default command-probe sweep passed after adding a live unknown effect descriptor type sentinel:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260513-204652/suite.tsv`.
   It covered 174 rows plus header: all 174 passed, 110 rows reported JBR command replay, 26 rows reported intentional
