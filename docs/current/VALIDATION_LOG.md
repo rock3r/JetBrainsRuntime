@@ -5,6 +5,20 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Full default command-probe sweep passed after adding live effect descriptor version, payload-count, and record-length
+  mismatch sentinels:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260513-183706/suite.tsv`.
+  It covered 173 rows plus header: all 173 passed, 110 rows reported JBR command replay, 26 rows reported intentional
+  JBR picture fallback, and 37 rows reported expected explicit fallback markers. The new
+  `commands-invalid-effect-descriptor-version-fallback`,
+  `commands-invalid-effect-descriptor-payload-count-fallback`, and
+  `commands-invalid-effect-descriptor-record-length-fallback` rows each required the matching typed Skiko marker,
+  recorded one `command-stream-invalid` fallback marker, `unsupported=none`, zero JBR picture frames, and zero JBR
+  command frames.
+- Focused effect descriptor metadata validation passed before the full sweep:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260513-183454/suite.tsv`.
+  The three-row subset covered descriptor version, payload-count, and record-length corruption, and every row failed
+  closed before replay with one explicit fallback marker and zero JBR picture/command frames.
 - Full default command-probe sweep passed after tightening the existing shader descriptor version sentinel to require
   its typed Skiko corruption marker:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260513-165558/suite.tsv`.

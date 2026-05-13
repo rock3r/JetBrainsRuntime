@@ -38,6 +38,17 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Full default command-probe sweep passed after adding live effect descriptor version, payload-count, and
+  record-length corruption sentinels. The sweep covered 173 rows plus header with all rows passing, 110 command replay
+  rows, 26 intentional JBR picture fallback rows, and 37 expected explicit fallback-marker rows. The new
+  `commands-invalid-effect-descriptor-version-fallback`,
+  `commands-invalid-effect-descriptor-payload-count-fallback`, and
+  `commands-invalid-effect-descriptor-record-length-fallback` rows each required their typed Skiko corruption marker,
+  recorded one `command-stream-invalid` fallback marker, `unsupported=none`, zero JBR picture frames, and zero JBR
+  command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260513-183706/suite.tsv`.
+- Focused validation for the same three effect descriptor metadata sentinels passed before the full sweep:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260513-183454/suite.tsv`.
 - Full default command-probe sweep passed after tightening the existing shader descriptor version sentinel to require
   its typed Skiko corruption marker. The sweep covered 170 rows plus header with all rows passing, 110 command replay
   rows, 26 intentional JBR picture fallback rows, and 34 expected explicit fallback-marker rows. The
