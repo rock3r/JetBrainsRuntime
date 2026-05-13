@@ -142,6 +142,11 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   validation passed, followed by a full default command sweep covering 170 passing rows:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260513-153009/suite.tsv` and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260513-153044/suite.tsv`.
+- The existing shader descriptor version sentinel is now marker-gated too: Magic Jewel requires
+  `SKIKO_JBR_INTEROP_DESCRIPTOR_VERSION_CORRUPTED`, and focused plus full default command validation passed with the
+  row failing closed before replay:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260513-165524/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260513-165558/suite.tsv`.
 - Latest compatibility matrix passed after that promotion. It covered 57 rows plus the header: all rows passed, the
   happy-path row replayed commands, the 56 ABI/capability/API mismatch rows fell back with zero JBR command frames, and
   every row used a background probe window:
