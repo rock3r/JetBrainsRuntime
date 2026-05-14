@@ -5,6 +5,18 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Focused and grouped command-probe validation passed after adding a live Perlin/noise shader descriptor zero-octaves
+  sentinel:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-203437/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-203549/suite.tsv`.
+  The focused row `commands-invalid-perlin-noise-shader-zero-octaves-fallback` rewrote one recorded Perlin/noise
+  shader descriptor octave-count slot to `0`, required
+  `SKIKO_JBR_INTEROP_PERLIN_NOISE_SHADER_ZERO_OCTAVES_CORRUPTED`, recorded one `command-stream-invalid` fallback
+  marker, `unsupported=none`, zero JBR picture frames, and zero JBR command frames. The grouped
+  `CASE_GROUPS=shader-descriptor-invalid` run covered eleven malformed shader-descriptor rows; all eleven passed,
+  with zero JBR replay rows and eleven expected explicit fallback markers.
+- Skiko `publishToMavenLocal` passed after adding the test-only
+  `skiko.jbr.interop.corruptPerlinNoiseShaderZeroOctavesForTesting` hook.
 - Focused and grouped command-probe validation passed after adding a live Perlin/noise shader descriptor negative
   tile-size sentinel:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-202424/suite.tsv` and

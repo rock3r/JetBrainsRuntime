@@ -38,6 +38,15 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused plus grouped validation passed after adding a live Perlin/noise shader descriptor zero-octaves sentinel. The
+  single-row focused run:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-203437/suite.tsv`.
+  The `CASE_GROUPS=shader-descriptor-invalid` subset then covered eleven malformed shader-descriptor live sentinels
+  with all rows passing, zero JBR picture/command frames, and eleven expected explicit fallback-marker rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-203549/suite.tsv`.
+  The new `commands-invalid-perlin-noise-shader-zero-octaves-fallback` row required
+  `SKIKO_JBR_INTEROP_PERLIN_NOISE_SHADER_ZERO_OCTAVES_CORRUPTED` and matched JBR's Perlin octave-count lower-bound
+  rejection.
 - Focused plus grouped validation passed after adding a live Perlin/noise shader descriptor negative tile-size
   sentinel. The single-row focused run:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-202424/suite.tsv`.

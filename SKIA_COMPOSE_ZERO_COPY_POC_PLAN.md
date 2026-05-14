@@ -303,6 +303,13 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   covering ten passing malformed shader-descriptor rows:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-202424/suite.tsv` and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-202513/suite.tsv`.
+- Latest Perlin/noise shader descriptor hardening now separately exercises JBR's positive octave-count lower bound.
+  Skiko can corrupt one recorded Perlin/noise shader octave-count slot to `0`, Magic Jewel requires
+  `SKIKO_JBR_INTEROP_PERLIN_NOISE_SHADER_ZERO_OCTAVES_CORRUPTED`, and JBR rejects the stream before replay. Focused
+  single-row validation passed, followed by the grouped `CASE_GROUPS=shader-descriptor-invalid` subset covering
+  eleven passing malformed shader-descriptor rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-203437/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-203549/suite.tsv`.
 - Latest compatibility matrix passed after that promotion. It covered 57 rows plus the header: all rows passed, the
   happy-path row replayed commands, the 56 ABI/capability/API mismatch rows fell back with zero JBR command frames, and
   every row used a background probe window:
