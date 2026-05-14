@@ -171,6 +171,12 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   replay. Focused validation passed, followed by a full default command sweep covering 176 passing rows:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-005110/suite.tsv` and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-005156/suite.tsv`.
+- Latest Perlin/noise shader descriptor hardening mirrors parser-only payload validation for kind, base frequency,
+  octave count, and tile size in live command rows. Skiko can corrupt each field after recording, Magic Jewel requires
+  the matching `SKIKO_JBR_INTEROP_PERLIN_NOISE_SHADER_*_CORRUPTED` marker, and JBR rejects each stream before replay.
+  Focused validation passed, followed by a full default command sweep covering 180 passing rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-025354/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-025633/suite.tsv`.
 - Latest compatibility matrix passed after that promotion. It covered 57 rows plus the header: all rows passed, the
   happy-path row replayed commands, the 56 ABI/capability/API mismatch rows fell back with zero JBR command frames, and
   every row used a background probe window:

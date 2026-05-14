@@ -5,6 +5,22 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Full default command-probe sweep passed after adding live Perlin/noise shader descriptor payload validation sentinels:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-025633/suite.tsv`.
+  It covered 180 rows plus header: all 180 passed, 110 rows reported JBR command replay, 26 rows reported intentional
+  JBR picture fallback, and 44 rows reported expected explicit fallback markers. The new
+  `commands-invalid-perlin-noise-shader-kind-fallback`,
+  `commands-invalid-perlin-noise-shader-frequency-fallback`,
+  `commands-invalid-perlin-noise-shader-octaves-fallback`, and
+  `commands-invalid-perlin-noise-shader-tile-size-fallback` rows each required their typed Skiko marker, recorded one
+  `command-stream-invalid` fallback marker, `unsupported=none`, zero JBR picture frames, and zero JBR command frames.
+- Focused Perlin/noise shader descriptor payload validation passed before the full sweep:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-025354/suite.tsv`.
+  The four-row subset covered invalid Perlin/noise kind, base frequency, octave count, and tile-size payloads, matching
+  JBR parser-only coverage, and every row failed closed before replay with one explicit fallback marker and zero JBR
+  picture/command frames.
+- Skiko `publishToMavenLocal` passed after adding the test-only
+  `skiko.jbr.interop.corruptPerlinNoiseShader*ForTesting` hooks.
 - Full default command-probe sweep passed after adding a live RuntimeEffect shader source-hash mismatch sentinel:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-005156/suite.tsv`.
   It covered 176 rows plus header: all 176 passed, 110 rows reported JBR command replay, 26 rows reported intentional

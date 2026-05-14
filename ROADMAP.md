@@ -38,6 +38,18 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Full default command-probe sweep passed after adding live Perlin/noise shader descriptor payload validation
+  sentinels. The sweep covered 180 rows plus header with all rows passing, 110 command replay rows, 26 intentional JBR
+  picture fallback rows, and 44 expected explicit fallback-marker rows. The new
+  `commands-invalid-perlin-noise-shader-kind-fallback`,
+  `commands-invalid-perlin-noise-shader-frequency-fallback`,
+  `commands-invalid-perlin-noise-shader-octaves-fallback`, and
+  `commands-invalid-perlin-noise-shader-tile-size-fallback` rows each required their typed Skiko corruption marker,
+  recorded one `command-stream-invalid` fallback marker, `unsupported=none`, zero JBR picture frames, and zero JBR
+  command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-025633/suite.tsv`.
+- Focused validation for the same four Perlin/noise shader descriptor payload sentinels passed before the full sweep:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-025354/suite.tsv`.
 - Full default command-probe sweep passed after adding a live RuntimeEffect shader source-hash mismatch sentinel. The
   sweep covered 176 rows plus header with all rows passing, 110 command replay rows, 26 intentional JBR picture
   fallback rows, and 40 expected explicit fallback-marker rows. The new
