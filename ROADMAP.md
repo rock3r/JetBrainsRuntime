@@ -38,6 +38,10 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Full default command-probe sweep passed after the radial-gradient radius and image shader width sentinel batch. The
+  sweep covered 200/200 passing rows: 110 command replay rows, 26 intentional picture-fallback rows, and 64 explicit
+  structured fallback rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-211318/suite.tsv`.
 - Focused plus grouped validation passed after adding a live radial-gradient shader descriptor radius sentinel. The
   single-row focused run:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-210305/suite.tsv`.

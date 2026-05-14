@@ -543,6 +543,9 @@ Current validation gates are intentionally broad but summarized here to keep thi
   command sentinels with typed `shader`/`colorFilter` evict gates. The latest command sweep covered 144 rows, all
   passed, with 110 command replay rows, 26 intentional JBR picture fallback rows, and 8 expected explicit
   fallback-marker rows.
+- The latest full default command-probe sweep after the radial-gradient/image shader descriptor sentinel batch covered
+  200 rows, all passed, with 110 command replay rows, 26 intentional picture-fallback rows, and 64 explicit structured
+  fallback rows.
 - Stable RuntimeEffect color-filter descriptors now have command lifecycle rows for same-context resize and forced
   destination-context migration, with effect-handle redefinition/use/cache-hit and RuntimeEffect source-cache-hit gates.
 - Matching focused screenshot parity rows now cover those RuntimeEffect color-filter lifecycle paths against old

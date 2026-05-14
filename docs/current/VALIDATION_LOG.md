@@ -5,6 +5,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Full default command-probe sweep passed after the radial-gradient radius and image shader width sentinel batch:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-211318/suite.tsv`.
+  Aggregate: 200/200 rows passed, with 110 command replay rows, 26 intentional picture-fallback rows, and 64 explicit
+  structured fallback rows. The full-suite malformed shader-descriptor block includes thirteen current
+  shader-descriptor invalid rows, including the latest radial-gradient positive-radius and image-shader positive-width
+  sentinels.
 - Focused and grouped command-probe validation passed after adding a live radial-gradient shader descriptor radius
   sentinel:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-210305/suite.tsv` and
