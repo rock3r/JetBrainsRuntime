@@ -5,6 +5,18 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Focused and grouped command-probe validation passed after adding a live blur image-filter descriptor negative-sigma
+  sentinel:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-172401/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-172454/suite.tsv`.
+  The focused row `commands-invalid-blur-image-filter-descriptor-negative-sigma-fallback` rewrote one recorded blur
+  image-filter descriptor sigma slot to `-1`, required
+  `SKIKO_JBR_INTEROP_BLUR_IMAGE_FILTER_DESCRIPTOR_NEGATIVE_SIGMA_CORRUPTED`, recorded one `command-stream-invalid`
+  fallback marker, `unsupported=none`, zero JBR picture frames, and zero JBR command frames. The grouped
+  `CASE_GROUPS=effect-descriptor-invalid` run covered nineteen malformed effect-descriptor rows; all nineteen passed,
+  with zero JBR replay rows and nineteen expected explicit fallback markers.
+- Skiko `publishToMavenLocal` passed after adding the test-only
+  `skiko.jbr.interop.corruptBlurImageFilterDescriptorNegativeSigmaForTesting` hook.
 - Focused and grouped command-probe validation passed after adding a live corner path-effect descriptor negative-radius
   sentinel:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-170802/suite.tsv` and
