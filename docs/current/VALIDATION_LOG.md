@@ -5,6 +5,18 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Focused and grouped command-probe validation passed after adding a live corner path-effect descriptor negative-radius
+  sentinel:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-170802/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-170922/suite.tsv`.
+  The focused row `commands-invalid-corner-path-effect-descriptor-negative-radius-fallback` rewrote one recorded
+  corner path-effect descriptor radius slot to `-1`, required
+  `SKIKO_JBR_INTEROP_CORNER_PATH_EFFECT_DESCRIPTOR_NEGATIVE_RADIUS_CORRUPTED`, recorded one
+  `command-stream-invalid` fallback marker, `unsupported=none`, zero JBR picture frames, and zero JBR command frames.
+  The grouped `CASE_GROUPS=effect-descriptor-invalid` run covered eighteen malformed effect-descriptor rows; all
+  eighteen passed, with zero JBR replay rows and eighteen expected explicit fallback markers.
+- Skiko `publishToMavenLocal` passed after adding the test-only
+  `skiko.jbr.interop.corruptCornerPathEffectDescriptorNegativeRadiusForTesting` hook.
 - Focused and grouped command-probe validation passed after adding a live stamped path-effect descriptor negative-phase
   sentinel:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-165312/suite.tsv` and
