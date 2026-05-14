@@ -38,6 +38,15 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused plus grouped validation passed after adding a live radial-gradient shader descriptor radius sentinel. The
+  single-row focused run:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-210305/suite.tsv`.
+  The `CASE_GROUPS=shader-descriptor-invalid` subset now covers thirteen malformed shader-descriptor live sentinels
+  with all rows passing, zero JBR picture/command frames, and thirteen expected explicit fallback-marker rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-210352/suite.tsv`.
+  The new `commands-invalid-radial-gradient-shader-descriptor-radius-fallback` row uses the descriptor-backed
+  composite shader probe, requires `SKIKO_JBR_INTEROP_RADIAL_GRADIENT_SHADER_DESCRIPTOR_RADIUS_CORRUPTED`, and matches
+  JBR's radial-gradient positive-radius rejection.
 - Focused plus grouped validation passed after adding a live image shader descriptor width sentinel. The single-row
   focused run:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-205054/suite.tsv`.
