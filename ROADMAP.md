@@ -38,6 +38,15 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused plus grouped validation passed after adding a live blur image-filter descriptor tile-mode sentinel. The
+  single-row focused run:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-161649/suite.tsv`.
+  The `CASE_GROUPS=effect-descriptor-invalid` subset then covered fifteen malformed effect-descriptor live sentinels
+  with all rows passing, zero JBR picture/command frames, and fifteen expected explicit fallback-marker rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-161742/suite.tsv`.
+  The new `commands-invalid-blur-image-filter-descriptor-tile-mode-fallback` row required
+  `SKIKO_JBR_INTEROP_BLUR_IMAGE_FILTER_DESCRIPTOR_TILE_MODE_CORRUPTED` and matched JBR's blur tile-mode bounds
+  rejection.
 - Full default command-probe sweep passed after the stamped path-effect descriptor payload hardening. The sweep covered
   190/190 passing rows: 110 command replay rows, 26 intentional picture-fallback rows, and 54 explicit structured
   fallback rows:

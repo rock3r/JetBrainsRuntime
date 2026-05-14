@@ -5,6 +5,21 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Focused and grouped command-probe validation passed after adding a live blur image-filter descriptor tile-mode
+  sentinel:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-161649/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-161742/suite.tsv`.
+  The focused row `commands-invalid-blur-image-filter-descriptor-tile-mode-fallback` rewrote one recorded blur
+  image-filter descriptor tile-mode slot to `99`, required
+  `SKIKO_JBR_INTEROP_BLUR_IMAGE_FILTER_DESCRIPTOR_TILE_MODE_CORRUPTED`, recorded one `command-stream-invalid`
+  fallback marker, `unsupported=none`, zero JBR picture frames, and zero JBR command frames. The grouped
+  `CASE_GROUPS=effect-descriptor-invalid` run covered fifteen malformed effect-descriptor rows; all fifteen passed,
+  with zero JBR replay rows and fifteen expected explicit fallback markers.
+- Skiko `publishToMavenLocal` passed after adding the test-only
+  `skiko.jbr.interop.corruptBlurImageFilterDescriptorTileModeForTesting` hook. An initial focused attempt at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-161436/suite.tsv`
+  correctly failed because the hook's precheck skipped the plain blur descriptor; the guard was tightened before the
+  passing focused and grouped runs above.
 - Full default command-probe sweep passed after the stamped path-effect descriptor payload hardening:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-140549/suite.tsv`.
   Aggregate: 190/190 rows passed, with 110 command replay rows, 26 intentional picture-fallback rows, and 54 explicit
