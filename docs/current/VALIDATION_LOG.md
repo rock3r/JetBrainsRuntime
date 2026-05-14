@@ -5,6 +5,17 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Focused and grouped command-probe validation passed after adding a live corner path-effect descriptor radius sentinel:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-125458/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-125544/suite.tsv`.
+  The focused row `commands-invalid-corner-path-effect-descriptor-radius-fallback` rewrote one recorded corner
+  path-effect descriptor radius slot to NaN, required
+  `SKIKO_JBR_INTEROP_CORNER_PATH_EFFECT_DESCRIPTOR_RADIUS_CORRUPTED`, recorded one `command-stream-invalid` fallback
+  marker, `unsupported=none`, zero JBR picture frames, and zero JBR command frames. The grouped
+  `CASE_GROUPS=effect-descriptor-invalid` run covered nine malformed effect-descriptor rows; all nine passed, with
+  zero JBR replay rows and nine expected explicit fallback markers.
+- Skiko `publishToMavenLocal` passed after adding the test-only
+  `skiko.jbr.interop.corruptCornerPathEffectDescriptorRadiusForTesting` hook.
 - Focused and grouped command-probe validation passed after adding a live offset image-filter descriptor delta sentinel:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-124549/suite.tsv` and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-124635/suite.tsv`.

@@ -38,6 +38,15 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused plus grouped validation passed after adding a live corner path-effect descriptor radius sentinel. The
+  single-row focused run:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-125458/suite.tsv`.
+  The `CASE_GROUPS=effect-descriptor-invalid` subset then covered nine malformed effect-descriptor live sentinels
+  with all rows passing, zero JBR picture/command frames, and nine expected explicit fallback-marker rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-125544/suite.tsv`.
+  The new `commands-invalid-corner-path-effect-descriptor-radius-fallback` row required
+  `SKIKO_JBR_INTEROP_CORNER_PATH_EFFECT_DESCRIPTOR_RADIUS_CORRUPTED` and matched JBR's non-finite/non-negative corner
+  radius payload rejection.
 - Focused plus grouped validation passed after adding a live offset image-filter descriptor delta sentinel. The
   single-row focused run:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-124549/suite.tsv`.
