@@ -38,6 +38,15 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused plus grouped validation passed after adding a live stamped path-effect descriptor advance sentinel. The
+  single-row focused run:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-130510/suite.tsv`.
+  The `CASE_GROUPS=effect-descriptor-invalid` subset then covered ten malformed effect-descriptor live sentinels
+  with all rows passing, zero JBR picture/command frames, and ten expected explicit fallback-marker rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-130556/suite.tsv`.
+  The new `commands-invalid-stamped-path-effect-descriptor-advance-fallback` row required
+  `SKIKO_JBR_INTEROP_STAMPED_PATH_EFFECT_DESCRIPTOR_ADVANCE_CORRUPTED` and matched JBR's finite/positive stamped
+  path-effect advance payload rejection.
 - Focused plus grouped validation passed after adding a live corner path-effect descriptor radius sentinel. The
   single-row focused run:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-125458/suite.tsv`.

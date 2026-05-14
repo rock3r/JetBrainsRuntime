@@ -211,6 +211,13 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   covering nine passing malformed effect-descriptor rows:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-125458/suite.tsv` and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-125544/suite.tsv`.
+- Latest stamped path-effect descriptor hardening mirrors JBR's finite/positive advance payload validation in a live
+  command row. Skiko can corrupt one recorded stamped path-effect advance slot to NaN, Magic Jewel requires
+  `SKIKO_JBR_INTEROP_STAMPED_PATH_EFFECT_DESCRIPTOR_ADVANCE_CORRUPTED`, and JBR rejects the stream before replay.
+  Focused single-row validation passed, followed by the grouped `CASE_GROUPS=effect-descriptor-invalid` subset
+  covering ten passing malformed effect-descriptor rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-130510/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-130556/suite.tsv`.
 - Latest compatibility matrix passed after that promotion. It covered 57 rows plus the header: all rows passed, the
   happy-path row replayed commands, the 56 ABI/capability/API mismatch rows fell back with zero JBR command frames, and
   every row used a background probe window:
@@ -479,6 +486,7 @@ Current validation gates are intentionally broad but summarized here to keep thi
 - Blur image-filter descriptors now have a focused live non-finite sigma sentinel in the same grouped validation path.
 - Offset image-filter descriptors now have a focused live non-finite delta sentinel in the same grouped validation path.
 - Corner path-effect descriptors now have a focused live non-finite radius sentinel in the same grouped validation path.
+- Stamped path-effect descriptors now have a focused live non-finite advance sentinel in the same grouped validation path.
 - Detailed validation paths and row-level counts live in [`docs/current/VALIDATION_LOG.md`](docs/current/VALIDATION_LOG.md).
 
 ## Key Files
