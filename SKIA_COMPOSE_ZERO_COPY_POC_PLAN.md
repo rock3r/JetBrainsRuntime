@@ -246,6 +246,10 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   subset covering fourteen passing malformed effect-descriptor rows:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-135433/suite.tsv` and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-135519/suite.tsv`.
+- Latest full default command-probe sweep passed after the stamped path-effect descriptor payload hardening. It covered
+  190/190 passing rows, including 110 command replay rows, 26 intentional picture-fallback rows, and 54 explicit
+  structured fallback rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-140549/suite.tsv`.
 - Latest compatibility matrix passed after that promotion. It covered 57 rows plus the header: all rows passed, the
   happy-path row replayed commands, the 56 ABI/capability/API mismatch rows fell back with zero JBR command frames, and
   every row used a background probe window:

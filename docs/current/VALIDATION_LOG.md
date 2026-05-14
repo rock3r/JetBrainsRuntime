@@ -5,6 +5,11 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Full default command-probe sweep passed after the stamped path-effect descriptor payload hardening:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-140549/suite.tsv`.
+  Aggregate: 190/190 rows passed, with 110 command replay rows, 26 intentional picture-fallback rows, and 54 explicit
+  structured fallback rows. The expanded malformed effect-descriptor block covered the new stamped advance, phase,
+  style, fill-type, and path-data-length sentinels in the full-suite context.
 - Focused and grouped command-probe validation passed after adding a live stamped path-effect descriptor
   path-data-length sentinel:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-135433/suite.tsv` and

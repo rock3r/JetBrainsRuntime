@@ -38,6 +38,10 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Full default command-probe sweep passed after the stamped path-effect descriptor payload hardening. The sweep covered
+  190/190 passing rows: 110 command replay rows, 26 intentional picture-fallback rows, and 54 explicit structured
+  fallback rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-140549/suite.tsv`.
 - Focused plus grouped validation passed after adding a live stamped path-effect descriptor path-data-length sentinel.
   The single-row focused run:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-135433/suite.tsv`.
