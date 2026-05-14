@@ -5,6 +5,21 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Focused and grouped command-probe validation passed after adding a live stamped path-effect descriptor zero-advance
+  sentinel:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-163606/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-163650/suite.tsv`.
+  The focused row `commands-invalid-stamped-path-effect-descriptor-zero-advance-fallback` rewrote one recorded stamped
+  path-effect descriptor advance slot to `0`, required
+  `SKIKO_JBR_INTEROP_STAMPED_PATH_EFFECT_DESCRIPTOR_ZERO_ADVANCE_CORRUPTED`, recorded one
+  `command-stream-invalid` fallback marker, `unsupported=none`, zero JBR picture frames, and zero JBR command frames.
+  The grouped `CASE_GROUPS=effect-descriptor-invalid` run covered sixteen malformed effect-descriptor rows; all
+  sixteen passed, with zero JBR replay rows and sixteen expected explicit fallback markers.
+- Skiko `publishToMavenLocal` passed after adding the test-only
+  `skiko.jbr.interop.corruptStampedPathEffectDescriptorZeroAdvanceForTesting` hook. An initial focused attempt at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-163534/suite.tsv`
+  failed before app startup because the sandbox blocked Gradle wrapper cache access under `~/.gradle`; the same row
+  passed when rerun with the validation suite's normal Gradle access.
 - Focused and grouped command-probe validation passed after adding a live blur image-filter descriptor tile-mode
   sentinel:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-161649/suite.tsv` and
