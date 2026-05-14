@@ -5,6 +5,18 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Focused and grouped command-probe validation passed after adding a live stamped path-effect descriptor negative-phase
+  sentinel:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-165312/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-165402/suite.tsv`.
+  The focused row `commands-invalid-stamped-path-effect-descriptor-negative-phase-fallback` rewrote one recorded
+  stamped path-effect descriptor phase slot to `-1`, required
+  `SKIKO_JBR_INTEROP_STAMPED_PATH_EFFECT_DESCRIPTOR_NEGATIVE_PHASE_CORRUPTED`, recorded one
+  `command-stream-invalid` fallback marker, `unsupported=none`, zero JBR picture frames, and zero JBR command frames.
+  The grouped `CASE_GROUPS=effect-descriptor-invalid` run covered seventeen malformed effect-descriptor rows; all
+  seventeen passed, with zero JBR replay rows and seventeen expected explicit fallback markers.
+- Skiko `publishToMavenLocal` passed after adding the test-only
+  `skiko.jbr.interop.corruptStampedPathEffectDescriptorNegativePhaseForTesting` hook.
 - Focused and grouped command-probe validation passed after adding a live stamped path-effect descriptor zero-advance
   sentinel:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-163606/suite.tsv` and

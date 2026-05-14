@@ -264,6 +264,13 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   covering sixteen passing malformed effect-descriptor rows:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-163606/suite.tsv` and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-163650/suite.tsv`.
+- Latest stamped path-effect descriptor hardening now also separately exercises JBR's non-negative phase bound. Skiko
+  can corrupt one recorded stamped path-effect phase slot to `-1`, Magic Jewel requires
+  `SKIKO_JBR_INTEROP_STAMPED_PATH_EFFECT_DESCRIPTOR_NEGATIVE_PHASE_CORRUPTED`, and JBR rejects the stream before
+  replay. Focused single-row validation passed, followed by the grouped `CASE_GROUPS=effect-descriptor-invalid`
+  subset covering seventeen passing malformed effect-descriptor rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-165312/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-165402/suite.tsv`.
 - Latest compatibility matrix passed after that promotion. It covered 57 rows plus the header: all rows passed, the
   happy-path row replayed commands, the 56 ABI/capability/API mismatch rows fell back with zero JBR command frames, and
   every row used a background probe window:
