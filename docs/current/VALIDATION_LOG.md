@@ -5,6 +5,18 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Focused and grouped command-probe validation passed after adding a live radial-gradient shader descriptor tile-mode
+  sentinel:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-234201/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-234247/suite.tsv`.
+  The focused row `commands-invalid-radial-gradient-shader-descriptor-tile-mode-fallback` uses the descriptor-backed
+  composite shader probe, rewrites one recorded radial-gradient shader descriptor tile-mode slot to `99`, requires
+  `SKIKO_JBR_INTEROP_RADIAL_GRADIENT_SHADER_DESCRIPTOR_TILE_MODE_CORRUPTED`, records one `command-stream-invalid`
+  fallback marker, `unsupported=none`, zero JBR picture frames, and zero JBR command frames. The grouped
+  `CASE_GROUPS=shader-descriptor-invalid` run covered fifteen malformed shader-descriptor rows; all fifteen passed,
+  with zero JBR replay rows and fifteen expected explicit fallback markers.
+- Skiko `publishToMavenLocal` passed after adding the test-only
+  `skiko.jbr.interop.corruptRadialGradientShaderDescriptorTileModeForTesting` hook.
 - Focused and grouped command-probe validation passed after adding a live linear-gradient shader descriptor tile-mode
   sentinel:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-232913/suite.tsv` and

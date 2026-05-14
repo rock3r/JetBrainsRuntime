@@ -588,11 +588,11 @@ Current validation gates are intentionally broad but summarized here to keep thi
 - Stamped path-effect descriptors now also have a focused live invalid-fill-type sentinel in the same grouped validation path.
 - Stamped path-effect descriptors now also have a focused live invalid-path-data-length sentinel in the same grouped validation path.
 - Linear-gradient shader descriptors now have a focused live invalid tile-mode sentinel using the descriptor-backed
-  linear-gradient shader-plus-color-filter probe. Radial-gradient shader descriptors also have an invalid-radius
-  sentinel using the descriptor-backed composite shader probe, and image shader descriptors have an invalid-width
-  sentinel using the descriptor-backed image-shader-plus-color-filter probe. `CASE_GROUPS=shader-descriptor-invalid`
-  is the quick parser/replay validation path for this shader family and now covers fourteen malformed shader descriptor
-  rows.
+  linear-gradient shader-plus-color-filter probe. Radial-gradient shader descriptors have invalid-radius and
+  invalid-tile-mode sentinels using the descriptor-backed composite shader probe, and image shader descriptors have an
+  invalid-width sentinel using the descriptor-backed image-shader-plus-color-filter probe.
+  `CASE_GROUPS=shader-descriptor-invalid` is the quick parser/replay validation path for this shader family and now
+  covers fifteen malformed shader descriptor rows.
 - Day-to-day malformed-descriptor work now uses exact `CASES=...` rows first, then curated `CASE_GROUPS=...`
   area sweeps before periodic full default command-probe batches, keeping iteration tight while preserving full-suite
   checkpoints.
