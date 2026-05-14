@@ -38,6 +38,15 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused plus grouped validation passed after adding a live blur image-filter descriptor sigma sentinel. The
+  single-row focused run:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-123706/suite.tsv`.
+  The `CASE_GROUPS=effect-descriptor-invalid` subset then covered seven malformed effect-descriptor live sentinels
+  with all rows passing, zero JBR picture/command frames, and seven expected explicit fallback-marker rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-123801/suite.tsv`.
+  The new `commands-invalid-blur-image-filter-descriptor-sigma-fallback` row required
+  `SKIKO_JBR_INTEROP_BLUR_IMAGE_FILTER_DESCRIPTOR_SIGMA_CORRUPTED` and matched JBR's non-finite blur sigma payload
+  rejection.
 - Focused plus grouped validation passed after adding a live color-matrix filter descriptor payload sentinel. The
   single-row focused run:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-102259/suite.tsv`.
