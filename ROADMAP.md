@@ -38,6 +38,15 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Full default command-probe sweep passed after adding a live RuntimeEffect shader source-hash mismatch sentinel. The
+  sweep covered 176 rows plus header with all rows passing, 110 command replay rows, 26 intentional JBR picture
+  fallback rows, and 40 expected explicit fallback-marker rows. The new
+  `commands-runtime-effect-shader-source-hash-fallback` row required
+  `SKIKO_JBR_INTEROP_RUNTIME_EFFECT_SHADER_SOURCE_HASH_CORRUPTED`, recorded one `command-stream-invalid` fallback
+  marker, `unsupported=none`, zero JBR picture frames, and zero JBR command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-005156/suite.tsv`.
+- Focused validation for the same RuntimeEffect shader source-hash sentinel passed before the full sweep:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-005110/suite.tsv`.
 - Full default command-probe sweep passed after adding a live transformed shader descriptor payload-count mismatch
   sentinel. The sweep covered 175 rows plus header with all rows passing, 110 command replay rows, 26 intentional JBR
   picture fallback rows, and 39 expected explicit fallback-marker rows. The new

@@ -5,6 +5,20 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Full default command-probe sweep passed after adding a live RuntimeEffect shader source-hash mismatch sentinel:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-005156/suite.tsv`.
+  It covered 176 rows plus header: all 176 passed, 110 rows reported JBR command replay, 26 rows reported intentional
+  JBR picture fallback, and 40 rows reported expected explicit fallback markers. The new
+  `commands-runtime-effect-shader-source-hash-fallback` row required
+  `SKIKO_JBR_INTEROP_RUNTIME_EFFECT_SHADER_SOURCE_HASH_CORRUPTED`, recorded one `command-stream-invalid` fallback
+  marker, `unsupported=none`, zero JBR picture frames, and zero JBR command frames.
+- Focused `commands-runtime-effect-shader-source-hash-fallback` validation passed before the full sweep:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-005110/suite.tsv`.
+  The row flipped one RuntimeEffect shader source-hash word after recording while leaving the SKSL payload unchanged,
+  matching JBR parser-only RuntimeEffect shader source-hash mismatch coverage, and failed closed before replay with
+  zero JBR picture/command frames.
+- Skiko `publishToMavenLocal` passed after adding the test-only
+  `skiko.jbr.interop.corruptRuntimeEffectShaderSourceHashForTesting` hook.
 - Full default command-probe sweep passed after adding a live transformed shader descriptor payload-count mismatch
   sentinel:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260513-224940/suite.tsv`.

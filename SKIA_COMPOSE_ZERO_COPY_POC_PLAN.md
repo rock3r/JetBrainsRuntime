@@ -165,6 +165,12 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   replay. Focused validation passed, followed by a full default command sweep covering 175 passing rows:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260513-224856/suite.tsv` and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260513-224940/suite.tsv`.
+- Latest RuntimeEffect shader descriptor hardening mirrors parser-only source-hash mismatch coverage in a live command
+  row. Skiko can corrupt the recorded RuntimeEffect shader source hash while leaving the SKSL payload unchanged, Magic
+  Jewel requires `SKIKO_JBR_INTEROP_RUNTIME_EFFECT_SHADER_SOURCE_HASH_CORRUPTED`, and JBR rejects the stream before
+  replay. Focused validation passed, followed by a full default command sweep covering 176 passing rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-005110/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-005156/suite.tsv`.
 - Latest compatibility matrix passed after that promotion. It covered 57 rows plus the header: all rows passed, the
   happy-path row replayed commands, the 56 ABI/capability/API mismatch rows fell back with zero JBR command frames, and
   every row used a background probe window:
