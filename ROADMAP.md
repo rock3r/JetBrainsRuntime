@@ -38,6 +38,15 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Full default command-probe sweep passed after adding a live tint color-filter descriptor blend-mode validation
+  sentinel. The sweep covered 181 rows plus header with all rows passing, 110 command replay rows, 26 intentional JBR
+  picture fallback rows, and 45 expected explicit fallback-marker rows. The new
+  `commands-invalid-tint-color-filter-descriptor-blend-mode-fallback` row required
+  `SKIKO_JBR_INTEROP_TINT_COLOR_FILTER_DESCRIPTOR_BLEND_MODE_CORRUPTED`, recorded one `command-stream-invalid`
+  fallback marker, `unsupported=none`, zero JBR picture frames, and zero JBR command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-081633/suite.tsv`.
+- Focused validation for the same tint color-filter descriptor blend-mode sentinel passed before the full sweep:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-081541/suite.tsv`.
 - Full default command-probe sweep passed after adding live Perlin/noise shader descriptor payload validation
   sentinels. The sweep covered 180 rows plus header with all rows passing, 110 command replay rows, 26 intentional JBR
   picture fallback rows, and 44 expected explicit fallback-marker rows. The new

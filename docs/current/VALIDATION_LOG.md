@@ -5,6 +5,21 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Full default command-probe sweep passed after adding a live tint color-filter descriptor blend-mode validation
+  sentinel:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-081633/suite.tsv`.
+  It covered 181 rows plus header: all 181 passed, 110 rows reported JBR command replay, 26 rows reported intentional
+  JBR picture fallback, and 45 rows reported expected explicit fallback markers. The new
+  `commands-invalid-tint-color-filter-descriptor-blend-mode-fallback` row required
+  `SKIKO_JBR_INTEROP_TINT_COLOR_FILTER_DESCRIPTOR_BLEND_MODE_CORRUPTED`, recorded one `command-stream-invalid`
+  fallback marker, `unsupported=none`, zero JBR picture frames, and zero JBR command frames.
+- Focused `commands-invalid-tint-color-filter-descriptor-blend-mode-fallback` validation passed before the full sweep:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-081541/suite.tsv`.
+  The row rewrote one recorded tint color-filter descriptor blend mode from supported `SrcIn` to unsupported `Plus`,
+  matching JBR parser-only unsupported tint blend-mode coverage, and failed closed before replay with one explicit
+  fallback marker and zero JBR picture/command frames.
+- Skiko `publishToMavenLocal` passed after adding the test-only
+  `skiko.jbr.interop.corruptTintColorFilterDescriptorBlendModeForTesting` hook.
 - Full default command-probe sweep passed after adding live Perlin/noise shader descriptor payload validation sentinels:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-025633/suite.tsv`.
   It covered 180 rows plus header: all 180 passed, 110 rows reported JBR command replay, 26 rows reported intentional

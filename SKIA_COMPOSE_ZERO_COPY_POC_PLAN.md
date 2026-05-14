@@ -177,6 +177,12 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   Focused validation passed, followed by a full default command sweep covering 180 passing rows:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-025354/suite.tsv` and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-025633/suite.tsv`.
+- Latest tint color-filter descriptor hardening mirrors parser-only unsupported blend-mode coverage in a live command
+  row. Skiko can corrupt one recorded tint color-filter descriptor from `SrcIn` to unsupported `Plus`, Magic Jewel
+  requires `SKIKO_JBR_INTEROP_TINT_COLOR_FILTER_DESCRIPTOR_BLEND_MODE_CORRUPTED`, and JBR rejects the stream before
+  replay. Focused validation passed, followed by a full default command sweep covering 181 passing rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-081541/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-081633/suite.tsv`.
 - Latest compatibility matrix passed after that promotion. It covered 57 rows plus the header: all rows passed, the
   happy-path row replayed commands, the 56 ABI/capability/API mismatch rows fell back with zero JBR command frames, and
   every row used a background probe window:
@@ -433,6 +439,9 @@ Current validation gates are intentionally broad but summarized here to keep thi
 - RuntimeEffect color-filter build failures now have a focused child-type sentinel that corrupts a recorded
   color-filter child descriptor into a shader child and asserts JBR reports
   `JBR_SKIA_INTEROP_RUNTIME_COLOR_FILTER_BUILD_FAILED ... stage=positional-child-type` before Skiko falls back.
+- Tint color-filter descriptors now have a focused live unsupported blend-mode sentinel that rewrites recorded
+  descriptor payload from `SrcIn` to `Plus`, requires the typed Skiko corruption marker, and fails closed before any JBR
+  picture or command replay.
 - Detailed validation paths and row-level counts live in [`docs/current/VALIDATION_LOG.md`](docs/current/VALIDATION_LOG.md).
 
 ## Key Files
