@@ -38,6 +38,15 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused plus grouped validation passed after adding a live stamped path-effect descriptor negative path-data-length
+  sentinel. The single-row focused run:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-174121/suite.tsv`.
+  The `CASE_GROUPS=effect-descriptor-invalid` subset then covered twenty malformed effect-descriptor live sentinels
+  with all rows passing, zero JBR picture/command frames, and twenty expected explicit fallback-marker rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-174214/suite.tsv`.
+  The new `commands-invalid-stamped-path-effect-descriptor-negative-path-data-length-fallback` row required
+  `SKIKO_JBR_INTEROP_STAMPED_PATH_EFFECT_DESCRIPTOR_NEGATIVE_PATH_DATA_LENGTH_CORRUPTED` and matched JBR's stamped
+  path-effect non-negative path-data-length rejection.
 - Focused plus grouped validation passed after adding a live blur image-filter descriptor negative-sigma sentinel. The
   single-row focused run:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-172401/suite.tsv`.
