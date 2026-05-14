@@ -239,6 +239,13 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   covering thirteen passing malformed effect-descriptor rows:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-134123/suite.tsv` and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-134207/suite.tsv`.
+- Latest stamped path-effect descriptor hardening also mirrors JBR's path-data-length validation in a live command
+  row. Skiko can corrupt one recorded stamped path-effect path-data length slot to `4097`, Magic Jewel requires
+  `SKIKO_JBR_INTEROP_STAMPED_PATH_EFFECT_DESCRIPTOR_PATH_DATA_LENGTH_CORRUPTED`, and JBR rejects the stream before
+  replay. Focused single-row validation passed, followed by the grouped `CASE_GROUPS=effect-descriptor-invalid`
+  subset covering fourteen passing malformed effect-descriptor rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-135433/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-135519/suite.tsv`.
 - Latest compatibility matrix passed after that promotion. It covered 57 rows plus the header: all rows passed, the
   happy-path row replayed commands, the 56 ABI/capability/API mismatch rows fell back with zero JBR command frames, and
   every row used a background probe window:
@@ -511,6 +518,7 @@ Current validation gates are intentionally broad but summarized here to keep thi
 - Stamped path-effect descriptors now also have a focused live non-finite phase sentinel in the same grouped validation path.
 - Stamped path-effect descriptors now also have a focused live invalid-style sentinel in the same grouped validation path.
 - Stamped path-effect descriptors now also have a focused live invalid-fill-type sentinel in the same grouped validation path.
+- Stamped path-effect descriptors now also have a focused live invalid-path-data-length sentinel in the same grouped validation path.
 - Detailed validation paths and row-level counts live in [`docs/current/VALIDATION_LOG.md`](docs/current/VALIDATION_LOG.md).
 
 ## Key Files
