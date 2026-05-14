@@ -584,6 +584,12 @@ Current validation gates are intentionally broad but summarized here to keep thi
 - Stamped path-effect descriptors now also have a focused live invalid-style sentinel in the same grouped validation path.
 - Stamped path-effect descriptors now also have a focused live invalid-fill-type sentinel in the same grouped validation path.
 - Stamped path-effect descriptors now also have a focused live invalid-path-data-length sentinel in the same grouped validation path.
+- Image shader descriptors now have a focused live invalid-width sentinel using the descriptor-backed
+  image-shader-plus-color-filter probe; `CASE_GROUPS=shader-descriptor-invalid` is the quick parser/replay validation
+  path for this shader family and now covers twelve malformed shader descriptor rows.
+- Day-to-day malformed-descriptor work now uses exact `CASES=...` rows first, then curated `CASE_GROUPS=...`
+  area sweeps before periodic full default command-probe batches, keeping iteration tight while preserving full-suite
+  checkpoints.
 - Detailed validation paths and row-level counts live in [`docs/current/VALIDATION_LOG.md`](docs/current/VALIDATION_LOG.md).
 
 ## Key Files
@@ -606,4 +612,4 @@ SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-compatibility-matrix.sh
 SKIKO_VERSION=0.0.0-SNAPSHOT ./scripts/jbr-skia-screenshot-parity-suite.sh
 ```
 
-Use focused `CASES=...` subsets before broad sweeps.
+Use focused `CASES=...` subsets and curated `CASE_GROUPS=...` area sweeps before broad default sweeps.

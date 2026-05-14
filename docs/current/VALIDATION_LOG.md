@@ -5,6 +5,17 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Focused and grouped command-probe validation passed after adding a live image shader descriptor width sentinel:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-205054/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-205138/suite.tsv`.
+  The focused row `commands-invalid-image-shader-descriptor-width-fallback` uses the descriptor-backed
+  image-shader-plus-color-filter probe, rewrites one recorded image shader descriptor width slot to `0`, requires
+  `SKIKO_JBR_INTEROP_IMAGE_SHADER_DESCRIPTOR_WIDTH_CORRUPTED`, records one `command-stream-invalid` fallback marker,
+  `unsupported=none`, zero JBR picture frames, and zero JBR command frames. The grouped
+  `CASE_GROUPS=shader-descriptor-invalid` run covered twelve malformed shader-descriptor rows; all twelve passed,
+  with zero JBR replay rows and twelve expected explicit fallback markers.
+- Skiko `publishToMavenLocal` passed after adding the test-only
+  `skiko.jbr.interop.corruptImageShaderDescriptorWidthForTesting` hook.
 - Focused and grouped command-probe validation passed after adding a live Perlin/noise shader descriptor zero-octaves
   sentinel:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-203437/suite.tsv` and
