@@ -197,6 +197,13 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   passing malformed effect-descriptor rows:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-123706/suite.tsv` and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-123801/suite.tsv`.
+- Latest offset image-filter descriptor hardening mirrors JBR's non-finite delta payload validation in a live command
+  row. Skiko can corrupt one recorded offset descriptor delta slot to NaN, Magic Jewel requires
+  `SKIKO_JBR_INTEROP_OFFSET_IMAGE_FILTER_DESCRIPTOR_DELTA_CORRUPTED`, and JBR rejects the stream before replay. Focused
+  single-row validation passed, followed by the grouped `CASE_GROUPS=effect-descriptor-invalid` subset covering eight
+  passing malformed effect-descriptor rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-124549/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-124635/suite.tsv`.
 - Latest compatibility matrix passed after that promotion. It covered 57 rows plus the header: all rows passed, the
   happy-path row replayed commands, the 56 ABI/capability/API mismatch rows fell back with zero JBR command frames, and
   every row used a background probe window:
@@ -463,6 +470,7 @@ Current validation gates are intentionally broad but summarized here to keep thi
 - Color-matrix filter descriptors now have a focused live non-finite payload sentinel and belong to the
   `effect-descriptor-invalid` command group for quicker parser/replay validation iterations.
 - Blur image-filter descriptors now have a focused live non-finite sigma sentinel in the same grouped validation path.
+- Offset image-filter descriptors now have a focused live non-finite delta sentinel in the same grouped validation path.
 - Detailed validation paths and row-level counts live in [`docs/current/VALIDATION_LOG.md`](docs/current/VALIDATION_LOG.md).
 
 ## Key Files
