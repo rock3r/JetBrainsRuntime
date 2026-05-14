@@ -38,6 +38,15 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused plus grouped validation passed after adding a live color-matrix filter descriptor payload sentinel. The
+  single-row focused run:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-102259/suite.tsv`.
+  The new `CASE_GROUPS=effect-descriptor-invalid` subset then covered all six malformed effect-descriptor live
+  sentinels with all rows passing, zero JBR picture/command frames, and six expected explicit fallback-marker rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-122441/suite.tsv`.
+  The new `commands-invalid-color-matrix-filter-descriptor-payload-fallback` row required
+  `SKIKO_JBR_INTEROP_COLOR_MATRIX_FILTER_DESCRIPTOR_PAYLOAD_CORRUPTED` and matched JBR parser-only non-finite
+  color-matrix payload rejection.
 - Full default command-probe sweep passed after adding a live tint color-filter descriptor blend-mode validation
   sentinel. The sweep covered 181 rows plus header with all rows passing, 110 command replay rows, 26 intentional JBR
   picture fallback rows, and 45 expected explicit fallback-marker rows. The new

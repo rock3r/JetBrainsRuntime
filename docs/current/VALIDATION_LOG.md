@@ -5,6 +5,27 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Focused and grouped command-probe validation passed after adding a live color-matrix filter descriptor payload
+  sentinel:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-102259/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-122441/suite.tsv`.
+  The focused row `commands-invalid-color-matrix-filter-descriptor-payload-fallback` rewrote one recorded
+  color-matrix descriptor payload slot to NaN, required
+  `SKIKO_JBR_INTEROP_COLOR_MATRIX_FILTER_DESCRIPTOR_PAYLOAD_CORRUPTED`, recorded one `command-stream-invalid`
+  fallback marker, `unsupported=none`, zero JBR picture frames, and zero JBR command frames. The grouped
+  `CASE_GROUPS=effect-descriptor-invalid` run covered six malformed effect-descriptor rows; all six passed, with zero
+  JBR replay rows and six expected explicit fallback markers.
+- A full default command-probe checkpoint also produced a complete 182-row TSV for the same slice:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-102400/suite.tsv`.
+  All 182 row results were `passed`, with 110 command replay rows, 26 intentional JBR picture fallback rows, and 46
+  expected explicit fallback-marker rows. The shell process exited after the final row because the suite script was
+  edited while Bash was still reading its tail, so this TSV is supporting evidence rather than the promoted full-sweep
+  gate.
+- Skiko `publishToMavenLocal` passed after adding the test-only
+  `skiko.jbr.interop.corruptColorMatrixFilterDescriptorPayloadForTesting` hook.
+- Magic Jewel command-suite grouping is now available for quicker inner-loop runs. `CASES=...` still selects exact
+  rows; `CASE_GROUPS=...` selects curated groups such as `effect-descriptor-invalid`, `shader-descriptor-invalid`,
+  `runtime-effect-invalid`, `descriptor-handles-invalid`, `color-filters`, `native-text`, and `graphics-layer`.
 - Full default command-probe sweep passed after adding a live tint color-filter descriptor blend-mode validation
   sentinel:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-081633/suite.tsv`.

@@ -183,6 +183,13 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   replay. Focused validation passed, followed by a full default command sweep covering 181 passing rows:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-081541/suite.tsv` and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-081633/suite.tsv`.
+- Latest color-matrix filter descriptor hardening mirrors parser-only non-finite payload validation in a live command
+  row. Skiko can corrupt one recorded color-matrix descriptor payload slot to NaN, Magic Jewel requires
+  `SKIKO_JBR_INTEROP_COLOR_MATRIX_FILTER_DESCRIPTOR_PAYLOAD_CORRUPTED`, and JBR rejects the stream before replay.
+  Focused single-row validation passed, followed by the new grouped `CASE_GROUPS=effect-descriptor-invalid` subset
+  covering six passing malformed effect-descriptor rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-102259/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-122441/suite.tsv`.
 - Latest compatibility matrix passed after that promotion. It covered 57 rows plus the header: all rows passed, the
   happy-path row replayed commands, the 56 ABI/capability/API mismatch rows fell back with zero JBR command frames, and
   every row used a background probe window:
@@ -364,8 +371,12 @@ Stable RuntimeEffect color-filter coverage and full screenshot parity are curren
 1. Continue shader-family hardening and transform/graphics-layer edge cleanup from the current roadmap.
 2. Prefer small, high-signal validation slices with focused command rows first, then default sweep or compatibility
    matrix when the touched surface warrants it.
-3. Keep updating this compact plan; move verbose historical details to archive or focused docs, not back into this file.
-4. Commit and push each major slice.
+3. Use `CASES=...` for exact one-off rows and Magic Jewel `CASE_GROUPS=...` for area slices during inner-loop work.
+   Current command groups include `smoke`, `effect-descriptor-invalid`, `shader-descriptor-invalid`,
+   `runtime-effect-invalid`, `descriptor-handles-invalid`, `color-filters`, `native-text`, and `graphics-layer`.
+4. Run full default command/screenshot sweeps as checkpoint or periodic gates instead of every edit iteration.
+5. Keep updating this compact plan; move verbose historical details to archive or focused docs, not back into this file.
+6. Commit and push each major slice.
 
 ## Current Validation Hardening
 
@@ -442,6 +453,8 @@ Current validation gates are intentionally broad but summarized here to keep thi
 - Tint color-filter descriptors now have a focused live unsupported blend-mode sentinel that rewrites recorded
   descriptor payload from `SrcIn` to `Plus`, requires the typed Skiko corruption marker, and fails closed before any JBR
   picture or command replay.
+- Color-matrix filter descriptors now have a focused live non-finite payload sentinel and belong to the
+  `effect-descriptor-invalid` command group for quicker parser/replay validation iterations.
 - Detailed validation paths and row-level counts live in [`docs/current/VALIDATION_LOG.md`](docs/current/VALIDATION_LOG.md).
 
 ## Key Files
