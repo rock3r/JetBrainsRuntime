@@ -5,6 +5,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Full default command-probe sweep passed after the blur/stamped/corner finite-bound sentinel batch:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-180227/suite.tsv`.
+  Aggregate: 196/196 rows passed, with 110 command replay rows, 26 intentional picture-fallback rows, and 60 explicit
+  structured fallback rows. The full-suite malformed effect-descriptor block includes all twenty current
+  effect-descriptor invalid rows, including the latest negative sigma, negative radius, zero/negative stamped advance
+  or phase bounds, and negative/oversized stamped path-data-length sentinels.
 - Focused and grouped command-probe validation passed after adding a live stamped path-effect descriptor negative
   path-data-length sentinel:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-174121/suite.tsv` and
