@@ -38,6 +38,15 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused plus grouped validation passed after adding a live Perlin/noise shader descriptor negative tile-size
+  sentinel. The single-row focused run:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-202424/suite.tsv`.
+  The `CASE_GROUPS=shader-descriptor-invalid` subset then covered ten malformed shader-descriptor live sentinels with
+  all rows passing, zero JBR picture/command frames, and ten expected explicit fallback-marker rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-202513/suite.tsv`.
+  The new `commands-invalid-perlin-noise-shader-negative-tile-size-fallback` row required
+  `SKIKO_JBR_INTEROP_PERLIN_NOISE_SHADER_NEGATIVE_TILE_SIZE_CORRUPTED` and matched JBR's Perlin tile-size lower-bound
+  rejection.
 - Full default command-probe sweep passed after the blur/stamped/corner finite-bound sentinel batch. The sweep covered
   196/196 passing rows: 110 command replay rows, 26 intentional picture-fallback rows, and 60 explicit structured
   fallback rows:

@@ -5,6 +5,18 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Focused and grouped command-probe validation passed after adding a live Perlin/noise shader descriptor negative
+  tile-size sentinel:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-202424/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-202513/suite.tsv`.
+  The focused row `commands-invalid-perlin-noise-shader-negative-tile-size-fallback` rewrote one recorded
+  Perlin/noise shader descriptor tile-size slot to `-1`, required
+  `SKIKO_JBR_INTEROP_PERLIN_NOISE_SHADER_NEGATIVE_TILE_SIZE_CORRUPTED`, recorded one `command-stream-invalid`
+  fallback marker, `unsupported=none`, zero JBR picture frames, and zero JBR command frames. The grouped
+  `CASE_GROUPS=shader-descriptor-invalid` run covered ten malformed shader-descriptor rows; all ten passed, with zero
+  JBR replay rows and ten expected explicit fallback markers.
+- Skiko `publishToMavenLocal` passed after adding the test-only
+  `skiko.jbr.interop.corruptPerlinNoiseShaderNegativeTileSizeForTesting` hook.
 - Full default command-probe sweep passed after the blur/stamped/corner finite-bound sentinel batch:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-180227/suite.tsv`.
   Aggregate: 196/196 rows passed, with 110 command replay rows, 26 intentional picture-fallback rows, and 60 explicit

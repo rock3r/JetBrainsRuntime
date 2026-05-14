@@ -296,6 +296,13 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   rows, including 110 command replay rows, 26 intentional picture-fallback rows, and 60 explicit structured fallback
   rows:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-180227/suite.tsv`.
+- Latest Perlin/noise shader descriptor hardening now separately exercises JBR's non-negative tile-size bound. Skiko
+  can corrupt one recorded Perlin/noise shader tile-size slot to `-1`, Magic Jewel requires
+  `SKIKO_JBR_INTEROP_PERLIN_NOISE_SHADER_NEGATIVE_TILE_SIZE_CORRUPTED`, and JBR rejects the stream before replay.
+  Focused single-row validation passed, followed by the grouped `CASE_GROUPS=shader-descriptor-invalid` subset
+  covering ten passing malformed shader-descriptor rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-202424/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-202513/suite.tsv`.
 - Latest compatibility matrix passed after that promotion. It covered 57 rows plus the header: all rows passed, the
   happy-path row replayed commands, the 56 ABI/capability/API mismatch rows fell back with zero JBR command frames, and
   every row used a background probe window:
