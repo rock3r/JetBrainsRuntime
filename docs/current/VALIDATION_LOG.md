@@ -5,6 +5,18 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Focused and grouped command-probe validation passed after adding a live Perlin/noise shader descriptor negative
+  tile-height sentinel:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260515-162500/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260515-162542/suite.tsv`.
+  The focused row `commands-invalid-perlin-noise-shader-negative-tile-height-fallback` rewrites one recorded
+  Perlin/noise shader descriptor tile-height slot to `-1`, requires
+  `SKIKO_JBR_INTEROP_PERLIN_NOISE_SHADER_NEGATIVE_TILE_HEIGHT_CORRUPTED`, records one `command-stream-invalid`
+  fallback marker, `unsupported=none`, zero JBR picture frames, and zero JBR command frames. The grouped
+  `CASE_GROUPS=shader-descriptor-invalid` run covered twenty-four malformed shader-descriptor rows; all twenty-four
+  passed, with zero JBR replay rows and twenty-four expected explicit fallback markers.
+- Skiko `publishToMavenLocal` passed after adding the test-only
+  `skiko.jbr.interop.corruptPerlinNoiseShaderNegativeTileHeightForTesting` hook.
 - Focused and grouped command-probe validation passed after adding a live Perlin/noise shader descriptor tile-height
   upper-bound sentinel:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260515-160431/suite.tsv` and

@@ -38,6 +38,15 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused plus grouped validation passed after adding a live Perlin/noise shader descriptor negative tile-height
+  sentinel. The single-row focused run:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260515-162500/suite.tsv`.
+  The `CASE_GROUPS=shader-descriptor-invalid` subset now covers twenty-four malformed shader-descriptor live sentinels
+  with all rows passing, zero JBR picture/command frames, and twenty-four expected explicit fallback-marker rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260515-162542/suite.tsv`.
+  The new `commands-invalid-perlin-noise-shader-negative-tile-height-fallback` row corrupts the Perlin/noise
+  tile-height slot to `-1`, requires `SKIKO_JBR_INTEROP_PERLIN_NOISE_SHADER_NEGATIVE_TILE_HEIGHT_CORRUPTED`, and
+  matches JBR's non-negative tile-height validation.
 - Focused plus grouped validation passed after adding a live Perlin/noise shader descriptor tile-height upper-bound
   sentinel. The single-row focused run:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260515-160431/suite.tsv`.
