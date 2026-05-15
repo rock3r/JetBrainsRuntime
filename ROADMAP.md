@@ -38,6 +38,16 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused plus grouped validation passed after adding a live chain path-effect descriptor payload-count sentinel. The
+  single-row focused run:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260515-175121/suite.tsv`.
+  The `CASE_GROUPS=effect-descriptor-invalid` subset now covers twenty-two malformed effect-descriptor live sentinels
+  with all rows passing, zero JBR picture/command frames, and twenty-two expected explicit fallback-marker rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260515-175219/suite.tsv`.
+  The new `commands-invalid-chain-path-effect-descriptor-payload-count-fallback` row corrupts a chain path-effect
+  descriptor payload count to `5` while keeping record length consistent, requires
+  `SKIKO_JBR_INTEROP_CHAIN_PATH_EFFECT_DESCRIPTOR_PAYLOAD_COUNT_CORRUPTED`, and reaches JBR's chain-specific
+  `payloadIntCount == 4` rejection.
 - Focused plus grouped validation passed after adding a live lighting color-filter descriptor payload-count sentinel. The
   single-row focused run:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260515-173102/suite.tsv`.
