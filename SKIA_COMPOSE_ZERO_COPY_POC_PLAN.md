@@ -543,6 +543,10 @@ Current validation gates are intentionally broad but summarized here to keep thi
   command sentinels with typed `shader`/`colorFilter` evict gates. The latest command sweep covered 144 rows, all
   passed, with 110 command replay rows, 26 intentional JBR picture fallback rows, and 8 expected explicit
   fallback-marker rows.
+- RuntimeEffect shader descriptors now also have a focused live SKSL-length sentinel. The quick `CASES=...` row and
+  the `CASE_GROUPS=runtime-effect-invalid` area sweep passed; the area group now covers 14 malformed RuntimeEffect
+  rows and includes the shader descriptor positive `skslLength` parser branch. `CASE_GROUPS` expansion was tightened
+  so curated groups are not also mutated by default-suite migration replacements.
 - The latest full default command-probe sweep after the radial-gradient/image shader descriptor sentinel batch covered
   200 rows, all passed, with 110 command replay rows, 26 intentional picture-fallback rows, and 64 explicit structured
   fallback rows.
