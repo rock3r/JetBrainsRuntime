@@ -546,6 +546,10 @@ Current validation gates are intentionally broad but summarized here to keep thi
 - The latest full default command-probe sweep after the radial-gradient/image shader descriptor sentinel batch covered
   200 rows, all passed, with 110 command replay rows, 26 intentional picture-fallback rows, and 64 explicit structured
   fallback rows.
+- Image shader descriptors now also have a focused live invalid-height sentinel using the descriptor-backed
+  image-shader-plus-color-filter probe. The quick `CASES=...` row and the
+  `CASE_GROUPS=shader-descriptor-invalid` area sweep passed; the area group now covers 17 malformed shader descriptor
+  rows while the previous full default command-probe checkpoint remains the 203-row sweep below.
 - Sweep-gradient shader descriptors now have a focused live invalid color-count sentinel using a descriptor-backed
   sweep-gradient shader-plus-color-filter probe. The quick `CASES=...` row and the
   `CASE_GROUPS=shader-descriptor-invalid` area sweep passed, and the latest full default command-probe sweep covered
@@ -596,10 +600,10 @@ Current validation gates are intentionally broad but summarized here to keep thi
   linear-gradient shader-plus-color-filter probe. Radial-gradient shader descriptors have invalid-radius and
   invalid-tile-mode sentinels using the descriptor-backed composite shader probe, sweep-gradient shader descriptors
   have an invalid color-count sentinel using a descriptor-backed sweep-gradient shader-plus-color-filter probe, and
-  image shader descriptors have an invalid-width sentinel using the descriptor-backed image-shader-plus-color-filter
+  image shader descriptors have invalid width and height sentinels using the descriptor-backed image-shader-plus-color-filter
   probe.
   `CASE_GROUPS=shader-descriptor-invalid` is the quick parser/replay validation path for this shader family and now
-  covers sixteen malformed shader descriptor rows.
+  covers seventeen malformed shader descriptor rows.
 - Day-to-day malformed-descriptor work now uses exact `CASES=...` rows first, then curated `CASE_GROUPS=...`
   area sweeps before periodic full default command-probe batches, keeping iteration tight while preserving full-suite
   checkpoints.

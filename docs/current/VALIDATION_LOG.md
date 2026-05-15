@@ -5,6 +5,18 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Focused and grouped command-probe validation passed after adding a live image shader descriptor height sentinel:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260515-120348/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260515-120436/suite.tsv`.
+  The focused row `commands-invalid-image-shader-descriptor-height-fallback` uses the descriptor-backed
+  image-shader-plus-color-filter probe, rewrites one recorded image shader descriptor height slot to `0`, requires
+  `SKIKO_JBR_INTEROP_IMAGE_SHADER_DESCRIPTOR_HEIGHT_CORRUPTED`, records one `command-stream-invalid` fallback marker,
+  `unsupported=none`, zero JBR picture frames, and zero JBR command frames. The grouped
+  `CASE_GROUPS=shader-descriptor-invalid` run covered seventeen malformed shader-descriptor rows; all seventeen
+  passed, with zero JBR replay rows and seventeen expected explicit fallback markers. This slice used the quick
+  exact-row then area-group validation path after the previous full 203-row default sweep.
+- Skiko `publishToMavenLocal` passed after adding the test-only
+  `skiko.jbr.interop.corruptImageShaderDescriptorHeightForTesting` hook.
 - Focused, grouped, and full command-probe validation passed after adding a live sweep-gradient shader descriptor
   color-count sentinel:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260515-092309/suite.tsv`,
