@@ -616,6 +616,9 @@ Current validation gates are intentionally broad but summarized here to keep thi
 - RuntimeEffect color-filter build failures now have a focused child-type sentinel that corrupts a recorded
   color-filter child descriptor into a shader child and asserts JBR reports
   `JBR_SKIA_INTEROP_RUNTIME_COLOR_FILTER_BUILD_FAILED ... stage=positional-child-type` before Skiko falls back.
+- Lighting color-filter descriptors now have a focused live payload-count sentinel. The quick `CASES=...` row and the
+  `CASE_GROUPS=effect-descriptor-invalid` area sweep passed; the area group now covers 21 malformed effect descriptor
+  rows and includes the lighting-specific `payloadIntCount == 2` parser branch.
 - Tint color-filter descriptors now have a focused live unsupported blend-mode sentinel that rewrites recorded
   descriptor payload from `SrcIn` to `Plus`, requires the typed Skiko corruption marker, and fails closed before any JBR
   picture or command replay.
