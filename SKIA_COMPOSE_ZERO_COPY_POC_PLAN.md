@@ -546,6 +546,9 @@ Current validation gates are intentionally broad but summarized here to keep thi
 - The latest full default command-probe sweep after the radial-gradient/image shader descriptor sentinel batch covered
   200 rows, all passed, with 110 command replay rows, 26 intentional picture-fallback rows, and 64 explicit structured
   fallback rows.
+- Composite shader descriptors now also have a focused live unsupported blend-mode sentinel. The quick `CASES=...` row
+  and the `CASE_GROUPS=shader-descriptor-invalid` area sweep passed; the area group now covers 27 malformed shader
+  descriptor rows and includes the composite descriptor `isSupportedBlendMode(blendMode)` parser branch.
 - Image shader descriptors now also have a focused live height upper-bound sentinel. The quick `CASES=...` row and the
   `CASE_GROUPS=shader-descriptor-invalid` area sweep passed; the area group now covers 26 malformed shader descriptor
   rows and includes live width/height lower-bound and upper-bound checks plus tile-mode range checks.
@@ -637,16 +640,17 @@ Current validation gates are intentionally broad but summarized here to keep thi
 - Stamped path-effect descriptors now also have a focused live invalid-fill-type sentinel in the same grouped validation path.
 - Stamped path-effect descriptors now also have a focused live invalid-path-data-length sentinel in the same grouped validation path.
 - Linear-gradient shader descriptors now have a focused live invalid tile-mode sentinel using the descriptor-backed
-  linear-gradient shader-plus-color-filter probe. Radial-gradient shader descriptors have invalid-radius and
-  invalid-tile-mode sentinels using the descriptor-backed composite shader probe, sweep-gradient shader descriptors
-  have an invalid color-count sentinel using a descriptor-backed sweep-gradient shader-plus-color-filter probe, and
-  image shader descriptors have invalid width, width upper-bound, height, height upper-bound, X tile-mode, and Y
-  tile-mode sentinels using the descriptor-backed image-shader-plus-color-filter probe. Linear-gradient, radial-gradient, and sweep-gradient shader descriptors also
-  have invalid stop-order sentinels. Perlin/noise shader descriptors cover kind, frequency, octave bounds, zero
-  octave count, tile-width upper bound, tile-height upper bound, negative tile-size rejection, and negative tile-height
+  linear-gradient shader-plus-color-filter probe. Composite shader descriptors have an unsupported blend-mode sentinel,
+  radial-gradient shader descriptors have invalid-radius and invalid-tile-mode sentinels using the descriptor-backed
+  composite shader probe, sweep-gradient shader descriptors have an invalid color-count sentinel using a
+  descriptor-backed sweep-gradient shader-plus-color-filter probe, and image shader descriptors have invalid width,
+  width upper-bound, height, height upper-bound, X tile-mode, and Y tile-mode sentinels using the descriptor-backed
+  image-shader-plus-color-filter probe. Linear-gradient, radial-gradient, and sweep-gradient shader descriptors also
+  have invalid stop-order sentinels. Perlin/noise shader descriptors cover kind, frequency, octave bounds, zero octave
+  count, tile-width upper bound, tile-height upper bound, negative tile-size rejection, and negative tile-height
   rejection.
   `CASE_GROUPS=shader-descriptor-invalid` is the quick parser/replay validation path for this shader family and now
-  covers twenty-six malformed shader descriptor rows.
+  covers twenty-seven malformed shader descriptor rows.
 - Day-to-day malformed-descriptor work now uses exact `CASES=...` rows first, then curated `CASE_GROUPS=...`
   area sweeps before periodic full default command-probe batches, keeping iteration tight while preserving full-suite
   checkpoints.

@@ -38,6 +38,16 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused plus grouped validation passed after adding a live composite shader descriptor blend-mode sentinel. The
+  single-row focused run:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260515-181627/suite.tsv`.
+  The `CASE_GROUPS=shader-descriptor-invalid` subset now covers twenty-seven malformed shader-descriptor live
+  sentinels with all rows passing, zero JBR picture/command frames, and twenty-seven expected explicit fallback-marker
+  rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260515-181710/suite.tsv`.
+  The new `commands-invalid-composite-shader-descriptor-blend-mode-fallback` row corrupts a composite shader descriptor
+  blend-mode slot to `99`, requires `SKIKO_JBR_INTEROP_COMPOSITE_SHADER_DESCRIPTOR_BLEND_MODE_CORRUPTED`, and reaches
+  JBR's composite-specific `isSupportedBlendMode(blendMode)` rejection while keeping descriptor payload count intact.
 - Focused plus grouped validation passed after adding a live chain path-effect descriptor payload-count sentinel. The
   single-row focused run:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260515-175121/suite.tsv`.
