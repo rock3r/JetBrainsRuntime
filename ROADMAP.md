@@ -38,6 +38,16 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused plus grouped validation passed after adding a live shader color-filter descriptor payload-count sentinel. The
+  single-row focused run:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260515-185920/suite.tsv`.
+  The `CASE_GROUPS=shader-descriptor-invalid` subset now covers twenty-nine malformed shader-descriptor live sentinels
+  with all rows passing, zero JBR picture/command frames, and twenty-nine expected explicit fallback-marker rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260515-190002/suite.tsv`.
+  The new `commands-invalid-shader-color-filter-descriptor-payload-count-fallback` row corrupts a shader color-filter
+  descriptor payload count to `5` while keeping record length consistent, requires
+  `SKIKO_JBR_INTEROP_SHADER_COLOR_FILTER_DESCRIPTOR_PAYLOAD_COUNT_CORRUPTED`, and reaches JBR's
+  shader-color-filter-specific `payloadIntCount == 4` rejection.
 - Focused plus grouped validation passed after adding a live solid color shader descriptor payload-count sentinel. The
   single-row focused run:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260515-183751/suite.tsv`.

@@ -5,6 +5,18 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Focused and grouped command-probe validation passed after adding a live shader color-filter descriptor payload-count
+  sentinel:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260515-185920/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260515-190002/suite.tsv`.
+  The focused row `commands-invalid-shader-color-filter-descriptor-payload-count-fallback` rewrites one recorded shader
+  color-filter descriptor payload count to `5` and increases the record length to keep the metadata gate consistent,
+  requires `SKIKO_JBR_INTEROP_SHADER_COLOR_FILTER_DESCRIPTOR_PAYLOAD_COUNT_CORRUPTED`, records one
+  `command-stream-invalid` fallback marker, `unsupported=none`, zero JBR picture frames, and zero JBR command frames.
+  The grouped `CASE_GROUPS=shader-descriptor-invalid` run covered twenty-nine malformed shader-descriptor rows; all
+  twenty-nine passed, with zero JBR replay rows and twenty-nine expected explicit fallback markers.
+- Skiko `publishToMavenLocal` passed after adding the test-only
+  `skiko.jbr.interop.corruptShaderColorFilterDescriptorPayloadCountForTesting` hook.
 - Focused and grouped command-probe validation passed after adding a live solid color shader descriptor payload-count
   sentinel:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260515-183751/suite.tsv` and
