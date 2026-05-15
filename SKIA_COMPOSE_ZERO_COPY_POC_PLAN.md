@@ -546,6 +546,10 @@ Current validation gates are intentionally broad but summarized here to keep thi
 - The latest full default command-probe sweep after the radial-gradient/image shader descriptor sentinel batch covered
   200 rows, all passed, with 110 command replay rows, 26 intentional picture-fallback rows, and 64 explicit structured
   fallback rows.
+- Radial-gradient shader descriptors now also have a focused live invalid stop-order sentinel using the
+  descriptor-backed composite shader probe. The quick `CASES=...` row and the
+  `CASE_GROUPS=shader-descriptor-invalid` area sweep passed; the area group now covers 21 malformed shader descriptor
+  rows and includes strictly-increasing gradient-stop validation for linear and radial descriptors.
 - Linear-gradient shader descriptors now have a focused live invalid stop-order sentinel using the descriptor-backed
   linear-gradient shader-plus-color-filter probe. The quick `CASES=...` row and the
   `CASE_GROUPS=shader-descriptor-invalid` area sweep passed; the area group now covers 20 malformed shader descriptor
@@ -615,9 +619,10 @@ Current validation gates are intentionally broad but summarized here to keep thi
   invalid-tile-mode sentinels using the descriptor-backed composite shader probe, sweep-gradient shader descriptors
   have an invalid color-count sentinel using a descriptor-backed sweep-gradient shader-plus-color-filter probe, and
   image shader descriptors have invalid width, height, X tile-mode, and Y tile-mode sentinels using the descriptor-backed
-  image-shader-plus-color-filter probe. Linear-gradient shader descriptors also have an invalid stop-order sentinel.
+  image-shader-plus-color-filter probe. Linear-gradient and radial-gradient shader descriptors also have invalid
+  stop-order sentinels.
   `CASE_GROUPS=shader-descriptor-invalid` is the quick parser/replay validation path for this shader family and now
-  covers twenty malformed shader descriptor rows.
+  covers twenty-one malformed shader descriptor rows.
 - Day-to-day malformed-descriptor work now uses exact `CASES=...` rows first, then curated `CASE_GROUPS=...`
   area sweeps before periodic full default command-probe batches, keeping iteration tight while preserving full-suite
   checkpoints.
