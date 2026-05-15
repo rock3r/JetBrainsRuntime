@@ -550,6 +550,9 @@ Current validation gates are intentionally broad but summarized here to keep thi
 - RuntimeEffect shader descriptors now also have a focused live uniform-float-count upper-bound sentinel. The quick
   `CASES=...` row and the `CASE_GROUPS=runtime-effect-invalid` area sweep passed; the area group now covers 15
   malformed RuntimeEffect rows and includes the shader descriptor `uniformFloatCount <= 256` parser branch.
+- RuntimeEffect shader descriptors now also have a focused live child-count upper-bound sentinel. The quick `CASES=...`
+  row and the `CASE_GROUPS=runtime-effect-invalid` area sweep passed; the area group now covers 16 malformed
+  RuntimeEffect rows and includes the shader descriptor `childCount <= 8` parser branch.
 - The latest full default command-probe sweep after the radial-gradient/image shader descriptor sentinel batch covered
   200 rows, all passed, with 110 command replay rows, 26 intentional picture-fallback rows, and 64 explicit structured
   fallback rows.

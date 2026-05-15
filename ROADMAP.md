@@ -38,6 +38,14 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused plus grouped validation passed after adding a live RuntimeEffect shader child-count sentinel. The single-row
+  focused run:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260515-201222/suite.tsv`.
+  The `CASE_GROUPS=runtime-effect-invalid` subset now covers sixteen RuntimeEffect-invalid rows with all rows passing:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260515-201314/suite.tsv`.
+  The new `commands-runtime-effect-shader-child-count-fallback` row corrupts a RuntimeEffect shader descriptor
+  `childCount` slot to `9`, requires `SKIKO_JBR_INTEROP_RUNTIME_EFFECT_SHADER_CHILD_COUNT_CORRUPTED`, and reaches
+  JBR's child-count upper-bound parser guard before schema validation or native compile.
 - Focused plus grouped validation passed after adding a live RuntimeEffect shader uniform-float-count sentinel. The
   single-row focused run:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260515-195420/suite.tsv`.

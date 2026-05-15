@@ -5,6 +5,16 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Focused and grouped command-probe validation passed after adding a live RuntimeEffect shader child-count sentinel:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260515-201222/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260515-201314/suite.tsv`.
+  The focused row `commands-runtime-effect-shader-child-count-fallback` rewrites one recorded RuntimeEffect shader
+  descriptor `childCount` to `9`, requires `SKIKO_JBR_INTEROP_RUNTIME_EFFECT_SHADER_CHILD_COUNT_CORRUPTED`, records
+  one `command-stream-invalid` fallback marker, `unsupported=none`, zero JBR picture frames, and zero JBR command
+  frames. The grouped `CASE_GROUPS=runtime-effect-invalid` run covered sixteen RuntimeEffect-invalid rows; all sixteen
+  passed.
+- Skiko `publishToMavenLocal` passed after adding the test-only
+  `skiko.jbr.interop.corruptRuntimeEffectShaderChildCountForTesting` hook.
 - Focused and grouped command-probe validation passed after adding a live RuntimeEffect shader uniform-float-count
   sentinel:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260515-195420/suite.tsv` and
