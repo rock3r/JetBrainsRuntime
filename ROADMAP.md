@@ -38,6 +38,15 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused plus grouped validation passed after adding a live image shader descriptor width upper-bound sentinel. The
+  single-row focused run:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260515-164502/suite.tsv`.
+  The `CASE_GROUPS=shader-descriptor-invalid` subset now covers twenty-five malformed shader-descriptor live sentinels
+  with all rows passing, zero JBR picture/command frames, and twenty-five expected explicit fallback-marker rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260515-164545/suite.tsv`.
+  The new `commands-invalid-image-shader-descriptor-max-width-fallback` row corrupts the image shader width slot to
+  `4097`, requires `SKIKO_JBR_INTEROP_IMAGE_SHADER_DESCRIPTOR_MAX_WIDTH_CORRUPTED`, and matches JBR's image-width
+  upper-bound validation.
 - Focused plus grouped validation passed after adding a live Perlin/noise shader descriptor negative tile-height
   sentinel. The single-row focused run:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260515-162500/suite.tsv`.
