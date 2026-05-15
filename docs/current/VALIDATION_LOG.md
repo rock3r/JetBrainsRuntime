@@ -5,6 +5,24 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Focused, grouped, and full command-probe validation passed after adding a live sweep-gradient shader descriptor
+  color-count sentinel:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260515-092309/suite.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260515-092408/suite.tsv`, and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260515-093643/suite.tsv`.
+  The focused row `commands-invalid-sweep-gradient-shader-descriptor-color-count-fallback` uses a new
+  `MAGIC_JEWEL_COMPOSE_SWEEP_GRADIENT_SHADER_COLOR_FILTER=true` probe to force descriptor-backed sweep-gradient
+  replay, rewrites one recorded sweep-gradient shader descriptor color-count slot to `17`, requires
+  `SKIKO_JBR_INTEROP_SWEEP_GRADIENT_SHADER_DESCRIPTOR_COLOR_COUNT_CORRUPTED`, records one `command-stream-invalid`
+  fallback marker, `unsupported=none`, zero JBR picture frames, and zero JBR command frames. The grouped
+  `CASE_GROUPS=shader-descriptor-invalid` run covered sixteen malformed shader-descriptor rows; all sixteen passed
+  with zero JBR replay rows and sixteen expected explicit fallback markers. The full default command sweep passed
+  203/203 rows, with 110 command replay rows, 26 intentional picture-fallback rows, and 67 explicit structured
+  fallback rows. Before the focused rerun, local JBR artifacts were refreshed with
+  `./scripts/rebuild-jbr-skia-local-artifacts.sh` because this shell had an empty `/tmp/jbr-skia-run/desktop` patch
+  directory and Temurin was correctly falling back with `service-unavailable`.
+- Skiko `publishToMavenLocal` passed after adding the test-only
+  `skiko.jbr.interop.corruptSweepGradientShaderDescriptorColorCountForTesting` hook.
 - Focused and grouped command-probe validation passed after adding a live radial-gradient shader descriptor tile-mode
   sentinel:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-234201/suite.tsv` and

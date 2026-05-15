@@ -38,6 +38,19 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused, grouped, and full default command-probe validation passed after adding a live sweep-gradient shader
+  descriptor color-count sentinel. The single-row focused run:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260515-092309/suite.tsv`.
+  The `CASE_GROUPS=shader-descriptor-invalid` subset now covers sixteen malformed shader-descriptor live sentinels
+  with all rows passing, zero JBR picture/command frames, and sixteen expected explicit fallback-marker rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260515-092408/suite.tsv`.
+  The full default sweep passed 203/203 rows: 110 command replay rows, 26 intentional picture-fallback rows, and
+  67 explicit structured fallback rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260515-093643/suite.tsv`.
+  The new `commands-invalid-sweep-gradient-shader-descriptor-color-count-fallback` row uses a descriptor-backed
+  sweep-gradient shader-plus-color-filter probe, requires
+  `SKIKO_JBR_INTEROP_SWEEP_GRADIENT_SHADER_DESCRIPTOR_COLOR_COUNT_CORRUPTED`, and matches JBR's gradient stop
+  color-count bounds/record-length rejection.
 - Focused plus grouped validation passed after adding a live radial-gradient shader descriptor tile-mode sentinel. The
   single-row focused run:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-234201/suite.tsv`.

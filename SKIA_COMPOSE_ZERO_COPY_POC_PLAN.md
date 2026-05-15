@@ -546,6 +546,11 @@ Current validation gates are intentionally broad but summarized here to keep thi
 - The latest full default command-probe sweep after the radial-gradient/image shader descriptor sentinel batch covered
   200 rows, all passed, with 110 command replay rows, 26 intentional picture-fallback rows, and 64 explicit structured
   fallback rows.
+- Sweep-gradient shader descriptors now have a focused live invalid color-count sentinel using a descriptor-backed
+  sweep-gradient shader-plus-color-filter probe. The quick `CASES=...` row and the
+  `CASE_GROUPS=shader-descriptor-invalid` area sweep passed, and the latest full default command-probe sweep covered
+  203 rows, all passed, with 110 command replay rows, 26 intentional picture-fallback rows, and 67 explicit structured
+  fallback rows.
 - Stable RuntimeEffect color-filter descriptors now have command lifecycle rows for same-context resize and forced
   destination-context migration, with effect-handle redefinition/use/cache-hit and RuntimeEffect source-cache-hit gates.
 - Matching focused screenshot parity rows now cover those RuntimeEffect color-filter lifecycle paths against old
@@ -589,10 +594,12 @@ Current validation gates are intentionally broad but summarized here to keep thi
 - Stamped path-effect descriptors now also have a focused live invalid-path-data-length sentinel in the same grouped validation path.
 - Linear-gradient shader descriptors now have a focused live invalid tile-mode sentinel using the descriptor-backed
   linear-gradient shader-plus-color-filter probe. Radial-gradient shader descriptors have invalid-radius and
-  invalid-tile-mode sentinels using the descriptor-backed composite shader probe, and image shader descriptors have an
-  invalid-width sentinel using the descriptor-backed image-shader-plus-color-filter probe.
+  invalid-tile-mode sentinels using the descriptor-backed composite shader probe, sweep-gradient shader descriptors
+  have an invalid color-count sentinel using a descriptor-backed sweep-gradient shader-plus-color-filter probe, and
+  image shader descriptors have an invalid-width sentinel using the descriptor-backed image-shader-plus-color-filter
+  probe.
   `CASE_GROUPS=shader-descriptor-invalid` is the quick parser/replay validation path for this shader family and now
-  covers fifteen malformed shader descriptor rows.
+  covers sixteen malformed shader descriptor rows.
 - Day-to-day malformed-descriptor work now uses exact `CASES=...` rows first, then curated `CASE_GROUPS=...`
   area sweeps before periodic full default command-probe batches, keeping iteration tight while preserving full-suite
   checkpoints.
