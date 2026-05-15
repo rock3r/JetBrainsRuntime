@@ -5,6 +5,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Full default command-probe sweep passed after the live image shader descriptor height and X/Y tile-mode sentinel
+  batch:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260515-124900/suite.tsv`.
+  Aggregate: 206/206 rows passed, with 110 command replay rows, 26 intentional picture-fallback rows, and 70 explicit
+  structured fallback rows. The full-suite malformed shader-descriptor block includes all nineteen current
+  shader-descriptor invalid rows, including image shader positive-width, positive-height, X tile-mode, and Y tile-mode
+  sentinels.
 - Focused and grouped command-probe validation passed after adding a live image shader descriptor Y tile-mode
   sentinel:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260515-123503/suite.tsv` and

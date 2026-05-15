@@ -550,6 +550,8 @@ Current validation gates are intentionally broad but summarized here to keep thi
   image-shader-plus-color-filter probe. The quick `CASES=...` row and the
   `CASE_GROUPS=shader-descriptor-invalid` area sweep passed; the area group now covers 19 malformed shader descriptor
   rows and image shader descriptor width, height, tile-mode-X, and tile-mode-Y bounds are all covered by live rows.
+  A periodic full default command-probe sweep after the three image shader descriptor slices covered 206/206 passing
+  rows, with 110 command replay rows, 26 intentional picture-fallback rows, and 70 explicit structured fallback rows.
 - Image shader descriptors now also have a focused live invalid X tile-mode sentinel using the descriptor-backed
   image-shader-plus-color-filter probe. The quick `CASES=...` row and the
   `CASE_GROUPS=shader-descriptor-invalid` area sweep passed; the area group now covers 18 malformed shader descriptor

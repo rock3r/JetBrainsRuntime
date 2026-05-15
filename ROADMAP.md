@@ -38,6 +38,10 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Full default command-probe sweep passed after adding the image shader descriptor height and X/Y tile-mode sentinels.
+  The sweep covered 206/206 passing rows: 110 command replay rows, 26 intentional picture-fallback rows, and 70
+  explicit structured fallback rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260515-124900/suite.tsv`.
 - Focused plus grouped validation passed after adding a live image shader descriptor Y tile-mode sentinel. The
   single-row focused run:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260515-123503/suite.tsv`.
