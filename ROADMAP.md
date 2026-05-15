@@ -38,6 +38,16 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused plus grouped validation passed after adding a live linear-gradient shader descriptor stop-order sentinel. The
+  single-row focused run:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260515-150917/suite.tsv`.
+  The `CASE_GROUPS=shader-descriptor-invalid` subset now covers twenty malformed shader-descriptor live sentinels with
+  all rows passing, zero JBR picture/command frames, and twenty expected explicit fallback-marker rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260515-151002/suite.tsv`.
+  The new `commands-invalid-linear-gradient-shader-descriptor-stop-order-fallback` row uses the descriptor-backed
+  linear-gradient shader-plus-color-filter probe, requires
+  `SKIKO_JBR_INTEROP_LINEAR_GRADIENT_SHADER_DESCRIPTOR_STOP_ORDER_CORRUPTED`, and matches JBR's strictly-increasing
+  gradient-stop validation.
 - Full default command-probe sweep passed after adding the image shader descriptor height and X/Y tile-mode sentinels.
   The sweep covered 206/206 passing rows: 110 command replay rows, 26 intentional picture-fallback rows, and 70
   explicit structured fallback rows:
