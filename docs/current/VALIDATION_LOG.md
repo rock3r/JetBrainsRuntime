@@ -5,6 +5,18 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Focused and grouped command-probe validation passed after adding a live sweep-gradient shader descriptor stop-order
+  sentinel:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260515-154421/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260515-154510/suite.tsv`.
+  The focused row `commands-invalid-sweep-gradient-shader-descriptor-stop-order-fallback` uses the descriptor-backed
+  sweep-gradient shader-plus-color-filter probe, rewrites the second recorded sweep-gradient stop position to match
+  the first stop, requires `SKIKO_JBR_INTEROP_SWEEP_GRADIENT_SHADER_DESCRIPTOR_STOP_ORDER_CORRUPTED`, records one
+  `command-stream-invalid` fallback marker, `unsupported=none`, zero JBR picture frames, and zero JBR command frames.
+  The grouped `CASE_GROUPS=shader-descriptor-invalid` run covered twenty-two malformed shader-descriptor rows; all
+  twenty-two passed, with zero JBR replay rows and twenty-two expected explicit fallback markers.
+- Skiko `publishToMavenLocal` passed after adding the test-only
+  `skiko.jbr.interop.corruptSweepGradientShaderDescriptorStopOrderForTesting` hook.
 - Focused and grouped command-probe validation passed after adding a live radial-gradient shader descriptor stop-order
   sentinel:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260515-152642/suite.tsv` and
