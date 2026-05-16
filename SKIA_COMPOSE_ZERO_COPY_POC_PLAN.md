@@ -46,12 +46,14 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260516-171111/suite.tsv`,
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260516-173844/suite.tsv`, and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260516-173928/suite.tsv`.
-- Latest RuntimeEffect shader lower-bound hardening now adds a live negative uniform-count sentinel. Skiko can corrupt
-  one recorded RuntimeEffect shader descriptor `uniformFloatCount` to `-1`, Magic Jewel requires
-  `SKIKO_JBR_INTEROP_RUNTIME_EFFECT_SHADER_NEGATIVE_UNIFORM_FLOAT_COUNT_CORRUPTED`, and focused plus
+- Latest RuntimeEffect shader lower-bound hardening now adds live negative uniform-count and child-count sentinels.
+  Skiko can corrupt one recorded RuntimeEffect shader descriptor `uniformFloatCount` or `childCount` to `-1`, Magic
+  Jewel requires matching typed corruption markers, and focused plus
   `runtime-effect-invalid` grouped validation passed:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260516-181512/suite.tsv` and
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260516-181601/suite.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260516-181512/suite.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260516-181601/suite.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260516-184122/suite.tsv`, and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260516-184211/suite.tsv`.
 - `MagicLabel` is a test harness switch: when Compose text is disabled, it renders fixed white boxes to isolate geometry
   parity from text rasterization drift. It is not a replacement for Jewel `Text`.
 - The working docs are intentionally split: this plan and `ROADMAP.md` stay compact, validation details live in
