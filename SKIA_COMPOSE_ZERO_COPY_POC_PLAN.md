@@ -22,12 +22,13 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - Harness windows are non-focus-stealing by default via `MAGIC_JEWEL_BACKGROUND_WINDOW=true`.
 - Validation iteration is now area-scoped by default for small sentinel slices: run the exact `CASES=...` row first,
   then the relevant `CASE_GROUPS=...` subset, and reserve full default command sweeps for periodic consolidation.
-- Latest RuntimeEffect color-filter hardening adds a live SKSL-length sentinel. Skiko can corrupt one recorded
-  RuntimeEffect color-filter descriptor length to `0`; Magic Jewel requires
-  `SKIKO_JBR_INTEROP_RUNTIME_EFFECT_COLOR_FILTER_SKSL_LENGTH_CORRUPTED`; focused and `runtime-effect-invalid`
-  grouped validation passed:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260516-124807/suite.tsv` and
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260516-124855/suite.tsv`.
+- Latest RuntimeEffect color-filter hardening adds live SKSL-length and uniform-count sentinels. Skiko can corrupt one
+  recorded RuntimeEffect color-filter descriptor length to `0` or `uniformFloatCount` to `257`; Magic Jewel requires
+  target-specific corruption markers; focused and `runtime-effect-invalid` grouped validation passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260516-124807/suite.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260516-124855/suite.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260516-131044/suite.tsv`, and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260516-131129/suite.tsv`.
 - `MagicLabel` is a test harness switch: when Compose text is disabled, it renders fixed white boxes to isolate geometry
   parity from text rasterization drift. It is not a replacement for Jewel `Text`.
 - The working docs are intentionally split: this plan and `ROADMAP.md` stay compact, validation details live in
