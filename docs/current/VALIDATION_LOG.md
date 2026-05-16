@@ -6,6 +6,18 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 ## Latest Broad Sweeps
 
 - Focused and grouped command-probe validation passed after adding a live RuntimeEffect color-filter negative
+  named-child-count sentinel:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260516-173844/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260516-173928/suite.tsv`.
+  The focused row `commands-runtime-effect-color-filter-negative-named-child-count-fallback` rewrites one recorded
+  RuntimeEffect color-filter descriptor `namedChildCount` to `-1`, requires
+  `SKIKO_JBR_INTEROP_RUNTIME_EFFECT_COLOR_FILTER_NEGATIVE_NAMED_CHILD_COUNT_CORRUPTED`, records one
+  `command-stream-invalid` fallback marker, `unsupported=none`, zero JBR picture frames, and zero JBR command frames.
+  The grouped `CASE_GROUPS=runtime-effect-invalid` run covered twenty-seven RuntimeEffect-invalid rows; all
+  twenty-seven passed.
+- Skiko `publishToMavenLocal` passed after adding the test-only
+  `skiko.jbr.interop.corruptRuntimeEffectColorFilterNegativeNamedChildCountForTesting` hook.
+- Focused and grouped command-probe validation passed after adding a live RuntimeEffect color-filter negative
   named-uniform-count sentinel:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260516-171026/suite.tsv` and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260516-171111/suite.tsv`.
