@@ -38,6 +38,16 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused plus grouped validation passed after adding a live RuntimeEffect color-filter named-child-count sentinel. The
+  single-row focused run:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260516-141823/suite.tsv`.
+  The `CASE_GROUPS=runtime-effect-invalid` subset now covers twenty-three RuntimeEffect-invalid rows with all rows
+  passing:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260516-141907/suite.tsv`.
+  The new `commands-runtime-effect-color-filter-named-child-count-fallback` row corrupts a RuntimeEffect color-filter
+  descriptor `namedChildCount` slot to `9`, requires
+  `SKIKO_JBR_INTEROP_RUNTIME_EFFECT_COLOR_FILTER_NAMED_CHILD_COUNT_CORRUPTED`, and reaches JBR's named-child-count
+  upper-bound parser guard before schema validation or native compile.
 - Focused plus grouped validation passed after adding a live RuntimeEffect color-filter named-uniform-count sentinel.
   The single-row focused run:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260516-135519/suite.tsv`.
