@@ -5,6 +5,14 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Periodic full default command-probe sweep passed after the RuntimeEffect shader/color-filter lower-bound sentinel
+  batch:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260516-213052/suite.tsv`.
+  Aggregate: 236/236 rows passed, with 110 command replay rows, 26 intentional picture-fallback rows, and 100 explicit
+  structured fallback rows. The sweep also reconfirmed the already-existing
+  `commands-invalid-effect-descriptor-type-fallback` live sentinel for JBR's unknown effect descriptor type parser
+  guard, and the newest `commands-runtime-effect-shader-negative-named-child-count-fallback` row passed with one
+  `command-stream-invalid` fallback marker, `unsupported=none`, zero JBR picture frames, and zero JBR command frames.
 - Focused and grouped command-probe validation passed after adding a live RuntimeEffect shader negative
   named-child-count sentinel:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260516-195041/suite.tsv` and

@@ -22,6 +22,10 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - Harness windows are non-focus-stealing by default via `MAGIC_JEWEL_BACKGROUND_WINDOW=true`.
 - Validation iteration is now area-scoped by default for small sentinel slices: run the exact `CASES=...` row first,
   then the relevant `CASE_GROUPS=...` subset, and reserve full default command sweeps for periodic consolidation.
+- Latest periodic full default command-probe consolidation after the RuntimeEffect lower-bound sentinel batch covered
+  236 rows, all passed, with 110 command replay rows, 26 intentional picture-fallback rows, and 100 explicit
+  structured fallback rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260516-213052/suite.tsv`.
 - Latest RuntimeEffect color-filter hardening adds live SKSL-length, uniform-count upper/lower-bound, child-count
   upper/lower-bound, named-uniform-count, and named-child-count sentinels. Skiko can corrupt one recorded
   RuntimeEffect color-filter descriptor length to `0`, `uniformFloatCount` to `257` or `-1`, `childCount` to `9` or

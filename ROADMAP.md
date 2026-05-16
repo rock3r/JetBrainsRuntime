@@ -38,6 +38,12 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Periodic full default command-probe sweep passed after the RuntimeEffect shader/color-filter lower-bound sentinel
+  batch:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260516-213052/suite.tsv`.
+  The sweep covered 236 command-probe rows, all passing, with 110 command replay rows, 26 intentional picture-fallback
+  rows, and 100 explicit structured fallback rows. The already-existing unknown effect descriptor type row and the
+  newest `commands-runtime-effect-shader-negative-named-child-count-fallback` row both passed in the full sweep.
 - Focused plus grouped validation passed after adding a live RuntimeEffect shader negative named-child-count sentinel.
   The single-row focused run:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260516-195041/suite.tsv`.
