@@ -38,6 +38,16 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused plus grouped validation passed after adding a live RuntimeEffect shader negative uniform-float-count sentinel.
+  The single-row focused run:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260516-181512/suite.tsv`.
+  The `CASE_GROUPS=runtime-effect-invalid` subset now covers twenty-eight RuntimeEffect-invalid rows with all rows
+  passing:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260516-181601/suite.tsv`.
+  The new `commands-runtime-effect-shader-negative-uniform-float-count-fallback` row corrupts a RuntimeEffect shader
+  descriptor `uniformFloatCount` slot to `-1`, requires
+  `SKIKO_JBR_INTEROP_RUNTIME_EFFECT_SHADER_NEGATIVE_UNIFORM_FLOAT_COUNT_CORRUPTED`, and reaches JBR's uniform-count
+  lower-bound parser guard before schema validation or native compile.
 - Focused plus grouped validation passed after adding a live RuntimeEffect color-filter negative named-child-count
   sentinel. The single-row focused run:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260516-173844/suite.tsv`.
