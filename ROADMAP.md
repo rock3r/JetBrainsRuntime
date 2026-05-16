@@ -38,6 +38,16 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused plus grouped validation passed after adding a live RuntimeEffect color-filter SKSL-length sentinel. The
+  single-row focused run:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260516-124807/suite.tsv`.
+  The `CASE_GROUPS=runtime-effect-invalid` subset now covers nineteen RuntimeEffect-invalid rows with all rows passing:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260516-124855/suite.tsv`.
+  The new `commands-runtime-effect-color-filter-sksl-length-fallback` row corrupts a RuntimeEffect color-filter
+  descriptor SKSL-length slot to `0`, requires
+  `SKIKO_JBR_INTEROP_RUNTIME_EFFECT_COLOR_FILTER_SKSL_LENGTH_CORRUPTED`, and reaches JBR's positive SKSL-length parser
+  guard before schema validation or native compile. This followed the faster exact-row plus area-group iteration path;
+  no full default command sweep was run for this micro-sentinel.
 - Focused plus grouped validation passed after adding a live RuntimeEffect shader named-child-count sentinel. The
   single-row focused run:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260515-205029/suite.tsv`.

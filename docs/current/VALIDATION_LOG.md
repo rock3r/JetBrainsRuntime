@@ -5,6 +5,19 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Focused and grouped command-probe validation passed after adding a live RuntimeEffect color-filter SKSL-length
+  sentinel:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260516-124807/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260516-124855/suite.tsv`.
+  The focused row `commands-runtime-effect-color-filter-sksl-length-fallback` rewrites one recorded RuntimeEffect
+  color-filter descriptor SKSL length to `0`, requires
+  `SKIKO_JBR_INTEROP_RUNTIME_EFFECT_COLOR_FILTER_SKSL_LENGTH_CORRUPTED`, records one `command-stream-invalid`
+  fallback marker, `unsupported=none`, zero JBR picture frames, and zero JBR command frames. The grouped
+  `CASE_GROUPS=runtime-effect-invalid` run covered nineteen RuntimeEffect-invalid rows; all nineteen passed.
+  This slice intentionally used the quick exact-row then area-group validation path rather than another full default
+  sweep.
+- Skiko `publishToMavenLocal` passed after adding the test-only
+  `skiko.jbr.interop.corruptRuntimeEffectColorFilterSkslLengthForTesting` hook.
 - Focused and grouped command-probe validation passed after adding a live RuntimeEffect shader named-child-count
   sentinel:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260515-205029/suite.tsv` and
