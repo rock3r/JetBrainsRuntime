@@ -22,10 +22,11 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - Harness windows are non-focus-stealing by default via `MAGIC_JEWEL_BACKGROUND_WINDOW=true`.
 - Validation iteration is now area-scoped by default for small sentinel slices: run the exact `CASES=...` row first,
   then the relevant `CASE_GROUPS=...` subset, and reserve full default command sweeps for periodic consolidation.
-- Latest RuntimeEffect color-filter hardening adds live SKSL-length, uniform-count, child-count, named-uniform-count,
-  and named-child-count sentinels. Skiko can corrupt one recorded RuntimeEffect color-filter descriptor length to `0`,
-  `uniformFloatCount` to `257`, `childCount` to `9`, `namedUniformCount` to `17`, or `namedChildCount` to `9`; Magic
-  Jewel requires target-specific corruption markers; focused and `runtime-effect-invalid` grouped validation passed:
+- Latest RuntimeEffect color-filter hardening adds live SKSL-length, uniform-count upper/lower-bound, child-count,
+  named-uniform-count, and named-child-count sentinels. Skiko can corrupt one recorded RuntimeEffect color-filter
+  descriptor length to `0`, `uniformFloatCount` to `257` or `-1`, `childCount` to `9`, `namedUniformCount` to `17`, or
+  `namedChildCount` to `9`; Magic Jewel requires target-specific corruption markers; focused and
+  `runtime-effect-invalid` grouped validation passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260516-124807/suite.tsv`,
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260516-124855/suite.tsv`,
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260516-131044/suite.tsv`,
@@ -34,8 +35,10 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260516-133331/suite.tsv`,
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260516-135519/suite.tsv`,
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260516-135603/suite.tsv`,
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260516-141823/suite.tsv`, and
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260516-141907/suite.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260516-141823/suite.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260516-141907/suite.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260516-144403/suite.tsv`, and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260516-144448/suite.tsv`.
 - `MagicLabel` is a test harness switch: when Compose text is disabled, it renders fixed white boxes to isolate geometry
   parity from text rasterization drift. It is not a replacement for Jewel `Text`.
 - The working docs are intentionally split: this plan and `ROADMAP.md` stay compact, validation details live in
