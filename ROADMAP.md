@@ -38,6 +38,14 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused plus grouped validation passed after adding a live stamped path-effect descriptor path-data verb sentinel.
+  The focused row:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-230818/suite.tsv`.
+  The scoped `CASE_GROUPS=effect-descriptor-invalid` subset now covers twenty-three malformed effect descriptor rows,
+  all passing:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-230917/suite.tsv`.
+  The new row corrupts the first stamped path-effect descriptor path verb to `99`, reaching JBR's `validatePathData`
+  unknown-verb branch before replay.
 - Current-artifact focused plus grouped validation rechecked the already-live unknown effect descriptor type sentinel.
   The focused row:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-225228/suite.tsv`.

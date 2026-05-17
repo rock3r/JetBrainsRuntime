@@ -5,6 +5,17 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Focused and grouped command-probe validation passed after adding a live stamped path-effect descriptor path-data verb
+  sentinel:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-230818/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-230917/suite.tsv`.
+  The focused row targets `COMMAND_EFFECT_DESCRIPTOR_STAMPED_PATH_EFFECT`, rewriting the first encoded descriptor path
+  verb to `99`. It requires `SKIKO_JBR_INTEROP_STAMPED_PATH_EFFECT_DESCRIPTOR_PATH_VERB_CORRUPTED` and records one
+  `command-stream-invalid` fallback marker, `unsupported=none`, zero JBR picture frames, and zero JBR command frames.
+  The scoped `CASE_GROUPS=effect-descriptor-invalid` run covered twenty-three malformed effect descriptor rows; all
+  twenty-three passed.
+- Skiko `publishToMavenLocal` passed after adding the test-only stamped path-effect descriptor path-verb corruption
+  hook.
 - Current-artifact focused and grouped command-probe validation rechecked the already-live unknown effect descriptor
   type sentinel:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-225228/suite.tsv` and

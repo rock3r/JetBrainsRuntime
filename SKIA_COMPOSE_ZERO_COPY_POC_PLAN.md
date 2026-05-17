@@ -412,6 +412,13 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   subset covering twenty passing malformed effect-descriptor rows:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-174121/suite.tsv` and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260514-174214/suite.tsv`.
+- Latest stamped path-effect descriptor hardening now also exercises JBR's path-data unknown-verb validation. Skiko can
+  corrupt the first recorded stamped path-effect descriptor path verb to `99`, Magic Jewel requires
+  `SKIKO_JBR_INTEROP_STAMPED_PATH_EFFECT_DESCRIPTOR_PATH_VERB_CORRUPTED`, and JBR rejects the stream before replay.
+  Focused single-row validation passed, followed by the grouped `CASE_GROUPS=effect-descriptor-invalid` subset
+  covering twenty-three passing malformed effect-descriptor rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-230818/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-230917/suite.tsv`.
 - Latest full default command-probe sweep passed after the finite-bound sentinel batch. It covered 196/196 passing
   rows, including 110 command replay rows, 26 intentional picture-fallback rows, and 60 explicit structured fallback
   rows:
