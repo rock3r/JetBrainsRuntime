@@ -38,6 +38,9 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Broader `CASE_GROUPS=gradient-invalid` consolidation passed after completing the path-gradient header guards. The
+  area sweep now covers fifty-seven invalid gradient rows, all passing:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-214935/suite.tsv`.
 - Focused plus grouped validation passed after extending path-gradient header parser guards to radial and sweep paths.
   The focused four-row run:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-213839/suite.tsv`.

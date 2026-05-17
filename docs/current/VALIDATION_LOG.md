@@ -5,6 +5,11 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Broader `CASE_GROUPS=gradient-invalid` consolidation passed after completing the path-gradient header guard family:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-214935/suite.tsv`.
+  The area group covered fifty-seven malformed gradient rows; all fifty-seven passed with one expected
+  `command-stream-invalid` fallback marker per row, `unsupported=none`, zero JBR picture frames, and zero JBR command
+  frames.
 - Focused and grouped command-probe validation passed after extending path-gradient header parser coverage to radial
   and sweep paths:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-213839/suite.tsv` and
