@@ -5,6 +5,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Scoped RuntimeEffect command-probe consolidation passed after the shader/color-filter source-code, source-hash,
+  uniform-name, and child-name live sentinel batch:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-012854/suite.tsv`.
+  The `CASE_GROUPS=runtime-effect-invalid` area run covered thirty-eight malformed RuntimeEffect rows; all thirty-eight
+  passed. Six rows were intentional picture-fallback/parser-only coverage, and zero rows replayed JBR command frames.
+  This is the current fast consolidation point for RuntimeEffect parser/schema sentinel work; continue iterating with
+  exact `CASES=...` rows plus tiny adjacent slices before broader sweeps.
 - Focused and adjacent command-probe validation passed after adding a live RuntimeEffect color-filter child-name schema
   sentinel:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-012238/suite.tsv` and

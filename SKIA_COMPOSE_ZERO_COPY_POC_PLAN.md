@@ -21,7 +21,13 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - Raw Skiko-owned shader/effect/path-effect families remain explicit fallback sentinels.
 - Harness windows are non-focus-stealing by default via `MAGIC_JEWEL_BACKGROUND_WINDOW=true`.
 - Validation iteration is now area-scoped by default for small sentinel slices: run the exact `CASES=...` row first,
-  then the relevant `CASE_GROUPS=...` subset, and reserve full default command sweeps for periodic consolidation.
+  then the smallest relevant adjacent `CASES=...` slice or `CASE_GROUPS=...` subset, and reserve full default command
+  sweeps for periodic consolidation.
+- Latest scoped RuntimeEffect consolidation passed after the shader/color-filter source-code, source-hash,
+  uniform-name, and child-name sentinel batch. The `runtime-effect-invalid` group covered thirty-eight malformed
+  RuntimeEffect rows; all thirty-eight passed, with six intentional picture-fallback/parser-only rows and zero command
+  replay rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-012854/suite.tsv`.
 - Direct path command validation now has a quick `path-invalid` group. It currently covers live `COMMAND_CLIP_PATH`,
   `COMMAND_DRAW_PATH`, `COMMAND_DRAW_PATH_PATH_EFFECT_REF`, `COMMAND_STROKE_PATH_DASH_PATH_EFFECT`, and
   `COMMAND_DRAW_SHADOW_PATH` unknown-verb sentinels that corrupt the first encoded path verb to `99` and require
@@ -136,6 +142,9 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   validation plus a five-row adjacent child-schema subset passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-012238/suite.tsv` and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-012327/suite.tsv`.
+  The follow-up `CASE_GROUPS=runtime-effect-invalid` consolidation covered thirty-eight malformed RuntimeEffect rows
+  after the full source/schema-name batch; all thirty-eight passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-012854/suite.tsv`.
 - Latest RuntimeEffect color-filter hardening adds live SKSL-length, uniform-count upper/lower-bound, child-count
   upper/lower-bound, named-uniform-count, and named-child-count sentinels. Skiko can corrupt one recorded
   RuntimeEffect color-filter descriptor length to `0`, `uniformFloatCount` to `257` or `-1`, `childCount` to `9` or

@@ -38,6 +38,13 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Scoped `CASE_GROUPS=runtime-effect-invalid` consolidation passed after the RuntimeEffect shader/color-filter
+  source-code, source-hash, uniform-name, and child-name live sentinels. The area sweep covered thirty-eight malformed
+  RuntimeEffect rows; all thirty-eight passed, with six intentional picture-fallback/parser-only rows and zero command
+  replay rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-012854/suite.tsv`.
+  Continue using exact `CASES=...` rows plus tiny adjacent slices for point-to-point iteration, and reserve full default
+  sweeps for periodic consolidation.
 - Focused plus adjacent child-schema validation passed after adding a live RuntimeEffect color-filter child-name schema
   sentinel. The focused row:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-012238/suite.tsv`.
