@@ -38,6 +38,15 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused plus grouped validation passed after adding live sweep-gradient color-count parser guards. The focused
+  four-row run:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-193808/suite.tsv`.
+  The expanded `CASE_GROUPS=gradient-invalid` subset now covers thirty-eight stroked-gradient/linear/radial/sweep
+  invalid rows, all passing:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-194011/suite.tsv`.
+  The new rows corrupt sweep-gradient color-count slots to `1`, require typed
+  `SKIKO_JBR_INTEROP_SWEEP_GRADIENT*_COLOR_COUNT_CORRUPTED` markers, and reach JBR's color-count lower bound before
+  replay.
 - Focused plus grouped validation passed after adding live linear-gradient stop-order parser guards. The first focused
   attempt exposed an offset mistake that rewrote a color slot and kept replay enabled; after correcting the second-stop
   offsets to `13`, `15`, `17`, and `19`, the focused four-row run passed:
