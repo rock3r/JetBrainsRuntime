@@ -40,15 +40,19 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-122535/suite.tsv`.
 - Latest gradient validation adds live parser-guard rows for stroked gradient command widths. Skiko can corrupt the
   recorded stroke-width slot to `0` across linear, radial, and sweep rect/round-rect stroke variants, and can corrupt
-  radial-gradient radius slots to `0` across fill/stroke rect/round-rect variants. Magic Jewel requires typed
-  `SKIKO_JBR_INTEROP_*_STROKE_WIDTH_CORRUPTED` and `SKIKO_JBR_INTEROP_RADIAL_GRADIENT*_RADIUS_CORRUPTED` markers, and
-  JBR rejects each stream before replay. Focused validation plus the quick `gradient-invalid` group passed:
+  radial-gradient radius slots to `0` and tile-mode slots to `4` across fill/stroke rect/round-rect variants. Magic
+  Jewel requires typed `SKIKO_JBR_INTEROP_*_STROKE_WIDTH_CORRUPTED`,
+  `SKIKO_JBR_INTEROP_RADIAL_GRADIENT*_RADIUS_CORRUPTED`, and
+  `SKIKO_JBR_INTEROP_RADIAL_GRADIENT*_TILE_MODE_CORRUPTED` markers, and JBR rejects each stream before replay. Focused
+  validation plus the quick `gradient-invalid` group passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-123644/suite.tsv`,
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-171310/suite.tsv`,
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-171855/suite.tsv`, and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-172203/suite.tsv`,
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-172925/suite.tsv`, and
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-173217/suite.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-173217/suite.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-174220/suite.tsv`, and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-174457/suite.tsv`.
 - Latest RuntimeEffect color-filter hardening adds live SKSL-length, uniform-count upper/lower-bound, child-count
   upper/lower-bound, named-uniform-count, and named-child-count sentinels. Skiko can corrupt one recorded
   RuntimeEffect color-filter descriptor length to `0`, `uniformFloatCount` to `257` or `-1`, `childCount` to `9` or
