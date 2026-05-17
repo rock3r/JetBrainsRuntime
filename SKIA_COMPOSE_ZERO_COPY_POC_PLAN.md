@@ -42,8 +42,8 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   recorded stroke-width slot to `0` across linear, radial, and sweep rect/round-rect stroke variants, and can corrupt
   linear-gradient tile-mode slots to `4`, color-count slots to `1`, and second stop slots to `0`, and radial-gradient
   radius slots to `0`, tile-mode slots to `4`, color-count slots to `1`, and second stop slots to `0`, and
-  sweep-gradient color-count slots to `1` across fill/stroke rect/round-rect variants. Magic Jewel requires typed
-  `SKIKO_JBR_INTEROP_*_STROKE_WIDTH_CORRUPTED`,
+  sweep-gradient color-count slots to `1` and second stop slots to `0` across fill/stroke rect/round-rect variants.
+  Magic Jewel requires typed `SKIKO_JBR_INTEROP_*_STROKE_WIDTH_CORRUPTED`,
   `SKIKO_JBR_INTEROP_RADIAL_GRADIENT*_RADIUS_CORRUPTED`, and
   `SKIKO_JBR_INTEROP_*_GRADIENT*_TILE_MODE_CORRUPTED` / `*_COLOR_COUNT_CORRUPTED` / `*_STOP_ORDER_CORRUPTED` markers,
   and JBR rejects each stream before replay. Focused validation plus the quick `gradient-invalid` group passed:
@@ -66,7 +66,9 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-191609/suite.tsv`, and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-191802/suite.tsv`,
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-193808/suite.tsv`, and
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-194011/suite.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-194011/suite.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-200346/suite.tsv`, and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-200601/suite.tsv`.
 - Latest RuntimeEffect color-filter hardening adds live SKSL-length, uniform-count upper/lower-bound, child-count
   upper/lower-bound, named-uniform-count, and named-child-count sentinels. Skiko can corrupt one recorded
   RuntimeEffect color-filter descriptor length to `0`, `uniformFloatCount` to `257` or `-1`, `childCount` to `9` or
