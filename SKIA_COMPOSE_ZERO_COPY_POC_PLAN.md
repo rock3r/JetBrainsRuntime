@@ -126,6 +126,11 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `1`. Focused validation plus a twelve-row adjacent color-filter parser subset passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-010124/suite.tsv` and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-010219/suite.tsv`.
+- Latest RuntimeEffect shader child-schema hardening adds a live parser guard for invalid named-child identifiers.
+  Skiko can corrupt the first recorded RuntimeEffect shader child-name character to `1`. Focused validation plus a
+  five-row adjacent child-schema subset passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-011504/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-011554/suite.tsv`.
 - Latest RuntimeEffect color-filter hardening adds live SKSL-length, uniform-count upper/lower-bound, child-count
   upper/lower-bound, named-uniform-count, and named-child-count sentinels. Skiko can corrupt one recorded
   RuntimeEffect color-filter descriptor length to `0`, `uniformFloatCount` to `257` or `-1`, `childCount` to `9` or
