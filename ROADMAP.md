@@ -38,6 +38,12 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused plus grouped validation passed after adding a live direct drawPath path-data verb sentinel. The focused row:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-232552/suite.tsv`.
+  The new `CASE_GROUPS=path-invalid` subset currently covers the same direct drawPath malformed-path row, all passing:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-232631/suite.tsv`.
+  The row corrupts the first `COMMAND_DRAW_PATH` path verb to `99`, reaching JBR's `validatePathData` unknown-verb
+  branch before replay.
 - Focused plus grouped validation passed after adding a live stamped path-effect descriptor path-data verb sentinel.
   The focused row:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-230818/suite.tsv`.
