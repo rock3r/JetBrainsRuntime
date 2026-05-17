@@ -5,6 +5,16 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Focused and grouped command-probe validation passed after adding linear-gradient tile-mode parser coverage:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-183701/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-183900/suite.tsv`.
+  The new focused rows rewrite recorded linear-gradient tile-mode slots to `4` for
+  `COMMAND_FILL_RECT_LINEAR_GRADIENT`, `COMMAND_FILL_ROUND_RECT_LINEAR_GRADIENT`,
+  `COMMAND_STROKE_RECT_LINEAR_GRADIENT`, and `COMMAND_STROKE_ROUND_RECT_LINEAR_GRADIENT`, require matching typed
+  tile-mode corruption markers, and each records one `command-stream-invalid` fallback marker, `unsupported=none`,
+  zero JBR picture frames, and zero JBR command frames. The grouped `CASE_GROUPS=gradient-invalid` run now covers
+  twenty-six stroked-gradient/linear/radial invalid rows; all twenty-six passed.
+- Skiko `publishToMavenLocal` passed after adding the test-only linear-gradient tile-mode corruption hook.
 - Focused and grouped command-probe validation passed after adding radial-gradient stop-order parser coverage:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-181911/suite.tsv` and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-182106/suite.tsv`.
