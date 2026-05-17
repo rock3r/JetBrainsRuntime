@@ -5,6 +5,16 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Current-artifact focused and grouped command-probe validation rechecked the already-live unknown effect descriptor
+  type sentinel:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-225228/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-225310/suite.tsv`.
+  The focused row rewrites one `COMMAND_DEFINE_EFFECT_DESCRIPTOR` descriptor type to an unknown value, matching JBR's
+  parser-only unknown descriptor type rejection path. It requires
+  `SKIKO_JBR_INTEROP_EFFECT_DESCRIPTOR_TYPE_CORRUPTED` and records one `command-stream-invalid` fallback marker,
+  `unsupported=none`, zero JBR picture frames, and zero JBR command frames. The scoped
+  `CASE_GROUPS=effect-descriptor-invalid` run covered twenty-two malformed effect descriptor rows; all twenty-two
+  passed.
 - Focused and grouped command-probe validation passed after extending live path-gradient path-data verb parser coverage
   to radial and sweep commands:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-223824/suite.tsv` and

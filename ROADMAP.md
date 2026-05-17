@@ -38,6 +38,14 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Current-artifact focused plus grouped validation rechecked the already-live unknown effect descriptor type sentinel.
+  The focused row:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-225228/suite.tsv`.
+  The scoped `CASE_GROUPS=effect-descriptor-invalid` subset covered twenty-two malformed effect descriptor rows, all
+  passing:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-225310/suite.tsv`.
+  The row rewrites one recorded effect descriptor type to an unknown value and reaches JBR's parser-only unknown-type
+  rejection before replay.
 - Focused plus grouped validation passed after extending the live path-gradient path-data verb parser guard to radial
   and sweep path commands. The focused rows:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-223824/suite.tsv`.

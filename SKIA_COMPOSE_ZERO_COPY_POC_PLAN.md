@@ -276,6 +276,9 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   covering 174 passing rows:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260513-204604/suite.tsv` and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260513-204652/suite.tsv`.
+  Current-artifact focused validation plus the scoped `effect-descriptor-invalid` area group also passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-225228/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-225310/suite.tsv`.
 - Latest transformed shader descriptor hardening mirrors parser-only payload-count mismatch coverage in a live command
   row. Skiko can corrupt only transformed shader descriptors from payload count 11 to 10 after recording, Magic Jewel
   requires `SKIKO_JBR_INTEROP_TRANSFORMED_SHADER_DESCRIPTOR_PAYLOAD_COUNT_CORRUPTED`, and JBR rejects the stream before
