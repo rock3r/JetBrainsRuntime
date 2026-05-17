@@ -38,6 +38,13 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused plus grouped validation passed after adding a live linear path-gradient path-data verb parser guard. The
+  focused row:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-222317/suite.tsv`.
+  The expanded `CASE_GROUPS=gradient-path-invalid` subset now covers sixteen path-gradient invalid rows, all passing:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-222406/suite.tsv`.
+  The new row corrupts the first recorded linear path-gradient path verb to `99`, reaching JBR's `validatePathData`
+  unknown-verb branch before replay.
 - Broader `CASE_GROUPS=gradient-invalid` consolidation passed after completing the path-gradient header guards. The
   area sweep now covers fifty-seven invalid gradient rows, all passing:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-214935/suite.tsv`.
