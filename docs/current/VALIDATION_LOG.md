@@ -5,6 +5,16 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Focused and grouped command-probe validation passed after adding linear path-gradient parser coverage:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-203301/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-203456/suite.tsv`.
+  The new focused rows target `COMMAND_FILL_PATH_LINEAR_GRADIENT`; Skiko reads the recorded path-data length to find
+  the gradient payload, then rewrites the tile-mode slot to `4`, color-count slot to `1`, or second stop to `0`. Each
+  row requires the matching `SKIKO_JBR_INTEROP_LINEAR_GRADIENT_PATH_*_CORRUPTED` marker and records one
+  `command-stream-invalid` fallback marker, `unsupported=none`, zero JBR picture frames, and zero JBR command frames.
+  The new narrow `CASE_GROUPS=gradient-path-invalid` run covered the three path-gradient invalid rows; all three
+  passed.
+- Skiko `publishToMavenLocal` passed after adding the test-only linear path-gradient corruption hooks.
 - Focused and grouped command-probe validation passed after adding sweep-gradient stop-order parser coverage:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-200346/suite.tsv` and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-200601/suite.tsv`.

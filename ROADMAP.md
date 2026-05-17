@@ -38,6 +38,14 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused plus grouped validation passed after adding live linear path-gradient parser guards. The focused three-row
+  run:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-203301/suite.tsv`.
+  The new narrow `CASE_GROUPS=gradient-path-invalid` subset passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-203456/suite.tsv`.
+  The new rows compute the variable path payload length, then corrupt the linear-gradient path tile-mode slot to `4`,
+  color-count slot to `1`, and second stop to `0`; each requires a typed
+  `SKIKO_JBR_INTEROP_LINEAR_GRADIENT_PATH_*_CORRUPTED` marker and reaches JBR's parser guard before replay.
 - Focused plus grouped validation passed after adding live sweep-gradient stop-order parser guards. The focused
   four-row run:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-200346/suite.tsv`.
