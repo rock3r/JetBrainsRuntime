@@ -5,6 +5,16 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Focused and grouped command-probe validation passed after adding radial-gradient stop-order parser coverage:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-181911/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-182106/suite.tsv`.
+  The new focused rows rewrite the second recorded radial-gradient stop to `0` for
+  `COMMAND_FILL_RECT_RADIAL_GRADIENT`, `COMMAND_FILL_ROUND_RECT_RADIAL_GRADIENT`,
+  `COMMAND_STROKE_RECT_RADIAL_GRADIENT`, and `COMMAND_STROKE_ROUND_RECT_RADIAL_GRADIENT`, require matching typed
+  stop-order corruption markers, and each records one `command-stream-invalid` fallback marker, `unsupported=none`,
+  zero JBR picture frames, and zero JBR command frames. The grouped `CASE_GROUPS=gradient-invalid` run now covers
+  twenty-two stroked-gradient/radial invalid rows; all twenty-two passed.
+- Skiko `publishToMavenLocal` passed after adding the test-only radial-gradient stop-order corruption hook.
 - Focused and grouped command-probe validation passed after adding radial-gradient color-count parser coverage:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-175821/suite.tsv` and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-180104/suite.tsv`.
