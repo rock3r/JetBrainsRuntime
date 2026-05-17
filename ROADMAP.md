@@ -38,6 +38,13 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused plus grouped validation passed after extending live stroked-gradient stroke-width parser guards across linear,
+  radial, and sweep rect/round-rect variants. The focused five-row run:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-171855/suite.tsv`.
+  The expanded `CASE_GROUPS=gradient-invalid` subset now covers six stroked-gradient invalid rows, all passing:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-172203/suite.tsv`.
+  Each row corrupts the recorded stroke-width slot to `0`, requires a typed `SKIKO_JBR_INTEROP_*_STROKE_WIDTH_CORRUPTED`
+  marker, and reaches JBR's `strokeWidth1000 > 0` validator before replay.
 - Focused plus grouped validation passed after adding a live linear-gradient stroke-width parser guard. The focused run:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-123644/suite.tsv`.
   The new `CASE_GROUPS=gradient-invalid` subset currently covers the matching row and passed:

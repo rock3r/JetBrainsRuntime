@@ -5,6 +5,18 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Focused and grouped command-probe validation passed after extending stroked-gradient stroke-width parser coverage
+  across linear, radial, and sweep rect/round-rect variants:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-171855/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-172203/suite.tsv`.
+  The new focused rows rewrite the recorded stroke-width slot to `0` for
+  `COMMAND_STROKE_ROUND_RECT_LINEAR_GRADIENT`, `COMMAND_STROKE_RECT_RADIAL_GRADIENT`,
+  `COMMAND_STROKE_ROUND_RECT_RADIAL_GRADIENT`, `COMMAND_STROKE_RECT_SWEEP_GRADIENT`, and
+  `COMMAND_STROKE_ROUND_RECT_SWEEP_GRADIENT`, require matching typed corruption markers, and each records one
+  `command-stream-invalid` fallback marker, `unsupported=none`, zero JBR picture frames, and zero JBR command frames.
+  The grouped `CASE_GROUPS=gradient-invalid` run now covers six stroked-gradient invalid rows; all six passed.
+- Skiko `publishToMavenLocal` passed after extending the test-only gradient stroke-width corruption hook to linear,
+  radial, and sweep rect/round-rect variants.
 - Focused and grouped command-probe validation passed after adding a live linear-gradient stroke-width parser guard:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-123644/suite.tsv` and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-171310/suite.tsv`.
