@@ -38,6 +38,13 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused plus adjacent shader parser validation passed after adding a live RuntimeEffect shader uniform-name schema
+  sentinel. The focused row:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-005128/suite.tsv`.
+  The narrower eight-row RuntimeEffect shader parser subset passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-005221/suite.tsv`.
+  The new row rewrites the first recorded RuntimeEffect shader named-uniform character to `1`, reaching JBR's
+  `isValidRuntimeEffectUniformName` first-character guard during descriptor validation.
 - Focused plus adjacent color-filter parser validation passed after adding a live RuntimeEffect color-filter
   source-hash mismatch sentinel. The focused row:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-003812/suite.tsv`.
