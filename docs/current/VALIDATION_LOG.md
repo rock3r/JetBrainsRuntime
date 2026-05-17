@@ -5,6 +5,16 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Focused and adjacent command-probe validation passed after adding a live RuntimeEffect color-filter child-name schema
+  sentinel:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-012238/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-012327/suite.tsv`.
+  The focused row `commands-runtime-effect-color-filter-child-name-fallback` rewrites the first recorded RuntimeEffect
+  color-filter named-child character to `1`. It requires
+  `SKIKO_JBR_INTEROP_RUNTIME_EFFECT_COLOR_FILTER_CHILD_NAME_CORRUPTED` and records one `command-stream-invalid`
+  fallback marker, `unsupported=none`, zero JBR picture frames, and zero JBR command frames. The adjacent
+  RuntimeEffect color-filter child-schema slice covered five rows; all five passed.
+- Skiko `publishToMavenLocal` passed after adding the test-only RuntimeEffect color-filter child-name corruption hook.
 - Focused and adjacent command-probe validation passed after adding a live RuntimeEffect shader child-name schema
   sentinel:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-011504/suite.tsv` and

@@ -38,6 +38,13 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused plus adjacent child-schema validation passed after adding a live RuntimeEffect color-filter child-name schema
+  sentinel. The focused row:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-012238/suite.tsv`.
+  The narrower five-row RuntimeEffect color-filter child-schema subset passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-012327/suite.tsv`.
+  The new row rewrites the first recorded RuntimeEffect color-filter named-child character to `1`, reaching JBR's
+  `isValidRuntimeEffectUniformName` first-character guard while validating child schema metadata.
 - Focused plus adjacent child-schema validation passed after adding a live RuntimeEffect shader child-name schema
   sentinel. The focused row:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-011504/suite.tsv`.
