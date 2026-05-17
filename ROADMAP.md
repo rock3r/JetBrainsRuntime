@@ -38,6 +38,14 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused plus grouped validation passed after adding a live native text font-size sentinel. The single-row focused
+  run:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-114019/suite.tsv`.
+  The new `CASE_GROUPS=native-text-invalid` subset currently covers the matching row and passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-120803/suite.tsv`.
+  The new `commands-invalid-text-font-size-fallback` row corrupts a recorded `COMMAND_DRAW_TEXT_UTF16` font-size slot
+  to `0`, requires `SKIKO_JBR_INTEROP_TEXT_FONT_SIZE_CORRUPTED`, and reaches JBR's `fontSize1000 > 0` parser guard
+  before replay, with zero picture frames and zero command frames.
 - Periodic full default command-probe sweep passed after the RuntimeEffect shader/color-filter lower-bound sentinel
   batch:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260516-213052/suite.tsv`.

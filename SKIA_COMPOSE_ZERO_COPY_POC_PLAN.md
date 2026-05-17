@@ -26,6 +26,12 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   236 rows, all passed, with 110 command replay rows, 26 intentional picture-fallback rows, and 100 explicit
   structured fallback rows:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260516-213052/suite.tsv`.
+- Latest native text validation starts live coverage for parser-only text guards. Skiko can corrupt the recorded
+  `COMMAND_DRAW_TEXT_UTF16` font-size slot to `0`, Magic Jewel requires
+  `SKIKO_JBR_INTEROP_TEXT_FONT_SIZE_CORRUPTED`, and JBR rejects the stream before replay with structured
+  `command-stream-invalid` fallback. Focused validation and the new quick `native-text-invalid` group passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-114019/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-120803/suite.tsv`.
 - Latest RuntimeEffect color-filter hardening adds live SKSL-length, uniform-count upper/lower-bound, child-count
   upper/lower-bound, named-uniform-count, and named-child-count sentinels. Skiko can corrupt one recorded
   RuntimeEffect color-filter descriptor length to `0`, `uniformFloatCount` to `257` or `-1`, `childCount` to `9` or
