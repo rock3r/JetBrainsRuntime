@@ -5,6 +5,16 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Focused and grouped command-probe validation passed after adding a live RuntimeEffect shader source-code parser
+  sentinel:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-235533/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-235624/suite.tsv`.
+  The focused row `commands-runtime-effect-shader-source-code-fallback` rewrites one recorded RuntimeEffect shader
+  descriptor SKSL code unit to `0`, recomputes the descriptor source hash, requires
+  `SKIKO_JBR_INTEROP_RUNTIME_EFFECT_SHADER_SOURCE_CODE_CORRUPTED`, and records one `command-stream-invalid` fallback
+  marker, `unsupported=none`, zero JBR picture frames, and zero JBR command frames. The scoped
+  `CASE_GROUPS=runtime-effect-invalid` run covered thirty-two malformed RuntimeEffect rows; all thirty-two passed.
+- Skiko `publishToMavenLocal` passed after adding the test-only RuntimeEffect shader source-code corruption hook.
 - Focused and grouped command-probe validation passed after adding a live drawShadow path-data verb sentinel:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-234649/suite.tsv` and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-234726/suite.tsv`.

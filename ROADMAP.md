@@ -38,6 +38,13 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused plus grouped validation passed after adding a live RuntimeEffect shader source-code parser sentinel. The
+  focused row:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-235533/suite.tsv`.
+  The `CASE_GROUPS=runtime-effect-invalid` subset now covers thirty-two malformed RuntimeEffect rows, all passing:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-235624/suite.tsv`.
+  The new row rewrites one RuntimeEffect shader descriptor SKSL code unit to `0`, recomputes the descriptor source
+  hash, and reaches JBR's source-code range guard before native compile.
 - Focused plus grouped validation passed after adding a live drawShadow path-data verb sentinel. The focused row:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-234649/suite.tsv`.
   The `CASE_GROUPS=path-invalid` subset now covers five malformed path rows, all passing:
