@@ -46,7 +46,8 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   Path-gradient command guards are now live too: Skiko computes the variable path payload length, then corrupts linear
   path-gradient tile-mode/color-count/stop-order slots or radial path-gradient radius/tile-mode/color-count/stop-order
   slots or sweep path-gradient color-count/stop-order slots to invalid values.
-  Linear path-gradient header guards are also live for invalid fill-type and negative path-data length.
+  Path-gradient header guards are also live across linear/radial/sweep for invalid fill-type and negative
+  path-data length.
   Magic Jewel requires typed `SKIKO_JBR_INTEROP_*_STROKE_WIDTH_CORRUPTED`,
   `SKIKO_JBR_INTEROP_RADIAL_GRADIENT*_RADIUS_CORRUPTED`, and
   `SKIKO_JBR_INTEROP_*_GRADIENT*_TILE_MODE_CORRUPTED` / `*_COLOR_COUNT_CORRUPTED` / `*_STOP_ORDER_CORRUPTED` markers,
@@ -86,6 +87,9 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   The follow-up linear path-header focused and grouped validation passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-212726/suite.tsv` and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-212838/suite.tsv`.
+  The radial/sweep path-header focused and grouped validation passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-213839/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-214053/suite.tsv`.
 - Latest RuntimeEffect color-filter hardening adds live SKSL-length, uniform-count upper/lower-bound, child-count
   upper/lower-bound, named-uniform-count, and named-child-count sentinels. Skiko can corrupt one recorded
   RuntimeEffect color-filter descriptor length to `0`, `uniformFloatCount` to `257` or `-1`, `childCount` to `9` or

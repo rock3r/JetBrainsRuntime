@@ -5,6 +5,17 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Focused and grouped command-probe validation passed after extending path-gradient header parser coverage to radial
+  and sweep paths:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-213839/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-214053/suite.tsv`.
+  The new focused rows target `COMMAND_FILL_PATH_RADIAL_GRADIENT` and `COMMAND_FILL_PATH_SWEEP_GRADIENT`, rewriting
+  the path fill-type slot to `99` or the path-data length slot to `-1`. Each row requires the matching
+  `SKIKO_JBR_INTEROP_RADIAL_GRADIENT_PATH_*_CORRUPTED` or `SKIKO_JBR_INTEROP_SWEEP_GRADIENT_PATH_*_CORRUPTED` marker
+  and records one `command-stream-invalid` fallback marker, `unsupported=none`, zero JBR picture frames, and zero JBR
+  command frames. The expanded `CASE_GROUPS=gradient-path-invalid` run covered fifteen path-gradient invalid rows;
+  all fifteen passed.
+- Skiko `publishToMavenLocal` passed after adding the test-only radial/sweep path-gradient header corruption hooks.
 - Focused and grouped command-probe validation passed after adding linear path-gradient header parser coverage:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-212726/suite.tsv` and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-212838/suite.tsv`.
