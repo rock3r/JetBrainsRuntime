@@ -38,6 +38,14 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused plus grouped validation passed after adding live radial path-gradient parser guards. The focused four-row
+  run:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-204153/suite.tsv`.
+  The expanded `CASE_GROUPS=gradient-path-invalid` subset now covers seven linear/radial path-gradient invalid rows,
+  all passing:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-204356/suite.tsv`.
+  The new rows corrupt radial path-gradient radius to `0`, tile-mode to `4`, color-count to `1`, and the second stop
+  to `0`, each with a typed `SKIKO_JBR_INTEROP_RADIAL_GRADIENT_PATH_*_CORRUPTED` marker before JBR replay.
 - Focused plus grouped validation passed after adding live linear path-gradient parser guards. The focused three-row
   run:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-203301/suite.tsv`.
