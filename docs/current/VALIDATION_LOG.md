@@ -5,6 +5,20 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Focused and grouped command-probe validation passed after adding native paragraph parser-guard coverage for font
+  size, weight, width, slant, and font-family-count bounds:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-122225/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-122535/suite.tsv`.
+  The new focused rows rewrite recorded `COMMAND_DRAW_PARAGRAPH_UTF16` font metadata to invalid values, require the
+  matching `SKIKO_JBR_INTEROP_PARAGRAPH_FONT_SIZE_CORRUPTED`,
+  `SKIKO_JBR_INTEROP_PARAGRAPH_FONT_WEIGHT_CORRUPTED`, `SKIKO_JBR_INTEROP_PARAGRAPH_FONT_WIDTH_CORRUPTED`,
+  `SKIKO_JBR_INTEROP_PARAGRAPH_FONT_SLANT_CORRUPTED`, and
+  `SKIKO_JBR_INTEROP_PARAGRAPH_FONT_FAMILY_COUNT_CORRUPTED` markers, and each records one
+  `command-stream-invalid` fallback marker, `unsupported=none`, zero JBR picture frames, and zero JBR command frames.
+  The grouped `CASE_GROUPS=native-text-invalid` run now covers ten simple native text and paragraph invalid rows; all
+  ten passed.
+- Skiko `publishToMavenLocal` passed after extending the test-only native text command corruption hook to paragraph
+  font size, weight, width, slant, and font-family-count fields.
 - Focused and grouped command-probe validation passed after extending native text parser-guard coverage to font
   weight, width, slant, and font-family-count bounds:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-121327/suite.tsv` and

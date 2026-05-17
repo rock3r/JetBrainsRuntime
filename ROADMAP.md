@@ -38,6 +38,15 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused plus grouped validation passed after adding live native paragraph parser-guard coverage for font size, weight,
+  width, slant, and font-family count. The focused five-row run:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-122225/suite.tsv`.
+  The expanded `CASE_GROUPS=native-text-invalid` subset now covers ten simple native text and paragraph invalid rows,
+  all passing:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-122535/suite.tsv`.
+  The paragraph rows corrupt recorded `COMMAND_DRAW_PARAGRAPH_UTF16` font metadata to out-of-range values and require
+  matching typed `SKIKO_JBR_INTEROP_PARAGRAPH_FONT_*_CORRUPTED` markers, keeping this parser-guard slice on the quick
+  exact-row plus area-group path rather than another full default sweep.
 - Focused plus grouped validation passed after extending live native text parser-guard coverage to font weight, width,
   slant, and font-family count. The focused four-row run:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-121327/suite.tsv`.
