@@ -5,6 +5,14 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Focused and grouped command-probe validation passed after adding a live drawShadow path-data verb sentinel:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-234649/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-234726/suite.tsv`.
+  The focused row targets `COMMAND_DRAW_SHADOW_PATH`, rewriting the first encoded path verb to `99`. It requires
+  `SKIKO_JBR_INTEROP_DRAW_SHADOW_PATH_VERB_CORRUPTED` and records one `command-stream-invalid` fallback marker,
+  `unsupported=none`, zero JBR picture frames, and zero JBR command frames. The scoped `CASE_GROUPS=path-invalid` run
+  now covers five malformed path rows; all five passed.
+- Skiko `publishToMavenLocal` passed after adding the test-only drawShadow path-verb corruption hook.
 - Focused and grouped command-probe validation passed after adding a live stroked-path dash path-effect path-data verb
   sentinel:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-234049/suite.tsv` and
