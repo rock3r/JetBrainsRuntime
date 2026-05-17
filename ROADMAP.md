@@ -38,6 +38,14 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused plus adjacent color-filter parser validation passed after adding a live RuntimeEffect color-filter
+  source-code parser sentinel. The focused row:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-002624/suite.tsv`.
+  The narrower ten-row RuntimeEffect color-filter parser subset passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-002719/suite.tsv`.
+  The new row rewrites one RuntimeEffect color-filter descriptor SKSL code unit to `0`, recomputes the descriptor
+  source hash, and reaches JBR's source-code range guard before native compile. This used the quick exact-row plus
+  adjacent-family slice rather than a full default sweep.
 - Focused plus grouped validation passed after adding a live RuntimeEffect shader source-code parser sentinel. The
   focused row:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-235533/suite.tsv`.

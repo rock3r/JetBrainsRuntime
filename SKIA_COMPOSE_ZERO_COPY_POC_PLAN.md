@@ -104,12 +104,15 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   The radial/sweep path-data verb focused and grouped validation passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-223824/suite.tsv` and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-223942/suite.tsv`.
-- Latest RuntimeEffect shader source-code hardening adds a live parser guard for invalid SKSL code units. Skiko can
-  corrupt one RuntimeEffect shader descriptor source code unit to `0` and recompute the source hash so JBR reaches the
-  source-code range guard before native compile. Focused validation plus the quick `runtime-effect-invalid` group
-  passed; the group now covers thirty-two malformed RuntimeEffect rows:
+- Latest RuntimeEffect source-code hardening adds live parser guards for invalid SKSL code units. Skiko can corrupt
+  one RuntimeEffect shader descriptor or RuntimeEffect color-filter descriptor source code unit to `0` and recompute
+  the source hash so JBR reaches the source-code range guard before native compile. Shader focused validation plus the
+  quick `runtime-effect-invalid` group passed; the group covers thirty-two malformed RuntimeEffect rows:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-235533/suite.tsv` and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-235624/suite.tsv`.
+  Color-filter focused validation plus a narrower ten-row adjacent parser subset passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-002624/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-002719/suite.tsv`.
 - Latest RuntimeEffect color-filter hardening adds live SKSL-length, uniform-count upper/lower-bound, child-count
   upper/lower-bound, named-uniform-count, and named-child-count sentinels. Skiko can corrupt one recorded
   RuntimeEffect color-filter descriptor length to `0`, `uniformFloatCount` to `257` or `-1`, `childCount` to `9` or

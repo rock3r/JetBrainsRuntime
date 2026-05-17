@@ -5,6 +5,17 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Focused and adjacent command-probe validation passed after adding a live RuntimeEffect color-filter source-code
+  parser sentinel:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-002624/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-002719/suite.tsv`.
+  The focused row `commands-runtime-effect-color-filter-source-code-fallback` rewrites one recorded RuntimeEffect
+  color-filter descriptor SKSL code unit to `0`, recomputes the descriptor source hash, requires
+  `SKIKO_JBR_INTEROP_RUNTIME_EFFECT_COLOR_FILTER_SOURCE_CODE_CORRUPTED`, and records one
+  `command-stream-invalid` fallback marker, `unsupported=none`, zero JBR picture frames, and zero JBR command frames.
+  The adjacent RuntimeEffect color-filter parser slice covered ten rows; all ten passed. This intentionally used a
+  narrow parser-family slice instead of a full default sweep.
+- Skiko `publishToMavenLocal` passed after adding the test-only RuntimeEffect color-filter source-code corruption hook.
 - Focused and grouped command-probe validation passed after adding a live RuntimeEffect shader source-code parser
   sentinel:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-235533/suite.tsv` and
