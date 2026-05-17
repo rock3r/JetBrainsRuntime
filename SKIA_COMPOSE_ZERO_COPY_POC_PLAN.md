@@ -27,11 +27,14 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   structured fallback rows:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260516-213052/suite.tsv`.
 - Latest native text validation starts live coverage for parser-only text guards. Skiko can corrupt the recorded
-  `COMMAND_DRAW_TEXT_UTF16` font-size slot to `0`, Magic Jewel requires
-  `SKIKO_JBR_INTEROP_TEXT_FONT_SIZE_CORRUPTED`, and JBR rejects the stream before replay with structured
-  `command-stream-invalid` fallback. Focused validation and the new quick `native-text-invalid` group passed:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-114019/suite.tsv` and
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-120803/suite.tsv`.
+  `COMMAND_DRAW_TEXT_UTF16` font-size, weight, width, slant, and font-family-count slots to out-of-range values. Magic
+  Jewel requires matching typed `SKIKO_JBR_INTEROP_TEXT_FONT_*_CORRUPTED` markers, and JBR rejects each stream before
+  replay with structured `command-stream-invalid` fallback. Focused validation plus the quick `native-text-invalid`
+  group passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-114019/suite.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-120803/suite.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-121327/suite.tsv`, and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-121603/suite.tsv`.
 - Latest RuntimeEffect color-filter hardening adds live SKSL-length, uniform-count upper/lower-bound, child-count
   upper/lower-bound, named-uniform-count, and named-child-count sentinels. Skiko can corrupt one recorded
   RuntimeEffect color-filter descriptor length to `0`, `uniformFloatCount` to `257` or `-1`, `childCount` to `9` or

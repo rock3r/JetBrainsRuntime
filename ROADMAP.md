@@ -38,6 +38,14 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused plus grouped validation passed after extending live native text parser-guard coverage to font weight, width,
+  slant, and font-family count. The focused four-row run:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-121327/suite.tsv`.
+  The expanded `CASE_GROUPS=native-text-invalid` subset now covers five simple native text invalid rows, all passing:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-121603/suite.tsv`.
+  The new rows corrupt recorded `COMMAND_DRAW_TEXT_UTF16` font metadata to out-of-range values and require matching
+  typed `SKIKO_JBR_INTEROP_TEXT_FONT_*_CORRUPTED` markers, closing the simple text parser-only guard cluster without a
+  full default sweep.
 - Focused plus grouped validation passed after adding a live native text font-size sentinel. The single-row focused
   run:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-114019/suite.tsv`.
