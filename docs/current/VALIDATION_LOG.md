@@ -5,6 +5,15 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Focused and grouped command-probe validation passed after adding a live drawPath path-effect-ref path-data verb
+  sentinel:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-233519/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-233604/suite.tsv`.
+  The focused row targets `COMMAND_DRAW_PATH_PATH_EFFECT_REF`, rewriting the first encoded path verb to `99`. It
+  requires `SKIKO_JBR_INTEROP_DRAW_PATH_PATH_EFFECT_VERB_CORRUPTED` and records one `command-stream-invalid` fallback
+  marker, `unsupported=none`, zero JBR picture frames, and zero JBR command frames. The scoped
+  `CASE_GROUPS=path-invalid` run now covers three malformed direct/path-effect path rows; all three passed.
+- Skiko `publishToMavenLocal` passed after adding the test-only drawPath path-effect-ref path-verb corruption hook.
 - Focused and grouped command-probe validation passed after adding a live direct clipPath path-data verb sentinel:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-232957/suite.tsv` and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260517-233038/suite.tsv`.

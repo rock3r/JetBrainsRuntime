@@ -22,9 +22,9 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - Harness windows are non-focus-stealing by default via `MAGIC_JEWEL_BACKGROUND_WINDOW=true`.
 - Validation iteration is now area-scoped by default for small sentinel slices: run the exact `CASES=...` row first,
   then the relevant `CASE_GROUPS=...` subset, and reserve full default command sweeps for periodic consolidation.
-- Direct path command validation now has a quick `path-invalid` group. It currently covers live `COMMAND_CLIP_PATH`
-  and `COMMAND_DRAW_PATH` unknown-verb sentinels that corrupt the first encoded path verb to `99` and require
-  structured `command-stream-invalid` fallback before replay.
+- Direct path command validation now has a quick `path-invalid` group. It currently covers live `COMMAND_CLIP_PATH`,
+  `COMMAND_DRAW_PATH`, and `COMMAND_DRAW_PATH_PATH_EFFECT_REF` unknown-verb sentinels that corrupt the first encoded
+  path verb to `99` and require structured `command-stream-invalid` fallback before replay.
 - Latest periodic full default command-probe consolidation after the RuntimeEffect lower-bound sentinel batch covered
   236 rows, all passed, with 110 command replay rows, 26 intentional picture-fallback rows, and 100 explicit
   structured fallback rows:
