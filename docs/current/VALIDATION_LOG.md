@@ -6,6 +6,22 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 ## Latest Broad Sweeps
 
 - Focused and adjacent command-probe validation passed after adding live RuntimeEffect shader and color-filter
+  child-schema name-range sentinels:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-142845/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-143020/suite.tsv`.
+  The focused rows `commands-runtime-effect-shader-child-schema-name-range-fallback` and
+  `commands-runtime-effect-color-filter-child-schema-name-range-fallback` bump the first named-child schema name length
+  just past the schema boundary while staying under the max-length guard. Both require their target-specific
+  `*_CHILD_SCHEMA_NAME_RANGE_CORRUPTED` marker and record one `command-stream-invalid` fallback marker,
+  `unsupported=none`, zero JBR picture frames, and zero JBR command frames. The adjacent RuntimeEffect child-schema
+  slice covered fourteen rows; all fourteen passed, with two intentional picture-fallback/parser-only rows and zero
+  command replay rows.
+- Scoped RuntimeEffect command-probe consolidation passed after adding the child-schema name-range live sentinel pairs:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-144007/suite.tsv`.
+  The `CASE_GROUPS=runtime-effect-invalid` area run covered fifty-eight malformed RuntimeEffect rows; all fifty-eight
+  passed. Six rows were intentional picture-fallback/parser-only coverage, and zero rows replayed JBR command frames.
+  This is the current RuntimeEffect parser/schema consolidation checkpoint.
+- Focused and adjacent command-probe validation passed after adding live RuntimeEffect shader and color-filter
   child-schema max-name-length sentinels:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-132914/suite.tsv` and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-133102/suite.tsv`.
@@ -20,7 +36,7 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-134009/suite.tsv`.
   The `CASE_GROUPS=runtime-effect-invalid` area run covered fifty-six malformed RuntimeEffect rows; all fifty-six
   passed. Six rows were intentional picture-fallback/parser-only coverage, and zero rows replayed JBR command frames.
-  This is the current RuntimeEffect parser/schema consolidation checkpoint.
+  This is the previous RuntimeEffect parser/schema consolidation checkpoint.
 - Focused and adjacent command-probe validation passed after adding live RuntimeEffect shader and color-filter
   child-schema name-length sentinels:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-123344/suite.tsv` and
