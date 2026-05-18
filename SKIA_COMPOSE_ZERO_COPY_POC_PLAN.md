@@ -33,6 +33,11 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   descriptor before native build. The focused two-row run and compact six-row child-schema slice passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-020224/suite.tsv` and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-020355/suite.tsv`.
+- Latest RuntimeEffect uniform-schema hardening adds live shader and color-filter float-count sentinels. Skiko can
+  corrupt the first named-uniform schema entry so its `floatCount` is `0`, and JBR rejects the descriptor before native
+  compile/build. The focused two-row run and compact six-row uniform-schema slice passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-021125/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-021257/suite.tsv`.
 - Direct path command validation now has a quick `path-invalid` group. It currently covers live `COMMAND_CLIP_PATH`,
   `COMMAND_DRAW_PATH`, `COMMAND_DRAW_PATH_PATH_EFFECT_REF`, `COMMAND_STROKE_PATH_DASH_PATH_EFFECT`, and
   `COMMAND_DRAW_SHADOW_PATH` unknown-verb sentinels that corrupt the first encoded path verb to `99` and require
@@ -137,6 +142,10 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `1`. Focused validation plus a twelve-row adjacent color-filter parser subset passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-010124/suite.tsv` and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-010219/suite.tsv`.
+  RuntimeEffect uniform-schema float-count validation now has matching live shader and color-filter rows. The focused
+  two-row run and compact six-row uniform-schema slice passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-021125/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-021257/suite.tsv`.
 - Latest RuntimeEffect shader child-schema hardening adds a live parser guard for invalid named-child identifiers.
   Skiko can corrupt the first recorded RuntimeEffect shader child-name character to `1`. Focused validation plus a
   five-row adjacent child-schema subset passed:
