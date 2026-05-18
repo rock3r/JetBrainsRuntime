@@ -5,6 +5,18 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Focused command-probe validation passed after adding live shader child use-after-evict sentinels:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-190602/suite.tsv`.
+  The new rows cover transformed shader child, composite shader destination child, composite shader source child,
+  shader-color-filter shader child, and RuntimeEffect shader child descriptors. Each row inserts a
+  `COMMAND_EVICT_SHADER_HANDLE` record immediately before the descriptor that consumes the child handle, requires a
+  target-specific `SKIKO_JBR_INTEROP_SHADER_CHILD_USE_AFTER_EVICT_CORRUPTED` marker, and reports one
+  `command-stream-invalid` fallback marker, `unsupported=none`, zero JBR picture frames, and zero JBR command frames.
+- Scoped descriptor-handle command-probe consolidation passed after adding the shader child use-after-evict rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-190943/suite.tsv`.
+  The `CASE_GROUPS=descriptor-handles-invalid` area run covered thirty-four malformed descriptor/child-handle rows; all
+  thirty-four passed. The group reported zero unsupported rows, zero picture rows, zero command replay rows, and one
+  structured fallback marker per row.
 - Focused command-probe validation passed after adding live composite shader source-child wrong-type and missing-child
   sentinels:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-184048/suite.tsv`.

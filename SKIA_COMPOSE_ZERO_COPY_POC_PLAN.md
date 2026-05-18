@@ -23,6 +23,14 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - Validation iteration is now area-scoped by default for small sentinel slices: run the exact `CASES=...` row first,
   then the smallest relevant adjacent `CASES=...` slice or `CASE_GROUPS=...` subset, and reserve full default command
   sweeps for periodic consolidation.
+- Descriptor child-handle validation now covers shader child use-after-evict paths. Skiko can insert a shader-handle
+  eviction immediately before descriptor validation for transformed shader, composite shader destination/source,
+  shader-color-filter shader child, and RuntimeEffect shader child descriptors. The focused five-row run passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-190602/suite.tsv`.
+  The follow-up `CASE_GROUPS=descriptor-handles-invalid` run covered thirty-four malformed descriptor/child-handle rows;
+  all thirty-four passed, with zero unsupported rows, zero picture rows, zero command replay rows, and one structured
+  fallback marker per row:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-190943/suite.tsv`.
 - Descriptor child-handle validation now includes both children of composite shader descriptors. Skiko can corrupt the
   composite shader source child to point at a color-filter descriptor or an undefined shader handle, matching JBR's
   existing `srcHandle` validation alongside the previously covered destination child. The focused two-row run passed:
