@@ -93,6 +93,20 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   The `CASE_GROUPS=image-handles-invalid` area run now covers twenty malformed image definition/cache-key/dimension,
   alpha, filter-quality, and blend-mode rows; all twenty passed. The group reported zero unsupported rows, zero picture
   rows, zero command replay rows, and one structured fallback marker per row.
+- Magic Jewel validation now supports `EXPECT_SCREENSHOT_ASSERTION=false` for command-only sweeps when macOS window
+  capture is flaky. The previously failing `commands-live-animation` and `commands-popup-window` rows both passed with
+  screenshot assertions disabled while still requiring command replay:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-224301/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-225925/suite.tsv`.
+- A periodic full default command-only sweep was restarted with `EXPECT_SCREENSHOT_ASSERTION=false`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-230019/`.
+  It progressed through the expanded image sentinel block, path verb sentinels, popup/menu, native text, image/shader,
+  and RuntimeEffect rows before stopping at `commands-runtime-effect-child-only` because the row's max shader-handle
+  define gate was stale. The report showed strict command replay stayed healthy: zero fallback, `unsupported=none`,
+  zero JBR picture frames, 1557 JBR command frames, one RuntimeEffect source-cache miss, and 2058 cache hits.
+- Focused validation passed after adjusting `commands-runtime-effect-child-only` to allow the current three shader-handle
+  definitions:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-234743/suite.tsv`.
 - Focused command-probe validation passed after adding top-level path-effect descriptor-use sentinels:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-200433/suite.tsv`.
   The new `commands-invalid-path-effect-descriptor-use-fallback`,

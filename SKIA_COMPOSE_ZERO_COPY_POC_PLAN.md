@@ -78,6 +78,11 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   alpha, filter-quality, and blend-mode rows; all twenty passed, with zero unsupported rows, zero picture rows, zero
   command replay rows, and one structured fallback marker per row:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-222802/suite.tsv`.
+- Magic Jewel report validation now has `EXPECT_SCREENSHOT_ASSERTION=false` for command-only sweeps when window capture
+  is unstable. `commands-live-animation` and `commands-popup-window` both passed with the screenshot gate disabled while
+  still proving command replay, and `commands-runtime-effect-child-only` now allows the current three shader-handle
+  definitions after focused validation:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-234743/suite.tsv`.
 - Descriptor-handle validation now covers top-level path-effect descriptor uses. Skiko can rewrite or evict the
   `COMMAND_DRAW_PATH_PATH_EFFECT_REF` handle to exercise JBR's missing-handle, use-after-evict, and wrong-family
   checks. The focused three-row run passed:

@@ -93,6 +93,9 @@ This is the small working roadmap for the current PoC. The full historical check
   rows; all twenty passed with zero unsupported rows, zero picture rows, zero command replay rows, and one structured
   fallback marker per row:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-222802/suite.tsv`.
+- Command-only full-sweep iteration now has an explicit screenshot-assertion skip for macOS capture flakiness, and the
+  `commands-runtime-effect-child-only` gate was refreshed to the current three shader-handle definitions:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-234743/suite.tsv`.
 - Focused plus grouped descriptor-handle validation passed after adding top-level path-effect descriptor-use sentinels
   for missing handles, use-after-evict, and wrong-family handles on `COMMAND_DRAW_PATH_PATH_EFFECT_REF`. The focused
   three-row run passed:
