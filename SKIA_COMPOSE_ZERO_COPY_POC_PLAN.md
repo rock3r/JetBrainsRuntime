@@ -23,6 +23,13 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - Validation iteration is now area-scoped by default for small sentinel slices: run the exact `CASES=...` row first,
   then the smallest relevant adjacent `CASES=...` slice or `CASE_GROUPS=...` subset, and reserve full default command
   sweeps for periodic consolidation.
+- Effect-child use-after-evict validation now also covers RuntimeEffect color-filter children and shader-color-filter
+  effect children. The focused two-row run passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-193417/suite.tsv`.
+  The follow-up `CASE_GROUPS=descriptor-handles-invalid` run covered thirty-six malformed descriptor/child-handle rows;
+  all thirty-six passed, with zero unsupported rows, zero picture rows, zero command replay rows, and one structured
+  fallback marker per row:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-193605/suite.tsv`.
 - Descriptor child-handle validation now covers shader child use-after-evict paths. Skiko can insert a shader-handle
   eviction immediately before descriptor validation for transformed shader, composite shader destination/source,
   shader-color-filter shader child, and RuntimeEffect shader child descriptors. The focused five-row run passed:

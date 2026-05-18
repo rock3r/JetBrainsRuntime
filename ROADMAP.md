@@ -38,6 +38,13 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused plus grouped descriptor child-handle validation passed after extending effect-child use-after-evict coverage to
+  RuntimeEffect color-filter children and shader-color-filter effect children. The focused two-row run passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-193417/suite.tsv`.
+  Scoped `CASE_GROUPS=descriptor-handles-invalid` now covers thirty-six malformed descriptor/child-handle rows; all
+  thirty-six passed, with zero unsupported rows, zero picture rows, zero command replay rows, and one structured
+  fallback marker per row:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-193605/suite.tsv`.
 - Focused plus grouped descriptor child-handle validation passed after adding live shader child use-after-evict
   sentinels. Skiko can now evict a shader child handle immediately before descriptor validation for transformed shader,
   composite shader destination and source children, shader-color-filter shader child, and RuntimeEffect shader child
