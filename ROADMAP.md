@@ -38,6 +38,14 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused plus grouped descriptor-handle validation passed after adding top-level path-effect descriptor-use sentinels
+  for missing handles, use-after-evict, and wrong-family handles on `COMMAND_DRAW_PATH_PATH_EFFECT_REF`. The focused
+  three-row run passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-200433/suite.tsv`.
+  Scoped `CASE_GROUPS=descriptor-handles-invalid` now covers thirty-nine malformed descriptor/child-handle rows; all
+  thirty-nine passed, with zero unsupported rows, zero picture rows, zero command replay rows, and one structured
+  fallback marker per row:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-200630/suite.tsv`.
 - Focused plus grouped descriptor child-handle validation passed after extending effect-child use-after-evict coverage to
   RuntimeEffect color-filter children and shader-color-filter effect children. The focused two-row run passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-193417/suite.tsv`.

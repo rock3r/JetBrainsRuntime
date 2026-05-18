@@ -5,6 +5,18 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Focused command-probe validation passed after adding top-level path-effect descriptor-use sentinels:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-200433/suite.tsv`.
+  The new `commands-invalid-path-effect-descriptor-use-fallback`,
+  `commands-invalid-path-effect-descriptor-use-after-evict-fallback`, and
+  `commands-path-effect-wrong-effect-type-fallback` rows exercise `COMMAND_DRAW_PATH_PATH_EFFECT_REF` with an undefined
+  handle, a just-evicted path-effect handle, and a color-filter handle. Each row reports one `command-stream-invalid`
+  fallback marker, `unsupported=none`, zero JBR picture frames, and zero JBR command frames.
+- Scoped descriptor-handle command-probe consolidation passed after adding those top-level path-effect use rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-200630/suite.tsv`.
+  The `CASE_GROUPS=descriptor-handles-invalid` area run covered thirty-nine malformed descriptor/child-handle rows; all
+  thirty-nine passed. The group reported zero unsupported rows, zero picture rows, zero command replay rows, and one
+  structured fallback marker per row.
 - Focused command-probe validation passed after extending effect-child use-after-evict coverage:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-193417/suite.tsv`.
   The new `commands-runtime-effect-color-filter-child-use-after-evict-fallback` and
