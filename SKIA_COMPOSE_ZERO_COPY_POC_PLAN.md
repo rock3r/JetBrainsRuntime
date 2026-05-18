@@ -23,6 +23,15 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - Validation iteration is now area-scoped by default for small sentinel slices: run the exact `CASES=...` row first,
   then the smallest relevant adjacent `CASES=...` slice or `CASE_GROUPS=...` subset, and reserve full default command
   sweeps for periodic consolidation.
+- RuntimeEffect uniform-schema name-range validation adds live shader and color-filter sentinels for
+  `offset + nameLength > schemaEnd`. Skiko can bump the first named-uniform schema name length just past the available
+  schema payload while staying under the max-length guard; the focused two-row run and compact fourteen-row
+  uniform-schema slice passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-153449/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-153628/suite.tsv`.
+  The follow-up `CASE_GROUPS=runtime-effect-invalid` consolidation covered sixty malformed RuntimeEffect rows; all
+  sixty passed, with six intentional picture-fallback/parser-only rows and zero command replay rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-154609/suite.tsv`.
 - RuntimeEffect child-schema name-range validation adds live shader and color-filter sentinels for
   `offset + nameLength > schemaEnd`. Skiko can bump the first named-child schema name length just past the available
   schema payload while staying under the max-length guard; the focused two-row run and compact fourteen-row
