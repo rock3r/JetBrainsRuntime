@@ -39,6 +39,13 @@ This is the small working roadmap for the current PoC. The full historical check
 ## Latest Validations
 
 - Focused plus adjacent uniform-schema validation passed after adding live RuntimeEffect shader and color-filter
+  uniform-schema max-name-length sentinels. The focused two-row run:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-102412/suite.tsv`.
+  The compact fourteen-row RuntimeEffect uniform-schema slice passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-102601/suite.tsv`.
+  The new rows rewrite the first recorded named-uniform schema name length to `65`, reaching JBR's `nameLength > 64`
+  guard before native compile/build or replay.
+- Focused plus adjacent uniform-schema validation passed after adding live RuntimeEffect shader and color-filter
   uniform-schema name-length sentinels. The focused two-row run:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-101012/suite.tsv`.
   The compact twelve-row RuntimeEffect uniform-schema slice passed:

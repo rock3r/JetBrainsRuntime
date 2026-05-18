@@ -53,6 +53,11 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   two-row run and compact twelve-row uniform-schema slice passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-101012/suite.tsv` and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-101145/suite.tsv`.
+- RuntimeEffect uniform-schema max-name-length validation adds live shader and color-filter sentinels for
+  `nameLength > 64`. Skiko can corrupt the first named-uniform schema entry so its name length is `65`; the focused
+  two-row run and compact fourteen-row uniform-schema slice passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-102412/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-102601/suite.tsv`.
   The follow-up `CASE_GROUPS=runtime-effect-invalid` consolidation covered forty-six malformed RuntimeEffect rows after
   adding the float-offset and float-range live sentinel pairs; all forty-six passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-031347/suite.tsv`.
@@ -179,6 +184,10 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   two-row run and compact twelve-row uniform-schema slice passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-101012/suite.tsv` and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-101145/suite.tsv`.
+  RuntimeEffect uniform-schema max-name-length validation now has matching live shader and color-filter rows. The
+  focused two-row run and compact fourteen-row uniform-schema slice passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-102412/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-102601/suite.tsv`.
   The scoped `runtime-effect-invalid` group was rechecked after the float-offset and float-range pairs and now covers
   forty-six malformed RuntimeEffect rows:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-031347/suite.tsv`.
