@@ -5,6 +5,17 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Focused command-probe validation passed after adding live image cache-key sentinels:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-203912/suite.tsv`.
+  The new `commands-invalid-image-use-fallback` row rewrites one `COMMAND_DRAW_IMAGE_REF` key to an undefined image
+  cache key. The new `commands-invalid-image-use-after-evict-fallback` row inserts `COMMAND_EVICT_IMAGE_CACHE_KEY`
+  immediately before the draw that uses that key. Both rows report one `command-stream-invalid` fallback marker,
+  `unsupported=none`, zero JBR picture frames, and zero JBR command frames.
+- Scoped image-handle command-probe consolidation passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-204017/suite.tsv`.
+  The new `CASE_GROUPS=image-handles-invalid` area run covered both malformed image cache-key rows; both passed. The
+  group reported zero unsupported rows, zero picture rows, zero command replay rows, and one structured fallback marker
+  per row.
 - Focused command-probe validation passed after adding top-level path-effect descriptor-use sentinels:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-200433/suite.tsv`.
   The new `commands-invalid-path-effect-descriptor-use-fallback`,
