@@ -5,6 +5,18 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Focused and adjacent command-probe validation passed after adding live RuntimeEffect shader and color-filter
+  uniform-schema name-length sentinels:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-101012/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-101145/suite.tsv`.
+  The focused rows `commands-runtime-effect-shader-uniform-schema-name-length-fallback` and
+  `commands-runtime-effect-color-filter-uniform-schema-name-length-fallback` rewrite the first named-uniform schema
+  name length to `0`. Both require their target-specific `*_UNIFORM_SCHEMA_NAME_LENGTH_CORRUPTED` marker and record one
+  `command-stream-invalid` fallback marker, `unsupported=none`, zero JBR picture frames, and zero JBR command frames.
+  The adjacent RuntimeEffect uniform-schema slice covered twelve rows; all twelve passed, with two intentional
+  picture-fallback/parser-only rows and zero command replay rows.
+- Skiko `publishToMavenLocal` passed after adding the test-only RuntimeEffect uniform-schema name-length corruption
+  hooks.
 - Scoped RuntimeEffect command-probe consolidation passed after adding the uniform-schema float-offset and float-range
   live sentinel pairs:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-031347/suite.tsv`.
