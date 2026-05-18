@@ -5,6 +5,15 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Current-artifact focused validation rechecked the live unknown effect descriptor type sentinel:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-111741/suite.tsv`.
+  `commands-invalid-effect-descriptor-type-fallback` rewrites one recorded effect descriptor type to an unknown value
+  and requires `SKIKO_JBR_INTEROP_EFFECT_DESCRIPTOR_TYPE_CORRUPTED`; it passed with one structured
+  `command-stream-invalid` fallback marker, `unsupported=none`, zero JBR picture frames, and zero JBR command frames.
+  The follow-up `CASE_GROUPS=effect-descriptor-invalid` area run passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-111855/suite.tsv`.
+  It covered twenty-three effect descriptor parser/fallback rows; all twenty-three passed, with zero unsupported rows,
+  zero picture rows, and zero command replay rows.
 - Scoped RuntimeEffect command-probe consolidation passed after adding the uniform-schema name-length and max-name-length
   live sentinel pairs:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-103723/suite.tsv`.

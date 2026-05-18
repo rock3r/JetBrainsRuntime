@@ -23,6 +23,11 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - Validation iteration is now area-scoped by default for small sentinel slices: run the exact `CASES=...` row first,
   then the smallest relevant adjacent `CASES=...` slice or `CASE_GROUPS=...` subset, and reserve full default command
   sweeps for periodic consolidation.
+- Current-artifact focused validation rechecked the live unknown effect descriptor type sentinel:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-111741/suite.tsv`.
+  The `effect-descriptor-invalid` quick area group then covered twenty-three descriptor parser/fallback rows; all
+  twenty-three passed with zero unsupported rows, zero picture rows, and zero command replay rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-111855/suite.tsv`.
 - Latest scoped RuntimeEffect consolidation passed after the uniform-schema name-length and max-name-length sentinel
   pairs. The `runtime-effect-invalid` group covered fifty malformed RuntimeEffect rows; all fifty passed, with six
   intentional picture-fallback/parser-only rows and zero command replay rows:
