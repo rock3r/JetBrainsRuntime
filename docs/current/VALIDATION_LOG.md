@@ -6,6 +6,21 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 ## Latest Broad Sweeps
 
 - Focused and adjacent command-probe validation passed after adding live RuntimeEffect shader and color-filter
+  duplicate child-index sentinels:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-164327/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-164445/suite.tsv`.
+  The focused rows `commands-runtime-effect-shader-duplicate-child-index-fallback` and
+  `commands-runtime-effect-color-filter-duplicate-child-index-fallback` rewrite the second named-child schema entry to
+  reference the first child index. Both require their target-specific `*_DUPLICATE_CHILD_INDEX_CORRUPTED` marker and
+  record one `command-stream-invalid` fallback marker, `unsupported=none`, zero JBR picture frames, and zero JBR command
+  frames. The adjacent RuntimeEffect child-schema slice covered fourteen rows; all fourteen passed, with zero
+  unsupported rows, zero picture rows, and zero command replay rows.
+- Scoped RuntimeEffect command-probe consolidation passed after adding the duplicate child-index live sentinel pairs:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-165244/suite.tsv`.
+  The `CASE_GROUPS=runtime-effect-invalid` area run covered sixty-two malformed RuntimeEffect rows; all sixty-two
+  passed. Six rows were intentional picture-fallback/parser-only coverage, and zero rows replayed JBR command frames.
+  This is the current RuntimeEffect parser/schema consolidation checkpoint.
+- Focused and adjacent command-probe validation passed after adding live RuntimeEffect shader and color-filter
   uniform-schema name-range sentinels:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-153449/suite.tsv` and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-153628/suite.tsv`.
