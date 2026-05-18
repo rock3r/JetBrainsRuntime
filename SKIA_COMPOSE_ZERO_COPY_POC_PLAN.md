@@ -23,6 +23,14 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - Validation iteration is now area-scoped by default for small sentinel slices: run the exact `CASES=...` row first,
   then the smallest relevant adjacent `CASES=...` slice or `CASE_GROUPS=...` subset, and reserve full default command
   sweeps for periodic consolidation.
+- Descriptor child-handle validation now includes both children of composite shader descriptors. Skiko can corrupt the
+  composite shader source child to point at a color-filter descriptor or an undefined shader handle, matching JBR's
+  existing `srcHandle` validation alongside the previously covered destination child. The focused two-row run passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-184048/suite.tsv`.
+  The follow-up `CASE_GROUPS=descriptor-handles-invalid` run covered twenty-nine malformed descriptor/child-handle rows;
+  all twenty-nine passed, with zero unsupported rows, zero picture rows, zero command replay rows, and one structured
+  fallback marker per row:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-184218/suite.tsv`.
 - Effect-descriptor invalid validation now includes with-input image-filter descriptor payload guards. Magic Jewel rows
   exercise blur-with-input sigma, negative sigma, tile mode, and offset-with-input delta using the existing Skiko
   corruption hooks. The focused four-row run passed:

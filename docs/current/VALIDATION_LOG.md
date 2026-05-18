@@ -5,6 +5,20 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Focused command-probe validation passed after adding live composite shader source-child wrong-type and missing-child
+  sentinels:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-184048/suite.tsv`.
+  The new `commands-composite-shader-src-child-wrong-effect-type-fallback` row rewrites the composite shader source
+  child handle to a color-filter descriptor and requires
+  `SKIKO_JBR_INTEROP_SHADER_HANDLE_TYPE_CORRUPTED target=compositeShaderSrcChild`. The new
+  `commands-composite-shader-src-child-missing-fallback` row rewrites that source child to an undefined shader handle
+  and requires `SKIKO_JBR_INTEROP_SHADER_CHILD_MISSING_CORRUPTED target=compositeShaderSrcChild`. Both rows report one
+  `command-stream-invalid` fallback marker, `unsupported=none`, zero JBR picture frames, and zero JBR command frames.
+- Scoped descriptor-handle command-probe consolidation passed after adding the composite shader source-child rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-184218/suite.tsv`.
+  The `CASE_GROUPS=descriptor-handles-invalid` area run covered twenty-nine malformed descriptor/child-handle rows; all
+  twenty-nine passed. The group reported zero unsupported rows, zero picture rows, zero command replay rows, and one
+  structured fallback marker per row.
 - Focused command-probe validation passed after adding Magic Jewel rows for with-input image-filter descriptor payload
   guards:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-181403/suite.tsv`.

@@ -38,6 +38,15 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused plus grouped descriptor child-handle validation passed after adding live composite shader source-child
+  sentinels. Skiko can now rewrite the source child of a `COMMAND_SHADER_DESCRIPTOR_COMPOSITE` descriptor to a
+  color-filter handle or to an undefined shader handle, matching JBR's existing `srcHandle` parser checks. The focused
+  two-row run passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-184048/suite.tsv`.
+  Scoped `CASE_GROUPS=descriptor-handles-invalid` now covers twenty-nine malformed descriptor/child-handle rows; all
+  twenty-nine passed, with zero unsupported rows, zero picture rows, zero command replay rows, and one structured
+  fallback marker per row:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-184218/suite.tsv`.
 - Focused plus grouped effect-descriptor validation passed after adding Magic Jewel rows for with-input image-filter
   descriptor payload guards: blur-with-input sigma, negative sigma, tile mode, and offset-with-input delta. The focused
   four-row run:
