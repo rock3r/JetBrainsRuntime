@@ -71,6 +71,13 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   alpha, and filter-quality rows; all nineteen passed, with zero unsupported rows, zero picture rows, zero command replay
   rows, and one structured fallback marker per row:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-220829/suite.tsv`.
+- The image quick group also covers the inline color-filter image-ref blend-mode guard. Skiko rewrites op 45's recorded
+  blend mode away from `SRC_IN`, matching JBR's parser/replay check. The focused row passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-222714/suite.tsv`.
+  The grouped `CASE_GROUPS=image-handles-invalid` run now covers twenty malformed image definition/cache-key/dimension,
+  alpha, filter-quality, and blend-mode rows; all twenty passed, with zero unsupported rows, zero picture rows, zero
+  command replay rows, and one structured fallback marker per row:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-222802/suite.tsv`.
 - Descriptor-handle validation now covers top-level path-effect descriptor uses. Skiko can rewrite or evict the
   `COMMAND_DRAW_PATH_PATH_EFFECT_REF` handle to exercise JBR's missing-handle, use-after-evict, and wrong-family
   checks. The focused three-row run passed:

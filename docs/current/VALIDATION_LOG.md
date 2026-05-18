@@ -77,6 +77,22 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   The `CASE_GROUPS=image-handles-invalid` area run now covers nineteen malformed image definition/cache-key/dimension,
   alpha, and filter-quality rows; all nineteen passed. The group reported zero unsupported rows, zero picture rows,
   zero command replay rows, and one structured fallback marker per row.
+- Periodic full default command-probe sweep was attempted after the image scalar rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-222129/commands-live-animation/report.md`.
+  The first row stayed on command replay with `unsupported=none`, zero fallback, zero JBR picture frames, 1636 JBR
+  command frames, and one tiny full-scene injection, but validation failed because window capture could not create a
+  screenshot. A focused rerun reproduced the capture-only failure under high host load:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-222419/commands-live-animation/report.md`.
+- Focused command-probe validation passed after adding a live inline image color-filter blend-mode sentinel:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-222714/suite.tsv`.
+  The new `commands-invalid-image-color-filter-blend-mode-fallback` row rewrites op 45's blend mode away from `SRC_IN`
+  and reports one `command-stream-invalid` fallback marker, `unsupported=none`, zero JBR picture frames, and zero JBR
+  command frames.
+- Scoped image-handle command-probe consolidation passed after adding the image color-filter blend-mode row:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-222802/suite.tsv`.
+  The `CASE_GROUPS=image-handles-invalid` area run now covers twenty malformed image definition/cache-key/dimension,
+  alpha, filter-quality, and blend-mode rows; all twenty passed. The group reported zero unsupported rows, zero picture
+  rows, zero command replay rows, and one structured fallback marker per row.
 - Focused command-probe validation passed after adding top-level path-effect descriptor-use sentinels:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-200433/suite.tsv`.
   The new `commands-invalid-path-effect-descriptor-use-fallback`,
