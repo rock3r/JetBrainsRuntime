@@ -5,6 +5,19 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Focused command-probe validation passed after adding live blur-with-input image-filter missing-child and
+  use-after-evict sentinels:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-175550/suite.tsv`.
+  The new `commands-invalid-blur-effect-child-use-after-evict-fallback` and
+  `commands-blur-image-filter-child-missing-fallback` rows both record the blur-of-offset render-effect descriptor chain,
+  require target-specific `blurImageFilterChild` Skiko markers, and report one `command-stream-invalid` fallback marker,
+  `unsupported=none`, zero JBR picture frames, and zero JBR command frames.
+- Scoped descriptor-handle command-probe consolidation passed after adding those blur image-filter child missing and
+  use-after-evict rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-175712/suite.tsv`.
+  The `CASE_GROUPS=descriptor-handles-invalid` area run covered twenty-four malformed descriptor/child-handle rows; all
+  twenty-four passed. The group reported zero unsupported rows, zero picture rows, zero command replay rows, and one
+  structured fallback marker per row.
 - Focused command-probe validation passed after adding a live blur-with-input image-filter child wrong-type sentinel:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-173959/suite.tsv`.
   The new `commands-blur-image-filter-child-wrong-effect-type-fallback` row records a blur-of-offset render-effect

@@ -38,6 +38,13 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused plus grouped descriptor child-handle validation passed after adding live blur-with-input image-filter
+  missing-child and use-after-evict sentinels. The focused two-row run:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-175550/suite.tsv`.
+  Scoped `CASE_GROUPS=descriptor-handles-invalid` now covers twenty-four malformed descriptor/child-handle rows; all
+  twenty-four passed, with zero unsupported rows, zero picture rows, zero command replay rows, and one structured
+  fallback marker per row:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-175712/suite.tsv`.
 - Focused plus grouped descriptor-handle validation passed after adding a live blur-with-input image-filter child
   wrong-type sentinel. The focused row:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-173959/suite.tsv`.

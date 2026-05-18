@@ -23,6 +23,13 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - Validation iteration is now area-scoped by default for small sentinel slices: run the exact `CASES=...` row first,
   then the smallest relevant adjacent `CASES=...` slice or `CASE_GROUPS=...` subset, and reserve full default command
   sweeps for periodic consolidation.
+- Descriptor child-handle validation also covers blur-with-input image-filter missing-child and use-after-evict paths.
+  The focused two-row run passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-175550/suite.tsv`.
+  The follow-up `CASE_GROUPS=descriptor-handles-invalid` run covered twenty-four malformed descriptor/child-handle rows;
+  all twenty-four passed, with zero unsupported rows, zero picture rows, zero command replay rows, and one structured
+  fallback marker per row:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-175712/suite.tsv`.
 - Descriptor child-handle validation now includes the blur-with-input image-filter wrong-type path. Magic Jewel can
   record a blur-of-offset render-effect descriptor chain, and Skiko can rewrite the blur child handle to a
   color-filter descriptor. The focused row passed:
