@@ -38,6 +38,10 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Scoped `CASE_GROUPS=runtime-effect-invalid` consolidation passed after adding the RuntimeEffect uniform-schema
+  name-length and max-name-length live sentinels. The area sweep now covers fifty malformed RuntimeEffect rows; all
+  fifty passed, with six intentional picture-fallback/parser-only rows and zero command replay rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-103723/suite.tsv`.
 - Focused plus adjacent uniform-schema validation passed after adding live RuntimeEffect shader and color-filter
   uniform-schema max-name-length sentinels. The focused two-row run:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-102412/suite.tsv`.

@@ -23,6 +23,10 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - Validation iteration is now area-scoped by default for small sentinel slices: run the exact `CASES=...` row first,
   then the smallest relevant adjacent `CASES=...` slice or `CASE_GROUPS=...` subset, and reserve full default command
   sweeps for periodic consolidation.
+- Latest scoped RuntimeEffect consolidation passed after the uniform-schema name-length and max-name-length sentinel
+  pairs. The `runtime-effect-invalid` group covered fifty malformed RuntimeEffect rows; all fifty passed, with six
+  intentional picture-fallback/parser-only rows and zero command replay rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-103723/suite.tsv`.
 - Latest scoped RuntimeEffect consolidation passed after the shader/color-filter source-code, source-hash,
   uniform-name, and child-name sentinel batch. The `runtime-effect-invalid` group covered thirty-eight malformed
   RuntimeEffect rows; all thirty-eight passed, with six intentional picture-fallback/parser-only rows and zero command
@@ -58,6 +62,9 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   two-row run and compact fourteen-row uniform-schema slice passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-102412/suite.tsv` and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-102601/suite.tsv`.
+  The latest follow-up `CASE_GROUPS=runtime-effect-invalid` consolidation covered fifty malformed RuntimeEffect rows
+  after adding the name-length and max-name-length live sentinel pairs; all fifty passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-103723/suite.tsv`.
   The follow-up `CASE_GROUPS=runtime-effect-invalid` consolidation covered forty-six malformed RuntimeEffect rows after
   adding the float-offset and float-range live sentinel pairs; all forty-six passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-031347/suite.tsv`.

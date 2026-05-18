@@ -5,6 +5,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Scoped RuntimeEffect command-probe consolidation passed after adding the uniform-schema name-length and max-name-length
+  live sentinel pairs:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-103723/suite.tsv`.
+  The `CASE_GROUPS=runtime-effect-invalid` area run covered fifty malformed RuntimeEffect rows; all fifty passed. Six
+  rows were intentional picture-fallback/parser-only coverage, and zero rows replayed JBR command frames. This is the
+  current RuntimeEffect parser/schema consolidation checkpoint.
 - Focused and adjacent command-probe validation passed after adding live RuntimeEffect shader and color-filter
   uniform-schema max-name-length sentinels:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-102412/suite.tsv` and
@@ -34,7 +40,6 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-031347/suite.tsv`.
   The `CASE_GROUPS=runtime-effect-invalid` area run covered forty-six malformed RuntimeEffect rows; all forty-six
   passed. Six rows were intentional picture-fallback/parser-only coverage, and zero rows replayed JBR command frames.
-  This is the current RuntimeEffect parser/schema consolidation checkpoint.
 - Focused and adjacent command-probe validation passed after adding live RuntimeEffect shader and color-filter
   uniform-schema float-range sentinels:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-030358/suite.tsv` and
@@ -64,7 +69,6 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-021819/suite.tsv`.
   The `CASE_GROUPS=runtime-effect-invalid` area run covered forty-two malformed RuntimeEffect rows; all forty-two
   passed. Six rows were intentional picture-fallback/parser-only coverage, and zero rows replayed JBR command frames.
-  This is the current RuntimeEffect parser/schema consolidation checkpoint.
 - Focused and adjacent command-probe validation passed after adding live RuntimeEffect shader and color-filter
   uniform-schema float-count sentinels:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-021125/suite.tsv` and
