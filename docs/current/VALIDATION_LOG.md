@@ -22,6 +22,15 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   `COMMAND_DRAW_IMAGE_REF`, `COMMAND_DRAW_IMAGE_REF_COLOR_FILTER`, and `COMMAND_DRAW_IMAGE_REF_COLOR_FILTER_REF`.
   All six rows passed. The group reported zero unsupported rows, zero picture rows, zero command replay rows, and one
   structured fallback marker per row.
+- Focused command-probe validation passed after adding a live image-ref width mismatch sentinel:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-205347/suite.tsv`.
+  The new `commands-invalid-image-ref-width-fallback` row records a normal `COMMAND_DRAW_IMAGE_REF` image cache use,
+  then increments the recorded width so JBR's cached-image dimension check rejects the stream after lookup.
+- Scoped image-handle command-probe consolidation passed after adding the width mismatch row:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-205428/suite.tsv`.
+  The `CASE_GROUPS=image-handles-invalid` area run now covers seven malformed image cache-key/dimension rows; all seven
+  passed. The group reported zero unsupported rows, zero picture rows, zero command replay rows, and one structured
+  fallback marker per row.
 - Focused command-probe validation passed after adding top-level path-effect descriptor-use sentinels:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-200433/suite.tsv`.
   The new `commands-invalid-path-effect-descriptor-use-fallback`,

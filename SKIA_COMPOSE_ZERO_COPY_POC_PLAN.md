@@ -34,6 +34,13 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   The expanded `CASE_GROUPS=image-handles-invalid` run covered six malformed image cache-key rows; all six passed, with
   zero unsupported rows, zero picture rows, zero command replay rows, and one structured fallback marker per row:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-204739/suite.tsv`.
+- Image-handle validation also covers JBR's cached-image dimension check for plain `COMMAND_DRAW_IMAGE_REF`. Skiko can
+  bump the recorded image width while leaving the cached image payload unchanged. The focused row passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-205347/suite.tsv`.
+  The grouped `CASE_GROUPS=image-handles-invalid` run now covers seven malformed image cache-key/dimension rows; all
+  seven passed, with zero unsupported rows, zero picture rows, zero command replay rows, and one structured fallback
+  marker per row:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-205428/suite.tsv`.
 - Descriptor-handle validation now covers top-level path-effect descriptor uses. Skiko can rewrite or evict the
   `COMMAND_DRAW_PATH_PATH_EFFECT_REF` handle to exercise JBR's missing-handle, use-after-evict, and wrong-family
   checks. The focused three-row run passed:
