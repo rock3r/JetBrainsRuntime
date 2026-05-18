@@ -23,6 +23,14 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - Validation iteration is now area-scoped by default for small sentinel slices: run the exact `CASES=...` row first,
   then the smallest relevant adjacent `CASES=...` slice or `CASE_GROUPS=...` subset, and reserve full default command
   sweeps for periodic consolidation.
+- Latest RuntimeEffect child-schema hardening adds live shader and color-filter negative referenced-child-index
+  sentinels. Skiko can corrupt the first named-child schema entry so its referenced index is `-1`, and JBR rejects the
+  descriptor before native build. The focused two-row run and compact eight-row child-schema slice passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-113957/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-114142/suite.tsv`.
+  The follow-up `CASE_GROUPS=runtime-effect-invalid` consolidation covered fifty-two malformed RuntimeEffect rows; all
+  fifty-two passed, with six intentional picture-fallback/parser-only rows and zero command replay rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-114736/suite.tsv`.
 - Current-artifact focused validation rechecked the live unknown effect descriptor type sentinel:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-111741/suite.tsv`.
   The `effect-descriptor-invalid` quick area group then covered twenty-three descriptor parser/fallback rows; all
