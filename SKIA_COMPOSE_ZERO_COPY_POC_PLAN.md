@@ -23,6 +23,14 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - Validation iteration is now area-scoped by default for small sentinel slices: run the exact `CASES=...` row first,
   then the smallest relevant adjacent `CASES=...` slice or `CASE_GROUPS=...` subset, and reserve full default command
   sweeps for periodic consolidation.
+- Descriptor child-handle validation now includes the blur-with-input image-filter wrong-type path. Magic Jewel can
+  record a blur-of-offset render-effect descriptor chain, and Skiko can rewrite the blur child handle to a
+  color-filter descriptor. The focused row passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-173959/suite.tsv`.
+  The follow-up `CASE_GROUPS=descriptor-handles-invalid` run covered twenty-two malformed descriptor/child-handle rows;
+  all twenty-two passed, with zero unsupported rows, zero picture rows, zero command replay rows, and one structured
+  fallback marker per row:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-174050/suite.tsv`.
 - RuntimeEffect child-schema duplicate-index validation adds live shader and color-filter sentinels for the
   `seen[referencedChildIndex]` duplicate guard. Magic Jewel's RuntimeEffect child probes now record two named children;
   Skiko can rewrite the second named-child schema entry to reference the first child index. The focused two-row run and
