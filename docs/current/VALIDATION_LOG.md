@@ -65,6 +65,18 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   The `CASE_GROUPS=image-handles-invalid` area run now covers sixteen malformed image definition/cache-key/dimension
   and alpha rows; all sixteen passed. The group reported zero unsupported rows, zero picture rows, zero command replay
   rows, and one structured fallback marker per row.
+- Focused command-probe validation passed after adding live image-ref filter-quality sentinels:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-220628/suite.tsv`.
+  The new `commands-invalid-image-ref-filter-quality-fallback`,
+  `commands-invalid-image-color-filter-ref-filter-quality-fallback`, and
+  `commands-invalid-image-color-filter-descriptor-ref-filter-quality-fallback` rows rewrite filter quality to `4` for
+  op 16, op 45, and op 53. Each row reports one `command-stream-invalid` fallback marker, `unsupported=none`, zero JBR
+  picture frames, and zero JBR command frames.
+- Scoped image-handle command-probe consolidation passed after adding the image-ref filter-quality rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-220829/suite.tsv`.
+  The `CASE_GROUPS=image-handles-invalid` area run now covers nineteen malformed image definition/cache-key/dimension,
+  alpha, and filter-quality rows; all nineteen passed. The group reported zero unsupported rows, zero picture rows,
+  zero command replay rows, and one structured fallback marker per row.
 - Focused command-probe validation passed after adding top-level path-effect descriptor-use sentinels:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-200433/suite.tsv`.
   The new `commands-invalid-path-effect-descriptor-use-fallback`,
