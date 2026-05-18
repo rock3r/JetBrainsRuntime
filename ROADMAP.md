@@ -39,6 +39,14 @@ This is the small working roadmap for the current PoC. The full historical check
 ## Latest Validations
 
 - Focused plus adjacent child-schema validation passed after adding live RuntimeEffect shader and color-filter
+  child-schema max-name-length sentinels. The focused two-row run:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-132914/suite.tsv`.
+  The compact twelve-row RuntimeEffect child-schema slice passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-133102/suite.tsv`.
+  Scoped `CASE_GROUPS=runtime-effect-invalid` consolidation now covers fifty-six malformed RuntimeEffect rows; all
+  fifty-six passed, with six intentional picture-fallback/parser-only rows and zero command replay rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-134009/suite.tsv`.
+- Focused plus adjacent child-schema validation passed after adding live RuntimeEffect shader and color-filter
   child-schema name-length sentinels. The focused two-row run:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-123344/suite.tsv`.
   The compact ten-row RuntimeEffect child-schema slice passed:
