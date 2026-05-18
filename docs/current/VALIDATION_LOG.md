@@ -5,6 +5,18 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Focused and adjacent command-probe validation passed after adding live RuntimeEffect shader and color-filter
+  uniform-schema float-offset sentinels:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-025315/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-025445/suite.tsv`.
+  The focused rows `commands-runtime-effect-shader-uniform-schema-float-offset-fallback` and
+  `commands-runtime-effect-color-filter-uniform-schema-float-offset-fallback` rewrite the first named-uniform schema
+  float-offset to `-1`. Both require their target-specific `*_UNIFORM_SCHEMA_FLOAT_OFFSET_CORRUPTED` marker and record
+  one `command-stream-invalid` fallback marker, `unsupported=none`, zero JBR picture frames, and zero JBR command
+  frames. The adjacent RuntimeEffect uniform-schema slice covered eight rows; all eight passed, with two intentional
+  picture-fallback/parser-only rows and zero command replay rows.
+- Skiko `publishToMavenLocal` passed after adding the test-only RuntimeEffect uniform-schema float-offset corruption
+  hooks.
 - Scoped RuntimeEffect command-probe consolidation passed after adding the child-index and uniform-schema float-count
   live sentinel pairs:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-021819/suite.tsv`.

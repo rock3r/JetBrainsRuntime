@@ -38,6 +38,13 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused plus adjacent uniform-schema validation passed after adding live RuntimeEffect shader and color-filter
+  uniform-schema float-offset sentinels. The focused two-row run:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-025315/suite.tsv`.
+  The compact eight-row RuntimeEffect uniform-schema slice passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-025445/suite.tsv`.
+  The new rows rewrite the first recorded named-uniform schema float-offset to `-1`, reaching JBR's
+  `floatOffset < 0` guard before native compile/build or replay.
 - Scoped `CASE_GROUPS=runtime-effect-invalid` consolidation passed after adding the RuntimeEffect child-index and
   uniform-schema float-count live sentinels. The area sweep now covers forty-two malformed RuntimeEffect rows; all
   forty-two passed, with six intentional picture-fallback/parser-only rows and zero command replay rows:
