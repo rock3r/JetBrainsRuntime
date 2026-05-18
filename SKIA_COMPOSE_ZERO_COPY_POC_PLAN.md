@@ -38,6 +38,9 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   compile/build. The focused two-row run and compact six-row uniform-schema slice passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-021125/suite.tsv` and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-021257/suite.tsv`.
+  The follow-up `CASE_GROUPS=runtime-effect-invalid` consolidation covered forty-two malformed RuntimeEffect rows after
+  adding the child-index and uniform-schema float-count live sentinel pairs; all forty-two passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-021819/suite.tsv`.
 - Direct path command validation now has a quick `path-invalid` group. It currently covers live `COMMAND_CLIP_PATH`,
   `COMMAND_DRAW_PATH`, `COMMAND_DRAW_PATH_PATH_EFFECT_REF`, `COMMAND_STROKE_PATH_DASH_PATH_EFFECT`, and
   `COMMAND_DRAW_SHADOW_PATH` unknown-verb sentinels that corrupt the first encoded path verb to `99` and require
@@ -146,6 +149,9 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   two-row run and compact six-row uniform-schema slice passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-021125/suite.tsv` and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-021257/suite.tsv`.
+  The scoped `runtime-effect-invalid` group was rechecked after the child-index and uniform-schema float-count pairs
+  and now covers forty-two malformed RuntimeEffect rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-021819/suite.tsv`.
 - Latest RuntimeEffect shader child-schema hardening adds a live parser guard for invalid named-child identifiers.
   Skiko can corrupt the first recorded RuntimeEffect shader child-name character to `1`. Focused validation plus a
   five-row adjacent child-schema subset passed:
