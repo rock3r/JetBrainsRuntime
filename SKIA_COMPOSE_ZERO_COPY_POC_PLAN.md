@@ -28,6 +28,11 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   RuntimeEffect rows; all thirty-eight passed, with six intentional picture-fallback/parser-only rows and zero command
   replay rows:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-012854/suite.tsv`.
+- Latest RuntimeEffect child-schema hardening adds live shader and color-filter referenced-child-index sentinels.
+  Skiko can corrupt the first named-child schema entry so its referenced index equals `childCount`, and JBR rejects the
+  descriptor before native build. The focused two-row run and compact six-row child-schema slice passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-020224/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-020355/suite.tsv`.
 - Direct path command validation now has a quick `path-invalid` group. It currently covers live `COMMAND_CLIP_PATH`,
   `COMMAND_DRAW_PATH`, `COMMAND_DRAW_PATH_PATH_EFFECT_REF`, `COMMAND_STROKE_PATH_DASH_PATH_EFFECT`, and
   `COMMAND_DRAW_SHADOW_PATH` unknown-verb sentinels that corrupt the first encoded path verb to `99` and require
@@ -142,6 +147,10 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   validation plus a five-row adjacent child-schema subset passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-012238/suite.tsv` and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-012327/suite.tsv`.
+  RuntimeEffect child-schema referenced-index validation now has matching live shader and color-filter rows. The
+  focused two-row run and compact six-row child-schema slice passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-020224/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-020355/suite.tsv`.
   The follow-up `CASE_GROUPS=runtime-effect-invalid` consolidation covered thirty-eight malformed RuntimeEffect rows
   after the full source/schema-name batch; all thirty-eight passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-012854/suite.tsv`.

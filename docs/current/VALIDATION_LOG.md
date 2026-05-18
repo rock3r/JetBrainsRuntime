@@ -5,6 +5,17 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Focused and adjacent command-probe validation passed after adding live RuntimeEffect shader and color-filter
+  child-index schema sentinels:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-020224/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-020355/suite.tsv`.
+  The focused rows `commands-runtime-effect-shader-child-index-fallback` and
+  `commands-runtime-effect-color-filter-child-index-fallback` rewrite the first named-child referenced index to
+  `childCount`. Both require their target-specific `*_CHILD_INDEX_CORRUPTED` marker and record one
+  `command-stream-invalid` fallback marker, `unsupported=none`, zero JBR picture frames, and zero JBR command frames.
+  The adjacent RuntimeEffect child-schema slice covered six rows; all six passed, with two intentional
+  picture-fallback/parser-only rows and zero command replay rows.
+- Skiko `publishToMavenLocal` passed after adding the test-only RuntimeEffect child-index corruption hooks.
 - Scoped RuntimeEffect command-probe consolidation passed after the shader/color-filter source-code, source-hash,
   uniform-name, and child-name live sentinel batch:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-012854/suite.tsv`.
