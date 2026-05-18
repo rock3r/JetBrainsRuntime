@@ -5,6 +5,17 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Focused command-probe validation passed after adding Magic Jewel rows for with-input image-filter descriptor payload
+  guards:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-181403/suite.tsv`.
+  The four rows cover blur-with-input sigma, blur-with-input negative sigma, blur-with-input tile mode, and
+  offset-with-input delta. Each row reuses an existing Skiko corruption hook, requires the target marker, and reports
+  one `command-stream-invalid` fallback marker, `unsupported=none`, zero JBR picture frames, and zero JBR command frames.
+- Scoped effect-descriptor command-probe consolidation passed after adding the with-input image-filter descriptor rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-181711/suite.tsv`.
+  The `CASE_GROUPS=effect-descriptor-invalid` area run covered twenty-seven malformed effect-descriptor rows; all
+  twenty-seven passed. The group reported zero unsupported rows, zero picture rows, zero command replay rows, and one
+  structured fallback marker per row.
 - Focused command-probe validation passed after adding live blur-with-input image-filter missing-child and
   use-after-evict sentinels:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-175550/suite.tsv`.
