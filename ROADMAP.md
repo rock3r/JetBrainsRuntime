@@ -39,6 +39,13 @@ This is the small working roadmap for the current PoC. The full historical check
 ## Latest Validations
 
 - Focused plus adjacent uniform-schema validation passed after adding live RuntimeEffect shader and color-filter
+  uniform-schema float-range sentinels. The focused two-row run:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-030358/suite.tsv`.
+  The compact ten-row RuntimeEffect uniform-schema slice passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-030537/suite.tsv`.
+  The new rows rewrite the first recorded named-uniform schema float-offset to `uniformFloatCount`, reaching JBR's
+  `floatOffset > uniformFloatCount - floatCount` guard before native compile/build or replay.
+- Focused plus adjacent uniform-schema validation passed after adding live RuntimeEffect shader and color-filter
   uniform-schema float-offset sentinels. The focused two-row run:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-025315/suite.tsv`.
   The compact eight-row RuntimeEffect uniform-schema slice passed:

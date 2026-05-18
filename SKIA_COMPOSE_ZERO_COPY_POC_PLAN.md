@@ -43,6 +43,11 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   native compile/build. The focused two-row run and compact eight-row uniform-schema slice passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-025315/suite.tsv` and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-025445/suite.tsv`.
+- RuntimeEffect uniform-schema range validation adds live shader and color-filter sentinels for
+  `floatOffset > uniformFloatCount - floatCount`. Skiko can corrupt the first named-uniform schema entry so its
+  `floatOffset` equals `uniformFloatCount`; the focused two-row run and compact ten-row uniform-schema slice passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-030358/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-030537/suite.tsv`.
   The follow-up `CASE_GROUPS=runtime-effect-invalid` consolidation covered forty-two malformed RuntimeEffect rows after
   adding the child-index and uniform-schema float-count live sentinel pairs; all forty-two passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-021819/suite.tsv`.
@@ -158,6 +163,10 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   two-row run and compact eight-row uniform-schema slice passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-025315/suite.tsv` and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-025445/suite.tsv`.
+  RuntimeEffect uniform-schema float-range validation now has matching live shader and color-filter rows. The focused
+  two-row run and compact ten-row uniform-schema slice passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-030358/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-030537/suite.tsv`.
   The scoped `runtime-effect-invalid` group was rechecked after the child-index and uniform-schema float-count pairs
   and now covers forty-two malformed RuntimeEffect rows:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-021819/suite.tsv`.
