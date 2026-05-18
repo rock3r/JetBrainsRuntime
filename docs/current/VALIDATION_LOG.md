@@ -16,6 +16,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   The new `CASE_GROUPS=image-handles-invalid` area run covered both malformed image cache-key rows; both passed. The
   group reported zero unsupported rows, zero picture rows, zero command replay rows, and one structured fallback marker
   per row.
+- Expanded scoped image-handle command-probe consolidation passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-204739/suite.tsv`.
+  The `CASE_GROUPS=image-handles-invalid` area run now covers missing-key and use-after-evict rows for
+  `COMMAND_DRAW_IMAGE_REF`, `COMMAND_DRAW_IMAGE_REF_COLOR_FILTER`, and `COMMAND_DRAW_IMAGE_REF_COLOR_FILTER_REF`.
+  All six rows passed. The group reported zero unsupported rows, zero picture rows, zero command replay rows, and one
+  structured fallback marker per row.
 - Focused command-probe validation passed after adding top-level path-effect descriptor-use sentinels:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-200433/suite.tsv`.
   The new `commands-invalid-path-effect-descriptor-use-fallback`,
