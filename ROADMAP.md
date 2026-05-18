@@ -64,6 +64,13 @@ This is the small working roadmap for the current PoC. The full historical check
   `CASE_GROUPS=image-handles-invalid` now covers twelve malformed image cache-key/dimension rows; all twelve passed
   with zero unsupported rows, zero picture rows, zero command replay rows, and one structured fallback marker per row:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-212945/suite.tsv`.
+- Focused plus grouped image-definition validation passed after adding a live `COMMAND_DEFINE_IMAGE_ARGB` pixel-count
+  mismatch sentinel. The focused row passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-213840/suite.tsv`.
+  `CASE_GROUPS=image-handles-invalid` now covers thirteen malformed image definition/cache-key/dimension rows; all
+  thirteen passed with zero unsupported rows, zero picture rows, zero command replay rows, and one structured fallback
+  marker per row:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-213912/suite.tsv`.
 - Focused plus grouped descriptor-handle validation passed after adding top-level path-effect descriptor-use sentinels
   for missing handles, use-after-evict, and wrong-family handles on `COMMAND_DRAW_PATH_PATH_EFFECT_REF`. The focused
   three-row run passed:

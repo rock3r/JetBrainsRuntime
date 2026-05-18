@@ -42,6 +42,17 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   The `CASE_GROUPS=image-handles-invalid` area run now covers twelve malformed image cache-key/dimension rows; all
   twelve passed. The group reported zero unsupported rows, zero picture rows, zero command replay rows, and one
   structured fallback marker per row.
+- Focused command-probe validation passed after adding a live image definition pixel-count sentinel:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-213840/suite.tsv`.
+  The new `commands-invalid-image-define-pixel-count-fallback` row records a normal `COMMAND_DEFINE_IMAGE_ARGB`, then
+  increments its pixel-count field while leaving the record length and payload unchanged. JBR rejects the stream before
+  replay with one `command-stream-invalid` fallback marker, `unsupported=none`, zero JBR picture frames, and zero JBR
+  command frames.
+- Scoped image-handle command-probe consolidation passed after adding the image definition pixel-count row:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-213912/suite.tsv`.
+  The `CASE_GROUPS=image-handles-invalid` area run now covers thirteen malformed image definition/cache-key/dimension
+  rows; all thirteen passed. The group reported zero unsupported rows, zero picture rows, zero command replay rows, and
+  one structured fallback marker per row.
 - Focused command-probe validation passed after adding top-level path-effect descriptor-use sentinels:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-200433/suite.tsv`.
   The new `commands-invalid-path-effect-descriptor-use-fallback`,

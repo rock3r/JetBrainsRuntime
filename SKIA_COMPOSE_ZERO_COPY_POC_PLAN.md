@@ -48,6 +48,14 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   twelve passed, with zero unsupported rows, zero picture rows, zero command replay rows, and one structured fallback
   marker per row:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-212945/suite.tsv`.
+- The image quick group now also covers JBR's `COMMAND_DEFINE_IMAGE_ARGB` pixel payload length guard. Skiko can bump
+  the recorded pixel count while leaving the record body unchanged, forcing pre-replay `command-stream-invalid`
+  fallback. The focused row passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-213840/suite.tsv`.
+  The grouped `CASE_GROUPS=image-handles-invalid` run now covers thirteen malformed image definition/cache-key/dimension
+  rows; all thirteen passed, with zero unsupported rows, zero picture rows, zero command replay rows, and one structured
+  fallback marker per row:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-213912/suite.tsv`.
 - Descriptor-handle validation now covers top-level path-effect descriptor uses. Skiko can rewrite or evict the
   `COMMAND_DRAW_PATH_PATH_EFFECT_REF` handle to exercise JBR's missing-handle, use-after-evict, and wrong-family
   checks. The focused three-row run passed:
