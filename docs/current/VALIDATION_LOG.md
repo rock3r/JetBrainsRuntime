@@ -5,6 +5,18 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Focused saveLayer color-filter-ref alpha validation passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-124011/suite.tsv`.
+  The new `commands-invalid-save-layer-color-filter-ref-alpha-fallback` and
+  `commands-invalid-save-layer-blend-color-filter-ref-alpha-fallback` rows record op 52
+  `COMMAND_SAVE_LAYER_COLOR_FILTER_REF` and op 54 `COMMAND_SAVE_LAYER_BLEND_COLOR_FILTER_REF`, then rewrite
+  `alpha1000` to `1001`. Both rows reported one `command-stream-invalid` fallback marker, `unsupported=none`, zero JBR
+  picture frames, and zero JBR command frames.
+- Scoped saveLayer-invalid validation passed after adding the color-filter-ref alpha rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-124137/suite.tsv`.
+  The quick group now covers nine malformed saveLayer rows, including op 52 and op 54 alpha bounds sentinels. All nine
+  passed with zero unsupported rows, zero picture rows, zero command replay rows, and one structured fallback marker per
+  row.
 - Focused saveLayer image-filter dimension validation passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-121803/suite.tsv`.
   The new `commands-invalid-save-layer-image-filter-width-fallback` and

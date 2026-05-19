@@ -38,6 +38,14 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused plus grouped saveLayer color-filter-ref alpha validation passed after adding op 52/op 54 alpha corruption
+  hooks. The focused two-row run passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-124011/suite.tsv`.
+  The rows record descriptor-backed saveLayer color-filter refs, rewrite `alpha1000` to `1001`, and require structured
+  `command-stream-invalid` fallback with zero JBR replay frames. The expanded `CASE_GROUPS=save-layer-invalid` group
+  now covers nine malformed saveLayer rows; all nine passed with zero unsupported rows, zero picture rows, zero command
+  replay rows, and one structured fallback marker per row:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-124137/suite.tsv`.
 - Focused plus grouped saveLayer image-filter dimension validation passed after adding op 55 width/height corruption
   hooks. The focused two-row run passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-121803/suite.tsv`.
