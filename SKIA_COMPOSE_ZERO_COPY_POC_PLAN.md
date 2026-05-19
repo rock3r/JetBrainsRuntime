@@ -87,6 +87,8 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-152806/suite.tsv`.
   The `CASE_GROUPS=save-layer-invalid` quick group now covers fourteen malformed saveLayer rows; all fourteen passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-152857/suite.tsv`.
+  The bounded default-order saveLayer range also passed with seventeen rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-153941/suite.tsv`.
 - Image-handle validation now has a dedicated quick group. Skiko can rewrite a `COMMAND_DRAW_IMAGE_REF` cache key to an
   undefined key or insert `COMMAND_EVICT_IMAGE_CACHE_KEY` immediately before the draw. The focused two-row run passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-203912/suite.tsv`.

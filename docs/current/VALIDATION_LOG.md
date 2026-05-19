@@ -15,6 +15,11 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-152857/suite.tsv`.
   The quick group now covers fourteen malformed saveLayer rows. All fourteen passed with zero unsupported rows, zero
   picture rows, zero command replay rows, and one structured fallback marker per row.
+- Bounded default-order saveLayer range validation passed after adding the op 54 blend-mode row:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-153941/suite.tsv`.
+  The range covered seventeen rows: two supported saveLayer command-replay rows, fourteen malformed saveLayer rows, and
+  the existing raw color-filter fallback sentinel. Aggregate: 17/17 passed, one expected unsupported-marker row, 1,941
+  JBR command frames, 863 expected picture-fallback frames, and fourteen structured invalid-stream fallback markers.
 - Focused saveLayer color-filter-ref dimension validation passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-140556/suite.tsv`.
   The new width/height rows cover op 52 `COMMAND_SAVE_LAYER_COLOR_FILTER_REF` and op 54
