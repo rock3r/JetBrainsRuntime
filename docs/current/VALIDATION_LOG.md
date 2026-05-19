@@ -5,6 +5,16 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Focused command-stream coordinate-space and paint-format validation passed after adding typed live sentinels:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-193259/suite.tsv`.
+  The two new rows rewrite the command stream coordinate-space or paint-format header words to unsupported values,
+  matching JBR's parser-only header guards. Aggregate: 2/2 passed, zero unsupported rows, zero JBR picture frames,
+  zero JBR command frames, and two structured invalid-stream fallback markers.
+- Scoped `stream-invalid` validation passed after adding the coordinate-space and paint-format rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-193047/suite.tsv`.
+  This quick group now covers stream flags, command record flags, coordinate space, and paint format. Aggregate: 4/4
+  passed, zero unsupported rows, zero JBR picture frames, zero JBR command frames, and four structured invalid-stream
+  fallback markers.
 - Focused command record-flags validation passed after adding a typed live sentinel:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-192645/suite.tsv`.
   The new `commands-invalid-command-record-flags-fallback` row rewrites the first command record flags word to an

@@ -38,6 +38,12 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused command-stream coordinate-space and paint-format validation passed after adding typed live sentinels for
+  JBR's parser-only header guards. The focused two-row run passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-193259/suite.tsv`.
+  The expanded `CASE_GROUPS=stream-invalid` quick path now covers stream flags, command record flags, coordinate
+  space, and paint format; all four rows passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-193047/suite.tsv`.
 - Focused command record-flags validation passed after adding a typed marker and live suite row for JBR's parser-only
   unsupported command record-flags guard. The new row passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-192645/suite.tsv`.
