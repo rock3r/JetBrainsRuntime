@@ -38,6 +38,11 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused saveLayer color-filter use-after-evict validation passed after extending descriptor eviction insertion to
+  `COMMAND_SAVE_LAYER_COLOR_FILTER_REF` and `COMMAND_SAVE_LAYER_BLEND_COLOR_FILTER_REF`. The exact two-row run passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-041255/suite.tsv`.
+  Both rows insert `COMMAND_EVICT_COLOR_FILTER_HANDLE` immediately before the saveLayer record that consumes the handle,
+  then require structured `command-stream-invalid` fallback with zero JBR replay frames.
 - Focused saveLayer color-filter handle validation passed after extending live descriptor-use corruption to
   `COMMAND_SAVE_LAYER_COLOR_FILTER_REF` and `COMMAND_SAVE_LAYER_BLEND_COLOR_FILTER_REF`. The exact two-row run passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-034302/suite.tsv`.

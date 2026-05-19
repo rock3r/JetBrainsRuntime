@@ -5,6 +5,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Focused saveLayer color-filter handle use-after-evict validation passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-041255/suite.tsv`.
+  The new `commands-invalid-save-layer-color-filter-use-after-evict-fallback` and
+  `commands-invalid-save-layer-blend-color-filter-use-after-evict-fallback` rows insert
+  `COMMAND_EVICT_COLOR_FILTER_HANDLE` immediately before op 52 or op 54 consumes the color-filter handle. Both rows
+  reported one `command-stream-invalid` fallback marker, `unsupported=none`, zero JBR picture frames, and zero JBR
+  command frames.
 - Focused saveLayer color-filter handle validation passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-034302/suite.tsv`.
   The new `commands-invalid-save-layer-color-filter-use-fallback` row records op 52
