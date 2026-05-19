@@ -38,6 +38,13 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused plus grouped stroke-path dash path-effect scalar validation passed after adding op 61 interval-count and
+  interval-value corruption hooks. The focused two-row run passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-184636/suite.tsv`.
+  The rows record `COMMAND_STROKE_PATH` with a dash path effect, corrupt the interval count or one interval value, and
+  require structured `command-stream-invalid` fallback with zero JBR replay frames. The `CASE_GROUPS=path-invalid`
+  quick group now covers seven malformed path rows and passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-184818/suite.tsv`.
 - Focused plus grouped fill-rect shader-ref scalar validation passed after adding op 58 bounds and alpha corruption
   hooks. The focused three-row run passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-182225/suite.tsv`.

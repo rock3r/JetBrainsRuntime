@@ -5,6 +5,17 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Focused stroke-path dash path-effect scalar validation passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-184636/suite.tsv`.
+  The two new rows record op 61 `COMMAND_STROKE_PATH` with a dash path effect, corrupt either the dash interval count
+  or one interval value, and require typed Skiko corruption markers plus `command-stream-invalid` fallback. Aggregate:
+  2/2 passed, zero unsupported rows, zero JBR picture frames, zero JBR command frames, and two structured
+  invalid-stream fallback markers.
+- Scoped `path-invalid` validation passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-184818/suite.tsv`.
+  This quick group now covers seven malformed path rows, including path verb corruption and stroke-path dash
+  path-effect verb, interval-count, and interval-value guards. Aggregate: 7/7 passed, zero unsupported rows, zero JBR
+  picture frames, zero JBR command frames, and seven structured invalid-stream fallback markers.
 - Focused fill-rect shader-ref bounds/alpha validation passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-182225/suite.tsv`.
   The three new rows record op 58 `COMMAND_FILL_RECT_SHADER_REF`, corrupt horizontal bounds, vertical bounds, or

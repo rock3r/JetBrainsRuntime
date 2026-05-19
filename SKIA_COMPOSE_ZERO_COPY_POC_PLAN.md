@@ -48,6 +48,12 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   A bounded default-order range from `commands-invalid-shader-descriptor-use-fallback` through
   `commands-invalid-descriptor-use-after-evict-fallback` also passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-183458/suite.tsv`.
+- Stroke-path dash path-effect parser coverage now includes the scalar guards adjacent to the existing verb guard.
+  Skiko can corrupt op 61 `COMMAND_STROKE_PATH` dash path-effect interval count or interval value after recording. The
+  exact two-row run passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-184636/suite.tsv`.
+  The focused `CASE_GROUPS=path-invalid` run now covers seven malformed path rows and passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-184818/suite.tsv`.
 - SaveLayer invalid validation now has its own quick group. Skiko can corrupt plain `COMMAND_SAVE_LAYER` alpha to
   `1001` and tint-filter `COMMAND_SAVE_LAYER_COLOR_FILTER` blend mode away from `SRC_IN`, matching JBR's parser
   bounds/type guards. The focused `CASE_GROUPS=save-layer-invalid` run covered both malformed saveLayer rows:
