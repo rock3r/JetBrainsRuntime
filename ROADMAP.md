@@ -38,6 +38,16 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused command-stream header flag validation passed after adding a typed marker and live suite row for Skiko's
+  generic stream corruption switch. The new `commands-invalid-command-stream-flags-fallback` row rewrites the stream
+  flags word to an unsupported value, matching JBR's parser-only unsupported stream-flags guard:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-190837/suite.tsv`.
+  The one-row `CASE_GROUPS=stream-invalid` quick path also passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-190836/suite.tsv`.
+- Current-artifact focused validation rechecked the already-live unknown effect descriptor type sentinel:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-190020/suite.tsv`.
+  The row still reaches JBR's parser-only unknown-type rejection path with
+  `SKIKO_JBR_INTEROP_EFFECT_DESCRIPTOR_TYPE_CORRUPTED` and zero JBR replay frames.
 - Focused plus grouped stroke-path dash path-effect scalar validation passed after adding op 61 interval-count and
   interval-value corruption hooks. The focused two-row run passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-184636/suite.tsv`.

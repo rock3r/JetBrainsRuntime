@@ -5,6 +5,20 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Focused command-stream header flag validation passed after adding a typed live sentinel:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-190837/suite.tsv`.
+  The new `commands-invalid-command-stream-flags-fallback` row uses Skiko's generic stream corruption switch to rewrite
+  the command stream flags word to an unsupported value, matching JBR's parser-only unsupported stream-flags guard. It
+  requires `SKIKO_JBR_INTEROP_COMMAND_STREAM_FLAGS_CORRUPTED`; aggregate: 1/1 passed, zero unsupported rows, zero JBR
+  picture frames, zero JBR command frames, and one structured invalid-stream fallback marker.
+- Scoped `stream-invalid` validation passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-190836/suite.tsv`.
+  This one-row quick group is the point-to-point iteration path for stream-header parser guards.
+- Current-artifact focused validation rechecked the already-live unknown effect descriptor type sentinel:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-190020/suite.tsv`.
+  The row rewrites one recorded effect descriptor type to an unknown value and requires
+  `SKIKO_JBR_INTEROP_EFFECT_DESCRIPTOR_TYPE_CORRUPTED`; aggregate: 1/1 passed, zero unsupported rows, zero JBR picture
+  frames, zero JBR command frames, and one structured invalid-stream fallback marker.
 - Focused stroke-path dash path-effect scalar validation passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-184636/suite.tsv`.
   The two new rows record op 61 `COMMAND_STROKE_PATH` with a dash path effect, corrupt either the dash interval count

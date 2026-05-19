@@ -23,6 +23,15 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - Validation iteration is now area-scoped by default for small sentinel slices: run the exact `CASES=...` row first,
   then the smallest relevant adjacent `CASES=...` slice or `CASE_GROUPS=...` subset, and reserve full default command
   sweeps for periodic consolidation.
+- Command-stream header flags now have a live quick-path sentinel. Skiko's generic stream corruption switch emits
+  `SKIKO_JBR_INTEROP_COMMAND_STREAM_FLAGS_CORRUPTED`, and Magic Jewel exposes both the exact
+  `commands-invalid-command-stream-flags-fallback` row and `CASE_GROUPS=stream-invalid`. The exact row passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-190837/suite.tsv`.
+  The one-row group passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-190836/suite.tsv`.
+- The already-live unknown effect descriptor type sentinel was refreshed on current artifacts. The exact
+  `commands-invalid-effect-descriptor-type-fallback` row passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-190020/suite.tsv`.
 - Fill-rect blend-mode scalar validation now has a quick group. Skiko can corrupt op 41
   `COMMAND_FILL_RECT_BLEND_MODE` width or height to `-1`, matching JBR's parser bounds guards. The exact two-row run
   passed:
