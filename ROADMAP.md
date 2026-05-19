@@ -38,6 +38,16 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused saveLayer color-filter handle validation passed after extending live descriptor-use corruption to
+  `COMMAND_SAVE_LAYER_COLOR_FILTER_REF` and `COMMAND_SAVE_LAYER_BLEND_COLOR_FILTER_REF`. The exact two-row run passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-034302/suite.tsv`.
+  The rows corrupt the recorded color-filter handle pair to an undefined handle for op 52 and op 54, matching JBR's
+  parser-only undefined saveLayer color-filter handle checks. A follow-up `descriptor-handles-invalid` group run proved
+  the new rows in area context before surfacing a stale group typo near the tail:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-034438/suite.tsv`.
+  After correcting the group entry to `commands-chain-path-effect-child-wrong-effect-type-fallback`, the repaired tail
+  passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-040920/suite.tsv`.
 - Focused and bounded-range saveLayer validation passed after extending live parser sentinels to the remaining
   saveLayer blend guards: `COMMAND_SAVE_LAYER_BLEND_MODE` rejects unsupported blend-mode ids, and
   `COMMAND_SAVE_LAYER_BLEND_COLOR_FILTER` rejects tint color-filter blend modes other than `SRC_IN`. The scoped

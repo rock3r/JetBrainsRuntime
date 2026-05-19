@@ -5,6 +5,21 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Focused saveLayer color-filter handle validation passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-034302/suite.tsv`.
+  The new `commands-invalid-save-layer-color-filter-use-fallback` row records op 52
+  `COMMAND_SAVE_LAYER_COLOR_FILTER_REF` through a saveLayer color-matrix filter handle and rewrites the handle to an
+  undefined value. The new `commands-invalid-save-layer-blend-color-filter-use-fallback` row records op 54
+  `COMMAND_SAVE_LAYER_BLEND_COLOR_FILTER_REF` through graphics-layer blend plus color-matrix filter and rewrites that
+  handle to an undefined value. Both rows reported one `command-stream-invalid` fallback marker, `unsupported=none`,
+  zero JBR picture frames, and zero JBR command frames.
+- Descriptor-handle area validation was continued around the new saveLayer handle rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-034438/suite.tsv`.
+  The new op 52 and op 54 rows passed in grouped context, and the established descriptor-handle rows remained green
+  until the run reached a stale group entry named `commands-chain-path-effect-wrong-effect-type-fallback`. The group
+  entry was corrected to the real row name, `commands-chain-path-effect-child-wrong-effect-type-fallback`, and the
+  repaired tail passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-040920/suite.tsv`.
 - Expanded saveLayer-invalid command-probe validation passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-032849/suite.tsv`.
   The `CASE_GROUPS=save-layer-invalid` quick area now covers four malformed saveLayer rows:
