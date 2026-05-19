@@ -38,6 +38,15 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused plus grouped saveLayer image-filter handle validation passed after extending descriptor-use corruption and
+  descriptor use-after-evict insertion to `COMMAND_SAVE_LAYER_IMAGE_FILTER_REF`. The exact two-row run passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-081201/suite.tsv`.
+  The rows corrupt the graphics-layer render-effect image-filter handle to an undefined value or evict it immediately
+  before op 55 consumes it, and both require structured `command-stream-invalid` fallback with zero JBR replay frames.
+  The follow-up `CASE_GROUPS=descriptor-handles-invalid` run covered forty-five malformed descriptor/child-handle rows;
+  all forty-five passed with zero unsupported rows, zero picture rows, zero command replay rows, and one structured
+  fallback marker per row:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-105843/suite.tsv`.
 - Focused saveLayer color-filter use-after-evict validation passed after extending descriptor eviction insertion to
   `COMMAND_SAVE_LAYER_COLOR_FILTER_REF` and `COMMAND_SAVE_LAYER_BLEND_COLOR_FILTER_REF`. The exact two-row run passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-041255/suite.tsv`.

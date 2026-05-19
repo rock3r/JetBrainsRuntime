@@ -43,6 +43,14 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - SaveLayer color-filter handles also have targeted use-after-evict coverage. Skiko can insert
   `COMMAND_EVICT_COLOR_FILTER_HANDLE` immediately before op 52 or op 54 consumes the handle; both exact rows passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-041255/suite.tsv`.
+- SaveLayer image-filter handle validation now mirrors the color-filter path for op 55
+  `COMMAND_SAVE_LAYER_IMAGE_FILTER_REF`. Skiko can rewrite the graphics-layer render-effect handle to an undefined
+  descriptor or insert an eviction immediately before use. The exact two-row run passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-081201/suite.tsv`.
+  The follow-up `CASE_GROUPS=descriptor-handles-invalid` run covered forty-five malformed descriptor/child-handle rows;
+  all forty-five passed with zero unsupported rows, zero picture rows, zero command replay rows, and one structured
+  fallback marker per row:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-105843/suite.tsv`.
 - Image-handle validation now has a dedicated quick group. Skiko can rewrite a `COMMAND_DRAW_IMAGE_REF` cache key to an
   undefined key or insert `COMMAND_EVICT_IMAGE_CACHE_KEY` immediately before the draw. The focused two-row run passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-203912/suite.tsv`.
