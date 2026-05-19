@@ -40,6 +40,12 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-193259/suite.tsv`.
   The expanded four-row `CASE_GROUPS=stream-invalid` run passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-193047/suite.tsv`.
+- Stream payload and first-record length guards are now in the same quick group. Skiko can rewrite the payload length
+  to negative, truncated, or extra values, or rewrite the first command record length, and emits typed markers for each
+  path. The exact four-row run passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-193923/suite.tsv`.
+  The expanded eight-row `CASE_GROUPS=stream-invalid` run passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-193642/suite.tsv`.
 - The already-live unknown effect descriptor type sentinel was refreshed on current artifacts. The exact
   `commands-invalid-effect-descriptor-type-fallback` row passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-190020/suite.tsv`.

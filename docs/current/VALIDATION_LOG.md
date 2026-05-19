@@ -5,6 +5,15 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Focused command payload and record-length validation passed after adding typed live sentinels:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-193923/suite.tsv`.
+  The four rows rewrite the command payload length to negative, truncated, or extra values, or rewrite the first command
+  record length, matching JBR's parser-only payload/record-length guards. Aggregate: 4/4 passed, zero unsupported rows,
+  zero JBR picture frames, zero JBR command frames, and four structured invalid-stream fallback markers.
+- Scoped `stream-invalid` validation passed after adding the payload and record-length rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-193642/suite.tsv`.
+  This quick group now covers eight stream parser guards. Aggregate: 8/8 passed, zero unsupported rows, zero JBR
+  picture frames, zero JBR command frames, and eight structured invalid-stream fallback markers.
 - Focused command-stream coordinate-space and paint-format validation passed after adding typed live sentinels:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-193259/suite.tsv`.
   The two new rows rewrite the command stream coordinate-space or paint-format header words to unsupported values,

@@ -38,6 +38,11 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused command payload and record-length validation passed after adding typed live sentinels for JBR's parser-only
+  payload-length and record-length guards. The focused four-row run passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-193923/suite.tsv`.
+  The expanded `CASE_GROUPS=stream-invalid` quick path now covers eight stream parser guards; all eight passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-193642/suite.tsv`.
 - Focused command-stream coordinate-space and paint-format validation passed after adding typed live sentinels for
   JBR's parser-only header guards. The focused two-row run passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-193259/suite.tsv`.
