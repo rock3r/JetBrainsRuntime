@@ -5,6 +5,17 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Focused saveLayer image-filter alpha validation passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-120426/suite.tsv`.
+  The new `commands-invalid-save-layer-image-filter-alpha-fallback` row records op 55
+  `COMMAND_SAVE_LAYER_IMAGE_FILTER_REF` through graphics-layer render-effect replay, rewrites `alpha1000` to `1001`
+  with the existing saveLayer alpha corruption hook, and reports one `command-stream-invalid` fallback marker,
+  `unsupported=none`, zero JBR picture frames, and zero JBR command frames.
+- Scoped saveLayer-invalid validation passed after adding the image-filter alpha row:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-120842/suite.tsv`.
+  The quick group now covers five malformed saveLayer rows, including the new op 55 alpha bounds sentinel. All five
+  passed with zero unsupported rows, zero picture rows, zero command replay rows, and one structured fallback marker
+  per row.
 - Focused saveLayer image-filter handle validation passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-081201/suite.tsv`.
   The new `commands-invalid-save-layer-image-filter-use-fallback` row records op 55

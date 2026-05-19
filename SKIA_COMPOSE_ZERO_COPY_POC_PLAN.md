@@ -51,6 +51,12 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   all forty-five passed with zero unsupported rows, zero picture rows, zero command replay rows, and one structured
   fallback marker per row:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-105843/suite.tsv`.
+- SaveLayer image-filter replay also has a scalar alpha bounds sentinel for op 55. The row reuses Skiko's saveLayer
+  alpha corruption hook against the graphics-layer render-effect path and rewrites `alpha1000` to `1001`. The focused
+  row passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-120426/suite.tsv`.
+  The expanded `CASE_GROUPS=save-layer-invalid` quick group now covers five malformed saveLayer rows; all five passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-120842/suite.tsv`.
 - Image-handle validation now has a dedicated quick group. Skiko can rewrite a `COMMAND_DRAW_IMAGE_REF` cache key to an
   undefined key or insert `COMMAND_EVICT_IMAGE_CACHE_KEY` immediately before the draw. The focused two-row run passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-203912/suite.tsv`.
