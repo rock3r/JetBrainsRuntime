@@ -5,6 +5,18 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Focused saveLayer-invalid command-probe validation passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-030846/suite.tsv`.
+  The new `CASE_GROUPS=save-layer-invalid` group covered
+  `commands-invalid-save-layer-alpha-fallback` and
+  `commands-invalid-save-layer-color-filter-blend-mode-fallback`. Both rows reported one `command-stream-invalid`
+  fallback marker, `unsupported=none`, zero JBR picture frames, and zero JBR command frames.
+- Bounded default-order saveLayer range validation passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-031011/suite.tsv`.
+  The range from `commands-save-layer-filter` through `commands-save-layer-raw-color-filter-fallback` covered four
+  rows: the supported saveLayer tint-filter command path, the two new invalid scalar rows, and the existing raw
+  color-filter fallback sentinel. Aggregate: 4/4 passed, one expected unsupported-marker row, 1,456 JBR command frames,
+  1,096 expected picture-fallback frames, and two structured fallback markers.
 - Focused command-probe validation passed after adding live image cache-key sentinels:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-203912/suite.tsv`.
   The new `commands-invalid-image-use-fallback` row rewrites one `COMMAND_DRAW_IMAGE_REF` key to an undefined image

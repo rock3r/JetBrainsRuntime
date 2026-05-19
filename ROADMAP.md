@@ -38,6 +38,16 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused and bounded-range saveLayer validation passed after adding live parser sentinels for `COMMAND_SAVE_LAYER`
+  alpha bounds and `COMMAND_SAVE_LAYER_COLOR_FILTER` blend-mode constraints. The scoped quick group covers the two
+  malformed saveLayer rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-030846/suite.tsv`.
+  The adjacent default-order range from `commands-save-layer-filter` through
+  `commands-save-layer-raw-color-filter-fallback` also passed, covering the supported tint-filter row, both new invalid
+  rows, and the existing raw color-filter fallback row:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-031011/suite.tsv`.
+  This keeps saveLayer scalar hardening on the quick exact/group/range path instead of requiring a full default sweep
+  for every small guard.
 - Focused plus grouped image-handle validation passed after adding live `COMMAND_DRAW_IMAGE_REF` cache-key sentinels
   for missing image handles and use-after-evict. The exact two-row run passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-203912/suite.tsv`.
