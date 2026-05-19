@@ -5,6 +5,16 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Focused command record-flags validation passed after adding a typed live sentinel:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-192645/suite.tsv`.
+  The new `commands-invalid-command-record-flags-fallback` row rewrites the first command record flags word to an
+  unsupported value, matching JBR's parser-only unsupported record-flags guard. It requires
+  `SKIKO_JBR_INTEROP_COMMAND_RECORD_FLAGS_CORRUPTED`; aggregate: 1/1 passed, zero unsupported rows, zero JBR picture
+  frames, zero JBR command frames, and one structured invalid-stream fallback marker.
+- Scoped `stream-invalid` validation passed after adding the record-flags row:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-192129/suite.tsv`.
+  This quick group now covers stream header flags and per-record flags. Aggregate: 2/2 passed, zero unsupported rows,
+  zero JBR picture frames, zero JBR command frames, and two structured invalid-stream fallback markers.
 - Focused command-stream header flag validation passed after adding a typed live sentinel:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-190837/suite.tsv`.
   The new `commands-invalid-command-stream-flags-fallback` row uses Skiko's generic stream corruption switch to rewrite

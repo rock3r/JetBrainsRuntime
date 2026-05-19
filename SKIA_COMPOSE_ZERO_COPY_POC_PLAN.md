@@ -29,6 +29,11 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-190837/suite.tsv`.
   The one-row group passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-190836/suite.tsv`.
+- The same quick group now covers per-record command flags. Skiko can rewrite the first command record flags word to
+  `2` and emits `SKIKO_JBR_INTEROP_COMMAND_RECORD_FLAGS_CORRUPTED`. The exact row passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-192645/suite.tsv`.
+  The expanded `CASE_GROUPS=stream-invalid` run passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-192129/suite.tsv`.
 - The already-live unknown effect descriptor type sentinel was refreshed on current artifacts. The exact
   `commands-invalid-effect-descriptor-type-fallback` row passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-190020/suite.tsv`.

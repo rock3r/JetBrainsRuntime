@@ -38,6 +38,12 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused command record-flags validation passed after adding a typed marker and live suite row for JBR's parser-only
+  unsupported command record-flags guard. The new row passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-192645/suite.tsv`.
+  The expanded `CASE_GROUPS=stream-invalid` quick path now covers both stream header flags and command record flags,
+  and passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-192129/suite.tsv`.
 - Focused command-stream header flag validation passed after adding a typed marker and live suite row for Skiko's
   generic stream corruption switch. The new `commands-invalid-command-stream-flags-fallback` row rewrites the stream
   flags word to an unsupported value, matching JBR's parser-only unsupported stream-flags guard:
