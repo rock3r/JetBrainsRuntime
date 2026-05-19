@@ -46,6 +46,10 @@ This is the small working roadmap for the current PoC. The full historical check
   now covers nine malformed saveLayer rows; all nine passed with zero unsupported rows, zero picture rows, zero command
   replay rows, and one structured fallback marker per row:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-124137/suite.tsv`.
+  The bounded default-order saveLayer range also passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-124859/suite.tsv`.
+  It covered two supported command-replay rows, all nine malformed saveLayer rows, and the existing raw color-filter
+  fallback sentinel.
 - Focused plus grouped saveLayer image-filter dimension validation passed after adding op 55 width/height corruption
   hooks. The focused two-row run passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-121803/suite.tsv`.
