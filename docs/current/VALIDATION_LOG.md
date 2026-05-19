@@ -5,6 +5,18 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Focused saveLayer image-filter dimension validation passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-121803/suite.tsv`.
+  The new `commands-invalid-save-layer-image-filter-width-fallback` and
+  `commands-invalid-save-layer-image-filter-height-fallback` rows record op 55
+  `COMMAND_SAVE_LAYER_IMAGE_FILTER_REF` through graphics-layer render-effect replay and rewrite width or height to
+  `-1`. Both rows reported one `command-stream-invalid` fallback marker, `unsupported=none`, zero JBR picture frames,
+  and zero JBR command frames.
+- Scoped saveLayer-invalid validation passed after adding the image-filter dimension rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-121925/suite.tsv`.
+  The quick group now covers seven malformed saveLayer rows, including op 55 alpha, width, and height bounds sentinels.
+  All seven passed with zero unsupported rows, zero picture rows, zero command replay rows, and one structured fallback
+  marker per row.
 - Focused saveLayer image-filter alpha validation passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-120426/suite.tsv`.
   The new `commands-invalid-save-layer-image-filter-alpha-fallback` row records op 55
