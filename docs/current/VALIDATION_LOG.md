@@ -5,6 +5,20 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Focused fill-rect shader-ref bounds/alpha validation passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-182225/suite.tsv`.
+  The three new rows record op 58 `COMMAND_FILL_RECT_SHADER_REF`, corrupt horizontal bounds, vertical bounds, or
+  `alpha1000`, and require typed Skiko corruption markers plus `command-stream-invalid` fallback. Aggregate: 3/3
+  passed, zero unsupported rows, zero JBR picture frames, zero JBR command frames, and three structured invalid-stream
+  fallback markers.
+- Scoped `shader-ref-invalid` validation passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-183006/suite.tsv`.
+  This quick group is the point-to-point iteration path for malformed descriptor-backed fill-rect shader refs.
+- Bounded default-order shader-ref range validation passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-183458/suite.tsv`.
+  The range covered the existing shader descriptor use, the three malformed shader-ref scalar rows, the path-effect
+  descriptor use row, and the descriptor use-after-evict row. Aggregate: 6/6 passed, zero unsupported rows, zero JBR
+  picture frames, zero JBR command frames, and six structured invalid-stream fallback markers.
 - Focused fill-rect color-filter blend-mode/width/height validation passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-173809/suite.tsv`.
   The three new rows record op 42 `COMMAND_FILL_RECT_COLOR_FILTER`, rewrite tint blend mode to an unsupported value or

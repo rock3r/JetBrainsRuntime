@@ -38,6 +38,16 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused plus grouped fill-rect shader-ref scalar validation passed after adding op 58 bounds and alpha corruption
+  hooks. The focused three-row run passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-182225/suite.tsv`.
+  The rows record `COMMAND_FILL_RECT_SHADER_REF`, corrupt horizontal bounds, vertical bounds, or `alpha1000`, and
+  require structured `command-stream-invalid` fallback with zero JBR replay frames. The new
+  `CASE_GROUPS=shader-ref-invalid` quick group passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-183006/suite.tsv`.
+  The bounded default-order range from `commands-invalid-shader-descriptor-use-fallback` through
+  `commands-invalid-descriptor-use-after-evict-fallback` also passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-183458/suite.tsv`.
 - Focused plus grouped fill-rect color-filter scalar validation passed after adding op 42 blend-mode, width, and height
   corruption hooks. The focused three-row run passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-173809/suite.tsv`.

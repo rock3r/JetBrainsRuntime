@@ -39,6 +39,15 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   A bounded default-order range from `commands-raw-blend-color-filter-fallback` through `commands-color-filter` also
   passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-180104/suite.tsv`.
+- Descriptor-backed fill-rect shader refs now have scalar parser coverage. Skiko can corrupt op 58
+  `COMMAND_FILL_RECT_SHADER_REF` horizontal bounds, vertical bounds, or `alpha1000` after recording. The exact
+  three-row run passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-182225/suite.tsv`.
+  The focused `CASE_GROUPS=shader-ref-invalid` run passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-183006/suite.tsv`.
+  A bounded default-order range from `commands-invalid-shader-descriptor-use-fallback` through
+  `commands-invalid-descriptor-use-after-evict-fallback` also passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-183458/suite.tsv`.
 - SaveLayer invalid validation now has its own quick group. Skiko can corrupt plain `COMMAND_SAVE_LAYER` alpha to
   `1001` and tint-filter `COMMAND_SAVE_LAYER_COLOR_FILTER` blend mode away from `SRC_IN`, matching JBR's parser
   bounds/type guards. The focused `CASE_GROUPS=save-layer-invalid` run covered both malformed saveLayer rows:
