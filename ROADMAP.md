@@ -38,6 +38,14 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused plus grouped saveLayer blend/color-filter-ref blend-mode validation passed after adding an op 54 blend-mode
+  corruption hook. The focused row passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-152806/suite.tsv`.
+  The row records `COMMAND_SAVE_LAYER_BLEND_COLOR_FILTER_REF`, rewrites its saveLayer blend mode to an unsupported
+  value, and requires structured `command-stream-invalid` fallback with zero JBR replay frames. The expanded
+  `CASE_GROUPS=save-layer-invalid` group now covers fourteen malformed saveLayer rows; all fourteen passed with zero
+  unsupported rows, zero picture rows, zero command replay rows, and one structured fallback marker per row:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-152857/suite.tsv`.
 - Focused plus grouped saveLayer color-filter-ref dimension validation passed after adding op 52/op 54 width/height
   corruption hooks. The focused four-row run passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-140556/suite.tsv`.

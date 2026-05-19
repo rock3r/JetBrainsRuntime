@@ -5,6 +5,16 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Focused saveLayer blend/color-filter-ref blend-mode validation passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-152806/suite.tsv`.
+  The new `commands-invalid-save-layer-blend-color-filter-ref-blend-mode-fallback` row records op 54
+  `COMMAND_SAVE_LAYER_BLEND_COLOR_FILTER_REF` and rewrites its saveLayer blend mode to an unsupported value. It
+  reported one `command-stream-invalid` fallback marker, `unsupported=none`, zero JBR picture frames, and zero JBR
+  command frames.
+- Scoped saveLayer-invalid validation passed after adding the op 54 blend-mode row:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-152857/suite.tsv`.
+  The quick group now covers fourteen malformed saveLayer rows. All fourteen passed with zero unsupported rows, zero
+  picture rows, zero command replay rows, and one structured fallback marker per row.
 - Focused saveLayer color-filter-ref dimension validation passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-140556/suite.tsv`.
   The new width/height rows cover op 52 `COMMAND_SAVE_LAYER_COLOR_FILTER_REF` and op 54
