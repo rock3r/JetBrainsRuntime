@@ -38,6 +38,16 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused and bounded-range saveLayer validation passed after extending live parser sentinels to the remaining
+  saveLayer blend guards: `COMMAND_SAVE_LAYER_BLEND_MODE` rejects unsupported blend-mode ids, and
+  `COMMAND_SAVE_LAYER_BLEND_COLOR_FILTER` rejects tint color-filter blend modes other than `SRC_IN`. The scoped
+  `CASE_GROUPS=save-layer-invalid` run now covers four malformed saveLayer rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-032849/suite.tsv`.
+  The bounded default-order range from `commands-save-layer-filter` through
+  `commands-save-layer-raw-color-filter-fallback` also passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-033128/suite.tsv`.
+  The op 51 row uses the existing graphics-layer blend+tint path because CMP emits
+  `COMMAND_SAVE_LAYER_BLEND_COLOR_FILTER` from nested layer replay rather than plain `Canvas.saveLayer`.
 - Focused and bounded-range saveLayer validation passed after adding live parser sentinels for `COMMAND_SAVE_LAYER`
   alpha bounds and `COMMAND_SAVE_LAYER_COLOR_FILTER` blend-mode constraints. The scoped quick group covers the two
   malformed saveLayer rows:

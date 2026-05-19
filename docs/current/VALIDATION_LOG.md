@@ -5,6 +5,20 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Expanded saveLayer-invalid command-probe validation passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-032849/suite.tsv`.
+  The `CASE_GROUPS=save-layer-invalid` quick area now covers four malformed saveLayer rows:
+  `commands-invalid-save-layer-alpha-fallback`,
+  `commands-invalid-save-layer-color-filter-blend-mode-fallback`,
+  `commands-invalid-save-layer-blend-mode-fallback`, and
+  `commands-invalid-save-layer-blend-color-filter-blend-mode-fallback`. All four rows reported one
+  `command-stream-invalid` fallback marker, `unsupported=none`, zero JBR picture frames, and zero JBR command frames.
+- Bounded default-order saveLayer range validation passed after adding the blend rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-033128/suite.tsv`.
+  The range covered six rows: supported tint-filter saveLayer command replay, supported saveLayer blend-mode command
+  replay, the four invalid saveLayer rows, and the existing raw color-filter fallback sentinel. Aggregate: 7/7 passed,
+  one expected unsupported-marker row, 2,907 JBR command frames, 1,228 expected picture-fallback frames, and four
+  structured invalid-stream fallback markers.
 - Focused saveLayer-invalid command-probe validation passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-030846/suite.tsv`.
   The new `CASE_GROUPS=save-layer-invalid` group covered
