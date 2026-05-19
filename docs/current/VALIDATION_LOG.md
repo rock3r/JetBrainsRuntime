@@ -5,6 +5,17 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Focused saveLayer color-filter-ref dimension validation passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-140556/suite.tsv`.
+  The new width/height rows cover op 52 `COMMAND_SAVE_LAYER_COLOR_FILTER_REF` and op 54
+  `COMMAND_SAVE_LAYER_BLEND_COLOR_FILTER_REF`, rewriting the recorded width or height to `-1`. All four rows reported
+  one `command-stream-invalid` fallback marker, `unsupported=none`, zero JBR picture frames, and zero JBR command
+  frames.
+- Scoped saveLayer-invalid validation passed after adding the color-filter-ref dimension rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-140848/suite.tsv`.
+  The quick group now covers thirteen malformed saveLayer rows, including width, height, and alpha bounds for op 52,
+  op 54, and op 55 descriptor-backed saveLayer forms. All thirteen passed with zero unsupported rows, zero picture
+  rows, zero command replay rows, and one structured fallback marker per row.
 - Focused saveLayer color-filter-ref alpha validation passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-124011/suite.tsv`.
   The new `commands-invalid-save-layer-color-filter-ref-alpha-fallback` and
