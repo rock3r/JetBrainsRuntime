@@ -114,6 +114,8 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-025324/suite.tsv`.
   A cheap no-app negative check with `CASES=commands-runtime-effect-child-only CASES_UNTIL=does-not-exist` exits with
   `Unknown CASES_UNTIL: does-not-exist`.
+- Magic Jewel command-probe group discovery now supports `LIST_CASE_GROUPS=true`, so quick area slices can be listed
+  without launching the app or reading the script.
 - Resumed command-only tail sweep passed with `EXPECT_SCREENSHOT_ASSERTION=false` and
   `CASES_FROM=commands-runtime-effect-child-only`:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-235421/suite.tsv`.

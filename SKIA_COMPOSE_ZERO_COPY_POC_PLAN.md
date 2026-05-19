@@ -915,9 +915,12 @@ Stable RuntimeEffect color-filter coverage and full screenshot parity are curren
 1. Continue shader-family hardening and transform/graphics-layer edge cleanup from the current roadmap.
 2. Prefer small, high-signal validation slices with focused command rows first, then default sweep or compatibility
    matrix when the touched surface warrants it.
-3. Use `CASES=...` for exact one-off rows and Magic Jewel `CASE_GROUPS=...` for area slices during inner-loop work.
-   Current command groups include `smoke`, `effect-descriptor-invalid`, `shader-descriptor-invalid`,
-   `runtime-effect-invalid`, `descriptor-handles-invalid`, `color-filters`, `native-text`, and `graphics-layer`.
+3. Use `CASES=...` for exact one-off rows, `CASES_FROM`/`CASES_UNTIL` for bounded/resumed default-order ranges, and
+   Magic Jewel `CASE_GROUPS=...` for area slices during inner-loop work. Use `LIST_CASE_GROUPS=true` to print the
+   current group names without launching validation. Current command groups include `smoke`, `path-invalid`,
+   `effect-descriptor-invalid`, `shader-descriptor-invalid`, `gradient-invalid`, `gradient-path-invalid`,
+   `runtime-effect-invalid`, `descriptor-handles-invalid`, `image-handles-invalid`, `color-filters`, `native-text`,
+   `native-text-invalid`, and `graphics-layer`.
 4. Run full default command/screenshot sweeps as checkpoint or periodic gates instead of every edit iteration.
 5. Keep updating this compact plan; move verbose historical details to archive or focused docs, not back into this file.
 6. Commit and push each major slice.
