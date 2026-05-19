@@ -46,6 +46,10 @@ This is the small working roadmap for the current PoC. The full historical check
   `CASE_GROUPS=save-layer-invalid` group now covers thirteen malformed saveLayer rows; all thirteen passed with zero
   unsupported rows, zero picture rows, zero command replay rows, and one structured fallback marker per row:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-140848/suite.tsv`.
+  The bounded default-order saveLayer range also passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-141854/suite.tsv`.
+  It covered two supported command-replay rows, all thirteen malformed saveLayer rows, and the existing raw
+  color-filter fallback sentinel.
 - Focused plus grouped saveLayer color-filter-ref alpha validation passed after adding op 52/op 54 alpha corruption
   hooks. The focused two-row run passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-124011/suite.tsv`.

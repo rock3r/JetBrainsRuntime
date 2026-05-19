@@ -16,6 +16,11 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   The quick group now covers thirteen malformed saveLayer rows, including width, height, and alpha bounds for op 52,
   op 54, and op 55 descriptor-backed saveLayer forms. All thirteen passed with zero unsupported rows, zero picture
   rows, zero command replay rows, and one structured fallback marker per row.
+- Bounded default-order saveLayer range validation passed after adding the color-filter-ref dimension rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-141854/suite.tsv`.
+  The range covered sixteen rows: two supported saveLayer command-replay rows, thirteen malformed saveLayer rows, and
+  the existing raw color-filter fallback sentinel. Aggregate: 16/16 passed, one expected unsupported-marker row, 3,909
+  JBR command frames, 1,115 expected picture-fallback frames, and thirteen structured invalid-stream fallback markers.
 - Focused saveLayer color-filter-ref alpha validation passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-124011/suite.tsv`.
   The new `commands-invalid-save-layer-color-filter-ref-alpha-fallback` and
