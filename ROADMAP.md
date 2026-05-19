@@ -96,6 +96,14 @@ This is the small working roadmap for the current PoC. The full historical check
 - Command-only full-sweep iteration now has an explicit screenshot-assertion skip for macOS capture flakiness, and the
   `commands-runtime-effect-child-only` gate was refreshed to the current three shader-handle definitions:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-234743/suite.tsv`.
+- Magic Jewel command-probe iteration now supports `CASES_FROM`/`CASES_UNTIL` range slicing for faster resumed or
+  point-to-point batches. One-row range smokes passed, including the post-guard check:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-235136/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-025324/suite.tsv`.
+  A resumed command-only tail sweep from `commands-runtime-effect-child-only` then passed 292/292 rows with 94,687 JBR
+  command frames, 17,970 expected picture-fallback frames, 17 expected unsupported-marker rows, and 208 total expected
+  fallback markers:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-235421/suite.tsv`.
 - Focused plus grouped descriptor-handle validation passed after adding top-level path-effect descriptor-use sentinels
   for missing handles, use-after-evict, and wrong-family handles on `COMMAND_DRAW_PATH_PATH_EFFECT_REF`. The focused
   three-row run passed:

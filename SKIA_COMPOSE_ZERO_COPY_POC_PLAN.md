@@ -83,6 +83,15 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   still proving command replay, and `commands-runtime-effect-child-only` now allows the current three shader-handle
   definitions after focused validation:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-234743/suite.tsv`.
+- Magic Jewel command-probe iteration now supports `CASES_FROM`/`CASES_UNTIL` range slicing, so local work can run a
+  one-row smoke, a bounded area, or a resumed tail before spending time on periodic full default batches. One-row range
+  smokes passed, including the post-guard check:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-235136/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-025324/suite.tsv`.
+  The resumed command-only tail from `commands-runtime-effect-child-only` passed 292/292 rows with 94,687 JBR command
+  frames, 17,970 expected picture-fallback frames, 17 expected unsupported-marker rows, and 208 total expected fallback
+  markers:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-235421/suite.tsv`.
 - Descriptor-handle validation now covers top-level path-effect descriptor uses. Skiko can rewrite or evict the
   `COMMAND_DRAW_PATH_PATH_EFFECT_REF` handle to exercise JBR's missing-handle, use-after-evict, and wrong-family
   checks. The focused three-row run passed:

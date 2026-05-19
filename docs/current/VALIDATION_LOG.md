@@ -107,6 +107,18 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 - Focused validation passed after adjusting `commands-runtime-effect-child-only` to allow the current three shader-handle
   definitions:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-234743/suite.tsv`.
+- Magic Jewel command-probe range slicing passed a one-row smoke with
+  `CASES_FROM=commands-runtime-effect-child-only` and `CASES_UNTIL=commands-runtime-effect-child-only`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-235136/suite.tsv`.
+- The same one-row range smoke passed again after adding fail-fast validation for unknown `CASES_UNTIL` values:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-025324/suite.tsv`.
+  A cheap no-app negative check with `CASES=commands-runtime-effect-child-only CASES_UNTIL=does-not-exist` exits with
+  `Unknown CASES_UNTIL: does-not-exist`.
+- Resumed command-only tail sweep passed with `EXPECT_SCREENSHOT_ASSERTION=false` and
+  `CASES_FROM=commands-runtime-effect-child-only`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-235421/suite.tsv`.
+  The tail covered 292 rows; all 292 passed. Aggregate: 94,687 JBR command frames, 17,970 expected picture-fallback
+  frames, 17 expected unsupported-marker rows, and 208 total expected fallback markers.
 - Focused command-probe validation passed after adding top-level path-effect descriptor-use sentinels:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-200433/suite.tsv`.
   The new `commands-invalid-path-effect-descriptor-use-fallback`,
