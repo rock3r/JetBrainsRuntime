@@ -5,6 +5,19 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Focused fill-rect blend-mode width/height validation passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-172416/suite.tsv`.
+  The two new rows record op 41 `COMMAND_FILL_RECT_BLEND_MODE`, rewrite width or height to `-1`, and require the
+  typed Skiko corruption markers plus `command-stream-invalid` fallback. Aggregate: 2/2 passed, zero unsupported rows,
+  zero JBR picture frames, zero JBR command frames, and two structured invalid-stream fallback markers.
+- Scoped `blend-mode-invalid` validation passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-172545/suite.tsv`.
+  This quick group is the point-to-point iteration path for malformed fill-rect blend-mode scalar guards.
+- Bounded default-order blend-mode range validation passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-172903/suite.tsv`.
+  The range covered the supported `commands-blend-mode` row, both malformed fill-rect blend-mode rows, and the adjacent
+  `commands-graphics-layer` row. Aggregate: 4/4 passed, zero unsupported rows, 2,013 JBR command frames, and two
+  structured invalid-stream fallback markers.
 - Focused saveLayer blend/color-filter-ref blend-mode validation passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-152806/suite.tsv`.
   The new `commands-invalid-save-layer-blend-color-filter-ref-blend-mode-fallback` row records op 54

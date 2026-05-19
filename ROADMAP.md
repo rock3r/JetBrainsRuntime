@@ -38,6 +38,15 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused plus grouped fill-rect blend-mode scalar validation passed after adding op 41 width/height corruption hooks.
+  The focused two-row run passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-172416/suite.tsv`.
+  The rows record `COMMAND_FILL_RECT_BLEND_MODE`, rewrite width or height to `-1`, and require structured
+  `command-stream-invalid` fallback with zero JBR replay frames. The new `CASE_GROUPS=blend-mode-invalid` quick group
+  passed as the targeted iteration slice:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-172545/suite.tsv`.
+  The bounded default-order range from `commands-blend-mode` through `commands-graphics-layer` also passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-172903/suite.tsv`.
 - Focused plus grouped saveLayer blend/color-filter-ref blend-mode validation passed after adding an op 54 blend-mode
   corruption hook. The focused row passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-152806/suite.tsv`.

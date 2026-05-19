@@ -23,6 +23,14 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - Validation iteration is now area-scoped by default for small sentinel slices: run the exact `CASES=...` row first,
   then the smallest relevant adjacent `CASES=...` slice or `CASE_GROUPS=...` subset, and reserve full default command
   sweeps for periodic consolidation.
+- Fill-rect blend-mode scalar validation now has a quick group. Skiko can corrupt op 41
+  `COMMAND_FILL_RECT_BLEND_MODE` width or height to `-1`, matching JBR's parser bounds guards. The exact two-row run
+  passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-172416/suite.tsv`.
+  The focused `CASE_GROUPS=blend-mode-invalid` run passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-172545/suite.tsv`.
+  A bounded default-order range from `commands-blend-mode` through `commands-graphics-layer` also passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-172903/suite.tsv`.
 - SaveLayer invalid validation now has its own quick group. Skiko can corrupt plain `COMMAND_SAVE_LAYER` alpha to
   `1001` and tint-filter `COMMAND_SAVE_LAYER_COLOR_FILTER` blend mode away from `SRC_IN`, matching JBR's parser
   bounds/type guards. The focused `CASE_GROUPS=save-layer-invalid` run covered both malformed saveLayer rows:
