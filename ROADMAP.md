@@ -38,6 +38,17 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Full default command-probe sweep passed after rebuilding local JBR Skia artifacts and adding primitive command
+  parser sentinels for stroke cap, transform record flags, and clip operation. Screenshot assertions were disabled for
+  the broad semantic sweep to avoid known macOS window-capture flakes; command/fallback markers were still validated.
+  Aggregate: 401/401 passed, 26 intentional unsupported-picture rows, 32,480 JBR picture frames, 184,608 JBR command
+  frames, and 264 structured fallback markers:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-002459/suite.tsv`.
+- Focused primitive command parser validation now has a quick group. The exact row and grouped runs passed after
+  rebuilding `/tmp/jbr-skia-run/desktop`, `/tmp/jbr-api-shim.jar`, and `/tmp/jbr-skia-native/libjbrskiainterop.dylib`;
+  stale artifacts had presented as `SKIKO_JBR_INTEROP_FALLBACK reason=service-unavailable` before the rebuild. The
+  quick group covers `COMMAND_STROKE_LINE` cap, `COMMAND_TRANSLATE` record flags, and `COMMAND_CLIP_RECT` operation:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-002341/suite.tsv`.
 - Focused command payload and record-length validation passed after adding typed live sentinels for JBR's parser-only
   payload-length and record-length guards. The focused four-row run passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-193923/suite.tsv`.

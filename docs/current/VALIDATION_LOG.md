@@ -5,6 +5,23 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Full default command-probe sweep passed after adding primitive command parser sentinels and rebuilding local JBR Skia
+  artifacts:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-002459/suite.tsv`.
+  Aggregate: 401/401 passed, 26 rows with intentional unsupported-picture fallback, 32,480 JBR picture frames,
+  184,608 JBR command frames, and 264 structured fallback markers. Screenshot assertions were disabled for this broad
+  semantic sweep because earlier macOS window capture attempts failed independently of command replay; command markers,
+  fallback reasons, unsupported reasons, JBR picture frames, and JBR command frames were still validated.
+- Scoped `primitive-invalid` validation passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-002341/suite.tsv`.
+  The quick group covers three primitive command parser guards: `COMMAND_STROKE_LINE` cap, `COMMAND_TRANSLATE` record
+  flags, and `COMMAND_CLIP_RECT` operation. Aggregate: 3/3 passed, zero unsupported rows, zero JBR picture frames,
+  zero JBR command frames, and three structured invalid-stream fallback markers.
+- Focused stroke-cap validation passed after rebuilding `/tmp` local artifacts:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-002307/suite.tsv`.
+  Before the rebuild, several rows reported `SKIKO_JBR_INTEROP_FALLBACK reason=service-unavailable`; rebuilding
+  `/tmp/jbr-skia-run/desktop`, `/tmp/jbr-api-shim.jar`, and `/tmp/jbr-skia-native/libjbrskiainterop.dylib` restored
+  service discovery and the full sweep later passed.
 - Focused command payload and record-length validation passed after adding typed live sentinels:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-193923/suite.tsv`.
   The four rows rewrite the command payload length to negative, truncated, or extra values, or rewrite the first command

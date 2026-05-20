@@ -23,6 +23,17 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - Validation iteration is now area-scoped by default for small sentinel slices: run the exact `CASES=...` row first,
   then the smallest relevant adjacent `CASES=...` slice or `CASE_GROUPS=...` subset, and reserve full default command
   sweeps for periodic consolidation.
+- Primitive command parser guards now have the same point-to-point workflow. Skiko can corrupt a recorded stroke cap,
+  transform record flags, or clip operation after recording, Magic Jewel exposes the exact rows and the
+  `CASE_GROUPS=primitive-invalid` quick path, and the grouped validation passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-002341/suite.tsv`.
+- The latest full default command-probe consolidation passed after rebuilding local JBR Skia artifacts. Aggregate:
+  401/401 passed, 26 intentional unsupported-picture rows, 32,480 JBR picture frames, 184,608 JBR command frames, and
+  264 structured fallback markers:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-002459/suite.tsv`.
+  If command probes suddenly report `SKIKO_JBR_INTEROP_FALLBACK reason=service-unavailable`, rebuild the local
+  artifacts before diagnosing recorder/parser changes:
+  `./scripts/rebuild-jbr-skia-local-artifacts.sh`.
 - Command-stream header flags now have a live quick-path sentinel. Skiko's generic stream corruption switch emits
   `SKIKO_JBR_INTEROP_COMMAND_STREAM_FLAGS_CORRUPTED`, and Magic Jewel exposes both the exact
   `commands-invalid-command-stream-flags-fallback` row and `CASE_GROUPS=stream-invalid`. The exact row passed:
