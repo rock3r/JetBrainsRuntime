@@ -5,6 +5,18 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Focused descriptor-handle eviction record-flags validation passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-085719/suite.tsv`.
+  The new `commands-invalid-shader-evict-record-flags-fallback` and
+  `commands-invalid-color-filter-evict-record-flags-fallback` rows reuse the existing descriptor use-after-evict
+  insertion path, then rewrite the inserted `COMMAND_EVICT_SHADER_HANDLE` or `COMMAND_EVICT_COLOR_FILTER_HANDLE`
+  record flags to `COMMAND_RECORD_FLAG_ANTIALIAS`. Aggregate: 2/2 passed, zero unsupported rows, zero JBR picture
+  frames, zero JBR command frames, and two structured invalid-stream fallback markers.
+- Focused descriptor-handle adjacent slice passed after adding the eviction record-flags rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-085837/suite.tsv`.
+  The explicit five-row quick slice covered the existing shader/color-filter/path-effect descriptor use-after-evict
+  rows plus the two new eviction record-flags rows. Aggregate: 5/5 passed, zero unsupported rows, zero JBR picture
+  frames, zero JBR command frames, and five structured invalid-stream fallback markers.
 - Focused image cache eviction record-flags validation passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-084204/suite.tsv`.
   The new `commands-invalid-image-evict-record-flags-fallback` row records image cache churn until

@@ -38,6 +38,13 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Descriptor-handle eviction parser guards now have live record-flags sentinels for both eviction command families.
+  Skiko can rewrite `COMMAND_EVICT_SHADER_HANDLE` or `COMMAND_EVICT_COLOR_FILTER_HANDLE` record flags to the antialias
+  bit after the existing use-after-evict hook inserts the eviction record. The exact two-row run passed with aggregate
+  2/2, `fallback_sum=2`, `unsupported_rows=0`, `picture_frames=0`, and `command_frames=0`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-085719/suite.tsv`.
+  A focused five-row descriptor-handle slice around the new rows also passed with aggregate 5/5:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-085837/suite.tsv`.
 - Image cache eviction parser guards now have a live record-flags sentinel. Skiko can rewrite
   `COMMAND_EVICT_IMAGE_CACHE_KEY` record flags to the antialias bit, matching JBR's parser guard that image cache
   eviction metadata records must have no flags. The exact row passed with one expected `command-stream-invalid`

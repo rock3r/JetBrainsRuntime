@@ -61,6 +61,11 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-084204/suite.tsv`.
   The expanded group covered twenty-two malformed image definition/cache-key/eviction and image-ref rows and passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-084246/suite.tsv`.
+- Descriptor-handle eviction parser guards now mirror that record-flags coverage for both
+  `COMMAND_EVICT_SHADER_HANDLE` and `COMMAND_EVICT_COLOR_FILTER_HANDLE`. The exact two-row run passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-085719/suite.tsv`.
+  A focused five-row descriptor-handle slice around the new rows passed as the quick adjacent-area validation:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-085837/suite.tsv`.
 - Font-data definition parser guards now cover record flags too. Skiko can rewrite cache-front-loaded
   `COMMAND_DEFINE_FONT_DATA` record flags to the antialias bit, Magic Jewel exposes the exact
   `commands-invalid-font-data-record-flags-fallback` row in the `native-text-invalid` quick group, and report
