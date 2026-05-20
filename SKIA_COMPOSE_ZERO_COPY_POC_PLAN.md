@@ -25,10 +25,15 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   sweeps for periodic consolidation. Long broad sweeps can be resumed with `CASES_FROM=...` after a failing/flaky row
   is understood, so already-green prefixes do not need to be repeated.
 - Primitive command parser guards now have the same point-to-point workflow. Skiko can corrupt a recorded stroke cap,
-  transform record flags, clip operation, draw-points point count, or draw-points record length after recording. Magic
-  Jewel exposes the exact rows and the `CASE_GROUPS=primitive-invalid` quick path. The record-length row passed:
+  transform record flags, clip operation, draw-points point count, draw-points record length, or draw-vertices vertex
+  count after recording. Magic Jewel exposes the exact rows and the `CASE_GROUPS=primitive-invalid` quick path. The
+  draw-vertices row passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-194429/suite.tsv`.
+  The six-row grouped validation passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-194537/suite.tsv`.
+  The draw-points record-length row also passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-143828/suite.tsv`.
-  The grouped validation passed with all five rows:
+  The five-row grouped validation passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-143915/suite.tsv`.
   The earlier point-count-only grouped validation remains a useful baseline:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-093531/suite.tsv`.

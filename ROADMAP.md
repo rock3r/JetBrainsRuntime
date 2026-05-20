@@ -68,6 +68,14 @@ This is the small working roadmap for the current PoC. The full historical check
   Skiko `publishAwtPublicationToMavenLocal publishAwtRuntimeElementsPublicationToMavenLocal
   publishKotlinMultiplatformPublicationToMavenLocal` and `JbrSkiaInteropTest` also passed. The full
   `publishToMavenLocal` task hit an external Skia macOS arm64 release 404 before the narrower publication succeeded.
+- Draw-vertices parser validation now has a live vertex-count sentinel. Skiko can rewrite the first recorded
+  `COMMAND_DRAW_VERTICES` vertex count to two, matching JBR's `vertexCount >= 3` and exact variable record-length
+  guards. The exact row passed with one expected `command-stream-invalid` fallback and no unsupported rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-194429/suite.tsv`.
+  The scoped `CASE_GROUPS=primitive-invalid` quick group now covers six rows including draw-vertices vertex count;
+  aggregate 6/6 passed, `fallback_sum=6`, `unsupported_rows=0`, `picture_frames=0`, and `command_frames=0`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-194537/suite.tsv`.
+  Skiko focused publication and `JbrSkiaInteropTest` also passed.
 - CMP now emits `COMMAND_CLEAR_IMAGE_CACHE` on the next top-level command frame after
   `clearInteropCachesForSurfaceChange()`, so JBR receives an explicit scoped image-cache clear when Skiko observes a
   destination surface/context migration. CMP focused recorder tests passed for the new pending-clear behavior plus the
