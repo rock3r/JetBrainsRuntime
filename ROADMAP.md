@@ -74,6 +74,14 @@ This is the small working roadmap for the current PoC. The full historical check
   Skiko `publishAwtPublicationToMavenLocal publishAwtRuntimeElementsPublicationToMavenLocal
   publishKotlinMultiplatformPublicationToMavenLocal` and `JbrSkiaInteropTest` also passed. The full
   `publishToMavenLocal` task hit an external Skia macOS arm64 release 404 before the narrower publication succeeded.
+- Draw-points parser validation now also has a live upper-bound sentinel for `pointCount <= 4096`. Skiko can rewrite
+  the first recorded `COMMAND_DRAW_POINTS` point count to `4097`. The exact row passed with one expected
+  `command-stream-invalid` fallback and no unsupported rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-014443/suite.tsv`.
+  The scoped `CASE_GROUPS=primitive-invalid` quick group now covers thirteen rows; aggregate 13/13 passed,
+  `fallback_sum=13`, `unsupported_rows=0`, `picture_frames=0`, and `command_frames=0`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-014536/suite.tsv`.
+  Skiko focused publication and `JbrSkiaInteropTest` also passed.
 - Draw-vertices parser validation now has a live vertex-count sentinel. Skiko can rewrite the first recorded
   `COMMAND_DRAW_VERTICES` vertex count to two, matching JBR's `vertexCount >= 3` and exact variable record-length
   guards. The exact row passed with one expected `command-stream-invalid` fallback and no unsupported rows:

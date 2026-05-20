@@ -51,6 +51,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   `./gradlew publishAwtPublicationToMavenLocal publishAwtRuntimeElementsPublicationToMavenLocal publishKotlinMultiplatformPublicationToMavenLocal`
   passed after full `publishToMavenLocal` hit an external Skia macOS arm64 release 404. Skiko
   `./gradlew awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest` also passed.
+- Skiko draw-points upper-bound sentinel validation passed. The hook rewrites the first recorded
+  `COMMAND_DRAW_POINTS` point count to `4097` and emits `SKIKO_JBR_INTEROP_DRAW_POINTS_MAX_POINT_COUNT_CORRUPTED`,
+  exercising JBR's `pointCount <= 4096` parser guard. The exact Magic Jewel row passed with one expected
+  `command-stream-invalid` fallback, zero unsupported rows, zero JBR picture frames, and zero JBR command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-014443/suite.tsv`.
+  The narrower Skiko publication path passed, and
+  `./gradlew awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest` also passed.
 - Scoped `primitive-invalid` validation passed after adding the draw-points record-length row:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-143915/suite.tsv`.
   The quick group now covers malformed stroke cap, transform record flags, clip operation, draw-points point count,
@@ -145,6 +152,14 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   draw-vertices vertex mode, draw-vertices blend mode, and draw-vertices index-count lower and upper bounds. Aggregate:
   12/12 passed, zero unsupported rows, zero JBR picture frames, zero JBR command frames, and twelve structured
   invalid-stream fallback markers. Screenshot assertions were disabled for this command-only semantic slice.
+- Scoped `primitive-invalid` validation passed after adding the draw-points upper-bound row:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-014536/suite.tsv`.
+  The quick group now covers malformed stroke cap, transform record flags, clip operation, draw-points point-count
+  lower and upper bounds, draw-points record length, draw-vertices vertex-count lower and upper bounds, draw-vertices
+  record length, draw-vertices vertex mode, draw-vertices blend mode, and draw-vertices index-count lower and upper
+  bounds. Aggregate: 13/13 passed, zero unsupported rows, zero JBR picture frames, zero JBR command frames, and
+  thirteen structured invalid-stream fallback markers. Screenshot assertions were disabled for this command-only
+  semantic slice.
 - Scoped `primitive-invalid` validation passed after adding the draw-points point-count row:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-093531/suite.tsv`.
   The quick group now covers malformed stroke cap, transform record flags, clip operation, and draw-points point

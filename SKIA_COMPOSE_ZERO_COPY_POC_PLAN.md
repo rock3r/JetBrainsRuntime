@@ -27,12 +27,16 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   or bounded adjacent range, Skiko focused publication, `JbrSkiaInteropTest`, and then a periodic full sweep once a
   coherent batch of sentinels has landed.
 - Primitive command parser guards now have the same point-to-point workflow. Skiko can corrupt a recorded stroke cap,
-  transform record flags, clip operation, draw-points point count, draw-points record length, or draw-vertices vertex
-  count lower/upper bounds, record length, vertex mode, blend mode, and index-count lower/upper bounds after
+  transform record flags, clip operation, draw-points point-count lower/upper bounds, draw-points record length, or
+  draw-vertices vertex-count lower/upper bounds, record length, vertex mode, blend mode, and index-count lower/upper bounds after
   recording. Magic Jewel exposes the exact rows and the `CASE_GROUPS=primitive-invalid` quick path. The latest
-  draw-vertices upper-bound exact run passed:
+  draw-points upper-bound exact row passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-014443/suite.tsv`.
+  The thirteen-row grouped validation passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-014536/suite.tsv`.
+  The earlier draw-vertices upper-bound exact run passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-013122/suite.tsv`.
-  The twelve-row grouped validation passed:
+  The earlier twelve-row grouped validation passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-013258/suite.tsv`.
   The earlier draw-vertices index-count row passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-202605/suite.tsv`.
