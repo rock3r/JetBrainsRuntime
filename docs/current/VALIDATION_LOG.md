@@ -5,6 +5,18 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Focused shader descriptor record-flags validation passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-051747/suite.tsv`.
+  The new `commands-invalid-shader-descriptor-record-flags-fallback` row records a
+  `COMMAND_DEFINE_SHADER_DESCRIPTOR`, rewrites its record flags to `COMMAND_RECORD_FLAG_ANTIALIAS`, and requires
+  `SKIKO_JBR_INTEROP_SHADER_DESCRIPTOR_RECORD_FLAGS_CORRUPTED` plus `command-stream-invalid` fallback before replay.
+  Aggregate: 1/1 passed, zero unsupported rows, zero JBR picture frames, zero JBR command frames, and one structured
+  fallback marker.
+- Scoped `shader-descriptor-invalid` validation passed after adding the record-flags row:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-051827/suite.tsv`.
+  The quick group now covers thirty malformed shader-descriptor rows. Aggregate: 30/30 passed, zero unsupported rows,
+  zero JBR picture frames, zero JBR command frames, and thirty structured invalid-stream fallback markers. Screenshot
+  assertions were disabled for this command-only semantic check.
 - Focused effect descriptor record-flags validation passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-050237/suite.tsv`.
   The new `commands-invalid-effect-descriptor-record-flags-fallback` row records a

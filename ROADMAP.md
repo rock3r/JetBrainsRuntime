@@ -38,6 +38,14 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused shader descriptor parser validation now includes record-flags coverage. Skiko can rewrite
+  `COMMAND_DEFINE_SHADER_DESCRIPTOR` record flags to the antialias bit, matching JBR's parser guard that shader
+  descriptor definition records must have no flags. The exact row passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-051747/suite.tsv`.
+  The scoped `CASE_GROUPS=shader-descriptor-invalid` quick group now covers thirty malformed shader-descriptor rows
+  and passed with zero unsupported rows, zero picture rows, zero command replay rows, and thirty structured
+  invalid-stream fallback markers:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-051827/suite.tsv`.
 - Focused effect descriptor parser validation now includes record-flags coverage. Skiko can rewrite
   `COMMAND_DEFINE_EFFECT_DESCRIPTOR` record flags to the antialias bit, matching JBR's parser guard that descriptor
   definition records must have no flags. The exact row passed:
