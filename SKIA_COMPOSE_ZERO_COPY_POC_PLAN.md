@@ -26,8 +26,12 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   is understood, so already-green prefixes do not need to be repeated.
 - Primitive command parser guards now have the same point-to-point workflow. Skiko can corrupt a recorded stroke cap,
   transform record flags, clip operation, draw-points point count, draw-points record length, or draw-vertices vertex
-  count/record length/vertex mode after recording. Magic Jewel exposes the exact rows and the
-  `CASE_GROUPS=primitive-invalid` quick path. The draw-vertices vertex-mode row passed:
+  count/record length/vertex mode/blend mode after recording. Magic Jewel exposes the exact rows and the
+  `CASE_GROUPS=primitive-invalid` quick path. The draw-vertices blend-mode row passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-201535/suite.tsv`.
+  The nine-row grouped validation passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-201625/suite.tsv`.
+  The draw-vertices vertex-mode row also passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-200424/suite.tsv`.
   The eight-row grouped validation passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-200517/suite.tsv`.

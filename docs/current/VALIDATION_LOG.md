@@ -93,6 +93,21 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   Aggregate: 8/8 passed, zero unsupported rows, zero JBR picture frames, zero JBR command frames, and eight
   structured invalid-stream fallback markers. Screenshot assertions were disabled for this command-only semantic
   slice.
+- Skiko draw-vertices blend-mode sentinel validation passed. The hook rewrites the first recorded
+  `COMMAND_DRAW_VERTICES` blend mode to an unsupported value and emits
+  `SKIKO_JBR_INTEROP_DRAW_VERTICES_BLEND_MODE_CORRUPTED`, exercising JBR's `isSupportedBlendMode(blendMode)` parser
+  guard. The exact Magic Jewel row passed with one expected `command-stream-invalid` fallback, zero unsupported rows,
+  zero JBR picture frames, and zero JBR command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-201535/suite.tsv`.
+  The narrower Skiko publication path passed, and
+  `./gradlew awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest` also passed.
+- Scoped `primitive-invalid` validation passed after adding the draw-vertices blend-mode row:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-201625/suite.tsv`.
+  The quick group now covers malformed stroke cap, transform record flags, clip operation, draw-points point count,
+  draw-points record length, draw-vertices vertex count, draw-vertices record length, draw-vertices vertex mode, and
+  draw-vertices blend mode. Aggregate: 9/9 passed, zero unsupported rows, zero JBR picture frames, zero JBR command
+  frames, and nine structured invalid-stream fallback markers. Screenshot assertions were disabled for this
+  command-only semantic slice.
 - Scoped `primitive-invalid` validation passed after adding the draw-points point-count row:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-093531/suite.tsv`.
   The quick group now covers malformed stroke cap, transform record flags, clip operation, and draw-points point
