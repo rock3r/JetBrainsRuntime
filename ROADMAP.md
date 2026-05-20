@@ -38,6 +38,15 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Image cache eviction parser guards now have a live record-flags sentinel. Skiko can rewrite
+  `COMMAND_EVICT_IMAGE_CACHE_KEY` record flags to the antialias bit, matching JBR's parser guard that image cache
+  eviction metadata records must have no flags. The exact row passed with one expected `command-stream-invalid`
+  fallback and no unsupported rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-084204/suite.tsv`.
+  The scoped `CASE_GROUPS=image-handles-invalid` quick group now covers twenty-two malformed image definition,
+  cache-key, eviction, and image-ref rows and passed with aggregate 22/22, `fallback_sum=22`,
+  `unsupported_rows=0`, `picture_frames=0`, and `command_frames=0`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-084246/suite.tsv`.
 - Periodic full default command-probe sweep passed after the font-data record-flags slice landed. Aggregate: 406/406
   passed, 26 intentional unsupported-picture rows, 8,744 JBR picture frames, 49,068 JBR command frames, and 269
   structured fallback markers:

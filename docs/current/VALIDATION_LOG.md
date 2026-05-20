@@ -5,6 +5,18 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Focused image cache eviction record-flags validation passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-084204/suite.tsv`.
+  The new `commands-invalid-image-evict-record-flags-fallback` row records image cache churn until
+  `COMMAND_EVICT_IMAGE_CACHE_KEY` appears, rewrites that eviction record's flags word to
+  `COMMAND_RECORD_FLAG_ANTIALIAS`, and requires `SKIKO_JBR_INTEROP_IMAGE_EVICT_RECORD_FLAGS_CORRUPTED` plus
+  `command-stream-invalid` fallback. The row passed with one expected fallback, zero unsupported rows, zero JBR
+  picture frames, and zero JBR command frames.
+- Scoped `image-handles-invalid` validation passed after adding the image cache eviction record-flags row:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-084246/suite.tsv`.
+  The quick group now covers twenty-two malformed image definition/cache-key/eviction and image-ref rows. Aggregate:
+  22/22 passed, zero unsupported rows, zero JBR picture frames, zero JBR command frames, and twenty-two structured
+  invalid-stream fallback markers.
 - Periodic full default command-probe sweep passed after adding the font-data record-flags sentinel:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-055642/suite.tsv`.
   Aggregate: 406/406 passed, 26 rows with intentional unsupported-picture replay, 8,744 JBR picture frames, 49,068
