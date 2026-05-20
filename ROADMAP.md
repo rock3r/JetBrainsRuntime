@@ -38,6 +38,14 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused image definition parser validation now includes record-flags coverage. Skiko can rewrite
+  `COMMAND_DEFINE_IMAGE_ARGB` record flags to the antialias bit, matching JBR's parser guard that image definition
+  metadata records must have no flags. The exact row passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-053349/suite.tsv`.
+  The scoped `CASE_GROUPS=image-handles-invalid` quick group now covers twenty-one malformed image definition/cache-key
+  and image-ref rows and passed with zero unsupported rows, zero picture rows, zero command replay rows, and twenty-one
+  structured invalid-stream fallback markers:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-053424/suite.tsv`.
 - Focused shader descriptor parser validation now includes record-flags coverage. Skiko can rewrite
   `COMMAND_DEFINE_SHADER_DESCRIPTOR` record flags to the antialias bit, matching JBR's parser guard that shader
   descriptor definition records must have no flags. The exact row passed:

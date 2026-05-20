@@ -47,6 +47,13 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-051747/suite.tsv`.
   The expanded group covered thirty malformed shader-descriptor rows and passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-051827/suite.tsv`.
+- Image definition parser guards now cover record flags alongside the existing pixel payload-length guard. Skiko can
+  rewrite `COMMAND_DEFINE_IMAGE_ARGB` record flags to the antialias bit, and Magic Jewel exposes the exact
+  `commands-invalid-image-define-record-flags-fallback` row in the `image-handles-invalid` quick group. The exact row
+  passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-053349/suite.tsv`.
+  The expanded group covered twenty-one malformed image definition/cache-key and image-ref rows and passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-053424/suite.tsv`.
 - The latest full default command-probe consolidation passed after rebuilding local JBR Skia artifacts. Aggregate:
   401/401 passed, 26 intentional unsupported-picture rows, 32,480 JBR picture frames, 184,608 JBR command frames, and
   264 structured fallback markers:
