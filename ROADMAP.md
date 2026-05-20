@@ -114,6 +114,15 @@ This is the small working roadmap for the current PoC. The full historical check
   aggregate 10/10 passed, `fallback_sum=10`, `unsupported_rows=0`, `picture_frames=0`, and `command_frames=0`:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-202656/suite.tsv`.
   Skiko focused publication and `JbrSkiaInteropTest` also passed.
+- Draw-vertices parser validation now also has live upper-bound sentinels for `vertexCount <= 4096` and
+  `indexCount <= 8192`. Skiko can rewrite the first recorded `COMMAND_DRAW_VERTICES` vertex count to `4097` or index
+  count to `8193`, and Magic Jewel exposes both rows in the `primitive-invalid` quick group. The exact two-row run
+  passed with one expected `command-stream-invalid` fallback per row and no unsupported rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-013122/suite.tsv`.
+  The scoped `CASE_GROUPS=primitive-invalid` quick group now covers twelve rows; aggregate 12/12 passed,
+  `fallback_sum=12`, `unsupported_rows=0`, `picture_frames=0`, and `command_frames=0`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-013258/suite.tsv`.
+  Skiko focused publication and `JbrSkiaInteropTest` also passed.
 - CMP now emits `COMMAND_CLEAR_IMAGE_CACHE` on the next top-level command frame after
   `clearInteropCachesForSurfaceChange()`, so JBR receives an explicit scoped image-cache clear when Skiko observes a
   destination surface/context migration. CMP focused recorder tests passed for the new pending-clear behavior plus the

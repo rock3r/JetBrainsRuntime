@@ -28,10 +28,15 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   coherent batch of sentinels has landed.
 - Primitive command parser guards now have the same point-to-point workflow. Skiko can corrupt a recorded stroke cap,
   transform record flags, clip operation, draw-points point count, draw-points record length, or draw-vertices vertex
-  count/record length/vertex mode/blend mode/index count after recording. Magic Jewel exposes the exact rows and the
-  `CASE_GROUPS=primitive-invalid` quick path. The draw-vertices index-count row passed:
+  count lower/upper bounds, record length, vertex mode, blend mode, and index-count lower/upper bounds after
+  recording. Magic Jewel exposes the exact rows and the `CASE_GROUPS=primitive-invalid` quick path. The latest
+  draw-vertices upper-bound exact run passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-013122/suite.tsv`.
+  The twelve-row grouped validation passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-013258/suite.tsv`.
+  The earlier draw-vertices index-count row passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-202605/suite.tsv`.
-  The ten-row grouped validation passed:
+  The earlier ten-row grouped validation passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-202656/suite.tsv`.
   A periodic full default command-probe sweep then passed with all five draw-vertices sentinels in the default set.
   Aggregate: 416/416 passed, 26 intentional unsupported-picture rows, 30,096 JBR picture frames, 201,780 JBR command

@@ -130,6 +130,21 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   draw-vertices blend mode, and draw-vertices index count. Aggregate: 10/10 passed, zero unsupported rows, zero JBR
   picture frames, zero JBR command frames, and ten structured invalid-stream fallback markers. Screenshot assertions
   were disabled for this command-only semantic slice.
+- Skiko draw-vertices upper-bound sentinel validation passed. The new hooks rewrite the first recorded
+  `COMMAND_DRAW_VERTICES` vertex count to `4097` or index count to `8193`, exercising JBR's `vertexCount <= 4096`
+  and `indexCount <= 8192` parser guards. The exact two-row Magic Jewel run passed with one expected
+  `command-stream-invalid` fallback per row, zero unsupported rows, zero JBR picture frames, and zero JBR command
+  frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-013122/suite.tsv`.
+  The narrower Skiko publication path passed, and
+  `./gradlew awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest` also passed.
+- Scoped `primitive-invalid` validation passed after adding the draw-vertices upper-bound rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-013258/suite.tsv`.
+  The quick group now covers malformed stroke cap, transform record flags, clip operation, draw-points point count,
+  draw-points record length, draw-vertices vertex-count lower and upper bounds, draw-vertices record length,
+  draw-vertices vertex mode, draw-vertices blend mode, and draw-vertices index-count lower and upper bounds. Aggregate:
+  12/12 passed, zero unsupported rows, zero JBR picture frames, zero JBR command frames, and twelve structured
+  invalid-stream fallback markers. Screenshot assertions were disabled for this command-only semantic slice.
 - Scoped `primitive-invalid` validation passed after adding the draw-points point-count row:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-093531/suite.tsv`.
   The quick group now covers malformed stroke cap, transform record flags, clip operation, and draw-points point
