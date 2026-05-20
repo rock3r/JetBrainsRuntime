@@ -38,6 +38,14 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused effect descriptor parser validation now includes record-flags coverage. Skiko can rewrite
+  `COMMAND_DEFINE_EFFECT_DESCRIPTOR` record flags to the antialias bit, matching JBR's parser guard that descriptor
+  definition records must have no flags. The exact row passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-050237/suite.tsv`.
+  The scoped `CASE_GROUPS=effect-descriptor-invalid` quick group now covers twenty-eight malformed effect-descriptor
+  rows and passed with zero unsupported rows, zero picture rows, zero command replay rows, and twenty-eight structured
+  invalid-stream fallback markers:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-050312/suite.tsv`.
 - Focused saveLayer command parser validation now includes the record-flags guard where `COMMAND_SAVE_LAYER` rejects
   the antialias bit even though the bit is otherwise globally recognized. The exact row passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-045239/suite.tsv`.
