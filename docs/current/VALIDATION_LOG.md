@@ -5,6 +5,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Full default command-probe sweep passed after adding the draw-points record-length sentinel. The run used
+  command-semantic validation with screenshot assertions disabled, included
+  `commands-invalid-draw-points-point-count-fallback` and
+  `commands-invalid-draw-points-record-length-fallback` in the default set, and passed every row. Aggregate: 411/411
+  passed, 27 rows with intentional unsupported-picture replay, 25,809 JBR picture frames, 151,351 JBR command frames,
+  and 274 structured fallback markers:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-144422/suite.tsv`.
 - Split broad command-probe consolidation passed after the draw-points point-count sentinel and full-log image-cache
   marker validation fix. The first run passed the default prefix through
   `commands-forced-context-native-system-font-text`; the second resumed at `commands-forced-context-dynamic-images`
@@ -27,8 +34,22 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   be in range and match the record length. The exact Magic Jewel row passed with one expected
   `command-stream-invalid` fallback, zero unsupported rows, zero JBR picture frames, and zero JBR command frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-142958/suite.tsv`.
-  Skiko `./gradlew publishToMavenLocal` and
-  `./gradlew awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest` both passed.
+- Skiko draw-points record-length sentinel validation passed. The hook shortens the first recorded
+  `COMMAND_DRAW_POINTS` record length and emits `SKIKO_JBR_INTEROP_DRAW_POINTS_RECORD_LENGTH_CORRUPTED`, exercising
+  JBR's exact `recordLength == 9 + pointCount * 2` parser guard without changing the recorded point-count field. The
+  exact Magic Jewel row passed with one expected `command-stream-invalid` fallback, zero unsupported rows, zero JBR
+  picture frames, and zero JBR command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-143828/suite.tsv`.
+  The narrower Skiko publication path
+  `./gradlew publishAwtPublicationToMavenLocal publishAwtRuntimeElementsPublicationToMavenLocal publishKotlinMultiplatformPublicationToMavenLocal`
+  passed after full `publishToMavenLocal` hit an external Skia macOS arm64 release 404. Skiko
+  `./gradlew awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest` also passed.
+- Scoped `primitive-invalid` validation passed after adding the draw-points record-length row:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-143915/suite.tsv`.
+  The quick group now covers malformed stroke cap, transform record flags, clip operation, draw-points point count,
+  and draw-points record length. Aggregate: 5/5 passed, zero unsupported rows, zero JBR picture frames, zero JBR
+  command frames, and five structured invalid-stream fallback markers. Screenshot assertions were disabled for this
+  command-only semantic slice.
 - Scoped `primitive-invalid` validation passed after adding the draw-points point-count row:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-093531/suite.tsv`.
   The quick group now covers malformed stroke cap, transform record flags, clip operation, and draw-points point

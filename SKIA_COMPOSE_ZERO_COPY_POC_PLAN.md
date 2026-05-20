@@ -25,9 +25,12 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   sweeps for periodic consolidation. Long broad sweeps can be resumed with `CASES_FROM=...` after a failing/flaky row
   is understood, so already-green prefixes do not need to be repeated.
 - Primitive command parser guards now have the same point-to-point workflow. Skiko can corrupt a recorded stroke cap,
-  transform record flags, clip operation, or draw-points point count after recording, Magic Jewel exposes the exact
-  rows and the `CASE_GROUPS=primitive-invalid` quick path, and the grouped validation passed after adding the
-  draw-points row:
+  transform record flags, clip operation, draw-points point count, or draw-points record length after recording. Magic
+  Jewel exposes the exact rows and the `CASE_GROUPS=primitive-invalid` quick path. The record-length row passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-143828/suite.tsv`.
+  The grouped validation passed with all five rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-143915/suite.tsv`.
+  The earlier point-count-only grouped validation remains a useful baseline:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-093531/suite.tsv`.
 - SaveLayer parser guards continue to use the quick exact/group workflow. Skiko can now rewrite a plain
   `COMMAND_SAVE_LAYER` record-flags word to the antialias bit, which JBR rejects for saveLayer records even though the
@@ -100,6 +103,11 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-093730/suite.tsv`,
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-102727/suite.tsv`,
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-123615/suite.tsv`.
+- A full default command-probe sweep then passed after adding the draw-points record-length sentinel. The run used
+  command-semantic validation with screenshot assertions disabled and included both draw-points invalid rows in the
+  default set. Aggregate: 411/411 passed, 27 intentional unsupported-picture rows, 25,809 JBR picture frames,
+  151,351 JBR command frames, and 274 structured fallback markers:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-144422/suite.tsv`.
 - The latest full default command-probe consolidation passed after rebuilding local JBR Skia artifacts. Aggregate:
   401/401 passed, 26 intentional unsupported-picture rows, 32,480 JBR picture frames, 184,608 JBR command frames, and
   264 structured fallback markers:

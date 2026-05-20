@@ -38,6 +38,11 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Full default command-probe sweep passed after adding the draw-points record-length sentinel. The run used
+  command-semantic validation with screenshot assertions disabled, included both draw-points invalid rows in the
+  default set, and passed all rows. Aggregate: 411/411 passed, `fallback_sum=274`, `unsupported_rows=27`,
+  `picture_frames=25809`, and `command_frames=151351`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-144422/suite.tsv`.
 - Split broad command-probe consolidation completed after the draw-points point-count and report-validation fixes.
   Instead of re-running already-green prefixes, the default suite was validated in resumed segments:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-093730/suite.tsv`,
@@ -46,16 +51,23 @@ This is the small working roadmap for the current PoC. The full historical check
   Combined aggregate: 410/410 passed, `fallback_sum=273`, `unsupported_rows=27`, `picture_frames=27097`, and
   `command_frames=147205`. Screenshot assertions were disabled for the final gradient/saveLayer/graphics tail to keep
   the broad run command-semantic-only after a macOS capture flake.
-- Draw-points parser validation now has a live point-count sentinel. Skiko can rewrite
-  `COMMAND_DRAW_POINTS` point count to zero after CMP records the point-dots scene, and Magic Jewel exposes
-  `commands-invalid-draw-points-point-count-fallback` in the `primitive-invalid` quick group. The exact row passed
-  with one expected `command-stream-invalid` fallback and no unsupported rows:
+- Draw-points parser validation now has live point-count and record-length sentinels. Skiko can rewrite
+  `COMMAND_DRAW_POINTS` point count to zero or shorten the recorded draw-points record length after CMP records the
+  point-dots scene, and Magic Jewel exposes both rows in the `primitive-invalid` quick group. The exact record-length
+  row passed with one expected `command-stream-invalid` fallback and no unsupported rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-143828/suite.tsv`.
+  The previous point-count row also passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-142958/suite.tsv`.
   The scoped `CASE_GROUPS=primitive-invalid` quick group now covers stroke cap, transform record flags, clip
-  operation, and draw-points point count; aggregate 4/4 passed, `fallback_sum=4`, `unsupported_rows=0`,
+  operation, draw-points point count, and draw-points record length; aggregate 5/5 passed, `fallback_sum=5`,
+  `unsupported_rows=0`, `picture_frames=0`, and `command_frames=0`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-143915/suite.tsv`.
+  The earlier 4-row primitive quick group also passed, `fallback_sum=4`, `unsupported_rows=0`,
   `picture_frames=0`, and `command_frames=0`:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-093531/suite.tsv`.
-  Skiko `publishToMavenLocal` and `JbrSkiaInteropTest` also passed.
+  Skiko `publishAwtPublicationToMavenLocal publishAwtRuntimeElementsPublicationToMavenLocal
+  publishKotlinMultiplatformPublicationToMavenLocal` and `JbrSkiaInteropTest` also passed. The full
+  `publishToMavenLocal` task hit an external Skia macOS arm64 release 404 before the narrower publication succeeded.
 - CMP now emits `COMMAND_CLEAR_IMAGE_CACHE` on the next top-level command frame after
   `clearInteropCachesForSurfaceChange()`, so JBR receives an explicit scoped image-cache clear when Skiko observes a
   destination surface/context migration. CMP focused recorder tests passed for the new pending-clear behavior plus the
