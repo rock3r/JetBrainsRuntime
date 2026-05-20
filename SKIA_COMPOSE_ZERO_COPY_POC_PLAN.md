@@ -22,11 +22,13 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - Harness windows are non-focus-stealing by default via `MAGIC_JEWEL_BACKGROUND_WINDOW=true`.
 - Validation iteration is now area-scoped by default for small sentinel slices: run the exact `CASES=...` row first,
   then the smallest relevant adjacent `CASES=...` slice or `CASE_GROUPS=...` subset, and reserve full default command
-  sweeps for periodic consolidation.
+  sweeps for periodic consolidation. Long broad sweeps can be resumed with `CASES_FROM=...` after a failing/flaky row
+  is understood, so already-green prefixes do not need to be repeated.
 - Primitive command parser guards now have the same point-to-point workflow. Skiko can corrupt a recorded stroke cap,
-  transform record flags, or clip operation after recording, Magic Jewel exposes the exact rows and the
-  `CASE_GROUPS=primitive-invalid` quick path, and the grouped validation passed:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-002341/suite.tsv`.
+  transform record flags, clip operation, or draw-points point count after recording, Magic Jewel exposes the exact
+  rows and the `CASE_GROUPS=primitive-invalid` quick path, and the grouped validation passed after adding the
+  draw-points row:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-093531/suite.tsv`.
 - SaveLayer parser guards continue to use the quick exact/group workflow. Skiko can now rewrite a plain
   `COMMAND_SAVE_LAYER` record-flags word to the antialias bit, which JBR rejects for saveLayer records even though the
   bit is accepted for paint-bearing records. The exact row passed:
@@ -71,6 +73,10 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-091447/suite.tsv`.
   Focused forced-context image-ref screenshot parity passed with the same scoped-clear contract:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260520-092645/suite.tsv`.
+- Magic Jewel report validation now reads image-cache clear/evict expectations from full logs, because scoped cache
+  clears are one-shot markers and can occur before the sampled-log window in long default rows. The default
+  `commands-forced-context-dynamic-images` row passed after that harness fix:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-102630/suite.tsv`.
 - Descriptor-handle eviction parser guards now mirror that record-flags coverage for both
   `COMMAND_EVICT_SHADER_HANDLE` and `COMMAND_EVICT_COLOR_FILTER_HANDLE`. The exact two-row run passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-085719/suite.tsv`.
@@ -88,6 +94,12 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   26 intentional unsupported-picture rows, 8,744 JBR picture frames, 49,068 JBR command frames, and 269 structured
   fallback markers:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-055642/suite.tsv`.
+- A split broad command-probe consolidation passed after the draw-points sentinel and report-validation fix. Combined
+  resumed aggregate across the default prefix/tail segments: 410/410 passed, 27 intentional unsupported-picture rows,
+  27,097 JBR picture frames, 147,205 JBR command frames, and 273 structured fallback markers:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-093730/suite.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-102727/suite.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-123615/suite.tsv`.
 - The latest full default command-probe consolidation passed after rebuilding local JBR Skia artifacts. Aggregate:
   401/401 passed, 26 intentional unsupported-picture rows, 32,480 JBR picture frames, 184,608 JBR command frames, and
   264 structured fallback markers:

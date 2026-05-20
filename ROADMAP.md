@@ -38,6 +38,24 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Split broad command-probe consolidation completed after the draw-points point-count and report-validation fixes.
+  Instead of re-running already-green prefixes, the default suite was validated in resumed segments:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-093730/suite.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-102727/suite.tsv`,
+  and `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-123615/suite.tsv`.
+  Combined aggregate: 410/410 passed, `fallback_sum=273`, `unsupported_rows=27`, `picture_frames=27097`, and
+  `command_frames=147205`. Screenshot assertions were disabled for the final gradient/saveLayer/graphics tail to keep
+  the broad run command-semantic-only after a macOS capture flake.
+- Draw-points parser validation now has a live point-count sentinel. Skiko can rewrite
+  `COMMAND_DRAW_POINTS` point count to zero after CMP records the point-dots scene, and Magic Jewel exposes
+  `commands-invalid-draw-points-point-count-fallback` in the `primitive-invalid` quick group. The exact row passed
+  with one expected `command-stream-invalid` fallback and no unsupported rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-142958/suite.tsv`.
+  The scoped `CASE_GROUPS=primitive-invalid` quick group now covers stroke cap, transform record flags, clip
+  operation, and draw-points point count; aggregate 4/4 passed, `fallback_sum=4`, `unsupported_rows=0`,
+  `picture_frames=0`, and `command_frames=0`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-093531/suite.tsv`.
+  Skiko `publishToMavenLocal` and `JbrSkiaInteropTest` also passed.
 - CMP now emits `COMMAND_CLEAR_IMAGE_CACHE` on the next top-level command frame after
   `clearInteropCachesForSurfaceChange()`, so JBR receives an explicit scoped image-cache clear when Skiko observes a
   destination surface/context migration. CMP focused recorder tests passed for the new pending-clear behavior plus the

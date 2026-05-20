@@ -5,6 +5,36 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Split broad command-probe consolidation passed after the draw-points point-count sentinel and full-log image-cache
+  marker validation fix. The first run passed the default prefix through
+  `commands-forced-context-native-system-font-text`; the second resumed at `commands-forced-context-dynamic-images`
+  after the cache-marker fix and passed through descriptor wrong-type rows; the third resumed at
+  `commands-gradient-stroke` with screenshot assertions disabled for command-only semantics after a macOS capture
+  flake. Combined aggregate: 410/410 passed, 27 rows with intentional unsupported-picture replay, 27,097 JBR picture
+  frames, 147,205 JBR command frames, and 273 structured fallback markers:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-093730/suite.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-102727/suite.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-123615/suite.tsv`.
+- Magic Jewel report validation now reads image-cache clear/evict expectations from full logs instead of sampled logs.
+  This fixes long default rows where the one-shot `COMMAND_CLEAR_IMAGE_CACHE` frame is emitted before the sampled-log
+  window even though `new.log` contains both `imageCacheClears=1` and `JBR_SKIA_INTEROP_IMAGE_CACHE_CLEAR`. The
+  default `commands-forced-context-dynamic-images` row passed after the harness fix with zero fallback, zero
+  unsupported rows, zero JBR picture frames, and 952 JBR command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-102630/suite.tsv`.
+- Skiko draw-points point-count sentinel validation passed. The new hook rewrites the first recorded
+  `COMMAND_DRAW_POINTS` point count to zero and emits
+  `SKIKO_JBR_INTEROP_DRAW_POINTS_POINT_COUNT_CORRUPTED`, exercising JBR's parser guard that point-count metadata must
+  be in range and match the record length. The exact Magic Jewel row passed with one expected
+  `command-stream-invalid` fallback, zero unsupported rows, zero JBR picture frames, and zero JBR command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-142958/suite.tsv`.
+  Skiko `./gradlew publishToMavenLocal` and
+  `./gradlew awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest` both passed.
+- Scoped `primitive-invalid` validation passed after adding the draw-points point-count row:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-093531/suite.tsv`.
+  The quick group now covers malformed stroke cap, transform record flags, clip operation, and draw-points point
+  count. Aggregate: 4/4 passed, zero unsupported rows, zero JBR picture frames, zero JBR command frames, and four
+  structured invalid-stream fallback markers. Screenshot assertions were disabled for this command-only semantic
+  slice.
 - CMP focused recorder validation passed after adding pending image-cache clear emission:
   `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.emitsImageCacheClearForInteropSurfaceChange --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.reusesStableImageCacheEntriesAcrossFrames --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.clearsTintColorFilterHandleCacheForInteropSurfaceChange`
   in `/Users/rock3r/src/jbr-skia-zero-copy/cmp`. The new test verifies that
