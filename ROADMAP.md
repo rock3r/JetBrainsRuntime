@@ -38,6 +38,20 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- CMP now emits `COMMAND_CLEAR_IMAGE_CACHE` on the next top-level command frame after
+  `clearInteropCachesForSurfaceChange()`, so JBR receives an explicit scoped image-cache clear when Skiko observes a
+  destination surface/context migration. CMP focused recorder tests passed for the new pending-clear behavior plus the
+  adjacent stable-image and color-filter-handle cache cases. Skiko now has a live record-flags corruption hook for op
+  18, and Magic Jewel's exact `commands-invalid-image-cache-clear-record-flags-fallback` row passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-091119/suite.tsv`.
+  The supported `commands-forced-context-dynamic-images` row now requires the CMP/JBR scoped clear markers and passed
+  with zero fallback and 410 JBR command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-091332/suite.tsv`.
+  The scoped `CASE_GROUPS=image-handles-invalid` quick group now covers twenty-three malformed image rows and passed
+  with aggregate 23/23, `fallback_sum=23`, `unsupported_rows=0`, `picture_frames=0`, and `command_frames=468`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-091447/suite.tsv`.
+  Focused screenshot parity for forced-context image refs also passed with zero fallback and 487 JBR command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260520-092645/suite.tsv`.
 - Descriptor-handle eviction parser guards now have live record-flags sentinels for both eviction command families.
   Skiko can rewrite `COMMAND_EVICT_SHADER_HANDLE` or `COMMAND_EVICT_COLOR_FILTER_HANDLE` record flags to the antialias
   bit after the existing use-after-evict hook inserts the eviction record. The exact two-row run passed with aggregate

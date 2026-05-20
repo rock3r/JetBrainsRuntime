@@ -61,6 +61,16 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-084204/suite.tsv`.
   The expanded group covered twenty-two malformed image definition/cache-key/eviction and image-ref rows and passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-084246/suite.tsv`.
+- Image cache clear is now a live producer path, not only parser/native support. CMP queues one
+  `COMMAND_CLEAR_IMAGE_CACHE` for the next top-level command frame after `clearInteropCachesForSurfaceChange()`, while
+  test-only reset stays local-only. The focused CMP recorder tests passed, the supported Magic Jewel
+  `commands-forced-context-dynamic-images` row passed with scoped CMP/JBR clear markers, and Skiko/Magic now cover the
+  op 18 record-flags parser guard:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-091119/suite.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-091332/suite.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-091447/suite.tsv`.
+  Focused forced-context image-ref screenshot parity passed with the same scoped-clear contract:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260520-092645/suite.tsv`.
 - Descriptor-handle eviction parser guards now mirror that record-flags coverage for both
   `COMMAND_EVICT_SHADER_HANDLE` and `COMMAND_EVICT_COLOR_FILTER_HANDLE`. The exact two-row run passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-085719/suite.tsv`.

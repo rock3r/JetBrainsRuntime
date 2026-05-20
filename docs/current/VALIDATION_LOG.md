@@ -5,6 +5,33 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- CMP focused recorder validation passed after adding pending image-cache clear emission:
+  `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.emitsImageCacheClearForInteropSurfaceChange --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.reusesStableImageCacheEntriesAcrossFrames --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.clearsTintColorFilterHandleCacheForInteropSurfaceChange`
+  in `/Users/rock3r/src/jbr-skia-zero-copy/cmp`. The new test verifies that
+  `clearInteropCachesForSurfaceChange()` queues one `COMMAND_CLEAR_IMAGE_CACHE` at the start of the next top-level
+  frame, increments `imageCacheClearCount`, and redefines a previously cached image; `clearImageCacheForTesting()`
+  remains a local-only reset.
+- Focused image cache clear record-flags validation passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-091119/suite.tsv`.
+  The new `commands-invalid-image-cache-clear-record-flags-fallback` row forces destination context migration to emit
+  `COMMAND_CLEAR_IMAGE_CACHE`, rewrites that clear record's flags word to `COMMAND_RECORD_FLAG_ANTIALIAS`, and
+  requires `SKIKO_JBR_INTEROP_IMAGE_CACHE_CLEAR_RECORD_FLAGS_CORRUPTED` plus `command-stream-invalid` fallback. The
+  row passed with one expected fallback, zero unsupported rows, zero JBR picture frames, and 176 recovering JBR
+  command frames.
+- Supported forced-context dynamic-image validation passed with scoped clear markers:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-091332/suite.tsv`.
+  The row now requires at least one CMP image-cache clear, one JBR image-cache clear, and one scoped JBR clear marker
+  in addition to image refs, image-cache evictions, surface/context-change markers, and command-cache clears. It
+  passed with zero fallback, zero unsupported rows, zero JBR picture frames, and 410 JBR command frames.
+- Scoped `image-handles-invalid` validation passed after adding the image cache clear record-flags row:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-091447/suite.tsv`.
+  The quick group now covers twenty-three malformed image definition/cache-key/cache-clear/eviction and image-ref
+  rows. Aggregate: 23/23 passed, zero unsupported rows, zero JBR picture frames, 468 JBR command frames, and
+  twenty-three structured invalid-stream fallback markers.
+- Focused forced-context image-ref screenshot parity passed after updating the scoped-clear contract:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260520-092645/suite.tsv`.
+  The row stayed on command replay with zero fallback, zero JBR picture frames, 487 JBR command frames,
+  `avg_delta=2.129`, and `compose_bad_pixel_ratio=0.07527`.
 - Focused descriptor-handle eviction record-flags validation passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-085719/suite.tsv`.
   The new `commands-invalid-shader-evict-record-flags-fallback` and
