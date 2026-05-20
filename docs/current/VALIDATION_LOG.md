@@ -5,6 +5,18 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Focused saveLayer record-flags validation passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-045239/suite.tsv`.
+  The new `commands-invalid-save-layer-record-flags-fallback` row records a plain `COMMAND_SAVE_LAYER`, rewrites its
+  record flags to `COMMAND_RECORD_FLAG_ANTIALIAS`, and requires
+  `SKIKO_JBR_INTEROP_SAVE_LAYER_RECORD_FLAGS_CORRUPTED` plus `command-stream-invalid` fallback before replay. Aggregate:
+  1/1 passed, zero unsupported rows, zero JBR picture frames, zero JBR command frames, and one structured fallback
+  marker.
+- Scoped `save-layer-invalid` validation passed after adding the record-flags row:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-045314/suite.tsv`.
+  The quick group now covers fifteen malformed saveLayer rows. Aggregate: 15/15 passed, zero unsupported rows, zero
+  JBR picture frames, zero JBR command frames, and fifteen structured invalid-stream fallback markers. Screenshot
+  assertions were disabled for this command-only semantic check.
 - Full default command-probe sweep passed after adding primitive command parser sentinels and rebuilding local JBR Skia
   artifacts:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-002459/suite.tsv`.

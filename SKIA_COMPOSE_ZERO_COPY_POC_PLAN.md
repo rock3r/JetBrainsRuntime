@@ -27,6 +27,12 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   transform record flags, or clip operation after recording, Magic Jewel exposes the exact rows and the
   `CASE_GROUPS=primitive-invalid` quick path, and the grouped validation passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-002341/suite.tsv`.
+- SaveLayer parser guards continue to use the quick exact/group workflow. Skiko can now rewrite a plain
+  `COMMAND_SAVE_LAYER` record-flags word to the antialias bit, which JBR rejects for saveLayer records even though the
+  bit is accepted for paint-bearing records. The exact row passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-045239/suite.tsv`.
+  The expanded `CASE_GROUPS=save-layer-invalid` run now covers fifteen malformed saveLayer rows and passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-045314/suite.tsv`.
 - The latest full default command-probe consolidation passed after rebuilding local JBR Skia artifacts. Aggregate:
   401/401 passed, 26 intentional unsupported-picture rows, 32,480 JBR picture frames, 184,608 JBR command frames, and
   264 structured fallback markers:

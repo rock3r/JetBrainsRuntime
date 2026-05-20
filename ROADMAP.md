@@ -38,6 +38,13 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused saveLayer command parser validation now includes the record-flags guard where `COMMAND_SAVE_LAYER` rejects
+  the antialias bit even though the bit is otherwise globally recognized. The exact row passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-045239/suite.tsv`.
+  The scoped `CASE_GROUPS=save-layer-invalid` quick group now covers fifteen malformed saveLayer rows and passed with
+  zero unsupported rows, zero picture rows, zero command replay rows, and fifteen structured invalid-stream fallback
+  markers:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-045314/suite.tsv`.
 - Full default command-probe sweep passed after rebuilding local JBR Skia artifacts and adding primitive command
   parser sentinels for stroke cap, transform record flags, and clip operation. Screenshot assertions were disabled for
   the broad semantic sweep to avoid known macOS window-capture flakes; command/fallback markers were still validated.
