@@ -5,6 +5,19 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Focused font-data definition record-flags validation passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-055135/suite.tsv`.
+  The new `commands-invalid-font-data-record-flags-fallback` row records cache-front-loaded
+  `COMMAND_DEFINE_FONT_DATA`, rewrites its record flags to `COMMAND_RECORD_FLAG_ANTIALIAS`, and requires
+  `SKIKO_JBR_INTEROP_FONT_DATA_RECORD_FLAGS_CORRUPTED` plus `command-stream-invalid` fallback. Because font-data
+  definitions are emitted during command-cache warmup, this row uses the new report-validation recovery expectation:
+  one fallback is required, then later frames may return to command replay. Aggregate: 1/1 passed, zero unsupported
+  rows, zero JBR picture frames, 469 JBR command frames after recovery, and one structured fallback marker.
+- Scoped `native-text-invalid` validation passed after adding the font-data record-flags row:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-055209/suite.tsv`.
+  The quick group now covers eleven malformed native text/font-data parser rows. Aggregate: 11/11 passed,
+  zero unsupported rows, zero JBR picture frames, 482 JBR command frames from the recovering font-data row, and eleven
+  structured invalid-stream fallback markers. Screenshot assertions were disabled for this command-only semantic check.
 - Focused image definition record-flags validation passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-053349/suite.tsv`.
   The new `commands-invalid-image-define-record-flags-fallback` row records a `COMMAND_DEFINE_IMAGE_ARGB`, rewrites

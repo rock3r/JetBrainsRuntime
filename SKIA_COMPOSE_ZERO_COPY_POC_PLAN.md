@@ -54,6 +54,14 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-053349/suite.tsv`.
   The expanded group covered twenty-one malformed image definition/cache-key and image-ref rows and passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-053424/suite.tsv`.
+- Font-data definition parser guards now cover record flags too. Skiko can rewrite cache-front-loaded
+  `COMMAND_DEFINE_FONT_DATA` record flags to the antialias bit, Magic Jewel exposes the exact
+  `commands-invalid-font-data-record-flags-fallback` row in the `native-text-invalid` quick group, and report
+  validation has an explicit one-shot fallback plus recovery mode for definitions emitted during cache warmup. The
+  exact row passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-055135/suite.tsv`.
+  The expanded group covered eleven native text/font-data parser rows and passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-055209/suite.tsv`.
 - The latest full default command-probe consolidation passed after rebuilding local JBR Skia artifacts. Aggregate:
   401/401 passed, 26 intentional unsupported-picture rows, 32,480 JBR picture frames, 184,608 JBR command frames, and
   264 structured fallback markers:

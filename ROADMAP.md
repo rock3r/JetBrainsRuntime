@@ -38,6 +38,16 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Font-data definition parser guards now have a live record-flags sentinel. Skiko can rewrite the cache-front-loaded
+  `COMMAND_DEFINE_FONT_DATA` record flags to `COMMAND_RECORD_FLAG_ANTIALIAS`, Magic Jewel exposes
+  `commands-invalid-font-data-record-flags-fallback`, and report validation now supports this one-shot fallback plus
+  recovery shape for records emitted only during command-cache warmup. The exact row passed with one expected fallback,
+  no unsupported rows, no JBR picture frames, and command replay recovering afterward:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-055135/suite.tsv`.
+  The scoped `CASE_GROUPS=native-text-invalid` quick group now covers eleven native text/font-data parser rows and
+  passed with aggregate 11/11, `fallback_sum=11`, `unsupported_rows=0`, `picture_frames=0`, and
+  `command_frames=482`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-055209/suite.tsv`.
 - Focused image definition parser validation now includes record-flags coverage. Skiko can rewrite
   `COMMAND_DEFINE_IMAGE_ARGB` record flags to the antialias bit, matching JBR's parser guard that image definition
   metadata records must have no flags. The exact row passed:
