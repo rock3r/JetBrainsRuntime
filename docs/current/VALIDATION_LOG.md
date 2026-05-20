@@ -5,6 +5,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Full default command-probe sweep passed after the draw-vertices parser sentinel series and the effect descriptor
+  version/payload-count/record-length rows were in the default set. The run used command-semantic validation with
+  screenshot assertions disabled. Aggregate: 416/416 passed, 26 rows with intentional unsupported-picture replay,
+  30,096 JBR picture frames, 201,780 JBR command frames, and 279 structured fallback markers:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-203639/suite.tsv`.
+  This is the periodic consolidation after the quick exact-row and `CASE_GROUPS=primitive-invalid` iterations for
+  draw-vertices vertex count, record length, vertex mode, blend mode, and index count.
 - Full default command-probe sweep passed after adding the draw-points record-length sentinel. The run used
   command-semantic validation with screenshot assertions disabled, included
   `commands-invalid-draw-points-point-count-fallback` and

@@ -38,6 +38,12 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Full default command-probe sweep passed after the draw-vertices parser sentinel series and the effect descriptor
+  version/payload-count/record-length rows landed. The run used command-semantic validation with screenshot
+  assertions disabled and included the ten-row `primitive-invalid` draw-points/draw-vertices quick group plus the
+  current descriptor fallback rows. Aggregate: 416/416 passed, `fallback_sum=279`, `unsupported_rows=26`,
+  `picture_frames=30096`, and `command_frames=201780`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-203639/suite.tsv`.
 - Full default command-probe sweep passed after adding the draw-points record-length sentinel. The run used
   command-semantic validation with screenshot assertions disabled, included both draw-points invalid rows in the
   default set, and passed all rows. Aggregate: 411/411 passed, `fallback_sum=274`, `unsupported_rows=27`,

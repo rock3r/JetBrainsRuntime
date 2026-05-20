@@ -23,7 +23,9 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - Validation iteration is now area-scoped by default for small sentinel slices: run the exact `CASES=...` row first,
   then the smallest relevant adjacent `CASES=...` slice or `CASE_GROUPS=...` subset, and reserve full default command
   sweeps for periodic consolidation. Long broad sweeps can be resumed with `CASES_FROM=...` after a failing/flaky row
-  is understood, so already-green prefixes do not need to be repeated.
+  is understood, so already-green prefixes do not need to be repeated. The current fast loop is exact row, quick group
+  or bounded adjacent range, Skiko focused publication, `JbrSkiaInteropTest`, and then a periodic full sweep once a
+  coherent batch of sentinels has landed.
 - Primitive command parser guards now have the same point-to-point workflow. Skiko can corrupt a recorded stroke cap,
   transform record flags, clip operation, draw-points point count, draw-points record length, or draw-vertices vertex
   count/record length/vertex mode/blend mode/index count after recording. Magic Jewel exposes the exact rows and the
@@ -31,6 +33,10 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-202605/suite.tsv`.
   The ten-row grouped validation passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-202656/suite.tsv`.
+  A periodic full default command-probe sweep then passed with all five draw-vertices sentinels in the default set.
+  Aggregate: 416/416 passed, 26 intentional unsupported-picture rows, 30,096 JBR picture frames, 201,780 JBR command
+  frames, and 279 structured fallback markers:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-203639/suite.tsv`.
   The draw-vertices blend-mode row also passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-201535/suite.tsv`.
   The nine-row grouped validation passed:
@@ -129,6 +135,11 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   default set. Aggregate: 411/411 passed, 27 intentional unsupported-picture rows, 25,809 JBR picture frames,
   151,351 JBR command frames, and 274 structured fallback markers:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-144422/suite.tsv`.
+- A full default command-probe sweep then passed after adding the draw-vertices parser sentinel series and validating
+  the effect descriptor version/payload-count/record-length rows. The run used command-semantic validation with
+  screenshot assertions disabled. Aggregate: 416/416 passed, 26 intentional unsupported-picture rows, 30,096 JBR
+  picture frames, 201,780 JBR command frames, and 279 structured fallback markers:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-203639/suite.tsv`.
 - The latest full default command-probe consolidation passed after rebuilding local JBR Skia artifacts. Aggregate:
   401/401 passed, 26 intentional unsupported-picture rows, 32,480 JBR picture frames, 184,608 JBR command frames, and
   264 structured fallback markers:
