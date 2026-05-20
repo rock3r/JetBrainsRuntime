@@ -5,6 +5,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Periodic full default command-probe sweep passed after adding the font-data record-flags sentinel:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-055642/suite.tsv`.
+  Aggregate: 406/406 passed, 26 rows with intentional unsupported-picture replay, 8,744 JBR picture frames, 49,068
+  JBR command frames, and 269 structured fallback markers. The default set now includes
+  `commands-invalid-font-data-record-flags-fallback`, which passed with one required invalid-stream fallback and
+  command replay recovery afterward.
 - Focused font-data definition record-flags validation passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-055135/suite.tsv`.
   The new `commands-invalid-font-data-record-flags-fallback` row records cache-front-loaded

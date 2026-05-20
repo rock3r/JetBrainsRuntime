@@ -38,6 +38,10 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Periodic full default command-probe sweep passed after the font-data record-flags slice landed. Aggregate: 406/406
+  passed, 26 intentional unsupported-picture rows, 8,744 JBR picture frames, 49,068 JBR command frames, and 269
+  structured fallback markers:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-055642/suite.tsv`.
 - Font-data definition parser guards now have a live record-flags sentinel. Skiko can rewrite the cache-front-loaded
   `COMMAND_DEFINE_FONT_DATA` record flags to `COMMAND_RECORD_FLAG_ANTIALIAS`, Magic Jewel exposes
   `commands-invalid-font-data-record-flags-fallback`, and report validation now supports this one-shot fallback plus

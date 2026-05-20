@@ -62,6 +62,10 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-055135/suite.tsv`.
   The expanded group covered eleven native text/font-data parser rows and passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-055209/suite.tsv`.
+- A periodic full default command-probe sweep then passed with this row in the default set. Aggregate: 406/406 passed,
+  26 intentional unsupported-picture rows, 8,744 JBR picture frames, 49,068 JBR command frames, and 269 structured
+  fallback markers:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-055642/suite.tsv`.
 - The latest full default command-probe consolidation passed after rebuilding local JBR Skia artifacts. Aggregate:
   401/401 passed, 26 intentional unsupported-picture rows, 32,480 JBR picture frames, 184,608 JBR command frames, and
   264 structured fallback markers:
