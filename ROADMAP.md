@@ -38,6 +38,19 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Fill-rect color-filter-ref parser validation now has live width/height sentinels for op 47
+  `COMMAND_FILL_RECT_COLOR_FILTER_REF`. Skiko can record the handle-backed fill-rect color-filter path, rewrite width
+  or height to `-1`, and force JBR's command-stream parser to reject the frame before replay. The exact two-row run
+  passed with two expected `command-stream-invalid` fallbacks and no unsupported rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-022809/suite.tsv`.
+  The scoped `CASE_GROUPS=fill-rect-color-filter-invalid` quick group now covers five rows; aggregate 5/5 passed,
+  `fallback_sum=5`, `unsupported_rows=0`, `picture_frames=0`, and `command_frames=0`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-022940/suite.tsv`.
+  The bounded default-order range from `commands-raw-blend-color-filter-fallback` through `commands-color-filter`
+  also passed; aggregate 7/7 passed, `fallback_sum=5`, `unsupported_rows=1`, `picture_frames=1792`, and
+  `command_frames=3025`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-023307/suite.tsv`.
+  Skiko focused publication and `JbrSkiaInteropTest` also passed.
 - Full default command-probe sweep passed after the draw-vertices parser sentinel series and the effect descriptor
   version/payload-count/record-length rows landed. The run used command-semantic validation with screenshot
   assertions disabled and included the ten-row `primitive-invalid` draw-points/draw-vertices quick group plus the
@@ -268,15 +281,17 @@ This is the small working roadmap for the current PoC. The full historical check
   `commands-invalid-descriptor-use-after-evict-fallback` also passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-183458/suite.tsv`.
 - Focused plus grouped fill-rect color-filter scalar validation passed after adding op 42 blend-mode, width, and height
-  corruption hooks. The focused three-row run passed:
+  corruption hooks plus op 47 color-filter-ref width/height hooks. The original focused three-row run passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-173809/suite.tsv`.
-  The rows record `COMMAND_FILL_RECT_COLOR_FILTER`, corrupt the tint blend mode or dimensions, and require structured
-  `command-stream-invalid` fallback with zero JBR replay frames. The new `CASE_GROUPS=fill-rect-color-filter-invalid`
-  quick group passed:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-174059/suite.tsv`.
+  The newer op 47 exact two-row run passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-022809/suite.tsv`.
+  The rows record `COMMAND_FILL_RECT_COLOR_FILTER` or `COMMAND_FILL_RECT_COLOR_FILTER_REF`, corrupt the tint blend
+  mode or dimensions, and require structured `command-stream-invalid` fallback with zero JBR replay frames. The
+  expanded `CASE_GROUPS=fill-rect-color-filter-invalid` quick group passed with five rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-022940/suite.tsv`.
   The bounded default-order range from `commands-raw-blend-color-filter-fallback` through `commands-color-filter` also
   passed:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-180104/suite.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-023307/suite.tsv`.
 - Focused plus grouped fill-rect blend-mode scalar validation passed after adding op 41 width/height corruption hooks.
   The focused two-row run passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-172416/suite.tsv`.

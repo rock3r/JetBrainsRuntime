@@ -391,6 +391,21 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   The range covered the existing raw blend color-filter fallback sentinel, the three malformed inline color-filter
   rows, and the supported `commands-color-filter` row. Aggregate: 5/5 passed, one expected unsupported-marker row,
   1,040 JBR picture-fallback frames, 926 JBR command frames, and three structured invalid-stream fallback markers.
+- Focused fill-rect color-filter-ref width/height validation passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-022809/suite.tsv`.
+  The two new rows record op 47 `COMMAND_FILL_RECT_COLOR_FILTER_REF`, rewrite width or height to `-1`, and require
+  typed Skiko corruption markers plus `command-stream-invalid` fallback. Aggregate: 2/2 passed, zero unsupported rows,
+  zero JBR picture frames, zero JBR command frames, and two structured invalid-stream fallback markers.
+- Expanded `fill-rect-color-filter-invalid` validation passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-022940/suite.tsv`.
+  This quick group now covers the existing op 42 inline tint color-filter blend-mode/width/height rows plus the new
+  op 47 handle-backed color-filter-ref width/height rows. Aggregate: 5/5 passed, zero unsupported rows, zero JBR
+  picture frames, zero JBR command frames, and five structured invalid-stream fallback markers.
+- Bounded default-order color-filter range validation passed after adding the op 47 rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-023307/suite.tsv`.
+  The range covered the existing raw blend color-filter fallback sentinel, the five malformed fill-rect color-filter
+  rows, and the supported `commands-color-filter` row. Aggregate: 7/7 passed, one expected unsupported-marker row,
+  1,792 JBR picture-fallback frames, 3,025 JBR command frames, and five structured invalid-stream fallback markers.
 - Focused fill-rect blend-mode width/height validation passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-172416/suite.tsv`.
   The two new rows record op 41 `COMMAND_FILL_RECT_BLEND_MODE`, rewrite width or height to `-1`, and require the

@@ -194,14 +194,18 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-172545/suite.tsv`.
   A bounded default-order range from `commands-blend-mode` through `commands-graphics-layer` also passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-172903/suite.tsv`.
-- Inline fill-rect color-filter scalar validation now has the same quick path. Skiko can corrupt op 42
-  `COMMAND_FILL_RECT_COLOR_FILTER` tint blend mode, width, or height after recording. The exact three-row run passed:
+- Fill-rect color-filter scalar validation now has the same quick path. Skiko can corrupt op 42
+  `COMMAND_FILL_RECT_COLOR_FILTER` tint blend mode, width, or height after recording, and op 47
+  `COMMAND_FILL_RECT_COLOR_FILTER_REF` width or height after recording the descriptor-backed handle path. The original
+  exact three-row run passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-173809/suite.tsv`.
-  The focused `CASE_GROUPS=fill-rect-color-filter-invalid` run passed:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-174059/suite.tsv`.
+  The new op 47 exact two-row run passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-022809/suite.tsv`.
+  The focused `CASE_GROUPS=fill-rect-color-filter-invalid` run now covers five rows and passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-022940/suite.tsv`.
   A bounded default-order range from `commands-raw-blend-color-filter-fallback` through `commands-color-filter` also
   passed:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-180104/suite.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-023307/suite.tsv`.
 - Descriptor-backed fill-rect shader refs now have scalar parser coverage. Skiko can corrupt op 58
   `COMMAND_FILL_RECT_SHADER_REF` horizontal bounds, vertical bounds, or `alpha1000` after recording. The exact
   three-row run passed:
