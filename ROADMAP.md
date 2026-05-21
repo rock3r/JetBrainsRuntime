@@ -110,6 +110,18 @@ This is the small working roadmap for the current PoC. The full historical check
   `unsupported_rows=1`, `picture_frames=1719`, and `command_frames=4995`:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-080718/suite.tsv`.
   Skiko focused publication and `JbrSkiaInteropTest` also passed.
+- Descriptor-backed saveLayer record-length parser validation now covers op 52 color-filter-ref, op 54
+  blend/color-filter-ref, and op 55 image-filter-ref. Skiko shortens each target record by one int after descriptor
+  recording, matching JBR's exact `offset == recordEnd` guards for the handle-backed variants. The exact three-row run
+  passed with aggregate 3/3, `fallback_sum=3`, `unsupported_rows=0`, `picture_frames=0`, and `command_frames=0`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-083632/suite.tsv`.
+  The expanded `CASE_GROUPS=save-layer-invalid` quick group now covers 36 malformed saveLayer rows and passed with
+  `fallback_sum=36`, `unsupported_rows=0`, `picture_frames=0`, and `command_frames=0`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-083848/suite.tsv`.
+  The bounded default-order saveLayer range also passed; aggregate 39/39 passed, `fallback_sum=36`,
+  `unsupported_rows=1`, `picture_frames=924`, and `command_frames=3483`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-090249/suite.tsv`.
+  Skiko focused publication and `JbrSkiaInteropTest` also passed.
 - Image definition parser validation now has live width/height lower- and upper-bound sentinels for
   `COMMAND_DEFINE_IMAGE_ARGB`. Skiko can rewrite the first emitted image define width or height to `0` or `4097`,
   matching JBR's `imageWidth > 0`, `imageHeight > 0`, and `<= 4096` parser guards. The exact four-row run passed with

@@ -334,6 +334,14 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-152857/suite.tsv`.
   The bounded default-order saveLayer range also passed with seventeen rows:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-153941/suite.tsv`.
+- Descriptor-backed saveLayer refs now also cover record-length mismatch for op 52
+  `COMMAND_SAVE_LAYER_COLOR_FILTER_REF`, op 54 `COMMAND_SAVE_LAYER_BLEND_COLOR_FILTER_REF`, and op 55
+  `COMMAND_SAVE_LAYER_IMAGE_FILTER_REF`. The focused exact rows passed with three expected structured fallbacks:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-083632/suite.tsv`.
+  The expanded `CASE_GROUPS=save-layer-invalid` quick group covers 36 malformed saveLayer rows and passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-083848/suite.tsv`.
+  The bounded default-order saveLayer range passed 39/39 with the one expected raw-color-filter unsupported row:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-090249/suite.tsv`.
 - Image-handle validation now has a dedicated quick group. Skiko can rewrite a `COMMAND_DRAW_IMAGE_REF` cache key to an
   undefined key or insert `COMMAND_EVICT_IMAGE_CACHE_KEY` immediately before the draw. The focused two-row run passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-203912/suite.tsv`.
@@ -1230,8 +1238,8 @@ Stable RuntimeEffect color-filter coverage and full screenshot parity are curren
    Magic Jewel `CASE_GROUPS=...` for area slices during inner-loop work. Use `LIST_CASE_GROUPS=true` to print the
    current group names without launching validation. Current command groups include `smoke`, `path-invalid`,
    `effect-descriptor-invalid`, `shader-descriptor-invalid`, `gradient-invalid`, `gradient-path-invalid`,
-   `runtime-effect-invalid`, `descriptor-handles-invalid`, `image-handles-invalid`, `color-filters`, `native-text`,
-   `native-text-invalid`, and `graphics-layer`.
+   `runtime-effect-invalid`, `descriptor-handles-invalid`, `image-handles-invalid`, `save-layer-invalid`,
+   `color-filters`, `native-text`, `native-text-invalid`, and `graphics-layer`.
 4. Run full default command/screenshot sweeps as checkpoint or periodic gates instead of every edit iteration.
 5. Keep updating this compact plan; move verbose historical details to archive or focused docs, not back into this file.
 6. Commit and push each major slice.
