@@ -12,6 +12,7 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   shader-ref/fill-rect color-filter/blend-mode invalid groups passed as a focused validation: 10/10,
   `fallback_sum=10`, `unsupported_rows=0`, `picture_frames=0`, and `command_frames=0`:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-002228/suite.tsv`.
+  Magic Jewel also gained `LIST_CASE_GROUP_COUNTS=true` to print quick-group sizes without launching validation.
 - Magic Jewel default command-probe ordering now includes the corner/stamped/chain path-effect descriptor invalid rows
   from `CASE_GROUPS=effect-descriptor-invalid`. `LIST_CASES=true` showed no remaining missing rows across the checked
   invalid quick groups (`stream`, `primitive`, `path`, `effect-descriptor`, `shader-descriptor`, `runtime-effect`,

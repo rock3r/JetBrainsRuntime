@@ -44,6 +44,7 @@ This is the small working roadmap for the current PoC. The full historical check
   is represented in the default case order. The exposed shader-ref, fill-rect color-filter, and blend-mode invalid
   groups also passed as a focused 10-row validation with `fallback_sum=10`, zero unsupported rows, and zero JBR frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-002228/suite.tsv`.
+  `LIST_CASE_GROUP_COUNTS=true` now prints quick-group sizes without launching validation.
 - Magic Jewel default command-probe ordering now also includes the corner/stamped/chain path-effect descriptor invalid
   rows from `CASE_GROUPS=effect-descriptor-invalid`. `LIST_CASES=true` showed no remaining missing rows across the
   checked invalid quick groups (`stream`, `primitive`, `path`, `effect-descriptor`, `shader-descriptor`,

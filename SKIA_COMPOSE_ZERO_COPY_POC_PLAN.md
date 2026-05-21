@@ -55,6 +55,8 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   A no-run membership scan confirmed every listed group remains represented in default ordering, and the newly exposed
   shader-ref/fill-rect color-filter/blend-mode invalid groups passed as a 10-row focused validation:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-002228/suite.tsv`.
+  The suite also supports `LIST_CASE_GROUP_COUNTS=true` so agents can pick smaller area batches by size before
+  launching validation.
 - Primitive command parser guards now have the same point-to-point workflow. Skiko can corrupt a recorded stroke cap,
   transform record flags, clip operation, draw-points point-count lower/upper bounds, draw-points record length, or
   draw-vertices vertex-count lower/upper bounds, record length, vertex mode, blend mode, and index-count lower/upper bounds after
