@@ -38,6 +38,9 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel `CASE_GROUPS=smoke` passed as the quick happy-path command replay check: 6/6, `fallback_sum=0`,
+  `unsupported_rows=0`, `picture_frames=0`, and `command_frames=6891`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-003530/suite.tsv`.
 - Magic Jewel quick-loop discovery is now complete for the command probe suite: `LIST_CASE_GROUPS=true` exposes every
   implemented quick group, including shader-ref, fill-rect color-filter, and blend-mode invalid groups that were
   previously usable but hidden from the group listing. A no-run membership scan confirmed every listed quick-group row
