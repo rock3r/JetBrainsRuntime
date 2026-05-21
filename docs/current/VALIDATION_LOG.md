@@ -8,6 +8,9 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 - Magic Jewel `CASE_GROUPS=smoke` passed as the quick happy-path command replay checkpoint. Aggregate: 6/6,
   `fallback_sum=0`, `unsupported_rows=0`, `picture_frames=0`, and `command_frames=6891`:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-003530/suite.tsv`.
+- Magic Jewel `CASE_GROUPS=stream-invalid` passed as the quick command-stream parser guard checkpoint. Aggregate: 8/8,
+  `fallback_sum=8`, `unsupported_rows=0`, `picture_frames=0`, and `command_frames=0`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-004208/suite.tsv`.
 - Magic Jewel quick-loop discovery now exposes every implemented command probe quick group through
   `LIST_CASE_GROUPS=true`, including shader-ref, fill-rect color-filter, and blend-mode invalid subsets that were
   previously usable but hidden from the listing. `LIST_CASES=true` no-run checks passed for the expanded group list,
