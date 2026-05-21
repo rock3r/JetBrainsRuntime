@@ -38,6 +38,20 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Stroke-round-rect dash path-effect stroke metadata validation now covers op 60 stroke width/cap/join/miter guards.
+  Skiko can rewrite `COMMAND_STROKE_ROUND_RECT_DASH_PATH_EFFECT` stroke width to `0`, cap/join to `3`, or miter to
+  `-1`, matching JBR's `isValidStrokeMetadata` checks, and Magic Jewel requires typed stroke metadata corruption
+  markers before accepting `command-stream-invalid` fallback. The exact four-row run passed with aggregate 4/4,
+  `fallback_sum=4`, `unsupported_rows=0`, `picture_frames=0`, and `command_frames=0`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-143055/suite.tsv`.
+  The scoped `CASE_GROUPS=path-invalid` quick group now covers 22 malformed path rows and passed with
+  `fallback_sum=22`, `unsupported_rows=0`, `picture_frames=0`, and `command_frames=0`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-143333/suite.tsv`.
+  The narrower default-order path tail from `commands-invalid-clip-path-verb-fallback` through
+  `commands-point-lines` also passed; aggregate 23/23 passed, `fallback_sum=22`, `unsupported_rows=0`,
+  `picture_frames=0`, and `command_frames=1972`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-144716/suite.tsv`.
+  Skiko focused publication and `JbrSkiaInteropTest` also passed.
 - Stroke-round-rect dash path-effect phase/interval validation now covers op 60 dash scalar guards. Skiko can rewrite
   `COMMAND_STROKE_ROUND_RECT_DASH_PATH_EFFECT` phase to `-1` or the first dash interval to `0`, matching JBR's
   `phase >= 0` and positive interval checks, and Magic Jewel requires typed phase/interval corruption markers before

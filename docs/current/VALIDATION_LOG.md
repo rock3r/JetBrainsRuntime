@@ -5,6 +5,24 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Stroke-round-rect dash path-effect stroke metadata validation passed for op 60
+  `COMMAND_STROKE_ROUND_RECT_DASH_PATH_EFFECT`. The exact four-row run rewrote stroke width to `0`, cap/join to `3`,
+  or stroke miter to `-1`, matching JBR's `isValidStrokeMetadata` guards for positive stroke width, cap/join enum
+  bounds, and non-negative miter. Each row required the typed
+  `SKIKO_JBR_INTEROP_STROKE_ROUND_RECT_DASH_PATH_EFFECT_STROKE_*_CORRUPTED` marker before accepting
+  `command-stream-invalid` fallback. Aggregate 4/4 passed, `fallback_sum=4`, `unsupported_rows=0`,
+  `picture_frames=0`, and `command_frames=0`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-143055/suite.tsv`.
+  The scoped `CASE_GROUPS=path-invalid` quick group now covers 22 malformed path rows and passed with
+  `fallback_sum=22`, `unsupported_rows=0`, `picture_frames=0`, and `command_frames=0`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-143333/suite.tsv`.
+  The narrower default-order path tail from `commands-invalid-clip-path-verb-fallback` through
+  `commands-point-lines` passed as the quick default-order iteration path; aggregate 23/23 passed,
+  `fallback_sum=22`, `unsupported_rows=0`, `picture_frames=0`, and `command_frames=1972`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-144716/suite.tsv`.
+  Skiko `publishAwtPublicationToMavenLocal publishAwtRuntimeElementsPublicationToMavenLocal
+  publishKotlinMultiplatformPublicationToMavenLocal` and focused
+  `./gradlew awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest` both passed.
 - Stroke-round-rect dash path-effect phase/interval validation passed for op 60
   `COMMAND_STROKE_ROUND_RECT_DASH_PATH_EFFECT`. The exact two-row run rewrote phase to `-1` or the first dash interval
   to `0`; both rows produced one expected `command-stream-invalid` fallback, zero unsupported rows, zero JBR picture
