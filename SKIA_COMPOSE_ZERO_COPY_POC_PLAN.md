@@ -91,6 +91,13 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-044919/suite.tsv`.
   The bounded default-order saveLayer range passed again with the op 44 dimension rows included:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-050428/suite.tsv`.
+  Op 50 `COMMAND_SAVE_LAYER_BLEND_MODE` width/height lower-bound guards now use the same quick path. The exact two-row
+  run passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-052535/suite.tsv`.
+  The expanded group covered twenty-five malformed saveLayer rows and passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-052706/suite.tsv`.
+  The bounded default-order saveLayer range passed again with the op 50 dimension rows included:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-054336/suite.tsv`.
 - Effect descriptor parser guards now also cover record flags. Skiko can rewrite
   `COMMAND_DEFINE_EFFECT_DESCRIPTOR` record flags to the antialias bit, and Magic Jewel exposes the exact
   `commands-invalid-effect-descriptor-record-flags-fallback` row in the `effect-descriptor-invalid` quick group. The
