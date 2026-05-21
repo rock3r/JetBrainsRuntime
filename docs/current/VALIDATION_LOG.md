@@ -5,6 +5,19 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Stroke-rect dash path-effect dimension validation passed for op 59 `COMMAND_STROKE_RECT_DASH_PATH_EFFECT`. The exact
+  two-row run rewrote width and height to `-1`; both rows produced one expected `command-stream-invalid` fallback,
+  zero unsupported rows, zero JBR picture frames, and zero JBR command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-125148/suite.tsv`.
+  The scoped `CASE_GROUPS=path-invalid` quick group then passed 12/12 with `fallback_sum=12`,
+  `unsupported_rows=0`, `picture_frames=0`, and `command_frames=0`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-125332/suite.tsv`.
+  A wider primitive/path attempt reached the existing clip-path row after passing the image rows but missed the new app
+  measurement window during Gradle startup, so the default-order path tail was rerun from
+  `commands-invalid-clip-path-verb-fallback` through `commands-point-lines`; it passed 13/13 with `fallback_sum=12`,
+  `unsupported_rows=0`, `picture_frames=0`, and `command_frames=937`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-131533/suite.tsv`.
+  Skiko focused publication and `./gradlew awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest` also passed.
 - Stroke-round-rect dash path-effect interval-count validation passed for op 60
   `COMMAND_STROKE_ROUND_RECT_DASH_PATH_EFFECT`. The exact one-row run rewrote the recorded dash interval count to `1`
   and produced one expected `command-stream-invalid` fallback, zero unsupported rows, zero JBR picture frames, and zero

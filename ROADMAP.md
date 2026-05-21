@@ -38,6 +38,21 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Stroke-rect dash path-effect dimension validation now covers op 59 width/height lower bounds. Skiko can rewrite the
+  recorded `COMMAND_STROKE_RECT_DASH_PATH_EFFECT` width or height to `-1`, matching JBR's live parser guards, and
+  Magic Jewel requires typed width/height corruption markers before accepting `command-stream-invalid` fallback. The
+  exact two-row run passed with aggregate 2/2, `fallback_sum=2`, `unsupported_rows=0`, `picture_frames=0`, and
+  `command_frames=0`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-125148/suite.tsv`.
+  The scoped `CASE_GROUPS=path-invalid` quick group now covers 12 malformed path rows and passed with
+  `fallback_sum=12`, `unsupported_rows=0`, `picture_frames=0`, and `command_frames=0`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-125332/suite.tsv`.
+  After a wider primitive/path attempt hit a Gradle/app startup measurement miss at an existing clip-path row, the
+  narrower default-order path tail from `commands-invalid-clip-path-verb-fallback` through `commands-point-lines`
+  passed; aggregate 13/13 passed, `fallback_sum=12`, `unsupported_rows=0`, `picture_frames=0`, and
+  `command_frames=937`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-131533/suite.tsv`.
+  Skiko focused publication and `JbrSkiaInteropTest` also passed.
 - Stroke-round-rect dash path-effect interval-count validation now covers op 60
   `COMMAND_STROKE_ROUND_RECT_DASH_PATH_EFFECT`. Skiko can rewrite the recorded dash interval count to `1`, matching
   JBR's round-rect dash path-effect parser guard at `argsStart + 12`, and Magic Jewel requires the typed
