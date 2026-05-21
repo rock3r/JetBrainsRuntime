@@ -133,6 +133,17 @@ This is the small working roadmap for the current PoC. The full historical check
   `unsupported_rows=1`, `picture_frames=985`, and `command_frames=1723`:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-095826/suite.tsv`.
   Skiko focused publication and `JbrSkiaInteropTest` also passed.
+- Shader descriptor version validation now has an explicit live row name matching JBR's parser fixture for unsupported
+  `COMMAND_DEFINE_SHADER_DESCRIPTOR` versions. The row uses the existing Skiko shader-version corruption hook and
+  replaces the older generic descriptor-version row in the shader descriptor quick/default paths. The exact one-row
+  run passed with aggregate 1/1, `fallback_sum=1`, `unsupported_rows=0`, `picture_frames=0`, and `command_frames=0`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-102949/suite.tsv`.
+  The scoped `CASE_GROUPS=shader-descriptor-invalid` quick group passed 30/30 with `fallback_sum=30`,
+  `unsupported_rows=0`, `picture_frames=0`, and `command_frames=0`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-103042/suite.tsv`.
+  The bounded default-order shader descriptor slice also passed; aggregate 9/9 passed, `fallback_sum=9`,
+  `unsupported_rows=0`, `picture_frames=0`, and `command_frames=0`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-105131/suite.tsv`.
 - Image definition parser validation now has live width/height lower- and upper-bound sentinels for
   `COMMAND_DEFINE_IMAGE_ARGB`. Skiko can rewrite the first emitted image define width or height to `0` or `4097`,
   matching JBR's `imageWidth > 0`, `imageHeight > 0`, and `<= 4096` parser guards. The exact four-row run passed with
