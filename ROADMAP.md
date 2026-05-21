@@ -38,6 +38,20 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Stroke-round-rect dash path-effect bounds/radii validation now covers op 60 right/bottom ordering and non-negative
+  radius guards. Skiko can rewrite `COMMAND_STROKE_ROUND_RECT_DASH_PATH_EFFECT` right or bottom to `-1`, or radius X/Y
+  to `-1`, matching JBR's live parser checks, and Magic Jewel requires typed right/bottom/radius corruption markers
+  before accepting `command-stream-invalid` fallback. The exact four-row run passed with aggregate 4/4,
+  `fallback_sum=4`, `unsupported_rows=0`, `picture_frames=0`, and `command_frames=0`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-133047/suite.tsv`.
+  The scoped `CASE_GROUPS=path-invalid` quick group now covers 16 malformed path rows and passed with
+  `fallback_sum=16`, `unsupported_rows=0`, `picture_frames=0`, and `command_frames=0`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-133333/suite.tsv`.
+  The narrower default-order path tail from `commands-invalid-clip-path-verb-fallback` through
+  `commands-point-lines` also passed; aggregate 17/17 passed, `fallback_sum=16`, `unsupported_rows=0`,
+  `picture_frames=0`, and `command_frames=1026`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-134426/suite.tsv`.
+  Skiko focused publication and `JbrSkiaInteropTest` also passed.
 - Stroke-rect dash path-effect dimension validation now covers op 59 width/height lower bounds. Skiko can rewrite the
   recorded `COMMAND_STROKE_RECT_DASH_PATH_EFFECT` width or height to `-1`, matching JBR's live parser guards, and
   Magic Jewel requires typed width/height corruption markers before accepting `command-stream-invalid` fallback. The

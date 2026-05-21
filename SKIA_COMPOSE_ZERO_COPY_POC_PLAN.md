@@ -1261,6 +1261,13 @@ Stable RuntimeEffect color-filter coverage and full screenshot parity are curren
 
 Current validation gates are intentionally broad but summarized here to keep this file small:
 
+- Stroke-round-rect dash path-effect bounds/radii validation now covers op 60 right/bottom ordering and radius
+  non-negativity. Skiko can corrupt right, bottom, radius X, or radius Y to `-1`; Magic Jewel requires the matching
+  `SKIKO_JBR_INTEROP_STROKE_ROUND_RECT_DASH_PATH_EFFECT_*_CORRUPTED` marker; and the exact four-row run,
+  `path-invalid` quick group, and narrower default-order path tail through `commands-point-lines` all passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-133047/suite.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-133333/suite.tsv`, and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-134426/suite.tsv`.
 - Stroke-rect dash path-effect dimension validation now covers op 59 width and height lower bounds. Skiko can corrupt
   either field to `-1`, Magic Jewel requires the matching
   `SKIKO_JBR_INTEROP_STROKE_RECT_DASH_PATH_EFFECT_{WIDTH,HEIGHT}_CORRUPTED` marker, and the exact two-row run,
