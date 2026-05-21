@@ -38,6 +38,19 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel default command-probe ordering now includes the existing blur image-filter child live sentinels for
+  use-after-evict, missing-child, and wrong-effect-type fallback, matching the offset image-filter child coverage that
+  was already in the default path. The exact three-row run passed with `fallback_sum=3`, zero unsupported rows, and
+  zero JBR frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-230108/suite.tsv`.
+  The `CASE_GROUPS=descriptor-handles-invalid` group passed 47/47 with `fallback_sum=47`, zero unsupported rows, and
+  zero JBR frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-230330/suite.tsv`.
+  Three bounded default-order ranges also passed, proving the new blur rows are inserted in the default use-after-evict,
+  missing-child, and wrong-type neighborhoods:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-233519/suite.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-233729/suite.tsv`, and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-233942/suite.tsv`.
 - Periodic full default command-probe consolidation passed as a split sweep after the stroke-round-rect dash stroke
   metadata slice. The first broad run hit a transient runtime/output miss at
   `commands-invalid-blur-with-input-image-filter-descriptor-tile-mode-fallback`, so the durable validation was split

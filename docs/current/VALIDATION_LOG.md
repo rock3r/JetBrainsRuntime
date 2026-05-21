@@ -5,6 +5,18 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel default command-probe ordering now includes the existing blur image-filter child live sentinels for
+  use-after-evict, missing-child, and wrong-effect-type fallback. The exact three-row run passed 3/3 with
+  `fallback_sum=3`, `unsupported_rows=0`, `picture_frames=0`, and `command_frames=0`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-230108/suite.tsv`.
+  `CASE_GROUPS=descriptor-handles-invalid` passed 47/47 with `fallback_sum=47`, `unsupported_rows=0`,
+  `picture_frames=0`, and `command_frames=0`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-230330/suite.tsv`.
+  Bounded default-order validation passed for the three insertion neighborhoods: use-after-evict 3/3,
+  missing-child 3/3, and wrong-type 4/4, all with zero unsupported rows and zero JBR frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-233519/suite.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-233729/suite.tsv`, and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-233942/suite.tsv`.
 - Periodic full default command-probe consolidation passed after the stroke-round-rect dash stroke metadata slice,
   using the quicker split workflow instead of rerunning already-green rows. A first broad pass hit a transient
   runtime/output miss at `commands-invalid-blur-with-input-image-filter-descriptor-tile-mode-fallback`; the durable

@@ -32,6 +32,16 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-172927/suite.tsv`,
   for a combined 462/462 passed, `fallback_sum=325`, `unsupported_rows=26`, `picture_frames=24648`, and
   `command_frames=146301`.
+- Descriptor/effect child handle validation has a default-order quick path for blur image-filter children too. The
+  existing blur use-after-evict, missing-child, and wrong-effect-type sentinels are now inserted into the default
+  command-probe order beside the offset image-filter child cases. Exact validation passed at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-230108/suite.tsv`;
+  `CASE_GROUPS=descriptor-handles-invalid` passed at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-230330/suite.tsv`;
+  and three bounded default-order ranges passed at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-233519/suite.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-233729/suite.tsv`, and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-233942/suite.tsv`.
 - Primitive command parser guards now have the same point-to-point workflow. Skiko can corrupt a recorded stroke cap,
   transform record flags, clip operation, draw-points point-count lower/upper bounds, draw-points record length, or
   draw-vertices vertex-count lower/upper bounds, record length, vertex mode, blend mode, and index-count lower/upper bounds after
