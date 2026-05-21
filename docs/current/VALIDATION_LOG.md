@@ -5,6 +5,18 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Periodic full default command-probe consolidation passed after the stroke-round-rect dash stroke metadata slice,
+  using the quicker split workflow instead of rerunning already-green rows. A first broad pass hit a transient
+  runtime/output miss at `commands-invalid-blur-with-input-image-filter-descriptor-tile-mode-fallback`; the durable
+  validation reran the prefix through `commands-invalid-blur-image-filter-descriptor-tile-mode-fallback` and resumed
+  the tail from the missed row forward. Prefix aggregate: 218/218 passed, `fallback_sum=151`, `unsupported_rows=16`,
+  `picture_frames=15365`, and `command_frames=65828`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-202252/suite.tsv`.
+  Tail aggregate: 244/244 passed, `fallback_sum=174`, `unsupported_rows=10`, `picture_frames=9283`, and
+  `command_frames=80473`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-172927/suite.tsv`.
+  Combined aggregate: 462/462 passed, `fallback_sum=325`, `unsupported_rows=26`, `picture_frames=24648`, and
+  `command_frames=146301`.
 - Stroke-round-rect dash path-effect stroke metadata validation passed for op 60
   `COMMAND_STROKE_ROUND_RECT_DASH_PATH_EFFECT`. The exact four-row run rewrote stroke width to `0`, cap/join to `3`,
   or stroke miter to `-1`, matching JBR's `isValidStrokeMetadata` guards for positive stroke width, cap/join enum

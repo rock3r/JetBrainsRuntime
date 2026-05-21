@@ -38,6 +38,15 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Periodic full default command-probe consolidation passed as a split sweep after the stroke-round-rect dash stroke
+  metadata slice. The first broad run hit a transient runtime/output miss at
+  `commands-invalid-blur-with-input-image-filter-descriptor-tile-mode-fallback`, so the durable validation was split
+  into a prefix through `commands-invalid-blur-image-filter-descriptor-tile-mode-fallback` and a resumed tail from the
+  missed row forward. Combined aggregate: 462/462 passed, `fallback_sum=325`, `unsupported_rows=26`,
+  `picture_frames=24648`, and `command_frames=146301`. Prefix:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-202252/suite.tsv`.
+  Tail:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-172927/suite.tsv`.
 - Stroke-round-rect dash path-effect stroke metadata validation now covers op 60 stroke width/cap/join/miter guards.
   Skiko can rewrite `COMMAND_STROKE_ROUND_RECT_DASH_PATH_EFFECT` stroke width to `0`, cap/join to `3`, or miter to
   `-1`, matching JBR's `isValidStrokeMetadata` checks, and Magic Jewel requires typed stroke metadata corruption

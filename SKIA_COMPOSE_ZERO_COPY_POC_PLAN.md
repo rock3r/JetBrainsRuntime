@@ -25,7 +25,13 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   sweeps for periodic consolidation. Long broad sweeps can be resumed with `CASES_FROM=...` after a failing/flaky row
   is understood, so already-green prefixes do not need to be repeated. The current fast loop is exact row, quick group
   or bounded adjacent range, Skiko focused publication, `JbrSkiaInteropTest`, and then a periodic full sweep once a
-  coherent batch of sentinels has landed.
+  coherent batch of sentinels has landed. The latest periodic default command-probe consolidation used that split
+  workflow: prefix
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-202252/suite.tsv`
+  plus resumed tail
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-172927/suite.tsv`,
+  for a combined 462/462 passed, `fallback_sum=325`, `unsupported_rows=26`, `picture_frames=24648`, and
+  `command_frames=146301`.
 - Primitive command parser guards now have the same point-to-point workflow. Skiko can corrupt a recorded stroke cap,
   transform record flags, clip operation, draw-points point-count lower/upper bounds, draw-points record length, or
   draw-vertices vertex-count lower/upper bounds, record length, vertex mode, blend mode, and index-count lower/upper bounds after
