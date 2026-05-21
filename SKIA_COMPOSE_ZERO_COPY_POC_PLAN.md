@@ -353,8 +353,8 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-102949/suite.tsv`.
   The `CASE_GROUPS=shader-descriptor-invalid` quick group passed 30/30:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-103042/suite.tsv`.
-  The bounded default-order shader descriptor slice passed 9/9:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-105131/suite.tsv`.
+  The bounded default-order shader descriptor slice passed 31/31:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-110020/suite.tsv`.
 - Image-handle validation now has a dedicated quick group. Skiko can rewrite a `COMMAND_DRAW_IMAGE_REF` cache key to an
   undefined key or insert `COMMAND_EVICT_IMAGE_CACHE_KEY` immediately before the draw. The focused two-row run passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-203912/suite.tsv`.

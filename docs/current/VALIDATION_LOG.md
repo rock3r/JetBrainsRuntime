@@ -14,9 +14,9 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   `unsupported_rows=0`, `picture_frames=0`, and `command_frames=0`:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-103042/suite.tsv`.
   The bounded default-order range from `commands-invalid-shader-descriptor-type-fallback` through
-  `commands-shader-wrong-effect-type-fallback` passed 9/9 with `fallback_sum=9`, `unsupported_rows=0`,
+  `commands-shader-wrong-effect-type-fallback` passed 31/31 with `fallback_sum=31`, `unsupported_rows=0`,
   `picture_frames=0`, and `command_frames=0`:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-105131/suite.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-110020/suite.tsv`.
 - Plain saveLayer record-length validation passed for op 13 `COMMAND_SAVE_LAYER`. The exact one-row run shortened the
   recorded plain saveLayer record length by one int and produced one expected `command-stream-invalid` fallback, zero
   unsupported rows, zero JBR picture frames, and zero JBR command frames:
