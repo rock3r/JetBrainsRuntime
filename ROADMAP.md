@@ -38,6 +38,18 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Image definition parser validation now has live width/height lower- and upper-bound sentinels for
+  `COMMAND_DEFINE_IMAGE_ARGB`. Skiko can rewrite the first emitted image define width or height to `0` or `4097`,
+  matching JBR's `imageWidth > 0`, `imageHeight > 0`, and `<= 4096` parser guards. The exact four-row run passed with
+  aggregate 4/4, `fallback_sum=4`, `unsupported_rows=0`, `picture_frames=0`, and `command_frames=0`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-030459/suite.tsv`.
+  The scoped `CASE_GROUPS=image-handles-invalid` quick group now covers 27 malformed image rows and passed with
+  `fallback_sum=27`, `unsupported_rows=0`, `picture_frames=0`, and `command_frames=1625`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-030826/suite.tsv`.
+  The bounded default-order range from `commands-core-primitives` through `commands-point-lines` also passed; aggregate
+  23/23 passed, `fallback_sum=21`, `unsupported_rows=0`, `picture_frames=0`, and `command_frames=7321`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-032618/suite.tsv`.
+  Skiko focused publication and `JbrSkiaInteropTest` also passed.
 - Current-artifact validation rechecked the already-live unknown effect descriptor type sentinel. The exact
   `commands-invalid-effect-descriptor-type-fallback` row rewrites the first recorded `COMMAND_DEFINE_EFFECT_DESCRIPTOR`
   descriptor type to `Int.MAX_VALUE`, matching JBR's parser-only unknown-type fixture, and passed with one expected

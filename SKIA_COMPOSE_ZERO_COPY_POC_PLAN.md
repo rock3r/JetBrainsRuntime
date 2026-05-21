@@ -92,13 +92,16 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-051747/suite.tsv`.
   The expanded group covered thirty malformed shader-descriptor rows and passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-051827/suite.tsv`.
-- Image definition parser guards now cover record flags alongside the existing pixel payload-length guard. Skiko can
-  rewrite `COMMAND_DEFINE_IMAGE_ARGB` record flags to the antialias bit, and Magic Jewel exposes the exact
-  `commands-invalid-image-define-record-flags-fallback` row in the `image-handles-invalid` quick group. The exact row
-  passed:
+- Image definition parser guards now cover record flags, width/height bounds, and the existing pixel payload-length
+  guard. Skiko can rewrite `COMMAND_DEFINE_IMAGE_ARGB` record flags to the antialias bit, width/height to `0` or
+  `4097`, and pixel count to mismatch the payload. The record-flags exact row passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-053349/suite.tsv`.
-  The expanded group covered twenty-one malformed image definition/cache-key and image-ref rows and passed:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-053424/suite.tsv`.
+  The width/height exact four-row run passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-030459/suite.tsv`.
+  The expanded group covered twenty-seven malformed image definition/cache-key and image-ref rows and passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-030826/suite.tsv`.
+  The bounded default-order range from `commands-core-primitives` through `commands-point-lines` also passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-032618/suite.tsv`.
 - Image cache eviction parser guards now cover record flags too. Skiko can rewrite
   `COMMAND_EVICT_IMAGE_CACHE_KEY` record flags to the antialias bit, and Magic Jewel exposes the exact
   `commands-invalid-image-evict-record-flags-fallback` row in the same `image-handles-invalid` quick group. The exact

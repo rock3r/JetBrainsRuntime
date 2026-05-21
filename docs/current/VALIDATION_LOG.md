@@ -610,6 +610,22 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   The `CASE_GROUPS=image-handles-invalid` area run now covers thirteen malformed image definition/cache-key/dimension
   rows; all thirteen passed. The group reported zero unsupported rows, zero picture rows, zero command replay rows, and
   one structured fallback marker per row.
+- Focused image definition width/height bounds validation passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-030459/suite.tsv`.
+  The four new rows record op 15 `COMMAND_DEFINE_IMAGE_ARGB`, rewrite image width or height to `0` or `4097`, and
+  require typed Skiko corruption markers plus `command-stream-invalid` fallback. Aggregate: 4/4 passed, zero
+  unsupported rows, zero JBR picture frames, zero JBR command frames, and four structured invalid-stream fallback
+  markers.
+- Expanded `image-handles-invalid` validation passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-030826/suite.tsv`.
+  The area group now covers twenty-seven malformed image definition/cache-key/dimension/alpha/filter rows, including
+  the new image-define width/height lower and upper bounds. Aggregate: 27/27 passed, zero unsupported rows, zero JBR
+  picture frames, 1,625 JBR command frames, and twenty-seven structured invalid-stream fallback markers.
+- Bounded default-order image/path range validation passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-032618/suite.tsv`.
+  The range covered `commands-core-primitives`, the expanded image-define/image-ref malformed block, the adjacent path
+  parser sentinels, and `commands-point-lines`. Aggregate: 23/23 passed, zero unsupported rows, zero JBR picture
+  frames, 7,321 JBR command frames, and twenty-one structured invalid-stream fallback markers.
 - Focused command-probe validation passed after adding live image-ref alpha sentinels:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260518-214844/suite.tsv`.
   The new `commands-invalid-image-ref-alpha-fallback`,
