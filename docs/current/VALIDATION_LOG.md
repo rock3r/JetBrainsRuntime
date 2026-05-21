@@ -5,6 +5,20 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- SaveLayer variant record-flags validation passed with the new narrow iteration path. The clean exact row set covered
+  `COMMAND_SAVE_LAYER_COLOR_FILTER`, `COMMAND_SAVE_LAYER_BLEND_MODE`, `COMMAND_SAVE_LAYER_BLEND_COLOR_FILTER`,
+  `COMMAND_SAVE_LAYER_COLOR_FILTER_REF`, `COMMAND_SAVE_LAYER_BLEND_COLOR_FILTER_REF`, and
+  `COMMAND_SAVE_LAYER_IMAGE_FILTER_REF`; all six rows produced one expected `command-stream-invalid` fallback each,
+  zero unsupported rows, zero JBR picture frames, and zero JBR command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-043049/suite.tsv`.
+  The scoped `CASE_GROUPS=save-layer-invalid` area group then passed 21/21 with `fallback_sum=21`,
+  `unsupported_rows=0`, `picture_frames=0`, and `command_frames=0`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-040032/suite.tsv`.
+  The bounded default-order range from `commands-save-layer-filter` through
+  `commands-save-layer-raw-color-filter-fallback` passed 24/24 with `fallback_sum=21`, `unsupported_rows=1`,
+  `picture_frames=1772`, and `command_frames=5948`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-041438/suite.tsv`.
+  Skiko `./gradlew awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest` also passed.
 - Full default command-probe sweep passed after the draw-vertices parser sentinel series and the effect descriptor
   version/payload-count/record-length rows were in the default set. The run used command-semantic validation with
   screenshot assertions disabled. Aggregate: 416/416 passed, 26 rows with intentional unsupported-picture replay,

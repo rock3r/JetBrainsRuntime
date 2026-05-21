@@ -38,6 +38,20 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- SaveLayer variant record-flags parser validation now has live sentinels for op 44, 50, 51, 52, 54, and 55:
+  color-filter, blend-mode, blend/color-filter, color-filter-ref, blend/color-filter-ref, and image-filter-ref
+  saveLayer records. Skiko can rewrite each variant's record-flags word to the antialias bit, and JBR rejects each
+  malformed stream before replay. The exact six-row run passed with aggregate 6/6, `fallback_sum=6`,
+  `unsupported_rows=0`, `picture_frames=0`, and `command_frames=0`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-043049/suite.tsv`.
+  The scoped `CASE_GROUPS=save-layer-invalid` quick group now covers 21 malformed saveLayer rows and passed with
+  `fallback_sum=21`, `unsupported_rows=0`, `picture_frames=0`, and `command_frames=0`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-040032/suite.tsv`.
+  The bounded default-order range from `commands-save-layer-filter` through
+  `commands-save-layer-raw-color-filter-fallback` also passed; aggregate 24/24 passed, `fallback_sum=21`,
+  `unsupported_rows=1`, `picture_frames=1772`, and `command_frames=5948`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-041438/suite.tsv`.
+  Skiko focused publication and `JbrSkiaInteropTest` also passed.
 - Image definition parser validation now has live width/height lower- and upper-bound sentinels for
   `COMMAND_DEFINE_IMAGE_ARGB`. Skiko can rewrite the first emitted image define width or height to `0` or `4097`,
   matching JBR's `imageWidth > 0`, `imageHeight > 0`, and `<= 4096` parser guards. The exact four-row run passed with

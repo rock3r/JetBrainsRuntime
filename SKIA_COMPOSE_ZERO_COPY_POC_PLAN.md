@@ -72,12 +72,18 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-143915/suite.tsv`.
   The earlier point-count-only grouped validation remains a useful baseline:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-093531/suite.tsv`.
-- SaveLayer parser guards continue to use the quick exact/group workflow. Skiko can now rewrite a plain
-  `COMMAND_SAVE_LAYER` record-flags word to the antialias bit, which JBR rejects for saveLayer records even though the
-  bit is accepted for paint-bearing records. The exact row passed:
+- SaveLayer parser guards continue to use the quick exact/group workflow. Skiko can now rewrite record flags to the
+  antialias bit for plain `COMMAND_SAVE_LAYER` and every supported saveLayer variant that JBR requires to use
+  `COMMAND_RECORD_FLAGS_NONE`: op 44 color-filter, op 50 blend-mode, op 51 blend/color-filter, op 52
+  color-filter-ref, op 54 blend/color-filter-ref, and op 55 image-filter-ref. JBR rejects each malformed stream before
+  replay. The plain saveLayer exact row passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-045239/suite.tsv`.
-  The expanded `CASE_GROUPS=save-layer-invalid` run now covers fifteen malformed saveLayer rows and passed:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-045314/suite.tsv`.
+  The six-row variant record-flags exact run passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-043049/suite.tsv`.
+  The expanded `CASE_GROUPS=save-layer-invalid` run now covers twenty-one malformed saveLayer rows and passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-040032/suite.tsv`.
+  Bounded default-order validation for the saveLayer insertion range also passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-041438/suite.tsv`.
 - Effect descriptor parser guards now also cover record flags. Skiko can rewrite
   `COMMAND_DEFINE_EFFECT_DESCRIPTOR` record flags to the antialias bit, and Magic Jewel exposes the exact
   `commands-invalid-effect-descriptor-record-flags-fallback` row in the `effect-descriptor-invalid` quick group. The
