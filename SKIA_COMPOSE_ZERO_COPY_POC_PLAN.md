@@ -1261,6 +1261,15 @@ Stable RuntimeEffect color-filter coverage and full screenshot parity are curren
 
 Current validation gates are intentionally broad but summarized here to keep this file small:
 
+- Stroke-line dash path-effect interval-count validation now mirrors JBR's op 43 live parser guard. Skiko can corrupt
+  `COMMAND_STROKE_LINE_DASH_PATH_EFFECT` by changing the dash interval count to `1`, Magic Jewel requires
+  `SKIKO_JBR_INTEROP_STROKE_LINE_DASH_PATH_EFFECT_INTERVAL_COUNT_CORRUPTED`, and the exact row, `path-invalid` quick
+  group, and bounded `commands-core-primitives` through `commands-point-lines` slice all passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-112712/suite.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-112800/suite.tsv`, and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-113311/suite.tsv`.
+  This keeps the quick point-to-point iteration path focused on the affected path-effect family while periodically
+  rechecking the surrounding default-order slice.
 - Screenshot parity asserts old/new pixel parity plus JBR-owned shader/effect handle definition, use, cache-hit, and
   context-invalidation markers on descriptor rows.
 - `parity-button-chrome` explicitly guards the Pulse primary-button white text and centering regression seen in manual

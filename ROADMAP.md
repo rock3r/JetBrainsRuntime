@@ -38,6 +38,21 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Stroke-line dash path-effect interval-count validation now has a live sentinel for op 43
+  `COMMAND_STROKE_LINE_DASH_PATH_EFFECT`. Skiko can rewrite the recorded dash interval count from an even value to
+  `1`, matching JBR's line dash path-effect parser guard, and Magic Jewel requires the typed
+  `SKIKO_JBR_INTEROP_STROKE_LINE_DASH_PATH_EFFECT_INTERVAL_COUNT_CORRUPTED` marker before accepting
+  `command-stream-invalid` fallback. The exact one-row run passed with aggregate 1/1, `fallback_sum=1`,
+  `unsupported_rows=0`, `picture_frames=0`, and `command_frames=0`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-112712/suite.tsv`.
+  The scoped `CASE_GROUPS=path-invalid` quick group now covers 8 malformed path rows and passed with
+  `fallback_sum=8`, `unsupported_rows=0`, `picture_frames=0`, and `command_frames=0`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-112800/suite.tsv`.
+  The bounded default-order primitive/path slice from `commands-core-primitives` through `commands-point-lines` also
+  passed; aggregate 24/24 passed, `fallback_sum=22`, `unsupported_rows=0`, `picture_frames=0`, and
+  `command_frames=3173`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-113311/suite.tsv`.
+  Skiko focused publication and `JbrSkiaInteropTest` also passed.
 - SaveLayer variant record-flags parser validation now has live sentinels for op 44, 50, 51, 52, 54, and 55:
   color-filter, blend-mode, blend/color-filter, color-filter-ref, blend/color-filter-ref, and image-filter-ref
   saveLayer records. Skiko can rewrite each variant's record-flags word to the antialias bit, and JBR rejects each
