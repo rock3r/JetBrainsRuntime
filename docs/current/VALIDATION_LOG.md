@@ -5,6 +5,17 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Stroke-rect dash path-effect interval-count validation passed for op 59 `COMMAND_STROKE_RECT_DASH_PATH_EFFECT`. The
+  exact one-row run rewrote the recorded dash interval count to `1` and produced one expected
+  `command-stream-invalid` fallback, zero unsupported rows, zero JBR picture frames, and zero JBR command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-115513/suite.tsv`.
+  The scoped `CASE_GROUPS=path-invalid` quick group then passed 9/9 with `fallback_sum=9`,
+  `unsupported_rows=0`, `picture_frames=0`, and `command_frames=0`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-115607/suite.tsv`.
+  The bounded default-order range from `commands-core-primitives` through `commands-point-lines` passed 25/25 with
+  `fallback_sum=23`, `unsupported_rows=0`, `picture_frames=0`, and `command_frames=3178`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-120233/suite.tsv`.
+  Skiko focused publication and `./gradlew awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest` also passed.
 - Stroke-line dash path-effect interval-count validation passed for op 43 `COMMAND_STROKE_LINE_DASH_PATH_EFFECT`. The
   exact one-row run rewrote the recorded dash interval count to `1` and produced one expected
   `command-stream-invalid` fallback, zero unsupported rows, zero JBR picture frames, and zero JBR command frames:

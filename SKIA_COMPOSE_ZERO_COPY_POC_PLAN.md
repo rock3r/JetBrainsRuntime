@@ -1261,6 +1261,13 @@ Stable RuntimeEffect color-filter coverage and full screenshot parity are curren
 
 Current validation gates are intentionally broad but summarized here to keep this file small:
 
+- Stroke-rect dash path-effect interval-count validation now mirrors the same live parser guard for op 59
+  `COMMAND_STROKE_RECT_DASH_PATH_EFFECT`. Skiko can corrupt the recorded dash interval count to `1`, Magic Jewel
+  requires `SKIKO_JBR_INTEROP_STROKE_RECT_DASH_PATH_EFFECT_INTERVAL_COUNT_CORRUPTED`, and the exact row,
+  `path-invalid` quick group, and bounded `commands-core-primitives` through `commands-point-lines` slice all passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-115513/suite.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-115607/suite.tsv`, and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-120233/suite.tsv`.
 - Stroke-line dash path-effect interval-count validation now mirrors JBR's op 43 live parser guard. Skiko can corrupt
   `COMMAND_STROKE_LINE_DASH_PATH_EFFECT` by changing the dash interval count to `1`, Magic Jewel requires
   `SKIKO_JBR_INTEROP_STROKE_LINE_DASH_PATH_EFFECT_INTERVAL_COUNT_CORRUPTED`, and the exact row, `path-invalid` quick
