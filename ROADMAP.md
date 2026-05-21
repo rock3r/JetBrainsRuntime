@@ -38,6 +38,14 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Current-artifact validation rechecked the already-live unknown effect descriptor type sentinel. The exact
+  `commands-invalid-effect-descriptor-type-fallback` row rewrites the first recorded `COMMAND_DEFINE_EFFECT_DESCRIPTOR`
+  descriptor type to `Int.MAX_VALUE`, matching JBR's parser-only unknown-type fixture, and passed with one expected
+  `command-stream-invalid` fallback:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-023959/suite.tsv`.
+  The scoped `CASE_GROUPS=effect-descriptor-invalid` area group passed with 28/28 rows, `fallback_sum=28`,
+  `unsupported_rows=0`, `picture_frames=0`, and `command_frames=0`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-024048/suite.tsv`.
 - Fill-rect color-filter-ref parser validation now has live width/height sentinels for op 47
   `COMMAND_FILL_RECT_COLOR_FILTER_REF`. Skiko can record the handle-backed fill-rect color-filter path, rewrite width
   or height to `-1`, and force JBR's command-stream parser to reject the frame before replay. The exact two-row run

@@ -348,10 +348,15 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-190836/suite.tsv`.
   This one-row quick group is the point-to-point iteration path for stream-header parser guards.
 - Current-artifact focused validation rechecked the already-live unknown effect descriptor type sentinel:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-190020/suite.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-023959/suite.tsv`.
   The row rewrites one recorded effect descriptor type to an unknown value and requires
   `SKIKO_JBR_INTEROP_EFFECT_DESCRIPTOR_TYPE_CORRUPTED`; aggregate: 1/1 passed, zero unsupported rows, zero JBR picture
   frames, zero JBR command frames, and one structured invalid-stream fallback marker.
+- Scoped `effect-descriptor-invalid` validation passed on the same current artifacts:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-024048/suite.tsv`.
+  The area group covered twenty-eight malformed effect-descriptor rows, including the unknown-type row, and kept every
+  row in structured `command-stream-invalid` fallback. Aggregate: 28/28 passed, zero unsupported rows, zero JBR
+  picture frames, zero JBR command frames, and twenty-eight structured invalid-stream fallback markers.
 - Focused stroke-path dash path-effect scalar validation passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-184636/suite.tsv`.
   The two new rows record op 61 `COMMAND_STROKE_PATH` with a dash path effect, corrupt either the dash interval count

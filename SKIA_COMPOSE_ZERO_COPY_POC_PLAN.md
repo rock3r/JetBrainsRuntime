@@ -183,9 +183,12 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-193923/suite.tsv`.
   The expanded eight-row `CASE_GROUPS=stream-invalid` run passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-193642/suite.tsv`.
-- The already-live unknown effect descriptor type sentinel was refreshed on current artifacts. The exact
+- The already-live unknown effect descriptor type sentinel was refreshed again on current artifacts. The exact
   `commands-invalid-effect-descriptor-type-fallback` row passed:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260519-190020/suite.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-023959/suite.tsv`.
+  The scoped `CASE_GROUPS=effect-descriptor-invalid` area group then covered twenty-eight malformed
+  effect-descriptor rows and passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-024048/suite.tsv`.
 - Fill-rect blend-mode scalar validation now has a quick group. Skiko can corrupt op 41
   `COMMAND_FILL_RECT_BLEND_MODE` width or height to `-1`, matching JBR's parser bounds guards. The exact two-row run
   passed:
