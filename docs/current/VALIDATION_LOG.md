@@ -17,6 +17,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-233519/suite.tsv`,
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-233729/suite.tsv`, and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-233942/suite.tsv`.
+  The suite also gained `LIST_CASES=true` no-run case listing. Comparing
+  `CASE_GROUPS=descriptor-handles-invalid LIST_CASES=true` against the expanded default `LIST_CASES=true` found no
+  remaining group rows missing from default.
+  The expanded default use-after-evict neighborhood passed 19/19 with `fallback_sum=19`, `unsupported_rows=0`,
+  `picture_frames=0`, and `command_frames=0`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-234632/suite.tsv`.
 - Periodic full default command-probe consolidation passed after the stroke-round-rect dash stroke metadata slice,
   using the quicker split workflow instead of rerunning already-green rows. A first broad pass hit a transient
   runtime/output miss at `commands-invalid-blur-with-input-image-filter-descriptor-tile-mode-fallback`; the durable

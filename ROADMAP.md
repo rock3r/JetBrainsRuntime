@@ -51,6 +51,10 @@ This is the small working roadmap for the current PoC. The full historical check
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-233519/suite.tsv`,
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-233729/suite.tsv`, and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-233942/suite.tsv`.
+  Magic Jewel also gained `LIST_CASES=true` no-run case listing, which confirmed the descriptor-handle invalid group is
+  no longer missing rows from the default case list. The expanded default use-after-evict neighborhood passed 19/19
+  with `fallback_sum=19`, zero unsupported rows, and zero JBR frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-234632/suite.tsv`.
 - Periodic full default command-probe consolidation passed as a split sweep after the stroke-round-rect dash stroke
   metadata slice. The first broad run hit a transient runtime/output miss at
   `commands-invalid-blur-with-input-image-filter-descriptor-tile-mode-fallback`, so the durable validation was split
