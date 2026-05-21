@@ -5,6 +5,18 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Plain saveLayer record-length validation passed for op 13 `COMMAND_SAVE_LAYER`. The exact one-row run shortened the
+  recorded plain saveLayer record length by one int and produced one expected `command-stream-invalid` fallback, zero
+  unsupported rows, zero JBR picture frames, and zero JBR command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-093321/suite.tsv`.
+  The scoped `CASE_GROUPS=save-layer-invalid` area group then passed 37/37 with `fallback_sum=37`,
+  `unsupported_rows=0`, `picture_frames=0`, and `command_frames=0`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-093418/suite.tsv`.
+  The bounded default-order range from `commands-save-layer-filter` through
+  `commands-save-layer-raw-color-filter-fallback` passed 40/40 with `fallback_sum=37`, `unsupported_rows=1`,
+  `picture_frames=985`, and `command_frames=1723`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-095826/suite.tsv`.
+  Skiko focused publication and `./gradlew awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest` also passed.
 - Descriptor-backed saveLayer record-length validation passed for op 52 `COMMAND_SAVE_LAYER_COLOR_FILTER_REF`, op 54
   `COMMAND_SAVE_LAYER_BLEND_COLOR_FILTER_REF`, and op 55 `COMMAND_SAVE_LAYER_IMAGE_FILTER_REF`. The exact three-row
   run shortened each target record length by one int; all rows produced one expected `command-stream-invalid`
