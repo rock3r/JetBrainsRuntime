@@ -46,6 +46,10 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   validation. That no-run check confirmed `CASE_GROUPS=descriptor-handles-invalid` is fully represented in default
   ordering; the expanded default use-after-evict neighborhood passed at
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-234632/suite.tsv`.
+  The same no-run scan now shows the checked invalid quick groups have no rows missing from default ordering, after
+  fixing the effect-descriptor insertion anchor for corner/stamped/chain path-effect descriptor sentinels. The bounded
+  effect-descriptor default-order range passed at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-000243/suite.tsv`.
 - Primitive command parser guards now have the same point-to-point workflow. Skiko can corrupt a recorded stroke cap,
   transform record flags, clip operation, draw-points point-count lower/upper bounds, draw-points record length, or
   draw-vertices vertex-count lower/upper bounds, record length, vertex mode, blend mode, and index-count lower/upper bounds after

@@ -38,6 +38,13 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel default command-probe ordering now also includes the corner/stamped/chain path-effect descriptor invalid
+  rows from `CASE_GROUPS=effect-descriptor-invalid`. `LIST_CASES=true` showed no remaining missing rows across the
+  checked invalid quick groups (`stream`, `primitive`, `path`, `effect-descriptor`, `shader-descriptor`,
+  `runtime-effect`, `descriptor-handles`, `image-handles`, `save-layer`, `gradient`, `gradient-path`, and
+  `native-text`). The bounded default-order effect-descriptor range passed 15/15 with `fallback_sum=15`, zero
+  unsupported rows, and zero JBR frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-000243/suite.tsv`.
 - Magic Jewel default command-probe ordering now includes the existing blur image-filter child live sentinels for
   use-after-evict, missing-child, and wrong-effect-type fallback, matching the offset image-filter child coverage that
   was already in the default path. The exact three-row run passed with `fallback_sum=3`, zero unsupported rows, and

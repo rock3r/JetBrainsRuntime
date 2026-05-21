@@ -5,6 +5,14 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel default command-probe ordering now includes the corner/stamped/chain path-effect descriptor invalid rows
+  from `CASE_GROUPS=effect-descriptor-invalid`. `LIST_CASES=true` showed no remaining missing rows across the checked
+  invalid quick groups (`stream`, `primitive`, `path`, `effect-descriptor`, `shader-descriptor`, `runtime-effect`,
+  `descriptor-handles`, `image-handles`, `save-layer`, `gradient`, `gradient-path`, and `native-text`). The bounded
+  default-order range from `commands-invalid-offset-image-filter-descriptor-delta-fallback` through
+  `commands-invalid-shader-descriptor-type-fallback` passed 15/15 with `fallback_sum=15`, `unsupported_rows=0`,
+  `picture_frames=0`, and `command_frames=0`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-000243/suite.tsv`.
 - Magic Jewel default command-probe ordering now includes the existing blur image-filter child live sentinels for
   use-after-evict, missing-child, and wrong-effect-type fallback. The exact three-row run passed 3/3 with
   `fallback_sum=3`, `unsupported_rows=0`, `picture_frames=0`, and `command_frames=0`:
