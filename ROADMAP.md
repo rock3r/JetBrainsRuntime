@@ -41,7 +41,9 @@ This is the small working roadmap for the current PoC. The full historical check
 - Magic Jewel quick-loop discovery is now complete for the command probe suite: `LIST_CASE_GROUPS=true` exposes every
   implemented quick group, including shader-ref, fill-rect color-filter, and blend-mode invalid groups that were
   previously usable but hidden from the group listing. A no-run membership scan confirmed every listed quick-group row
-  is represented in the default case order.
+  is represented in the default case order. The exposed shader-ref, fill-rect color-filter, and blend-mode invalid
+  groups also passed as a focused 10-row validation with `fallback_sum=10`, zero unsupported rows, and zero JBR frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-002228/suite.tsv`.
 - Magic Jewel default command-probe ordering now also includes the corner/stamped/chain path-effect descriptor invalid
   rows from `CASE_GROUPS=effect-descriptor-invalid`. `LIST_CASES=true` showed no remaining missing rows across the
   checked invalid quick groups (`stream`, `primitive`, `path`, `effect-descriptor`, `shader-descriptor`,
