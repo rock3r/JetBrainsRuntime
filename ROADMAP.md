@@ -81,6 +81,12 @@ This is the small working roadmap for the current PoC. The full historical check
   The scoped `CASE_GROUPS=primitive-invalid` quick group now covers thirteen rows; aggregate 13/13 passed,
   `fallback_sum=13`, `unsupported_rows=0`, `picture_frames=0`, and `command_frames=0`:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-014536/suite.tsv`.
+  Bounded default-order ranges also passed around the point and vertices insertion slots. Point range aggregate:
+  27/27 passed, `fallback_sum=23`, `unsupported_rows=0`, `picture_frames=0`, and `command_frames=11992`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-015718/suite.tsv`.
+  Vertices range aggregate: 9/9 passed, `fallback_sum=7`, `unsupported_rows=0`, `picture_frames=0`, and
+  `command_frames=5171`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-021540/suite.tsv`.
   Skiko focused publication and `JbrSkiaInteropTest` also passed.
 - Draw-vertices parser validation now has a live vertex-count sentinel. Skiko can rewrite the first recorded
   `COMMAND_DRAW_VERTICES` vertex count to two, matching JBR's `vertexCount >= 3` and exact variable record-length

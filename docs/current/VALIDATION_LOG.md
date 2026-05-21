@@ -160,6 +160,14 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   bounds. Aggregate: 13/13 passed, zero unsupported rows, zero JBR picture frames, zero JBR command frames, and
   thirteen structured invalid-stream fallback markers. Screenshot assertions were disabled for this command-only
   semantic slice.
+- Bounded default-order validation passed after adding the primitive upper-bound rows. The point-range run covered the
+  default insertion path from native bridge through point dots:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-015718/suite.tsv`.
+  Aggregate: 27/27 passed, zero unsupported rows, zero JBR picture frames, 11,992 JBR command frames, and
+  twenty-three structured fallback markers. The vertices-to-blend-mode range also passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-021540/suite.tsv`.
+  Aggregate: 9/9 passed, zero unsupported rows, zero JBR picture frames, 5,171 JBR command frames, and seven
+  structured fallback markers. Screenshot assertions were disabled for both command-only semantic slices.
 - Scoped `primitive-invalid` validation passed after adding the draw-points point-count row:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260520-093531/suite.tsv`.
   The quick group now covers malformed stroke cap, transform record flags, clip operation, and draw-points point
