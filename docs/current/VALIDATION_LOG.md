@@ -5,6 +5,10 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel quick-loop discovery now exposes every implemented command probe quick group through
+  `LIST_CASE_GROUPS=true`, including shader-ref, fill-rect color-filter, and blend-mode invalid subsets that were
+  previously usable but hidden from the listing. `LIST_CASES=true` no-run checks passed for the expanded group list,
+  and a membership scan found no listed quick-group rows missing from default ordering.
 - Magic Jewel default command-probe ordering now includes the corner/stamped/chain path-effect descriptor invalid rows
   from `CASE_GROUPS=effect-descriptor-invalid`. `LIST_CASES=true` showed no remaining missing rows across the checked
   invalid quick groups (`stream`, `primitive`, `path`, `effect-descriptor`, `shader-descriptor`, `runtime-effect`,

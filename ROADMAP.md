@@ -38,6 +38,10 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel quick-loop discovery is now complete for the command probe suite: `LIST_CASE_GROUPS=true` exposes every
+  implemented quick group, including shader-ref, fill-rect color-filter, and blend-mode invalid groups that were
+  previously usable but hidden from the group listing. A no-run membership scan confirmed every listed quick-group row
+  is represented in the default case order.
 - Magic Jewel default command-probe ordering now also includes the corner/stamped/chain path-effect descriptor invalid
   rows from `CASE_GROUPS=effect-descriptor-invalid`. `LIST_CASES=true` showed no remaining missing rows across the
   checked invalid quick groups (`stream`, `primitive`, `path`, `effect-descriptor`, `shader-descriptor`,

@@ -50,6 +50,9 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   fixing the effect-descriptor insertion anchor for corner/stamped/chain path-effect descriptor sentinels. The bounded
   effect-descriptor default-order range passed at
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-000243/suite.tsv`.
+  Magic Jewel README and `LIST_CASE_GROUPS=true` now expose the full quick-group surface, including shader-ref,
+  fill-rect color-filter, and blend-mode invalid subsets that were previously implemented but hidden from the listing.
+  A no-run membership scan confirmed every listed group remains represented in default ordering.
 - Primitive command parser guards now have the same point-to-point workflow. Skiko can corrupt a recorded stroke cap,
   transform record flags, clip operation, draw-points point-count lower/upper bounds, draw-points record length, or
   draw-vertices vertex-count lower/upper bounds, record length, vertex mode, blend mode, and index-count lower/upper bounds after
