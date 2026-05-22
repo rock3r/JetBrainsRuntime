@@ -42,6 +42,13 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   11/11 with `fallback_sum=11`, zero unsupported rows, zero JBR picture frames, and 728 JBR command frames from the
   recoverable font-data record-flags row:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-090411/suite.tsv`.
+- The current focused primitive command parser guard checkpoint is `CASE_GROUPS=primitive-invalid`, which passed 13/13
+  with `fallback_sum=13`, zero unsupported rows, zero JBR picture frames, and zero JBR command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-091344/suite.tsv`.
+  The adjacent default-order primitive/image/path range from `commands-core-primitives` through
+  `commands-point-lines` also passed 38/38 with `fallback_sum=36`, zero unsupported rows, zero JBR picture frames, and
+  3,398 JBR command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-092240/suite.tsv`.
 - Descriptor/effect child handle validation has a default-order quick path for blur image-filter children too. The
   existing blur use-after-evict, missing-child, and wrong-effect-type sentinels are now inserted into the default
   command-probe order beside the offset image-filter child cases. Exact validation passed at

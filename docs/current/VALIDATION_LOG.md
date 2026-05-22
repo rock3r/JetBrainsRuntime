@@ -5,6 +5,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel `CASE_GROUPS=primitive-invalid` passed as a focused primitive command parser guard checkpoint.
+  Aggregate: 13/13, `fallback_sum=13`, `unsupported_rows=0`, `picture_frames=0`, and `command_frames=0`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-091344/suite.tsv`.
+  The bounded default-order range from `commands-core-primitives` through `commands-point-lines` also passed as the
+  adjacent primitive/image/path ordering checkpoint. Aggregate: 38/38, `fallback_sum=36`, `unsupported_rows=0`,
+  `picture_frames=0`, and `command_frames=3398`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-092240/suite.tsv`.
 - Magic Jewel `CASE_GROUPS=native-text-invalid` passed as a focused native text/font-data parser guard checkpoint.
   Aggregate: 11/11, `fallback_sum=11`, `unsupported_rows=0`, `picture_frames=0`, and `command_frames=728`:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-090411/suite.tsv`.
