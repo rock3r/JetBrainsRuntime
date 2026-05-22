@@ -38,6 +38,20 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel periodic default command-probe consolidation passed across the full default order using split resume
+  roots: 486/486, `fallback_sum=349`, `unsupported_rows=26`, `picture_frames=31265`, and
+  `command_frames=189208`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-143223/suite.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-160910/suite.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-192154/suite.tsv`, and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-200157/suite.tsv`.
+  The run recovered from a transient local `public-api-missing` artifact state by rebuilding JBR Skia artifacts; the
+  final tail used command-marker-only validation after macOS `screencapture` began failing to create images from the
+  matched Magic Jewel window despite healthy command replay.
+- Magic Jewel `CASES=commands-gradient-stroke` passed after the scoped screenshot-gate relaxation for that row:
+  `fallback_sum=0`, `unsupported_rows=0`, `picture_frames=0`, and `command_frames=2710`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-191608/suite.tsv`.
+  Magic Jewel commit `41f08e5` pushed the harness change.
 - Magic Jewel `CASE_GROUPS=runtime-effect-invalid` passed as the focused RuntimeEffect parser/semantic guard
   checkpoint: 62/62, `fallback_sum=56`, `unsupported_rows=6`, `picture_frames=6338`, and `command_frames=0`:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-134345/suite.tsv`.

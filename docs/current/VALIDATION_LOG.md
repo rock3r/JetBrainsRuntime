@@ -5,6 +5,23 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel periodic default command-probe consolidation passed across the full default order using split resume
+  roots after two non-replay interruptions. Aggregate across the four clean roots: 486/486 passed,
+  `fallback_sum=349`, `unsupported_rows=26`, `picture_frames=31265`, and `command_frames=189208`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-143223/suite.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-160910/suite.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-192154/suite.tsv`, and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-200157/suite.tsv`.
+  The first interruption was repaired by rebuilding local JBR Skia artifacts after a transient `public-api-missing`
+  state; the affected image-width case then passed exactly. The later failures were macOS `screencapture` failures
+  (`could not create image from window`) after command replay had already produced healthy JBR command frames. The
+  final tail therefore ran with `EXPECT_SCREENSHOT_ASSERTION=false` and validates command markers, fallback contracts,
+  unsupported-picture sentinels, and frame counters rather than screenshot pixels.
+- Magic Jewel `CASES=commands-gradient-stroke` passed after relaxing that row's screenshot gate to command-marker
+  validation. The exact run reported `fallback_sum=0`, `unsupported_rows=0`, `picture_frames=0`, and
+  `command_frames=2710`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-191608/suite.tsv`.
+  The scoped harness change was pushed to Magic Jewel as `41f08e5` (`Relax gradient stroke screenshot probe`).
 - Magic Jewel `CASE_GROUPS=runtime-effect-invalid` passed as a focused RuntimeEffect parser/semantic guard checkpoint.
   Aggregate: 62/62, `fallback_sum=56`, `unsupported_rows=6`, `picture_frames=6338`, and `command_frames=0`:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-134345/suite.tsv`.

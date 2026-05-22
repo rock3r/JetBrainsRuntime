@@ -26,12 +26,15 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   is understood, so already-green prefixes do not need to be repeated. The current fast loop is exact row, quick group
   or bounded adjacent range, Skiko focused publication, `JbrSkiaInteropTest`, and then a periodic full sweep once a
   coherent batch of sentinels has landed. The latest periodic default command-probe consolidation used that split
-  workflow: prefix
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-202252/suite.tsv`
-  plus resumed tail
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260521-172927/suite.tsv`,
-  for a combined 462/462 passed, `fallback_sum=325`, `unsupported_rows=26`, `picture_frames=24648`, and
-  `command_frames=146301`.
+  workflow across four clean roots:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-143223/suite.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-160910/suite.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-192154/suite.tsv`, and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-200157/suite.tsv`,
+  for a combined 486/486 passed, `fallback_sum=349`, `unsupported_rows=26`, `picture_frames=31265`, and
+  `command_frames=189208`. The split recovered from a transient local JBR Skia `public-api-missing` artifact state by
+  rebuilding local artifacts, then used command-marker-only validation for the final tail after macOS `screencapture`
+  began failing independently of command replay.
 - The current quick happy-path command replay checkpoint is `CASE_GROUPS=smoke`, which passed 6/6 with no fallback,
   no unsupported rows, no picture fallback, and 6,891 JBR command frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-003530/suite.tsv`.
