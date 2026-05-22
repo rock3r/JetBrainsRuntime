@@ -38,6 +38,11 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel `CASE_GROUPS=descriptor-handles-invalid` passed as the focused descriptor handle lifecycle/type guard
+  checkpoint: 47/47, `fallback_sum=47`, `unsupported_rows=0`, `picture_frames=0`, and `command_frames=0`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-122554/suite.tsv`.
+  This covers missing handles, use-after-evict, eviction record flags, child missing/use-after-evict, and wrong-type
+  guards across shader, color-filter, image-filter, path-effect, and RuntimeEffect descriptor families.
 - Magic Jewel `CASE_GROUPS=save-layer-invalid` passed as the focused saveLayer parser guard checkpoint: 37/37,
   `fallback_sum=37`, `unsupported_rows=0`, `picture_frames=0`, and `command_frames=0`:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-115938/suite.tsv`.

@@ -85,6 +85,11 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `fallback_sum=37`, zero unsupported rows, zero JBR picture frames, and zero JBR command frames across alpha, record
   flags, record lengths, width/height, blend modes, and descriptor-backed color/image-filter saveLayer variants:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-115938/suite.tsv`.
+- The current focused descriptor handle lifecycle/type guard checkpoint is `CASE_GROUPS=descriptor-handles-invalid`,
+  which passed 47/47 with `fallback_sum=47`, zero unsupported rows, zero JBR picture frames, and zero JBR command
+  frames across missing handles, use-after-evict, eviction record flags, child missing/use-after-evict, and wrong-type
+  guards for shader, color-filter, image-filter, path-effect, and RuntimeEffect descriptor families:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-122554/suite.tsv`.
 - Descriptor/effect child handle validation has a default-order quick path for blur image-filter children too. The
   existing blur use-after-evict, missing-child, and wrong-effect-type sentinels are now inserted into the default
   command-probe order beside the offset image-filter child cases. Exact validation passed at
