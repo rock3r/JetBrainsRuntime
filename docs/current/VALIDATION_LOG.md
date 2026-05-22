@@ -5,6 +5,10 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel `CASE_GROUPS=save-layer-invalid` passed as a focused saveLayer parser guard refresh after the direct
+  JBR parser-test additions. Aggregate: 37/37 passed, `fallback_sum=37`, `unsupported_rows=0`,
+  `picture_frames=0`, and `command_frames=0`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-215534/suite.tsv`.
 - JBR parser-only `JBRSkiaApiTest` passed after extending direct saveLayer scalar coverage for supported non-ref
   color-filter, blend-mode, and blend/color-filter width/height/alpha bounds. The test was compiled with `javac`
   against `/tmp/jbr-skia-run/desktop` and the local `JBRApi` stub, then run headlessly with the patched
