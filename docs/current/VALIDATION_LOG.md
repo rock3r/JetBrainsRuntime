@@ -5,6 +5,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- JBR parser-only `JBRSkiaApiTest` passed after extending Perlin-noise shader descriptor coverage to include
+  base-frequency Y lower bounds, zero octaves, and tile-height upper/lower bounds. The test was compiled with `javac`
+  against `/tmp/jbr-skia-run/desktop` and the local `JBRApi` stub, then run headlessly with
+  `--patch-module java.desktop=/tmp/jbr-skia-run/desktop`,
+  `--patch-module java.base=/tmp/jbr-skia-api-test-java-base`,
+  `-Dsun.java2d.skia.interop.library=/tmp/jbr-skia-native/libjbrskiainterop.dylib`, and explicit
+  `com.jetbrains.exported`/`com.jetbrains.desktop` exports. The run exited 0.
 - Magic Jewel periodic default command-probe consolidation passed across the full default order using split resume
   roots after two non-replay interruptions. Aggregate across the four clean roots: 486/486 passed,
   `fallback_sum=349`, `unsupported_rows=26`, `picture_frames=31265`, and `command_frames=189208`:

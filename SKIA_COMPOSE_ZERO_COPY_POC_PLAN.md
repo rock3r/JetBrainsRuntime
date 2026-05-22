@@ -15,6 +15,8 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - Command replay supports the current broad scene set: primitives, gradients, images, text/font-data, point dots,
   shader/effect descriptors, RuntimeEffect shaders/color filters, image filters, path effects, blend modes, shadows,
   and graphics-layer variants.
+- Direct JBR parser coverage now mirrors the live Perlin-noise shader descriptor bounds for base-frequency X/Y,
+  octave range, and tile width/height limits.
 - Stable descriptor rows assert JBR handle definitions, uses, cache hits, and context invalidation behavior.
 - The default path-effect command row now also gates the stable descriptor-definition contract: five JBR-owned
   path-effect descriptor definitions and no picture fallback.

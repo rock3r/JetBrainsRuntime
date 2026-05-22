@@ -38,6 +38,9 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- JBR parser-only `JBRSkiaApiTest` passed after adding direct Perlin-noise shader descriptor guards for base-frequency
+  Y, zero octaves, and tile-height bounds. The test compiled against the patched `/tmp/jbr-skia-run/desktop` classes
+  and local `JBRApi` stub, then ran headlessly with the rebuilt native bridge.
 - Magic Jewel periodic default command-probe consolidation passed across the full default order using split resume
   roots: 486/486, `fallback_sum=349`, `unsupported_rows=26`, `picture_frames=31265`, and
   `command_frames=189208`:
