@@ -5,6 +5,9 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel `CASE_GROUPS=gradient-path-invalid` passed as a focused gradient path parser guard checkpoint. Aggregate:
+  18/18, `fallback_sum=18`, `unsupported_rows=0`, `picture_frames=0`, and `command_frames=0`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-102856/suite.tsv`.
 - Magic Jewel `CASE_GROUPS=native-text` passed as a focused native text/font-data command replay checkpoint. Aggregate:
   14/14, `fallback_sum=0`, `unsupported_rows=0`, `picture_frames=0`, and `command_frames=15912`:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-101728/suite.tsv`.
