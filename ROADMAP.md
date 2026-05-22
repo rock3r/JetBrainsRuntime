@@ -38,6 +38,11 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel `CASE_GROUPS=native-text-invalid` passed as the focused native text/font-data parser guard checkpoint:
+  11/11, `fallback_sum=11`, `unsupported_rows=0`, `picture_frames=0`, and `command_frames=728`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-090411/suite.tsv`.
+  The font-data record-flags row is recoverable after the one-shot invalid definition, accounting for the JBR command
+  frames.
 - Magic Jewel `CASE_GROUPS=smoke` passed as the quick happy-path command replay check: 6/6, `fallback_sum=0`,
   `unsupported_rows=0`, `picture_frames=0`, and `command_frames=6891`:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-003530/suite.tsv`.

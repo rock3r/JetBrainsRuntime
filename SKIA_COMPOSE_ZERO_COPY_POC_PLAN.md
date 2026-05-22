@@ -38,6 +38,10 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - The current quick command-stream parser guard checkpoint is `CASE_GROUPS=stream-invalid`, which passed 8/8 with
   `fallback_sum=8`, zero unsupported rows, and zero JBR frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-004208/suite.tsv`.
+- The current focused native text/font-data parser guard checkpoint is `CASE_GROUPS=native-text-invalid`, which passed
+  11/11 with `fallback_sum=11`, zero unsupported rows, zero JBR picture frames, and 728 JBR command frames from the
+  recoverable font-data record-flags row:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-090411/suite.tsv`.
 - Descriptor/effect child handle validation has a default-order quick path for blur image-filter children too. The
   existing blur use-after-evict, missing-child, and wrong-effect-type sentinels are now inserted into the default
   command-probe order beside the offset image-filter child cases. Exact validation passed at

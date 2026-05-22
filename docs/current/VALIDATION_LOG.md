@@ -5,6 +5,11 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel `CASE_GROUPS=native-text-invalid` passed as a focused native text/font-data parser guard checkpoint.
+  Aggregate: 11/11, `fallback_sum=11`, `unsupported_rows=0`, `picture_frames=0`, and `command_frames=728`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-090411/suite.tsv`.
+  The final font-data record-flags row intentionally recovered after the one-shot invalid definition, so it is the
+  only row with JBR command frames.
 - Magic Jewel `CASE_GROUPS=smoke` passed as the quick happy-path command replay checkpoint. Aggregate: 6/6,
   `fallback_sum=0`, `unsupported_rows=0`, `picture_frames=0`, and `command_frames=6891`:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-003530/suite.tsv`.
