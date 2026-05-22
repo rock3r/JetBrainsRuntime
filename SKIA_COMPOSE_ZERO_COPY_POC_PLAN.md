@@ -52,6 +52,10 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - The current focused path/path-effect parser guard checkpoint is `CASE_GROUPS=path-invalid`, which passed 22/22 with
   `fallback_sum=22`, zero unsupported rows, zero JBR picture frames, and zero JBR command frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-094905/suite.tsv`.
+- The current focused color-filter command replay checkpoint is `CASE_GROUPS=color-filters`, which passed 10/10 with
+  `fallback_sum=0`, one intentional unsupported raw blend color-filter row, 1,197 JBR picture frames, and 10,861 JBR
+  command frames across the supported descriptor and graphics-layer color-filter rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-100853/suite.tsv`.
 - Descriptor/effect child handle validation has a default-order quick path for blur image-filter children too. The
   existing blur use-after-evict, missing-child, and wrong-effect-type sentinels are now inserted into the default
   command-probe order beside the offset image-filter child cases. Exact validation passed at

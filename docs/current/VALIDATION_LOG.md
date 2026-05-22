@@ -5,6 +5,11 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel `CASE_GROUPS=color-filters` passed as a focused color-filter command replay checkpoint. Aggregate:
+  10/10, `fallback_sum=0`, `unsupported_rows=1`, `picture_frames=1197`, and `command_frames=10861`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-100853/suite.tsv`.
+  The single unsupported row is the intentional raw blend color-filter fallback; supported descriptor and
+  graphics-layer color-filter rows replayed through JBR commands.
 - Magic Jewel `CASE_GROUPS=path-invalid` passed as a focused path/path-effect parser guard checkpoint. Aggregate:
   22/22, `fallback_sum=22`, `unsupported_rows=0`, `picture_frames=0`, and `command_frames=0`:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-094905/suite.tsv`.
