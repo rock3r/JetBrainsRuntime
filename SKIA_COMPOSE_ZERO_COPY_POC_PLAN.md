@@ -17,8 +17,8 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   and graphics-layer variants.
 - Direct JBR parser coverage now mirrors the live shader descriptor bounds for gradient tile/stop/radius/color-count
   guards, image shader dimensions/tile modes, and Perlin-noise base-frequency/octave/tile limits.
-- Direct RuntimeEffect shader parser coverage now includes SKSL/source-code validation and uniform/child/named-count
-  bounds alongside the existing hash and schema checks.
+- Direct RuntimeEffect shader/color-filter parser coverage now includes hash, SKSL/source-code validation, and
+  uniform/child/named-count bounds alongside the existing schema checks.
 - Direct effect descriptor parser coverage now mirrors the live blur, offset, corner/stamped path-effect, and chained
   path-effect descriptor payload bounds.
 - Stable descriptor rows assert JBR handle definitions, uses, cache hits, and context invalidation behavior.

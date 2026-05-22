@@ -505,6 +505,17 @@ public class JBRSkiaApiTest {
         }, "evicted effect descriptor handle");
         assertInvalidCommandStream(invalidRuntimeColorFilterMissingChildHandleStream(), "undefined runtime color-filter child handle");
         assertInvalidCommandStream(invalidRuntimeColorFilterImageFilterChildStream(), "image-filter runtime color-filter child handle");
+        assertInvalidCommandStream(invalidRuntimeColorFilterSourceHashStream(), "invalid runtime color-filter source hash");
+        assertInvalidCommandStream(invalidRuntimeColorFilterSourceCodeStream(), "invalid runtime color-filter source code");
+        assertInvalidCommandStream(invalidRuntimeColorFilterSkslLengthStream(), "invalid runtime color-filter SKSL length");
+        assertInvalidCommandStream(invalidRuntimeColorFilterUniformFloatCountStream(), "invalid runtime color-filter uniform count");
+        assertInvalidCommandStream(invalidRuntimeColorFilterNegativeUniformFloatCountStream(), "invalid runtime color-filter negative uniform count");
+        assertInvalidCommandStream(invalidRuntimeColorFilterChildCountStream(), "invalid runtime color-filter child count");
+        assertInvalidCommandStream(invalidRuntimeColorFilterNegativeChildCountStream(), "invalid runtime color-filter negative child count");
+        assertInvalidCommandStream(invalidRuntimeColorFilterNamedUniformCountStream(), "invalid runtime color-filter named uniform count");
+        assertInvalidCommandStream(invalidRuntimeColorFilterNegativeNamedUniformCountStream(), "invalid runtime color-filter negative named uniform count");
+        assertInvalidCommandStream(invalidRuntimeColorFilterNamedChildCountStream(), "invalid runtime color-filter named child count");
+        assertInvalidCommandStream(invalidRuntimeColorFilterNegativeNamedChildCountStream(), "invalid runtime color-filter negative named child count");
         assertInvalidCommandStream(invalidOffsetImageFilterMissingChildHandleStream(), "undefined offset image-filter child handle");
         assertInvalidCommandStream(invalidOffsetImageFilterEvictedChildHandleStream(), "evicted offset image-filter child handle");
         assertInvalidCommandStream(invalidOffsetImageFilterColorFilterChildHandleStream(), "color-filter offset image-filter child handle");
@@ -1867,6 +1878,96 @@ public class JBRSkiaApiTest {
 
     private static int[] invalidRuntimeColorFilterImageFilterChildStream() {
         return runtimeColorFilterChildDescriptorStream(true, true);
+    }
+
+    private static int[] invalidRuntimeColorFilterSourceHashStream() {
+        int[] commands = validRuntimeColorFilterChildDescriptorStream();
+        commands[runtimeColorFilterPayloadStart(commands) + 5] ^= 1;
+        return commands;
+    }
+
+    private static int[] invalidRuntimeColorFilterSourceCodeStream() {
+        int[] commands = validRuntimeColorFilterChildDescriptorStream();
+        int payloadStart = runtimeColorFilterPayloadStart(commands);
+        int skslStart = runtimeColorFilterSkslStart(commands);
+        int skslLength = commands[payloadStart];
+        commands[skslStart] = 0;
+        long sourceHash = shaderSourceHash(commands, skslStart, skslLength);
+        commands[payloadStart + 5] = (int) (sourceHash >> 32);
+        commands[payloadStart + 6] = (int) sourceHash;
+        return commands;
+    }
+
+    private static int[] invalidRuntimeColorFilterSkslLengthStream() {
+        int[] commands = validRuntimeColorFilterChildDescriptorStream();
+        commands[runtimeColorFilterPayloadStart(commands)] = 0;
+        return commands;
+    }
+
+    private static int[] invalidRuntimeColorFilterUniformFloatCountStream() {
+        int[] commands = validRuntimeColorFilterChildDescriptorStream();
+        commands[runtimeColorFilterPayloadStart(commands) + 1] = 257;
+        return commands;
+    }
+
+    private static int[] invalidRuntimeColorFilterNegativeUniformFloatCountStream() {
+        int[] commands = validRuntimeColorFilterChildDescriptorStream();
+        commands[runtimeColorFilterPayloadStart(commands) + 1] = -1;
+        return commands;
+    }
+
+    private static int[] invalidRuntimeColorFilterChildCountStream() {
+        int[] commands = validRuntimeColorFilterChildDescriptorStream();
+        commands[runtimeColorFilterPayloadStart(commands) + 2] = 9;
+        return commands;
+    }
+
+    private static int[] invalidRuntimeColorFilterNegativeChildCountStream() {
+        int[] commands = validRuntimeColorFilterChildDescriptorStream();
+        commands[runtimeColorFilterPayloadStart(commands) + 2] = -1;
+        return commands;
+    }
+
+    private static int[] invalidRuntimeColorFilterNamedUniformCountStream() {
+        int[] commands = validRuntimeColorFilterChildDescriptorStream();
+        commands[runtimeColorFilterPayloadStart(commands) + 3] = 17;
+        return commands;
+    }
+
+    private static int[] invalidRuntimeColorFilterNegativeNamedUniformCountStream() {
+        int[] commands = validRuntimeColorFilterChildDescriptorStream();
+        commands[runtimeColorFilterPayloadStart(commands) + 3] = -1;
+        return commands;
+    }
+
+    private static int[] invalidRuntimeColorFilterNamedChildCountStream() {
+        int[] commands = validRuntimeColorFilterChildDescriptorStream();
+        commands[runtimeColorFilterPayloadStart(commands) + 4] = 9;
+        return commands;
+    }
+
+    private static int[] invalidRuntimeColorFilterNegativeNamedChildCountStream() {
+        int[] commands = validRuntimeColorFilterChildDescriptorStream();
+        commands[runtimeColorFilterPayloadStart(commands) + 4] = -1;
+        return commands;
+    }
+
+    private static int runtimeColorFilterPayloadStart(int[] commands) {
+        int offset = JBRSkia.COMMAND_STREAM_HEADER_SIZE;
+        while (offset < commands.length) {
+            if (commands[offset] == JBRSkia.COMMAND_DEFINE_EFFECT_DESCRIPTOR
+                    && commands[offset + 5] == JBRSkia.COMMAND_EFFECT_DESCRIPTOR_RUNTIME_COLOR_FILTER) {
+                return offset + 8;
+            }
+            offset += commands[offset + 1] / Integer.BYTES;
+        }
+        throw new AssertionError("runtime color-filter descriptor not found");
+    }
+
+    private static int runtimeColorFilterSkslStart(int[] commands) {
+        int payloadStart = runtimeColorFilterPayloadStart(commands);
+        int childCount = commands[payloadStart + 2];
+        return payloadStart + 7 + childCount * 2;
     }
 
     private static int[] runtimeColorFilterChildDescriptorStream(boolean defineChild, boolean imageFilterChild) {
