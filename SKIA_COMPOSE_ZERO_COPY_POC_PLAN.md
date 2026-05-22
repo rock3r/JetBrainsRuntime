@@ -46,6 +46,10 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - The current focused saveLayer parser guard refresh is `CASE_GROUPS=save-layer-invalid`, which passed 37/37 with
   `fallback_sum=37`, zero unsupported rows, zero JBR picture frames, and zero JBR command frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-215534/suite.tsv`.
+- The current focused shader descriptor parser guard refresh is `CASE_GROUPS=shader-descriptor-invalid`, which passed
+  30/30 with `fallback_sum=30`, zero unsupported rows, zero JBR picture frames, and zero JBR command frames after the
+  direct parser-test additions for gradient/image shader and Perlin-noise descriptor bounds:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-222036/suite.tsv`.
 - The current quick happy-path command replay checkpoint is `CASE_GROUPS=smoke`, which passed 6/6 with no fallback,
   no unsupported rows, no picture fallback, and 6,891 JBR command frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-003530/suite.tsv`.
@@ -1597,7 +1601,7 @@ Current validation gates are intentionally broad but summarized here to keep thi
   Perlin/noise shader descriptors cover kind, frequency, octave bounds, zero octave count, tile-width upper bound,
   tile-height upper bound, negative tile-size rejection, and negative tile-height rejection.
   `CASE_GROUPS=shader-descriptor-invalid` is the quick parser/replay validation path for this shader family and now
-  covers twenty-nine malformed shader descriptor rows.
+  covers thirty malformed shader descriptor rows.
 - Day-to-day malformed-descriptor work now uses exact `CASES=...` rows first, then curated `CASE_GROUPS=...`
   area sweeps before periodic full default command-probe batches, keeping iteration tight while preserving full-suite
   checkpoints.

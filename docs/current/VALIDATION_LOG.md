@@ -5,6 +5,10 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel `CASE_GROUPS=shader-descriptor-invalid` passed as a focused shader descriptor parser guard refresh after
+  the direct JBR parser-test additions. Aggregate: 30/30 passed, `fallback_sum=30`, `unsupported_rows=0`,
+  `picture_frames=0`, and `command_frames=0`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-222036/suite.tsv`.
 - Magic Jewel `CASE_GROUPS=save-layer-invalid` passed as a focused saveLayer parser guard refresh after the direct
   JBR parser-test additions. Aggregate: 37/37 passed, `fallback_sum=37`, `unsupported_rows=0`,
   `picture_frames=0`, and `command_frames=0`:
