@@ -5,6 +5,11 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel `CASE_GROUPS=runtime-effect-invalid` passed as a focused RuntimeEffect parser/semantic guard checkpoint.
+  Aggregate: 62/62, `fallback_sum=56`, `unsupported_rows=6`, `picture_frames=6338`, and `command_frames=0`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-134345/suite.tsv`.
+  The six unsupported rows are the intentional invalid uniform/child/nested-child schema fallbacks for shader and
+  color-filter RuntimeEffect descriptors; the remaining rows rejected through structured command fallback.
 - Magic Jewel `CASE_GROUPS=gradient-invalid` passed as a focused gradient parser guard checkpoint. Aggregate: 60/60,
   `fallback_sum=60`, `unsupported_rows=0`, `picture_frames=0`, and `command_frames=0`:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-130045/suite.tsv`.
