@@ -90,6 +90,11 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   frames across missing handles, use-after-evict, eviction record flags, child missing/use-after-evict, and wrong-type
   guards for shader, color-filter, image-filter, path-effect, and RuntimeEffect descriptor families:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-122554/suite.tsv`.
+- The current focused gradient parser guard checkpoint is `CASE_GROUPS=gradient-invalid`, which passed 60/60 with
+  `fallback_sum=60`, zero unsupported rows, zero JBR picture frames, and zero JBR command frames across
+  linear/radial/sweep stroke width, tile mode, color count, stop order, path-gradient, and radial radius
+  malformed-stream guards:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-130045/suite.tsv`.
 - Descriptor/effect child handle validation has a default-order quick path for blur image-filter children too. The
   existing blur use-after-evict, missing-child, and wrong-effect-type sentinels are now inserted into the default
   command-probe order beside the offset image-filter child cases. Exact validation passed at

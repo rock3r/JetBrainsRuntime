@@ -5,6 +5,11 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel `CASE_GROUPS=gradient-invalid` passed as a focused gradient parser guard checkpoint. Aggregate: 60/60,
+  `fallback_sum=60`, `unsupported_rows=0`, `picture_frames=0`, and `command_frames=0`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-130045/suite.tsv`.
+  This covers linear/radial/sweep stroke width, tile mode, color count, stop order, path-gradient, and radial radius
+  malformed-stream guards.
 - Magic Jewel `CASE_GROUPS=descriptor-handles-invalid` passed as a focused descriptor handle lifecycle/type guard
   checkpoint. Aggregate: 47/47, `fallback_sum=47`, `unsupported_rows=0`, `picture_frames=0`, and `command_frames=0`:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-122554/suite.tsv`.
