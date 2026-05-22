@@ -81,6 +81,10 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   across shader descriptor headers, color/filter payloads, transformed/composite shader guards, gradient/image shader
   descriptor bounds, and Perlin noise descriptor guards:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-113757/suite.tsv`.
+- The current focused saveLayer parser guard checkpoint is `CASE_GROUPS=save-layer-invalid`, which passed 37/37 with
+  `fallback_sum=37`, zero unsupported rows, zero JBR picture frames, and zero JBR command frames across alpha, record
+  flags, record lengths, width/height, blend modes, and descriptor-backed color/image-filter saveLayer variants:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-115938/suite.tsv`.
 - Descriptor/effect child handle validation has a default-order quick path for blur image-filter children too. The
   existing blur use-after-evict, missing-child, and wrong-effect-type sentinels are now inserted into the default
   command-probe order beside the offset image-filter child cases. Exact validation passed at
