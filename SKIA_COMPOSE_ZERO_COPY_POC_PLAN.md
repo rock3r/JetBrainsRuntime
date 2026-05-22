@@ -56,6 +56,10 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `fallback_sum=0`, one intentional unsupported raw blend color-filter row, 1,197 JBR picture frames, and 10,861 JBR
   command frames across the supported descriptor and graphics-layer color-filter rows:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-100853/suite.tsv`.
+- The current focused native text/font-data command replay checkpoint is `CASE_GROUPS=native-text`, which passed 14/14
+  with `fallback_sum=0`, zero unsupported rows, zero JBR picture frames, and 15,912 JBR command frames across custom,
+  generic, loaded-font-data, resource, system, resize, and forced-context native text rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-101728/suite.tsv`.
 - Descriptor/effect child handle validation has a default-order quick path for blur image-filter children too. The
   existing blur use-after-evict, missing-child, and wrong-effect-type sentinels are now inserted into the default
   command-probe order beside the offset image-filter child cases. Exact validation passed at

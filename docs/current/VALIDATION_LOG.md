@@ -5,6 +5,10 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel `CASE_GROUPS=native-text` passed as a focused native text/font-data command replay checkpoint. Aggregate:
+  14/14, `fallback_sum=0`, `unsupported_rows=0`, `picture_frames=0`, and `command_frames=15912`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-101728/suite.tsv`.
+  This covers custom, generic, loaded-font-data, resource, system, resize, and forced-context native text rows.
 - Magic Jewel `CASE_GROUPS=color-filters` passed as a focused color-filter command replay checkpoint. Aggregate:
   10/10, `fallback_sum=0`, `unsupported_rows=1`, `picture_frames=1197`, and `command_frames=10861`:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-100853/suite.tsv`.
