@@ -63,6 +63,10 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - The current focused gradient path parser guard checkpoint is `CASE_GROUPS=gradient-path-invalid`, which passed 18/18
   with `fallback_sum=18`, zero unsupported rows, zero JBR picture frames, and zero JBR command frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-102856/suite.tsv`.
+- The current focused graphics-layer command replay checkpoint is `CASE_GROUPS=graphics-layer`, which passed 21/21
+  with `fallback_sum=0`, zero unsupported rows, zero JBR picture frames, and 30,306 JBR command frames across layer
+  clips, blend/color filters, render effects, shadows, 3D rotations, scale/translate, camera, and pivot variants:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-104254/suite.tsv`.
 - Descriptor/effect child handle validation has a default-order quick path for blur image-filter children too. The
   existing blur use-after-evict, missing-child, and wrong-effect-type sentinels are now inserted into the default
   command-probe order beside the offset image-filter child cases. Exact validation passed at
