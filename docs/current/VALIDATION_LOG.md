@@ -5,6 +5,11 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- JBR parser-only `JBRSkiaApiTest` passed after extending direct RuntimeEffect shader descriptor coverage for SKSL
+  length, uniform/child/named-count bounds, negative count guards, and source-code byte validation with a recomputed
+  matching hash. The test was compiled with `javac` against `/tmp/jbr-skia-run/desktop` and the local `JBRApi` stub,
+  then run headlessly with the patched `java.desktop` module, patched `java.base` stub classes, and
+  `/tmp/jbr-skia-native/libjbrskiainterop.dylib`; the run exited 0.
 - JBR parser-only `JBRSkiaApiTest` passed after extending direct effect descriptor payload coverage for blur sigma/tile
   guards, offset finite-delta guards, corner path-effect radius, stamped path-effect advance/phase/style/fill/path-data
   bounds, and chain path-effect payload count. The test was compiled with `javac` against

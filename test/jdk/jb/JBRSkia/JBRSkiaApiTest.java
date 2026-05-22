@@ -295,6 +295,16 @@ public class JBRSkiaApiTest {
         assertInvalidCommandStream(invalidTransformedShaderPayloadCountStream(), "transformed shader payload count mismatch");
         assertInvalidCommandStream(invalidEvictedShaderHandleStream(), "evicted shader handle fill");
         assertInvalidCommandStream(invalidRuntimeEffectShaderHashStream(), "invalid runtime-effect shader source hash stream");
+        assertInvalidCommandStream(invalidRuntimeEffectShaderSkslLengthStream(), "invalid runtime-effect shader SKSL length");
+        assertInvalidCommandStream(invalidRuntimeEffectShaderUniformFloatCountStream(), "invalid runtime-effect shader uniform count");
+        assertInvalidCommandStream(invalidRuntimeEffectShaderNegativeUniformFloatCountStream(), "invalid runtime-effect shader negative uniform count");
+        assertInvalidCommandStream(invalidRuntimeEffectShaderChildCountStream(), "invalid runtime-effect shader child count");
+        assertInvalidCommandStream(invalidRuntimeEffectShaderNegativeChildCountStream(), "invalid runtime-effect shader negative child count");
+        assertInvalidCommandStream(invalidRuntimeEffectShaderNamedUniformCountStream(), "invalid runtime-effect shader named uniform count");
+        assertInvalidCommandStream(invalidRuntimeEffectShaderNegativeNamedUniformCountStream(), "invalid runtime-effect shader negative named uniform count");
+        assertInvalidCommandStream(invalidRuntimeEffectShaderNamedChildCountStream(), "invalid runtime-effect shader named child count");
+        assertInvalidCommandStream(invalidRuntimeEffectShaderNegativeNamedChildCountStream(), "invalid runtime-effect shader negative named child count");
+        assertInvalidCommandStream(invalidRuntimeEffectShaderSourceCodeStream(), "invalid runtime-effect shader source code");
         assertInvalidCommandStream(invalidRuntimeEffectShaderColorFilterChildHandleStream(), "color-filter runtime-effect shader child handle");
         assertInvalidCommandStream(invalidRuntimeEffectUniformSchemaStream(), "invalid runtime-effect uniform schema stream");
         assertInvalidCommandStream(invalidRuntimeEffectChildSchemaStream(), "invalid runtime-effect child schema stream");
@@ -1690,6 +1700,71 @@ public class JBRSkiaApiTest {
         return commands;
     }
 
+    private static int[] invalidRuntimeEffectShaderSkslLengthStream() {
+        int[] commands = validRuntimeEffectShaderDescriptorStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 8] = 0;
+        return commands;
+    }
+
+    private static int[] invalidRuntimeEffectShaderUniformFloatCountStream() {
+        int[] commands = validRuntimeEffectShaderDescriptorStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 9] = 257;
+        return commands;
+    }
+
+    private static int[] invalidRuntimeEffectShaderNegativeUniformFloatCountStream() {
+        int[] commands = validRuntimeEffectShaderDescriptorStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 9] = -1;
+        return commands;
+    }
+
+    private static int[] invalidRuntimeEffectShaderChildCountStream() {
+        int[] commands = validRuntimeEffectShaderDescriptorStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 10] = 9;
+        return commands;
+    }
+
+    private static int[] invalidRuntimeEffectShaderNegativeChildCountStream() {
+        int[] commands = validRuntimeEffectShaderDescriptorStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 10] = -1;
+        return commands;
+    }
+
+    private static int[] invalidRuntimeEffectShaderNamedUniformCountStream() {
+        int[] commands = validRuntimeEffectShaderDescriptorStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 11] = 17;
+        return commands;
+    }
+
+    private static int[] invalidRuntimeEffectShaderNegativeNamedUniformCountStream() {
+        int[] commands = validRuntimeEffectShaderDescriptorStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 11] = -1;
+        return commands;
+    }
+
+    private static int[] invalidRuntimeEffectShaderNamedChildCountStream() {
+        int[] commands = validRuntimeEffectShaderDescriptorStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 12] = 1;
+        return commands;
+    }
+
+    private static int[] invalidRuntimeEffectShaderNegativeNamedChildCountStream() {
+        int[] commands = validRuntimeEffectShaderDescriptorStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 12] = -1;
+        return commands;
+    }
+
+    private static int[] invalidRuntimeEffectShaderSourceCodeStream() {
+        int[] commands = validRuntimeEffectShaderDescriptorStream();
+        int skslStart = JBRSkia.COMMAND_STREAM_HEADER_SIZE + 15;
+        int skslLength = commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 8];
+        commands[skslStart] = 0;
+        long sourceHash = shaderSourceHash(commands, skslStart, skslLength);
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 13] = (int) (sourceHash >> 32);
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 14] = (int) sourceHash;
+        return commands;
+    }
+
     private static int[] invalidRuntimeEffectShaderColorFilterChildHandleStream() {
         String sksl = "uniform shader content;half4 main(float2 p){return content.eval(p);}";
         long sourceHash = shaderSourceHash(sksl);
@@ -1754,6 +1829,15 @@ public class JBRSkiaApiTest {
         long hash = -3750763034362895579L;
         for (int index = 0; index < sksl.length(); index++) {
             hash ^= sksl.charAt(index) & 0xffL;
+            hash *= 1099511628211L;
+        }
+        return hash;
+    }
+
+    private static long shaderSourceHash(int[] commands, int offset, int length) {
+        long hash = -3750763034362895579L;
+        for (int index = 0; index < length; index++) {
+            hash ^= commands[offset + index] & 0xffL;
             hash *= 1099511628211L;
         }
         return hash;

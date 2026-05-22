@@ -38,6 +38,8 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- JBR parser-only `JBRSkiaApiTest` passed after adding direct RuntimeEffect shader descriptor guards for SKSL/source
+  code and uniform/child/named-count bounds.
 - JBR parser-only `JBRSkiaApiTest` passed after adding direct effect descriptor payload guards for blur, offset,
   corner/stamped path-effect, and chain path-effect descriptor bounds.
 - JBR parser-only `JBRSkiaApiTest` passed after adding direct shader descriptor payload guards for gradient tile/stop
