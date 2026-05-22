@@ -38,6 +38,11 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel `CASE_GROUPS=effect-descriptor-invalid` passed as the focused effect descriptor parser guard checkpoint:
+  28/28, `fallback_sum=28`, `unsupported_rows=0`, `picture_frames=0`, and `command_frames=0`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-111754/suite.tsv`.
+  This covers descriptor header guards, color/image filter payloads, and corner/stamped/chain path-effect descriptor
+  parser guards.
 - Magic Jewel `CASE_GROUPS=image-handles-invalid` passed as the focused image handle/parser guard checkpoint: 27/27,
   `fallback_sum=27`, `unsupported_rows=0`, `picture_frames=0`, and `command_frames=1082`:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-105821/suite.tsv`.
