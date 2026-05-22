@@ -50,6 +50,10 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   30/30 with `fallback_sum=30`, zero unsupported rows, zero JBR picture frames, and zero JBR command frames after the
   direct parser-test additions for gradient/image shader and Perlin-noise descriptor bounds:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-222036/suite.tsv`.
+- The current focused effect descriptor parser guard refresh is `CASE_GROUPS=effect-descriptor-invalid`, which passed
+  28/28 with `fallback_sum=28`, zero unsupported rows, zero JBR picture frames, and zero JBR command frames after the
+  direct parser-test additions for blur, offset, corner/stamped path-effect, and chain path-effect descriptor bounds:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-224042/suite.tsv`.
 - The current quick happy-path command replay checkpoint is `CASE_GROUPS=smoke`, which passed 6/6 with no fallback,
   no unsupported rows, no picture fallback, and 6,891 JBR command frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-003530/suite.tsv`.
