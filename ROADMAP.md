@@ -38,6 +38,11 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel `CASE_GROUPS=image-handles-invalid` passed as the focused image handle/parser guard checkpoint: 27/27,
+  `fallback_sum=27`, `unsupported_rows=0`, `picture_frames=0`, and `command_frames=1082`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-105821/suite.tsv`.
+  The command frames come from the recoverable image-cache-clear record-flags row; the other malformed rows rejected
+  before replay.
 - Magic Jewel `CASE_GROUPS=graphics-layer` passed as the focused graphics-layer command replay checkpoint: 21/21,
   `fallback_sum=0`, `unsupported_rows=0`, `picture_frames=0`, and `command_frames=30306`:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-104254/suite.tsv`.

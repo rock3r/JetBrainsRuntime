@@ -5,6 +5,11 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel `CASE_GROUPS=image-handles-invalid` passed as a focused image handle/parser guard checkpoint. Aggregate:
+  27/27, `fallback_sum=27`, `unsupported_rows=0`, `picture_frames=0`, and `command_frames=1082`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-105821/suite.tsv`.
+  The command frames come from the recoverable image-cache-clear record-flags row; the other malformed rows rejected
+  before replay.
 - Magic Jewel `CASE_GROUPS=graphics-layer` passed as a focused graphics-layer command replay checkpoint. Aggregate:
   21/21, `fallback_sum=0`, `unsupported_rows=0`, `picture_frames=0`, and `command_frames=30306`:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-104254/suite.tsv`.

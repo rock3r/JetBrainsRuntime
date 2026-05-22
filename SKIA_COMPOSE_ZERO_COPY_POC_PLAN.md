@@ -67,6 +67,10 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   with `fallback_sum=0`, zero unsupported rows, zero JBR picture frames, and 30,306 JBR command frames across layer
   clips, blend/color filters, render effects, shadows, 3D rotations, scale/translate, camera, and pivot variants:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-104254/suite.tsv`.
+- The current focused image handle/parser guard checkpoint is `CASE_GROUPS=image-handles-invalid`, which passed 27/27
+  with `fallback_sum=27`, zero unsupported rows, zero JBR picture frames, and 1,082 JBR command frames from the
+  recoverable image-cache-clear record-flags row:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-105821/suite.tsv`.
 - Descriptor/effect child handle validation has a default-order quick path for blur image-filter children too. The
   existing blur use-after-evict, missing-child, and wrong-effect-type sentinels are now inserted into the default
   command-probe order beside the offset image-filter child cases. Exact validation passed at
