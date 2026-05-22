@@ -38,6 +38,8 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- JBR parser-only `JBRSkiaApiTest` passed after adding direct shader descriptor payload guards for gradient tile/stop
+  ordering, radial radius, sweep color counts, and image shader dimension/tile bounds.
 - JBR parser-only `JBRSkiaApiTest` passed after adding direct Perlin-noise shader descriptor guards for base-frequency
   Y, zero octaves, and tile-height bounds. The test compiled against the patched `/tmp/jbr-skia-run/desktop` classes
   and local `JBRApi` stub, then ran headlessly with the rebuilt native bridge.

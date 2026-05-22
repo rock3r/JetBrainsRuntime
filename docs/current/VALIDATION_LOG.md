@@ -5,6 +5,11 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- JBR parser-only `JBRSkiaApiTest` passed again after extending direct shader descriptor payload coverage for
+  linear/radial/sweep gradient tile/stop/radius/color-count guards and image shader width/height/tile-mode bounds. The
+  test was compiled with `javac` against `/tmp/jbr-skia-run/desktop` and the local `JBRApi` stub, then run headlessly
+  with the patched `java.desktop` module, patched `java.base` stub classes, and
+  `/tmp/jbr-skia-native/libjbrskiainterop.dylib`; the run exited 0.
 - JBR parser-only `JBRSkiaApiTest` passed after extending Perlin-noise shader descriptor coverage to include
   base-frequency Y lower bounds, zero octaves, and tile-height upper/lower bounds. The test was compiled with `javac`
   against `/tmp/jbr-skia-run/desktop` and the local `JBRApi` stub, then run headlessly with
