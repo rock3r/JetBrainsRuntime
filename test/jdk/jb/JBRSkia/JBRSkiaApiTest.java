@@ -468,6 +468,18 @@ public class JBRSkiaApiTest {
                 2, 0xff00ffff, JBRSkia.COMMAND_BLEND_MODE_PLUS
         }, "unsupported effect descriptor blend mode");
         assertInvalidCommandStream(invalidColorMatrixFilterDescriptorStream(), "color-matrix descriptor rejects nonfinite values");
+        assertInvalidCommandStream(invalidBlurImageFilterDescriptorSigmaStream(), "blur image-filter descriptor sigma");
+        assertInvalidCommandStream(invalidBlurImageFilterDescriptorNegativeSigmaStream(), "blur image-filter descriptor negative sigma");
+        assertInvalidCommandStream(invalidBlurImageFilterDescriptorTileModeStream(), "blur image-filter descriptor tile mode");
+        assertInvalidCommandStream(invalidOffsetImageFilterDescriptorDeltaStream(), "offset image-filter descriptor delta");
+        assertInvalidCommandStream(invalidCornerPathEffectDescriptorRadiusStream(), "corner path-effect descriptor radius");
+        assertInvalidCommandStream(invalidStampedPathEffectDescriptorAdvanceStream(), "stamped path-effect descriptor advance");
+        assertInvalidCommandStream(invalidStampedPathEffectDescriptorZeroAdvanceStream(), "stamped path-effect descriptor zero advance");
+        assertInvalidCommandStream(invalidStampedPathEffectDescriptorPhaseStream(), "stamped path-effect descriptor phase");
+        assertInvalidCommandStream(invalidStampedPathEffectDescriptorStyleStream(), "stamped path-effect descriptor style");
+        assertInvalidCommandStream(invalidStampedPathEffectDescriptorFillTypeStream(), "stamped path-effect descriptor fill type");
+        assertInvalidCommandStream(invalidStampedPathEffectDescriptorPathDataLengthStream(), "stamped path-effect descriptor path-data length");
+        assertInvalidCommandStream(invalidChainPathEffectDescriptorPayloadCountStream(), "chain path-effect descriptor payload count");
         assertInvalidCommandStream(new int[] {
                 JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 25,
                 JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
@@ -945,6 +957,130 @@ public class JBRSkiaApiTest {
                 f(0f), f(0f), f(1f), f(0f), f(0f),
                 f(0f), f(0f), f(0f), f(1f), f(0f)
         };
+    }
+
+    private static int[] validBlurImageFilterDescriptorRecordOnlyStream() {
+        return new int[] {
+                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 11,
+                JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
+                JBRSkia.COMMAND_DEFINE_EFFECT_DESCRIPTOR, 44, JBRSkia.COMMAND_RECORD_FLAGS_NONE,
+                0x00000031, 0x00000032,
+                JBRSkia.COMMAND_EFFECT_DESCRIPTOR_BLUR_IMAGE_FILTER,
+                JBRSkia.COMMAND_EFFECT_DESCRIPTOR_VERSION_1,
+                3,
+                f(1f), f(1f), 0
+        };
+    }
+
+    private static int[] invalidBlurImageFilterDescriptorSigmaStream() {
+        int[] commands = validBlurImageFilterDescriptorRecordOnlyStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 8] = f(Float.NaN);
+        return commands;
+    }
+
+    private static int[] invalidBlurImageFilterDescriptorNegativeSigmaStream() {
+        int[] commands = validBlurImageFilterDescriptorRecordOnlyStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 9] = f(-1f);
+        return commands;
+    }
+
+    private static int[] invalidBlurImageFilterDescriptorTileModeStream() {
+        int[] commands = validBlurImageFilterDescriptorRecordOnlyStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 10] = 4;
+        return commands;
+    }
+
+    private static int[] validOffsetImageFilterDescriptorRecordOnlyStream() {
+        return new int[] {
+                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 10,
+                JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
+                JBRSkia.COMMAND_DEFINE_EFFECT_DESCRIPTOR, 40, JBRSkia.COMMAND_RECORD_FLAGS_NONE,
+                0x00000031, 0x00000032,
+                JBRSkia.COMMAND_EFFECT_DESCRIPTOR_OFFSET_IMAGE_FILTER,
+                JBRSkia.COMMAND_EFFECT_DESCRIPTOR_VERSION_1,
+                2,
+                f(2f), f(3f)
+        };
+    }
+
+    private static int[] invalidOffsetImageFilterDescriptorDeltaStream() {
+        int[] commands = validOffsetImageFilterDescriptorRecordOnlyStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 9] = f(Float.POSITIVE_INFINITY);
+        return commands;
+    }
+
+    private static int[] invalidCornerPathEffectDescriptorRadiusStream() {
+        int[] commands = validCornerPathEffectDescriptorRecordOnlyStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 8] = f(Float.NaN);
+        return commands;
+    }
+
+    private static int[] validCornerPathEffectDescriptorRecordOnlyStream() {
+        return new int[] {
+                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 9,
+                JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
+                JBRSkia.COMMAND_DEFINE_EFFECT_DESCRIPTOR, 36, JBRSkia.COMMAND_RECORD_FLAGS_NONE,
+                0x00000031, 0x00000032,
+                JBRSkia.COMMAND_EFFECT_DESCRIPTOR_CORNER_PATH_EFFECT,
+                JBRSkia.COMMAND_EFFECT_DESCRIPTOR_VERSION_1,
+                1,
+                f(2f)
+        };
+    }
+
+    private static int[] validStampedPathEffectDescriptorRecordOnlyStream() {
+        return new int[] {
+                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 13,
+                JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
+                JBRSkia.COMMAND_DEFINE_EFFECT_DESCRIPTOR, 52, JBRSkia.COMMAND_RECORD_FLAGS_NONE,
+                0x00000031, 0x00000032,
+                JBRSkia.COMMAND_EFFECT_DESCRIPTOR_STAMPED_PATH_EFFECT,
+                JBRSkia.COMMAND_EFFECT_DESCRIPTOR_VERSION_1,
+                5,
+                f(2f), f(1f), 0, JBRSkia.COMMAND_PATH_FILL_NON_ZERO, 0
+        };
+    }
+
+    private static int[] invalidStampedPathEffectDescriptorAdvanceStream() {
+        int[] commands = validStampedPathEffectDescriptorRecordOnlyStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 8] = f(Float.NaN);
+        return commands;
+    }
+
+    private static int[] invalidStampedPathEffectDescriptorZeroAdvanceStream() {
+        int[] commands = validStampedPathEffectDescriptorRecordOnlyStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 8] = f(0f);
+        return commands;
+    }
+
+    private static int[] invalidStampedPathEffectDescriptorPhaseStream() {
+        int[] commands = validStampedPathEffectDescriptorRecordOnlyStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 9] = f(-1f);
+        return commands;
+    }
+
+    private static int[] invalidStampedPathEffectDescriptorStyleStream() {
+        int[] commands = validStampedPathEffectDescriptorRecordOnlyStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 10] = 3;
+        return commands;
+    }
+
+    private static int[] invalidStampedPathEffectDescriptorFillTypeStream() {
+        int[] commands = validStampedPathEffectDescriptorRecordOnlyStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 11] = 99;
+        return commands;
+    }
+
+    private static int[] invalidStampedPathEffectDescriptorPathDataLengthStream() {
+        int[] commands = validStampedPathEffectDescriptorRecordOnlyStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 12] = 4097;
+        return commands;
+    }
+
+    private static int[] invalidChainPathEffectDescriptorPayloadCountStream() {
+        int[] commands = invalidChainPathEffectMissingChildHandleStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 7] = 3;
+        return commands;
     }
 
     private static int[] invalidFillRectColorFilterImageFilterHandleStream() {
