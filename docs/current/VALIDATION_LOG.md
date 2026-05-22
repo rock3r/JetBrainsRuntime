@@ -5,6 +5,11 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- JBR parser-only `JBRSkiaApiTest` passed after extending direct saveLayer scalar coverage for supported non-ref
+  color-filter, blend-mode, and blend/color-filter width/height/alpha bounds. The test was compiled with `javac`
+  against `/tmp/jbr-skia-run/desktop` and the local `JBRApi` stub, then run headlessly with the patched
+  `java.desktop` module, patched `java.base` stub classes, and `/tmp/jbr-skia-native/libjbrskiainterop.dylib`; the run
+  exited 0.
 - JBR parser-only `JBRSkiaApiTest` passed after extending direct RuntimeEffect color-filter descriptor coverage for
   source hash/source-code validation, SKSL length, uniform/child/named-count bounds, and negative count guards. The
   test was compiled with `javac` against `/tmp/jbr-skia-run/desktop` and the local `JBRApi` stub, then run headlessly

@@ -21,6 +21,8 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   uniform/child/named-count bounds alongside the existing schema checks.
 - Direct effect descriptor parser coverage now mirrors the live blur, offset, corner/stamped path-effect, and chained
   path-effect descriptor payload bounds.
+- Direct saveLayer parser coverage includes supported non-ref color-filter, blend-mode, and blend/color-filter scalar
+  bounds.
 - Stable descriptor rows assert JBR handle definitions, uses, cache hits, and context invalidation behavior.
 - The default path-effect command row now also gates the stable descriptor-definition contract: five JBR-owned
   path-effect descriptor definitions and no picture fallback.

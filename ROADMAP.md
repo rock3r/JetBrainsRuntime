@@ -38,6 +38,8 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- JBR parser-only `JBRSkiaApiTest` passed after adding direct saveLayer scalar guards for supported non-ref
+  color-filter, blend-mode, and blend/color-filter bounds.
 - JBR parser-only `JBRSkiaApiTest` passed after adding direct RuntimeEffect color-filter descriptor guards for
   hash/source code and uniform/child/named-count bounds.
 - JBR parser-only `JBRSkiaApiTest` passed after adding direct RuntimeEffect shader descriptor guards for SKSL/source
