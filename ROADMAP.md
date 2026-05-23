@@ -38,6 +38,9 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel `CASE_GROUPS=color-filters` passed as a focused supported color-filter/graphics-layer replay refresh:
+  10/10, `fallback_sum=0`, `unsupported_rows=1`, `picture_frames=873`, and `command_frames=12561`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260523-174955/suite.tsv`.
 - Magic Jewel `CASE_GROUPS=path-invalid` passed as the path and path-effect parser fallback refresh: 22/22,
   `fallback_sum=22`, `unsupported_rows=0`, `picture_frames=0`, and `command_frames=0`:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260523-173511/suite.tsv`.

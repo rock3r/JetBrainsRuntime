@@ -5,6 +5,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel `CASE_GROUPS=color-filters` passed as a focused supported color-filter/graphics-layer replay refresh.
+  Aggregate: 10/10 passed, `fallback_sum=0`, `unsupported_rows=1`, `picture_frames=873`, and
+  `command_frames=12561`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260523-174955/suite.tsv`.
+  The one unsupported row is the intentional raw blend color-filter sentinel; the supported color-filter, lighting,
+  and graphics-layer color-filter rows stayed on command replay.
 - Magic Jewel `CASE_GROUPS=path-invalid` passed as the path and path-effect parser fallback refresh. Aggregate:
   22/22 passed, `fallback_sum=22`, `unsupported_rows=0`, `picture_frames=0`, and `command_frames=0`:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260523-173511/suite.tsv`.
