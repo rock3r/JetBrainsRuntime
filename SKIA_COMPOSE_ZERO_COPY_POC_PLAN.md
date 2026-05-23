@@ -78,6 +78,10 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   with `fallback_sum=11`, zero unsupported rows, zero JBR picture frames, and 1,500 JBR command frames across invalid
   font size/weight/width/slant/family-count rows and the invalid font-data record flags sentinel:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260523-171910/suite.tsv`.
+- The current primitive paint/draw parser fallback checkpoint is `CASE_GROUPS=primitive-invalid`, which passed 13/13
+  with `fallback_sum=13`, zero unsupported rows, zero JBR picture frames, and zero JBR command frames across invalid
+  stroke cap, transform flags, clip operation, drawPoints, and drawVertices payload guards:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260523-172558/suite.tsv`.
 - The current focused graphics-layer transform/effect checkpoint is `CASE_GROUPS=graphics-layer`, which passed 21/21
   with no fallback, no unsupported rows, zero JBR picture frames, and 42,087 JBR command frames across layer
   alpha/offscreen/clip variants, blend/color-filter/render-effect rows, shadows, rotations, scale/translate,

@@ -5,6 +5,11 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel `CASE_GROUPS=primitive-invalid` passed as the primitive paint/draw parser fallback refresh. Aggregate:
+  13/13 passed, `fallback_sum=13`, `unsupported_rows=0`, `picture_frames=0`, and `command_frames=0`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260523-172558/suite.tsv`.
+  The group covers invalid stroke cap, transform record flags, clip operation, point-count/record-length guards, and
+  drawVertices count/mode/blend/index guards.
 - Magic Jewel `CASE_GROUPS=native-text-invalid` passed as the native text/font parser fallback refresh. Aggregate:
   11/11 passed, `fallback_sum=11`, `unsupported_rows=0`, `picture_frames=0`, and `command_frames=1500`:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260523-171910/suite.tsv`.
