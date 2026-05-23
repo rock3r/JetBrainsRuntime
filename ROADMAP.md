@@ -39,9 +39,10 @@ This is the small working roadmap for the current PoC. The full historical check
 ## Latest Validations
 
 - JBR parser-only `JBRSkiaApiTest` passed after adding direct descriptor-handle invalid checks for shader/color-filter
-  evict record flags, undefined saveLayer image-filter handles, and evicted saveLayer color/filter descriptor handles.
-  The Magic Jewel `CASE_GROUPS=descriptor-handles-invalid` harness run remains pending until Gradle can access the
-  user-home wrapper lock again.
+  evict record flags, transformed/composite/shader-color-filter child use-after-evict, undefined saveLayer image-filter
+  handles, and evicted saveLayer color/filter descriptor handles. The Magic Jewel
+  `CASE_GROUPS=descriptor-handles-invalid` harness run remains pending until Gradle can access the user-home wrapper
+  lock again.
 - Magic Jewel `CASE_GROUPS=image-handles-invalid` passed as the image handle/ref parser fallback refresh: 27/27,
   `fallback_sum=27`, `unsupported_rows=0`, `picture_frames=0`, and `command_frames=806`:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260523-175721/suite.tsv`.

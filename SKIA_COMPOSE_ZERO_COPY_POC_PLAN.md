@@ -96,10 +96,11 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   image-ref/use/ref rows, and descriptor-ref scalar guards:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260523-175721/suite.tsv`.
 - The current direct JBR parser checkpoint extends `JBRSkiaApiTest` for descriptor-handle invalid coverage. It now
-  covers shader/color-filter evict record flags, undefined saveLayer image-filter handles, and evicted saveLayer
-  color/filter descriptor handles; the local `-Djbrskia.parserOnly=true` run exited 0. The full Magic Jewel
-  `CASE_GROUPS=descriptor-handles-invalid` harness run is still pending because the non-escalated Gradle wrapper cannot
-  access `~/.gradle` locks and escalation is currently quota-blocked.
+  covers shader/color-filter evict record flags, transformed/composite/shader-color-filter child use-after-evict,
+  undefined saveLayer image-filter handles, and evicted saveLayer color/filter descriptor handles; the local
+  `-Djbrskia.parserOnly=true` run exited 0. The full Magic Jewel `CASE_GROUPS=descriptor-handles-invalid` harness run
+  is still pending because the non-escalated Gradle wrapper cannot access `~/.gradle` locks and escalation is currently
+  quota-blocked.
 - The current focused graphics-layer transform/effect checkpoint is `CASE_GROUPS=graphics-layer`, which passed 21/21
   with no fallback, no unsupported rows, zero JBR picture frames, and 42,087 JBR command frames across layer
   alpha/offscreen/clip variants, blend/color-filter/render-effect rows, shadows, rotations, scale/translate,
