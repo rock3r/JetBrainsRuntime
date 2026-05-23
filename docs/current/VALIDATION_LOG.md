@@ -5,6 +5,11 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel `CASE_GROUPS=path-invalid` passed as the path and path-effect parser fallback refresh. Aggregate:
+  22/22 passed, `fallback_sum=22`, `unsupported_rows=0`, `picture_frames=0`, and `command_frames=0`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260523-173511/suite.tsv`.
+  The group covers malformed clip/draw path verbs, dash path-effect interval/geometry/stroke fields for line, rect,
+  round-rect, and generic-path rows, plus the drawShadow path verb fallback.
 - Magic Jewel `CASE_GROUPS=primitive-invalid` passed as the primitive paint/draw parser fallback refresh. Aggregate:
   13/13 passed, `fallback_sum=13`, `unsupported_rows=0`, `picture_frames=0`, and `command_frames=0`:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260523-172558/suite.tsv`.

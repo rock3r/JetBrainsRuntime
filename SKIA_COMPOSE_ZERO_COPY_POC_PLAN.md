@@ -82,6 +82,10 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   with `fallback_sum=13`, zero unsupported rows, zero JBR picture frames, and zero JBR command frames across invalid
   stroke cap, transform flags, clip operation, drawPoints, and drawVertices payload guards:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260523-172558/suite.tsv`.
+- The current path and path-effect parser fallback checkpoint is `CASE_GROUPS=path-invalid`, which passed 22/22 with
+  `fallback_sum=22`, zero unsupported rows, zero JBR picture frames, and zero JBR command frames across malformed
+  clip/draw path verbs, dash path-effect line/rect/round-rect/generic-path payloads, and drawShadow path verbs:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260523-173511/suite.tsv`.
 - The current focused graphics-layer transform/effect checkpoint is `CASE_GROUPS=graphics-layer`, which passed 21/21
   with no fallback, no unsupported rows, zero JBR picture frames, and 42,087 JBR command frames across layer
   alpha/offscreen/clip variants, blend/color-filter/render-effect rows, shadows, rotations, scale/translate,
