@@ -11,6 +11,11 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260523-050014/suite.tsv`.
   The group covers descriptor eviction, same-context resize and forced-context redefine paths for descriptor-backed
   shader/effect families, stable RuntimeEffect color filters, and RuntimeEffect source-cache eviction rows.
+- Magic Jewel `CASE_GROUPS=native-text` passed as a focused native font/text lifecycle refresh. Aggregate: 14/14
+  passed, `fallback_sum=0`, `unsupported_rows=0`, `picture_frames=0`, and `command_frames=27551`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260523-051647/suite.tsv`.
+  The group covers custom-font image text, generic/loaded/resource/system fonts, same-context resize, and forced
+  destination-context migration.
 - Magic Jewel periodic default command-probe consolidation passed after the shader/effect/RuntimeEffect/saveLayer
   parser guard refreshes. macOS `screencapture` failed on the first broad attempt for `commands-live-animation`
   (`could not create image from window`) even though command replay was healthy, so the row was rerun exactly with
