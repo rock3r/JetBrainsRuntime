@@ -7,8 +7,9 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 - JBR parser-only `JBRSkiaApiTest` passed after extending descriptor-handle invalid coverage. The new direct streams
   cover shader/color-filter evict record flags, transformed/composite/shader-color-filter and RuntimeEffect shader/
-  color-filter child use-after-evict, undefined saveLayer image-filter handles, plus evicted saveLayer color-filter,
-  blend/color-filter, and image-filter descriptor handles. The local run used `-Djbrskia.parserOnly=true` with
+  color-filter child use-after-evict, blur image-filter child missing/evicted/wrong-type, undefined saveLayer
+  image-filter handles, plus evicted saveLayer color-filter, blend/color-filter, and image-filter descriptor handles.
+  The local run used `-Djbrskia.parserOnly=true` with
   `/tmp/jbr-skia-run/desktop`,
   `/tmp/jbr-skia-api-stub-classes`, and `/tmp/jbr-skia-native/libjbrskiainterop.dylib`; it exited 0. The broader
   Magic Jewel `CASE_GROUPS=descriptor-handles-invalid` harness run is still pending because sandboxed Gradle cannot

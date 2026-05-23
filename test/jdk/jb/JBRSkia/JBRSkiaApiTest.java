@@ -528,6 +528,9 @@ public class JBRSkiaApiTest {
         assertInvalidCommandStream(invalidRuntimeColorFilterNegativeNamedUniformCountStream(), "invalid runtime color-filter negative named uniform count");
         assertInvalidCommandStream(invalidRuntimeColorFilterNamedChildCountStream(), "invalid runtime color-filter named child count");
         assertInvalidCommandStream(invalidRuntimeColorFilterNegativeNamedChildCountStream(), "invalid runtime color-filter negative named child count");
+        assertInvalidCommandStream(invalidBlurImageFilterMissingChildHandleStream(), "undefined blur image-filter child handle");
+        assertInvalidCommandStream(invalidBlurImageFilterEvictedChildHandleStream(), "evicted blur image-filter child handle");
+        assertInvalidCommandStream(invalidBlurImageFilterColorFilterChildHandleStream(), "color-filter blur image-filter child handle");
         assertInvalidCommandStream(invalidOffsetImageFilterMissingChildHandleStream(), "undefined offset image-filter child handle");
         assertInvalidCommandStream(invalidOffsetImageFilterEvictedChildHandleStream(), "evicted offset image-filter child handle");
         assertInvalidCommandStream(invalidOffsetImageFilterColorFilterChildHandleStream(), "color-filter offset image-filter child handle");
@@ -2249,6 +2252,61 @@ public class JBRSkiaApiTest {
                 4,
                 0x00000043, 0x00000044,
                 f(2f), f(3f)
+        };
+    }
+
+    private static int[] invalidBlurImageFilterMissingChildHandleStream() {
+        return new int[] {
+                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 13,
+                JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
+                JBRSkia.COMMAND_DEFINE_EFFECT_DESCRIPTOR, 52, JBRSkia.COMMAND_RECORD_FLAGS_NONE,
+                0x00000043, 0x00000044,
+                JBRSkia.COMMAND_EFFECT_DESCRIPTOR_BLUR_IMAGE_FILTER_WITH_INPUT,
+                JBRSkia.COMMAND_EFFECT_DESCRIPTOR_VERSION_1,
+                5,
+                0x00000041, 0x00000042,
+                f(1f), f(1f), 0
+        };
+    }
+
+    private static int[] invalidBlurImageFilterEvictedChildHandleStream() {
+        return new int[] {
+                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 29,
+                JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
+                JBRSkia.COMMAND_DEFINE_EFFECT_DESCRIPTOR, 44, JBRSkia.COMMAND_RECORD_FLAGS_NONE,
+                0x00000041, 0x00000042,
+                JBRSkia.COMMAND_EFFECT_DESCRIPTOR_BLUR_IMAGE_FILTER,
+                JBRSkia.COMMAND_EFFECT_DESCRIPTOR_VERSION_1,
+                3,
+                f(1f), f(1f), 0,
+                JBRSkia.COMMAND_EVICT_COLOR_FILTER_HANDLE, 20, JBRSkia.COMMAND_RECORD_FLAGS_NONE,
+                0x00000041, 0x00000042,
+                JBRSkia.COMMAND_DEFINE_EFFECT_DESCRIPTOR, 52, JBRSkia.COMMAND_RECORD_FLAGS_NONE,
+                0x00000043, 0x00000044,
+                JBRSkia.COMMAND_EFFECT_DESCRIPTOR_BLUR_IMAGE_FILTER_WITH_INPUT,
+                JBRSkia.COMMAND_EFFECT_DESCRIPTOR_VERSION_1,
+                5,
+                0x00000041, 0x00000042,
+                f(1f), f(1f), 0
+        };
+    }
+
+    private static int[] invalidBlurImageFilterColorFilterChildHandleStream() {
+        return new int[] {
+                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 23,
+                JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
+                JBRSkia.COMMAND_DEFINE_EFFECT_DESCRIPTOR, 40, JBRSkia.COMMAND_RECORD_FLAGS_NONE,
+                0x00000041, 0x00000042,
+                JBRSkia.COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER,
+                JBRSkia.COMMAND_EFFECT_DESCRIPTOR_VERSION_1,
+                2, 0xff00ffff, JBRSkia.COMMAND_BLEND_MODE_SRC_IN,
+                JBRSkia.COMMAND_DEFINE_EFFECT_DESCRIPTOR, 52, JBRSkia.COMMAND_RECORD_FLAGS_NONE,
+                0x00000043, 0x00000044,
+                JBRSkia.COMMAND_EFFECT_DESCRIPTOR_BLUR_IMAGE_FILTER_WITH_INPUT,
+                JBRSkia.COMMAND_EFFECT_DESCRIPTOR_VERSION_1,
+                5,
+                0x00000041, 0x00000042,
+                f(1f), f(1f), 0
         };
     }
 
