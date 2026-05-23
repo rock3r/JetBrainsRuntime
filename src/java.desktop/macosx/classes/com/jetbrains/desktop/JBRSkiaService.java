@@ -3635,7 +3635,9 @@ public class JBRSkiaService extends JBRSkia {
                         int blendMode = commands[offset++];
                         long handle = cacheKey(commands[offset++], commands[offset++]);
                         ColorFilterDescriptor descriptor = COLOR_FILTER_CACHE.get(new ColorFilterCacheKey(contextPtr, handle));
-                        if (descriptor == null || width < 0 || height < 0 || alpha1000 < 0 || alpha1000 > 1000
+                        if (descriptor == null
+                                || !isColorFilterDescriptor(descriptor)
+                                || width < 0 || height < 0 || alpha1000 < 0 || alpha1000 > 1000
                                 || !isSupportedBlendMode(blendMode)) return false;
                         stack.addLast(current);
                         current = (Graphics2D) current.create();
@@ -3649,7 +3651,9 @@ public class JBRSkiaService extends JBRSkia {
                         int alpha1000 = commands[offset++];
                         long handle = cacheKey(commands[offset++], commands[offset++]);
                         ColorFilterDescriptor descriptor = COLOR_FILTER_CACHE.get(new ColorFilterCacheKey(contextPtr, handle));
-                        if (descriptor == null || width < 0 || height < 0 || alpha1000 < 0 || alpha1000 > 1000) return false;
+                        if (descriptor == null
+                                || !isColorFilterDescriptor(descriptor)
+                                || width < 0 || height < 0 || alpha1000 < 0 || alpha1000 > 1000) return false;
                         stack.addLast(current);
                         current = (Graphics2D) current.create();
                         current.clipRect(x, y, width, height);

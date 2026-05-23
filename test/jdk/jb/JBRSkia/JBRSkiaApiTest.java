@@ -546,6 +546,8 @@ public class JBRSkiaApiTest {
         assertInvalidCommandStream(invalidDrawPathPathEffectColorFilterHandleStream(), "color-filter draw-path path-effect handle");
         assertInvalidCommandStream(invalidSaveLayerImageFilterMissingHandleStream(), "undefined saveLayer image-filter handle");
         assertInvalidCommandStream(invalidSaveLayerImageFilterColorFilterHandleStream(), "color-filter saveLayer image-filter handle");
+        assertInvalidCommandStream(invalidSaveLayerColorFilterPathEffectHandleStream(), "path-effect saveLayer color-filter handle");
+        assertInvalidCommandStream(invalidSaveLayerBlendColorFilterPathEffectHandleStream(), "path-effect saveLayer blend/color-filter handle");
         assertInvalidCommandStream(invalidSaveLayerColorFilterEvictedHandleStream(), "evicted saveLayer color-filter handle");
         assertInvalidCommandStream(invalidSaveLayerBlendColorFilterEvictedHandleStream(), "evicted saveLayer blend/color-filter handle");
         assertInvalidCommandStream(invalidSaveLayerImageFilterEvictedHandleStream(), "evicted saveLayer image-filter handle");
@@ -2609,6 +2611,34 @@ public class JBRSkiaApiTest {
                 f(0f), f(0f), f(0f), f(1f), f(0f),
                 JBRSkia.COMMAND_SAVE_LAYER_BLEND_COLOR_FILTER_REF, 44, JBRSkia.COMMAND_RECORD_FLAGS_NONE,
                 1, 2, 10, 10, 600, JBRSkia.COMMAND_BLEND_MODE_PLUS, 0x00000009, 0x0000000a
+        };
+    }
+
+    private static int[] invalidSaveLayerColorFilterPathEffectHandleStream() {
+        return new int[] {
+                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 19,
+                JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
+                JBRSkia.COMMAND_DEFINE_EFFECT_DESCRIPTOR, 36, JBRSkia.COMMAND_RECORD_FLAGS_NONE,
+                0x00000031, 0x00000032,
+                JBRSkia.COMMAND_EFFECT_DESCRIPTOR_CORNER_PATH_EFFECT,
+                JBRSkia.COMMAND_EFFECT_DESCRIPTOR_VERSION_1,
+                1, f(4f),
+                JBRSkia.COMMAND_SAVE_LAYER_COLOR_FILTER_REF, 40, JBRSkia.COMMAND_RECORD_FLAGS_NONE,
+                1, 2, 10, 10, 600, 0x00000031, 0x00000032
+        };
+    }
+
+    private static int[] invalidSaveLayerBlendColorFilterPathEffectHandleStream() {
+        return new int[] {
+                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 20,
+                JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
+                JBRSkia.COMMAND_DEFINE_EFFECT_DESCRIPTOR, 36, JBRSkia.COMMAND_RECORD_FLAGS_NONE,
+                0x00000031, 0x00000032,
+                JBRSkia.COMMAND_EFFECT_DESCRIPTOR_CORNER_PATH_EFFECT,
+                JBRSkia.COMMAND_EFFECT_DESCRIPTOR_VERSION_1,
+                1, f(4f),
+                JBRSkia.COMMAND_SAVE_LAYER_BLEND_COLOR_FILTER_REF, 44, JBRSkia.COMMAND_RECORD_FLAGS_NONE,
+                1, 2, 10, 10, 600, JBRSkia.COMMAND_BLEND_MODE_PLUS, 0x00000031, 0x00000032
         };
     }
 

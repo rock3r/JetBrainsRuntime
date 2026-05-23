@@ -38,6 +38,9 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- JBR parser-only `JBRSkiaApiTest` passed after aligning Java2D replay with parser-helper type checks for saveLayer
+  color-filter descriptor refs. Path-effect descriptors are now rejected for both color-filter and blend/color-filter
+  saveLayer refs.
 - JBR parser-only `JBRSkiaApiTest` passed after tightening direct parser-helper image-cache tracking for image refs and
   image-shader refs. The new direct rows reject undefined, evicted, and dimension-mismatched image cache keys before
   replay.
