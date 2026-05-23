@@ -537,6 +537,9 @@ public class JBRSkiaApiTest {
         assertInvalidCommandStream(invalidChainPathEffectMissingChildHandleStream(), "undefined chained path-effect child handle");
         assertInvalidCommandStream(invalidChainPathEffectEvictedChildHandleStream(), "evicted chained path-effect child handle");
         assertInvalidCommandStream(invalidChainPathEffectColorFilterChildHandleStream(), "color-filter chained path-effect child handle");
+        assertInvalidCommandStream(invalidDrawPathPathEffectMissingHandleStream(), "undefined draw-path path-effect handle");
+        assertInvalidCommandStream(invalidDrawPathPathEffectEvictedHandleStream(), "evicted draw-path path-effect handle");
+        assertInvalidCommandStream(invalidDrawPathPathEffectColorFilterHandleStream(), "color-filter draw-path path-effect handle");
         assertInvalidCommandStream(invalidSaveLayerImageFilterMissingHandleStream(), "undefined saveLayer image-filter handle");
         assertInvalidCommandStream(invalidSaveLayerImageFilterColorFilterHandleStream(), "color-filter saveLayer image-filter handle");
         assertInvalidCommandStream(invalidSaveLayerColorFilterEvictedHandleStream(), "evicted saveLayer color-filter handle");
@@ -2451,6 +2454,51 @@ public class JBRSkiaApiTest {
                 4,
                 0x00000051, 0x00000052,
                 0x00000053, 0x00000054
+        };
+    }
+
+    private static int[] invalidDrawPathPathEffectMissingHandleStream() {
+        return new int[] {
+                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 13,
+                JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
+                JBRSkia.COMMAND_DRAW_PATH_PATH_EFFECT_REF, 52, JBRSkia.COMMAND_RECORD_FLAG_ANTIALIAS,
+                JBRSkia.COMMAND_PAINT_STYLE_STROKE, 0xff3366cc, 1000, 0, 0, 4000,
+                0x00000051, 0x00000052,
+                JBRSkia.COMMAND_PATH_FILL_NON_ZERO, 0
+        };
+    }
+
+    private static int[] invalidDrawPathPathEffectEvictedHandleStream() {
+        return new int[] {
+                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 27,
+                JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
+                JBRSkia.COMMAND_DEFINE_EFFECT_DESCRIPTOR, 36, JBRSkia.COMMAND_RECORD_FLAGS_NONE,
+                0x00000051, 0x00000052,
+                JBRSkia.COMMAND_EFFECT_DESCRIPTOR_CORNER_PATH_EFFECT,
+                JBRSkia.COMMAND_EFFECT_DESCRIPTOR_VERSION_1,
+                1, f(4f),
+                JBRSkia.COMMAND_EVICT_COLOR_FILTER_HANDLE, 20, JBRSkia.COMMAND_RECORD_FLAGS_NONE,
+                0x00000051, 0x00000052,
+                JBRSkia.COMMAND_DRAW_PATH_PATH_EFFECT_REF, 52, JBRSkia.COMMAND_RECORD_FLAG_ANTIALIAS,
+                JBRSkia.COMMAND_PAINT_STYLE_STROKE, 0xff3366cc, 1000, 0, 0, 4000,
+                0x00000051, 0x00000052,
+                JBRSkia.COMMAND_PATH_FILL_NON_ZERO, 0
+        };
+    }
+
+    private static int[] invalidDrawPathPathEffectColorFilterHandleStream() {
+        return new int[] {
+                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 23,
+                JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
+                JBRSkia.COMMAND_DEFINE_EFFECT_DESCRIPTOR, 40, JBRSkia.COMMAND_RECORD_FLAGS_NONE,
+                0x00000051, 0x00000052,
+                JBRSkia.COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER,
+                JBRSkia.COMMAND_EFFECT_DESCRIPTOR_VERSION_1,
+                2, 0xff00ffff, JBRSkia.COMMAND_BLEND_MODE_SRC_IN,
+                JBRSkia.COMMAND_DRAW_PATH_PATH_EFFECT_REF, 52, JBRSkia.COMMAND_RECORD_FLAG_ANTIALIAS,
+                JBRSkia.COMMAND_PAINT_STYLE_STROKE, 0xff3366cc, 1000, 0, 0, 4000,
+                0x00000051, 0x00000052,
+                JBRSkia.COMMAND_PATH_FILL_NON_ZERO, 0
         };
     }
 

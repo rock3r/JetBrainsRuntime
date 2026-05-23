@@ -354,6 +354,12 @@ public class JBRSkiaService extends JBRSkia {
                     commands[record.argsStart() + 14],
                     commands[record.argsStart() + 15])) {
                 return false;
+            } else if (record.op() == COMMAND_DRAW_PATH_PATH_EFFECT_REF
+                    && !hasPathEffectDescriptorType(
+                    effectDescriptorTypes,
+                    commands[record.argsStart() + 6],
+                    commands[record.argsStart() + 7])) {
+                return false;
             } else if (record.op() == COMMAND_FILL_RECT_SHADER_REF
                     && !shaderHandles.contains(commandHandle(commands[record.argsStart()], commands[record.argsStart() + 1]))) {
                 return false;
@@ -1854,6 +1860,14 @@ public class JBRSkiaService extends JBRSkia {
             int handleLow
     ) {
         return isImageFilterDescriptorType(effectDescriptorTypes.get(commandHandle(handleHigh, handleLow)));
+    }
+
+    private static boolean hasPathEffectDescriptorType(
+            Map<Long, Integer> effectDescriptorTypes,
+            int handleHigh,
+            int handleLow
+    ) {
+        return isPathEffectDescriptorType(effectDescriptorTypes.get(commandHandle(handleHigh, handleLow)));
     }
 
     private static boolean isImageFilterDescriptorType(Integer descriptorType) {

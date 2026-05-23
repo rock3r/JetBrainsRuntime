@@ -5,6 +5,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- JBR parser-only `JBRSkiaApiTest` passed after tightening `isValidCommandStreamForTesting` so
+  `COMMAND_DRAW_PATH_PATH_EFFECT_REF` rejects undefined, evicted, or wrong-type descriptor handles before replay.
+  The local run first compiled a single-source patched `JBRSkiaService` overlay into
+  `/tmp/jbr-skia-service-test-classes`, then ran `JBRSkiaApiTest` with `-Djbrskia.parserOnly=true`,
+  `/tmp/jbr-skia-run/desktop`, `/tmp/jbr-skia-api-stub-classes`, and `/tmp/jbr-skia-native/libjbrskiainterop.dylib`;
+  it exited 0. The broader Magic Jewel `CASE_GROUPS=descriptor-handles-invalid` harness run remains pending because
+  sandboxed Gradle cannot open the user-home wrapper lock and app escalation is currently quota-blocked.
 - JBR parser-only `JBRSkiaApiTest` passed after extending descriptor-handle invalid coverage. The new direct streams
   cover shader/color-filter evict record flags, transformed/composite/shader-color-filter and RuntimeEffect shader/
   color-filter child use-after-evict, blur image-filter child missing/evicted/wrong-type, undefined saveLayer
