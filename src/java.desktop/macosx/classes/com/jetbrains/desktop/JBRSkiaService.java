@@ -1875,7 +1875,7 @@ public class JBRSkiaService extends JBRSkia {
                         commands[payloadStart + 8 + index * 2]
                 );
                 Integer childType = effectDescriptorTypes.get(childHandle);
-                if (childType == null || isImageFilterDescriptorType(childType)) return false;
+                if (!isColorFilterDescriptorType(childType)) return false;
             }
         }
         if (descriptorType == COMMAND_EFFECT_DESCRIPTOR_CHAIN_PATH_EFFECT && payloadIntCount == 4) {
@@ -4120,7 +4120,7 @@ public class JBRSkiaService extends JBRSkia {
                                         commands[offset + 8 + index * 2]
                                 );
                                 ColorFilterDescriptor child = COLOR_FILTER_CACHE.get(new ColorFilterCacheKey(contextPtr, childHandle));
-                                if (child == null || isImageFilterDescriptor(child)) return false;
+                                if (child == null || !isColorFilterDescriptor(child)) return false;
                             }
                             int[] payload = new int[payloadIntCount];
                             System.arraycopy(commands, offset, payload, 0, payloadIntCount);

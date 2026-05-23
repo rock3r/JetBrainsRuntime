@@ -522,6 +522,7 @@ public class JBRSkiaApiTest {
         assertInvalidCommandStream(invalidRuntimeColorFilterMissingChildHandleStream(), "undefined runtime color-filter child handle");
         assertInvalidCommandStream(invalidRuntimeColorFilterEvictedChildHandleStream(), "evicted runtime color-filter child handle");
         assertInvalidCommandStream(invalidRuntimeColorFilterImageFilterChildStream(), "image-filter runtime color-filter child handle");
+        assertInvalidCommandStream(invalidRuntimeColorFilterPathEffectChildStream(), "path-effect runtime color-filter child handle");
         assertInvalidCommandStream(invalidRuntimeColorFilterSourceHashStream(), "invalid runtime color-filter source hash");
         assertInvalidCommandStream(invalidRuntimeColorFilterSourceCodeStream(), "invalid runtime color-filter source code");
         assertInvalidCommandStream(invalidRuntimeColorFilterSkslLengthStream(), "invalid runtime color-filter SKSL length");
@@ -2126,6 +2127,10 @@ public class JBRSkiaApiTest {
         return runtimeColorFilterChildDescriptorStream(true, true, false);
     }
 
+    private static int[] invalidRuntimeColorFilterPathEffectChildStream() {
+        return runtimeColorFilterChildDescriptorStream(true, false, true, false);
+    }
+
     private static int[] invalidRuntimeColorFilterSourceHashStream() {
         int[] commands = validRuntimeColorFilterChildDescriptorStream();
         commands[runtimeColorFilterPayloadStart(commands) + 5] ^= 1;
@@ -2217,15 +2222,34 @@ public class JBRSkiaApiTest {
     }
 
     private static int[] runtimeColorFilterChildDescriptorStream(boolean defineChild, boolean imageFilterChild, boolean evictChild) {
+        return runtimeColorFilterChildDescriptorStream(defineChild, imageFilterChild, false, evictChild);
+    }
+
+    private static int[] runtimeColorFilterChildDescriptorStream(
+            boolean defineChild,
+            boolean imageFilterChild,
+            boolean pathEffectChild,
+            boolean evictChild
+    ) {
         String sksl = "half4 main(half4 c){return c;}";
         long sourceHash = shaderSourceHash(sksl);
         int payloadIntCount = 7 + 2 + sksl.length();
         int childRecordLength = 10;
         int childImageFilterRecordLength = 11;
+        int childPathEffectRecordLength = 9;
+        int childDefineRecordLength = childRecordLength;
+        int childDescriptorType = JBRSkia.COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER;
+        if (imageFilterChild) {
+            childDefineRecordLength = childImageFilterRecordLength;
+            childDescriptorType = JBRSkia.COMMAND_EFFECT_DESCRIPTOR_BLUR_IMAGE_FILTER;
+        } else if (pathEffectChild) {
+            childDefineRecordLength = childPathEffectRecordLength;
+            childDescriptorType = JBRSkia.COMMAND_EFFECT_DESCRIPTOR_CORNER_PATH_EFFECT;
+        }
         int evictRecordLength = 5;
         int defineRecordLength = 8 + payloadIntCount;
         int fillRecordLength = 10;
-        int commandIntCount = (defineChild ? (imageFilterChild ? childImageFilterRecordLength : childRecordLength) : 0)
+        int commandIntCount = (defineChild ? childDefineRecordLength : 0)
                 + (evictChild ? evictRecordLength : 0)
                 + defineRecordLength
                 + fillRecordLength;
@@ -2239,19 +2263,20 @@ public class JBRSkiaApiTest {
         commands[offset++] = JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB;
         if (defineChild) {
             commands[offset++] = JBRSkia.COMMAND_DEFINE_EFFECT_DESCRIPTOR;
-            commands[offset++] = (imageFilterChild ? childImageFilterRecordLength : childRecordLength) * Integer.BYTES;
+            commands[offset++] = childDefineRecordLength * Integer.BYTES;
             commands[offset++] = JBRSkia.COMMAND_RECORD_FLAGS_NONE;
             commands[offset++] = 0x00000031;
             commands[offset++] = 0x00000032;
-            commands[offset++] = imageFilterChild
-                    ? JBRSkia.COMMAND_EFFECT_DESCRIPTOR_BLUR_IMAGE_FILTER
-                    : JBRSkia.COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER;
+            commands[offset++] = childDescriptorType;
             commands[offset++] = JBRSkia.COMMAND_EFFECT_DESCRIPTOR_VERSION_1;
             if (imageFilterChild) {
                 commands[offset++] = 3;
                 commands[offset++] = f(1f);
                 commands[offset++] = f(1f);
                 commands[offset++] = 0;
+            } else if (pathEffectChild) {
+                commands[offset++] = 1;
+                commands[offset++] = f(4f);
             } else {
                 commands[offset++] = 2;
                 commands[offset++] = 0xff00ffff;

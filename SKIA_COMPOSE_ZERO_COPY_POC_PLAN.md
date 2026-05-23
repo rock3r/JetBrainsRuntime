@@ -29,6 +29,8 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   blend/color-filter refs.
 - Java2D replay now explicitly rejects non-color-filter descriptors for image-ref and fill-rect color-filter refs
   instead of relying on downstream filter application to fail.
+- RuntimeEffect color-filter child validation now requires color-filter descriptor children explicitly, including a
+  direct path-effect wrong-family sentinel.
 - Direct saveLayer parser coverage includes supported non-ref color-filter, blend-mode, and blend/color-filter scalar
   bounds.
 - Stable descriptor rows assert JBR handle definitions, uses, cache hits, and context invalidation behavior.
