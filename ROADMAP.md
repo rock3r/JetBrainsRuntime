@@ -38,6 +38,11 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel focused screenshot parity passed for the stable descriptor lifecycle visual surface: 14/14,
+  `fallback_sum=5`, `jbr_picture_frames=0`, and `jbr_command_frames=9992`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260523-170917/suite.tsv`.
+  The subset covered descriptor eviction, shader resize/forced-context redefine rows, stable RuntimeEffect
+  color-filter lifecycle rows, and RuntimeEffect source-cache eviction.
 - Magic Jewel compatibility matrix passed after the local artifact rebuild and latest default command-probe
   consolidation: 57/57, `fallback_sum=56`, `command_frames=426`, all rows background-windowed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260523-163821/matrix.tsv`.

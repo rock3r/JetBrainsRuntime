@@ -5,6 +5,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel focused screenshot parity passed for the stable descriptor lifecycle visual surface. The bounded
+  `CASES=...` subset covered descriptor eviction; same-context resize and forced-context redefine rows for color,
+  noise, turbulence, and composite-noise shaders; stable RuntimeEffect color-filter resize/forced-context rows; and
+  RuntimeEffect shader/color-filter source-cache eviction. Aggregate: 14/14 passed, `fallback_sum=5`,
+  `jbr_picture_frames=0`, and `jbr_command_frames=9992`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260523-170917/suite.tsv`.
 - Magic Jewel compatibility matrix passed after the local artifact rebuild and latest default command-probe
   consolidation. Aggregate: 57/57 passed, `fallback_sum=56`, `command_frames=426`, and all 57 rows kept
   `MAGIC_JEWEL_BACKGROUND_WINDOW=true`:
