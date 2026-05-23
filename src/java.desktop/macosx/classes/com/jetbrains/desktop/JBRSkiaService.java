@@ -296,6 +296,7 @@ public class JBRSkiaService extends JBRSkia {
         Set<Long> colorFilterHandles = new HashSet<>();
         Map<Long, Integer> effectDescriptorTypes = new HashMap<>();
         Set<Long> shaderHandles = new HashSet<>();
+        Map<Long, Long> imageDimensions = new HashMap<>();
         while (offset < commandEnd) {
             CommandRecord record = readCommandRecord(commands, offset, commandEnd);
             if (record == null
@@ -303,7 +304,32 @@ public class JBRSkiaService extends JBRSkia {
                     || !validateRecordArguments(commands, record)) {
                 return false;
             }
-            if (record.op() == COMMAND_DEFINE_COLOR_FILTER_TINT || record.op() == COMMAND_DEFINE_EFFECT_DESCRIPTOR) {
+            if (record.op() == COMMAND_CLEAR_IMAGE_CACHE) {
+                imageDimensions.clear();
+            } else if (record.op() == COMMAND_DEFINE_IMAGE_ARGB) {
+                long cacheKey = commandHandle(commands[record.argsStart()], commands[record.argsStart() + 1]);
+                imageDimensions.put(cacheKey, imageDimensions(commands[record.argsStart() + 2], commands[record.argsStart() + 3]));
+            } else if (record.op() == COMMAND_EVICT_IMAGE_CACHE_KEY) {
+                imageDimensions.remove(commandHandle(commands[record.argsStart()], commands[record.argsStart() + 1]));
+            } else if ((record.op() == COMMAND_DRAW_IMAGE_REF
+                    || record.op() == COMMAND_DRAW_IMAGE_REF_COLOR_FILTER
+                    || record.op() == COMMAND_DRAW_IMAGE_REF_COLOR_FILTER_REF)
+                    && !hasImageDimensions(
+                    imageDimensions,
+                    commands[record.argsStart() + 8],
+                    commands[record.argsStart() + 9],
+                    commands[record.argsStart() + 10],
+                    commands[record.argsStart() + 11])) {
+                return false;
+            } else if (record.op() == COMMAND_FILL_RECT_IMAGE_SHADER
+                    && !hasImageDimensions(
+                    imageDimensions,
+                    commands[record.argsStart() + 4],
+                    commands[record.argsStart() + 5],
+                    commands[record.argsStart() + 6],
+                    commands[record.argsStart() + 7])) {
+                return false;
+            } else if (record.op() == COMMAND_DEFINE_COLOR_FILTER_TINT || record.op() == COMMAND_DEFINE_EFFECT_DESCRIPTOR) {
                 if (record.op() == COMMAND_DEFINE_EFFECT_DESCRIPTOR
                         && !validateEffectDescriptorReferences(commands, record, effectDescriptorTypes)) {
                     return false;
@@ -384,6 +410,21 @@ public class JBRSkiaService extends JBRSkia {
             return -1;
         }
         return COMMAND_STREAM_HEADER_SIZE + payloadLength;
+    }
+
+    private static boolean hasImageDimensions(
+            Map<Long, Long> imageDimensions,
+            int cacheKeyHigh,
+            int cacheKeyLow,
+            int width,
+            int height
+    ) {
+        Long dimensions = imageDimensions.get(commandHandle(cacheKeyHigh, cacheKeyLow));
+        return dimensions != null && dimensions == imageDimensions(width, height);
+    }
+
+    private static long imageDimensions(int width, int height) {
+        return ((long) width << 32) | (height & 0xffffffffL);
     }
 
     private static int recordLengthFromBytes(int recordByteLength) {

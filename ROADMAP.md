@@ -38,6 +38,9 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- JBR parser-only `JBRSkiaApiTest` passed after tightening direct parser-helper image-cache tracking for image refs and
+  image-shader refs. The new direct rows reject undefined, evicted, and dimension-mismatched image cache keys before
+  replay.
 - JBR parser-only `JBRSkiaApiTest` passed after tightening the direct parser helper for
   `COMMAND_DRAW_PATH_PATH_EFFECT_REF` descriptor handles. The new checks reject undefined, evicted, and wrong-type
   path-effect handles with a single-source patched `JBRSkiaService` overlay; the broader Magic Jewel

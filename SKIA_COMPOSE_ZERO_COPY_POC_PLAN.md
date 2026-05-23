@@ -23,6 +23,8 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   path-effect descriptor payload bounds.
 - Direct descriptor-handle parser coverage now includes top-level draw-path path-effect refs, so the parser helper
   rejects undefined, evicted, and wrong-type path-effect handles before replay.
+- Direct image-cache parser coverage now mirrors live replay for image refs and image-shader refs by rejecting
+  undefined, evicted, cleared, or dimension-mismatched cache keys before replay.
 - Direct saveLayer parser coverage includes supported non-ref color-filter, blend-mode, and blend/color-filter scalar
   bounds.
 - Stable descriptor rows assert JBR handle definitions, uses, cache hits, and context invalidation behavior.

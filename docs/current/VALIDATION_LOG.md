@@ -5,6 +5,11 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- JBR parser-only `JBRSkiaApiTest` passed after tightening `isValidCommandStreamForTesting` image-cache tracking for
+  `COMMAND_DRAW_IMAGE_REF`, raw/ref color-filter image refs, and `COMMAND_FILL_RECT_IMAGE_SHADER`. The helper now
+  rejects undefined, evicted, cleared, or dimension-mismatched image cache keys before replay. The local run used the
+  same single-source patched `JBRSkiaService` overlay flow into `/tmp/jbr-skia-service-test-classes`, then
+  `-Djbrskia.parserOnly=true`; it exited 0.
 - JBR parser-only `JBRSkiaApiTest` passed after tightening `isValidCommandStreamForTesting` so
   `COMMAND_DRAW_PATH_PATH_EFFECT_REF` rejects undefined, evicted, or wrong-type descriptor handles before replay.
   The local run first compiled a single-source patched `JBRSkiaService` overlay into
