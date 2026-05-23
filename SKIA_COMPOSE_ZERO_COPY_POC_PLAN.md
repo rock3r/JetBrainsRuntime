@@ -49,6 +49,14 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `fallback_sum=349`, `unsupported_rows=26`, `picture_frames=33767`, and `command_frames=222490`:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-234434/suite.tsv` and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-234537/suite.tsv`.
+- The latest periodic default command-probe consolidation after the descriptor lifecycle, native text, graphics-layer,
+  and gradient quick refreshes used split resume roots and an exact repaired rerun after a transient local
+  `public-api-missing` artifact state. Combined aggregate: 486/486 passed, `fallback_sum=349`,
+  `unsupported_rows=26`, `picture_frames=34318`, and `command_frames=200336`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260523-063205/suite.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260523-153433/suite.tsv`,
+  and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260523-153519/suite.tsv`.
 - The current focused stable descriptor lifecycle checkpoint is `CASE_GROUPS=descriptor-lifecycle`, which passed 18/18
   with no fallback, no unsupported rows, zero JBR picture frames, and 34,840 JBR command frames across descriptor
   eviction, same-context resize/forced-context redefine, stable RuntimeEffect color-filter, and RuntimeEffect

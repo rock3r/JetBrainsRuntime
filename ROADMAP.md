@@ -38,6 +38,12 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel periodic default command-probe consolidation passed after the latest focused quick refreshes, using split
+  resume roots and an exact repaired rerun after a transient local `public-api-missing` artifact state: 486/486,
+  `fallback_sum=349`, `unsupported_rows=26`, `picture_frames=34318`, and `command_frames=200336`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260523-063205/suite.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260523-153433/suite.tsv`, and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260523-153519/suite.tsv`.
 - Magic Jewel now exposes `CASE_GROUPS=descriptor-lifecycle` for focused stable descriptor lifecycle validation. The
   group passed 18/18 with `fallback_sum=0`, `unsupported_rows=0`, `picture_frames=0`, and `command_frames=34840`:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260523-050014/suite.tsv`.
