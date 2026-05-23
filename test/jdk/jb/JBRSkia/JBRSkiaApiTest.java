@@ -267,6 +267,7 @@ public class JBRSkiaApiTest {
         assertValidCommandStream(validSaveLayerTintColorFilterStream(), "valid saveLayer tint color-filter stream");
         assertValidCommandStream(validImageRefTintColorFilterStream(), "valid image-ref tint color-filter stream");
         assertValidCommandStream(validImageRefColorMatrixFilterHandleStream(), "valid image-ref color-matrix filter handle stream");
+        assertInvalidCommandStream(invalidImageRefColorFilterPathEffectHandleStream(), "path-effect image-ref color-filter handle");
         assertValidCommandStream(validCompositeShaderDescriptorStream(), "valid composite shader descriptor stream");
         assertValidCommandStream(validRuntimeEffectShaderDescriptorStream(), "valid runtime-effect shader descriptor stream");
         assertValidCommandStream(validShaderColorFilterDescriptorStream(), "valid shader color-filter descriptor stream");
@@ -2757,6 +2758,23 @@ public class JBRSkiaApiTest {
                 f(0f), f(1f), f(0f), f(0f), f(0f),
                 f(0f), f(0f), f(1f), f(0f), f(0f),
                 f(0f), f(0f), f(0f), f(1f), f(0f),
+                JBRSkia.COMMAND_DEFINE_IMAGE_ARGB, 36, JBRSkia.COMMAND_RECORD_FLAGS_NONE,
+                1, 2, 1, 1, 1, 0xffffffff,
+                JBRSkia.COMMAND_DRAW_IMAGE_REF_COLOR_FILTER_REF, 76, JBRSkia.COMMAND_RECORD_FLAG_ANTIALIAS,
+                0, 0, 1000, 1000, 10, 20, 30, 40, 1, 2, 1, 1, 600, 1,
+                0x00000007, 0x00000008
+        };
+    }
+
+    private static int[] invalidImageRefColorFilterPathEffectHandleStream() {
+        return new int[] {
+                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 37,
+                JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
+                JBRSkia.COMMAND_DEFINE_EFFECT_DESCRIPTOR, 36, JBRSkia.COMMAND_RECORD_FLAGS_NONE,
+                0x00000007, 0x00000008,
+                JBRSkia.COMMAND_EFFECT_DESCRIPTOR_CORNER_PATH_EFFECT,
+                JBRSkia.COMMAND_EFFECT_DESCRIPTOR_VERSION_1,
+                1, f(4f),
                 JBRSkia.COMMAND_DEFINE_IMAGE_ARGB, 36, JBRSkia.COMMAND_RECORD_FLAGS_NONE,
                 1, 2, 1, 1, 1, 0xffffffff,
                 JBRSkia.COMMAND_DRAW_IMAGE_REF_COLOR_FILTER_REF, 76, JBRSkia.COMMAND_RECORD_FLAG_ANTIALIAS,

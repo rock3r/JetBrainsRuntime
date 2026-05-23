@@ -3772,7 +3772,8 @@ public class JBRSkiaService extends JBRSkia {
                         long handle = cacheKey(commands[offset++], commands[offset++]);
                         BufferedImage image = IMAGE_CACHE.get(new ImageCacheKey(contextPtr, cacheKey));
                         ColorFilterDescriptor descriptor = COLOR_FILTER_CACHE.get(new ColorFilterCacheKey(contextPtr, handle));
-                        if (image == null || descriptor == null || image.getWidth() != imageWidth || image.getHeight() != imageHeight
+                        if (image == null || descriptor == null || !isColorFilterDescriptor(descriptor)
+                                || image.getWidth() != imageWidth || image.getHeight() != imageHeight
                                 || alpha1000 < 0 || alpha1000 > 1000 || filterQuality < 0 || filterQuality > 3) {
                             return false;
                         }
@@ -4276,7 +4277,7 @@ public class JBRSkiaService extends JBRSkia {
                         int width = commands[offset++];
                         int height = commands[offset++];
                         ColorFilterDescriptor descriptor = COLOR_FILTER_CACHE.get(new ColorFilterCacheKey(contextPtr, handle));
-                        if (descriptor == null || width < 0 || height < 0) return false;
+                        if (descriptor == null || !isColorFilterDescriptor(descriptor) || width < 0 || height < 0) return false;
                         logEffectHandleUse("java2d", contextPtr, handle, op);
                         if (descriptor.type() == COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER) {
                             if (descriptor.blendMode() != COMMAND_BLEND_MODE_SRC_IN) return false;

@@ -27,6 +27,8 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   undefined, evicted, cleared, or dimension-mismatched cache keys before replay.
 - Java2D replay and parser-helper descriptor type checks now agree for saveLayer color-filter refs, including
   blend/color-filter refs.
+- Java2D replay now explicitly rejects non-color-filter descriptors for image-ref and fill-rect color-filter refs
+  instead of relying on downstream filter application to fail.
 - Direct saveLayer parser coverage includes supported non-ref color-filter, blend-mode, and blend/color-filter scalar
   bounds.
 - Stable descriptor rows assert JBR handle definitions, uses, cache hits, and context invalidation behavior.
