@@ -49,6 +49,11 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `fallback_sum=349`, `unsupported_rows=26`, `picture_frames=33767`, and `command_frames=222490`:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-234434/suite.tsv` and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-234537/suite.tsv`.
+- The current focused stable descriptor lifecycle checkpoint is `CASE_GROUPS=descriptor-lifecycle`, which passed 18/18
+  with no fallback, no unsupported rows, zero JBR picture frames, and 34,840 JBR command frames across descriptor
+  eviction, same-context resize/forced-context redefine, stable RuntimeEffect color-filter, and RuntimeEffect
+  source-cache eviction rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260523-050014/suite.tsv`.
 - The current focused saveLayer parser guard refresh is `CASE_GROUPS=save-layer-invalid`, which passed 37/37 with
   `fallback_sum=37`, zero unsupported rows, zero JBR picture frames, and zero JBR command frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-215534/suite.tsv`.
@@ -1383,8 +1388,9 @@ Stable RuntimeEffect color-filter coverage and full screenshot parity are curren
    current group names without launching validation. Current command groups include `smoke`, `stream-invalid`,
    `primitive-invalid`, `path-invalid`, `effect-descriptor-invalid`, `shader-descriptor-invalid`, `gradient-invalid`,
    `gradient-path-invalid`, `runtime-effect-invalid`, `descriptor-handles-invalid`, `shader-ref-invalid`,
-   `image-handles-invalid`, `save-layer-invalid`, `color-filters`, `fill-rect-color-filter-invalid`, `native-text`,
-   `native-text-invalid`, `blend-mode-invalid`, and `graphics-layer`.
+   `image-handles-invalid`, `save-layer-invalid`, `color-filters`, `descriptor-lifecycle`,
+   `fill-rect-color-filter-invalid`, `native-text`, `native-text-invalid`, `blend-mode-invalid`, and
+   `graphics-layer`.
 4. Run full default command/screenshot sweeps as checkpoint or periodic gates instead of every edit iteration.
 5. Keep updating this compact plan; move verbose historical details to archive or focused docs, not back into this file.
 6. Commit and push each major slice.

@@ -5,6 +5,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel now exposes `CASE_GROUPS=descriptor-lifecycle` as a no-run quick group for the stable descriptor
+  create/redefine/reuse/cache-eviction rows. The focused group passed 18/18 with `fallback_sum=0`,
+  `unsupported_rows=0`, `picture_frames=0`, and `command_frames=34840`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260523-050014/suite.tsv`.
+  The group covers descriptor eviction, same-context resize and forced-context redefine paths for descriptor-backed
+  shader/effect families, stable RuntimeEffect color filters, and RuntimeEffect source-cache eviction rows.
 - Magic Jewel periodic default command-probe consolidation passed after the shader/effect/RuntimeEffect/saveLayer
   parser guard refreshes. macOS `screencapture` failed on the first broad attempt for `commands-live-animation`
   (`could not create image from window`) even though command replay was healthy, so the row was rerun exactly with
