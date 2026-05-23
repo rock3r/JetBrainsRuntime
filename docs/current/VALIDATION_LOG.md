@@ -5,6 +5,9 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- JBR parser-only `JBRSkiaApiTest` passed after adding a direct cleared-image-cache ref row, covering the
+  `COMMAND_CLEAR_IMAGE_CACHE` branch in the parser-helper image-cache tracking. The local overlay parser-only run
+  exited 0.
 - JBR parser-only `JBRSkiaApiTest` passed after tightening RuntimeEffect color-filter child validation to require
   actual color-filter descriptors rather than merely excluding image filters. The new direct row covers a path-effect
   descriptor supplied as a RuntimeEffect color-filter child; the local overlay parser-only run exited 0.

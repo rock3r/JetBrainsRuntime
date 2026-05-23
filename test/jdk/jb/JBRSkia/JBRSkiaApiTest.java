@@ -223,6 +223,7 @@ public class JBRSkiaApiTest {
         assertValidCommandStream(validImageCacheStream(), "valid image cache stream");
         assertInvalidCommandStream(invalidDrawImageRefMissingImageStream(), "undefined image ref handle");
         assertInvalidCommandStream(invalidDrawImageRefEvictedImageStream(), "evicted image ref handle");
+        assertInvalidCommandStream(invalidDrawImageRefClearedImageStream(), "cleared image ref handle");
         assertInvalidCommandStream(invalidDrawImageRefDimensionMismatchStream(), "image ref dimension mismatch");
         assertInvalidCommandStream(invalidFillRectImageShaderMissingImageStream(), "undefined image shader handle");
         assertValidCommandStream(validFontDataStream(), "valid font-data stream");
@@ -714,6 +715,20 @@ public class JBRSkiaApiTest {
                 0xffff0000, 0xff00ff00, 0xff0000ff, 0xffffffff,
                 JBRSkia.COMMAND_EVICT_IMAGE_CACHE_KEY, 20, JBRSkia.COMMAND_RECORD_FLAGS_NONE,
                 0x12345678, 0x0abcdef0,
+                JBRSkia.COMMAND_DRAW_IMAGE_REF, 68, JBRSkia.COMMAND_RECORD_FLAG_ANTIALIAS,
+                0, 0, 2000, 2000, 10000, 20000, 30000, 40000,
+                0x12345678, 0x0abcdef0, 2, 2, 600, 1
+        };
+    }
+
+    private static int[] invalidDrawImageRefClearedImageStream() {
+        return new int[] {
+                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 32,
+                JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
+                JBRSkia.COMMAND_DEFINE_IMAGE_ARGB, 48, JBRSkia.COMMAND_RECORD_FLAGS_NONE,
+                0x12345678, 0x0abcdef0, 2, 2, 4,
+                0xffff0000, 0xff00ff00, 0xff0000ff, 0xffffffff,
+                JBRSkia.COMMAND_CLEAR_IMAGE_CACHE, 12, JBRSkia.COMMAND_RECORD_FLAGS_NONE,
                 JBRSkia.COMMAND_DRAW_IMAGE_REF, 68, JBRSkia.COMMAND_RECORD_FLAG_ANTIALIAS,
                 0, 0, 2000, 2000, 10000, 20000, 30000, 40000,
                 0x12345678, 0x0abcdef0, 2, 2, 600, 1

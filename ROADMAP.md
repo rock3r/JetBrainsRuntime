@@ -38,6 +38,8 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- JBR parser-only `JBRSkiaApiTest` passed after adding a cleared-image-cache ref row for the direct image-cache
+  tracking helper.
 - JBR parser-only `JBRSkiaApiTest` passed after tightening RuntimeEffect color-filter child validation to require
   actual color-filter descriptors. A path-effect child row now pins the wrong-family rejection.
 - JBR parser-only `JBRSkiaApiTest` passed after making Java2D replay explicitly reject non-color-filter descriptors for
