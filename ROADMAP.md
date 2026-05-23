@@ -38,6 +38,9 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel compatibility matrix passed after the local artifact rebuild and latest default command-probe
+  consolidation: 57/57, `fallback_sum=56`, `command_frames=426`, all rows background-windowed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260523-163821/matrix.tsv`.
 - Magic Jewel periodic default command-probe consolidation passed after the latest focused quick refreshes, using split
   resume roots and an exact repaired rerun after a transient local `public-api-missing` artifact state: 486/486,
   `fallback_sum=349`, `unsupported_rows=26`, `picture_frames=34318`, and `command_frames=200336`:

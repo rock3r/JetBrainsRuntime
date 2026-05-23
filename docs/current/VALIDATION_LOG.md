@@ -5,6 +5,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel compatibility matrix passed after the local artifact rebuild and latest default command-probe
+  consolidation. Aggregate: 57/57 passed, `fallback_sum=56`, `command_frames=426`, and all 57 rows kept
+  `MAGIC_JEWEL_BACKGROUND_WINDOW=true`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260523-163821/matrix.tsv`.
+  The matrix covers the happy command path plus ABI mismatch, native ABI mismatch, low/high command capability
+  mismatches, and the explicit `public-api-missing` fallback case.
 - Magic Jewel periodic default command-probe consolidation passed after the descriptor lifecycle, native text,
   graphics-layer, and gradient quick refreshes. The run used `EXPECT_SCREENSHOT_ASSERTION=false` and split resume
   roots after a transient local `public-api-missing` artifact state surfaced at
