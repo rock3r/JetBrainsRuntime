@@ -529,6 +529,7 @@ public class JBRSkiaApiTest {
         assertInvalidCommandStream(invalidChainPathEffectMissingChildHandleStream(), "undefined chained path-effect child handle");
         assertInvalidCommandStream(invalidChainPathEffectEvictedChildHandleStream(), "evicted chained path-effect child handle");
         assertInvalidCommandStream(invalidChainPathEffectColorFilterChildHandleStream(), "color-filter chained path-effect child handle");
+        assertInvalidCommandStream(invalidSaveLayerImageFilterMissingHandleStream(), "undefined saveLayer image-filter handle");
         assertInvalidCommandStream(invalidSaveLayerImageFilterColorFilterHandleStream(), "color-filter saveLayer image-filter handle");
         assertInvalidCommandStream(invalidSaveLayerColorFilterEvictedHandleStream(), "evicted saveLayer color-filter handle");
         assertInvalidCommandStream(invalidSaveLayerBlendColorFilterEvictedHandleStream(), "evicted saveLayer blend/color-filter handle");
@@ -2250,6 +2251,15 @@ public class JBRSkiaApiTest {
                 f(0f), f(0f), f(1f), f(0f), f(0f),
                 f(0f), f(0f), f(0f), f(1f), f(0f),
                 JBRSkia.COMMAND_SAVE_LAYER_COLOR_FILTER_REF, 40, JBRSkia.COMMAND_RECORD_FLAGS_NONE,
+                1, 2, 10, 10, 600, 0x00000005, 0x00000006
+        };
+    }
+
+    private static int[] invalidSaveLayerImageFilterMissingHandleStream() {
+        return new int[] {
+                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 10,
+                JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
+                JBRSkia.COMMAND_SAVE_LAYER_IMAGE_FILTER_REF, 40, JBRSkia.COMMAND_RECORD_FLAGS_NONE,
                 1, 2, 10, 10, 600, 0x00000005, 0x00000006
         };
     }
