@@ -5,6 +5,11 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel `CASE_GROUPS=native-text-invalid` passed as the native text/font parser fallback refresh. Aggregate:
+  11/11 passed, `fallback_sum=11`, `unsupported_rows=0`, `picture_frames=0`, and `command_frames=1500`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260523-171910/suite.tsv`.
+  The group covers invalid font size/weight/width/slant/family-count payloads for text and paragraph records, plus the
+  invalid font-data record flags sentinel.
 - Magic Jewel focused screenshot parity passed for the stable descriptor lifecycle visual surface. The bounded
   `CASES=...` subset covered descriptor eviction; same-context resize and forced-context redefine rows for color,
   noise, turbulence, and composite-noise shaders; stable RuntimeEffect color-filter resize/forced-context rows; and
