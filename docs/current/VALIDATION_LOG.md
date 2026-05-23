@@ -21,6 +21,10 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260523-052656/suite.tsv`.
   The group covers layer alpha/offscreen/clip variants, blend/color-filter/render-effect rows, shadows, rotations,
   scale/translate, near-camera, and off-center pivot replay.
+- Magic Jewel `CASE_GROUPS=gradient-path-invalid` passed as a focused gradient path parser/fallback refresh.
+  Aggregate: 18/18 passed, `fallback_sum=18`, `unsupported_rows=0`, `picture_frames=0`, and `command_frames=0`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260523-054125/suite.tsv`.
+  The group covers malformed linear/radial/sweep gradient path tile/count/stop-order/path-data variants.
 - Magic Jewel periodic default command-probe consolidation passed after the shader/effect/RuntimeEffect/saveLayer
   parser guard refreshes. macOS `screencapture` failed on the first broad attempt for `commands-live-animation`
   (`could not create image from window`) even though command replay was healthy, so the row was rerun exactly with

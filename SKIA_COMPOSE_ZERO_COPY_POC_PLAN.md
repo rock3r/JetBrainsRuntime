@@ -63,6 +63,10 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   alpha/offscreen/clip variants, blend/color-filter/render-effect rows, shadows, rotations, scale/translate,
   near-camera, and off-center pivot replay:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260523-052656/suite.tsv`.
+- The current focused gradient path parser/fallback checkpoint is `CASE_GROUPS=gradient-path-invalid`, which passed
+  18/18 with `fallback_sum=18`, zero unsupported rows, zero JBR picture frames, and zero JBR command frames across
+  malformed linear/radial/sweep gradient path tile/count/stop-order/path-data variants:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260523-054125/suite.tsv`.
 - The current focused saveLayer parser guard refresh is `CASE_GROUPS=save-layer-invalid`, which passed 37/37 with
   `fallback_sum=37`, zero unsupported rows, zero JBR picture frames, and zero JBR command frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-215534/suite.tsv`.
