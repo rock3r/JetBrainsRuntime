@@ -50,6 +50,9 @@ This is the small working roadmap for the current PoC. The full historical check
 - Magic Jewel `CASE_GROUPS=gradient-path-invalid` passed as a focused gradient path parser/fallback refresh: 18/18,
   `fallback_sum=18`, `unsupported_rows=0`, `picture_frames=0`, and `command_frames=0`:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260523-054125/suite.tsv`.
+- Magic Jewel `CASE_GROUPS=gradient-invalid` passed as the broader gradient parser/fallback refresh: 60/60,
+  `fallback_sum=60`, `unsupported_rows=0`, `picture_frames=0`, and `command_frames=0`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260523-055336/suite.tsv`.
 - Magic Jewel periodic default command-probe consolidation passed after the focused parser guard refreshes, using an
   exact `commands-live-animation` rerun plus a resumed default tail after macOS window capture failed independently of
   command replay on the first broad attempt: 486/486, `fallback_sum=349`, `unsupported_rows=26`,
