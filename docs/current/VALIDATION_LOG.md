@@ -5,6 +5,16 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel periodic default command-probe consolidation passed after the shader/effect/RuntimeEffect/saveLayer
+  parser guard refreshes. macOS `screencapture` failed on the first broad attempt for `commands-live-animation`
+  (`could not create image from window`) even though command replay was healthy, so the row was rerun exactly with
+  `EXPECT_SCREENSHOT_ASSERTION=false` and the rest of the default order resumed from the second case in command-marker
+  mode. Combined aggregate across the two passing roots: 486/486 passed, `fallback_sum=349`,
+  `unsupported_rows=26`, `picture_frames=33767`, and `command_frames=222490`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-234434/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-234537/suite.tsv`.
+  The discarded capture-failure root is
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-234330/suite.tsv`.
 - Magic Jewel `CASE_GROUPS=runtime-effect-invalid` passed as a focused RuntimeEffect parser/semantic guard refresh
   after the direct JBR parser-test additions. Aggregate: 62/62 passed, `fallback_sum=56`, `unsupported_rows=6`,
   `picture_frames=7689`, and `command_frames=0`:

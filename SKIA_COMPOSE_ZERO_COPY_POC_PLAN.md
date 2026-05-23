@@ -43,6 +43,12 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `command_frames=189208`. The split recovered from a transient local JBR Skia `public-api-missing` artifact state by
   rebuilding local artifacts, then used command-marker-only validation for the final tail after macOS `screencapture`
   began failing independently of command replay.
+- The latest periodic default command-probe consolidation after the shader/effect/RuntimeEffect/saveLayer parser guard
+  refreshes used an exact `commands-live-animation` rerun plus a resumed default tail after macOS window capture failed
+  independently of command replay on the first broad attempt. Combined aggregate: 486/486 passed,
+  `fallback_sum=349`, `unsupported_rows=26`, `picture_frames=33767`, and `command_frames=222490`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-234434/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-234537/suite.tsv`.
 - The current focused saveLayer parser guard refresh is `CASE_GROUPS=save-layer-invalid`, which passed 37/37 with
   `fallback_sum=37`, zero unsupported rows, zero JBR picture frames, and zero JBR command frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-215534/suite.tsv`.

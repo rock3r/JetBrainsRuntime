@@ -38,6 +38,12 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel periodic default command-probe consolidation passed after the focused parser guard refreshes, using an
+  exact `commands-live-animation` rerun plus a resumed default tail after macOS window capture failed independently of
+  command replay on the first broad attempt: 486/486, `fallback_sum=349`, `unsupported_rows=26`,
+  `picture_frames=33767`, and `command_frames=222490`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-234434/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-234537/suite.tsv`.
 - Magic Jewel `CASE_GROUPS=runtime-effect-invalid` passed as a focused RuntimeEffect parser/semantic guard refresh:
   62/62, `fallback_sum=56`, `unsupported_rows=6`, `picture_frames=7689`, and `command_frames=0`:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-225911/suite.tsv`.
