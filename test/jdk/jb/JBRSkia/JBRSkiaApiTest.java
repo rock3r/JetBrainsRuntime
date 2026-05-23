@@ -312,6 +312,7 @@ public class JBRSkiaApiTest {
         assertInvalidCommandStream(invalidRuntimeEffectShaderNamedChildCountStream(), "invalid runtime-effect shader named child count");
         assertInvalidCommandStream(invalidRuntimeEffectShaderNegativeNamedChildCountStream(), "invalid runtime-effect shader negative named child count");
         assertInvalidCommandStream(invalidRuntimeEffectShaderSourceCodeStream(), "invalid runtime-effect shader source code");
+        assertInvalidCommandStream(invalidRuntimeEffectShaderEvictedChildHandleStream(), "evicted runtime-effect shader child handle");
         assertInvalidCommandStream(invalidRuntimeEffectShaderColorFilterChildHandleStream(), "color-filter runtime-effect shader child handle");
         assertInvalidCommandStream(invalidRuntimeEffectUniformSchemaStream(), "invalid runtime-effect uniform schema stream");
         assertInvalidCommandStream(invalidRuntimeEffectChildSchemaStream(), "invalid runtime-effect child schema stream");
@@ -1929,6 +1930,59 @@ public class JBRSkiaApiTest {
         commands[offset++] = 2;
         commands[offset++] = 0xff00ffff;
         commands[offset++] = JBRSkia.COMMAND_BLEND_MODE_SRC_IN;
+        commands[offset++] = JBRSkia.COMMAND_DEFINE_SHADER_DESCRIPTOR;
+        commands[offset++] = defineRecordLength * Integer.BYTES;
+        commands[offset++] = JBRSkia.COMMAND_RECORD_FLAGS_NONE;
+        commands[offset++] = 0x00000033;
+        commands[offset++] = 0x00000034;
+        commands[offset++] = JBRSkia.COMMAND_SHADER_DESCRIPTOR_RUNTIME_EFFECT;
+        commands[offset++] = JBRSkia.COMMAND_SHADER_DESCRIPTOR_VERSION_1;
+        commands[offset++] = payloadIntCount;
+        commands[offset++] = sksl.length();
+        commands[offset++] = 0;
+        commands[offset++] = 1;
+        commands[offset++] = 0;
+        commands[offset++] = 0;
+        commands[offset++] = (int) (sourceHash >> 32);
+        commands[offset++] = (int) sourceHash;
+        commands[offset++] = 0x00000031;
+        commands[offset++] = 0x00000032;
+        for (int index = 0; index < sksl.length(); index++) {
+            commands[offset++] = sksl.charAt(index);
+        }
+        return commands;
+    }
+
+    private static int[] invalidRuntimeEffectShaderEvictedChildHandleStream() {
+        String sksl = "uniform shader content;half4 main(float2 p){return content.eval(p);}";
+        long sourceHash = shaderSourceHash(sksl);
+        int payloadIntCount = 7 + 2 + sksl.length();
+        int childRecordLength = 9;
+        int evictRecordLength = 5;
+        int defineRecordLength = 8 + payloadIntCount;
+        int commandIntCount = childRecordLength + evictRecordLength + defineRecordLength;
+        int[] commands = new int[JBRSkia.COMMAND_STREAM_HEADER_SIZE + commandIntCount];
+        int offset = 0;
+        commands[offset++] = JBRSkia.COMMAND_STREAM_MAGIC;
+        commands[offset++] = JBRSkia.ABI_ID;
+        commands[offset++] = JBRSkia.COMMAND_STREAM_FLAGS_NONE;
+        commands[offset++] = commandIntCount;
+        commands[offset++] = JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER;
+        commands[offset++] = JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB;
+        commands[offset++] = JBRSkia.COMMAND_DEFINE_SHADER_DESCRIPTOR;
+        commands[offset++] = childRecordLength * Integer.BYTES;
+        commands[offset++] = JBRSkia.COMMAND_RECORD_FLAGS_NONE;
+        commands[offset++] = 0x00000031;
+        commands[offset++] = 0x00000032;
+        commands[offset++] = JBRSkia.COMMAND_SHADER_DESCRIPTOR_COLOR;
+        commands[offset++] = JBRSkia.COMMAND_SHADER_DESCRIPTOR_VERSION_1;
+        commands[offset++] = 1;
+        commands[offset++] = 0xff3366cc;
+        commands[offset++] = JBRSkia.COMMAND_EVICT_SHADER_HANDLE;
+        commands[offset++] = evictRecordLength * Integer.BYTES;
+        commands[offset++] = JBRSkia.COMMAND_RECORD_FLAGS_NONE;
+        commands[offset++] = 0x00000031;
+        commands[offset++] = 0x00000032;
         commands[offset++] = JBRSkia.COMMAND_DEFINE_SHADER_DESCRIPTOR;
         commands[offset++] = defineRecordLength * Integer.BYTES;
         commands[offset++] = JBRSkia.COMMAND_RECORD_FLAGS_NONE;

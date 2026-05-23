@@ -39,7 +39,7 @@ This is the small working roadmap for the current PoC. The full historical check
 ## Latest Validations
 
 - JBR parser-only `JBRSkiaApiTest` passed after adding direct descriptor-handle invalid checks for shader/color-filter
-  evict record flags, transformed/composite/shader-color-filter and RuntimeEffect color-filter child use-after-evict,
+  evict record flags, transformed/composite/shader-color-filter and RuntimeEffect shader/color-filter child use-after-evict,
   undefined saveLayer image-filter handles, and evicted saveLayer color/filter descriptor handles. The Magic Jewel
   `CASE_GROUPS=descriptor-handles-invalid` harness run remains pending until Gradle can access the user-home wrapper
   lock again.
