@@ -5,6 +5,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- JBR parser-only `JBRSkiaApiTest` passed after extending descriptor-handle invalid coverage. The new direct streams
+  cover shader/color-filter evict record flags plus evicted saveLayer color-filter, blend/color-filter, and image-filter
+  descriptor handles. The local run used `-Djbrskia.parserOnly=true` with `/tmp/jbr-skia-run/desktop`,
+  `/tmp/jbr-skia-api-stub-classes`, and `/tmp/jbr-skia-native/libjbrskiainterop.dylib`; it exited 0. The broader
+  Magic Jewel `CASE_GROUPS=descriptor-handles-invalid` harness run is still pending because sandboxed Gradle cannot
+  open the user-home wrapper lock and app escalation is currently quota-blocked.
 - Magic Jewel `CASE_GROUPS=image-handles-invalid` passed as the image handle/ref parser fallback refresh. Aggregate:
   27/27 passed, `fallback_sum=27`, `unsupported_rows=0`, `picture_frames=0`, and `command_frames=806`:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260523-175721/suite.tsv`.
