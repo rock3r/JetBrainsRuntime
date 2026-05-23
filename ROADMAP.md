@@ -38,6 +38,8 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel no-run quick-loop plumbing now exposes the RuntimeEffect color-filter child path-effect wrong-type row in
+  `descriptor-handles-invalid`; the group count is 48. Execution remains pending on Gradle wrapper-lock access.
 - JBR parser-only `JBRSkiaApiTest` passed after adding a cleared-image-cache ref row for the direct image-cache
   tracking helper.
 - JBR parser-only `JBRSkiaApiTest` passed after tightening RuntimeEffect color-filter child validation to require

@@ -5,6 +5,11 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel no-run quick-loop plumbing now exposes
+  `commands-runtime-effect-color-filter-child-path-effect-wrong-type-fallback` in
+  `CASE_GROUPS=descriptor-handles-invalid`. `LIST_CASE_GROUP_COUNTS=true` reports the group at 48 cases, and
+  `CASE_GROUPS=descriptor-handles-invalid LIST_CASES=true` lists the new row. Execution is pending until Gradle can
+  access the user-home wrapper lock again.
 - JBR parser-only `JBRSkiaApiTest` passed after adding a direct cleared-image-cache ref row, covering the
   `COMMAND_CLEAR_IMAGE_CACHE` branch in the parser-helper image-cache tracking. The local overlay parser-only run
   exited 0.
