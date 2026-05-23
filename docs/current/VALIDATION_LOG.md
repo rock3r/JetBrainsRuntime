@@ -16,6 +16,11 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260523-051647/suite.tsv`.
   The group covers custom-font image text, generic/loaded/resource/system fonts, same-context resize, and forced
   destination-context migration.
+- Magic Jewel `CASE_GROUPS=graphics-layer` passed as a focused graphics-layer transform/effect refresh. Aggregate:
+  21/21 passed, `fallback_sum=0`, `unsupported_rows=0`, `picture_frames=0`, and `command_frames=42087`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260523-052656/suite.tsv`.
+  The group covers layer alpha/offscreen/clip variants, blend/color-filter/render-effect rows, shadows, rotations,
+  scale/translate, near-camera, and off-center pivot replay.
 - Magic Jewel periodic default command-probe consolidation passed after the shader/effect/RuntimeEffect/saveLayer
   parser guard refreshes. macOS `screencapture` failed on the first broad attempt for `commands-live-animation`
   (`could not create image from window`) even though command replay was healthy, so the row was rerun exactly with

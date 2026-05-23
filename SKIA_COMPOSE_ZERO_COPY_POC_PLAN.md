@@ -58,6 +58,11 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   fallback, no unsupported rows, zero JBR picture frames, and 27,551 JBR command frames across custom-font image text,
   generic/loaded/resource/system fonts, same-context resize, and forced destination-context migration:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260523-051647/suite.tsv`.
+- The current focused graphics-layer transform/effect checkpoint is `CASE_GROUPS=graphics-layer`, which passed 21/21
+  with no fallback, no unsupported rows, zero JBR picture frames, and 42,087 JBR command frames across layer
+  alpha/offscreen/clip variants, blend/color-filter/render-effect rows, shadows, rotations, scale/translate,
+  near-camera, and off-center pivot replay:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260523-052656/suite.tsv`.
 - The current focused saveLayer parser guard refresh is `CASE_GROUPS=save-layer-invalid`, which passed 37/37 with
   `fallback_sum=37`, zero unsupported rows, zero JBR picture frames, and zero JBR command frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-215534/suite.tsv`.
