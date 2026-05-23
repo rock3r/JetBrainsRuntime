@@ -5,6 +5,11 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel `CASE_GROUPS=image-handles-invalid` passed as the image handle/ref parser fallback refresh. Aggregate:
+  27/27 passed, `fallback_sum=27`, `unsupported_rows=0`, `picture_frames=0`, and `command_frames=806`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260523-175721/suite.tsv`.
+  The group covers malformed image define/cache-clear/evict records, image use/use-after-evict, image-ref scalar
+  corruption, color-filter image-ref/use/ref rows, and descriptor-ref scalar guards.
 - Magic Jewel `CASE_GROUPS=color-filters` passed as a focused supported color-filter/graphics-layer replay refresh.
   Aggregate: 10/10 passed, `fallback_sum=0`, `unsupported_rows=1`, `picture_frames=873`, and
   `command_frames=12561`:
