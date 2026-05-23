@@ -514,6 +514,7 @@ public class JBRSkiaApiTest {
                 0xffff00ff, 0xff00ffff, JBRSkia.COMMAND_BLEND_MODE_SRC_IN, 3, 4, 10, 20
         }, "evicted effect descriptor handle");
         assertInvalidCommandStream(invalidRuntimeColorFilterMissingChildHandleStream(), "undefined runtime color-filter child handle");
+        assertInvalidCommandStream(invalidRuntimeColorFilterEvictedChildHandleStream(), "evicted runtime color-filter child handle");
         assertInvalidCommandStream(invalidRuntimeColorFilterImageFilterChildStream(), "image-filter runtime color-filter child handle");
         assertInvalidCommandStream(invalidRuntimeColorFilterSourceHashStream(), "invalid runtime color-filter source hash");
         assertInvalidCommandStream(invalidRuntimeColorFilterSourceCodeStream(), "invalid runtime color-filter source code");
@@ -1996,15 +1997,19 @@ public class JBRSkiaApiTest {
     }
 
     private static int[] validRuntimeColorFilterChildDescriptorStream() {
-        return runtimeColorFilterChildDescriptorStream(true, false);
+        return runtimeColorFilterChildDescriptorStream(true, false, false);
     }
 
     private static int[] invalidRuntimeColorFilterMissingChildHandleStream() {
-        return runtimeColorFilterChildDescriptorStream(false, false);
+        return runtimeColorFilterChildDescriptorStream(false, false, false);
+    }
+
+    private static int[] invalidRuntimeColorFilterEvictedChildHandleStream() {
+        return runtimeColorFilterChildDescriptorStream(true, false, true);
     }
 
     private static int[] invalidRuntimeColorFilterImageFilterChildStream() {
-        return runtimeColorFilterChildDescriptorStream(true, true);
+        return runtimeColorFilterChildDescriptorStream(true, true, false);
     }
 
     private static int[] invalidRuntimeColorFilterSourceHashStream() {
@@ -2097,15 +2102,17 @@ public class JBRSkiaApiTest {
         return payloadStart + 7 + childCount * 2;
     }
 
-    private static int[] runtimeColorFilterChildDescriptorStream(boolean defineChild, boolean imageFilterChild) {
+    private static int[] runtimeColorFilterChildDescriptorStream(boolean defineChild, boolean imageFilterChild, boolean evictChild) {
         String sksl = "half4 main(half4 c){return c;}";
         long sourceHash = shaderSourceHash(sksl);
         int payloadIntCount = 7 + 2 + sksl.length();
         int childRecordLength = 10;
         int childImageFilterRecordLength = 11;
+        int evictRecordLength = 5;
         int defineRecordLength = 8 + payloadIntCount;
         int fillRecordLength = 10;
         int commandIntCount = (defineChild ? (imageFilterChild ? childImageFilterRecordLength : childRecordLength) : 0)
+                + (evictChild ? evictRecordLength : 0)
                 + defineRecordLength
                 + fillRecordLength;
         int[] commands = new int[JBRSkia.COMMAND_STREAM_HEADER_SIZE + commandIntCount];
@@ -2136,6 +2143,13 @@ public class JBRSkiaApiTest {
                 commands[offset++] = 0xff00ffff;
                 commands[offset++] = JBRSkia.COMMAND_BLEND_MODE_SRC_IN;
             }
+        }
+        if (evictChild) {
+            commands[offset++] = JBRSkia.COMMAND_EVICT_COLOR_FILTER_HANDLE;
+            commands[offset++] = evictRecordLength * Integer.BYTES;
+            commands[offset++] = JBRSkia.COMMAND_RECORD_FLAGS_NONE;
+            commands[offset++] = 0x00000031;
+            commands[offset++] = 0x00000032;
         }
         commands[offset++] = JBRSkia.COMMAND_DEFINE_EFFECT_DESCRIPTOR;
         commands[offset++] = defineRecordLength * Integer.BYTES;

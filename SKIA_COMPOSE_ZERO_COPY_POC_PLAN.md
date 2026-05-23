@@ -96,8 +96,9 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   image-ref/use/ref rows, and descriptor-ref scalar guards:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260523-175721/suite.tsv`.
 - The current direct JBR parser checkpoint extends `JBRSkiaApiTest` for descriptor-handle invalid coverage. It now
-  covers shader/color-filter evict record flags, transformed/composite/shader-color-filter child use-after-evict,
-  undefined saveLayer image-filter handles, and evicted saveLayer color/filter descriptor handles; the local
+  covers shader/color-filter evict record flags, transformed/composite/shader-color-filter and RuntimeEffect
+  color-filter child use-after-evict, undefined saveLayer image-filter handles, and evicted saveLayer color/filter
+  descriptor handles; the local
   `-Djbrskia.parserOnly=true` run exited 0. The full Magic Jewel `CASE_GROUPS=descriptor-handles-invalid` harness run
   is still pending because the non-escalated Gradle wrapper cannot access `~/.gradle` locks and escalation is currently
   quota-blocked.
