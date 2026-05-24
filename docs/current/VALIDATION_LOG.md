@@ -5,6 +5,9 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- JBR parser-only `JBRSkiaApiTest` passed after adding direct non-path linear-gradient rows for fill rect,
+  fill round-rect, stroke rect, and stroke round-rect tile-mode, color-count, stop-order, and stroke-width guards;
+  the local parser-only run exited 0.
 - JBR parser-only `JBRSkiaApiTest` passed after adding direct gradient-path command rows for linear, radial, and sweep
   path gradients. The new streams cover all `gradient-path-invalid` parser guards: tile/radius/color-count/stop-order,
   fill-type, path-data length, and path-verb rejection; the local parser-only run exited 0.
