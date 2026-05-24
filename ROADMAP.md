@@ -38,6 +38,8 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- JBR parser-only `JBRSkiaApiTest` passed after adding direct dashed stroke-rect path-effect rows for interval-count,
+  width, and height parser guards.
 - JBR parser-only `JBRSkiaApiTest` passed after adding direct dashed stroke-line path-effect rows for interval-count,
   phase, and interval-value parser guards.
 - JBR parser-only `JBRSkiaApiTest` passed after adding direct draw-points and draw-vertices scalar rows matching the

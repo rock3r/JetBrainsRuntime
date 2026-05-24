@@ -284,6 +284,10 @@ public class JBRSkiaApiTest {
         assertInvalidCommandStream(invalidDashedStrokeLineIntervalCountStream(), "invalid dashed stroke line interval count");
         assertInvalidCommandStream(invalidDashedStrokeLinePhaseStream(), "invalid dashed stroke line phase");
         assertInvalidCommandStream(invalidDashedStrokeLineIntervalStream(), "invalid dashed stroke line interval");
+        assertValidCommandStream(validDashedStrokeRectStream(), "valid dashed stroke rect stream");
+        assertInvalidCommandStream(invalidDashedStrokeRectIntervalCountStream(), "invalid dashed stroke rect interval count");
+        assertInvalidCommandStream(invalidDashedStrokeRectWidthStream(), "invalid dashed stroke rect width");
+        assertInvalidCommandStream(invalidDashedStrokeRectHeightStream(), "invalid dashed stroke rect height");
         assertValidCommandStream(validSaveLayerTintColorFilterStream(), "valid saveLayer tint color-filter stream");
         assertValidCommandStream(validImageRefTintColorFilterStream(), "valid image-ref tint color-filter stream");
         assertValidCommandStream(validImageRefColorMatrixFilterHandleStream(), "valid image-ref color-matrix filter handle stream");
@@ -2915,6 +2919,33 @@ public class JBRSkiaApiTest {
     private static int[] invalidDashedStrokeLineIntervalStream() {
         int[] commands = validDashedStrokeLineStream();
         commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 14] = 0;
+        return commands;
+    }
+
+    private static int[] validDashedStrokeRectStream() {
+        return new int[] {
+                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 16,
+                JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
+                JBRSkia.COMMAND_STROKE_RECT_DASH_PATH_EFFECT, 64, JBRSkia.COMMAND_RECORD_FLAG_ANTIALIAS,
+                0xffffffff, 1, 2, 11, 12, 8, 0, 1, 4000, 3000, 2, 16000, 10000
+        };
+    }
+
+    private static int[] invalidDashedStrokeRectIntervalCountStream() {
+        int[] commands = validDashedStrokeRectStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 13] = 1;
+        return commands;
+    }
+
+    private static int[] invalidDashedStrokeRectWidthStream() {
+        int[] commands = validDashedStrokeRectStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 6] = -1;
+        return commands;
+    }
+
+    private static int[] invalidDashedStrokeRectHeightStream() {
+        int[] commands = validDashedStrokeRectStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 7] = -1;
         return commands;
     }
 
