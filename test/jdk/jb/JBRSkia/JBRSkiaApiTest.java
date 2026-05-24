@@ -311,6 +311,13 @@ public class JBRSkiaApiTest {
         assertInvalidCommandStream(invalidDashedStrokePathFillTypeStream(), "invalid dashed stroke path fill type");
         assertInvalidCommandStream(invalidDashedStrokePathDataLengthStream(), "invalid dashed stroke path data length");
         assertInvalidCommandStream(invalidDashedStrokePathVerbStream(), "invalid dashed stroke path verb");
+        assertValidCommandStream(validDrawShadowPathStream(), "valid draw-shadow path stream");
+        assertInvalidCommandStream(invalidDrawShadowPathPlaneStream(), "invalid draw-shadow path plane");
+        assertInvalidCommandStream(invalidDrawShadowPathRadiusStream(), "invalid draw-shadow path radius");
+        assertInvalidCommandStream(invalidDrawShadowPathFlagsStream(), "invalid draw-shadow path flags");
+        assertInvalidCommandStream(invalidDrawShadowPathFillTypeStream(), "invalid draw-shadow path fill type");
+        assertInvalidCommandStream(invalidDrawShadowPathDataLengthStream(), "invalid draw-shadow path data length");
+        assertInvalidCommandStream(invalidDrawShadowPathVerbStream(), "invalid draw-shadow path verb");
         assertValidCommandStream(validSaveLayerTintColorFilterStream(), "valid saveLayer tint color-filter stream");
         assertValidCommandStream(validImageRefTintColorFilterStream(), "valid image-ref tint color-filter stream");
         assertValidCommandStream(validImageRefColorMatrixFilterHandleStream(), "valid image-ref color-matrix filter handle stream");
@@ -3114,6 +3121,53 @@ public class JBRSkiaApiTest {
     private static int[] invalidDashedStrokePathVerbStream() {
         int[] commands = validDashedStrokePathStream();
         commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 14] = 99;
+        return commands;
+    }
+
+    private static int[] validDrawShadowPathStream() {
+        return new int[] {
+                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 18,
+                JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
+                JBRSkia.COMMAND_DRAW_SHADOW_PATH, 72, JBRSkia.COMMAND_RECORD_FLAG_ANTIALIAS,
+                0x33000000, 0x55000000,
+                f(0f), f(0f), f(8f), f(10f), f(12f), f(20f), f(30f), 0,
+                JBRSkia.COMMAND_PATH_FILL_NON_ZERO, 3, JBRSkia.COMMAND_PATH_VERB_MOVE, 1000, 2000
+        };
+    }
+
+    private static int[] invalidDrawShadowPathPlaneStream() {
+        int[] commands = validDrawShadowPathStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 5] = f(Float.NaN);
+        return commands;
+    }
+
+    private static int[] invalidDrawShadowPathRadiusStream() {
+        int[] commands = validDrawShadowPathStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 11] = f(-1f);
+        return commands;
+    }
+
+    private static int[] invalidDrawShadowPathFlagsStream() {
+        int[] commands = validDrawShadowPathStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 12] = 4;
+        return commands;
+    }
+
+    private static int[] invalidDrawShadowPathFillTypeStream() {
+        int[] commands = validDrawShadowPathStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 13] = -1;
+        return commands;
+    }
+
+    private static int[] invalidDrawShadowPathDataLengthStream() {
+        int[] commands = validDrawShadowPathStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 14] = 4097;
+        return commands;
+    }
+
+    private static int[] invalidDrawShadowPathVerbStream() {
+        int[] commands = validDrawShadowPathStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 15] = 99;
         return commands;
     }
 

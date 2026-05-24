@@ -38,6 +38,8 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- JBR parser-only `JBRSkiaApiTest` passed after aligning direct draw-shadow path validation with native replay for
+  finite geometry, light radius, shadow flags, fill/path length, and path-verb parser guards.
 - JBR parser-only `JBRSkiaApiTest` passed after adding direct dashed stroke-path path-effect rows for interval-count,
   stroke metadata, phase, interval-value, fill-type, path-data-length, and path-verb parser guards.
 - JBR parser-only `JBRSkiaApiTest` passed after adding direct dashed stroke-round-rect path-effect rows for

@@ -988,6 +988,36 @@ public class JBRSkiaService extends JBRSkia {
                     && record.argsStart() + 8 + pathDataLength == record.recordEnd()
                     && validatePathData(commands, record.argsStart() + 8, record.recordEnd());
         }
+        if (record.op() == COMMAND_DRAW_SHADOW_PATH) {
+            if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE
+                    && record.recordFlags() != COMMAND_RECORD_FLAG_ANTIALIAS) {
+                return false;
+            }
+            float zPlaneX = Float.intBitsToFloat(commands[record.argsStart() + 2]);
+            float zPlaneY = Float.intBitsToFloat(commands[record.argsStart() + 3]);
+            float zPlaneZ = Float.intBitsToFloat(commands[record.argsStart() + 4]);
+            float lightPosX = Float.intBitsToFloat(commands[record.argsStart() + 5]);
+            float lightPosY = Float.intBitsToFloat(commands[record.argsStart() + 6]);
+            float lightPosZ = Float.intBitsToFloat(commands[record.argsStart() + 7]);
+            float lightRadius = Float.intBitsToFloat(commands[record.argsStart() + 8]);
+            int shadowFlags = commands[record.argsStart() + 9];
+            int fillType = commands[record.argsStart() + 10];
+            int pathDataLength = commands[record.argsStart() + 11];
+            return Float.isFinite(zPlaneX)
+                    && Float.isFinite(zPlaneY)
+                    && Float.isFinite(zPlaneZ)
+                    && Float.isFinite(lightPosX)
+                    && Float.isFinite(lightPosY)
+                    && Float.isFinite(lightPosZ)
+                    && Float.isFinite(lightRadius)
+                    && lightRadius >= 0f
+                    && (shadowFlags & ~0x3) == 0
+                    && (fillType == COMMAND_PATH_FILL_NON_ZERO || fillType == COMMAND_PATH_FILL_EVEN_ODD)
+                    && pathDataLength >= 0
+                    && pathDataLength <= 4096
+                    && record.argsStart() + 12 + pathDataLength == record.recordEnd()
+                    && validatePathData(commands, record.argsStart() + 12, record.recordEnd());
+        }
         if (record.op() == COMMAND_DRAW_ARC) {
             if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE
                     && record.recordFlags() != COMMAND_RECORD_FLAG_ANTIALIAS) {
