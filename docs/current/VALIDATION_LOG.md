@@ -5,6 +5,10 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- JBR parser-only `JBRSkiaApiTest` passed after adding direct fill-rect blend/color-filter scalar rows matching the
+  small Magic Jewel `blend-mode-invalid` and `fill-rect-color-filter-invalid` groups. The new direct streams cover
+  fill-rect blend-mode width/height, raw color-filter width/height, and descriptor color-filter ref width/height; the
+  local parser-only run exited 0.
 - Magic Jewel no-run quick-loop plumbing now exposes
   `commands-runtime-effect-color-filter-child-path-effect-wrong-type-fallback` in
   `CASE_GROUPS=descriptor-handles-invalid`. `LIST_CASE_GROUP_COUNTS=true` reports the group at 48 cases, and

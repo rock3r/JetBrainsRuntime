@@ -254,8 +254,14 @@ public class JBRSkiaApiTest {
         assertValidCommandStream(validFillRectSaturationBlendModeStream(), "valid fill rect saturation blend-mode stream");
         assertValidCommandStream(validFillRectColorBlendModeStream(), "valid fill rect color blend-mode stream");
         assertValidCommandStream(validFillRectLuminosityBlendModeStream(), "valid fill rect luminosity blend-mode stream");
+        assertInvalidCommandStream(invalidFillRectBlendModeWidthStream(), "invalid fill rect blend-mode width");
+        assertInvalidCommandStream(invalidFillRectBlendModeHeightStream(), "invalid fill rect blend-mode height");
         assertValidCommandStream(validFillRectTintColorFilterStream(), "valid fill rect tint color-filter stream");
         assertValidCommandStream(validFillRectTintColorFilterHandleStream(), "valid fill rect tint color-filter handle stream");
+        assertInvalidCommandStream(invalidFillRectColorFilterWidthStream(), "invalid fill rect color-filter width");
+        assertInvalidCommandStream(invalidFillRectColorFilterHeightStream(), "invalid fill rect color-filter height");
+        assertInvalidCommandStream(invalidFillRectColorFilterRefWidthStream(), "invalid fill rect color-filter ref width");
+        assertInvalidCommandStream(invalidFillRectColorFilterRefHeightStream(), "invalid fill rect color-filter ref height");
         assertValidCommandStream(validFillRectColorMatrixFilterHandleStream(), "valid fill rect color-matrix filter handle stream");
         assertValidCommandStream(validFillRectLightingFilterHandleStream(), "valid fill rect lighting filter handle stream");
         assertValidCommandStream(validRuntimeColorFilterChildDescriptorStream(), "valid runtime color-filter child descriptor stream");
@@ -1041,6 +1047,42 @@ public class JBRSkiaApiTest {
                 JBRSkia.COMMAND_FILL_RECT_COLOR_FILTER, 40, JBRSkia.COMMAND_RECORD_FLAG_ANTIALIAS,
                 0xffff00ff, 0xff00ffff, JBRSkia.COMMAND_BLEND_MODE_SRC_IN, 3, 4, 10, 20
         };
+    }
+
+    private static int[] invalidFillRectBlendModeWidthStream() {
+        int[] commands = validFillRectPlusBlendModeStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 7] = -1;
+        return commands;
+    }
+
+    private static int[] invalidFillRectBlendModeHeightStream() {
+        int[] commands = validFillRectPlusBlendModeStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 8] = -1;
+        return commands;
+    }
+
+    private static int[] invalidFillRectColorFilterWidthStream() {
+        int[] commands = validFillRectTintColorFilterStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 8] = -1;
+        return commands;
+    }
+
+    private static int[] invalidFillRectColorFilterHeightStream() {
+        int[] commands = validFillRectTintColorFilterStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 9] = -1;
+        return commands;
+    }
+
+    private static int[] invalidFillRectColorFilterRefWidthStream() {
+        int[] commands = validFillRectTintColorFilterHandleStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 10 + 8] = -1;
+        return commands;
+    }
+
+    private static int[] invalidFillRectColorFilterRefHeightStream() {
+        int[] commands = validFillRectTintColorFilterHandleStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 10 + 9] = -1;
+        return commands;
     }
 
     private static int[] validFillRectTintColorFilterHandleStream() {
