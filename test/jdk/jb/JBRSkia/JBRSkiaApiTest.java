@@ -233,6 +233,16 @@ public class JBRSkiaApiTest {
         assertValidCommandStream(validLinearGradientStrokeStream(), "valid linear-gradient stroke stream");
         assertValidCommandStream(validDrawPointsStream(), "valid draw-points stream");
         assertValidCommandStream(validDrawVerticesStream(), "valid draw-vertices stream");
+        assertInvalidCommandStream(invalidDrawPointsPointCountStream(), "invalid draw-points point count");
+        assertInvalidCommandStream(invalidDrawPointsMaxPointCountStream(), "invalid draw-points max point count");
+        assertInvalidCommandStream(invalidDrawPointsRecordLengthStream(), "invalid draw-points record length");
+        assertInvalidCommandStream(invalidDrawVerticesVertexCountStream(), "invalid draw-vertices vertex count");
+        assertInvalidCommandStream(invalidDrawVerticesMaxVertexCountStream(), "invalid draw-vertices max vertex count");
+        assertInvalidCommandStream(invalidDrawVerticesRecordLengthStream(), "invalid draw-vertices record length");
+        assertInvalidCommandStream(invalidDrawVerticesVertexModeStream(), "invalid draw-vertices vertex mode");
+        assertInvalidCommandStream(invalidDrawVerticesBlendModeStream(), "invalid draw-vertices blend mode");
+        assertInvalidCommandStream(invalidDrawVerticesIndexCountStream(), "invalid draw-vertices index count");
+        assertInvalidCommandStream(invalidDrawVerticesMaxIndexCountStream(), "invalid draw-vertices max index count");
         assertValidCommandStream(validLinearGradientStrokeRoundRectStream(), "valid linear-gradient stroke round-rect stream");
         assertValidCommandStream(validRadialGradientStrokeStream(), "valid radial-gradient stroke stream");
         assertValidCommandStream(validRadialGradientStrokeRoundRectStream(), "valid radial-gradient stroke round-rect stream");
@@ -847,6 +857,66 @@ public class JBRSkiaApiTest {
                 0xffff0000, 0xff00ff00, 0xff0000ff,
                 0, 1, 2
         };
+    }
+
+    private static int[] invalidDrawPointsPointCountStream() {
+        int[] commands = validDrawPointsStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 8] = 0;
+        return commands;
+    }
+
+    private static int[] invalidDrawPointsMaxPointCountStream() {
+        int[] commands = validDrawPointsStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 8] = 4097;
+        return commands;
+    }
+
+    private static int[] invalidDrawPointsRecordLengthStream() {
+        int[] commands = validDrawPointsStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 1] -= Integer.BYTES;
+        return commands;
+    }
+
+    private static int[] invalidDrawVerticesVertexCountStream() {
+        int[] commands = validDrawVerticesStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 6] = 2;
+        return commands;
+    }
+
+    private static int[] invalidDrawVerticesMaxVertexCountStream() {
+        int[] commands = validDrawVerticesStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 6] = 4097;
+        return commands;
+    }
+
+    private static int[] invalidDrawVerticesRecordLengthStream() {
+        int[] commands = validDrawVerticesStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 1] -= Integer.BYTES;
+        return commands;
+    }
+
+    private static int[] invalidDrawVerticesVertexModeStream() {
+        int[] commands = validDrawVerticesStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 3] = 3;
+        return commands;
+    }
+
+    private static int[] invalidDrawVerticesBlendModeStream() {
+        int[] commands = validDrawVerticesStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 4] = 9999;
+        return commands;
+    }
+
+    private static int[] invalidDrawVerticesIndexCountStream() {
+        int[] commands = validDrawVerticesStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 7] = -1;
+        return commands;
+    }
+
+    private static int[] invalidDrawVerticesMaxIndexCountStream() {
+        int[] commands = validDrawVerticesStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 7] = 8193;
+        return commands;
     }
 
     private static int[] validLinearGradientStrokeRoundRectStream() {

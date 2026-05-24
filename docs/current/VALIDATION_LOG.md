@@ -5,6 +5,10 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- JBR parser-only `JBRSkiaApiTest` passed after adding direct draw-points and draw-vertices scalar rows matching most
+  of the Magic Jewel `primitive-invalid` group. The new streams cover draw-points point-count lower/upper bounds and
+  record length, plus draw-vertices vertex-count lower/upper bounds, record length, vertex mode, blend mode, and
+  index-count lower/upper bounds; the local parser-only run exited 0.
 - JBR parser-only `JBRSkiaApiTest` passed after adding direct fill-rect shader-ref scalar rows matching the small
   Magic Jewel `shader-ref-invalid` group. The new streams cover horizontal bounds, vertical bounds, and alpha; the
   local parser-only run exited 0.
