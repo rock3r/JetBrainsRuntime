@@ -318,6 +318,19 @@ public class JBRSkiaApiTest {
         assertInvalidCommandStream(invalidDrawShadowPathFillTypeStream(), "invalid draw-shadow path fill type");
         assertInvalidCommandStream(invalidDrawShadowPathDataLengthStream(), "invalid draw-shadow path data length");
         assertInvalidCommandStream(invalidDrawShadowPathVerbStream(), "invalid draw-shadow path verb");
+        assertValidCommandStream(validClipPathStream(), "valid clip path stream");
+        assertInvalidCommandStream(invalidClipPathOpStream(), "invalid clip path operation");
+        assertInvalidCommandStream(invalidClipPathFillTypeStream(), "invalid clip path fill type");
+        assertInvalidCommandStream(invalidClipPathDataLengthStream(), "invalid clip path data length");
+        assertInvalidCommandStream(invalidClipPathVerbStream(), "invalid clip path verb");
+        assertValidCommandStream(validDrawPathStream(), "valid draw path stream");
+        assertInvalidCommandStream(invalidDrawPathStyleStream(), "invalid draw path style");
+        assertInvalidCommandStream(invalidDrawPathStrokeWidthStream(), "invalid draw path stroke width");
+        assertInvalidCommandStream(invalidDrawPathFillTypeStream(), "invalid draw path fill type");
+        assertInvalidCommandStream(invalidDrawPathDataLengthStream(), "invalid draw path data length");
+        assertInvalidCommandStream(invalidDrawPathVerbStream(), "invalid draw path verb");
+        assertValidCommandStream(validDrawPathPathEffectRefStream(), "valid draw path path-effect-ref stream");
+        assertInvalidCommandStream(invalidDrawPathPathEffectRefVerbStream(), "invalid draw path path-effect-ref verb");
         assertValidCommandStream(validSaveLayerTintColorFilterStream(), "valid saveLayer tint color-filter stream");
         assertValidCommandStream(validImageRefTintColorFilterStream(), "valid image-ref tint color-filter stream");
         assertValidCommandStream(validImageRefColorMatrixFilterHandleStream(), "valid image-ref color-matrix filter handle stream");
@@ -3168,6 +3181,102 @@ public class JBRSkiaApiTest {
     private static int[] invalidDrawShadowPathVerbStream() {
         int[] commands = validDrawShadowPathStream();
         commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 15] = 99;
+        return commands;
+    }
+
+    private static int[] validClipPathStream() {
+        return new int[] {
+                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 9,
+                JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
+                JBRSkia.COMMAND_CLIP_PATH, 36, JBRSkia.COMMAND_RECORD_FLAG_ANTIALIAS,
+                JBRSkia.COMMAND_CLIP_OP_INTERSECT, JBRSkia.COMMAND_PATH_FILL_NON_ZERO, 3,
+                JBRSkia.COMMAND_PATH_VERB_MOVE, 1000, 2000
+        };
+    }
+
+    private static int[] invalidClipPathOpStream() {
+        int[] commands = validClipPathStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 3] = -1;
+        return commands;
+    }
+
+    private static int[] invalidClipPathFillTypeStream() {
+        int[] commands = validClipPathStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 4] = -1;
+        return commands;
+    }
+
+    private static int[] invalidClipPathDataLengthStream() {
+        int[] commands = validClipPathStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 5] = 4097;
+        return commands;
+    }
+
+    private static int[] invalidClipPathVerbStream() {
+        int[] commands = validClipPathStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 6] = 99;
+        return commands;
+    }
+
+    private static int[] validDrawPathStream() {
+        return new int[] {
+                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 14,
+                JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
+                JBRSkia.COMMAND_DRAW_PATH, 56, JBRSkia.COMMAND_RECORD_FLAG_ANTIALIAS,
+                JBRSkia.COMMAND_PAINT_STYLE_STROKE, 0xff3366cc, 8, 0, 1, 4000,
+                JBRSkia.COMMAND_PATH_FILL_NON_ZERO, 3, JBRSkia.COMMAND_PATH_VERB_MOVE, 1000, 2000
+        };
+    }
+
+    private static int[] invalidDrawPathStyleStream() {
+        int[] commands = validDrawPathStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 3] = -1;
+        return commands;
+    }
+
+    private static int[] invalidDrawPathStrokeWidthStream() {
+        int[] commands = validDrawPathStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 5] = 0;
+        return commands;
+    }
+
+    private static int[] invalidDrawPathFillTypeStream() {
+        int[] commands = validDrawPathStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 9] = -1;
+        return commands;
+    }
+
+    private static int[] invalidDrawPathDataLengthStream() {
+        int[] commands = validDrawPathStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 10] = 4097;
+        return commands;
+    }
+
+    private static int[] invalidDrawPathVerbStream() {
+        int[] commands = validDrawPathStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 11] = 99;
+        return commands;
+    }
+
+    private static int[] validDrawPathPathEffectRefStream() {
+        return new int[] {
+                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 25,
+                JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
+                JBRSkia.COMMAND_DEFINE_EFFECT_DESCRIPTOR, 36, JBRSkia.COMMAND_RECORD_FLAGS_NONE,
+                0x00000051, 0x00000052,
+                JBRSkia.COMMAND_EFFECT_DESCRIPTOR_CORNER_PATH_EFFECT,
+                JBRSkia.COMMAND_EFFECT_DESCRIPTOR_VERSION_1,
+                1, f(4f),
+                JBRSkia.COMMAND_DRAW_PATH_PATH_EFFECT_REF, 64, JBRSkia.COMMAND_RECORD_FLAG_ANTIALIAS,
+                JBRSkia.COMMAND_PAINT_STYLE_STROKE, 0xff3366cc, 8, 0, 1, 4000,
+                0x00000051, 0x00000052,
+                JBRSkia.COMMAND_PATH_FILL_NON_ZERO, 3, JBRSkia.COMMAND_PATH_VERB_MOVE, 1000, 2000
+        };
+    }
+
+    private static int[] invalidDrawPathPathEffectRefVerbStream() {
+        int[] commands = validDrawPathPathEffectRefStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 22] = 99;
         return commands;
     }
 
