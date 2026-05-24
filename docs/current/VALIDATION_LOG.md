@@ -5,6 +5,11 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel exact save-layer ref scalar invalid slice passed for color-filter-ref and blend-color-filter-ref
+  width/height/alpha plus blend-mode payload guards, completing all 37 `save-layer-invalid` rows across exact slices.
+  Aggregate: 7/7 passed, `fallback_sum=7`, `unsupported_rows=0`, `jbr_picture_frames=0`, and
+  `jbr_command_frames=0`. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-131028/suite.tsv`.
 - Magic Jewel exact save-layer scalar/blend invalid slice passed for color-filter, blend-mode, blend-color-filter, and
   image-filter saveLayer width/height/alpha plus blend-mode payload guards. Aggregate: 15/15 passed,
   `fallback_sum=15`, `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=0`. Suite:

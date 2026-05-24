@@ -38,6 +38,10 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel exact save-layer ref scalar invalid slice passed for color-filter-ref and blend-color-filter-ref
+  scalar/blend guards, completing all 37 `save-layer-invalid` rows across exact slices: 7/7 passed,
+  `fallback_sum=7`, `unsupported_rows=0`, `jbr_picture_frames=0`, `jbr_command_frames=0`, suite
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-131028/suite.tsv`.
 - Magic Jewel exact save-layer scalar/blend invalid slice passed for color-filter/blend/image-filter saveLayer
   width/height/alpha and blend-mode payload guards: 15/15 passed, `fallback_sum=15`, `unsupported_rows=0`,
   `jbr_picture_frames=0`, `jbr_command_frames=0`, suite
