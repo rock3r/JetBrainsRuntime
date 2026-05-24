@@ -38,6 +38,10 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel exact RuntimeEffect nested-child fallback validation passed for the shader and color-filter rows,
+  completing the focused six-row schema/nested parser-fallback cluster: 2/2 passed, `jbr_picture_frames=2770`,
+  `jbr_command_frames=0`, suite
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-112201/suite.tsv`.
 - Magic Jewel exact RuntimeEffect child-schema fallback validation passed for the shader and color-filter rows:
   2/2 passed, `jbr_picture_frames=2562`, `jbr_command_frames=0`, suite
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-111924/suite.tsv`.
