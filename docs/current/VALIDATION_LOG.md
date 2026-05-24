@@ -5,6 +5,22 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel `CASE_GROUPS=graphics-layer` passed as a supported graphics-layer command replay refresh after exact
+  base/clip/blend, filters/effects, and shadows/transforms slices. Aggregate: 21/21 passed, `fallback_sum=0`,
+  `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=23622`. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-203342/suite.tsv`.
+- Magic Jewel exact graphics-layer shadows/transforms slice passed for shadow, round shadow, path shadow, rotation,
+  scale/translate, near-camera, and off-center pivot rows. Aggregate: 9/9 passed, `fallback_sum=0`,
+  `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=10778`. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-202706/suite.tsv`.
+- Magic Jewel exact graphics-layer filters/effects slice passed for color-filter, color-matrix, render-effect,
+  offset-effect, and chained render-effect rows. Aggregate: 5/5 passed, `fallback_sum=0`, `unsupported_rows=0`,
+  `jbr_picture_frames=0`, and `jbr_command_frames=6297`. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-202325/suite.tsv`.
+- Magic Jewel exact graphics-layer base/clip/blend slice passed for plain, modulate-alpha, offscreen, rect/round/path
+  clip, and blend-mode rows. Aggregate: 7/7 passed, `fallback_sum=0`, `unsupported_rows=0`,
+  `jbr_picture_frames=0`, and `jbr_command_frames=9525`. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-201824/suite.tsv`.
 - Magic Jewel `CASE_GROUPS=descriptor-lifecycle` passed as a supported descriptor lifecycle/source-cache refresh after
   exact descriptor redefine and RuntimeEffect lifecycle/source-cache slices. Aggregate: 18/18 passed,
   `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=23330`. Suite:
