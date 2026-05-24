@@ -280,6 +280,9 @@ public class JBRSkiaApiTest {
         assertValidCommandStream(validShaderColorFilterDescriptorStream(), "valid shader color-filter descriptor stream");
         assertValidCommandStream(validTransformedShaderDescriptorStream(), "valid transformed shader descriptor stream");
         assertValidCommandStream(validColorShaderDescriptorStream(), "valid color shader descriptor stream");
+        assertInvalidCommandStream(invalidFillRectShaderRefHorizontalBoundsStream(), "invalid fill rect shader-ref horizontal bounds");
+        assertInvalidCommandStream(invalidFillRectShaderRefVerticalBoundsStream(), "invalid fill rect shader-ref vertical bounds");
+        assertInvalidCommandStream(invalidFillRectShaderRefAlphaStream(), "invalid fill rect shader-ref alpha");
         assertValidCommandStream(validPerlinNoiseShaderDescriptorStream(), "valid Perlin noise shader descriptor stream");
         assertInvalidCommandStream(invalidUnknownShaderDescriptorTypeStream(), "unknown shader descriptor type");
         assertInvalidCommandStream(invalidShaderDescriptorVersionStream(), "unsupported shader descriptor version");
@@ -1902,6 +1905,24 @@ public class JBRSkiaApiTest {
                 0x00000041, 0x00000042,
                 1000, 2000, 11000, 12000, 1000
         };
+    }
+
+    private static int[] invalidFillRectShaderRefHorizontalBoundsStream() {
+        int[] commands = validColorShaderDescriptorStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 16] = 999;
+        return commands;
+    }
+
+    private static int[] invalidFillRectShaderRefVerticalBoundsStream() {
+        int[] commands = validColorShaderDescriptorStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 17] = 1999;
+        return commands;
+    }
+
+    private static int[] invalidFillRectShaderRefAlphaStream() {
+        int[] commands = validColorShaderDescriptorStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 18] = 1001;
+        return commands;
     }
 
     private static int[] invalidPerlinNoiseShaderKindStream() {

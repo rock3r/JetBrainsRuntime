@@ -38,6 +38,8 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- JBR parser-only `JBRSkiaApiTest` passed after adding direct fill-rect shader-ref scalar rows matching
+  `shader-ref-invalid`.
 - JBR parser-only `JBRSkiaApiTest` passed after adding direct fill-rect blend/color-filter scalar rows matching the
   small `blend-mode-invalid` and `fill-rect-color-filter-invalid` Magic Jewel groups.
 - Magic Jewel no-run quick-loop plumbing now exposes the RuntimeEffect color-filter child path-effect wrong-type row in
