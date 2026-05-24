@@ -38,6 +38,15 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel `CASE_GROUPS=descriptor-lifecycle` passed as a supported descriptor lifecycle/source-cache refresh:
+  18/18 passed, `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, `jbr_command_frames=23330`,
+  suite `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-200304/suite.tsv`.
+- Magic Jewel exact descriptor lifecycle slices passed before consolidation: descriptor eviction/redefine 13/13 at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-194922/suite.tsv`
+  with `jbr_command_frames=18104`, and RuntimeEffect lifecycle/source-cache 5/5 at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-195934/suite.tsv`
+  with `jbr_command_frames=7343`; both had `fallback_sum=0`, `unsupported_rows=0`, and
+  `jbr_picture_frames=0`.
 - Magic Jewel `CASE_GROUPS=color-filters` passed as a supported color-filter command replay refresh: 10/10 passed,
   `fallback_sum=0`, `unsupported_rows=1`, `jbr_picture_frames=1165`, `jbr_command_frames=13465`, suite
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-194122/suite.tsv`.

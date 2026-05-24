@@ -5,6 +5,19 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel `CASE_GROUPS=descriptor-lifecycle` passed as a supported descriptor lifecycle/source-cache refresh after
+  exact descriptor redefine and RuntimeEffect lifecycle/source-cache slices. Aggregate: 18/18 passed,
+  `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=23330`. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-200304/suite.tsv`.
+- Magic Jewel exact RuntimeEffect lifecycle/source-cache slice passed for stable color-filter, resize, forced-context,
+  shader source-cache eviction, and color-filter source-cache eviction rows. Aggregate: 5/5 passed,
+  `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=7343`. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-195934/suite.tsv`.
+- Magic Jewel exact descriptor eviction/redefine slice passed for descriptor eviction plus resize/forced-context
+  redefine rows across generic, shader, color shader, noise, turbulence, and composite-noise descriptors. Aggregate:
+  13/13 passed, `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, and
+  `jbr_command_frames=18104`. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-194922/suite.tsv`.
 - Magic Jewel `CASE_GROUPS=color-filters` passed as a supported color-filter command replay refresh after exact base
   and graphics-layer color-filter slices. Aggregate: 10/10 passed, `fallback_sum=0`, `unsupported_rows=1`,
   `jbr_picture_frames=1165`, and `jbr_command_frames=13465`. Suite:
