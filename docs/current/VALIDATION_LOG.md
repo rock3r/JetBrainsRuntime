@@ -5,6 +5,9 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- JBR parser-only `JBRSkiaApiTest` passed after adding direct saveLayer invalid-family rows for raw saveLayer,
+  blend-mode, raw color-filter, blend/color-filter, color-filter-ref, blend/color-filter-ref, and image-filter-ref
+  record flags, record lengths, dimensions, alpha, and blend-mode guards; the local parser-only run exited 0.
 - JBR parser-only `JBRSkiaApiTest` passed after adding direct clip-path, draw-path, and draw-path path-effect-ref rows.
   The new streams cover valid path payloads plus clip op, fill type, path-data length, paint style/stroke width, and
   malformed path-verb rejection; the local parser-only run exited 0.

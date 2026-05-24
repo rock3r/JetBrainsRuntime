@@ -470,26 +470,40 @@ public class JBRSkiaApiTest {
                 JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
                 JBRSkia.COMMAND_SAVE_LAYER, 32, JBRSkia.COMMAND_RECORD_FLAGS_NONE, 1, 2, 10, 10, 1001
         }, "invalid saveLayer alpha");
+        assertInvalidCommandStream(invalidSaveLayerRecordFlagsStream(), "invalid saveLayer record flags");
+        assertInvalidCommandStream(invalidSaveLayerRecordLengthStream(), "invalid saveLayer record length");
         assertInvalidCommandStream(new int[] {
                 JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 9,
                 JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
                 JBRSkia.COMMAND_SAVE_LAYER_BLEND_MODE, 36, JBRSkia.COMMAND_RECORD_FLAGS_NONE,
                 1, 2, 10, 10, 600, 9999
         }, "invalid saveLayer blend mode");
+        assertInvalidCommandStream(invalidSaveLayerBlendModeRecordFlagsStream(), "invalid saveLayer blend-mode record flags");
+        assertInvalidCommandStream(invalidSaveLayerBlendModeRecordLengthStream(), "invalid saveLayer blend-mode record length");
+        assertInvalidCommandStream(invalidSaveLayerBlendModeWidthStream(), "invalid saveLayer blend-mode width");
+        assertInvalidCommandStream(invalidSaveLayerBlendModeHeightStream(), "invalid saveLayer blend-mode height");
+        assertInvalidCommandStream(invalidSaveLayerBlendModeAlphaStream(), "invalid saveLayer blend-mode alpha");
         assertInvalidCommandStream(new int[] {
                 JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 10,
                 JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
                 JBRSkia.COMMAND_SAVE_LAYER_COLOR_FILTER, 40, JBRSkia.COMMAND_RECORD_FLAGS_NONE,
                 1, 2, 10, 10, 600, 0xff00ffff, JBRSkia.COMMAND_BLEND_MODE_PLUS
         }, "invalid saveLayer color-filter blend mode");
+        assertInvalidCommandStream(invalidSaveLayerColorFilterRecordFlagsStream(), "invalid saveLayer color-filter record flags");
+        assertInvalidCommandStream(invalidSaveLayerColorFilterRecordLengthStream(), "invalid saveLayer color-filter record length");
         assertInvalidCommandStream(new int[] {
                 JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 11,
                 JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
                 JBRSkia.COMMAND_SAVE_LAYER_BLEND_COLOR_FILTER, 44, JBRSkia.COMMAND_RECORD_FLAGS_NONE,
                 1, 2, 10, 10, 600, JBRSkia.COMMAND_BLEND_MODE_PLUS, 0xff00ffff, JBRSkia.COMMAND_BLEND_MODE_PLUS
         }, "invalid saveLayer blend/color-filter filter blend mode");
+        assertInvalidCommandStream(invalidSaveLayerBlendColorFilterRecordFlagsStream(), "invalid saveLayer blend/color-filter record flags");
+        assertInvalidCommandStream(invalidSaveLayerBlendColorFilterRecordLengthStream(), "invalid saveLayer blend/color-filter record length");
+        assertInvalidCommandStream(invalidSaveLayerBlendColorFilterWidthStream(), "invalid saveLayer blend/color-filter width");
+        assertInvalidCommandStream(invalidSaveLayerBlendColorFilterHeightStream(), "invalid saveLayer blend/color-filter height");
         assertInvalidCommandStream(invalidSaveLayerColorFilterWidthStream(), "invalid saveLayer color-filter width");
-        assertInvalidCommandStream(invalidSaveLayerBlendModeHeightStream(), "invalid saveLayer blend-mode height");
+        assertInvalidCommandStream(invalidSaveLayerColorFilterHeightStream(), "invalid saveLayer color-filter height");
+        assertInvalidCommandStream(invalidSaveLayerColorFilterAlphaStream(), "invalid saveLayer color-filter alpha");
         assertInvalidCommandStream(invalidSaveLayerBlendColorFilterAlphaStream(), "invalid saveLayer blend/color-filter alpha");
         assertInvalidCommandStream(new int[] {
                 JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 10,
@@ -505,12 +519,29 @@ public class JBRSkiaApiTest {
                 JBRSkia.COMMAND_SAVE_LAYER_COLOR_FILTER_REF, 40, JBRSkia.COMMAND_RECORD_FLAGS_NONE,
                 1, 2, 10, 10, 600, 0x00000001, 0x00000002
         }, "undefined saveLayer color-filter handle");
+        assertValidCommandStream(validSaveLayerImageFilterRefStream(), "valid saveLayer image-filter-ref stream");
+        assertInvalidCommandStream(invalidSaveLayerColorFilterRefRecordFlagsStream(), "invalid saveLayer color-filter-ref record flags");
+        assertInvalidCommandStream(invalidSaveLayerColorFilterRefRecordLengthStream(), "invalid saveLayer color-filter-ref record length");
+        assertInvalidCommandStream(invalidSaveLayerColorFilterRefWidthStream(), "invalid saveLayer color-filter-ref width");
+        assertInvalidCommandStream(invalidSaveLayerColorFilterRefHeightStream(), "invalid saveLayer color-filter-ref height");
+        assertInvalidCommandStream(invalidSaveLayerColorFilterRefAlphaStream(), "invalid saveLayer color-filter-ref alpha");
         assertInvalidCommandStream(new int[] {
                 JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 11,
                 JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
                 JBRSkia.COMMAND_SAVE_LAYER_BLEND_COLOR_FILTER_REF, 44, JBRSkia.COMMAND_RECORD_FLAGS_NONE,
                 1, 2, 10, 10, 600, JBRSkia.COMMAND_BLEND_MODE_PLUS, 0x00000001, 0x00000002
         }, "undefined saveLayer blend/color-filter handle");
+        assertInvalidCommandStream(invalidSaveLayerBlendColorFilterRefRecordFlagsStream(), "invalid saveLayer blend/color-filter-ref record flags");
+        assertInvalidCommandStream(invalidSaveLayerBlendColorFilterRefRecordLengthStream(), "invalid saveLayer blend/color-filter-ref record length");
+        assertInvalidCommandStream(invalidSaveLayerBlendColorFilterRefWidthStream(), "invalid saveLayer blend/color-filter-ref width");
+        assertInvalidCommandStream(invalidSaveLayerBlendColorFilterRefHeightStream(), "invalid saveLayer blend/color-filter-ref height");
+        assertInvalidCommandStream(invalidSaveLayerBlendColorFilterRefAlphaStream(), "invalid saveLayer blend/color-filter-ref alpha");
+        assertInvalidCommandStream(invalidSaveLayerBlendColorFilterRefBlendModeStream(), "invalid saveLayer blend/color-filter-ref blend mode");
+        assertInvalidCommandStream(invalidSaveLayerImageFilterRefRecordFlagsStream(), "invalid saveLayer image-filter-ref record flags");
+        assertInvalidCommandStream(invalidSaveLayerImageFilterRefRecordLengthStream(), "invalid saveLayer image-filter-ref record length");
+        assertInvalidCommandStream(invalidSaveLayerImageFilterRefWidthStream(), "invalid saveLayer image-filter-ref width");
+        assertInvalidCommandStream(invalidSaveLayerImageFilterRefHeightStream(), "invalid saveLayer image-filter-ref height");
+        assertInvalidCommandStream(invalidSaveLayerImageFilterRefAlphaStream(), "invalid saveLayer image-filter-ref alpha");
         assertInvalidCommandStream(new int[] {
                 JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 31,
                 JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
@@ -730,8 +761,92 @@ public class JBRSkiaApiTest {
         return commands;
     }
 
+    private static int[] invalidSaveLayerColorFilterRecordFlagsStream() {
+        int[] commands = validSaveLayerTintColorFilterStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 2] = JBRSkia.COMMAND_RECORD_FLAG_ANTIALIAS;
+        return commands;
+    }
+
+    private static int[] invalidSaveLayerColorFilterRecordLengthStream() {
+        int[] commands = validSaveLayerTintColorFilterStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 1] = 36;
+        return commands;
+    }
+
+    private static int[] invalidSaveLayerColorFilterHeightStream() {
+        int[] commands = validSaveLayerTintColorFilterStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 6] = -1;
+        return commands;
+    }
+
+    private static int[] invalidSaveLayerColorFilterAlphaStream() {
+        int[] commands = validSaveLayerTintColorFilterStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 7] = 1001;
+        return commands;
+    }
+
+    private static int[] invalidSaveLayerRecordFlagsStream() {
+        int[] commands = validSaveLayerStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 2] = JBRSkia.COMMAND_RECORD_FLAG_ANTIALIAS;
+        return commands;
+    }
+
+    private static int[] invalidSaveLayerRecordLengthStream() {
+        int[] commands = validSaveLayerStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 1] = 28;
+        return commands;
+    }
+
+    private static int[] invalidSaveLayerBlendModeRecordFlagsStream() {
+        int[] commands = validSaveLayerBlendModeStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 2] = JBRSkia.COMMAND_RECORD_FLAG_ANTIALIAS;
+        return commands;
+    }
+
+    private static int[] invalidSaveLayerBlendModeRecordLengthStream() {
+        int[] commands = validSaveLayerBlendModeStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 1] = 32;
+        return commands;
+    }
+
+    private static int[] invalidSaveLayerBlendModeWidthStream() {
+        int[] commands = validSaveLayerBlendModeStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 5] = -1;
+        return commands;
+    }
+
     private static int[] invalidSaveLayerBlendModeHeightStream() {
         int[] commands = validSaveLayerBlendModeStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 6] = -1;
+        return commands;
+    }
+
+    private static int[] invalidSaveLayerBlendModeAlphaStream() {
+        int[] commands = validSaveLayerBlendModeStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 7] = 1001;
+        return commands;
+    }
+
+    private static int[] invalidSaveLayerBlendColorFilterRecordFlagsStream() {
+        int[] commands = validSaveLayerBlendColorFilterStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 2] = JBRSkia.COMMAND_RECORD_FLAG_ANTIALIAS;
+        return commands;
+    }
+
+    private static int[] invalidSaveLayerBlendColorFilterRecordLengthStream() {
+        int[] commands = validSaveLayerBlendColorFilterStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 1] = 40;
+        return commands;
+    }
+
+    private static int[] invalidSaveLayerBlendColorFilterWidthStream() {
+        int[] commands = validSaveLayerBlendColorFilterStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 5] = -1;
+        return commands;
+    }
+
+    private static int[] invalidSaveLayerBlendColorFilterHeightStream() {
+        int[] commands = validSaveLayerBlendColorFilterStream();
         commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 6] = -1;
         return commands;
     }
@@ -2797,6 +2912,80 @@ public class JBRSkiaApiTest {
         };
     }
 
+    private static int[] invalidSaveLayerColorFilterRefRecordFlagsStream() {
+        int[] commands = validSaveLayerColorMatrixFilterHandleStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 30] = JBRSkia.COMMAND_RECORD_FLAG_ANTIALIAS;
+        return commands;
+    }
+
+    private static int[] invalidSaveLayerColorFilterRefRecordLengthStream() {
+        int[] commands = validSaveLayerColorMatrixFilterHandleStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 29] = 36;
+        return commands;
+    }
+
+    private static int[] invalidSaveLayerColorFilterRefWidthStream() {
+        int[] commands = validSaveLayerColorMatrixFilterHandleStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 33] = -1;
+        return commands;
+    }
+
+    private static int[] invalidSaveLayerColorFilterRefHeightStream() {
+        int[] commands = validSaveLayerColorMatrixFilterHandleStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 34] = -1;
+        return commands;
+    }
+
+    private static int[] invalidSaveLayerColorFilterRefAlphaStream() {
+        int[] commands = validSaveLayerColorMatrixFilterHandleStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 35] = 1001;
+        return commands;
+    }
+
+    private static int[] validSaveLayerImageFilterRefStream() {
+        return new int[] {
+                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 21,
+                JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
+                JBRSkia.COMMAND_DEFINE_EFFECT_DESCRIPTOR, 44, JBRSkia.COMMAND_RECORD_FLAGS_NONE,
+                0x00000005, 0x00000006,
+                JBRSkia.COMMAND_EFFECT_DESCRIPTOR_BLUR_IMAGE_FILTER,
+                JBRSkia.COMMAND_EFFECT_DESCRIPTOR_VERSION_1,
+                3, f(1f), f(1f), 0,
+                JBRSkia.COMMAND_SAVE_LAYER_IMAGE_FILTER_REF, 40, JBRSkia.COMMAND_RECORD_FLAGS_NONE,
+                1, 2, 10, 10, 600, 0x00000005, 0x00000006
+        };
+    }
+
+    private static int[] invalidSaveLayerImageFilterRefRecordFlagsStream() {
+        int[] commands = validSaveLayerImageFilterRefStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 13] = JBRSkia.COMMAND_RECORD_FLAG_ANTIALIAS;
+        return commands;
+    }
+
+    private static int[] invalidSaveLayerImageFilterRefRecordLengthStream() {
+        int[] commands = validSaveLayerImageFilterRefStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 12] = 36;
+        return commands;
+    }
+
+    private static int[] invalidSaveLayerImageFilterRefWidthStream() {
+        int[] commands = validSaveLayerImageFilterRefStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 16] = -1;
+        return commands;
+    }
+
+    private static int[] invalidSaveLayerImageFilterRefHeightStream() {
+        int[] commands = validSaveLayerImageFilterRefStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 17] = -1;
+        return commands;
+    }
+
+    private static int[] invalidSaveLayerImageFilterRefAlphaStream() {
+        int[] commands = validSaveLayerImageFilterRefStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 18] = 1001;
+        return commands;
+    }
+
     private static int[] invalidSaveLayerImageFilterMissingHandleStream() {
         return new int[] {
                 JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 10,
@@ -2836,6 +3025,42 @@ public class JBRSkiaApiTest {
                 JBRSkia.COMMAND_SAVE_LAYER_BLEND_COLOR_FILTER_REF, 44, JBRSkia.COMMAND_RECORD_FLAGS_NONE,
                 1, 2, 10, 10, 600, JBRSkia.COMMAND_BLEND_MODE_PLUS, 0x00000009, 0x0000000a
         };
+    }
+
+    private static int[] invalidSaveLayerBlendColorFilterRefRecordFlagsStream() {
+        int[] commands = validSaveLayerBlendColorMatrixFilterHandleStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 30] = JBRSkia.COMMAND_RECORD_FLAG_ANTIALIAS;
+        return commands;
+    }
+
+    private static int[] invalidSaveLayerBlendColorFilterRefRecordLengthStream() {
+        int[] commands = validSaveLayerBlendColorMatrixFilterHandleStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 29] = 40;
+        return commands;
+    }
+
+    private static int[] invalidSaveLayerBlendColorFilterRefWidthStream() {
+        int[] commands = validSaveLayerBlendColorMatrixFilterHandleStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 33] = -1;
+        return commands;
+    }
+
+    private static int[] invalidSaveLayerBlendColorFilterRefHeightStream() {
+        int[] commands = validSaveLayerBlendColorMatrixFilterHandleStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 34] = -1;
+        return commands;
+    }
+
+    private static int[] invalidSaveLayerBlendColorFilterRefAlphaStream() {
+        int[] commands = validSaveLayerBlendColorMatrixFilterHandleStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 35] = 1001;
+        return commands;
+    }
+
+    private static int[] invalidSaveLayerBlendColorFilterRefBlendModeStream() {
+        int[] commands = validSaveLayerBlendColorMatrixFilterHandleStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 36] = 9999;
+        return commands;
     }
 
     private static int[] invalidSaveLayerColorFilterPathEffectHandleStream() {
