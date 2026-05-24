@@ -5,6 +5,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel exact RuntimeEffect child-schema fallback validation passed after the direct JBR parser-only schema
+  additions. `CASES="commands-runtime-effect-invalid-child-schema-fallback
+  commands-runtime-effect-color-filter-invalid-child-schema-fallback"` produced 2/2 passed at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-111924/suite.tsv`;
+  unsupported reasons were `shaderDescriptor` and `colorFilterDescriptor`, `jbr_picture_frames=2562`, and
+  `jbr_command_frames=0`.
 - Magic Jewel exact RuntimeEffect uniform-schema fallback validation passed after the direct JBR parser-only schema
   additions. `CASES="commands-runtime-effect-invalid-uniform-schema-fallback
   commands-runtime-effect-color-filter-invalid-uniform-schema-fallback"` produced 2/2 passed at
