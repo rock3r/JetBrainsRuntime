@@ -38,6 +38,8 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- JBR parser-only `JBRSkiaApiTest` passed after extending direct shader-descriptor invalid coverage for record flags,
+  color/color-filter payload counts, composite blend mode, and Perlin tile-width parser guards.
 - JBR parser-only `JBRSkiaApiTest` passed after extending direct effect-descriptor invalid coverage for descriptor
   flags, lighting payload count, corner/stamped path-effect bounds, and stamped path-verb guards.
 - JBR parser-only `JBRSkiaApiTest` passed after adding direct saveLayer invalid-family rows for record flags,

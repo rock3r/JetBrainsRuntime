@@ -345,9 +345,13 @@ public class JBRSkiaApiTest {
         assertInvalidCommandStream(invalidFillRectShaderRefAlphaStream(), "invalid fill rect shader-ref alpha");
         assertValidCommandStream(validPerlinNoiseShaderDescriptorStream(), "valid Perlin noise shader descriptor stream");
         assertInvalidCommandStream(invalidUnknownShaderDescriptorTypeStream(), "unknown shader descriptor type");
+        assertInvalidCommandStream(invalidShaderDescriptorRecordFlagsStream(), "shader descriptor record flags");
         assertInvalidCommandStream(invalidShaderDescriptorVersionStream(), "unsupported shader descriptor version");
         assertInvalidCommandStream(invalidShaderDescriptorPayloadCountStream(), "shader descriptor payload count mismatch");
+        assertInvalidCommandStream(invalidColorShaderDescriptorPayloadCountStream(), "color shader descriptor payload count mismatch");
+        assertInvalidCommandStream(invalidShaderColorFilterDescriptorPayloadCountStream(), "shader color-filter descriptor payload count mismatch");
         assertInvalidCommandStream(invalidShaderDescriptorRecordLengthStream(), "shader descriptor record length mismatch");
+        assertInvalidCommandStream(invalidCompositeShaderDescriptorBlendModeStream(), "composite shader descriptor blend mode");
         assertInvalidCommandStream(invalidLinearGradientShaderTileModeStream(), "linear gradient shader tile mode");
         assertInvalidCommandStream(invalidLinearGradientShaderStopOrderStream(), "linear gradient shader stop order");
         assertInvalidCommandStream(invalidRadialGradientShaderRadiusStream(), "radial gradient shader radius");
@@ -398,6 +402,7 @@ public class JBRSkiaApiTest {
         assertInvalidCommandStream(invalidPerlinNoiseShaderZeroOctavesStream(), "invalid Perlin noise shader zero-octave stream");
         assertInvalidCommandStream(invalidPerlinNoiseShaderTileSizeStream(), "invalid Perlin noise shader tile-size stream");
         assertInvalidCommandStream(invalidPerlinNoiseShaderTileHeightStream(), "invalid Perlin noise shader tile-height stream");
+        assertInvalidCommandStream(invalidPerlinNoiseShaderNegativeTileSizeStream(), "invalid Perlin noise shader negative tile-size stream");
         assertInvalidCommandStream(invalidPerlinNoiseShaderNegativeTileHeightStream(), "invalid Perlin noise shader negative tile-height stream");
         assertValidCommandStream(new int[] {
                 JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 3,
@@ -1711,6 +1716,12 @@ public class JBRSkiaApiTest {
         return commands;
     }
 
+    private static int[] invalidShaderDescriptorRecordFlagsStream() {
+        int[] commands = validLinearGradientShaderDescriptorRecordOnlyStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 2] = JBRSkia.COMMAND_RECORD_FLAG_ANTIALIAS;
+        return commands;
+    }
+
     private static int[] invalidShaderDescriptorPayloadCountStream() {
         int[] commands = validLinearGradientShaderDescriptorRecordOnlyStream();
         commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 7] = 9;
@@ -1720,6 +1731,24 @@ public class JBRSkiaApiTest {
     private static int[] invalidShaderDescriptorRecordLengthStream() {
         int[] commands = validLinearGradientShaderDescriptorRecordOnlyStream();
         commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 1] = 68;
+        return commands;
+    }
+
+    private static int[] invalidColorShaderDescriptorPayloadCountStream() {
+        int[] commands = validColorShaderDescriptorStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 7] = 2;
+        return commands;
+    }
+
+    private static int[] invalidShaderColorFilterDescriptorPayloadCountStream() {
+        int[] commands = validShaderColorFilterDescriptorStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 35] = 3;
+        return commands;
+    }
+
+    private static int[] invalidCompositeShaderDescriptorBlendModeStream() {
+        int[] commands = validCompositeShaderDescriptorStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 47] = 9999;
         return commands;
     }
 
@@ -2279,6 +2308,12 @@ public class JBRSkiaApiTest {
     private static int[] invalidPerlinNoiseShaderTileHeightStream() {
         int[] commands = validPerlinNoiseShaderDescriptorStream();
         commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 14] = 4097;
+        return commands;
+    }
+
+    private static int[] invalidPerlinNoiseShaderNegativeTileSizeStream() {
+        int[] commands = validPerlinNoiseShaderDescriptorStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 13] = -1;
         return commands;
     }
 

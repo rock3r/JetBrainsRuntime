@@ -5,6 +5,9 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- JBR parser-only `JBRSkiaApiTest` passed after extending direct shader-descriptor invalid coverage for descriptor
+  record flags, color/color-filter payload counts, composite blend mode, and negative Perlin tile width; the local
+  parser-only run exited 0.
 - JBR parser-only `JBRSkiaApiTest` passed after extending direct effect-descriptor invalid coverage for descriptor
   record flags, lighting payload count, corner path-effect negative radius, stamped path-effect non-finite/negative
   phase, negative path-data length, and malformed stamped path verbs; the local parser-only run exited 0.
