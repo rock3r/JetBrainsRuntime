@@ -38,6 +38,9 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel exact image define/cache invalid slice passed for record flags, image dimensions, max bounds, and pixel
+  count: 8/8 passed, `fallback_sum=8`, `unsupported_rows=0`, `jbr_picture_frames=0`, `jbr_command_frames=1295`,
+  suite `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-120938/suite.tsv`.
 - Magic Jewel exact fill-rect scalar invalid refresh passed across `fill-rect-color-filter-invalid`,
   `shader-ref-invalid`, and `blend-mode-invalid`: 10/10 passed, `fallback_sum=10`, `unsupported_rows=0`,
   `jbr_picture_frames=0`, `jbr_command_frames=0`, suite
