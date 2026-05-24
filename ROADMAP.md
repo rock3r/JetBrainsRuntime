@@ -38,6 +38,9 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel exact RuntimeEffect uniform-schema fallback validation passed for the shader and color-filter rows:
+  2/2 passed, `jbr_picture_frames=2223`, `jbr_command_frames=0`, suite
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-111654/suite.tsv`.
 - JBR parser-only `JBRSkiaApiTest` passed after adding direct RuntimeEffect color-filter descriptor rows for malformed
   uniform-schema and child-schema metadata, mirroring the existing shader RuntimeEffect schema checks.
 - JBR parser-only `JBRSkiaApiTest` passed after adding direct non-path sweep-gradient rows for fill/stroke
