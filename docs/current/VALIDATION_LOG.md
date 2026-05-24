@@ -5,6 +5,22 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel `CASE_GROUPS=gradient-path-invalid` passed as the grouped gradient-path parser consolidation after exact
+  linear/radial/sweep slices. Aggregate: 18/18 passed, `fallback_sum=18`, `unsupported_rows=0`,
+  `jbr_picture_frames=0`, and `jbr_command_frames=0`. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-181611/suite.tsv`.
+- Magic Jewel exact sweep gradient-path invalid slice passed for color-count, stop-order, fill-type, path-data-length,
+  and path-verb guards. Aggregate: 5/5 passed, `fallback_sum=5`, `unsupported_rows=0`, `jbr_picture_frames=0`,
+  and `jbr_command_frames=0`. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-181247/suite.tsv`.
+- Magic Jewel exact radial gradient-path invalid slice passed for radius, tile-mode, color-count, stop-order,
+  fill-type, path-data-length, and path-verb guards. Aggregate: 7/7 passed, `fallback_sum=7`,
+  `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=0`. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-180753/suite.tsv`.
+- Magic Jewel exact linear gradient-path invalid slice passed for tile-mode, color-count, stop-order, fill-type,
+  path-data-length, and path-verb guards. Aggregate: 6/6 passed, `fallback_sum=6`, `unsupported_rows=0`,
+  `jbr_picture_frames=0`, and `jbr_command_frames=0`. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-180353/suite.tsv`.
 - Magic Jewel `CASE_GROUPS=runtime-effect-invalid` passed as the grouped RuntimeEffect descriptor/parser
   consolidation after the exact RuntimeEffect focused slices. Aggregate: 62/62 passed, `fallback_sum=56`,
   `unsupported_rows=6`, `jbr_picture_frames=6711`, and `jbr_command_frames=0`. Suite:
