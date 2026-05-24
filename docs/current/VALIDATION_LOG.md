@@ -5,6 +5,30 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel `CASE_GROUPS=runtime-effect-invalid` passed as the grouped RuntimeEffect descriptor/parser
+  consolidation after the exact RuntimeEffect focused slices. Aggregate: 62/62 passed, `fallback_sum=56`,
+  `unsupported_rows=6`, `jbr_picture_frames=6711`, and `jbr_command_frames=0`. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-171908/suite.tsv`.
+  The six unsupported rows are the intentionally invalid RuntimeEffect schema/nested descriptor cases; they validated
+  the JBR picture fallback route rather than producing command-stream invalid fallback markers.
+- Magic Jewel exact RuntimeEffect compile/build/type fallback tail passed for color-filter compile/build/child-type
+  and shader compile/build/child-type rows. Aggregate: 6/6 passed, `fallback_sum=6`, `unsupported_rows=0`,
+  `jbr_picture_frames=0`, and `jbr_command_frames=0`. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-171059/suite.tsv`.
+- Magic Jewel exact RuntimeEffect schema/nested six-pack passed for shader and color-filter uniform-schema,
+  child-schema, and nested-child rows. Aggregate: 6/6 passed, `fallback_sum=0`, `unsupported_rows=6`,
+  `jbr_picture_frames=5340`, and `jbr_command_frames=0`. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-170650/suite.tsv`.
+- Magic Jewel exact RuntimeEffect color-filter descriptor parser slice passed for malformed source hash, source code,
+  SKSL length, uniform/child counts, named metadata, uniform schema, child schema, and child index rows. Aggregate:
+  25/25 passed, `fallback_sum=25`, `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=0`.
+  Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-165052/suite.tsv`.
+- Magic Jewel exact RuntimeEffect shader descriptor parser slice passed for malformed source hash, source code,
+  SKSL length, uniform/child counts, named metadata, uniform schema, child schema, and child index rows. Aggregate:
+  25/25 passed, `fallback_sum=25`, `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=0`.
+  Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-163503/suite.tsv`.
 - Magic Jewel `CASE_GROUPS=descriptor-handles-invalid` passed as the grouped descriptor-handle parser/lifecycle
   consolidation after the exact descriptor-handle slices and Skiko corruption-target fix. Aggregate: 48/48 passed,
   `fallback_sum=48`, `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=0`. Suite:

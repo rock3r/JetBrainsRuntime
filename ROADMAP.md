@@ -38,6 +38,20 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel `CASE_GROUPS=runtime-effect-invalid` passed as the grouped RuntimeEffect descriptor/parser
+  consolidation after the exact focused slices: 62/62 passed, `fallback_sum=56`, `unsupported_rows=6`,
+  `jbr_picture_frames=6711`, `jbr_command_frames=0`, suite
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-171908/suite.tsv`.
+  The six unsupported rows are the intentional schema/nested descriptor cases, which fall back through JBR picture
+  replay rather than command-stream invalid fallback markers.
+- Magic Jewel exact RuntimeEffect focused slices passed before consolidation: shader descriptor parser 25/25 at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-163503/suite.tsv`,
+  color-filter descriptor parser 25/25 at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-165052/suite.tsv`,
+  schema/nested picture fallback 6/6 at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-170650/suite.tsv`,
+  and compile/build/type fallback tail 6/6 at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-171059/suite.tsv`.
 - Magic Jewel `CASE_GROUPS=descriptor-handles-invalid` passed as the grouped descriptor-handle parser/lifecycle
   consolidation after Skiko commit `4e7b0a6ba`: 48/48 passed, `fallback_sum=48`, `unsupported_rows=0`,
   `jbr_picture_frames=0`, `jbr_command_frames=0`, suite
