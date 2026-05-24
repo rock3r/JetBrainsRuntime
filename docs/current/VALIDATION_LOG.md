@@ -5,6 +5,9 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- JBR parser-only `JBRSkiaApiTest` passed after adding direct dashed stroke-round-rect path-effect rows. The new
+  streams cover the valid dashed round-rect form plus interval-count, right/bottom ordering, radius, stroke metadata,
+  phase, and interval-value rejection; the local parser-only run exited 0.
 - JBR parser-only `JBRSkiaApiTest` passed after adding direct dashed stroke-rect path-effect rows. The new streams
   cover the valid dashed rect form plus interval-count, width, and height rejection; the local parser-only run exited 0.
 - JBR parser-only `JBRSkiaApiTest` passed after adding direct dashed stroke-line path-effect rows for the path-invalid

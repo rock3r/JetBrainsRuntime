@@ -288,6 +288,18 @@ public class JBRSkiaApiTest {
         assertInvalidCommandStream(invalidDashedStrokeRectIntervalCountStream(), "invalid dashed stroke rect interval count");
         assertInvalidCommandStream(invalidDashedStrokeRectWidthStream(), "invalid dashed stroke rect width");
         assertInvalidCommandStream(invalidDashedStrokeRectHeightStream(), "invalid dashed stroke rect height");
+        assertValidCommandStream(validDashedStrokeRoundRectStream(), "valid dashed stroke round-rect stream");
+        assertInvalidCommandStream(invalidDashedStrokeRoundRectIntervalCountStream(), "invalid dashed stroke round-rect interval count");
+        assertInvalidCommandStream(invalidDashedStrokeRoundRectRightStream(), "invalid dashed stroke round-rect right");
+        assertInvalidCommandStream(invalidDashedStrokeRoundRectBottomStream(), "invalid dashed stroke round-rect bottom");
+        assertInvalidCommandStream(invalidDashedStrokeRoundRectRadiusXStream(), "invalid dashed stroke round-rect radius x");
+        assertInvalidCommandStream(invalidDashedStrokeRoundRectRadiusYStream(), "invalid dashed stroke round-rect radius y");
+        assertInvalidCommandStream(invalidDashedStrokeRoundRectStrokeWidthStream(), "invalid dashed stroke round-rect stroke width");
+        assertInvalidCommandStream(invalidDashedStrokeRoundRectStrokeCapStream(), "invalid dashed stroke round-rect stroke cap");
+        assertInvalidCommandStream(invalidDashedStrokeRoundRectStrokeJoinStream(), "invalid dashed stroke round-rect stroke join");
+        assertInvalidCommandStream(invalidDashedStrokeRoundRectStrokeMiterStream(), "invalid dashed stroke round-rect stroke miter");
+        assertInvalidCommandStream(invalidDashedStrokeRoundRectPhaseStream(), "invalid dashed stroke round-rect phase");
+        assertInvalidCommandStream(invalidDashedStrokeRoundRectIntervalStream(), "invalid dashed stroke round-rect interval");
         assertValidCommandStream(validSaveLayerTintColorFilterStream(), "valid saveLayer tint color-filter stream");
         assertValidCommandStream(validImageRefTintColorFilterStream(), "valid image-ref tint color-filter stream");
         assertValidCommandStream(validImageRefColorMatrixFilterHandleStream(), "valid image-ref color-matrix filter handle stream");
@@ -2946,6 +2958,81 @@ public class JBRSkiaApiTest {
     private static int[] invalidDashedStrokeRectHeightStream() {
         int[] commands = validDashedStrokeRectStream();
         commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 7] = -1;
+        return commands;
+    }
+
+    private static int[] validDashedStrokeRoundRectStream() {
+        return new int[] {
+                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 18,
+                JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
+                JBRSkia.COMMAND_STROKE_ROUND_RECT_DASH_PATH_EFFECT, 72, JBRSkia.COMMAND_RECORD_FLAG_ANTIALIAS,
+                0xffffffff, 1, 2, 11, 12, 3, 4, 8, 0, 1, 4000, 3000, 2, 16000, 10000
+        };
+    }
+
+    private static int[] invalidDashedStrokeRoundRectIntervalCountStream() {
+        int[] commands = validDashedStrokeRoundRectStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 15] = 1;
+        return commands;
+    }
+
+    private static int[] invalidDashedStrokeRoundRectRightStream() {
+        int[] commands = validDashedStrokeRoundRectStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 6] = 0;
+        return commands;
+    }
+
+    private static int[] invalidDashedStrokeRoundRectBottomStream() {
+        int[] commands = validDashedStrokeRoundRectStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 7] = 1;
+        return commands;
+    }
+
+    private static int[] invalidDashedStrokeRoundRectRadiusXStream() {
+        int[] commands = validDashedStrokeRoundRectStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 8] = -1;
+        return commands;
+    }
+
+    private static int[] invalidDashedStrokeRoundRectRadiusYStream() {
+        int[] commands = validDashedStrokeRoundRectStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 9] = -1;
+        return commands;
+    }
+
+    private static int[] invalidDashedStrokeRoundRectStrokeWidthStream() {
+        int[] commands = validDashedStrokeRoundRectStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 10] = 0;
+        return commands;
+    }
+
+    private static int[] invalidDashedStrokeRoundRectStrokeCapStream() {
+        int[] commands = validDashedStrokeRoundRectStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 11] = 3;
+        return commands;
+    }
+
+    private static int[] invalidDashedStrokeRoundRectStrokeJoinStream() {
+        int[] commands = validDashedStrokeRoundRectStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 12] = 3;
+        return commands;
+    }
+
+    private static int[] invalidDashedStrokeRoundRectStrokeMiterStream() {
+        int[] commands = validDashedStrokeRoundRectStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 13] = -1;
+        return commands;
+    }
+
+    private static int[] invalidDashedStrokeRoundRectPhaseStream() {
+        int[] commands = validDashedStrokeRoundRectStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 14] = -1;
+        return commands;
+    }
+
+    private static int[] invalidDashedStrokeRoundRectIntervalStream() {
+        int[] commands = validDashedStrokeRoundRectStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 16] = 0;
         return commands;
     }
 
