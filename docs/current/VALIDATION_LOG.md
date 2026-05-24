@@ -5,6 +5,10 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel `CASE_GROUPS=effect-descriptor-invalid` passed as the grouped effect descriptor parser consolidation
+  after the exact effect-descriptor slices. Aggregate: 28/28 passed, `fallback_sum=28`, `unsupported_rows=0`,
+  `jbr_picture_frames=0`, and `jbr_command_frames=0`. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-140259/suite.tsv`.
 - Magic Jewel exact effect path-effect descriptor invalid slice passed for corner, stamped, and chained path-effect
   payload guards, completing all 28 `effect-descriptor-invalid` rows across exact slices. Aggregate: 12/12 passed,
   `fallback_sum=12`, `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=0`. Suite:

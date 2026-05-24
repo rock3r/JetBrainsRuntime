@@ -38,6 +38,9 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel `CASE_GROUPS=effect-descriptor-invalid` passed as the grouped effect descriptor parser consolidation:
+  28/28 passed, `fallback_sum=28`, `unsupported_rows=0`, `jbr_picture_frames=0`, `jbr_command_frames=0`, suite
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-140259/suite.tsv`.
 - Magic Jewel exact effect path-effect descriptor invalid slice passed for corner/stamped/chain path-effect payload
   guards, completing all 28 `effect-descriptor-invalid` rows across exact slices: 12/12 passed, `fallback_sum=12`,
   `unsupported_rows=0`, `jbr_picture_frames=0`, `jbr_command_frames=0`, suite
