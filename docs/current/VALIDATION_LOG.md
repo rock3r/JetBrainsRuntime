@@ -5,6 +5,26 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel `CASE_GROUPS=gradient-invalid` passed as the grouped gradient parser consolidation after exact non-path
+  gradient slices and the earlier grouped gradient-path consolidation. Aggregate: 60/60 passed, `fallback_sum=60`,
+  `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=0`. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-185624/suite.tsv`.
+- Magic Jewel exact radial non-path gradient invalid slice passed for radius, tile-mode, color-count, and stop-order
+  guards across fill/stroke rect and round-rect forms. Aggregate: 16/16 passed, `fallback_sum=16`,
+  `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=0`. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-184612/suite.tsv`.
+- Magic Jewel exact sweep non-path gradient invalid slice passed for color-count and stop-order guards across
+  fill/stroke rect and round-rect forms. Aggregate: 8/8 passed, `fallback_sum=8`, `unsupported_rows=0`,
+  `jbr_picture_frames=0`, and `jbr_command_frames=0`. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-184050/suite.tsv`.
+- Magic Jewel exact linear non-path gradient invalid slice passed for tile-mode, color-count, and stop-order guards
+  across fill/stroke rect and round-rect forms. Aggregate: 12/12 passed, `fallback_sum=12`,
+  `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=0`. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-183259/suite.tsv`.
+- Magic Jewel exact non-path gradient stroke-width invalid slice passed across linear, radial, and sweep gradient
+  stroke/round-rect stroke rows. Aggregate: 6/6 passed, `fallback_sum=6`, `unsupported_rows=0`,
+  `jbr_picture_frames=0`, and `jbr_command_frames=0`. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-182859/suite.tsv`.
 - Magic Jewel `CASE_GROUPS=gradient-path-invalid` passed as the grouped gradient-path parser consolidation after exact
   linear/radial/sweep slices. Aggregate: 18/18 passed, `fallback_sum=18`, `unsupported_rows=0`,
   `jbr_picture_frames=0`, and `jbr_command_frames=0`. Suite:
