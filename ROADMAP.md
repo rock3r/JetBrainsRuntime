@@ -38,6 +38,10 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel exact effect path-effect descriptor invalid slice passed for corner/stamped/chain path-effect payload
+  guards, completing all 28 `effect-descriptor-invalid` rows across exact slices: 12/12 passed, `fallback_sum=12`,
+  `unsupported_rows=0`, `jbr_picture_frames=0`, `jbr_command_frames=0`, suite
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-135419/suite.tsv`.
 - Magic Jewel exact effect image-filter descriptor invalid slice passed for blur/offset payload guards:
   8/8 passed, `fallback_sum=8`, `unsupported_rows=0`, `jbr_picture_frames=0`, `jbr_command_frames=0`, suite
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-134749/suite.tsv`.
