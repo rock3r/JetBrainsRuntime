@@ -5,6 +5,10 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel `CASE_GROUPS=image-handles-invalid` passed as the grouped image handle/parser consolidation after the
+  focused image slices. Aggregate: 27/27 passed, `fallback_sum=27`, `unsupported_rows=0`, `jbr_picture_frames=0`,
+  and `jbr_command_frames=1102`. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-123035/suite.tsv`.
 - Magic Jewel exact image color-filter invalid slice passed for color-filter image handle use/eviction, scalar
   width/height/alpha/filter-quality/blend guards, color-filter-ref handle use/eviction, and descriptor-backed
   color-filter-ref scalar guards. Aggregate: 13/13 passed, `fallback_sum=13`, `unsupported_rows=0`,
