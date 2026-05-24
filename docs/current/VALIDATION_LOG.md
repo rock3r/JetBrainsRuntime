@@ -5,6 +5,28 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel `CASE_GROUPS=shader-descriptor-invalid` passed as the grouped shader descriptor parser consolidation
+  after the exact shader-descriptor slices. Aggregate: 30/30 passed, `fallback_sum=30`, `unsupported_rows=0`,
+  `jbr_picture_frames=0`, and `jbr_command_frames=0`. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-144958/suite.tsv`.
+- Magic Jewel exact Perlin-noise shader descriptor invalid slice passed for kind, base-frequency, octave, zero-octave,
+  tile-size, tile-height, negative tile-size, and negative tile-height guards. Aggregate: 8/8 passed,
+  `fallback_sum=8`, `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=0`. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-144440/suite.tsv`.
+- Magic Jewel exact image-shader descriptor invalid slice passed for width, max-width, height, max-height, X tile-mode,
+  and Y tile-mode guards after tightening the report summary parser to ignore concatenated sampled-log prefixes.
+  Aggregate: 6/6 passed, `fallback_sum=6`, `unsupported_rows=0`, `jbr_picture_frames=0`, and
+  `jbr_command_frames=0`. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-144018/suite.tsv`.
+- Magic Jewel exact gradient shader descriptor invalid slice passed for linear tile-mode/stop-order, radial
+  radius/tile-mode/stop-order, and sweep color-count/stop-order guards. Aggregate: 7/7 passed, `fallback_sum=7`,
+  `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=0`. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-142702/suite.tsv`.
+- Magic Jewel exact shader descriptor header/color/transformed/composite invalid slice passed for descriptor type,
+  record flags, payload count, color/filter payload count, record length, version, transformed payload count, and
+  composite blend-mode guards. Aggregate: 9/9 passed, `fallback_sum=9`, `unsupported_rows=0`,
+  `jbr_picture_frames=0`, and `jbr_command_frames=0`. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-142112/suite.tsv`.
 - Magic Jewel `CASE_GROUPS=effect-descriptor-invalid` passed as the grouped effect descriptor parser consolidation
   after the exact effect-descriptor slices. Aggregate: 28/28 passed, `fallback_sum=28`, `unsupported_rows=0`,
   `jbr_picture_frames=0`, and `jbr_command_frames=0`. Suite:
