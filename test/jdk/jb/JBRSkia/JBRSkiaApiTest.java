@@ -715,6 +715,8 @@ public class JBRSkiaApiTest {
         assertInvalidCommandStream(invalidRuntimeColorFilterNegativeNamedUniformCountStream(), "invalid runtime color-filter negative named uniform count");
         assertInvalidCommandStream(invalidRuntimeColorFilterNamedChildCountStream(), "invalid runtime color-filter named child count");
         assertInvalidCommandStream(invalidRuntimeColorFilterNegativeNamedChildCountStream(), "invalid runtime color-filter negative named child count");
+        assertInvalidCommandStream(invalidRuntimeColorFilterUniformSchemaStream(), "invalid runtime color-filter uniform schema");
+        assertInvalidCommandStream(invalidRuntimeColorFilterChildSchemaStream(), "invalid runtime color-filter child schema");
         assertInvalidCommandStream(invalidBlurImageFilterMissingChildHandleStream(), "undefined blur image-filter child handle");
         assertInvalidCommandStream(invalidBlurImageFilterEvictedChildHandleStream(), "evicted blur image-filter child handle");
         assertInvalidCommandStream(invalidBlurImageFilterColorFilterChildHandleStream(), "color-filter blur image-filter child handle");
@@ -3164,6 +3166,18 @@ public class JBRSkiaApiTest {
     private static int[] invalidRuntimeColorFilterNegativeNamedChildCountStream() {
         int[] commands = validRuntimeColorFilterChildDescriptorStream();
         commands[runtimeColorFilterPayloadStart(commands) + 4] = -1;
+        return commands;
+    }
+
+    private static int[] invalidRuntimeColorFilterUniformSchemaStream() {
+        int[] commands = validRuntimeColorFilterChildDescriptorStream();
+        commands[runtimeColorFilterPayloadStart(commands) + 3] = 1;
+        return commands;
+    }
+
+    private static int[] invalidRuntimeColorFilterChildSchemaStream() {
+        int[] commands = validRuntimeColorFilterChildDescriptorStream();
+        commands[runtimeColorFilterPayloadStart(commands) + 4] = 1;
         return commands;
     }
 

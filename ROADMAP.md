@@ -38,6 +38,8 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- JBR parser-only `JBRSkiaApiTest` passed after adding direct RuntimeEffect color-filter descriptor rows for malformed
+  uniform-schema and child-schema metadata, mirroring the existing shader RuntimeEffect schema checks.
 - JBR parser-only `JBRSkiaApiTest` passed after adding direct non-path sweep-gradient rows for fill/stroke
   rect/round-rect color-count, stop-order, and stroke-width guards, completing direct coverage for the current
   `gradient-invalid` family with the linear/radial/path slices.
