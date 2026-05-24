@@ -38,6 +38,17 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel `CASE_GROUPS=native-text` passed as a supported native text/font replay refresh: 14/14 passed,
+  `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, `jbr_command_frames=16173`, suite
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-205921/suite.tsv`.
+- Magic Jewel exact native-text slices passed before consolidation: base text 5/5 at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-204934/suite.tsv`
+  with `jbr_command_frames=5082`, resize 4/4 at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-205300/suite.tsv`
+  with `jbr_command_frames=4294`, and forced-context 5/5 at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-205555/suite.tsv`
+  with `jbr_command_frames=6494`; all had `fallback_sum=0`, `unsupported_rows=0`, and
+  `jbr_picture_frames=0`.
 - Magic Jewel `CASE_GROUPS=graphics-layer` passed as a supported graphics-layer command replay refresh: 21/21
   passed, `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, `jbr_command_frames=23622`, suite
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-203342/suite.tsv`.

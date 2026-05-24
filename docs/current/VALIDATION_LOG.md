@@ -5,6 +5,22 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel `CASE_GROUPS=native-text` passed as a supported native text/font replay refresh after exact base,
+  resize, and forced-context slices. Aggregate: 14/14 passed, `fallback_sum=0`, `unsupported_rows=0`,
+  `jbr_picture_frames=0`, and `jbr_command_frames=16173`. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-205921/suite.tsv`.
+- Magic Jewel exact native-text forced-context slice passed for custom-font text image plus generic, loaded font-data,
+  resource, and system font text rows. Aggregate: 5/5 passed, `fallback_sum=0`, `unsupported_rows=0`,
+  `jbr_picture_frames=0`, and `jbr_command_frames=6494`. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-205555/suite.tsv`.
+- Magic Jewel exact native-text resize slice passed for generic, loaded font-data, resource, and system font text
+  rows. Aggregate: 4/4 passed, `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, and
+  `jbr_command_frames=4294`. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-205300/suite.tsv`.
+- Magic Jewel exact native-text base slice passed for custom-font text image plus generic, loaded font-data, resource,
+  and system font text rows. Aggregate: 5/5 passed, `fallback_sum=0`, `unsupported_rows=0`,
+  `jbr_picture_frames=0`, and `jbr_command_frames=5082`. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-204934/suite.tsv`.
 - Magic Jewel `CASE_GROUPS=graphics-layer` passed as a supported graphics-layer command replay refresh after exact
   base/clip/blend, filters/effects, and shadows/transforms slices. Aggregate: 21/21 passed, `fallback_sum=0`,
   `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=23622`. Suite:
