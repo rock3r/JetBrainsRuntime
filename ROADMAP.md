@@ -38,6 +38,8 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- JBR parser-only `JBRSkiaApiTest` passed after adding direct non-path radial-gradient rows for fill/stroke
+  rect/round-rect radius, tile-mode, color-count, stop-order, and stroke-width guards.
 - JBR parser-only `JBRSkiaApiTest` passed after adding direct non-path linear-gradient rows for fill/stroke
   rect/round-rect tile-mode, color-count, stop-order, and stroke-width guards.
 - JBR parser-only `JBRSkiaApiTest` passed after adding direct linear/radial/sweep gradient-path command rows covering

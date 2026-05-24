@@ -5,6 +5,9 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- JBR parser-only `JBRSkiaApiTest` passed after adding direct non-path radial-gradient rows for fill rect,
+  fill round-rect, stroke rect, and stroke round-rect radius, tile-mode, color-count, stop-order, and stroke-width
+  guards; the local parser-only run exited 0.
 - JBR parser-only `JBRSkiaApiTest` passed after adding direct non-path linear-gradient rows for fill rect,
   fill round-rect, stroke rect, and stroke round-rect tile-mode, color-count, stop-order, and stroke-width guards;
   the local parser-only run exited 0.
