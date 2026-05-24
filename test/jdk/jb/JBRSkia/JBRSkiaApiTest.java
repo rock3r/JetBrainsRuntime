@@ -281,6 +281,9 @@ public class JBRSkiaApiTest {
         assertValidCommandStream(validSaveLayerBlendColorMatrixFilterHandleStream(), "valid saveLayer blend/color-matrix filter handle stream");
         assertValidCommandStream(validColorFilterHandleEvictStream(), "valid color-filter handle evict stream");
         assertValidCommandStream(validDashedStrokeLineStream(), "valid dashed stroke line stream");
+        assertInvalidCommandStream(invalidDashedStrokeLineIntervalCountStream(), "invalid dashed stroke line interval count");
+        assertInvalidCommandStream(invalidDashedStrokeLinePhaseStream(), "invalid dashed stroke line phase");
+        assertInvalidCommandStream(invalidDashedStrokeLineIntervalStream(), "invalid dashed stroke line interval");
         assertValidCommandStream(validSaveLayerTintColorFilterStream(), "valid saveLayer tint color-filter stream");
         assertValidCommandStream(validImageRefTintColorFilterStream(), "valid image-ref tint color-filter stream");
         assertValidCommandStream(validImageRefColorMatrixFilterHandleStream(), "valid image-ref color-matrix filter handle stream");
@@ -2895,6 +2898,24 @@ public class JBRSkiaApiTest {
                 JBRSkia.COMMAND_STROKE_LINE_DASH_PATH_EFFECT, 64, JBRSkia.COMMAND_RECORD_FLAG_ANTIALIAS,
                 0xffffffff, 1, 2, 11, 12, 8, 0, 1, 0, 3000, 2, 16000, 10000
         };
+    }
+
+    private static int[] invalidDashedStrokeLineIntervalCountStream() {
+        int[] commands = validDashedStrokeLineStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 13] = 1;
+        return commands;
+    }
+
+    private static int[] invalidDashedStrokeLinePhaseStream() {
+        int[] commands = validDashedStrokeLineStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 12] = -1;
+        return commands;
+    }
+
+    private static int[] invalidDashedStrokeLineIntervalStream() {
+        int[] commands = validDashedStrokeLineStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 14] = 0;
+        return commands;
     }
 
     private static int[] validSaveLayerTintColorFilterStream() {
