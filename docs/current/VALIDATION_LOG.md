@@ -5,6 +5,35 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel `CASE_GROUPS=descriptor-handles-invalid` passed as the grouped descriptor-handle parser/lifecycle
+  consolidation after the exact descriptor-handle slices and Skiko corruption-target fix. Aggregate: 48/48 passed,
+  `fallback_sum=48`, `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=0`. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-160242/suite.tsv`.
+- Magic Jewel exact descriptor-handle wrong-type slice passed after Skiko commit `4e7b0a6ba` made the path-effect
+  color-filter corruption hook prefer RuntimeEffect color-filter children before falling back to fill-rect
+  color-filter refs. Aggregate: 15/15 passed, `fallback_sum=15`, `unsupported_rows=0`, `jbr_picture_frames=0`,
+  and `jbr_command_frames=0`. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-155203/suite.tsv`.
+- Magic Jewel exact RuntimeEffect color-filter child path-effect wrong-type row passed after the same Skiko hook fix,
+  proving the marker now targets `runtimeEffectColorFilterChildPathEffect` instead of spending the one-shot
+  corruption on the earlier fill-rect color-filter ref. Aggregate: 1/1 passed, `fallback_sum=1`,
+  `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=0`. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-154401/suite.tsv`.
+- Magic Jewel exact descriptor-handle missing-child slice passed for RuntimeEffect color-filter, blur/offset
+  image-filter, chain path-effect, shader-color-filter effect child, and transformed/composite shader child missing
+  handles. Aggregate: 9/9 passed, `fallback_sum=9`, `unsupported_rows=0`, `jbr_picture_frames=0`, and
+  `jbr_command_frames=0`. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-152543/suite.tsv`.
+- Magic Jewel exact descriptor child use-after-evict slice passed for transformed/composite/shader-color-filter
+  shader children, RuntimeEffect shader/color-filter children, shader-color-filter effect children, and effect/blur/
+  path-effect children. Aggregate: 10/10 passed, `fallback_sum=10`, `unsupported_rows=0`,
+  `jbr_picture_frames=0`, and `jbr_command_frames=0`. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-151912/suite.tsv`.
+- Magic Jewel exact direct descriptor-handle use/eviction slice passed for undefined shader/path-effect/saveLayer refs,
+  descriptor use-after-evict, shader/color-filter evict record flags, color-filter/path-effect use-after-evict, and
+  saveLayer descriptor-ref use-after-evict rows. Aggregate: 14/14 passed, `fallback_sum=14`,
+  `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=0`. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-151010/suite.tsv`.
 - Magic Jewel `CASE_GROUPS=shader-descriptor-invalid` passed as the grouped shader descriptor parser consolidation
   after the exact shader-descriptor slices. Aggregate: 30/30 passed, `fallback_sum=30`, `unsupported_rows=0`,
   `jbr_picture_frames=0`, and `jbr_command_frames=0`. Suite:
