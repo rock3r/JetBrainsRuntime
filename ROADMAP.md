@@ -38,6 +38,17 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel `CASE_GROUPS=color-filters` passed as a supported color-filter command replay refresh: 10/10 passed,
+  `fallback_sum=0`, `unsupported_rows=1`, `jbr_picture_frames=1165`, `jbr_command_frames=13465`, suite
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-194122/suite.tsv`.
+  The single unsupported row was the intentional raw blend color-filter fallback; descriptor-backed color-filter rows
+  stayed on command replay.
+- Magic Jewel exact color-filter slices passed before consolidation: base color filters 6/6 at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-193428/suite.tsv`
+  with `unsupported_rows=1`, `jbr_picture_frames=999`, and `jbr_command_frames=7220`, and graphics-layer
+  color filters 4/4 at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-193838/suite.tsv`
+  with `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=6264`.
 - Magic Jewel `CASE_GROUPS=gradient-invalid` passed as the grouped gradient parser consolidation, including the
   previously grouped gradient-path rows: 60/60 passed, `fallback_sum=60`, `unsupported_rows=0`,
   `jbr_picture_frames=0`, `jbr_command_frames=0`, suite

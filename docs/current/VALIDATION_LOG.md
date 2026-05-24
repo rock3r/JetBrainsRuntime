@@ -5,6 +5,20 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel `CASE_GROUPS=color-filters` passed as a supported color-filter command replay refresh after exact base
+  and graphics-layer color-filter slices. Aggregate: 10/10 passed, `fallback_sum=0`, `unsupported_rows=1`,
+  `jbr_picture_frames=1165`, and `jbr_command_frames=13465`. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-194122/suite.tsv`.
+  The only unsupported row was `commands-raw-blend-color-filter-fallback`; descriptor-backed base and graphics-layer
+  color-filter rows stayed on command replay.
+- Magic Jewel exact graphics-layer color-filter slice passed for descriptor-backed color-filter, color-matrix,
+  blend-color-filter, and blend color-matrix rows. Aggregate: 4/4 passed, `fallback_sum=0`, `unsupported_rows=0`,
+  `jbr_picture_frames=0`, and `jbr_command_frames=6264`. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-193838/suite.tsv`.
+- Magic Jewel exact base color-filter slice passed for image color-matrix, raw blend fallback, color-filter handle,
+  color-matrix, and lighting rows. Aggregate: 6/6 passed, `fallback_sum=0`, `unsupported_rows=1`,
+  `jbr_picture_frames=999`, and `jbr_command_frames=7220`. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-193428/suite.tsv`.
 - Magic Jewel `CASE_GROUPS=gradient-invalid` passed as the grouped gradient parser consolidation after exact non-path
   gradient slices and the earlier grouped gradient-path consolidation. Aggregate: 60/60 passed, `fallback_sum=60`,
   `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=0`. Suite:
