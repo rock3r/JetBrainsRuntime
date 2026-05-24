@@ -248,6 +248,27 @@ public class JBRSkiaApiTest {
         assertValidCommandStream(validRadialGradientStrokeRoundRectStream(), "valid radial-gradient stroke round-rect stream");
         assertValidCommandStream(validSweepGradientStrokeStream(), "valid sweep-gradient stroke stream");
         assertValidCommandStream(validSweepGradientStrokeRoundRectStream(), "valid sweep-gradient stroke round-rect stream");
+        assertValidCommandStream(validLinearGradientPathStream(), "valid linear-gradient path stream");
+        assertInvalidCommandStream(invalidLinearGradientPathTileModeStream(), "invalid linear-gradient path tile mode");
+        assertInvalidCommandStream(invalidLinearGradientPathColorCountStream(), "invalid linear-gradient path color count");
+        assertInvalidCommandStream(invalidLinearGradientPathStopOrderStream(), "invalid linear-gradient path stop order");
+        assertInvalidCommandStream(invalidLinearGradientPathFillTypeStream(), "invalid linear-gradient path fill type");
+        assertInvalidCommandStream(invalidLinearGradientPathDataLengthStream(), "invalid linear-gradient path data length");
+        assertInvalidCommandStream(invalidLinearGradientPathVerbStream(), "invalid linear-gradient path verb");
+        assertValidCommandStream(validRadialGradientPathStream(), "valid radial-gradient path stream");
+        assertInvalidCommandStream(invalidRadialGradientPathRadiusStream(), "invalid radial-gradient path radius");
+        assertInvalidCommandStream(invalidRadialGradientPathTileModeStream(), "invalid radial-gradient path tile mode");
+        assertInvalidCommandStream(invalidRadialGradientPathColorCountStream(), "invalid radial-gradient path color count");
+        assertInvalidCommandStream(invalidRadialGradientPathStopOrderStream(), "invalid radial-gradient path stop order");
+        assertInvalidCommandStream(invalidRadialGradientPathFillTypeStream(), "invalid radial-gradient path fill type");
+        assertInvalidCommandStream(invalidRadialGradientPathDataLengthStream(), "invalid radial-gradient path data length");
+        assertInvalidCommandStream(invalidRadialGradientPathVerbStream(), "invalid radial-gradient path verb");
+        assertValidCommandStream(validSweepGradientPathStream(), "valid sweep-gradient path stream");
+        assertInvalidCommandStream(invalidSweepGradientPathColorCountStream(), "invalid sweep-gradient path color count");
+        assertInvalidCommandStream(invalidSweepGradientPathStopOrderStream(), "invalid sweep-gradient path stop order");
+        assertInvalidCommandStream(invalidSweepGradientPathFillTypeStream(), "invalid sweep-gradient path fill type");
+        assertInvalidCommandStream(invalidSweepGradientPathDataLengthStream(), "invalid sweep-gradient path data length");
+        assertInvalidCommandStream(invalidSweepGradientPathVerbStream(), "invalid sweep-gradient path verb");
         assertValidCommandStream(validFillRectPlusBlendModeStream(), "valid fill rect plus blend-mode stream");
         assertValidCommandStream(validFillRectMultiplyBlendModeStream(), "valid fill rect multiply blend-mode stream");
         assertValidCommandStream(validFillRectScreenBlendModeStream(), "valid fill rect screen blend-mode stream");
@@ -1143,6 +1164,153 @@ public class JBRSkiaApiTest {
                 1, 2, 11, 12, 3000, 4000, 12000, 1, 0, 4000,
                 6, 7, 2, 0xff22d3ee, 0, 0xfff97316, 1000
         };
+    }
+
+    private static int[] validLinearGradientPathStream() {
+        return new int[] {
+                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 18,
+                JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
+                JBRSkia.COMMAND_FILL_PATH_LINEAR_GRADIENT, 72, JBRSkia.COMMAND_RECORD_FLAG_ANTIALIAS,
+                JBRSkia.COMMAND_PATH_FILL_NON_ZERO, 3, JBRSkia.COMMAND_PATH_VERB_MOVE, 1000, 2000,
+                1000, 2000, 11000, 12000, 0, 2,
+                0xffff0000, 250,
+                0xff0000ff, 750
+        };
+    }
+
+    private static int[] invalidLinearGradientPathTileModeStream() {
+        int[] commands = validLinearGradientPathStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 12] = 4;
+        return commands;
+    }
+
+    private static int[] invalidLinearGradientPathColorCountStream() {
+        int[] commands = validLinearGradientPathStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 13] = 1;
+        return commands;
+    }
+
+    private static int[] invalidLinearGradientPathStopOrderStream() {
+        int[] commands = validLinearGradientPathStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 15] = 750;
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 17] = 250;
+        return commands;
+    }
+
+    private static int[] invalidLinearGradientPathFillTypeStream() {
+        int[] commands = validLinearGradientPathStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 3] = -1;
+        return commands;
+    }
+
+    private static int[] invalidLinearGradientPathDataLengthStream() {
+        int[] commands = validLinearGradientPathStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 4] = 4097;
+        return commands;
+    }
+
+    private static int[] invalidLinearGradientPathVerbStream() {
+        int[] commands = validLinearGradientPathStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 5] = 99;
+        return commands;
+    }
+
+    private static int[] validRadialGradientPathStream() {
+        return new int[] {
+                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 17,
+                JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
+                JBRSkia.COMMAND_FILL_PATH_RADIAL_GRADIENT, 68, JBRSkia.COMMAND_RECORD_FLAG_ANTIALIAS,
+                JBRSkia.COMMAND_PATH_FILL_NON_ZERO, 3, JBRSkia.COMMAND_PATH_VERB_MOVE, 1000, 2000,
+                6000, 7000, 8000, 0, 2,
+                0xff00ff00, 200,
+                0xffffffff, 800
+        };
+    }
+
+    private static int[] invalidRadialGradientPathRadiusStream() {
+        int[] commands = validRadialGradientPathStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 10] = 0;
+        return commands;
+    }
+
+    private static int[] invalidRadialGradientPathTileModeStream() {
+        int[] commands = validRadialGradientPathStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 11] = 4;
+        return commands;
+    }
+
+    private static int[] invalidRadialGradientPathColorCountStream() {
+        int[] commands = validRadialGradientPathStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 12] = 1;
+        return commands;
+    }
+
+    private static int[] invalidRadialGradientPathStopOrderStream() {
+        int[] commands = validRadialGradientPathStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 14] = 800;
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 16] = 200;
+        return commands;
+    }
+
+    private static int[] invalidRadialGradientPathFillTypeStream() {
+        int[] commands = validRadialGradientPathStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 3] = -1;
+        return commands;
+    }
+
+    private static int[] invalidRadialGradientPathDataLengthStream() {
+        int[] commands = validRadialGradientPathStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 4] = 4097;
+        return commands;
+    }
+
+    private static int[] invalidRadialGradientPathVerbStream() {
+        int[] commands = validRadialGradientPathStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 5] = 99;
+        return commands;
+    }
+
+    private static int[] validSweepGradientPathStream() {
+        return new int[] {
+                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 15,
+                JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
+                JBRSkia.COMMAND_FILL_PATH_SWEEP_GRADIENT, 60, JBRSkia.COMMAND_RECORD_FLAG_ANTIALIAS,
+                JBRSkia.COMMAND_PATH_FILL_NON_ZERO, 3, JBRSkia.COMMAND_PATH_VERB_MOVE, 1000, 2000,
+                5000, 6000, 2,
+                0xff00ff00, 200,
+                0xffffffff, 800
+        };
+    }
+
+    private static int[] invalidSweepGradientPathColorCountStream() {
+        int[] commands = validSweepGradientPathStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 10] = 1;
+        return commands;
+    }
+
+    private static int[] invalidSweepGradientPathStopOrderStream() {
+        int[] commands = validSweepGradientPathStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 12] = 800;
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 14] = 200;
+        return commands;
+    }
+
+    private static int[] invalidSweepGradientPathFillTypeStream() {
+        int[] commands = validSweepGradientPathStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 3] = -1;
+        return commands;
+    }
+
+    private static int[] invalidSweepGradientPathDataLengthStream() {
+        int[] commands = validSweepGradientPathStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 4] = 4097;
+        return commands;
+    }
+
+    private static int[] invalidSweepGradientPathVerbStream() {
+        int[] commands = validSweepGradientPathStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 5] = 99;
+        return commands;
     }
 
     private static int[] validFillRectPlusBlendModeStream() {

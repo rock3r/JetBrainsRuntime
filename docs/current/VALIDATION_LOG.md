@@ -5,6 +5,9 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- JBR parser-only `JBRSkiaApiTest` passed after adding direct gradient-path command rows for linear, radial, and sweep
+  path gradients. The new streams cover all `gradient-path-invalid` parser guards: tile/radius/color-count/stop-order,
+  fill-type, path-data length, and path-verb rejection; the local parser-only run exited 0.
 - JBR parser-only `JBRSkiaApiTest` passed after extending direct shader-descriptor invalid coverage for descriptor
   record flags, color/color-filter payload counts, composite blend mode, and negative Perlin tile width; the local
   parser-only run exited 0.

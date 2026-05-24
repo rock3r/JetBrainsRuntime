@@ -38,6 +38,8 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- JBR parser-only `JBRSkiaApiTest` passed after adding direct linear/radial/sweep gradient-path command rows covering
+  the full `gradient-path-invalid` guard set.
 - JBR parser-only `JBRSkiaApiTest` passed after extending direct shader-descriptor invalid coverage for record flags,
   color/color-filter payload counts, composite blend mode, and Perlin tile-width parser guards.
 - JBR parser-only `JBRSkiaApiTest` passed after extending direct effect-descriptor invalid coverage for descriptor
