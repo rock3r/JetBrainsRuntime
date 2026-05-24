@@ -38,6 +38,10 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel exact save-layer record/length invalid slice passed for raw/color-filter/blend/blend-color-filter
+  variants and descriptor-ref variants: 15/15 passed, `fallback_sum=15`, `unsupported_rows=0`,
+  `jbr_picture_frames=0`, `jbr_command_frames=0`, suite
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-124845/suite.tsv`.
 - Magic Jewel `CASE_GROUPS=image-handles-invalid` passed as the grouped image handle/parser consolidation:
   27/27 passed, `fallback_sum=27`, `unsupported_rows=0`, `jbr_picture_frames=0`, `jbr_command_frames=1102`, suite
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-123035/suite.tsv`.
