@@ -300,6 +300,17 @@ public class JBRSkiaApiTest {
         assertInvalidCommandStream(invalidDashedStrokeRoundRectStrokeMiterStream(), "invalid dashed stroke round-rect stroke miter");
         assertInvalidCommandStream(invalidDashedStrokeRoundRectPhaseStream(), "invalid dashed stroke round-rect phase");
         assertInvalidCommandStream(invalidDashedStrokeRoundRectIntervalStream(), "invalid dashed stroke round-rect interval");
+        assertValidCommandStream(validDashedStrokePathStream(), "valid dashed stroke path stream");
+        assertInvalidCommandStream(invalidDashedStrokePathIntervalCountStream(), "invalid dashed stroke path interval count");
+        assertInvalidCommandStream(invalidDashedStrokePathStrokeWidthStream(), "invalid dashed stroke path stroke width");
+        assertInvalidCommandStream(invalidDashedStrokePathStrokeCapStream(), "invalid dashed stroke path stroke cap");
+        assertInvalidCommandStream(invalidDashedStrokePathStrokeJoinStream(), "invalid dashed stroke path stroke join");
+        assertInvalidCommandStream(invalidDashedStrokePathStrokeMiterStream(), "invalid dashed stroke path stroke miter");
+        assertInvalidCommandStream(invalidDashedStrokePathPhaseStream(), "invalid dashed stroke path phase");
+        assertInvalidCommandStream(invalidDashedStrokePathIntervalStream(), "invalid dashed stroke path interval");
+        assertInvalidCommandStream(invalidDashedStrokePathFillTypeStream(), "invalid dashed stroke path fill type");
+        assertInvalidCommandStream(invalidDashedStrokePathDataLengthStream(), "invalid dashed stroke path data length");
+        assertInvalidCommandStream(invalidDashedStrokePathVerbStream(), "invalid dashed stroke path verb");
         assertValidCommandStream(validSaveLayerTintColorFilterStream(), "valid saveLayer tint color-filter stream");
         assertValidCommandStream(validImageRefTintColorFilterStream(), "valid image-ref tint color-filter stream");
         assertValidCommandStream(validImageRefColorMatrixFilterHandleStream(), "valid image-ref color-matrix filter handle stream");
@@ -3033,6 +3044,76 @@ public class JBRSkiaApiTest {
     private static int[] invalidDashedStrokeRoundRectIntervalStream() {
         int[] commands = validDashedStrokeRoundRectStream();
         commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 16] = 0;
+        return commands;
+    }
+
+    private static int[] validDashedStrokePathStream() {
+        return new int[] {
+                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 17,
+                JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
+                JBRSkia.COMMAND_STROKE_PATH_DASH_PATH_EFFECT, 68, JBRSkia.COMMAND_RECORD_FLAG_ANTIALIAS,
+                0xff3366cc, 8, 0, 1, 4000, 3000, 2, 16000, 10000,
+                JBRSkia.COMMAND_PATH_FILL_NON_ZERO, 3, JBRSkia.COMMAND_PATH_VERB_MOVE, 1000, 2000
+        };
+    }
+
+    private static int[] invalidDashedStrokePathIntervalCountStream() {
+        int[] commands = validDashedStrokePathStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 9] = 1;
+        return commands;
+    }
+
+    private static int[] invalidDashedStrokePathStrokeWidthStream() {
+        int[] commands = validDashedStrokePathStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 4] = 0;
+        return commands;
+    }
+
+    private static int[] invalidDashedStrokePathStrokeCapStream() {
+        int[] commands = validDashedStrokePathStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 5] = 3;
+        return commands;
+    }
+
+    private static int[] invalidDashedStrokePathStrokeJoinStream() {
+        int[] commands = validDashedStrokePathStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 6] = 3;
+        return commands;
+    }
+
+    private static int[] invalidDashedStrokePathStrokeMiterStream() {
+        int[] commands = validDashedStrokePathStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 7] = -1;
+        return commands;
+    }
+
+    private static int[] invalidDashedStrokePathPhaseStream() {
+        int[] commands = validDashedStrokePathStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 8] = -1;
+        return commands;
+    }
+
+    private static int[] invalidDashedStrokePathIntervalStream() {
+        int[] commands = validDashedStrokePathStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 10] = 0;
+        return commands;
+    }
+
+    private static int[] invalidDashedStrokePathFillTypeStream() {
+        int[] commands = validDashedStrokePathStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 12] = -1;
+        return commands;
+    }
+
+    private static int[] invalidDashedStrokePathDataLengthStream() {
+        int[] commands = validDashedStrokePathStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 13] = 4097;
+        return commands;
+    }
+
+    private static int[] invalidDashedStrokePathVerbStream() {
+        int[] commands = validDashedStrokePathStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 14] = 99;
         return commands;
     }
 
