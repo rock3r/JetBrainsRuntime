@@ -585,6 +585,8 @@ public class JBRSkiaApiTest {
                 JBRSkia.COMMAND_EFFECT_DESCRIPTOR_VERSION_1,
                 2, 0xff00ffff, JBRSkia.COMMAND_BLEND_MODE_SRC_IN
         }, "effect descriptor record length mismatch");
+        assertInvalidCommandStream(invalidTintEffectDescriptorRecordFlagsStream(), "effect descriptor record flags");
+        assertInvalidCommandStream(invalidLightingFilterDescriptorPayloadCountStream(), "lighting descriptor payload count");
         assertInvalidCommandStream(new int[] {
                 JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 10,
                 JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
@@ -600,12 +602,16 @@ public class JBRSkiaApiTest {
         assertInvalidCommandStream(invalidBlurImageFilterDescriptorTileModeStream(), "blur image-filter descriptor tile mode");
         assertInvalidCommandStream(invalidOffsetImageFilterDescriptorDeltaStream(), "offset image-filter descriptor delta");
         assertInvalidCommandStream(invalidCornerPathEffectDescriptorRadiusStream(), "corner path-effect descriptor radius");
+        assertInvalidCommandStream(invalidCornerPathEffectDescriptorNegativeRadiusStream(), "corner path-effect descriptor negative radius");
         assertInvalidCommandStream(invalidStampedPathEffectDescriptorAdvanceStream(), "stamped path-effect descriptor advance");
         assertInvalidCommandStream(invalidStampedPathEffectDescriptorZeroAdvanceStream(), "stamped path-effect descriptor zero advance");
         assertInvalidCommandStream(invalidStampedPathEffectDescriptorPhaseStream(), "stamped path-effect descriptor phase");
+        assertInvalidCommandStream(invalidStampedPathEffectDescriptorNegativePhaseStream(), "stamped path-effect descriptor negative phase");
         assertInvalidCommandStream(invalidStampedPathEffectDescriptorStyleStream(), "stamped path-effect descriptor style");
         assertInvalidCommandStream(invalidStampedPathEffectDescriptorFillTypeStream(), "stamped path-effect descriptor fill type");
         assertInvalidCommandStream(invalidStampedPathEffectDescriptorPathDataLengthStream(), "stamped path-effect descriptor path-data length");
+        assertInvalidCommandStream(invalidStampedPathEffectDescriptorNegativePathDataLengthStream(), "stamped path-effect descriptor negative path-data length");
+        assertInvalidCommandStream(invalidStampedPathEffectDescriptorPathVerbStream(), "stamped path-effect descriptor path verb");
         assertInvalidCommandStream(invalidChainPathEffectDescriptorPayloadCountStream(), "chain path-effect descriptor payload count");
         assertInvalidCommandStream(new int[] {
                 JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 25,
@@ -1355,6 +1361,42 @@ public class JBRSkiaApiTest {
         };
     }
 
+    private static int[] validTintEffectDescriptorRecordOnlyStream() {
+        return new int[] {
+                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 10,
+                JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
+                JBRSkia.COMMAND_DEFINE_EFFECT_DESCRIPTOR, 40, JBRSkia.COMMAND_RECORD_FLAGS_NONE,
+                0x00000001, 0x00000002,
+                JBRSkia.COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER,
+                JBRSkia.COMMAND_EFFECT_DESCRIPTOR_VERSION_1,
+                2, 0xff00ffff, JBRSkia.COMMAND_BLEND_MODE_SRC_IN
+        };
+    }
+
+    private static int[] invalidTintEffectDescriptorRecordFlagsStream() {
+        int[] commands = validTintEffectDescriptorRecordOnlyStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 2] = JBRSkia.COMMAND_RECORD_FLAG_ANTIALIAS;
+        return commands;
+    }
+
+    private static int[] validLightingFilterDescriptorRecordOnlyStream() {
+        return new int[] {
+                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 10,
+                JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
+                JBRSkia.COMMAND_DEFINE_EFFECT_DESCRIPTOR, 40, JBRSkia.COMMAND_RECORD_FLAGS_NONE,
+                0x00000001, 0x00000002,
+                JBRSkia.COMMAND_EFFECT_DESCRIPTOR_LIGHTING_FILTER,
+                JBRSkia.COMMAND_EFFECT_DESCRIPTOR_VERSION_1,
+                2, 0xffffffff, 0xff000000
+        };
+    }
+
+    private static int[] invalidLightingFilterDescriptorPayloadCountStream() {
+        int[] commands = validLightingFilterDescriptorRecordOnlyStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 7] = 1;
+        return commands;
+    }
+
     private static int[] invalidColorMatrixFilterDescriptorStream() {
         return new int[] {
                 JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 28,
@@ -1427,6 +1469,12 @@ public class JBRSkiaApiTest {
         return commands;
     }
 
+    private static int[] invalidCornerPathEffectDescriptorNegativeRadiusStream() {
+        int[] commands = validCornerPathEffectDescriptorRecordOnlyStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 8] = f(-1f);
+        return commands;
+    }
+
     private static int[] validCornerPathEffectDescriptorRecordOnlyStream() {
         return new int[] {
                 JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 9,
@@ -1467,6 +1515,12 @@ public class JBRSkiaApiTest {
 
     private static int[] invalidStampedPathEffectDescriptorPhaseStream() {
         int[] commands = validStampedPathEffectDescriptorRecordOnlyStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 9] = f(Float.NaN);
+        return commands;
+    }
+
+    private static int[] invalidStampedPathEffectDescriptorNegativePhaseStream() {
+        int[] commands = validStampedPathEffectDescriptorRecordOnlyStream();
         commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 9] = f(-1f);
         return commands;
     }
@@ -1486,6 +1540,32 @@ public class JBRSkiaApiTest {
     private static int[] invalidStampedPathEffectDescriptorPathDataLengthStream() {
         int[] commands = validStampedPathEffectDescriptorRecordOnlyStream();
         commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 12] = 4097;
+        return commands;
+    }
+
+    private static int[] invalidStampedPathEffectDescriptorNegativePathDataLengthStream() {
+        int[] commands = validStampedPathEffectDescriptorRecordOnlyStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 12] = -1;
+        return commands;
+    }
+
+    private static int[] validStampedPathEffectDescriptorWithPathStream() {
+        return new int[] {
+                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 16,
+                JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
+                JBRSkia.COMMAND_DEFINE_EFFECT_DESCRIPTOR, 64, JBRSkia.COMMAND_RECORD_FLAGS_NONE,
+                0x00000031, 0x00000032,
+                JBRSkia.COMMAND_EFFECT_DESCRIPTOR_STAMPED_PATH_EFFECT,
+                JBRSkia.COMMAND_EFFECT_DESCRIPTOR_VERSION_1,
+                8,
+                f(2f), f(1f), 0, JBRSkia.COMMAND_PATH_FILL_NON_ZERO, 3,
+                JBRSkia.COMMAND_PATH_VERB_MOVE, 1000, 2000
+        };
+    }
+
+    private static int[] invalidStampedPathEffectDescriptorPathVerbStream() {
+        int[] commands = validStampedPathEffectDescriptorWithPathStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 13] = 99;
         return commands;
     }
 

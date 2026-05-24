@@ -5,6 +5,9 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- JBR parser-only `JBRSkiaApiTest` passed after extending direct effect-descriptor invalid coverage for descriptor
+  record flags, lighting payload count, corner path-effect negative radius, stamped path-effect non-finite/negative
+  phase, negative path-data length, and malformed stamped path verbs; the local parser-only run exited 0.
 - JBR parser-only `JBRSkiaApiTest` passed after adding direct saveLayer invalid-family rows for raw saveLayer,
   blend-mode, raw color-filter, blend/color-filter, color-filter-ref, blend/color-filter-ref, and image-filter-ref
   record flags, record lengths, dimensions, alpha, and blend-mode guards; the local parser-only run exited 0.
