@@ -5,6 +5,11 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel exact image color-filter invalid slice passed for color-filter image handle use/eviction, scalar
+  width/height/alpha/filter-quality/blend guards, color-filter-ref handle use/eviction, and descriptor-backed
+  color-filter-ref scalar guards. Aggregate: 13/13 passed, `fallback_sum=13`, `unsupported_rows=0`,
+  `jbr_picture_frames=0`, and `jbr_command_frames=0`. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-122124/suite.tsv`.
 - Magic Jewel exact plain image-ref/use invalid slice passed for missing/evicted image handles and image-ref
   width/height/alpha/filter-quality scalar guards: 6/6 passed, `fallback_sum=6`, `unsupported_rows=0`,
   `jbr_picture_frames=0`, and `jbr_command_frames=0`. Suite:

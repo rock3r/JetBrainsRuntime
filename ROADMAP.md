@@ -38,6 +38,10 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel exact image color-filter invalid slice passed for color-filter image handle/scalar guards and
+  descriptor-backed color-filter-ref scalar guards: 13/13 passed, `fallback_sum=13`, `unsupported_rows=0`,
+  `jbr_picture_frames=0`, `jbr_command_frames=0`, suite
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-122124/suite.tsv`.
 - Magic Jewel exact plain image-ref/use invalid slice passed for missing/evicted image handles and image-ref
   width/height/alpha/filter-quality scalar guards: 6/6 passed, `fallback_sum=6`, `unsupported_rows=0`,
   `jbr_picture_frames=0`, `jbr_command_frames=0`, suite
