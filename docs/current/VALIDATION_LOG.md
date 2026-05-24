@@ -5,6 +5,15 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel exact RuntimeEffect schema/nested fallback consolidation passed:
+  `commands-runtime-effect-invalid-uniform-schema-fallback`,
+  `commands-runtime-effect-color-filter-invalid-uniform-schema-fallback`,
+  `commands-runtime-effect-invalid-child-schema-fallback`,
+  `commands-runtime-effect-color-filter-invalid-child-schema-fallback`,
+  `commands-runtime-effect-invalid-nested-child-fallback`, and
+  `commands-runtime-effect-color-filter-invalid-nested-child-fallback` produced 6/6 passed at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-112429/suite.tsv`;
+  `fallback_sum=0`, `jbr_picture_frames=7665`, and `jbr_command_frames=0`.
 - Magic Jewel exact RuntimeEffect nested-child fallback validation passed, completing focused exact coverage for the
   six intentional RuntimeEffect schema/nested parser-fallback rows. `CASES="commands-runtime-effect-invalid-nested-child-fallback
   commands-runtime-effect-color-filter-invalid-nested-child-fallback"` produced 2/2 passed at
