@@ -92,6 +92,9 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260523-153433/suite.tsv`,
   and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260523-153519/suite.tsv`.
+- Magic Jewel command-probe quick-group coverage now spans every resolved default case. `LIST_UNGROUPED_CASES=true`
+  returns no rows after adding supported surface/transform/UI, shader-rendering, shader-composition/RuntimeEffect,
+  core-effects, graphics-layer-extras, and saveLayer/shader-fallback groups.
 - The current exact saveLayer/shader-fallback uncovered command-probe tail passed 7/7, with `fallback_sum=0`, five
   intentional unsupported fallback rows, 4,435 JBR picture frames, and 1,659 JBR command frames across saveLayer filter
   and blend-mode replay, saveLayer raw color-filter fallback, opaque/composite opaque/picture shader fallbacks, and

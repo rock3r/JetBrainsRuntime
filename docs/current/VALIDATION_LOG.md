@@ -5,6 +5,10 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel command-probe quick-group coverage now spans every resolved default case. `LIST_UNGROUPED_CASES=true`
+  returns no rows after adding the supported surface/transform/UI, shader-rendering, shader-composition/RuntimeEffect,
+  core-effects, graphics-layer-extras, and saveLayer/shader-fallback quick groups. `LIST_CASE_GROUP_COUNTS=true`
+  reports the new group sizes as 11, 13, 15, 7, 14, and 7 rows, respectively.
 - Magic Jewel exact saveLayer/shader-fallback uncovered command-probe tail passed. Aggregate: 7/7 passed,
   `fallback_sum=0`, `unsupported_rows=5`, `jbr_picture_frames=4435`, and `jbr_command_frames=1659`. It covered
   saveLayer filter and blend-mode replay, saveLayer raw color-filter fallback, opaque/composite opaque/picture shader

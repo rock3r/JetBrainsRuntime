@@ -38,6 +38,9 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel command-probe quick-group coverage now spans every resolved default case: `LIST_UNGROUPED_CASES=true`
+  returns no rows after adding supported surface/transform/UI, shader-rendering, shader-composition/RuntimeEffect,
+  core-effects, graphics-layer-extras, and saveLayer/shader-fallback groups.
 - Magic Jewel exact saveLayer/shader-fallback uncovered command-probe tail passed: 7/7 passed, `fallback_sum=0`,
   `unsupported_rows=5`, `jbr_picture_frames=4435`, `jbr_command_frames=1659`, suite
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-233413/suite.tsv`.
