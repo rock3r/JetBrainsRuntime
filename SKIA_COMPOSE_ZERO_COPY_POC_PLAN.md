@@ -129,6 +129,10 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   blend+color-filter, blend+color-matrix, render-effect plus color/blend/filter combinations, offset-effect
   blend+color-matrix, chained render-effect blend+color-matrix, and the near-camera chained variant:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260525-144729/suite.tsv`.
+- The current focused descriptor-backed color-filter visual checkpoint passed 6/6, with `fallback_sum=1`, zero JBR
+  picture frames, 6,651 JBR command frames, and average `bad_pixel_ratio=0.05071` across image color-matrix filtering,
+  color-filter handle base/resize/forced-context lifecycle, color-matrix filter, and lighting filter rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260525-145502/suite.tsv`.
 - The current focused stable descriptor lifecycle checkpoint is `CASE_GROUPS=descriptor-lifecycle`, which passed 18/18
   with no fallback, no unsupported rows, zero JBR picture frames, and 20,144 JBR command frames across descriptor
   eviction, same-context resize/forced-context redefine, stable RuntimeEffect color-filter, and RuntimeEffect
