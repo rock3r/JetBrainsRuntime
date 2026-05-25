@@ -96,9 +96,9 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `fallback_sum=56`, 421 JBR command frames from the happy path, and background-window mode on every row:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260525-220254/matrix.tsv`.
 - The current artifact matrix checkpoint passed the required current-artifact rows on ABI 106 local artifacts:
-  `current-all` replayed commands with 718 JBR command frames, `missing-public-api` fell back exactly once, and the
+  `current-all` replayed commands with 606 JBR command frames, `missing-public-api` fell back exactly once, and the
   optional old-artifact rows were skipped because no old bundle variables were set:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260525-135942/matrix.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260525-223152/matrix.tsv`.
 - The current focused button-chrome screenshot parity checkpoint passed after the macOS capture helper gained the
   window-bounds retry. The row stayed on command replay with `fallback_sum=0`, zero JBR picture frames, 941 JBR command
   frames, overall `bad_pixel_ratio=0.05200`, and header-button `bad_pixel_ratio=0.00381`:

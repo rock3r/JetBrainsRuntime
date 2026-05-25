@@ -17,6 +17,11 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   frames came from the happy path; all ABI, native ABI, command-capability, high-capability, and public API mismatch
   rows fell back exactly once. Matrix:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260525-220254/matrix.tsv`.
+- Magic Jewel artifact matrix passed on current ABI 106 local artifacts after the compatibility refresh. Required rows:
+  `current-all` passed with no fallback and 606 JBR command frames, and `missing-public-api` passed with one expected
+  public API fallback and zero command frames. The five optional old-artifact rows were recorded as skipped because no
+  old bundle variables were configured. Matrix:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260525-223152/matrix.tsv`.
 - Magic Jewel full default screenshot parity passed after the focused visual refreshes and local macOS capture retry
   fix. Aggregate: 106/106 passed, `fallback_sum=11`, `jbr_picture_frames=0`, `jbr_command_frames=90354`, average
   pixel delta `2.158`, average `bad_pixel_ratio=0.05158`, average header-button `bad_pixel_ratio=0.00594`, and
