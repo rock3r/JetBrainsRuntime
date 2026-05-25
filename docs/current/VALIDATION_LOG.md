@@ -5,6 +5,11 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel focused `parity-button-chrome` screenshot parity passed on current artifacts after the macOS capture
+  helper gained the window-bounds retry. This narrow capture-health checkpoint stayed on command replay with
+  `fallback_sum=0`, `jbr_picture_frames=0`, `jbr_command_frames=941`, average pixel delta `2.265`, overall
+  `bad_pixel_ratio=0.05200`, header-button `bad_pixel_ratio=0.00381`, and zero bottom-swatch bad pixels. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260525-140430/suite.tsv`.
 - Magic Jewel artifact matrix passed on current ABI 106 local artifacts. Required rows: `current-all` passed with no
   fallback and 718 JBR command frames, and `missing-public-api` passed with one expected public API fallback and zero
   command frames. The five optional old-artifact rows were recorded as skipped because no old bundle variables were

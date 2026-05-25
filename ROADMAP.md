@@ -38,6 +38,10 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel focused `parity-button-chrome` screenshot parity passed on current artifacts after the macOS capture
+  helper gained the window-bounds retry: 1/1 passed, `fallback_sum=0`, `jbr_picture_frames=0`,
+  `jbr_command_frames=941`, `bad_pixel_ratio=0.05200`, header-button `bad_pixel_ratio=0.00381`, suite
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260525-140430/suite.tsv`.
 - Magic Jewel artifact matrix passed on current ABI 106 local artifacts: required rows 2/2 passed, optional old-artifact
   rows skipped because no old bundle variables were set, `fallback_sum=1`, `jbr_command_frames=718`, matrix
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260525-135942/matrix.tsv`.
