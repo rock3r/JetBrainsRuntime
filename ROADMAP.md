@@ -38,6 +38,9 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel artifact matrix passed on current ABI 106 local artifacts: required rows 2/2 passed, optional old-artifact
+  rows skipped because no old bundle variables were set, `fallback_sum=1`, `jbr_command_frames=718`, matrix
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260525-135942/matrix.tsv`.
 - Magic Jewel full default command-probe consolidation passed in command-marker-only mode after the focused group and
   compatibility refreshes: 487/487 passed, `fallback_sum=350`, `unsupported_rows=26`,
   `jbr_picture_frames=33702`, `jbr_command_frames=188677`, suite

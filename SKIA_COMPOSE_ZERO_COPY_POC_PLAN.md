@@ -93,6 +93,10 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - The current compatibility matrix checkpoint passed 57/57 after the focused command-probe refreshes, with
   `fallback_sum=56`, 663 JBR command frames from the happy path, and background-window mode on every row:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260525-080634/matrix.tsv`.
+- The current artifact matrix checkpoint passed the required current-artifact rows on ABI 106 local artifacts:
+  `current-all` replayed commands with 718 JBR command frames, `missing-public-api` fell back exactly once, and the
+  optional old-artifact rows were skipped because no old bundle variables were set:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260525-135942/matrix.tsv`.
 - The current focused screenshot parity checkpoint for the stable descriptor lifecycle visual surface passed 14/14
   with `fallback_sum=5`, zero JBR picture frames, and 9,992 JBR command frames across descriptor eviction,
   shader resize/forced-context redefine rows, stable RuntimeEffect color-filter lifecycle rows, and RuntimeEffect

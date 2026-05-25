@@ -5,6 +5,11 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel artifact matrix passed on current ABI 106 local artifacts. Required rows: `current-all` passed with no
+  fallback and 718 JBR command frames, and `missing-public-api` passed with one expected public API fallback and zero
+  command frames. The five optional old-artifact rows were recorded as skipped because no old bundle variables were
+  configured. Matrix:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260525-135942/matrix.tsv`.
 - Magic Jewel full default command-probe consolidation passed in command-marker-only mode after the focused group and
   compatibility refreshes. Local macOS screenshot capture still fails independently of command replay, so this sweep
   validated command markers, fallback contracts, unsupported-picture sentinels, and frame counters rather than
