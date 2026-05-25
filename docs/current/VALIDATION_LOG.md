@@ -12,6 +12,11 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   color-filter fallback paths, descriptor lifecycle, color/image filters, path effects, vertices, blend modes,
   saveLayer guards, and graphics-layer variants. Suite:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-163835/suite.tsv`.
+- Magic Jewel compatibility matrix passed after the screenshot-enabled command-probe refresh. Aggregate: 57/57
+  passed, `fallback_sum=56`, `jbr_command_frames=421`, and `background_window=true` on every row. The only command
+  frames came from the happy path; all ABI, native ABI, command-capability, high-capability, and public API mismatch
+  rows fell back exactly once. Matrix:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260525-220254/matrix.tsv`.
 - Magic Jewel full default screenshot parity passed after the focused visual refreshes and local macOS capture retry
   fix. Aggregate: 106/106 passed, `fallback_sum=11`, `jbr_picture_frames=0`, `jbr_command_frames=90354`, average
   pixel delta `2.158`, average `bad_pixel_ratio=0.05158`, average header-button `bad_pixel_ratio=0.00594`, and
