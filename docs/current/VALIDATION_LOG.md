@@ -5,6 +5,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel full default command-probe sweep passed with screenshot assertions enabled after the macOS capture
+  helper gained the window-bounds retry. Aggregate: 487/487 passed, `fallback_sum=350`, `unsupported_rows=26`,
+  `jbr_picture_frames=25539`, and `jbr_command_frames=146052`. The TSV has 488 lines including the header. The sweep
+  covered smoke replay, parser invalid groups, image/shader/effect descriptor guards, RuntimeEffect shader and
+  color-filter fallback paths, descriptor lifecycle, color/image filters, path effects, vertices, blend modes,
+  saveLayer guards, and graphics-layer variants. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-163835/suite.tsv`.
 - Magic Jewel full default screenshot parity passed after the focused visual refreshes and local macOS capture retry
   fix. Aggregate: 106/106 passed, `fallback_sum=11`, `jbr_picture_frames=0`, `jbr_command_frames=90354`, average
   pixel delta `2.158`, average `bad_pixel_ratio=0.05158`, average header-button `bad_pixel_ratio=0.00594`, and

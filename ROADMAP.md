@@ -38,6 +38,10 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel full default command-probe sweep passed with screenshot assertions enabled after the macOS capture retry:
+  487/487 passed, `fallback_sum=350`, `unsupported_rows=26`, `jbr_picture_frames=25539`,
+  `jbr_command_frames=146052`, suite
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-163835/suite.tsv`.
 - Magic Jewel full default screenshot parity passed after the focused visual refreshes and local macOS capture retry:
   106/106 passed, `fallback_sum=11`, `jbr_picture_frames=0`, `jbr_command_frames=90354`, average
   `bad_pixel_ratio=0.05158`, suite

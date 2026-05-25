@@ -53,11 +53,13 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `command_frames=189208`. The split recovered from a transient local JBR Skia `public-api-missing` artifact state by
   rebuilding local artifacts, then used command-marker-only validation for the final tail after macOS `screencapture`
   began failing independently of command replay.
-- The latest full default command-probe checkpoint passed in command-marker-only mode after the focused group and
-  compatibility refreshes. Local macOS screenshot capture still fails independently of command replay, so this sweep
-  validates command markers, fallback contracts, unsupported-picture sentinels, and frame counters rather than
-  screenshot pixels. Aggregate: 487/487 passed, `fallback_sum=350`, `unsupported_rows=26`, `picture_frames=33702`,
-  and `command_frames=188677`:
+- The latest full default command-probe checkpoint passed with screenshot assertions enabled after the focused
+  screenshot parity refreshes and macOS capture retry fix. Aggregate: 487/487 passed, `fallback_sum=350`,
+  `unsupported_rows=26`, `picture_frames=25539`, and `command_frames=146052`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-163835/suite.tsv`.
+- The previous full default command-probe checkpoint passed in command-marker-only mode after the focused group and
+  compatibility refreshes while local macOS screenshot capture still failed independently of command replay. Aggregate:
+  487/487 passed, `fallback_sum=350`, `unsupported_rows=26`, `picture_frames=33702`, and `command_frames=188677`:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-083629/suite.tsv`.
 - The latest supported command-replay refresh passed in command-marker-only mode while the local macOS screenshot
   capture path remains unavailable: `smoke` 6/6 with 7,336 command frames, `color-filters` 10/10 with one intentional
