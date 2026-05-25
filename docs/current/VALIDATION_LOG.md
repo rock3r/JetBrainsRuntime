@@ -5,6 +5,16 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel small invalid-group refresh passed for stream envelope and tiny fill/blend descriptor guards. Results:
+  `stream-invalid` 8/8, `fallback_sum=8`;
+  `shader-ref-invalid` 3/3, `fallback_sum=3`;
+  `fill-rect-color-filter-invalid` 5/5, `fallback_sum=5`;
+  `blend-mode-invalid` 2/2, `fallback_sum=2`. All four runs had `unsupported_rows=0`,
+  `jbr_picture_frames=0`, and `jbr_command_frames=0`. Suites:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-062055/suite.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-062610/suite.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-062808/suite.tsv`, and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-063118/suite.tsv`.
 - Magic Jewel `CASE_GROUPS=gradient-invalid` passed as the broader gradient parser refresh after the focused
   `gradient-path-invalid` run. Aggregate: 60/60 passed, `fallback_sum=60`, `unsupported_rows=0`,
   `jbr_picture_frames=0`, and `jbr_command_frames=0`. It covered stroke-width, tile-mode, radius, color-count, and

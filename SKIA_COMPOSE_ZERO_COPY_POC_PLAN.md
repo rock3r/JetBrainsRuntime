@@ -57,6 +57,13 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   capture failed independently of command replay on the screenshot-enabled broad attempt. Aggregate: 487/487 passed,
   `fallback_sum=350`, `unsupported_rows=26`, `picture_frames=24438`, and `command_frames=141588`:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-215756/suite.tsv`.
+- The current small invalid-group refresh passed for `stream-invalid`, `shader-ref-invalid`,
+  `fill-rect-color-filter-invalid`, and `blend-mode-invalid`, covering 18 rows total with expected fallback sums, zero
+  unsupported rows, zero JBR picture frames, and zero JBR command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-062055/suite.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-062610/suite.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-062808/suite.tsv`, and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-063118/suite.tsv`.
 - The latest periodic default command-probe consolidation after the shader/effect/RuntimeEffect/saveLayer parser guard
   refreshes used an exact `commands-live-animation` rerun plus a resumed default tail after macOS window capture failed
   independently of command replay on the first broad attempt. Combined aggregate: 486/486 passed,
