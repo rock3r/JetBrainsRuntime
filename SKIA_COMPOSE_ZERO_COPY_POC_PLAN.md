@@ -131,7 +131,7 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260523-055336/suite.tsv`.
 - The current focused saveLayer parser guard refresh is `CASE_GROUPS=save-layer-invalid`, which passed 37/37 with
   `fallback_sum=37`, zero unsupported rows, zero JBR picture frames, and zero JBR command frames:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-215534/suite.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-040347/suite.tsv`.
 - The current focused shader descriptor parser guard refresh is `CASE_GROUPS=shader-descriptor-invalid`, which passed
   30/30 with `fallback_sum=30`, zero unsupported rows, zero JBR picture frames, and zero JBR command frames after the
   direct parser-test additions for gradient/image shader and Perlin-noise descriptor bounds:
