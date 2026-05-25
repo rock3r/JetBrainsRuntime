@@ -5,6 +5,11 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel compatibility matrix passed after the focused command-probe refreshes. Aggregate: 57/57 passed,
+  `fallback_sum=56`, `jbr_command_frames=663`, and `background_window=true` on every row. The only command frames came
+  from the happy path; all ABI, native ABI, command-capability, high-capability, and public API mismatch rows fell back
+  exactly once. Matrix:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260525-080634/matrix.tsv`.
 - Magic Jewel `CASE_GROUPS=runtime-effect-invalid` passed as a focused RuntimeEffect parser/semantic guard refresh.
   Aggregate: 62/62 passed, `fallback_sum=56`, `unsupported_rows=6`, `jbr_picture_frames=5684`, and
   `jbr_command_frames=0`. The six unsupported-picture rows are the intentional shader/color-filter invalid uniform,

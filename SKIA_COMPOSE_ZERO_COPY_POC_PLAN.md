@@ -88,9 +88,9 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260523-153433/suite.tsv`,
   and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260523-153519/suite.tsv`.
-- The current compatibility matrix checkpoint passed 57/57 after that rebuild and default sweep, with
-  `fallback_sum=56`, 426 JBR command frames from the happy path, and background-window mode on every row:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260523-163821/matrix.tsv`.
+- The current compatibility matrix checkpoint passed 57/57 after the focused command-probe refreshes, with
+  `fallback_sum=56`, 663 JBR command frames from the happy path, and background-window mode on every row:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260525-080634/matrix.tsv`.
 - The current focused screenshot parity checkpoint for the stable descriptor lifecycle visual surface passed 14/14
   with `fallback_sum=5`, zero JBR picture frames, and 9,992 JBR command frames across descriptor eviction,
   shader resize/forced-context redefine rows, stable RuntimeEffect color-filter lifecycle rows, and RuntimeEffect
