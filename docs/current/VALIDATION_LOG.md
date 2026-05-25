@@ -5,6 +5,15 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel `CASE_GROUPS=gradient-invalid` passed as the broader gradient parser refresh after the focused
+  `gradient-path-invalid` run. Aggregate: 60/60 passed, `fallback_sum=60`, `unsupported_rows=0`,
+  `jbr_picture_frames=0`, and `jbr_command_frames=0`. It covered stroke-width, tile-mode, radius, color-count, and
+  stop-order guards across linear, radial, and sweep gradients plus the embedded gradient-path rows. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-054237/suite.tsv`.
+- Magic Jewel `CASE_GROUPS=gradient-path-invalid` passed as a focused gradient path parser refresh. Aggregate: 18/18
+  passed, `fallback_sum=18`, `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=0`. It covered
+  linear/radial/sweep gradient path tile/count/stop-order/fill-type/path-data/path-verb guards. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-053116/suite.tsv`.
 - Magic Jewel `CASE_GROUPS=path-invalid` passed as a focused path/path-effect parser refresh after
   `primitive-invalid`. Aggregate: 22/22 passed, `fallback_sum=22`, `unsupported_rows=0`, `jbr_picture_frames=0`, and
   `jbr_command_frames=0`. It covered malformed clip/draw/drawShadow path verbs plus dash path-effect payload guards

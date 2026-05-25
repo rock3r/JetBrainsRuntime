@@ -38,6 +38,12 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel `CASE_GROUPS=gradient-invalid` passed as the broader gradient parser refresh: 60/60 passed,
+  `fallback_sum=60`, `unsupported_rows=0`, `jbr_picture_frames=0`, `jbr_command_frames=0`, suite
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-054237/suite.tsv`.
+- Magic Jewel `CASE_GROUPS=gradient-path-invalid` passed as a focused gradient path parser refresh: 18/18 passed,
+  `fallback_sum=18`, `unsupported_rows=0`, `jbr_picture_frames=0`, `jbr_command_frames=0`, suite
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-053116/suite.tsv`.
 - Magic Jewel `CASE_GROUPS=path-invalid` passed as a focused path/path-effect parser refresh: 22/22 passed,
   `fallback_sum=22`, `unsupported_rows=0`, `jbr_picture_frames=0`, `jbr_command_frames=0`, suite
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-051534/suite.tsv`.
