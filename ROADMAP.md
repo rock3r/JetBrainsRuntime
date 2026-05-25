@@ -38,6 +38,9 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel focused screenshot parity passed for the gradient visual surface: 4/4 passed, `fallback_sum=0`,
+  `jbr_picture_frames=0`, `jbr_command_frames=4613`, average `bad_pixel_ratio=0.05099`, suite
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260525-145959/suite.tsv`.
 - Magic Jewel focused screenshot parity passed for the descriptor-backed color-filter visual surface: 6/6 passed,
   `fallback_sum=1`, `jbr_picture_frames=0`, `jbr_command_frames=6651`, average `bad_pixel_ratio=0.05071`, suite
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260525-145502/suite.tsv`.

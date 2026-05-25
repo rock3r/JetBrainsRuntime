@@ -5,6 +5,11 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel focused screenshot parity passed for the gradient visual surface. Aggregate: 4/4 passed,
+  `fallback_sum=0`, `jbr_picture_frames=0`, `jbr_command_frames=4613`, average pixel delta `2.145`, average
+  `bad_pixel_ratio=0.05099`, and average header-button `bad_pixel_ratio=0.00381`. It covered gradient surfaces,
+  gradient-filled paths, ShaderBrush gradients, and stroked gradients. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260525-145959/suite.tsv`.
 - Magic Jewel focused screenshot parity passed for the descriptor-backed color-filter visual surface. Aggregate:
   6/6 passed, `fallback_sum=1`, `jbr_picture_frames=0`, `jbr_command_frames=6651`, average pixel delta `2.130`,
   average `bad_pixel_ratio=0.05071`, and average header-button `bad_pixel_ratio=0.00677`. It covered image

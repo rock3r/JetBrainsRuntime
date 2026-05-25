@@ -133,6 +133,10 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   picture frames, 6,651 JBR command frames, and average `bad_pixel_ratio=0.05071` across image color-matrix filtering,
   color-filter handle base/resize/forced-context lifecycle, color-matrix filter, and lighting filter rows:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260525-145502/suite.tsv`.
+- The current focused gradient visual checkpoint passed 4/4, with `fallback_sum=0`, zero JBR picture frames, 4,613
+  JBR command frames, and average `bad_pixel_ratio=0.05099` across gradient surfaces, gradient-filled paths,
+  ShaderBrush gradients, and stroked gradients:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260525-145959/suite.tsv`.
 - The current focused stable descriptor lifecycle checkpoint is `CASE_GROUPS=descriptor-lifecycle`, which passed 18/18
   with no fallback, no unsupported rows, zero JBR picture frames, and 20,144 JBR command frames across descriptor
   eviction, same-context resize/forced-context redefine, stable RuntimeEffect color-filter, and RuntimeEffect
