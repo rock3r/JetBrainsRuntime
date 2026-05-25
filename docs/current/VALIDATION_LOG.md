@@ -5,6 +5,11 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel exact shader composition and RuntimeEffect uncovered command-probe slice passed. Aggregate: 15/15
+  passed, `fallback_sum=0`, `unsupported_rows=2`, `jbr_picture_frames=2005`, and `jbr_command_frames=17627`. It
+  covered image/composite/transformed shaders, shader color-filter combinations, RuntimeEffect shader and color-filter
+  replay, pure/uniform/child RuntimeEffects, and raw RuntimeEffect shader/color-filter fallback sentinels. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-230231/suite.tsv`.
 - Magic Jewel exact shader/image-rendering uncovered command-probe slice passed. Aggregate: 13/13 passed,
   `fallback_sum=0`, `unsupported_rows=8`, `jbr_picture_frames=7775`, and `jbr_command_frames=6664`. It covered
   forced-context dynamic image-cache replay, image path-effect fallback, image shader replay, descriptor stroke-shader

@@ -92,6 +92,11 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260523-153433/suite.tsv`,
   and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260523-153519/suite.tsv`.
+- The current exact shader composition and RuntimeEffect uncovered command-probe checkpoint passed 15/15, with
+  `fallback_sum=0`, two intentional unsupported fallback rows, 2,005 JBR picture frames, and 17,627 JBR command frames
+  across image/composite/transformed shaders, shader color-filter combinations, RuntimeEffect shader and color-filter
+  replay, pure/uniform/child RuntimeEffects, and raw RuntimeEffect shader/color-filter fallback sentinels:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-230231/suite.tsv`.
 - The current exact shader/image-rendering uncovered command-probe checkpoint passed 13/13, with `fallback_sum=0`,
   eight intentional unsupported fallback rows, 7,775 JBR picture frames, and 6,664 JBR command frames across
   forced-context dynamic images, image path-effect fallback, image shader replay, descriptor stroke-shader fallback,
