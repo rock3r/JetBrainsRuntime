@@ -5,6 +5,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel full default command-probe consolidation passed in command-marker-only mode after the focused group and
+  compatibility refreshes. Local macOS screenshot capture still fails independently of command replay, so this sweep
+  validated command markers, fallback contracts, unsupported-picture sentinels, and frame counters rather than
+  screenshot pixels. Aggregate: 487/487 passed, `fallback_sum=350`, `unsupported_rows=26`,
+  `jbr_picture_frames=33702`, and `jbr_command_frames=188677`. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-083629/suite.tsv`.
 - Magic Jewel compatibility matrix passed after the focused command-probe refreshes. Aggregate: 57/57 passed,
   `fallback_sum=56`, `jbr_command_frames=663`, and `background_window=true` on every row. The only command frames came
   from the happy path; all ABI, native ABI, command-capability, high-capability, and public API mismatch rows fell back
