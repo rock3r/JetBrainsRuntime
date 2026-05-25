@@ -5,6 +5,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel `CASE_GROUPS=effect-descriptor-invalid` passed as a focused effect descriptor parser refresh after the
+  command-marker-only full sweep. Aggregate: 28/28 passed, `fallback_sum=28`, `unsupported_rows=0`,
+  `jbr_picture_frames=0`, and `jbr_command_frames=0`. This rechecked descriptor header guards, color/image-filter
+  payload guards, and corner/stamped/chained path-effect descriptor bounds with all malformed rows failing before JBR
+  replay. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-032537/suite.tsv`.
 - Magic Jewel `CASE_GROUPS=image-handles-invalid` passed as a focused image handle/ref parser refresh after the
   command-marker-only full sweep. Aggregate: 27/27 passed, `fallback_sum=27`, `unsupported_rows=0`,
   `jbr_picture_frames=0`, and `jbr_command_frames=980`. The command frames came from the recoverable

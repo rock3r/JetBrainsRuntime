@@ -139,7 +139,7 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - The current focused effect descriptor parser guard refresh is `CASE_GROUPS=effect-descriptor-invalid`, which passed
   28/28 with `fallback_sum=28`, zero unsupported rows, zero JBR picture frames, and zero JBR command frames after the
   direct parser-test additions for blur, offset, corner/stamped path-effect, and chain path-effect descriptor bounds:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-224042/suite.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-032537/suite.tsv`.
 - The current focused RuntimeEffect parser/semantic guard refresh is `CASE_GROUPS=runtime-effect-invalid`, which passed
   62/62 with `fallback_sum=56`, six intentional unsupported-picture rows, 7,689 JBR picture frames, and zero JBR
   command frames after the direct parser-test additions for source, SKSL, uniform, child, and named-count bounds:
