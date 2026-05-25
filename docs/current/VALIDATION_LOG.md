@@ -5,6 +5,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel focused screenshot parity passed for the remaining RuntimeEffect visual surface. Aggregate: 9/9 passed,
+  `fallback_sum=1`, `jbr_picture_frames=0`, `jbr_command_frames=7416`, average pixel delta `2.063`, average
+  `bad_pixel_ratio=0.04895`, and average header-button `bad_pixel_ratio=0.00578`. It covered pure-color
+  RuntimeEffect base/resize/forced-context lifecycle, uniform-only and child-only RuntimeEffects, shader source-cache
+  eviction, RuntimeEffect shader, shader+color-filter, and color-filter rows. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260525-152025/suite.tsv`.
 - Magic Jewel focused screenshot parity passed for the image/shader descriptor visual surface. Aggregate: 12/12
   passed, `fallback_sum=0`, `jbr_picture_frames=0`, `jbr_command_frames=10079`, average pixel delta `2.202`,
   average `bad_pixel_ratio=0.05304`, and average header-button `bad_pixel_ratio=0.00363`. It covered forced-context

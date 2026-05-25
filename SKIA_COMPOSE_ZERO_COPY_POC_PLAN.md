@@ -147,6 +147,11 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   filters, image/color/noise/turbulence shaders, image-shader color filters, composite and composite-noise shaders,
   composite/linear-gradient shader color filters, and transformed shaders:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260525-151131/suite.tsv`.
+- The current focused remaining RuntimeEffect visual checkpoint passed 9/9, with `fallback_sum=1`, zero JBR picture
+  frames, 7,416 JBR command frames, and average `bad_pixel_ratio=0.04895` across pure-color RuntimeEffect
+  base/resize/forced-context lifecycle, uniform-only and child-only RuntimeEffects, shader source-cache eviction,
+  RuntimeEffect shader, shader+color-filter, and color-filter rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260525-152025/suite.tsv`.
 - The current focused stable descriptor lifecycle checkpoint is `CASE_GROUPS=descriptor-lifecycle`, which passed 18/18
   with no fallback, no unsupported rows, zero JBR picture frames, and 20,144 JBR command frames across descriptor
   eviction, same-context resize/forced-context redefine, stable RuntimeEffect color-filter, and RuntimeEffect
