@@ -95,11 +95,11 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - The current primitive paint/draw parser fallback checkpoint is `CASE_GROUPS=primitive-invalid`, which passed 13/13
   with `fallback_sum=13`, zero unsupported rows, zero JBR picture frames, and zero JBR command frames across invalid
   stroke cap, transform flags, clip operation, drawPoints, and drawVertices payload guards:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260523-172558/suite.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-050721/suite.tsv`.
 - The current path and path-effect parser fallback checkpoint is `CASE_GROUPS=path-invalid`, which passed 22/22 with
   `fallback_sum=22`, zero unsupported rows, zero JBR picture frames, and zero JBR command frames across malformed
   clip/draw path verbs, dash path-effect line/rect/round-rect/generic-path payloads, and drawShadow path verbs:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260523-173511/suite.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-051534/suite.tsv`.
 - The current supported color-filter/graphics-layer replay checkpoint is `CASE_GROUPS=color-filters`, which passed
   10/10 with no fallback, one intentional unsupported raw color-filter sentinel, 873 JBR picture frames for that row,
   and 12,561 JBR command frames across the supported color-filter, lighting, and graphics-layer color-filter rows:

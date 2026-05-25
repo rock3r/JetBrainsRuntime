@@ -5,6 +5,16 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel `CASE_GROUPS=path-invalid` passed as a focused path/path-effect parser refresh after
+  `primitive-invalid`. Aggregate: 22/22 passed, `fallback_sum=22`, `unsupported_rows=0`, `jbr_picture_frames=0`, and
+  `jbr_command_frames=0`. It covered malformed clip/draw/drawShadow path verbs plus dash path-effect payload guards
+  across line, rect, round-rect, and generic path rows. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-051534/suite.tsv`.
+- Magic Jewel `CASE_GROUPS=primitive-invalid` passed as a focused primitive parser refresh after the native text
+  invalid refresh. Aggregate: 13/13 passed, `fallback_sum=13`, `unsupported_rows=0`, `jbr_picture_frames=0`, and
+  `jbr_command_frames=0`. It covered invalid stroke cap, transform flags, clip operation, drawPoints payload guards,
+  and drawVertices vertex/index/mode/blend guards. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-050721/suite.tsv`.
 - Magic Jewel `CASE_GROUPS=native-text-invalid` passed as a focused native text/font parser refresh after the
   command-marker-only full sweep. Aggregate: 11/11 passed, `fallback_sum=11`, `unsupported_rows=0`,
   `jbr_picture_frames=0`, and `jbr_command_frames=1223`. Text and paragraph font scalar/family-count rows rejected
