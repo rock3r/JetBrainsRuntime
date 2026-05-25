@@ -38,6 +38,9 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel `CASE_GROUPS=native-text-invalid` passed as a focused native text/font parser refresh: 11/11 passed,
+  `fallback_sum=11`, `unsupported_rows=0`, `jbr_picture_frames=0`, `jbr_command_frames=1223`, suite
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-045900/suite.tsv`.
 - Magic Jewel `CASE_GROUPS=descriptor-handles-invalid` passed as a focused descriptor handle lifetime/family refresh:
   48/48 passed, `fallback_sum=48`, `unsupported_rows=0`, `jbr_picture_frames=0`, `jbr_command_frames=0`, suite
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-042757/suite.tsv`.

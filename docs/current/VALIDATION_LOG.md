@@ -5,6 +5,11 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel `CASE_GROUPS=native-text-invalid` passed as a focused native text/font parser refresh after the
+  command-marker-only full sweep. Aggregate: 11/11 passed, `fallback_sum=11`, `unsupported_rows=0`,
+  `jbr_picture_frames=0`, and `jbr_command_frames=1223`. Text and paragraph font scalar/family-count rows rejected
+  before replay; the command frames came from the recoverable font-data record-flags row. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-045900/suite.tsv`.
 - Magic Jewel `CASE_GROUPS=descriptor-handles-invalid` passed as a focused descriptor handle lifetime/family refresh
   after the command-marker-only full sweep. Aggregate: 48/48 passed, `fallback_sum=48`, `unsupported_rows=0`,
   `jbr_picture_frames=0`, and `jbr_command_frames=0`. This rechecked undefined and evicted top-level shader,
