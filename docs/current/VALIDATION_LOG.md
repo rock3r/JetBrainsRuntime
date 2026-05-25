@@ -5,6 +5,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel `CASE_GROUPS=runtime-effect-invalid` passed as a focused RuntimeEffect parser/semantic guard refresh.
+  Aggregate: 62/62 passed, `fallback_sum=56`, `unsupported_rows=6`, `jbr_picture_frames=5684`, and
+  `jbr_command_frames=0`. The six unsupported-picture rows are the intentional shader/color-filter invalid uniform,
+  child, and nested-child schema cases; all other malformed source, SKSL, uniform, child, named-count, compile/build,
+  and child-type rows failed before replay with one structured fallback marker. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-072243/suite.tsv`.
 - Magic Jewel supported command-replay refresh passed in command-marker-only mode while the local macOS screenshot
   capture path remains unavailable. Results: `smoke` 6/6, `fallback_sum=0`, `unsupported_rows=0`,
   `jbr_picture_frames=0`, `jbr_command_frames=7336`; `color-filters` 10/10, `fallback_sum=0`,
