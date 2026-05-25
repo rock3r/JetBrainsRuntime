@@ -38,6 +38,17 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel supported command-replay refresh passed in command-marker-only mode while local macOS screenshot capture
+  remains broken independently of replay: `smoke` 6/6 with `jbr_command_frames=7336`, `color-filters` 10/10 with
+  `unsupported_rows=1`, `jbr_picture_frames=979`, and `jbr_command_frames=11118`, `descriptor-lifecycle` 18/18 with
+  `jbr_command_frames=20144`, `native-text` 14/14 with `jbr_command_frames=15012`, and `graphics-layer` 21/21 with
+  `jbr_command_frames=26150`. All supported rows in these runs had `fallback_sum=0`; the single unsupported row is the
+  intentional raw blend color-filter sentinel. Suites:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-063438/suite.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-063910/suite.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-064533/suite.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-065848/suite.tsv`, and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-070741/suite.tsv`.
 - Magic Jewel small invalid-group refresh passed: `stream-invalid` 8/8, `shader-ref-invalid` 3/3,
   `fill-rect-color-filter-invalid` 5/5, and `blend-mode-invalid` 2/2. All four runs had expected fallback sums, zero
   unsupported rows, zero JBR picture frames, and zero JBR command frames. Suites:

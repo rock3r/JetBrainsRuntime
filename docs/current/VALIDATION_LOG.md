@@ -5,6 +5,19 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel supported command-replay refresh passed in command-marker-only mode while the local macOS screenshot
+  capture path remains unavailable. Results: `smoke` 6/6, `fallback_sum=0`, `unsupported_rows=0`,
+  `jbr_picture_frames=0`, `jbr_command_frames=7336`; `color-filters` 10/10, `fallback_sum=0`,
+  `unsupported_rows=1`, `jbr_picture_frames=979`, `jbr_command_frames=11118`; `descriptor-lifecycle` 18/18,
+  `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, `jbr_command_frames=20144`; `native-text` 14/14,
+  `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, `jbr_command_frames=15012`; and
+  `graphics-layer` 21/21, `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`,
+  `jbr_command_frames=26150`. The only unsupported row is the intentional raw blend color-filter sentinel. Suites:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-063438/suite.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-063910/suite.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-064533/suite.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-065848/suite.tsv`, and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-070741/suite.tsv`.
 - Magic Jewel small invalid-group refresh passed for stream envelope and tiny fill/blend descriptor guards. Results:
   `stream-invalid` 8/8, `fallback_sum=8`;
   `shader-ref-invalid` 3/3, `fallback_sum=3`;
