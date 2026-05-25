@@ -38,6 +38,10 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel focused screenshot parity passed for the native text/font visual lifecycle surface after the local
+  capture retry refresh: 14/14 passed, `fallback_sum=3`, `jbr_picture_frames=0`, `jbr_command_frames=10056`,
+  average `bad_pixel_ratio=0.04758`, suite
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260525-142013/suite.tsv`.
 - Magic Jewel focused screenshot parity passed for the stable descriptor lifecycle visual surface after the local
   capture retry refresh: 14/14 passed, `fallback_sum=5`, `jbr_picture_frames=0`, `jbr_command_frames=10401`,
   average `bad_pixel_ratio=0.04695`, suite

@@ -5,6 +5,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel focused screenshot parity passed for the native text/font visual lifecycle surface after the local
+  capture retry refresh. Aggregate: 14/14 passed, `fallback_sum=3`, `jbr_picture_frames=0`,
+  `jbr_command_frames=10056`, average pixel delta `2.037`, average `bad_pixel_ratio=0.04758`, and average
+  header-button `bad_pixel_ratio=0.00889`. It covered custom-font image text, generic/loaded/resource/system font text,
+  same-context resize, and forced destination-context migration rows. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260525-142013/suite.tsv`.
 - Magic Jewel focused screenshot parity passed for the stable descriptor lifecycle visual surface after the local
   capture retry refresh. Aggregate: 14/14 passed, `fallback_sum=5`, `jbr_picture_frames=0`,
   `jbr_command_frames=10401`, average pixel delta `1.976`, average `bad_pixel_ratio=0.04695`, and average
