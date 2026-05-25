@@ -92,6 +92,11 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260523-153433/suite.tsv`,
   and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260523-153519/suite.tsv`.
+- The current exact shader/image-rendering uncovered command-probe checkpoint passed 13/13, with `fallback_sum=0`,
+  eight intentional unsupported fallback rows, 7,775 JBR picture frames, and 6,664 JBR command frames across
+  forced-context dynamic images, image path-effect fallback, image shader replay, descriptor stroke-shader fallback,
+  gradient/noise/turbulence shader descriptors, and raw image/gradient/noise/turbulence fallback sentinels:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-225136/suite.tsv`.
 - The current exact uncovered surface/transform/UI command-probe checkpoint passed 11/11 after adding Magic Jewel
   ungrouped-case discovery, with `fallback_sum=0`, no unsupported rows, zero JBR picture frames, and 15,296 JBR
   command frames across native bridge loading, drawPoints lines/dots, concat/skew transforms, gradient surfaces/paths,

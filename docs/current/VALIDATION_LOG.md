@@ -5,6 +5,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel exact shader/image-rendering uncovered command-probe slice passed. Aggregate: 13/13 passed,
+  `fallback_sum=0`, `unsupported_rows=8`, `jbr_picture_frames=7775`, and `jbr_command_frames=6664`. It covered
+  forced-context dynamic image-cache replay, image path-effect fallback, image shader replay, descriptor stroke-shader
+  fallback, gradient/noise/turbulence shader descriptors, and raw image/gradient/noise/turbulence shader fallback
+  sentinels. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-225136/suite.tsv`.
 - Magic Jewel exact uncovered surface/transform/UI command-probe slice passed after adding the ungrouped-case
   discovery helper. Aggregate: 11/11 passed, `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, and
   `jbr_command_frames=15296`. It covered native bridge loading, drawPoints lines/dots, concat/skew transforms,
