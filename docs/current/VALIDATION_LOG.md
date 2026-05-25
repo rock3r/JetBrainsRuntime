@@ -5,6 +5,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel focused screenshot parity passed for the graphics-layer base/clip/blend visual surface. Aggregate:
+  7/7 passed, `fallback_sum=0`, `jbr_picture_frames=0`, `jbr_command_frames=6852`, average pixel delta `2.255`,
+  average `bad_pixel_ratio=0.05404`, and average header-button `bad_pixel_ratio=0.00381`. It covered plain
+  graphics-layer replay, modulate-alpha, offscreen compositing, rectangular/rounded/path clips, and graphics-layer
+  blend mode. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260525-143023/suite.tsv`.
 - Magic Jewel focused screenshot parity passed for the native text/font visual lifecycle surface after the local
   capture retry refresh. Aggregate: 14/14 passed, `fallback_sum=3`, `jbr_picture_frames=0`,
   `jbr_command_frames=10056`, average pixel delta `2.037`, average `bad_pixel_ratio=0.04758`, and average
