@@ -5,6 +5,11 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel focused screenshot parity passed for the graphics-layer shadow/transform visual surface. Aggregate:
+  9/9 passed, `fallback_sum=0`, `jbr_picture_frames=0`, `jbr_command_frames=10016`, average pixel delta `2.192`,
+  average `bad_pixel_ratio=0.05198`, and average header-button `bad_pixel_ratio=0.00381`. It covered rectangular,
+  rounded, and path shadows plus rotation X/Y/XY, scale/translate, near-camera, and off-center pivot rows. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260525-144011/suite.tsv`.
 - Magic Jewel focused screenshot parity passed for the graphics-layer filter/effect visual surface. Aggregate:
   5/5 passed, `fallback_sum=0`, `jbr_picture_frames=0`, `jbr_command_frames=6450`, average pixel delta `2.186`,
   average `bad_pixel_ratio=0.05177`, and average header-button `bad_pixel_ratio=0.00381`. It covered graphics-layer
