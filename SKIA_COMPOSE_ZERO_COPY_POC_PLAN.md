@@ -152,6 +152,12 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   base/resize/forced-context lifecycle, uniform-only and child-only RuntimeEffects, shader source-cache eviction,
   RuntimeEffect shader, shader+color-filter, and color-filter rows:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260525-152025/suite.tsv`.
+- The current full default screenshot parity checkpoint passed after the focused visual refreshes and local macOS
+  capture retry fix. Aggregate: 106/106 passed, `fallback_sum=11`, zero JBR picture frames, 90,354 JBR command frames,
+  average `bad_pixel_ratio=0.05158`, and 107 TSV lines including the header across button chrome, core drawing, native
+  text, gradients, image/color filters, descriptor lifecycle, shader descriptors, RuntimeEffect rows, and
+  graphics-layer variants:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260525-152754/suite.tsv`.
 - The current focused stable descriptor lifecycle checkpoint is `CASE_GROUPS=descriptor-lifecycle`, which passed 18/18
   with no fallback, no unsupported rows, zero JBR picture frames, and 20,144 JBR command frames across descriptor
   eviction, same-context resize/forced-context redefine, stable RuntimeEffect color-filter, and RuntimeEffect

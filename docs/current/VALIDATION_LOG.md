@@ -5,6 +5,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel full default screenshot parity passed after the focused visual refreshes and local macOS capture retry
+  fix. Aggregate: 106/106 passed, `fallback_sum=11`, `jbr_picture_frames=0`, `jbr_command_frames=90354`, average
+  pixel delta `2.158`, average `bad_pixel_ratio=0.05158`, average header-button `bad_pixel_ratio=0.00594`, and
+  average Compose-canvas `bad_pixel_ratio=0.07632`. The TSV has 107 lines including the header, and covered button
+  chrome, core drawing, native text, gradients, image/color filters, descriptor lifecycle, shader descriptors,
+  RuntimeEffect rows, and graphics-layer variants. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260525-152754/suite.tsv`.
 - Magic Jewel focused screenshot parity passed for the remaining RuntimeEffect visual surface. Aggregate: 9/9 passed,
   `fallback_sum=1`, `jbr_picture_frames=0`, `jbr_command_frames=7416`, average pixel delta `2.063`, average
   `bad_pixel_ratio=0.04895`, and average header-button `bad_pixel_ratio=0.00578`. It covered pure-color
