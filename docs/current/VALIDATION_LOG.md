@@ -5,6 +5,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel `CASE_GROUPS=shader-descriptor-invalid` passed as a focused shader descriptor parser refresh after the
+  command-marker-only full sweep. Aggregate: 30/30 passed, `fallback_sum=30`, `unsupported_rows=0`,
+  `jbr_picture_frames=0`, and `jbr_command_frames=0`. This rechecked descriptor header guards, gradient
+  tile/stop/radius/color-count guards, image-shader dimension/tile-mode guards, and Perlin noise kind/frequency/octave
+  and tile bounds; all malformed rows failed before JBR replay. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-034415/suite.tsv`.
 - Magic Jewel `CASE_GROUPS=effect-descriptor-invalid` passed as a focused effect descriptor parser refresh after the
   command-marker-only full sweep. Aggregate: 28/28 passed, `fallback_sum=28`, `unsupported_rows=0`,
   `jbr_picture_frames=0`, and `jbr_command_frames=0`. This rechecked descriptor header guards, color/image-filter
