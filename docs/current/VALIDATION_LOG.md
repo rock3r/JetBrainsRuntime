@@ -5,6 +5,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel `CASE_GROUPS=image-handles-invalid` passed as a focused image handle/ref parser refresh after the
+  command-marker-only full sweep. Aggregate: 27/27 passed, `fallback_sum=27`, `unsupported_rows=0`,
+  `jbr_picture_frames=0`, and `jbr_command_frames=980`. The command frames came from the recoverable
+  image-cache-clear record-flags row; the other malformed image define/use/ref and color-filter ref rows rejected
+  before JBR replay. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-030742/suite.tsv`.
 - Magic Jewel full default command-probe sweep passed in command-marker-only mode after the local macOS
   `screencapture` path began failing independently of command replay (`could not create image from window`, and the
   region retry also failed with `could not create image from rect`). The sweep used

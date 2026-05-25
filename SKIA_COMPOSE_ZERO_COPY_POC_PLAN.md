@@ -105,10 +105,10 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   and 12,561 JBR command frames across the supported color-filter, lighting, and graphics-layer color-filter rows:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260523-174955/suite.tsv`.
 - The current image handle/ref parser fallback checkpoint is `CASE_GROUPS=image-handles-invalid`, which passed 27/27
-  with `fallback_sum=27`, zero unsupported rows, zero JBR picture frames, and 806 JBR command frames across malformed
+  with `fallback_sum=27`, zero unsupported rows, zero JBR picture frames, and 980 JBR command frames across malformed
   image define/cache-clear/evict records, image use/use-after-evict, image-ref scalar corruption, color-filter
   image-ref/use/ref rows, and descriptor-ref scalar guards:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260523-175721/suite.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-030742/suite.tsv`.
 - The current direct JBR parser checkpoint extends `JBRSkiaApiTest` for descriptor-handle invalid coverage. It now
   covers shader/color-filter evict record flags, transformed/composite/shader-color-filter and RuntimeEffect shader/
   color-filter child use-after-evict, blur image-filter child missing/evicted/wrong-type, undefined saveLayer
