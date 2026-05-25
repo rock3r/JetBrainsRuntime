@@ -92,6 +92,11 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260523-153433/suite.tsv`,
   and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260523-153519/suite.tsv`.
+- The current exact saveLayer/shader-fallback uncovered command-probe tail passed 7/7, with `fallback_sum=0`, five
+  intentional unsupported fallback rows, 4,435 JBR picture frames, and 1,659 JBR command frames across saveLayer filter
+  and blend-mode replay, saveLayer raw color-filter fallback, opaque/composite opaque/picture shader fallbacks, and
+  invalid-gradient fallback:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-233413/suite.tsv`.
 - The current exact graphics-layer extras uncovered command-probe checkpoint passed 14/14, with `fallback_sum=0`, two
   intentional unsupported fallback rows, 1,809 JBR picture frames, and 10,986 JBR command frames across
   graphics-layer color-matrix/render-effect resize and forced-context lifecycle rows, raw color-filter/render-effect

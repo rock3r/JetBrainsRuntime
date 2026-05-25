@@ -5,6 +5,11 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel exact saveLayer/shader-fallback uncovered command-probe tail passed. Aggregate: 7/7 passed,
+  `fallback_sum=0`, `unsupported_rows=5`, `jbr_picture_frames=4435`, and `jbr_command_frames=1659`. It covered
+  saveLayer filter and blend-mode replay, saveLayer raw color-filter fallback, opaque/composite opaque/picture shader
+  fallbacks, and invalid-gradient fallback. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-233413/suite.tsv`.
 - Magic Jewel exact graphics-layer extras uncovered command-probe slice passed. Aggregate: 14/14 passed,
   `fallback_sum=0`, `unsupported_rows=2`, `jbr_picture_frames=1809`, and `jbr_command_frames=10986`. It covered
   graphics-layer color-matrix and render-effect resize/forced-context lifecycle rows, raw color-filter/render-effect
