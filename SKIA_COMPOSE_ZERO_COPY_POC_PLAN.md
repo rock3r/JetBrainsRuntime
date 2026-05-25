@@ -137,6 +137,11 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   JBR command frames, and average `bad_pixel_ratio=0.05099` across gradient surfaces, gradient-filled paths,
   ShaderBrush gradients, and stroked gradients:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260525-145959/suite.tsv`.
+- The current focused core drawing visual checkpoint passed 10/10, with `fallback_sum=0`, zero JBR picture frames,
+  8,713 JBR command frames, and average `bad_pixel_ratio=0.05479` across clean geometry, skew, drawVertices, point
+  dots, path effects, drawPath/drawArc/drawRoundRect shapes, clip rect/path, blend modes, and saveLayer tint-filter
+  replay:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260525-150344/suite.tsv`.
 - The current focused stable descriptor lifecycle checkpoint is `CASE_GROUPS=descriptor-lifecycle`, which passed 18/18
   with no fallback, no unsupported rows, zero JBR picture frames, and 20,144 JBR command frames across descriptor
   eviction, same-context resize/forced-context redefine, stable RuntimeEffect color-filter, and RuntimeEffect
