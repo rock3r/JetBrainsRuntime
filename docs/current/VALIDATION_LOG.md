@@ -5,6 +5,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel `CASE_GROUPS=descriptor-handles-invalid` passed as a focused descriptor handle lifetime/family refresh
+  after the command-marker-only full sweep. Aggregate: 48/48 passed, `fallback_sum=48`, `unsupported_rows=0`,
+  `jbr_picture_frames=0`, and `jbr_command_frames=0`. This rechecked undefined and evicted top-level shader,
+  color-filter, path-effect, saveLayer color-filter/blend/image-filter handles, shader/effect child use-after-evict,
+  missing-child, and wrong-family cases, all failing before JBR replay. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-042757/suite.tsv`.
 - Magic Jewel `CASE_GROUPS=save-layer-invalid` passed as a focused saveLayer parser refresh after the
   command-marker-only full sweep. Aggregate: 37/37 passed, `fallback_sum=37`, `unsupported_rows=0`,
   `jbr_picture_frames=0`, and `jbr_command_frames=0`. This rechecked saveLayer alpha, record flags/lengths,
