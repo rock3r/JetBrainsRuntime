@@ -116,6 +116,10 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   picture frames, 6,852 JBR command frames, and average `bad_pixel_ratio=0.05404` across plain graphics-layer replay,
   modulate-alpha, offscreen compositing, rectangular/rounded/path clips, and graphics-layer blend mode:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260525-143023/suite.tsv`.
+- The current focused graphics-layer filter/effect visual checkpoint passed 5/5, with `fallback_sum=0`, zero JBR
+  picture frames, 6,450 JBR command frames, and average `bad_pixel_ratio=0.05177` across graphics-layer color filter,
+  color-matrix filter, combined render/offset/chained effects, offset effect, and chained render effect:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260525-143551/suite.tsv`.
 - The current focused stable descriptor lifecycle checkpoint is `CASE_GROUPS=descriptor-lifecycle`, which passed 18/18
   with no fallback, no unsupported rows, zero JBR picture frames, and 20,144 JBR command frames across descriptor
   eviction, same-context resize/forced-context redefine, stable RuntimeEffect color-filter, and RuntimeEffect

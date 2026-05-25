@@ -5,6 +5,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel focused screenshot parity passed for the graphics-layer filter/effect visual surface. Aggregate:
+  5/5 passed, `fallback_sum=0`, `jbr_picture_frames=0`, `jbr_command_frames=6450`, average pixel delta `2.186`,
+  average `bad_pixel_ratio=0.05177`, and average header-button `bad_pixel_ratio=0.00381`. It covered graphics-layer
+  color filter, color-matrix filter, combined render/offset/chained effects, offset effect, and chained render effect.
+  Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260525-143551/suite.tsv`.
 - Magic Jewel focused screenshot parity passed for the graphics-layer base/clip/blend visual surface. Aggregate:
   7/7 passed, `fallback_sum=0`, `jbr_picture_frames=0`, `jbr_command_frames=6852`, average pixel delta `2.255`,
   average `bad_pixel_ratio=0.05404`, and average header-button `bad_pixel_ratio=0.00381`. It covered plain
