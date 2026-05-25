@@ -5,6 +5,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel focused screenshot parity passed for the image/shader descriptor visual surface. Aggregate: 12/12
+  passed, `fallback_sum=0`, `jbr_picture_frames=0`, `jbr_command_frames=10079`, average pixel delta `2.202`,
+  average `bad_pixel_ratio=0.05304`, and average header-button `bad_pixel_ratio=0.00363`. It covered forced-context
+  image refs, image filters, image/color/noise/turbulence shaders, image-shader color filters, composite and
+  composite-noise shaders, composite/linear-gradient shader color filters, and transformed shaders. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260525-151131/suite.tsv`.
 - Magic Jewel focused screenshot parity passed for the core drawing visual surface. Aggregate: 10/10 passed,
   `fallback_sum=0`, `jbr_picture_frames=0`, `jbr_command_frames=8713`, average pixel delta `2.259`, average
   `bad_pixel_ratio=0.05479`, and average header-button `bad_pixel_ratio=0.00351`. It covered clean geometry, skew,
