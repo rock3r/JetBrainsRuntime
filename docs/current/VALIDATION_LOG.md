@@ -5,6 +5,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel focused screenshot parity passed for the stable descriptor lifecycle visual surface after the local
+  capture retry refresh. Aggregate: 14/14 passed, `fallback_sum=5`, `jbr_picture_frames=0`,
+  `jbr_command_frames=10401`, average pixel delta `1.976`, average `bad_pixel_ratio=0.04695`, and average
+  header-button `bad_pixel_ratio=0.01016`. It covered descriptor eviction, shader resize/forced-context redefine
+  rows, stable RuntimeEffect color-filter lifecycle rows, RuntimeEffect color-filter child replay, and RuntimeEffect
+  source-cache eviction. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260525-140922/suite.tsv`.
 - Magic Jewel focused `parity-button-chrome` screenshot parity passed on current artifacts after the macOS capture
   helper gained the window-bounds retry. This narrow capture-health checkpoint stayed on command replay with
   `fallback_sum=0`, `jbr_picture_frames=0`, `jbr_command_frames=941`, average pixel delta `2.265`, overall

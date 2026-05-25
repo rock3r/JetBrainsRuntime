@@ -38,6 +38,10 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel focused screenshot parity passed for the stable descriptor lifecycle visual surface after the local
+  capture retry refresh: 14/14 passed, `fallback_sum=5`, `jbr_picture_frames=0`, `jbr_command_frames=10401`,
+  average `bad_pixel_ratio=0.04695`, suite
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260525-140922/suite.tsv`.
 - Magic Jewel focused `parity-button-chrome` screenshot parity passed on current artifacts after the macOS capture
   helper gained the window-bounds retry: 1/1 passed, `fallback_sum=0`, `jbr_picture_frames=0`,
   `jbr_command_frames=941`, `bad_pixel_ratio=0.05200`, header-button `bad_pixel_ratio=0.00381`, suite
