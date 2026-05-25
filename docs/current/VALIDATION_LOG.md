@@ -5,6 +5,16 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel full default command-probe sweep passed in command-marker-only mode after the local macOS
+  `screencapture` path began failing independently of command replay (`could not create image from window`, and the
+  region retry also failed with `could not create image from rect`). The sweep used
+  `EXPECT_SCREENSHOT_ASSERTION=false` and covered 487/487 passing rows, `fallback_sum=350`,
+  `unsupported_rows=26`, `jbr_picture_frames=24438`, and `jbr_command_frames=141588`. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-215756/suite.tsv`.
+  A screenshot-enabled broad attempt reached `commands-point-lines` with healthy command markers
+  (`fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, `jbr_command_frames=1149`) but could not run
+  the screenshot assertion because window capture failed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-210938/commands-point-lines/report.md`.
 - Magic Jewel `CASE_GROUPS=native-text` passed as a supported native text/font replay refresh after exact base,
   resize, and forced-context slices. Aggregate: 14/14 passed, `fallback_sum=0`, `unsupported_rows=0`,
   `jbr_picture_frames=0`, and `jbr_command_frames=16173`. Suite:

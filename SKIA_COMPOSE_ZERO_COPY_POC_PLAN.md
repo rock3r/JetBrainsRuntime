@@ -53,6 +53,10 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `command_frames=189208`. The split recovered from a transient local JBR Skia `public-api-missing` artifact state by
   rebuilding local artifacts, then used command-marker-only validation for the final tail after macOS `screencapture`
   began failing independently of command replay.
+- The latest full default command-probe checkpoint passed in command-marker-only mode after local macOS screenshot
+  capture failed independently of command replay on the screenshot-enabled broad attempt. Aggregate: 487/487 passed,
+  `fallback_sum=350`, `unsupported_rows=26`, `picture_frames=24438`, and `command_frames=141588`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-215756/suite.tsv`.
 - The latest periodic default command-probe consolidation after the shader/effect/RuntimeEffect/saveLayer parser guard
   refreshes used an exact `commands-live-animation` rerun plus a resumed default tail after macOS window capture failed
   independently of command replay on the first broad attempt. Combined aggregate: 486/486 passed,
