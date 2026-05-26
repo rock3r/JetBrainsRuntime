@@ -187,6 +187,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   fallback. The run was 42M under Magic Jewel `out`, with `out` at 26G and the volume at about 382Gi free after
   completion. Suite:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260526-110644/suite.tsv`.
+- Magic Jewel focused command-probe `CASE_GROUPS=primitive-invalid` passed as the current primitive parser guard
+  checkpoint. Aggregate: 13/13 passed, `fallback_sum=13`, `unsupported_rows=0`, `jbr_picture_frames=0`, and
+  `jbr_command_frames=0`. The run covered stroke-cap, transform record flags, clip operation, drawPoints count/length
+  bounds, and drawVertices vertex/index/mode/blend parser guards. The run was 37M under Magic Jewel `out`, with `out`
+  at 26G and the volume at about 382Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260526-111457/suite.tsv`.
 - Magic Jewel command-probe quick-group coverage now spans every resolved default case. `LIST_UNGROUPED_CASES=true`
   returns no rows after adding the supported surface/transform/UI, shader-rendering, shader-composition/RuntimeEffect,
   core-effects, graphics-layer-extras, and saveLayer/shader-fallback quick groups. `LIST_CASE_GROUP_COUNTS=true`
