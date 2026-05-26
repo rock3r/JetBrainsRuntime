@@ -53,10 +53,10 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `command_frames=189208`. The split recovered from a transient local JBR Skia `public-api-missing` artifact state by
   rebuilding local artifacts, then used command-marker-only validation for the final tail after macOS `screencapture`
   began failing independently of command replay.
-- The latest full default command-probe checkpoint passed after quick-group coverage reached every resolved default
-  case. Aggregate: 487/487 passed, `fallback_sum=350`, `unsupported_rows=26`, `picture_frames=24871`, and
-  `command_frames=111213`:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-234251/suite.tsv`.
+- The latest full default command-probe checkpoint passed after the focused invalid parser/semantic refreshes.
+  Aggregate: 487/487 passed, `fallback_sum=350`, `unsupported_rows=26`, `picture_frames=29351`, and
+  `command_frames=167122`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260526-151626/suite.tsv`.
 - The latest compatibility matrix checkpoint passed after that full command-probe refresh, with 57/57 rows passed,
   `fallback_sum=56`, 600 JBR command frames from the happy path, and background-window mode on every row:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260526-050502/matrix.tsv`.
