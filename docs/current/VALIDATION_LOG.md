@@ -27,6 +27,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   `bad_pixel_ratio=0.08648`. The run was 514M under Magic Jewel `out`, with `out` at 24G and the volume at about
   379Gi free after completion. Suite:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260526-053720/suite.tsv`.
+- Magic Jewel screenshot parity suite now has no-run helpers for visual loops: `LIST_CASES=true`,
+  `LIST_CASE_COUNT=true`, and bounded default-order `CASES_FROM=... CASES_UNTIL=...`. Validation:
+  `bash -n scripts/jbr-skia-screenshot-parity-suite.sh`, `LIST_CASE_COUNT=true` returned 106, and
+  `LIST_CASES=true CASES_FROM=parity-image-shader CASES_UNTIL=parity-transformed-shader` printed the expected
+  18-row shader slice. A focused `CASES=parity-button-chrome` launch also passed with `fallback_sum=0`,
+  `jbr_picture_frames=0`, and `jbr_command_frames=1723`. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260526-064955/suite.tsv`.
 - Magic Jewel command-probe quick-group coverage now spans every resolved default case. `LIST_UNGROUPED_CASES=true`
   returns no rows after adding the supported surface/transform/UI, shader-rendering, shader-composition/RuntimeEffect,
   core-effects, graphics-layer-extras, and saveLayer/shader-fallback quick groups. `LIST_CASE_GROUP_COUNTS=true`
