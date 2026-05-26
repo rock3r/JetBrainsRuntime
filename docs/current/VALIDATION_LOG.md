@@ -213,6 +213,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   Perlin/noise kind/frequency/octave/tile bounds. The run was 126M under Magic Jewel `out`, with `out` at 26G and the
   volume at about 381Gi free after completion. Suite:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260526-120027/suite.tsv`.
+- Magic Jewel focused command-probe `CASE_GROUPS=image-handles-invalid` passed as the current image handle/cache parser
+  guard checkpoint. Aggregate: 27/27 passed, `fallback_sum=27`, `unsupported_rows=0`, `jbr_picture_frames=0`, and
+  `jbr_command_frames=1100`. The run covered image define/cache-clear/evict record flags, image dimensions/pixel
+  bounds, undefined and evicted image handles, image-ref scalar guards, color-filter image refs, and descriptor-backed
+  color-filter image-ref bounds. The only command frames came from the cache-clear setup row before fallback. The run
+  was 93M under Magic Jewel `out`, with `out` at 26G and the volume at about 380Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260526-122058/suite.tsv`.
 - Magic Jewel command-probe quick-group coverage now spans every resolved default case. `LIST_UNGROUPED_CASES=true`
   returns no rows after adding the supported surface/transform/UI, shader-rendering, shader-composition/RuntimeEffect,
   core-effects, graphics-layer-extras, and saveLayer/shader-fallback quick groups. `LIST_CASE_GROUP_COUNTS=true`
