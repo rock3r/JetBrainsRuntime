@@ -339,9 +339,9 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   clips, blend/color filters, render effects, shadows, 3D rotations, scale/translate, camera, and pivot variants:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-104254/suite.tsv`.
 - The current focused image handle/parser guard checkpoint is `CASE_GROUPS=image-handles-invalid`, which passed 27/27
-  with `fallback_sum=27`, zero unsupported rows, zero JBR picture frames, and 1,082 JBR command frames from the
+  with `fallback_sum=27`, zero unsupported rows, zero JBR picture frames, and 1,162 JBR command frames from the
   recoverable image-cache-clear record-flags row:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-105821/suite.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260526-234804/suite.tsv`.
 - The current focused effect descriptor parser guard checkpoint is `CASE_GROUPS=effect-descriptor-invalid`, which
   passed 28/28 with `fallback_sum=28`, zero unsupported rows, zero JBR picture frames, and zero JBR command frames
   across descriptor header guards, color/image filter payloads, and corner/stamped/chain path-effect descriptor parser
