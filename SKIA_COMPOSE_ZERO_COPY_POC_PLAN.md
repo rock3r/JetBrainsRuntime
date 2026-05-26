@@ -74,6 +74,12 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - The latest full default benchmark checkpoint passed after the invalid-refresh validation gates. Aggregate: 5/5
   passed, `fallback_sum=0`, 83 old-side CPU samples, 84 new-side CPU samples, and `jbr_command_frames=16324`:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-benchmark-suite/20260526-221122/suite.tsv`.
+- RuntimeEffect source-cache eviction rows now assert descriptor-handle cache reuse in both command and visual suites.
+  Exact affected command rows passed 3/3 with zero fallback and 6,043 JBR command frames; exact affected visual rows
+  passed 2/2 with zero fallback, zero picture frames, 2,253 JBR command frames, and average
+  `bad_pixel_ratio=0.04981`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260526-222509/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260526-222738/suite.tsv`.
 - The latest focused graphics-layer command/visual checkpoints passed: command `CASE_GROUPS=graphics-layer` covered 21
   rows with zero fallback and 33,675 JBR command frames, while screenshot
   `CASE_GROUPS=graphics-layer-clip-shadow-transform` covered 14 clip/shadow/3D rows with zero fallback, zero picture

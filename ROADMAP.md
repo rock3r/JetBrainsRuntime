@@ -119,6 +119,12 @@ This is the small working roadmap for the current PoC. The full historical check
   `fallback_sum=0`, `jbr_command_frames=16324`, picture FPS `232.0`, and command FPS rows `289.6`, `180.1`,
   `176.2`, and `170.3`, suite
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-benchmark-suite/20260526-221122/suite.tsv`.
+- Magic Jewel RuntimeEffect source-cache eviction rows now require descriptor-handle cache-hit markers in command and
+  screenshot suites. Exact affected command rows passed 3/3 with `fallback_sum=0`, `unsupported_rows=0`,
+  `jbr_picture_frames=0`, and `jbr_command_frames=6043`; exact affected visual rows passed 2/2 with
+  `fallback_sum=0`, `jbr_picture_frames=0`, `jbr_command_frames=2253`, and average `bad_pixel_ratio=0.04981`, suites
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260526-222509/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260526-222738/suite.tsv`.
 - Magic Jewel focused command-probe `CASE_GROUPS=graphics-layer` passed as the current graphics-layer command replay
   checkpoint: 21/21 passed, `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`,
   `jbr_command_frames=33675`, suite
