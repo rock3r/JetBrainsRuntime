@@ -231,9 +231,9 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   parser guard checkpoint. Aggregate: 30/30 passed, `fallback_sum=30`, `unsupported_rows=0`,
   `jbr_picture_frames=0`, and `jbr_command_frames=0`. The run covered shader descriptor header/type/length guards,
   transformed/composite descriptors, linear/radial/sweep gradients, image shader dimensions/tile modes, and
-  Perlin/noise kind/frequency/octave/tile bounds. The run was 126M under Magic Jewel `out`, with `out` at 26G and the
-  volume at about 381Gi free after completion. Suite:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260526-120027/suite.tsv`.
+  Perlin/noise kind/frequency/octave/tile bounds. The run was 126M under Magic Jewel `out`, with `out` at 30G and the
+  volume at about 393Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260526-232759/suite.tsv`.
 - Magic Jewel focused command-probe `CASE_GROUPS=image-handles-invalid` passed as the current image handle/cache parser
   guard checkpoint. Aggregate: 27/27 passed, `fallback_sum=27`, `unsupported_rows=0`, `jbr_picture_frames=0`, and
   `jbr_command_frames=1100`. The run covered image define/cache-clear/evict record flags, image dimensions/pixel
