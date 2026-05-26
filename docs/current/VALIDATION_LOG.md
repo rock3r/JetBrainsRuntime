@@ -265,9 +265,9 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   checkpoint. Aggregate: 60/60 passed, `fallback_sum=60`, `unsupported_rows=0`, `jbr_picture_frames=0`, and
   `jbr_command_frames=0`. The run covered linear/radial/sweep gradient stroke width, tile mode, color-count,
   stop-order, radial radius, round-rect/stroke variants, and the gradient path parser rows included in the broader
-  group. The run was 168M under Magic Jewel `out`, with `out` at 27G and the volume at about 379Gi free after
+  group. The run was 229M under Magic Jewel `out`, with `out` at 30G and the volume at about 392Gi free after
   completion. Suite:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260526-135123/suite.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-004244/suite.tsv`.
 - Magic Jewel focused command-probe `CASE_GROUPS=runtime-effect-invalid` passed as the current RuntimeEffect
   parser/schema guard checkpoint. Aggregate: 62/62 passed, `fallback_sum=56`, `unsupported_rows=6`,
   `jbr_picture_frames=6265`, and `jbr_command_frames=0`. The six unsupported rows are the intentional invalid

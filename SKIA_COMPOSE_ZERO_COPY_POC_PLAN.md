@@ -287,7 +287,7 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - The current broader gradient parser/fallback checkpoint is `CASE_GROUPS=gradient-invalid`, which passed 60/60 with
   `fallback_sum=60`, zero unsupported rows, zero JBR picture frames, and zero JBR command frames across malformed
   stroke-width, tile-mode, radius, color-count, stop-order, and embedded gradient-path variants:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-054237/suite.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-004244/suite.tsv`.
 - The current focused saveLayer parser guard refresh is `CASE_GROUPS=save-layer-invalid`, which passed 37/37 with
   `fallback_sum=37`, zero unsupported rows, zero JBR picture frames, and zero JBR command frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-000551/suite.tsv`.
