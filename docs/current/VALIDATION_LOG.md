@@ -113,6 +113,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   `background_window=true`. The run was 1.6M under Magic Jewel `out`, with `out` at 25G and the volume at about 379Gi
   free after completion. Matrix:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260526-093632/matrix.tsv`.
+- Magic Jewel full default artifact matrix passed after the exact-row helper refresh. Required rows: `current-all`
+  passed with no fallback and 634 JBR command frames, and `missing-public-api` passed with one expected public API
+  fallback and zero command frames. The five optional old-artifact rows were recorded as skipped because no old bundle
+  variables were configured. The run was 3.5M under Magic Jewel `out`, with `out` at 25G and the volume at about 384Gi
+  free after completion. Matrix:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260526-095132/matrix.tsv`.
 - Magic Jewel benchmark suite now has no-run `LIST_CASES=true` and `LIST_CASE_COUNT=true` helpers, and unknown
   `CASES=...` entries fail fast before launch. Validation: `bash -n scripts/jbr-skia-benchmark-suite.sh`,
   `LIST_CASE_COUNT=true` returned 5, `LIST_CASES=true CASES="commands commands-dynamic-images"` printed those two
