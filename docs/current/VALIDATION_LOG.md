@@ -233,6 +233,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   path-data length, path verb, and radial radius guards. The run was 36M under Magic Jewel `out`, with `out` at 26G
   and the volume at about 379Gi free after completion. Suite:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260526-131310/suite.tsv`.
+- Magic Jewel focused command-probe `CASE_GROUPS=save-layer-invalid` passed as the current saveLayer parser guard
+  checkpoint. Aggregate: 37/37 passed, `fallback_sum=37`, `unsupported_rows=0`, `jbr_picture_frames=0`, and
+  `jbr_command_frames=0`. The run covered saveLayer alpha, record flags, record lengths, color-filter/blend/image
+  filter bounds, blend modes, and descriptor-ref record/bounds guards for color-filter, blend+color-filter, and
+  image-filter variants. The run was 105M under Magic Jewel `out`, with `out` at 26G and the volume at about 379Gi
+  free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260526-132640/suite.tsv`.
 - Magic Jewel command-probe quick-group coverage now spans every resolved default case. `LIST_UNGROUPED_CASES=true`
   returns no rows after adding the supported surface/transform/UI, shader-rendering, shader-composition/RuntimeEffect,
   core-effects, graphics-layer-extras, and saveLayer/shader-fallback quick groups. `LIST_CASE_GROUP_COUNTS=true`
