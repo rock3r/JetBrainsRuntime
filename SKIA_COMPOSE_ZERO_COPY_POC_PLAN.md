@@ -74,6 +74,12 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - The latest full default benchmark checkpoint passed after the suite listing-helper refresh. Aggregate: 5/5 passed,
   `fallback_sum=0`, 85 old-side CPU samples, 80 new-side CPU samples, and `jbr_command_frames=13497`:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-benchmark-suite/20260526-094359/suite.tsv`.
+- The latest focused graphics-layer command/visual checkpoints passed: command `CASE_GROUPS=graphics-layer` covered 21
+  rows with zero fallback and 33,675 JBR command frames, while screenshot
+  `CASE_GROUPS=graphics-layer-clip-shadow-transform` covered 14 clip/shadow/3D rows with zero fallback, zero picture
+  frames, 23,890 JBR command frames, and average `bad_pixel_ratio=0.05296`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260526-095534/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260526-101046/suite.tsv`.
 - The previous full default command-probe checkpoint passed with screenshot assertions enabled after the focused
   screenshot parity refreshes and macOS capture retry fix. Aggregate: 487/487 passed, `fallback_sum=350`,
   `unsupported_rows=26`, `picture_frames=25539`, and `command_frames=146052`:
