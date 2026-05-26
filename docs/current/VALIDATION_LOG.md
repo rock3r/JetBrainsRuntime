@@ -199,6 +199,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   bounds, radii, stroke metadata, phase, and interval guards. The run was 43M under Magic Jewel `out`, with `out` at
   26G and the volume at about 376Gi free after completion. Suite:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260526-112440/suite.tsv`.
+- Magic Jewel focused command-probe `CASE_GROUPS=effect-descriptor-invalid` passed as the current effect descriptor
+  parser guard checkpoint. Aggregate: 28/28 passed, `fallback_sum=28`, `unsupported_rows=0`,
+  `jbr_picture_frames=0`, and `jbr_command_frames=0`. The run covered descriptor header/type/version/length guards,
+  lighting/tint/color-matrix color-filter descriptors, blur/offset image-filter descriptors, and corner/stamped/chain
+  path-effect descriptor payload guards. The run was 90M under Magic Jewel `out`, with `out` at 26G and the volume at
+  about 381Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260526-114057/suite.tsv`.
 - Magic Jewel command-probe quick-group coverage now spans every resolved default case. `LIST_UNGROUPED_CASES=true`
   returns no rows after adding the supported surface/transform/UI, shader-rendering, shader-composition/RuntimeEffect,
   core-effects, graphics-layer-extras, and saveLayer/shader-fallback quick groups. `LIST_CASE_GROUP_COUNTS=true`
