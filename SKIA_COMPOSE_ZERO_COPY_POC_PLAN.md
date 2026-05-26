@@ -283,7 +283,7 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - The current focused gradient path parser/fallback checkpoint is `CASE_GROUPS=gradient-path-invalid`, which passed
   18/18 with `fallback_sum=18`, zero unsupported rows, zero JBR picture frames, and zero JBR command frames across
   malformed linear/radial/sweep gradient path tile/count/stop-order/path-data variants:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-053116/suite.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-003026/suite.tsv`.
 - The current broader gradient parser/fallback checkpoint is `CASE_GROUPS=gradient-invalid`, which passed 60/60 with
   `fallback_sum=60`, zero unsupported rows, zero JBR picture frames, and zero JBR command frames across malformed
   stroke-width, tile-mode, radius, color-count, stop-order, and embedded gradient-path variants:
