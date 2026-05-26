@@ -220,6 +220,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   color-filter image-ref bounds. The only command frames came from the cache-clear setup row before fallback. The run
   was 93M under Magic Jewel `out`, with `out` at 26G and the volume at about 380Gi free after completion. Suite:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260526-122058/suite.tsv`.
+- Magic Jewel focused command-probe `CASE_GROUPS=descriptor-handles-invalid` passed as the current descriptor handle
+  lifetime/type guard checkpoint. Aggregate: 48/48 passed, `fallback_sum=48`, `unsupported_rows=0`,
+  `jbr_picture_frames=0`, and `jbr_command_frames=0`. The run covered descriptor use/use-after-evict, descriptor
+  evict record flags, saveLayer descriptor refs, child use-after-evict, missing children, and wrong-family child/type
+  checks across shader, color-filter, image-filter, path-effect, and RuntimeEffect descriptor families. The run was
+  170M under Magic Jewel `out`, with `out` at 26G and the volume at about 380Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260526-123951/suite.tsv`.
 - Magic Jewel command-probe quick-group coverage now spans every resolved default case. `LIST_UNGROUPED_CASES=true`
   returns no rows after adding the supported surface/transform/UI, shader-rendering, shader-composition/RuntimeEffect,
   core-effects, graphics-layer-extras, and saveLayer/shader-fallback quick groups. `LIST_CASE_GROUP_COUNTS=true`
