@@ -97,6 +97,9 @@ This is the small working roadmap for the current PoC. The full historical check
   `LIST_CASE_COUNT=true` helpers with unknown `CASES=...` validation. A focused `CASES=current-all` launch passed with
   `fallback_sum=0`, `jbr_command_frames=599`, and `background_window=true`, matrix
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260526-093100/matrix.tsv`.
+- Magic Jewel focused artifact matrix `CASES=missing-public-api` also passed through the exact-row filter with
+  `fallback_sum=1`, `jbr_command_frames=0`, and `background_window=true`, matrix
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260526-093632/matrix.tsv`.
 - Magic Jewel benchmark suite now has no-run `LIST_CASES=true` / `LIST_CASE_COUNT=true` helpers with unknown
   `CASES=...` validation. A short `CASES=commands DURATION_SECONDS=1 WARMUP_SECONDS=0` smoke passed with
   `fallback_sum=0`, one old/new CPU sample, and `jbr_command_frames=633`, suite
