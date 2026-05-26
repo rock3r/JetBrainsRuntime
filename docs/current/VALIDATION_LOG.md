@@ -146,6 +146,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   scale/rotation/near-camera/off-center-pivot transforms. The run was 94M under Magic Jewel `out`, with `out` at 25G
   and the volume at about 383Gi free after completion. Suite:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260526-095534/suite.tsv`.
+- Magic Jewel focused screenshot parity `CASE_GROUPS=graphics-layer-clip-shadow-transform` passed as the paired visual
+  checkpoint for clip/shadow/3D graphics-layer replay. Aggregate: 14/14 passed, `fallback_sum=0`,
+  `jbr_picture_frames=0`, `jbr_command_frames=23890`, average pixel delta `2.223`, and average
+  `bad_pixel_ratio=0.05296`. The run was 74M under Magic Jewel `out`, with `out` at 25G and the volume at about 383Gi
+  free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260526-101046/suite.tsv`.
 - Magic Jewel command-probe quick-group coverage now spans every resolved default case. `LIST_UNGROUPED_CASES=true`
   returns no rows after adding the supported surface/transform/UI, shader-rendering, shader-composition/RuntimeEffect,
   core-effects, graphics-layer-extras, and saveLayer/shader-fallback quick groups. `LIST_CASE_GROUP_COUNTS=true`
