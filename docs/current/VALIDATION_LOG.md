@@ -95,6 +95,11 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   `LIST_CASE_COUNT=true CASES=missing` failed with `Unknown CASES entry`. A focused real `CASES=happy` launch passed
   with `fallback_sum=0`, `jbr_command_frames=607`, and `background_window=true`. Matrix:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260526-092457/matrix.tsv`.
+- Magic Jewel focused compatibility matrix `CASES=public-api-missing` passed through the new exact-row filter with the
+  expected public API fallback. Aggregate: 1/1 passed, `fallback_sum=1`, `jbr_command_frames=0`, and
+  `background_window=true`. The run was 1.3M under Magic Jewel `out`, with `out` at 25G and the volume at about 379Gi
+  free after completion. Matrix:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260526-094135/matrix.tsv`.
 - Magic Jewel artifact matrix now has exact-row `CASES=...` selection plus no-run `LIST_CASES=true` and
   `LIST_CASE_COUNT=true` helpers, and unknown `CASES=...` entries fail fast before artifact checks. Validation:
   `bash -n scripts/jbr-skia-artifact-matrix.sh`, `LIST_CASE_COUNT=true` returned 7,
