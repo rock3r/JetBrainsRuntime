@@ -89,6 +89,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   `bad_pixel_ratio=0.08648`. The run was 510M under Magic Jewel `out`, with `out` at 25G and the volume at about
   384Gi free after completion. Suite:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260526-081358/suite.tsv`.
+- Magic Jewel compatibility matrix now has no-run `LIST_CASES=true` and `LIST_CASE_COUNT=true` helpers, and unknown
+  `CASES=...` entries fail fast before launch. Validation: `bash -n scripts/jbr-skia-compatibility-matrix.sh`,
+  `LIST_CASE_COUNT=true` returned 57, `LIST_CASES=true CASES="happy public-api-missing"` printed those two rows, and
+  `LIST_CASE_COUNT=true CASES=missing` failed with `Unknown CASES entry`. A focused real `CASES=happy` launch passed
+  with `fallback_sum=0`, `jbr_command_frames=607`, and `background_window=true`. Matrix:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260526-092457/matrix.tsv`.
 - Magic Jewel command-probe quick-group coverage now spans every resolved default case. `LIST_UNGROUPED_CASES=true`
   returns no rows after adding the supported surface/transform/UI, shader-rendering, shader-composition/RuntimeEffect,
   core-effects, graphics-layer-extras, and saveLayer/shader-fallback quick groups. `LIST_CASE_GROUP_COUNTS=true`
