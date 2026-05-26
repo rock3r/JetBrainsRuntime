@@ -95,6 +95,14 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   `LIST_CASE_COUNT=true CASES=missing` failed with `Unknown CASES entry`. A focused real `CASES=happy` launch passed
   with `fallback_sum=0`, `jbr_command_frames=607`, and `background_window=true`. Matrix:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260526-092457/matrix.tsv`.
+- Magic Jewel artifact matrix now has exact-row `CASES=...` selection plus no-run `LIST_CASES=true` and
+  `LIST_CASE_COUNT=true` helpers, and unknown `CASES=...` entries fail fast before artifact checks. Validation:
+  `bash -n scripts/jbr-skia-artifact-matrix.sh`, `LIST_CASE_COUNT=true` returned 7,
+  `LIST_CASES=true CASES="current-all missing-public-api"` printed those two rows, and
+  `LIST_CASE_COUNT=true CASES=missing` failed with `Unknown CASES entry`. A focused real `CASES=current-all` launch
+  passed with `fallback_sum=0`, `jbr_command_frames=599`, and `background_window=true`. The run was 3.2M under Magic
+  Jewel `out`, with `out` at 25G and the volume at about 384Gi free after completion. Matrix:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260526-093100/matrix.tsv`.
 - Magic Jewel command-probe quick-group coverage now spans every resolved default case. `LIST_UNGROUPED_CASES=true`
   returns no rows after adding the supported surface/transform/UI, shader-rendering, shader-composition/RuntimeEffect,
   core-effects, graphics-layer-extras, and saveLayer/shader-fallback quick groups. `LIST_CASE_GROUP_COUNTS=true`

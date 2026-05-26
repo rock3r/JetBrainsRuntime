@@ -93,6 +93,10 @@ This is the small working roadmap for the current PoC. The full historical check
   `CASES=...` validation. A focused `CASES=happy` launch passed with `fallback_sum=0`, `jbr_command_frames=607`, and
   `background_window=true`, matrix
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260526-092457/matrix.tsv`.
+- Magic Jewel artifact matrix now has exact-row `CASES=...` selection and no-run `LIST_CASES=true` /
+  `LIST_CASE_COUNT=true` helpers with unknown `CASES=...` validation. A focused `CASES=current-all` launch passed with
+  `fallback_sum=0`, `jbr_command_frames=599`, and `background_window=true`, matrix
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260526-093100/matrix.tsv`.
 - Magic Jewel command-probe quick-group coverage now spans every resolved default case: `LIST_UNGROUPED_CASES=true`
   returns no rows after adding supported surface/transform/UI, shader-rendering, shader-composition/RuntimeEffect,
   core-effects, graphics-layer-extras, and saveLayer/shader-fallback groups.
