@@ -75,11 +75,18 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   passed, `fallback_sum=0`, 83 old-side CPU samples, 84 new-side CPU samples, and `jbr_command_frames=16324`:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-benchmark-suite/20260526-221122/suite.tsv`.
 - RuntimeEffect source-cache eviction rows now assert descriptor-handle cache reuse in both command and visual suites.
-  Exact affected command rows passed 3/3 with zero fallback and 6,043 JBR command frames; exact affected visual rows
-  passed 2/2 with zero fallback, zero picture frames, 2,253 JBR command frames, and average
-  `bad_pixel_ratio=0.04981`:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260526-222509/suite.tsv` and
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260526-222738/suite.tsv`.
+  The RuntimeEffect color-filter child row keeps descriptor define/use and source-cache-hit gates, but omits the
+  descriptor cache-hit gate after grouped replay showed that child effect-handle cache hits can legitimately be zero.
+  Exact source-cache command rows passed 2/2 with zero fallback, zero unsupported rows, and 3,930 JBR command frames;
+  descriptor lifecycle command validation passed 18/18 with zero fallback and 29,228 JBR command frames; exact
+  affected visual rows passed 2/2 with zero fallback, zero picture frames, 2,253 JBR command frames, and average
+  `bad_pixel_ratio=0.04981`; the RuntimeEffect visual group passed 14/14 with `fallback_sum=2`, zero picture frames,
+  12,263 JBR command frames, and average `bad_pixel_ratio=0.04879`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260526-224211/suite.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260526-224342/suite.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260526-222738/suite.tsv`,
+  and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260526-225720/suite.tsv`.
 - The latest focused graphics-layer command/visual checkpoints passed: command `CASE_GROUPS=graphics-layer` covered 21
   rows with zero fallback and 33,675 JBR command frames, while screenshot
   `CASE_GROUPS=graphics-layer-clip-shadow-transform` covered 14 clip/shadow/3D rows with zero fallback, zero picture

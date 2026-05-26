@@ -120,11 +120,19 @@ This is the small working roadmap for the current PoC. The full historical check
   `176.2`, and `170.3`, suite
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-benchmark-suite/20260526-221122/suite.tsv`.
 - Magic Jewel RuntimeEffect source-cache eviction rows now require descriptor-handle cache-hit markers in command and
-  screenshot suites. Exact affected command rows passed 3/3 with `fallback_sum=0`, `unsupported_rows=0`,
-  `jbr_picture_frames=0`, and `jbr_command_frames=6043`; exact affected visual rows passed 2/2 with
-  `fallback_sum=0`, `jbr_picture_frames=0`, `jbr_command_frames=2253`, and average `bad_pixel_ratio=0.04981`, suites
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260526-222509/suite.tsv` and
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260526-222738/suite.tsv`.
+  screenshot suites. The RuntimeEffect color-filter child row keeps descriptor define/use and source-cache-hit gates,
+  but not a descriptor cache-hit gate because grouped replay can legitimately produce zero child effect-handle cache
+  hits. Exact source-cache command rows passed 2/2 with `fallback_sum=0`, `unsupported_rows=0`,
+  `jbr_picture_frames=0`, and `jbr_command_frames=3930`; descriptor lifecycle command validation passed 18/18 with
+  `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=29228`; exact visual rows
+  passed 2/2 with `fallback_sum=0`, `jbr_picture_frames=0`, `jbr_command_frames=2253`, and average
+  `bad_pixel_ratio=0.04981`; the RuntimeEffect visual group passed 14/14 with `fallback_sum=2`,
+  `jbr_picture_frames=0`, `jbr_command_frames=12263`, and average `bad_pixel_ratio=0.04879`, suites
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260526-224211/suite.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260526-224342/suite.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260526-222738/suite.tsv`,
+  and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260526-225720/suite.tsv`.
 - Magic Jewel focused command-probe `CASE_GROUPS=graphics-layer` passed as the current graphics-layer command replay
   checkpoint: 21/21 passed, `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`,
   `jbr_command_frames=33675`, suite
