@@ -193,6 +193,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   bounds, and drawVertices vertex/index/mode/blend parser guards. The run was 37M under Magic Jewel `out`, with `out`
   at 26G and the volume at about 382Gi free after completion. Suite:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260526-111457/suite.tsv`.
+- Magic Jewel focused command-probe `CASE_GROUPS=path-invalid` passed as the current path/path-effect parser guard
+  checkpoint. Aggregate: 22/22 passed, `fallback_sum=22`, `unsupported_rows=0`, `jbr_picture_frames=0`, and
+  `jbr_command_frames=0`. The run covered clip/draw/stroke/shadow path verb guards plus dash path-effect interval,
+  bounds, radii, stroke metadata, phase, and interval guards. The run was 43M under Magic Jewel `out`, with `out` at
+  26G and the volume at about 376Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260526-112440/suite.tsv`.
 - Magic Jewel command-probe quick-group coverage now spans every resolved default case. `LIST_UNGROUPED_CASES=true`
   returns no rows after adding the supported surface/transform/UI, shader-rendering, shader-composition/RuntimeEffect,
   core-effects, graphics-layer-extras, and saveLayer/shader-fallback quick groups. `LIST_CASE_GROUP_COUNTS=true`
