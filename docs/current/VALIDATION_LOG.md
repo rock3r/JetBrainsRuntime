@@ -152,6 +152,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   `bad_pixel_ratio=0.05296`. The run was 74M under Magic Jewel `out`, with `out` at 25G and the volume at about 383Gi
   free after completion. Suite:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260526-101046/suite.tsv`.
+- Magic Jewel focused command-probe `CASE_GROUPS=descriptor-lifecycle` passed as the current descriptor lifecycle
+  command checkpoint. Aggregate: 18/18 passed, `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, and
+  `jbr_command_frames=33447`. The run covered descriptor eviction, resize and forced-context redefinition for
+  effect/shader/color/noise/turbulence/composite-noise descriptors, stable RuntimeEffect color filters, and
+  RuntimeEffect source-cache eviction. The run was 309M under Magic Jewel `out`, with `out` at 26G and the volume at
+  about 382Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260526-102113/suite.tsv`.
 - Magic Jewel command-probe quick-group coverage now spans every resolved default case. `LIST_UNGROUPED_CASES=true`
   returns no rows after adding the supported surface/transform/UI, shader-rendering, shader-composition/RuntimeEffect,
   core-effects, graphics-layer-extras, and saveLayer/shader-fallback quick groups. `LIST_CASE_GROUP_COUNTS=true`
