@@ -139,6 +139,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   `149.7`, dynamic images `149.1`, and resize dynamic images `145.4`. The run was 47M under Magic Jewel `out`, with
   `out` at 25G and the volume at about 384Gi free after completion. Suite:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-benchmark-suite/20260526-094359/suite.tsv`.
+- Magic Jewel focused command-probe `CASE_GROUPS=graphics-layer` passed as the current graphics-layer command replay
+  checkpoint. Aggregate: 21/21 passed, `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, and
+  `jbr_command_frames=33675`. The run covered base layer replay, ModulateAlpha/Offscreen, rectangular/rounded/path
+  clips and shadows, blend/color-filter/color-matrix/render-effect rows, offset/chained effects, and 3D
+  scale/rotation/near-camera/off-center-pivot transforms. The run was 94M under Magic Jewel `out`, with `out` at 25G
+  and the volume at about 383Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260526-095534/suite.tsv`.
 - Magic Jewel command-probe quick-group coverage now spans every resolved default case. `LIST_UNGROUPED_CASES=true`
   returns no rows after adding the supported surface/transform/UI, shader-rendering, shader-composition/RuntimeEffect,
   core-effects, graphics-layer-extras, and saveLayer/shader-fallback quick groups. `LIST_CASE_GROUP_COUNTS=true`

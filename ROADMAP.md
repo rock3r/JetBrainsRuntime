@@ -117,6 +117,10 @@ This is the small working roadmap for the current PoC. The full historical check
 - Magic Jewel full default benchmark suite passed after the listing-helper refresh: 5/5 passed, `fallback_sum=0`,
   `jbr_command_frames=13497`, picture FPS `203.3`, and command FPS rows `230.7`, `149.7`, `149.1`, and `145.4`, suite
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-benchmark-suite/20260526-094359/suite.tsv`.
+- Magic Jewel focused command-probe `CASE_GROUPS=graphics-layer` passed as the current graphics-layer command replay
+  checkpoint: 21/21 passed, `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`,
+  `jbr_command_frames=33675`, suite
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260526-095534/suite.tsv`.
 - Magic Jewel command-probe quick-group coverage now spans every resolved default case: `LIST_UNGROUPED_CASES=true`
   returns no rows after adding supported surface/transform/UI, shader-rendering, shader-composition/RuntimeEffect,
   core-effects, graphics-layer-extras, and saveLayer/shader-fallback groups.
