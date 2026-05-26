@@ -116,6 +116,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   `jbr_command_frames=633`. The run was 1.6M under Magic Jewel `out`, with `out` at 25G and the volume at about 379Gi
   free after completion. Suite:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-benchmark-suite/20260526-093404/suite.tsv`.
+- Magic Jewel short benchmark smoke passed for the image-cache subset through the new exact-row filter. With
+  `CASES="commands-stable-images commands-resize-dynamic-images" DURATION_SECONDS=1 WARMUP_SECONDS=0`, aggregate was
+  2/2 passed, `fallback_sum=0`, one old/new CPU sample per row, and `jbr_command_frames=1079`. Treat this as a wiring
+  check only, not a performance measurement. The run was 4.6M under Magic Jewel `out`, with `out` at 25G and the volume
+  at about 379Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-benchmark-suite/20260526-093925/suite.tsv`.
 - Magic Jewel command-probe quick-group coverage now spans every resolved default case. `LIST_UNGROUPED_CASES=true`
   returns no rows after adding the supported surface/transform/UI, shader-rendering, shader-composition/RuntimeEffect,
   core-effects, graphics-layer-extras, and saveLayer/shader-fallback quick groups. `LIST_CASE_GROUP_COUNTS=true`

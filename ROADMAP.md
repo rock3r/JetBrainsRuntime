@@ -104,6 +104,9 @@ This is the small working roadmap for the current PoC. The full historical check
   `CASES=...` validation. A short `CASES=commands DURATION_SECONDS=1 WARMUP_SECONDS=0` smoke passed with
   `fallback_sum=0`, one old/new CPU sample, and `jbr_command_frames=633`, suite
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-benchmark-suite/20260526-093404/suite.tsv`.
+- Magic Jewel short benchmark image-cache subset passed through the exact-row filter: 2/2 passed,
+  `fallback_sum=0`, one old/new CPU sample per row, and `jbr_command_frames=1079`, suite
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-benchmark-suite/20260526-093925/suite.tsv`.
 - Magic Jewel command-probe quick-group coverage now spans every resolved default case: `LIST_UNGROUPED_CASES=true`
   returns no rows after adding supported surface/transform/UI, shader-rendering, shader-composition/RuntimeEffect,
   core-effects, graphics-layer-extras, and saveLayer/shader-fallback groups.
