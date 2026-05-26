@@ -80,6 +80,12 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   frames, 23,890 JBR command frames, and average `bad_pixel_ratio=0.05296`:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260526-095534/suite.tsv` and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260526-101046/suite.tsv`.
+- The latest focused descriptor lifecycle command/visual checkpoints passed: command
+  `CASE_GROUPS=descriptor-lifecycle` covered 18 rows with zero fallback, zero picture frames, and 33,447 JBR command
+  frames, while screenshot `CASE_GROUPS=descriptor-lifecycle` covered 6 rows with `fallback_sum=1`, zero picture
+  frames, 6,153 JBR command frames, and average `bad_pixel_ratio=0.05078`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260526-102113/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260526-103610/suite.tsv`.
 - The previous full default command-probe checkpoint passed with screenshot assertions enabled after the focused
   screenshot parity refreshes and macOS capture retry fix. Aggregate: 487/487 passed, `fallback_sum=350`,
   `unsupported_rows=26`, `picture_frames=25539`, and `command_frames=146052`:
