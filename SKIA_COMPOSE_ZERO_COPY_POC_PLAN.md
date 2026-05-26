@@ -357,10 +357,10 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   flags, record lengths, width/height, blend modes, and descriptor-backed color/image-filter saveLayer variants:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-000551/suite.tsv`.
 - The current focused descriptor handle lifecycle/type guard checkpoint is `CASE_GROUPS=descriptor-handles-invalid`,
-  which passed 47/47 with `fallback_sum=47`, zero unsupported rows, zero JBR picture frames, and zero JBR command
+  which passed 48/48 with `fallback_sum=48`, zero unsupported rows, zero JBR picture frames, and zero JBR command
   frames across missing handles, use-after-evict, eviction record flags, child missing/use-after-evict, and wrong-type
   guards for shader, color-filter, image-filter, path-effect, and RuntimeEffect descriptor families:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-122554/suite.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-012055/suite.tsv`.
 - The current focused gradient parser guard checkpoint is `CASE_GROUPS=gradient-invalid`, which passed 60/60 with
   `fallback_sum=60`, zero unsupported rows, zero JBR picture frames, and zero JBR command frames across
   linear/radial/sweep stroke width, tile mode, color count, stop order, path-gradient, and radial radius

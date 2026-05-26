@@ -246,8 +246,8 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   `jbr_picture_frames=0`, and `jbr_command_frames=0`. The run covered descriptor use/use-after-evict, descriptor
   evict record flags, saveLayer descriptor refs, child use-after-evict, missing children, and wrong-family child/type
   checks across shader, color-filter, image-filter, path-effect, and RuntimeEffect descriptor families. The run was
-  170M under Magic Jewel `out`, with `out` at 26G and the volume at about 380Gi free after completion. Suite:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260526-123951/suite.tsv`.
+  210M under Magic Jewel `out`, with `out` at 30G and the volume at about 392Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-012055/suite.tsv`.
 - Magic Jewel focused command-probe `CASE_GROUPS=gradient-path-invalid` passed as the current gradient path parser
   guard checkpoint. Aggregate: 18/18 passed, `fallback_sum=18`, `unsupported_rows=0`, `jbr_picture_frames=0`, and
   `jbr_command_frames=0`. The run covered linear/radial/sweep gradient path tile, color-count, stop-order, fill-type,
