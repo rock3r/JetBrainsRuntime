@@ -165,6 +165,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   `bad_pixel_ratio=0.05078`. The run was 164M under Magic Jewel `out`, with `out` at 26G and the volume at about 382Gi
   free after completion. Suite:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260526-103610/suite.tsv`.
+- Magic Jewel focused command-probe `CASE_GROUPS=shader-composition-runtime` passed as the current shader composition
+  and RuntimeEffect command checkpoint. Aggregate: 15/15 passed, `fallback_sum=0`, `unsupported_rows=2`,
+  `jbr_picture_frames=2613`, and `jbr_command_frames=23910`. The unsupported rows are the intentional raw
+  RuntimeEffect shader and raw RuntimeEffect color-filter fallback sentinels; descriptor-backed RuntimeEffect and
+  shader-composition rows stayed on command replay. The run was 91M under Magic Jewel `out`, with `out` at 26G and the
+  volume at about 382Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260526-104459/suite.tsv`.
 - Magic Jewel command-probe quick-group coverage now spans every resolved default case. `LIST_UNGROUPED_CASES=true`
   returns no rows after adding the supported surface/transform/UI, shader-rendering, shader-composition/RuntimeEffect,
   core-effects, graphics-layer-extras, and saveLayer/shader-fallback quick groups. `LIST_CASE_GROUP_COUNTS=true`
