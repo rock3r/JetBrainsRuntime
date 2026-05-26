@@ -10,6 +10,16 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   `jbr_command_frames=111213`. The TSV has 488 lines including the header. The run was 1.5G under Magic Jewel `out`,
   with `out` at 24G and the volume at about 380Gi free after completion. Suite:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-234251/suite.tsv`.
+- Magic Jewel compatibility matrix passed after the full command-probe group refresh. Aggregate: 57/57 passed,
+  `fallback_sum=56`, `jbr_command_frames=600`, and `background_window=true` on every row. The only command frames
+  came from the happy path; all ABI, native ABI, command-capability, high-capability, feature-capability, and public
+  API mismatch rows fell back exactly once. Matrix:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260526-050502/matrix.tsv`.
+- Magic Jewel artifact matrix passed on current ABI 106 local artifacts after the compatibility refresh. Required rows:
+  `current-all` passed with no fallback and 872 JBR command frames, and `missing-public-api` passed with one expected
+  public API fallback and zero command frames. The five optional old-artifact rows were recorded as skipped because no
+  old bundle variables were configured. Matrix:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260526-053438/matrix.tsv`.
 - Magic Jewel command-probe quick-group coverage now spans every resolved default case. `LIST_UNGROUPED_CASES=true`
   returns no rows after adding the supported surface/transform/UI, shader-rendering, shader-composition/RuntimeEffect,
   core-effects, graphics-layer-extras, and saveLayer/shader-fallback quick groups. `LIST_CASE_GROUP_COUNTS=true`

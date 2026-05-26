@@ -57,6 +57,13 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   case. Aggregate: 487/487 passed, `fallback_sum=350`, `unsupported_rows=26`, `picture_frames=24871`, and
   `command_frames=111213`:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-234251/suite.tsv`.
+- The latest compatibility matrix checkpoint passed after that full command-probe refresh, with 57/57 rows passed,
+  `fallback_sum=56`, 600 JBR command frames from the happy path, and background-window mode on every row:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260526-050502/matrix.tsv`.
+- The latest artifact matrix checkpoint passed the required current-artifact rows on ABI 106 local artifacts:
+  `current-all` replayed commands with 872 JBR command frames, `missing-public-api` fell back exactly once, and the
+  optional old-artifact rows were skipped because no bundle variables were set:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260526-053438/matrix.tsv`.
 - The previous full default command-probe checkpoint passed with screenshot assertions enabled after the focused
   screenshot parity refreshes and macOS capture retry fix. Aggregate: 487/487 passed, `fallback_sum=350`,
   `unsupported_rows=26`, `picture_frames=25539`, and `command_frames=146052`:
