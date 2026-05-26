@@ -227,6 +227,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   checks across shader, color-filter, image-filter, path-effect, and RuntimeEffect descriptor families. The run was
   170M under Magic Jewel `out`, with `out` at 26G and the volume at about 380Gi free after completion. Suite:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260526-123951/suite.tsv`.
+- Magic Jewel focused command-probe `CASE_GROUPS=gradient-path-invalid` passed as the current gradient path parser
+  guard checkpoint. Aggregate: 18/18 passed, `fallback_sum=18`, `unsupported_rows=0`, `jbr_picture_frames=0`, and
+  `jbr_command_frames=0`. The run covered linear/radial/sweep gradient path tile, color-count, stop-order, fill-type,
+  path-data length, path verb, and radial radius guards. The run was 36M under Magic Jewel `out`, with `out` at 26G
+  and the volume at about 379Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260526-131310/suite.tsv`.
 - Magic Jewel command-probe quick-group coverage now spans every resolved default case. `LIST_UNGROUPED_CASES=true`
   returns no rows after adding the supported surface/transform/UI, shader-rendering, shader-composition/RuntimeEffect,
   core-effects, graphics-layer-extras, and saveLayer/shader-fallback quick groups. `LIST_CASE_GROUP_COUNTS=true`
