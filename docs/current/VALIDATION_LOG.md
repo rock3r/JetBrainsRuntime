@@ -82,6 +82,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   screenshot grouping helper. The run was 47M under Magic Jewel `out`, with `out` at 25G and the volume at about 386Gi
   free after completion. Suite:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260526-080246/suite.tsv`.
+- Magic Jewel full default screenshot parity passed after the focused visual group refresh. Aggregate: 106/106 passed,
+  `fallback_sum=11`, `jbr_picture_frames=0`, `jbr_command_frames=93451`, average pixel delta `2.158`, average
+  `bad_pixel_ratio=0.05158`, average header-button `bad_pixel_ratio=0.00594`, average Compose-canvas
+  `bad_pixel_ratio=0.07632`, average bottom-label `bad_pixel_ratio=0.11884`, and average paragraph-probe
+  `bad_pixel_ratio=0.08648`. The run was 510M under Magic Jewel `out`, with `out` at 25G and the volume at about
+  384Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260526-081358/suite.tsv`.
 - Magic Jewel command-probe quick-group coverage now spans every resolved default case. `LIST_UNGROUPED_CASES=true`
   returns no rows after adding the supported surface/transform/UI, shader-rendering, shader-composition/RuntimeEffect,
   core-effects, graphics-layer-extras, and saveLayer/shader-fallback quick groups. `LIST_CASE_GROUP_COUNTS=true`
