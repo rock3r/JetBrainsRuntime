@@ -180,6 +180,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   `bad_pixel_ratio=0.08599`. The run was 66M under Magic Jewel `out`, with `out` at 26G and the volume at about
   382Gi free after completion. Suite:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260526-105613/suite.tsv`.
+- Magic Jewel focused command-probe `CASE_GROUPS=native-text-invalid` passed as the current native text/font-data
+  parser guard checkpoint. Aggregate: 11/11 passed, `fallback_sum=11`, `unsupported_rows=0`,
+  `jbr_picture_frames=0`, and `jbr_command_frames=981`. The text and paragraph scalar/font-family guard rows fell
+  back before command replay; the font-data record-flags sentinel retained the expected setup command frames before
+  fallback. The run was 42M under Magic Jewel `out`, with `out` at 26G and the volume at about 382Gi free after
+  completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260526-110644/suite.tsv`.
 - Magic Jewel command-probe quick-group coverage now spans every resolved default case. `LIST_UNGROUPED_CASES=true`
   returns no rows after adding the supported surface/transform/UI, shader-rendering, shader-composition/RuntimeEffect,
   core-effects, graphics-layer-extras, and saveLayer/shader-fallback quick groups. `LIST_CASE_GROUP_COUNTS=true`
