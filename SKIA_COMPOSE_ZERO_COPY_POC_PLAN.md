@@ -68,6 +68,9 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   106/106 passed, `fallback_sum=11`, zero JBR picture frames, 91,946 JBR command frames, average
   `bad_pixel_ratio=0.05158`, and 107 TSV lines including the header:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260526-053720/suite.tsv`.
+- Current no-run discovery helpers cover the command-probe, screenshot parity, compatibility matrix, artifact matrix,
+  and benchmark suite loops. Use `LIST_CASES=true` / `LIST_CASE_COUNT=true` where available for exact row discovery;
+  command and screenshot suites also expose `CASE_GROUPS=...` plus group listing/count helpers.
 - The previous full default command-probe checkpoint passed with screenshot assertions enabled after the focused
   screenshot parity refreshes and macOS capture retry fix. Aggregate: 487/487 passed, `fallback_sum=350`,
   `unsupported_rows=26`, `picture_frames=25539`, and `command_frames=146052`:
@@ -1587,8 +1590,9 @@ Stable RuntimeEffect color-filter coverage and full screenshot parity are curren
 2. Prefer small, high-signal validation slices with focused command rows first, then default sweep or compatibility
    matrix when the touched surface warrants it.
 3. Use `CASES=...` for exact one-off rows, `CASES_FROM`/`CASES_UNTIL` for bounded/resumed default-order ranges, and
-   Magic Jewel `CASE_GROUPS=...` for area slices during inner-loop work. Use `LIST_CASE_GROUPS=true` to print the
-   current group names without launching validation. Current command groups include `smoke`,
+   Magic Jewel `CASE_GROUPS=...` for area slices during inner-loop work. Use `LIST_CASES=true`,
+   `LIST_CASE_COUNT=true`, `LIST_CASE_GROUPS=true`, and `LIST_CASE_GROUP_COUNTS=true` where supported to plan slices
+   without launching validation. Current command groups include `smoke`,
    `surface-transform-ui`, `shader-rendering`, `shader-composition-runtime`, `core-effects`,
    `graphics-layer-extras`, `save-layer-shader-fallbacks`, `stream-invalid`, `primitive-invalid`, `path-invalid`,
    `effect-descriptor-invalid`, `shader-descriptor-invalid`, `gradient-invalid`, `gradient-path-invalid`,
