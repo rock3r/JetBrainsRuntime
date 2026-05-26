@@ -66,6 +66,9 @@ This is the small working roadmap for the current PoC. The full historical check
 - Magic Jewel focused visual `CASE_GROUPS=runtime-effect` passed through the new screenshot group path: 14/14 passed,
   `fallback_sum=2`, `jbr_picture_frames=0`, `jbr_command_frames=8923`, average `bad_pixel_ratio=0.04879`, suite
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260526-070611/suite.tsv`.
+- Magic Jewel focused visual `CASE_GROUPS=shader-rendering` passed through the new screenshot group path: 18/18
+  passed, `fallback_sum=4`, `jbr_picture_frames=0`, `jbr_command_frames=12289`, average `bad_pixel_ratio=0.04995`,
+  suite `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260526-071543/suite.tsv`.
 - Magic Jewel command-probe quick-group coverage now spans every resolved default case: `LIST_UNGROUPED_CASES=true`
   returns no rows after adding supported surface/transform/UI, shader-rendering, shader-composition/RuntimeEffect,
   core-effects, graphics-layer-extras, and saveLayer/shader-fallback groups.
