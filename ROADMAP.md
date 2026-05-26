@@ -115,9 +115,10 @@ This is the small working roadmap for the current PoC. The full historical check
 - Magic Jewel short benchmark image-cache subset passed through the exact-row filter: 2/2 passed,
   `fallback_sum=0`, one old/new CPU sample per row, and `jbr_command_frames=1079`, suite
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-benchmark-suite/20260526-093925/suite.tsv`.
-- Magic Jewel full default benchmark suite passed after the listing-helper refresh: 5/5 passed, `fallback_sum=0`,
-  `jbr_command_frames=13497`, picture FPS `203.3`, and command FPS rows `230.7`, `149.7`, `149.1`, and `145.4`, suite
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-benchmark-suite/20260526-094359/suite.tsv`.
+- Magic Jewel full default benchmark suite passed after the invalid-refresh validation gates: 5/5 passed,
+  `fallback_sum=0`, `jbr_command_frames=16324`, picture FPS `232.0`, and command FPS rows `289.6`, `180.1`,
+  `176.2`, and `170.3`, suite
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-benchmark-suite/20260526-221122/suite.tsv`.
 - Magic Jewel focused command-probe `CASE_GROUPS=graphics-layer` passed as the current graphics-layer command replay
   checkpoint: 21/21 passed, `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`,
   `jbr_command_frames=33675`, suite

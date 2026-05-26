@@ -137,12 +137,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   check only, not a performance measurement. The run was 4.6M under Magic Jewel `out`, with `out` at 25G and the volume
   at about 379Gi free after completion. Suite:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-benchmark-suite/20260526-093925/suite.tsv`.
-- Magic Jewel full default benchmark suite passed after the listing-helper refresh. Aggregate: 5/5 passed,
-  `fallback_sum=0`, 85 old-side CPU samples, 80 new-side CPU samples, and `jbr_command_frames=13497`. The picture row
-  reported `jbr_picture_fps=203.3`; command rows reported `jbr_command_fps`: plain commands `230.7`, stable images
-  `149.7`, dynamic images `149.1`, and resize dynamic images `145.4`. The run was 47M under Magic Jewel `out`, with
-  `out` at 25G and the volume at about 384Gi free after completion. Suite:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-benchmark-suite/20260526-094359/suite.tsv`.
+- Magic Jewel full default benchmark suite passed after the invalid-refresh validation gates. Aggregate: 5/5 passed,
+  `fallback_sum=0`, 83 old-side CPU samples, 84 new-side CPU samples, and `jbr_command_frames=16324`. The picture row
+  reported `jbr_picture_fps=232.0`; command rows reported `jbr_command_fps`: plain commands `289.6`, stable images
+  `180.1`, dynamic images `176.2`, and resize dynamic images `170.3`. The run was 53M under Magic Jewel `out`, with
+  `out` at 29G and the volume at about 395Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-benchmark-suite/20260526-221122/suite.tsv`.
 - Magic Jewel focused command-probe `CASE_GROUPS=graphics-layer` passed as the current graphics-layer command replay
   checkpoint. Aggregate: 21/21 passed, `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, and
   `jbr_command_frames=33675`. The run covered base layer replay, ModulateAlpha/Offscreen, rectangular/rounded/path

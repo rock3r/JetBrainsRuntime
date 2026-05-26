@@ -71,9 +71,9 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - Current no-run discovery helpers cover the command-probe, screenshot parity, compatibility matrix, artifact matrix,
   and benchmark suite loops. Use `LIST_CASES=true` / `LIST_CASE_COUNT=true` where available for exact row discovery;
   command and screenshot suites also expose `CASE_GROUPS=...` plus group listing/count helpers.
-- The latest full default benchmark checkpoint passed after the suite listing-helper refresh. Aggregate: 5/5 passed,
-  `fallback_sum=0`, 85 old-side CPU samples, 80 new-side CPU samples, and `jbr_command_frames=13497`:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-benchmark-suite/20260526-094359/suite.tsv`.
+- The latest full default benchmark checkpoint passed after the invalid-refresh validation gates. Aggregate: 5/5
+  passed, `fallback_sum=0`, 83 old-side CPU samples, 84 new-side CPU samples, and `jbr_command_frames=16324`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-benchmark-suite/20260526-221122/suite.tsv`.
 - The latest focused graphics-layer command/visual checkpoints passed: command `CASE_GROUPS=graphics-layer` covered 21
   rows with zero fallback and 33,675 JBR command frames, while screenshot
   `CASE_GROUPS=graphics-layer-clip-shadow-transform` covered 14 clip/shadow/3D rows with zero fallback, zero picture
