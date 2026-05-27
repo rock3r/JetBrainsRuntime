@@ -289,6 +289,11 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   10/10 with no fallback, one intentional unsupported raw color-filter sentinel, 982 JBR picture frames for that row,
   and 13,865 JBR command frames across the supported color-filter, lighting, and graphics-layer color-filter rows:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-122130/suite.tsv`.
+- The current save-layer shader fallback checkpoint is `CASE_GROUPS=save-layer-shader-fallbacks`, which passed 7/7 in
+  command-marker-only mode after a screenshot assertion failure independent of command replay, with `fallback_sum=0`,
+  five intentional unsupported picture-replay rows, 3,149 JBR picture frames, and 674 JBR command frames across
+  supported saveLayer filter/blend-mode replay and raw color-filter/shader/invalid-gradient fallback sentinels:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260528-004224/suite.tsv`.
 - The current image handle/ref parser fallback checkpoint is `CASE_GROUPS=image-handles-invalid`, which passed 27/27
   with `fallback_sum=27`, zero unsupported rows, zero JBR picture frames, and 1,109 JBR command frames across malformed
   image define/cache-clear/evict records, image use/use-after-evict, image-ref scalar corruption, color-filter

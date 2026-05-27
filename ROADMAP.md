@@ -91,6 +91,10 @@ This is the small working roadmap for the current PoC. The full historical check
   drawing/effect coverage: 7/7 passed, `fallback_sum=0`, `unsupported_rows=2`, `jbr_picture_frames=1720`,
   `jbr_command_frames=5244`, suite
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-104223/suite.tsv`.
+- Magic Jewel focused command-probe `CASE_GROUPS=save-layer-shader-fallbacks` passed in command-marker-only mode after a
+  screenshot assertion failure independent of command replay: 7/7 passed, `fallback_sum=0`, `unsupported_rows=5`,
+  `jbr_picture_frames=3149`, `jbr_command_frames=674`, suite
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260528-004224/suite.tsv`.
 - Magic Jewel focused visual `CASE_GROUPS=core-drawing` passed through the new screenshot group path: 16/16 passed,
   `fallback_sum=0`, `jbr_picture_frames=0`, `jbr_command_frames=13217`, average `bad_pixel_ratio=0.05197`, completing
   one focused pass over every curated visual group; suite

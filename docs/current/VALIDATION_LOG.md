@@ -91,6 +91,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   `commands-path-effect-color-filter-fallback` and `commands-raw-discrete-path-effect-fallback`. The run was 24M under
   Magic Jewel `out`, with `out` at 34G and the volume at about 386Gi free after completion. Suite:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-104223/suite.tsv`.
+- Magic Jewel focused command-probe `CASE_GROUPS=save-layer-shader-fallbacks` passed in command-marker-only mode after a
+  screenshot assertion failure independent of command replay. Aggregate: 7/7 passed, `fallback_sum=0`,
+  `unsupported_rows=5`, `jbr_picture_frames=3149`, and `jbr_command_frames=674`. The supported saveLayer filter and
+  blend-mode rows stayed on command replay; the raw color-filter, opaque/composite/picture shader, and invalid-gradient
+  sentinels used intentional unsupported picture replay. The run was 12M under Magic Jewel `out`, with `out` at 38G and
+  the volume at about 365Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260528-004224/suite.tsv`.
 - Magic Jewel focused screenshot parity `CASE_GROUPS=core-drawing` passed through the new visual group path. Aggregate:
   16/16 passed, `fallback_sum=0`, `jbr_picture_frames=0`, `jbr_command_frames=13217`, average pixel delta `2.175`,
   and average `bad_pixel_ratio=0.05197`. This refreshes the core visual group after the latest command-probe
