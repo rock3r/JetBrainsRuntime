@@ -267,7 +267,7 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - The current primitive paint/draw parser fallback checkpoint is `CASE_GROUPS=primitive-invalid`, which passed 13/13
   with `fallback_sum=13`, zero unsupported rows, zero JBR picture frames, and zero JBR command frames across invalid
   stroke cap, transform flags, clip operation, drawPoints, and drawVertices payload guards:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-050721/suite.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-111842/suite.tsv`.
 - The current path and path-effect parser fallback checkpoint is `CASE_GROUPS=path-invalid`, which passed 22/22 with
   `fallback_sum=22`, zero unsupported rows, zero JBR picture frames, and zero JBR command frames across malformed
   clip/draw path verbs, dash path-effect line/rect/round-rect/generic-path payloads, and drawShadow path verbs:
