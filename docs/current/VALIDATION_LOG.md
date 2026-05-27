@@ -25,12 +25,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   `out`, with `out` at 33G and the volume at about 387Gi free after completion. Matrix:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260527-081549/matrix.tsv`.
 - Magic Jewel full default screenshot parity passed after the command-probe, compatibility, and artifact refreshes.
-  Aggregate: 106/106 passed, `fallback_sum=12`, `jbr_picture_frames=0`, `jbr_command_frames=104902`, average pixel
+  Aggregate: 106/106 passed, `fallback_sum=12`, `jbr_picture_frames=0`, `jbr_command_frames=107121`, average pixel
   delta `2.158`, average `bad_pixel_ratio=0.05158`, average header-button `bad_pixel_ratio=0.00594`, average
   Compose-canvas `bad_pixel_ratio=0.07632`, average bottom-label `bad_pixel_ratio=0.11884`, and average
-  paragraph-probe `bad_pixel_ratio=0.08648`. The TSV has 107 lines including the header. The run was 568M under Magic
-  Jewel `out`, with `out` at 29G and the volume at about 395Gi free after completion. Suite:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260526-210527/suite.tsv`.
+  paragraph-probe `bad_pixel_ratio=0.08648`. The TSV has 107 lines including the header. The run was 539M under Magic
+  Jewel `out`, with `out` at 33G and the volume at about 387Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260527-081758/suite.tsv`.
 - Magic Jewel screenshot parity suite now has no-run helpers for visual loops: `LIST_CASES=true`,
   `LIST_CASE_COUNT=true`, and bounded default-order `CASES_FROM=... CASES_UNTIL=...`. Validation:
   `bash -n scripts/jbr-skia-screenshot-parity-suite.sh`, `LIST_CASE_COUNT=true` returned 106, and
