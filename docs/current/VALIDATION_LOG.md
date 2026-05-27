@@ -5,13 +5,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
-- Magic Jewel full default command-probe sweep passed after the focused invalid parser/semantic refreshes. Aggregate:
-  487/487 passed, `fallback_sum=350`, `unsupported_rows=26`, `jbr_picture_frames=29351`, and
-  `jbr_command_frames=167122`. The unsupported rows remain the intentional raw/unsupported shader, color-filter,
-  path-effect, graphics-layer, saveLayer, and RuntimeEffect schema fallback sentinels. The TSV has 488 lines including
-  the header. The run was 1.8G under Magic Jewel `out`, with `out` at 29G and the volume at about 396Gi free after
-  completion. Suite:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260526-151626/suite.tsv`.
+- Magic Jewel full default command-probe sweep passed after the RuntimeEffect cache-gate calibration and focused
+  invalid parser/semantic refreshes. Aggregate: 487/487 passed, `fallback_sum=350`, `unsupported_rows=26`,
+  `jbr_picture_frames=32385`, and `jbr_command_frames=183405`. The unsupported rows remain the intentional
+  raw/unsupported shader, color-filter, path-effect, graphics-layer, saveLayer, and RuntimeEffect schema fallback
+  sentinels. The TSV has 488 lines including the header. The run was 2.2G under Magic Jewel `out`, with `out` at 33G
+  and the volume at about 387Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-023649/suite.tsv`.
 - Magic Jewel compatibility matrix passed after the full command-probe invalid-refresh sweep. Aggregate: 57/57 passed,
   `fallback_sum=56`, `jbr_command_frames=431`, and `background_window=true` on every row. The only command frames
   came from the happy path; all ABI, native ABI, command-capability, high-capability, feature-capability, and public
