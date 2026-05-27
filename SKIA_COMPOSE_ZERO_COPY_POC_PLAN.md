@@ -297,7 +297,7 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   48/48 with `fallback_sum=48`, zero unsupported rows, zero JBR picture frames, and zero JBR command frames across
   undefined/evicted top-level handles, saveLayer descriptor handles, shader/effect child use-after-evict, missing
   children, and wrong-family descriptor children:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-042757/suite.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-201204/suite.tsv`.
 - The current focused graphics-layer transform/effect checkpoint is `CASE_GROUPS=graphics-layer`, which passed 21/21
   with no fallback, no unsupported rows, zero JBR picture frames, and 26,150 JBR command frames across layer
   alpha/offscreen/clip variants, blend/color-filter/render-effect rows, shadows, rotations, scale/translate,
@@ -383,7 +383,7 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   which passed 48/48 with `fallback_sum=48`, zero unsupported rows, zero JBR picture frames, and zero JBR command
   frames across missing handles, use-after-evict, eviction record flags, child missing/use-after-evict, and wrong-type
   guards for shader, color-filter, image-filter, path-effect, and RuntimeEffect descriptor families:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-012055/suite.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-201204/suite.tsv`.
 - The current focused gradient parser guard checkpoint is `CASE_GROUPS=gradient-invalid`, which passed 60/60 with
   `fallback_sum=60`, zero unsupported rows, zero JBR picture frames, and zero JBR command frames across
   linear/radial/sweep stroke width, tile mode, color count, stop order, path-gradient, and radial radius
