@@ -261,9 +261,9 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-105833/suite.tsv` and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260527-110758/suite.tsv`.
 - The current native text/font parser fallback checkpoint is `CASE_GROUPS=native-text-invalid`, which passed 11/11
-  with `fallback_sum=11`, zero unsupported rows, zero JBR picture frames, and 1,223 JBR command frames across invalid
+  with `fallback_sum=11`, zero unsupported rows, zero JBR picture frames, and 1,226 JBR command frames across invalid
   font size/weight/width/slant/family-count rows and the invalid font-data record flags sentinel:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-045900/suite.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-114213/suite.tsv`.
 - The current primitive paint/draw parser fallback checkpoint is `CASE_GROUPS=primitive-invalid`, which passed 13/13
   with `fallback_sum=13`, zero unsupported rows, zero JBR picture frames, and zero JBR command frames across invalid
   stroke cap, transform flags, clip operation, drawPoints, and drawVertices payload guards:

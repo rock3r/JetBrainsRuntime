@@ -167,8 +167,8 @@ This is the small working roadmap for the current PoC. The full historical check
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260526-105613/suite.tsv`.
 - Magic Jewel focused command-probe `CASE_GROUPS=native-text-invalid` passed as the current native text/font-data
   parser guard checkpoint: 11/11 passed, `fallback_sum=11`, `unsupported_rows=0`, `jbr_picture_frames=0`,
-  `jbr_command_frames=981`, suite
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260526-110644/suite.tsv`.
+  `jbr_command_frames=1226`, suite
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-114213/suite.tsv`.
 - Magic Jewel focused command-probe `CASE_GROUPS=primitive-invalid` passed as the current primitive parser guard
   checkpoint: 13/13 passed, `fallback_sum=13`, `unsupported_rows=0`, `jbr_picture_frames=0`,
   `jbr_command_frames=0`, suite
