@@ -1659,13 +1659,14 @@ Stable RuntimeEffect color-filter coverage and full screenshot parity are curren
 Current validation gates are intentionally broad but summarized here to keep this file small:
 
 - Shader composition and RuntimeEffect command/visual checkpoints are current. The focused command group
-  `CASE_GROUPS=shader-composition-runtime` passed 15/15 with `fallback_sum=0`, `unsupported_rows=2`,
-  `jbr_picture_frames=2613`, and `jbr_command_frames=23910`; the two unsupported rows are the intentional raw
-  RuntimeEffect shader/color-filter fallback sentinels. The paired visual group `CASE_GROUPS=runtime-effect` passed
-  14/14 with `fallback_sum=2`, `jbr_picture_frames=0`, `jbr_command_frames=12948`, and average
+  `CASE_GROUPS=shader-composition-runtime` passed 15/15 with `fallback_sum=0`, `unsupported_rows=3`,
+  `jbr_picture_frames=2068`, and `jbr_command_frames=19883`; the unsupported rows are the intentional raw
+  RuntimeEffect shader/color-filter fallback sentinels plus the interop-scope marker on the descriptor-backed
+  RuntimeEffect shader/color-filter row. The paired visual group `CASE_GROUPS=runtime-effect` passed 14/14 with
+  `fallback_sum=2`, `jbr_picture_frames=0`, `jbr_command_frames=12380`, and average
   `bad_pixel_ratio=0.04879`:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260526-104459/suite.tsv` and
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260526-105613/suite.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-122909/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260527-123909/suite.tsv`.
 - Stroke-round-rect dash path-effect stroke metadata validation now covers op 60 stroke width/cap/join/miter guards.
   Skiko can corrupt stroke width to `0`, cap/join to `3`, or miter to `-1`; Magic Jewel requires the matching
   `SKIKO_JBR_INTEROP_STROKE_ROUND_RECT_DASH_PATH_EFFECT_STROKE_{WIDTH,CAP,JOIN,MITER}_CORRUPTED` marker; and the exact

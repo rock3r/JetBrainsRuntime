@@ -198,20 +198,21 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   free after completion. Suite:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260526-103610/suite.tsv`.
 - Magic Jewel focused command-probe `CASE_GROUPS=shader-composition-runtime` passed as the current shader composition
-  and RuntimeEffect command checkpoint. Aggregate: 15/15 passed, `fallback_sum=0`, `unsupported_rows=2`,
-  `jbr_picture_frames=2613`, and `jbr_command_frames=23910`. The unsupported rows are the intentional raw
-  RuntimeEffect shader and raw RuntimeEffect color-filter fallback sentinels; descriptor-backed RuntimeEffect and
-  shader-composition rows stayed on command replay. The run was 91M under Magic Jewel `out`, with `out` at 26G and the
-  volume at about 382Gi free after completion. Suite:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260526-104459/suite.tsv`.
+  and RuntimeEffect command checkpoint. Aggregate: 15/15 passed, `fallback_sum=0`, `unsupported_rows=3`,
+  `jbr_picture_frames=2068`, and `jbr_command_frames=19883`. The unsupported rows are the intentional raw
+  RuntimeEffect shader and raw RuntimeEffect color-filter fallback sentinels plus the interop-scope marker on the
+  descriptor-backed RuntimeEffect shader/color-filter row; descriptor-backed RuntimeEffect and shader-composition rows
+  stayed on command replay. The run was 77M under Magic Jewel `out`, with `out` at 34G and the volume at about 383Gi
+  free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-122909/suite.tsv`.
 - Magic Jewel focused screenshot parity `CASE_GROUPS=runtime-effect` passed as the paired RuntimeEffect visual
   checkpoint after the shader composition command checkpoint. Aggregate: 14/14 passed, `fallback_sum=2`,
-  `jbr_picture_frames=0`, `jbr_command_frames=12948`, average pixel delta `2.054`, average
+  `jbr_picture_frames=0`, `jbr_command_frames=12380`, average pixel delta `2.054`, average
   `bad_pixel_ratio=0.04879`, average header-button `bad_pixel_ratio=0.00635`, average Compose-canvas
   `bad_pixel_ratio=0.07246`, average bottom-label `bad_pixel_ratio=0.11024`, and average paragraph-probe
-  `bad_pixel_ratio=0.08599`. The run was 66M under Magic Jewel `out`, with `out` at 26G and the volume at about
-  382Gi free after completion. Suite:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260526-105613/suite.tsv`.
+  `bad_pixel_ratio=0.08599`. The run was 63M under Magic Jewel `out`, with `out` at 34G and the volume at about
+  383Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260527-123909/suite.tsv`.
 - Magic Jewel focused command-probe `CASE_GROUPS=native-text-invalid` passed as the current native text/font-data
   parser guard checkpoint. Aggregate: 11/11 passed, `fallback_sum=11`, `unsupported_rows=0`,
   `jbr_picture_frames=0`, and `jbr_command_frames=1226`. The text and paragraph scalar/font-family guard rows fell

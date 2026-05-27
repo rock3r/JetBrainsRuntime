@@ -158,13 +158,13 @@ This is the small working roadmap for the current PoC. The full historical check
   `bad_pixel_ratio=0.05078`, suite
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260526-103610/suite.tsv`.
 - Magic Jewel focused command-probe `CASE_GROUPS=shader-composition-runtime` passed as the current shader composition
-  and RuntimeEffect command checkpoint: 15/15 passed, `fallback_sum=0`, `unsupported_rows=2`,
-  `jbr_picture_frames=2613`, `jbr_command_frames=23910`, suite
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260526-104459/suite.tsv`.
+  and RuntimeEffect command checkpoint: 15/15 passed, `fallback_sum=0`, `unsupported_rows=3`,
+  `jbr_picture_frames=2068`, `jbr_command_frames=19883`, suite
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-122909/suite.tsv`.
 - Magic Jewel focused screenshot parity `CASE_GROUPS=runtime-effect` passed as the paired RuntimeEffect visual
-  checkpoint: 14/14 passed, `fallback_sum=2`, `jbr_picture_frames=0`, `jbr_command_frames=12948`, average
+  checkpoint: 14/14 passed, `fallback_sum=2`, `jbr_picture_frames=0`, `jbr_command_frames=12380`, average
   `bad_pixel_ratio=0.04879`, suite
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260526-105613/suite.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260527-123909/suite.tsv`.
 - Magic Jewel focused command-probe `CASE_GROUPS=native-text-invalid` passed as the current native text/font-data
   parser guard checkpoint: 11/11 passed, `fallback_sum=11`, `unsupported_rows=0`, `jbr_picture_frames=0`,
   `jbr_command_frames=1226`, suite
