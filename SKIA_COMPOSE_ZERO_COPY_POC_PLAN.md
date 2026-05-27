@@ -289,10 +289,10 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   and 13,865 JBR command frames across the supported color-filter, lighting, and graphics-layer color-filter rows:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-122130/suite.tsv`.
 - The current image handle/ref parser fallback checkpoint is `CASE_GROUPS=image-handles-invalid`, which passed 27/27
-  with `fallback_sum=27`, zero unsupported rows, zero JBR picture frames, and 980 JBR command frames across malformed
+  with `fallback_sum=27`, zero unsupported rows, zero JBR picture frames, and 1,109 JBR command frames across malformed
   image define/cache-clear/evict records, image use/use-after-evict, image-ref scalar corruption, color-filter
   image-ref/use/ref rows, and descriptor-ref scalar guards:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-030742/suite.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-192940/suite.tsv`.
 - The current descriptor handle/family parser checkpoint is `CASE_GROUPS=descriptor-handles-invalid`, which passed
   48/48 with `fallback_sum=48`, zero unsupported rows, zero JBR picture frames, and zero JBR command frames across
   undefined/evicted top-level handles, saveLayer descriptor handles, shader/effect child use-after-evict, missing
@@ -362,9 +362,9 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   clips, blend/color filters, render effects, shadows, 3D rotations, scale/translate, camera, and pivot variants:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-104254/suite.tsv`.
 - The current focused image handle/parser guard checkpoint is `CASE_GROUPS=image-handles-invalid`, which passed 27/27
-  with `fallback_sum=27`, zero unsupported rows, zero JBR picture frames, and 1,162 JBR command frames from the
+  with `fallback_sum=27`, zero unsupported rows, zero JBR picture frames, and 1,109 JBR command frames from the
   recoverable image-cache-clear record-flags row:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260526-234804/suite.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-192940/suite.tsv`.
 - The current focused effect descriptor parser guard checkpoint is `CASE_GROUPS=effect-descriptor-invalid`, which
   passed 28/28 with `fallback_sum=28`, zero unsupported rows, zero JBR picture frames, and zero JBR command frames
   across descriptor header guards, color/image filter payloads, and corner/stamped/chain path-effect descriptor parser
