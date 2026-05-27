@@ -162,11 +162,11 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260526-225720/suite.tsv`.
 - Magic Jewel focused command-probe `CASE_GROUPS=graphics-layer` passed as the current graphics-layer command replay
   checkpoint. Aggregate: 21/21 passed, `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, and
-  `jbr_command_frames=33675`. The run covered base layer replay, ModulateAlpha/Offscreen, rectangular/rounded/path
+  `jbr_command_frames=24769`. The run covered base layer replay, ModulateAlpha/Offscreen, rectangular/rounded/path
   clips and shadows, blend/color-filter/color-matrix/render-effect rows, offset/chained effects, and 3D
-  scale/rotation/near-camera/off-center-pivot transforms. The run was 94M under Magic Jewel `out`, with `out` at 25G
-  and the volume at about 383Gi free after completion. Suite:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260526-095534/suite.tsv`.
+  scale/rotation/near-camera/off-center-pivot transforms. The run was 78M under Magic Jewel `out`, with `out` at 34G
+  and the volume at about 386Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-101706/suite.tsv`.
 - Magic Jewel focused screenshot parity `CASE_GROUPS=graphics-layer-clip-shadow-transform` passed as the paired visual
   checkpoint for clip/shadow/3D graphics-layer replay. Aggregate: 14/14 passed, `fallback_sum=0`,
   `jbr_picture_frames=0`, `jbr_command_frames=23890`, average pixel delta `2.223`, and average
