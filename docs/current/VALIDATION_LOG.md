@@ -298,12 +298,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   at about 383Gi free after completion. Suite:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-120619/suite.tsv`.
 - Magic Jewel focused command-probe `CASE_GROUPS=graphics-layer-extras` passed as the current graphics-layer extras
-  command checkpoint. Aggregate: 14/14 passed, `fallback_sum=0`, `unsupported_rows=2`, `jbr_picture_frames=2032`,
-  and `jbr_command_frames=13005`. It covered graphics-layer color-matrix and render-effect resize/forced-context
+  command checkpoint. Aggregate: 14/14 passed, `fallback_sum=0`, `unsupported_rows=2`, `jbr_picture_frames=2207`,
+  and `jbr_command_frames=20463`. It covered graphics-layer color-matrix and render-effect resize/forced-context
   lifecycle rows, raw color-filter/render-effect fallback sentinels, render-effect color/blend/color-matrix
   combinations, offset/chained render-effect combinations, and the near-camera chained render-effect variant. The run
-  was 57M under Magic Jewel `out`, with `out` at 34G and the volume at about 387Gi free after completion. Suite:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-095544/suite.tsv`.
+  was 77M under Magic Jewel `out`, with `out` at 38G and the volume at about 366Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-223616/suite.tsv`.
 - Magic Jewel exact core effects uncovered command-probe slice passed. Aggregate: 7/7 passed, `fallback_sum=0`,
   `unsupported_rows=2`, `jbr_picture_frames=1694`, and `jbr_command_frames=5042`. It covered stroked gradients,
   image filters, descriptor path effects, path-effect color-filter fallback, raw discrete path-effect fallback,
