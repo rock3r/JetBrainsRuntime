@@ -327,8 +327,8 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   command frames across source, SKSL, uniform, child, named-count, compile/build, and child-type bounds:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-015158/suite.tsv`.
 - The current quick happy-path command replay checkpoint is `CASE_GROUPS=smoke`, which passed 6/6 with no fallback,
-  no unsupported rows, no picture fallback, and 7,336 JBR command frames:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-063438/suite.tsv`.
+  no unsupported rows, no picture fallback, and 7,759 JBR command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-130948/suite.tsv`.
 - The current quick command-stream parser guard checkpoint is `CASE_GROUPS=stream-invalid`, which passed 8/8 with
   `fallback_sum=8`, zero unsupported rows, and zero JBR frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-004208/suite.tsv`.

@@ -765,8 +765,8 @@ This is the small working roadmap for the current PoC. The full historical check
   The font-data record-flags row is recoverable after the one-shot invalid definition, accounting for the JBR command
   frames.
 - Magic Jewel `CASE_GROUPS=smoke` passed as the quick happy-path command replay check: 6/6, `fallback_sum=0`,
-  `unsupported_rows=0`, `picture_frames=0`, and `command_frames=6891`:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-003530/suite.tsv`.
+  `unsupported_rows=0`, `picture_frames=0`, and `command_frames=7759`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-130948/suite.tsv`.
 - Magic Jewel `CASE_GROUPS=stream-invalid` passed as the quick command-stream parser guard check: 8/8,
   `fallback_sum=8`, `unsupported_rows=0`, `picture_frames=0`, and `command_frames=0`:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-004208/suite.tsv`.
