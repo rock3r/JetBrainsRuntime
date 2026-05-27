@@ -325,6 +325,10 @@ This is the small working roadmap for the current PoC. The full historical check
   color-filter parser guard checkpoint: 5/5 passed, `fallback_sum=5`, `unsupported_rows=0`, `jbr_picture_frames=0`,
   `jbr_command_frames=0`, suite
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-115236/suite.tsv`.
+- Magic Jewel focused command-probe `CASE_GROUPS=shader-ref-invalid` passed as the current fill-rect shader-ref parser
+  guard checkpoint: 3/3 passed, `fallback_sum=3`, `unsupported_rows=0`, `jbr_picture_frames=0`,
+  `jbr_command_frames=0`, suite
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-115651/suite.tsv`.
 - Magic Jewel `CASE_GROUPS=gradient-invalid` passed as the broader gradient parser refresh: 60/60 passed,
   `fallback_sum=60`, `unsupported_rows=0`, `jbr_picture_frames=0`, `jbr_command_frames=0`, suite
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-054237/suite.tsv`.

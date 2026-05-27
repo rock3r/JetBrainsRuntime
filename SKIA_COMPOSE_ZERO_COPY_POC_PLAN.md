@@ -137,6 +137,9 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - The current focused fill-rect color-filter parser guard checkpoint is `CASE_GROUPS=fill-rect-color-filter-invalid`,
   which passed 5/5 with `fallback_sum=5`, zero unsupported rows, zero JBR picture frames, and zero JBR command frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-115236/suite.tsv`.
+- The current focused fill-rect shader-ref parser guard checkpoint is `CASE_GROUPS=shader-ref-invalid`, which passed
+  3/3 with `fallback_sum=3`, zero unsupported rows, zero JBR picture frames, and zero JBR command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-115651/suite.tsv`.
 - The latest periodic default command-probe consolidation after the shader/effect/RuntimeEffect/saveLayer parser guard
   refreshes used an exact `commands-live-animation` rerun plus a resumed default tail after macOS window capture failed
   independently of command replay on the first broad attempt. Combined aggregate: 486/486 passed,

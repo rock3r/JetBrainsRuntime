@@ -474,6 +474,11 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   `jbr_picture_frames=0`, and `jbr_command_frames=0`. The run was 12M under Magic Jewel `out`, with `out` at 34G and
   the volume at about 384Gi free after completion. Suite:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-115236/suite.tsv`.
+- Magic Jewel focused command-probe `CASE_GROUPS=shader-ref-invalid` passed as the current fill-rect shader-ref parser
+  guard checkpoint. Aggregate: 3/3 passed, `fallback_sum=3`, `unsupported_rows=0`, `jbr_picture_frames=0`, and
+  `jbr_command_frames=0`. The run was 11M under Magic Jewel `out`, with `out` at 34G and the volume at about 384Gi
+  free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-115651/suite.tsv`.
 - Magic Jewel `CASE_GROUPS=gradient-invalid` passed as the broader gradient parser refresh after the focused
   `gradient-path-invalid` run. Aggregate: 60/60 passed, `fallback_sum=60`, `unsupported_rows=0`,
   `jbr_picture_frames=0`, and `jbr_command_frames=0`. It covered stroke-width, tile-mode, radius, color-count, and
