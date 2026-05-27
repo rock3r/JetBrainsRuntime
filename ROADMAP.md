@@ -228,8 +228,8 @@ This is the small working roadmap for the current PoC. The full historical check
   `unsupported_rows=8`, `jbr_picture_frames=8930`, `jbr_command_frames=7006`, suite
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-093249/suite.tsv`.
 - Magic Jewel exact uncovered surface/transform/UI command-probe slice passed after adding ungrouped-case discovery:
-  11/11 passed, `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, `jbr_command_frames=15296`, suite
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-224136/suite.tsv`.
+  11/11 passed, `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, `jbr_command_frames=14604`, suite
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-121209/suite.tsv`.
 - Magic Jewel full default command-probe sweep passed with screenshot assertions enabled after the macOS capture retry:
   487/487 passed, `fallback_sum=350`, `unsupported_rows=26`, `jbr_picture_frames=25539`,
   `jbr_command_frames=146052`, suite

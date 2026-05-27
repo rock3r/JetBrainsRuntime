@@ -188,10 +188,10 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   fallback sentinels:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-093249/suite.tsv`.
 - The current exact uncovered surface/transform/UI command-probe checkpoint passed 11/11 after adding Magic Jewel
-  ungrouped-case discovery, with `fallback_sum=0`, no unsupported rows, zero JBR picture frames, and 15,296 JBR
+  ungrouped-case discovery, with `fallback_sum=0`, no unsupported rows, zero JBR picture frames, and 14,604 JBR
   command frames across native bridge loading, drawPoints lines/dots, concat/skew transforms, gradient surfaces/paths,
   popup/menu layering, popup-window capture, and text-as-image replay:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-224136/suite.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-121209/suite.tsv`.
 - The current compatibility matrix checkpoint passed 57/57 after the screenshot-enabled command-probe refresh, with
   `fallback_sum=56`, 421 JBR command frames from the happy path, and background-window mode on every row:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260525-220254/matrix.tsv`.
