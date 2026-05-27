@@ -169,10 +169,10 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-101706/suite.tsv`.
 - Magic Jewel focused screenshot parity `CASE_GROUPS=graphics-layer-clip-shadow-transform` passed as the paired visual
   checkpoint for clip/shadow/3D graphics-layer replay. Aggregate: 14/14 passed, `fallback_sum=0`,
-  `jbr_picture_frames=0`, `jbr_command_frames=23890`, average pixel delta `2.223`, and average
-  `bad_pixel_ratio=0.05296`. The run was 74M under Magic Jewel `out`, with `out` at 25G and the volume at about 383Gi
+  `jbr_picture_frames=0`, `jbr_command_frames=14847`, average pixel delta `2.223`, and average
+  `bad_pixel_ratio=0.05296`. The run was 57M under Magic Jewel `out`, with `out` at 34G and the volume at about 386Gi
   free after completion. Suite:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260526-101046/suite.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260527-103209/suite.tsv`.
 - Magic Jewel focused command-probe `CASE_GROUPS=descriptor-lifecycle` passed as the current descriptor lifecycle
   command checkpoint. Aggregate: 18/18 passed, `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, and
   `jbr_command_frames=33447`. The run covered descriptor eviction, resize and forced-context redefinition for
