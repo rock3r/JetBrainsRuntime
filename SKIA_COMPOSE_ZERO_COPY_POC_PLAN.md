@@ -101,11 +101,11 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-104223/suite.tsv` and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260527-104710/suite.tsv`.
 - The latest focused descriptor lifecycle command/visual checkpoints passed: command
-  `CASE_GROUPS=descriptor-lifecycle` covered 18 rows with zero fallback, zero picture frames, and 33,447 JBR command
+  `CASE_GROUPS=descriptor-lifecycle` covered 18 rows with zero fallback, zero picture frames, and 24,188 JBR command
   frames, while screenshot `CASE_GROUPS=descriptor-lifecycle` covered 6 rows with `fallback_sum=1`, zero picture
-  frames, 6,153 JBR command frames, and average `bad_pixel_ratio=0.05078`:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260526-102113/suite.tsv` and
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260526-103610/suite.tsv`.
+  frames, 7,237 JBR command frames, and average `bad_pixel_ratio=0.05078`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-124935/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260527-130309/suite.tsv`.
 - The previous full default command-probe checkpoint passed with screenshot assertions enabled after the focused
   screenshot parity refreshes and macOS capture retry fix. Aggregate: 487/487 passed, `fallback_sum=350`,
   `unsupported_rows=26`, `picture_frames=25539`, and `command_frames=146052`:
@@ -261,10 +261,10 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   graphics-layer variants:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260525-152754/suite.tsv`.
 - The current focused stable descriptor lifecycle checkpoint is `CASE_GROUPS=descriptor-lifecycle`, which passed 18/18
-  with no fallback, no unsupported rows, zero JBR picture frames, and 20,144 JBR command frames across descriptor
+  with no fallback, no unsupported rows, zero JBR picture frames, and 24,188 JBR command frames across descriptor
   eviction, same-context resize/forced-context redefine, stable RuntimeEffect color-filter, and RuntimeEffect
   source-cache eviction rows:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-064533/suite.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-124935/suite.tsv`.
 - The current focused native text lifecycle checkpoint is `CASE_GROUPS=native-text`, which passed 14/14 with no
   fallback, no unsupported rows, zero JBR picture frames, and 14,996 JBR command frames across custom-font image text,
   generic/loaded/resource/system fonts, same-context resize, and forced destination-context migration. The paired
