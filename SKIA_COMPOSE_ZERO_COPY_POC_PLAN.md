@@ -310,7 +310,7 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - The current broader gradient parser/fallback checkpoint is `CASE_GROUPS=gradient-invalid`, which passed 60/60 with
   `fallback_sum=60`, zero unsupported rows, zero JBR picture frames, and zero JBR command frames across malformed
   stroke-width, tile-mode, radius, color-count, stop-order, and embedded gradient-path variants:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-004244/suite.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-205626/suite.tsv`.
 - The current focused saveLayer parser guard refresh is `CASE_GROUPS=save-layer-invalid`, which passed 37/37 with
   `fallback_sum=37`, zero unsupported rows, zero JBR picture frames, and zero JBR command frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-194753/suite.tsv`.
@@ -388,7 +388,7 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `fallback_sum=60`, zero unsupported rows, zero JBR picture frames, and zero JBR command frames across
   linear/radial/sweep stroke width, tile mode, color count, stop order, path-gradient, and radial radius
   malformed-stream guards:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-130045/suite.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-205626/suite.tsv`.
 - The current focused RuntimeEffect parser/semantic guard checkpoint is `CASE_GROUPS=runtime-effect-invalid`, which
   passed 62/62 with `fallback_sum=56`, six intentional unsupported-picture rows, 6,919 JBR picture frames, and zero
   JBR command frames. The unsupported rows are the invalid uniform/child/nested-child schema fallbacks for shader and
