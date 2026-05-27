@@ -182,11 +182,11 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   replay, pure/uniform/child RuntimeEffects, and raw RuntimeEffect shader/color-filter fallback sentinels:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-225415/suite.tsv`.
 - The current focused shader-rendering command-probe checkpoint is `CASE_GROUPS=shader-rendering`, which passed 13/13
-  with `fallback_sum=0`, eight intentional unsupported fallback rows, 8,930 JBR picture frames, and 7,006 JBR command
+  with `fallback_sum=0`, eight intentional unsupported fallback rows, 9,898 JBR picture frames, and 9,047 JBR command
   frames across forced-context dynamic images, image path-effect fallback, image shader replay, descriptor
   stroke-shader fallback, gradient/noise/turbulence shader descriptors, and raw image/gradient/noise/turbulence
   fallback sentinels:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-093249/suite.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-230549/suite.tsv`.
 - The current exact uncovered surface/transform/UI command-probe checkpoint passed 11/11 after adding Magic Jewel
   ungrouped-case discovery, with `fallback_sum=0`, no unsupported rows, zero JBR picture frames, and 14,604 JBR
   command frames across native bridge loading, drawPoints lines/dots, concat/skew transforms, gradient surfaces/paths,

@@ -315,12 +315,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   replay, pure/uniform/child RuntimeEffects, and raw RuntimeEffect shader/color-filter fallback sentinels. Suite:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-225415/suite.tsv`.
 - Magic Jewel focused command-probe `CASE_GROUPS=shader-rendering` passed as the current shader-rendering command
-  checkpoint. Aggregate: 13/13 passed, `fallback_sum=0`, `unsupported_rows=8`, `jbr_picture_frames=8930`, and
-  `jbr_command_frames=7006`. It covered forced-context dynamic image-cache replay, image path-effect fallback, image
+  checkpoint. Aggregate: 13/13 passed, `fallback_sum=0`, `unsupported_rows=8`, `jbr_picture_frames=9898`, and
+  `jbr_command_frames=9047`. It covered forced-context dynamic image-cache replay, image path-effect fallback, image
   shader replay, descriptor stroke-shader fallback, gradient/noise/turbulence shader descriptors, and raw
-  image/gradient/noise/turbulence shader fallback sentinels. The run was 53M under Magic Jewel `out`, with `out` at
-  33G and the volume at about 380Gi free after completion. Suite:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-093249/suite.tsv`.
+  image/gradient/noise/turbulence shader fallback sentinels. The run was 61M under Magic Jewel `out`, with `out` at
+  38G and the volume at about 365Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-230549/suite.tsv`.
 - Magic Jewel exact uncovered surface/transform/UI command-probe slice passed after adding the ungrouped-case
   discovery helper. Aggregate: 11/11 passed, `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, and
   `jbr_command_frames=14604`. It covered native bridge loading, drawPoints lines/dots, concat/skew transforms,
