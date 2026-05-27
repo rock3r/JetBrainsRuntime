@@ -68,8 +68,8 @@ This is the small working roadmap for the current PoC. The full historical check
   `fallback_sum=2`, `jbr_picture_frames=0`, `jbr_command_frames=8923`, average `bad_pixel_ratio=0.04879`, suite
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260526-070611/suite.tsv`.
 - Magic Jewel focused visual `CASE_GROUPS=shader-rendering` passed through the new screenshot group path: 18/18
-  passed, `fallback_sum=4`, `jbr_picture_frames=0`, `jbr_command_frames=12289`, average `bad_pixel_ratio=0.04995`,
-  suite `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260526-071543/suite.tsv`.
+  passed, `fallback_sum=4`, `jbr_picture_frames=0`, `jbr_command_frames=15092`, average `bad_pixel_ratio=0.04995`,
+  suite `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260527-094321/suite.tsv`.
 - Magic Jewel focused visual `CASE_GROUPS=graphics-layer-basic` passed through the new screenshot group path: 7/7
   passed, `fallback_sum=0`, `jbr_picture_frames=0`, `jbr_command_frames=8326`, average `bad_pixel_ratio=0.05223`,
   suite `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260526-072753/suite.tsv`.
