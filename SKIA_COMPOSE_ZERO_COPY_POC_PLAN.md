@@ -306,7 +306,7 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - The current focused gradient path parser/fallback checkpoint is `CASE_GROUPS=gradient-path-invalid`, which passed
   18/18 with `fallback_sum=18`, zero unsupported rows, zero JBR picture frames, and zero JBR command frames across
   malformed linear/radial/sweep gradient path tile/count/stop-order/path-data variants:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-003026/suite.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-204343/suite.tsv`.
 - The current broader gradient parser/fallback checkpoint is `CASE_GROUPS=gradient-invalid`, which passed 60/60 with
   `fallback_sum=60`, zero unsupported rows, zero JBR picture frames, and zero JBR command frames across malformed
   stroke-width, tile-mode, radius, color-count, stop-order, and embedded gradient-path variants:
@@ -356,7 +356,7 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-105833/suite.tsv`.
 - The current focused gradient path parser guard checkpoint is `CASE_GROUPS=gradient-path-invalid`, which passed 18/18
   with `fallback_sum=18`, zero unsupported rows, zero JBR picture frames, and zero JBR command frames:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-102856/suite.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-204343/suite.tsv`.
 - The current focused graphics-layer command replay checkpoint is `CASE_GROUPS=graphics-layer`, which passed 21/21
   with `fallback_sum=0`, zero unsupported rows, zero JBR picture frames, and 30,306 JBR command frames across layer
   clips, blend/color filters, render effects, shadows, 3D rotations, scale/translate, camera, and pivot variants:
