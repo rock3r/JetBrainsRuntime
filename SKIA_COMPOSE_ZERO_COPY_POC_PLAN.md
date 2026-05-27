@@ -94,6 +94,12 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   frames, 14,847 JBR command frames, and average `bad_pixel_ratio=0.05296`:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-101706/suite.tsv` and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260527-103209/suite.tsv`.
+- The latest focused core drawing/effect checkpoints passed: command `CASE_GROUPS=core-effects` covered 7 rows with
+  `fallback_sum=0`, 2 unsupported fallback-sentinel rows, 1,720 picture frames, and 5,244 JBR command frames; screenshot
+  `CASE_GROUPS=core-drawing` covered 16 rows with zero fallback, zero picture frames, 13,217 JBR command frames, and
+  average `bad_pixel_ratio=0.05197`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-104223/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260527-104710/suite.tsv`.
 - The latest focused descriptor lifecycle command/visual checkpoints passed: command
   `CASE_GROUPS=descriptor-lifecycle` covered 18 rows with zero fallback, zero picture frames, and 33,447 JBR command
   frames, while screenshot `CASE_GROUPS=descriptor-lifecycle` covered 6 rows with `fallback_sum=1`, zero picture

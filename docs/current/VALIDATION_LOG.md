@@ -80,12 +80,18 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   average `bad_pixel_ratio=0.04758`. The run was 39M under Magic Jewel `out`, with `out` at 25G and the volume at about
   379Gi free after completion. Suite:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260526-075241/suite.tsv`.
+- Magic Jewel focused command-probe `CASE_GROUPS=core-effects` passed as the paired command refresh for core visual
+  drawing/effect coverage. Aggregate: 7/7 passed, `fallback_sum=0`, `unsupported_rows=2`, `jbr_picture_frames=1720`,
+  and `jbr_command_frames=5244`. The unsupported fallback-sentinel rows were
+  `commands-path-effect-color-filter-fallback` and `commands-raw-discrete-path-effect-fallback`. The run was 24M under
+  Magic Jewel `out`, with `out` at 34G and the volume at about 386Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-104223/suite.tsv`.
 - Magic Jewel focused screenshot parity `CASE_GROUPS=core-drawing` passed through the new visual group path. Aggregate:
-  16/16 passed, `fallback_sum=0`, `jbr_picture_frames=0`, `jbr_command_frames=10686`, average pixel delta `2.175`,
-  and average `bad_pixel_ratio=0.05197`. This completes one focused pass over every curated visual group in the new
-  screenshot grouping helper. The run was 47M under Magic Jewel `out`, with `out` at 25G and the volume at about 386Gi
+  16/16 passed, `fallback_sum=0`, `jbr_picture_frames=0`, `jbr_command_frames=13217`, average pixel delta `2.175`,
+  and average `bad_pixel_ratio=0.05197`. This refreshes the core visual group after the latest command-probe
+  consolidation. The run was 55M under Magic Jewel `out`, with `out` at 34G and the volume at about 385Gi
   free after completion. Suite:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260526-080246/suite.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260527-104710/suite.tsv`.
 - Magic Jewel full default screenshot parity passed after the focused visual group refresh. Aggregate: 106/106 passed,
   `fallback_sum=11`, `jbr_picture_frames=0`, `jbr_command_frames=93451`, average pixel delta `2.158`, average
   `bad_pixel_ratio=0.05158`, average header-button `bad_pixel_ratio=0.00594`, average Compose-canvas
