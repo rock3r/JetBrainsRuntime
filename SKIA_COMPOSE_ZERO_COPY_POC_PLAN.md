@@ -177,10 +177,10 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   and blend-mode rendering:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-224656/suite.tsv`.
 - The current exact shader composition and RuntimeEffect uncovered command-probe checkpoint passed 15/15, with
-  `fallback_sum=0`, two intentional unsupported fallback rows, 2,005 JBR picture frames, and 17,627 JBR command frames
+  `fallback_sum=0`, two intentional unsupported fallback rows, 2,550 JBR picture frames, and 24,094 JBR command frames
   across image/composite/transformed shaders, shader color-filter combinations, RuntimeEffect shader and color-filter
   replay, pure/uniform/child RuntimeEffects, and raw RuntimeEffect shader/color-filter fallback sentinels:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-230231/suite.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-225415/suite.tsv`.
 - The current focused shader-rendering command-probe checkpoint is `CASE_GROUPS=shader-rendering`, which passed 13/13
   with `fallback_sum=0`, eight intentional unsupported fallback rows, 8,930 JBR picture frames, and 7,006 JBR command
   frames across forced-context dynamic images, image path-effect fallback, image shader replay, descriptor
