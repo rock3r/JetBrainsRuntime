@@ -285,9 +285,9 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   clip/draw path verbs, dash path-effect line/rect/round-rect/generic-path payloads, and drawShadow path verbs:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-112747/suite.tsv`.
 - The current supported color-filter/graphics-layer replay checkpoint is `CASE_GROUPS=color-filters`, which passed
-  10/10 with no fallback, one intentional unsupported raw color-filter sentinel, 979 JBR picture frames for that row,
-  and 11,118 JBR command frames across the supported color-filter, lighting, and graphics-layer color-filter rows:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-063910/suite.tsv`.
+  10/10 with no fallback, one intentional unsupported raw color-filter sentinel, 982 JBR picture frames for that row,
+  and 13,865 JBR command frames across the supported color-filter, lighting, and graphics-layer color-filter rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-122130/suite.tsv`.
 - The current image handle/ref parser fallback checkpoint is `CASE_GROUPS=image-handles-invalid`, which passed 27/27
   with `fallback_sum=27`, zero unsupported rows, zero JBR picture frames, and 980 JBR command frames across malformed
   image define/cache-clear/evict records, image use/use-after-evict, image-ref scalar corruption, color-filter

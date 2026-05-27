@@ -597,8 +597,9 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-194922/suite.tsv`.
 - Magic Jewel `CASE_GROUPS=color-filters` passed as a supported color-filter command replay refresh after exact base
   and graphics-layer color-filter slices. Aggregate: 10/10 passed, `fallback_sum=0`, `unsupported_rows=1`,
-  `jbr_picture_frames=1165`, and `jbr_command_frames=13465`. Suite:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-194122/suite.tsv`.
+  `jbr_picture_frames=982`, and `jbr_command_frames=13865`. The run was 47M under Magic Jewel `out`, with `out` at
+  34G and the volume at about 383Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-122130/suite.tsv`.
   The only unsupported row was `commands-raw-blend-color-filter-fallback`; descriptor-backed base and graphics-layer
   color-filter rows stayed on command replay.
 - Magic Jewel exact graphics-layer color-filter slice passed for descriptor-backed color-filter, color-matrix,

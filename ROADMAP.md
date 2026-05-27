@@ -402,8 +402,8 @@ This is the small working roadmap for the current PoC. The full historical check
   with `jbr_command_frames=7343`; both had `fallback_sum=0`, `unsupported_rows=0`, and
   `jbr_picture_frames=0`.
 - Magic Jewel `CASE_GROUPS=color-filters` passed as a supported color-filter command replay refresh: 10/10 passed,
-  `fallback_sum=0`, `unsupported_rows=1`, `jbr_picture_frames=1165`, `jbr_command_frames=13465`, suite
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-194122/suite.tsv`.
+  `fallback_sum=0`, `unsupported_rows=1`, `jbr_picture_frames=982`, `jbr_command_frames=13865`, suite
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-122130/suite.tsv`.
   The single unsupported row was the intentional raw blend color-filter fallback; descriptor-backed color-filter rows
   stayed on command replay.
 - Magic Jewel exact color-filter slices passed before consolidation: base color filters 6/6 at
