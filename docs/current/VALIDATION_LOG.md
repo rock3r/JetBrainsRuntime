@@ -321,13 +321,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   image/gradient/noise/turbulence shader fallback sentinels. The run was 61M under Magic Jewel `out`, with `out` at
   38G and the volume at about 365Gi free after completion. Suite:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-230549/suite.tsv`.
-- Magic Jewel exact uncovered surface/transform/UI command-probe slice passed after adding the ungrouped-case
-  discovery helper. Aggregate: 11/11 passed, `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, and
-  `jbr_command_frames=14604`. It covered native bridge loading, drawPoints lines/dots, concat/skew transforms,
-  gradient surfaces/paths, glass-pane popup layering, real popup-window capture, Swing menu popup layering, and
-  text-as-image replay. The run was 43M under Magic Jewel `out`, with `out` at 34G and the volume at about 383Gi free
-  after completion. Suite:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-121209/suite.tsv`.
+- Magic Jewel focused surface/transform/UI command-probe slice passed in command-marker-only mode after a macOS
+  screenshot-capture failure independent of command replay. Aggregate: 11/11 passed, `fallback_sum=0`,
+  `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=10163`. It covered native bridge loading,
+  drawPoints lines/dots, concat/skew transforms, gradient surfaces/paths, glass-pane popup layering, real popup-window
+  capture, Swing menu popup layering, and text-as-image replay. The run was 27M under Magic Jewel `out`, with `out` at
+  38G and the volume at about 365Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-233456/suite.tsv`.
 - Magic Jewel full default command-probe sweep passed with screenshot assertions enabled after the macOS capture
   helper gained the window-bounds retry. Aggregate: 487/487 passed, `fallback_sum=350`, `unsupported_rows=26`,
   `jbr_picture_frames=25539`, and `jbr_command_frames=146052`. The TSV has 488 lines including the header. The sweep
