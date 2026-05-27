@@ -265,12 +265,13 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   eviction, same-context resize/forced-context redefine, stable RuntimeEffect color-filter, and RuntimeEffect
   source-cache eviction rows:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-124935/suite.tsv`.
-- The current focused native text lifecycle checkpoint is `CASE_GROUPS=native-text`, which passed 14/14 with no
-  fallback, no unsupported rows, zero JBR picture frames, and 14,996 JBR command frames across custom-font image text,
+- The current focused native text lifecycle checkpoint is `CASE_GROUPS=native-text`, which passed 14/14 in
+  command-marker-only mode after a screenshot assertion failure independent of command replay, with no fallback, no
+  unsupported rows, zero JBR picture frames, and 5,486 JBR command frames across custom-font image text,
   generic/loaded/resource/system fonts, same-context resize, and forced destination-context migration. The paired
   screenshot `CASE_GROUPS=native-text` refresh passed 14/14 with `fallback_sum=2`, zero picture frames, 9,822 command
   frames, and average `bad_pixel_ratio=0.04758`:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-105833/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260528-001410/suite.tsv` and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260527-110758/suite.tsv`.
 - The current native text/font parser fallback checkpoint is `CASE_GROUPS=native-text-invalid`, which passed 11/11
   with `fallback_sum=11`, zero unsupported rows, zero JBR picture frames, and 396 JBR command frames across invalid
