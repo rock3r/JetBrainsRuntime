@@ -215,11 +215,11 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260527-123909/suite.tsv`.
 - Magic Jewel focused command-probe `CASE_GROUPS=native-text-invalid` passed as the current native text/font-data
   parser guard checkpoint. Aggregate: 11/11 passed, `fallback_sum=11`, `unsupported_rows=0`,
-  `jbr_picture_frames=0`, and `jbr_command_frames=1226`. The text and paragraph scalar/font-family guard rows fell
+  `jbr_picture_frames=0`, and `jbr_command_frames=396`. The text and paragraph scalar/font-family guard rows fell
   back before command replay; the font-data record-flags sentinel retained the expected setup command frames before
-  fallback. The run was 26M under Magic Jewel `out`, with `out` at 34G and the volume at about 384Gi free after
+  fallback. The run was 7.6M under Magic Jewel `out`, with `out` at 38G and the volume at about 366Gi free after
   completion. Suite:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-114213/suite.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-235140/suite.tsv`.
 - Magic Jewel focused command-probe `CASE_GROUPS=primitive-invalid` passed as the current primitive parser guard
   checkpoint. Aggregate: 13/13 passed, `fallback_sum=13`, `unsupported_rows=0`, `jbr_picture_frames=0`, and
   `jbr_command_frames=0`. The run covered stroke-cap, transform record flags, clip operation, drawPoints count/length
