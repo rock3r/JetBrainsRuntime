@@ -66,10 +66,10 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   volume at about 379Gi free after completion. Suite:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260526-072753/suite.tsv`.
 - Magic Jewel focused screenshot parity `CASE_GROUPS=graphics-layer-effects` passed through the new visual group path.
-  Aggregate: 14/14 passed, `fallback_sum=2`, `jbr_picture_frames=0`, `jbr_command_frames=15099`, average pixel delta
-  `2.341`, and average `bad_pixel_ratio=0.05725`. The run was 68M under Magic Jewel `out`, with `out` at 25G and the
-  volume at about 379Gi free after completion. Suite:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260526-073317/suite.tsv`.
+  Aggregate: 14/14 passed, `fallback_sum=2`, `jbr_picture_frames=0`, `jbr_command_frames=11941`, average pixel delta
+  `2.341`, and average `bad_pixel_ratio=0.05725`. The run was 57M under Magic Jewel `out`, with `out` at 34G and the
+  volume at about 386Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260527-100709/suite.tsv`.
 - Magic Jewel focused screenshot parity `CASE_GROUPS=graphics-layer-clip-shadow-transform` passed through the new visual
   group path. Aggregate: 14/14 passed, `fallback_sum=0`, `jbr_picture_frames=0`, `jbr_command_frames=14935`, average
   pixel delta `2.223`, and average `bad_pixel_ratio=0.05296`. The run was 56M under Magic Jewel `out`, with `out` at

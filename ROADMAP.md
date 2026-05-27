@@ -74,8 +74,8 @@ This is the small working roadmap for the current PoC. The full historical check
   passed, `fallback_sum=0`, `jbr_picture_frames=0`, `jbr_command_frames=8326`, average `bad_pixel_ratio=0.05223`,
   suite `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260526-072753/suite.tsv`.
 - Magic Jewel focused visual `CASE_GROUPS=graphics-layer-effects` passed through the new screenshot group path: 14/14
-  passed, `fallback_sum=2`, `jbr_picture_frames=0`, `jbr_command_frames=15099`, average `bad_pixel_ratio=0.05725`,
-  suite `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260526-073317/suite.tsv`.
+  passed, `fallback_sum=2`, `jbr_picture_frames=0`, `jbr_command_frames=11941`, average `bad_pixel_ratio=0.05725`,
+  suite `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260527-100709/suite.tsv`.
 - Magic Jewel focused visual `CASE_GROUPS=graphics-layer-clip-shadow-transform` passed through the new screenshot group
   path: 14/14 passed, `fallback_sum=0`, `jbr_picture_frames=0`, `jbr_command_frames=14935`, average
   `bad_pixel_ratio=0.05296`, suite
