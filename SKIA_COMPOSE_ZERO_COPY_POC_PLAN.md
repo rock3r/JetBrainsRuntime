@@ -57,9 +57,10 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   invalid parser/semantic refreshes. Aggregate: 487/487 passed, `fallback_sum=350`, `unsupported_rows=26`,
   `picture_frames=32385`, and `command_frames=183405`:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-023649/suite.tsv`.
-- The latest compatibility matrix checkpoint passed after that full command-probe invalid-refresh sweep, with 57/57
-  rows passed, `fallback_sum=56`, 431 JBR command frames from the happy path, and background-window mode on every row:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260526-203313/matrix.tsv`.
+- The latest compatibility matrix checkpoint passed after that full command-probe consolidation refresh, with 57/57
+  rows passed, `fallback_sum=56`, 1,130 JBR command frames from the happy path, and background-window mode on every
+  row:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260527-074723/matrix.tsv`.
 - The latest artifact matrix checkpoint passed the required current-artifact rows on ABI 106 local artifacts:
   `current-all` replayed commands with 463 JBR command frames, `missing-public-api` fell back exactly once, and the
   optional old-artifact rows were skipped because no bundle variables were set:

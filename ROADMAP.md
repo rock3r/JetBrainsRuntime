@@ -42,9 +42,9 @@ This is the small working roadmap for the current PoC. The full historical check
   invalid parser/semantic refreshes: 487/487 passed, `fallback_sum=350`, `unsupported_rows=26`,
   `jbr_picture_frames=32385`, `jbr_command_frames=183405`, suite
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-023649/suite.tsv`.
-- Magic Jewel compatibility matrix passed after the full command-probe invalid-refresh sweep: 57/57 passed,
-  `fallback_sum=56`, `jbr_command_frames=431`, background-window mode true for all rows, matrix
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260526-203313/matrix.tsv`.
+- Magic Jewel compatibility matrix passed after the full command-probe consolidation refresh: 57/57 passed,
+  `fallback_sum=56`, `jbr_command_frames=1130`, background-window mode true for all rows, matrix
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260527-074723/matrix.tsv`.
 - Magic Jewel artifact matrix passed on current ABI 106 local artifacts after the compatibility refresh: required rows
   2/2 passed, optional old-artifact rows skipped because no old bundle variables were set, `fallback_sum=1`,
   `jbr_command_frames=463`, matrix
