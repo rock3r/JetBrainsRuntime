@@ -207,9 +207,9 @@ This is the small working roadmap for the current PoC. The full historical check
 - Magic Jewel exact saveLayer/shader-fallback uncovered command-probe tail passed: 7/7 passed, `fallback_sum=0`,
   `unsupported_rows=5`, `jbr_picture_frames=4435`, `jbr_command_frames=1659`, suite
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-233413/suite.tsv`.
-- Magic Jewel exact graphics-layer extras uncovered command-probe slice passed: 14/14 passed, `fallback_sum=0`,
-  `unsupported_rows=2`, `jbr_picture_frames=1809`, `jbr_command_frames=10986`, suite
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-232205/suite.tsv`.
+- Magic Jewel focused command-probe `CASE_GROUPS=graphics-layer-extras` passed: 14/14 passed, `fallback_sum=0`,
+  `unsupported_rows=2`, `jbr_picture_frames=2032`, `jbr_command_frames=13005`, suite
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-095544/suite.tsv`.
 - Magic Jewel exact core effects uncovered command-probe slice passed: 7/7 passed, `fallback_sum=0`,
   `unsupported_rows=2`, `jbr_picture_frames=1694`, `jbr_command_frames=5042`, suite
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-231448/suite.tsv`.
