@@ -254,9 +254,12 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   source-cache eviction rows:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-064533/suite.tsv`.
 - The current focused native text lifecycle checkpoint is `CASE_GROUPS=native-text`, which passed 14/14 with no
-  fallback, no unsupported rows, zero JBR picture frames, and 15,012 JBR command frames across custom-font image text,
-  generic/loaded/resource/system fonts, same-context resize, and forced destination-context migration:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-065848/suite.tsv`.
+  fallback, no unsupported rows, zero JBR picture frames, and 14,996 JBR command frames across custom-font image text,
+  generic/loaded/resource/system fonts, same-context resize, and forced destination-context migration. The paired
+  screenshot `CASE_GROUPS=native-text` refresh passed 14/14 with `fallback_sum=2`, zero picture frames, 9,822 command
+  frames, and average `bad_pixel_ratio=0.04758`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-105833/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260527-110758/suite.tsv`.
 - The current native text/font parser fallback checkpoint is `CASE_GROUPS=native-text-invalid`, which passed 11/11
   with `fallback_sum=11`, zero unsupported rows, zero JBR picture frames, and 1,223 JBR command frames across invalid
   font size/weight/width/slant/family-count rows and the invalid font-data record flags sentinel:
@@ -336,9 +339,9 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   command frames across the supported descriptor and graphics-layer color-filter rows:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-100853/suite.tsv`.
 - The current focused native text/font-data command replay checkpoint is `CASE_GROUPS=native-text`, which passed 14/14
-  with `fallback_sum=0`, zero unsupported rows, zero JBR picture frames, and 15,912 JBR command frames across custom,
+  with `fallback_sum=0`, zero unsupported rows, zero JBR picture frames, and 14,996 JBR command frames across custom,
   generic, loaded-font-data, resource, system, resize, and forced-context native text rows:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-101728/suite.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-105833/suite.tsv`.
 - The current focused gradient path parser guard checkpoint is `CASE_GROUPS=gradient-path-invalid`, which passed 18/18
   with `fallback_sum=18`, zero unsupported rows, zero JBR picture frames, and zero JBR command frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-102856/suite.tsv`.

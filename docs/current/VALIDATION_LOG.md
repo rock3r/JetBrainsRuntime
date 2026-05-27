@@ -75,11 +75,16 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   pixel delta `2.223`, and average `bad_pixel_ratio=0.05296`. The run was 56M under Magic Jewel `out`, with `out` at
   25G and the volume at about 379Gi free after completion. Suite:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260526-074310/suite.tsv`.
+- Magic Jewel focused command-probe `CASE_GROUPS=native-text` passed as the current native text lifecycle command
+  checkpoint. Aggregate: 14/14 passed, `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, and
+  `jbr_command_frames=14996`. The run was 51M under Magic Jewel `out`, with `out` at 34G and the volume at about 384Gi
+  free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-105833/suite.tsv`.
 - Magic Jewel focused screenshot parity `CASE_GROUPS=native-text` passed through the new visual group path. Aggregate:
-  14/14 passed, `fallback_sum=2`, `jbr_picture_frames=0`, `jbr_command_frames=8531`, average pixel delta `2.037`, and
-  average `bad_pixel_ratio=0.04758`. The run was 39M under Magic Jewel `out`, with `out` at 25G and the volume at about
-  379Gi free after completion. Suite:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260526-075241/suite.tsv`.
+  14/14 passed, `fallback_sum=2`, `jbr_picture_frames=0`, `jbr_command_frames=9822`, average pixel delta `2.037`, and
+  average `bad_pixel_ratio=0.04758`. The run was 43M under Magic Jewel `out`, with `out` at 34G and the volume at about
+  384Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260527-110758/suite.tsv`.
 - Magic Jewel focused command-probe `CASE_GROUPS=core-effects` passed as the paired command refresh for core visual
   drawing/effect coverage. Aggregate: 7/7 passed, `fallback_sum=0`, `unsupported_rows=2`, `jbr_picture_frames=1720`,
   and `jbr_command_frames=5244`. The unsupported fallback-sentinel rows were
