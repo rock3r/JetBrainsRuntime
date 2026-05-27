@@ -116,9 +116,9 @@ This is the small working roadmap for the current PoC. The full historical check
   `fallback_sum=0`, one old/new CPU sample per row, and `jbr_command_frames=1079`, suite
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-benchmark-suite/20260526-093925/suite.tsv`.
 - Magic Jewel full default benchmark suite passed after the invalid-refresh validation gates: 5/5 passed,
-  `fallback_sum=0`, `jbr_command_frames=16324`, picture FPS `232.0`, and command FPS rows `289.6`, `180.1`,
-  `176.2`, and `170.3`, suite
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-benchmark-suite/20260526-221122/suite.tsv`.
+  `fallback_sum=0`, `jbr_command_frames=12205`, picture FPS `196.2`, and command FPS rows `202.1`, `136.8`,
+  `141.9`, and `129.4`, suite
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-benchmark-suite/20260527-092418/suite.tsv`.
 - Magic Jewel RuntimeEffect source-cache eviction rows now require descriptor-handle cache-hit markers in command and
   screenshot suites. The RuntimeEffect color-filter child row keeps descriptor define/use and source-cache-hit gates,
   but not a descriptor cache-hit gate because grouped replay can legitimately produce zero child effect-handle cache

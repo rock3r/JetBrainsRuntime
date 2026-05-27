@@ -138,11 +138,11 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   at about 379Gi free after completion. Suite:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-benchmark-suite/20260526-093925/suite.tsv`.
 - Magic Jewel full default benchmark suite passed after the invalid-refresh validation gates. Aggregate: 5/5 passed,
-  `fallback_sum=0`, 83 old-side CPU samples, 84 new-side CPU samples, and `jbr_command_frames=16324`. The picture row
-  reported `jbr_picture_fps=232.0`; command rows reported `jbr_command_fps`: plain commands `289.6`, stable images
-  `180.1`, dynamic images `176.2`, and resize dynamic images `170.3`. The run was 53M under Magic Jewel `out`, with
-  `out` at 29G and the volume at about 395Gi free after completion. Suite:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-benchmark-suite/20260526-221122/suite.tsv`.
+  `fallback_sum=0`, 85 old-side CPU samples, 83 new-side CPU samples, and `jbr_command_frames=12205`. The picture row
+  reported `jbr_picture_fps=196.2`; command rows reported `jbr_command_fps`: plain commands `202.1`, stable images
+  `136.8`, dynamic images `141.9`, and resize dynamic images `129.4`. The run was 45M under Magic Jewel `out`, with
+  `out` at 33G and the volume at about 387Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-benchmark-suite/20260527-092418/suite.tsv`.
 - Magic Jewel RuntimeEffect source-cache eviction rows now require descriptor-handle cache-hit markers in both command
   and screenshot suites. The RuntimeEffect color-filter child row keeps descriptor define/use and source-cache-hit
   gates, but no descriptor cache-hit gate because grouped replay showed that child effect-handle cache hits can

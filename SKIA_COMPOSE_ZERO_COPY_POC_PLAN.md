@@ -73,8 +73,8 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   and benchmark suite loops. Use `LIST_CASES=true` / `LIST_CASE_COUNT=true` where available for exact row discovery;
   command and screenshot suites also expose `CASE_GROUPS=...` plus group listing/count helpers.
 - The latest full default benchmark checkpoint passed after the invalid-refresh validation gates. Aggregate: 5/5
-  passed, `fallback_sum=0`, 83 old-side CPU samples, 84 new-side CPU samples, and `jbr_command_frames=16324`:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-benchmark-suite/20260526-221122/suite.tsv`.
+  passed, `fallback_sum=0`, 85 old-side CPU samples, 83 new-side CPU samples, and `jbr_command_frames=12205`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-benchmark-suite/20260527-092418/suite.tsv`.
 - RuntimeEffect source-cache eviction rows now assert descriptor-handle cache reuse in both command and visual suites.
   The RuntimeEffect color-filter child row keeps descriptor define/use and source-cache-hit gates, but omits the
   descriptor cache-hit gate after grouped replay showed that child effect-handle cache hits can legitimately be zero.
