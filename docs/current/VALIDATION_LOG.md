@@ -464,6 +464,11 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-062610/suite.tsv`,
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-062808/suite.tsv`, and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-063118/suite.tsv`.
+- Magic Jewel focused command-probe `CASE_GROUPS=blend-mode-invalid` passed as the current fill-rect blend-mode
+  parser guard checkpoint. Aggregate: 2/2 passed, `fallback_sum=2`, `unsupported_rows=0`, `jbr_picture_frames=0`,
+  and `jbr_command_frames=0`. The run was 4.2M under Magic Jewel `out`, with `out` at 34G and the volume at about
+  384Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-114958/suite.tsv`.
 - Magic Jewel `CASE_GROUPS=gradient-invalid` passed as the broader gradient parser refresh after the focused
   `gradient-path-invalid` run. Aggregate: 60/60 passed, `fallback_sum=60`, `unsupported_rows=0`,
   `jbr_picture_frames=0`, and `jbr_command_frames=0`. It covered stroke-width, tile-mode, radius, color-count, and

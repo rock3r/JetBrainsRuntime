@@ -131,6 +131,9 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-062610/suite.tsv`,
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-062808/suite.tsv`, and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-063118/suite.tsv`.
+- The current focused fill-rect blend-mode parser guard checkpoint is `CASE_GROUPS=blend-mode-invalid`, which passed
+  2/2 with `fallback_sum=2`, zero unsupported rows, zero JBR picture frames, and zero JBR command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-114958/suite.tsv`.
 - The latest periodic default command-probe consolidation after the shader/effect/RuntimeEffect/saveLayer parser guard
   refreshes used an exact `commands-live-animation` rerun plus a resumed default tail after macOS window capture failed
   independently of command replay on the first broad attempt. Combined aggregate: 486/486 passed,
