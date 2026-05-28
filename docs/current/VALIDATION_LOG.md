@@ -167,6 +167,10 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   `./gradlew --no-daemon --no-configuration-cache :awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`.
   The run completed in 15s and covered public-API fallback, command-frame cache behavior, and service canvas acquire
   checks.
+- Rebuilt local JBR Skia overlay artifacts with
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/scripts/rebuild-jbr-skia-local-artifacts.sh`, then compiled and
+  ran `test/jdk/jb/JBRSkia/JBRSkiaApiTest.java` headlessly against `/tmp/jbr-skia-run/desktop` and
+  `/tmp/jbr-skia-native/libjbrskiainterop.dylib`. The parser/API-side run exited 0.
 - Magic Jewel RuntimeEffect source-cache eviction rows now require descriptor-handle cache-hit markers in both command
   and screenshot suites. The RuntimeEffect color-filter child row keeps descriptor define/use and source-cache-hit
   gates, but no descriptor cache-hit gate because grouped replay showed that child effect-handle cache hits can
