@@ -193,6 +193,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   raw gradient/noise/turbulence shader fallback sentinels. The TSV has 14 lines including the header. The run was 47M
   under Magic Jewel `out`, with `out` at 40G and the volume at about 352Gi free after completion. Suite:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260528-174929/suite.tsv`.
+- Magic Jewel paired post-helper focused shader-family screenshot parity passed: `CASE_GROUPS=shader-rendering`
+  covered 18/18 rows with `fallback_sum=4`, `jbr_picture_frames=0`, `jbr_command_frames=17519`, average pixel delta
+  `2.081`, average `bad_pixel_ratio=0.04995`, average header-button `bad_pixel_ratio=0.00764`, average Compose-canvas
+  `bad_pixel_ratio=0.07420`, average bottom-label `bad_pixel_ratio=0.12282`, and average paragraph-probe
+  `bad_pixel_ratio=0.08520`. The TSV has 19 lines including the header. The run was 75M under Magic Jewel `out`, with
+  `out` at 40G and the volume at about 351Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260528-175750/suite.tsv`.
 - CMP full focused recorder regression class passed after the JBR/Skiko gates:
   `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest`.
   The XML result reported 132 tests, zero skipped, zero failures, and zero errors; Gradle completed successfully in
