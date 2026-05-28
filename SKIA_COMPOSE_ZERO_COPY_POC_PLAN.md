@@ -74,6 +74,9 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `./gradlew --no-daemon --no-configuration-cache :awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`.
 - The latest JBR parser/API-side gate passed after rebuilding local overlay artifacts with Magic Jewel's helper and
   running `JBRSkiaApiTest` against `/tmp/jbr-skia-run/desktop` plus `/tmp/jbr-skia-native/libjbrskiainterop.dylib`.
+- The latest CMP recorder gate passed after the JBR/Skiko gates:
+  `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest`
+  reported 132/132 desktop tests with zero skipped/failures/errors.
 - RuntimeEffect source-cache eviction rows now assert descriptor-handle cache reuse in both command and visual suites.
   The RuntimeEffect color-filter child row keeps descriptor define/use and source-cache-hit gates, but omits the
   descriptor cache-hit gate after grouped replay showed that child effect-handle cache hits can legitimately be zero.

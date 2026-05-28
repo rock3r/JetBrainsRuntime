@@ -171,6 +171,10 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/scripts/rebuild-jbr-skia-local-artifacts.sh`, then compiled and
   ran `test/jdk/jb/JBRSkia/JBRSkiaApiTest.java` headlessly against `/tmp/jbr-skia-run/desktop` and
   `/tmp/jbr-skia-native/libjbrskiainterop.dylib`. The parser/API-side run exited 0.
+- CMP full focused recorder regression class passed after the JBR/Skiko gates:
+  `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest`.
+  The XML result reported 132 tests, zero skipped, zero failures, and zero errors; Gradle completed successfully in
+  1m11s.
 - Magic Jewel RuntimeEffect source-cache eviction rows now require descriptor-handle cache-hit markers in both command
   and screenshot suites. The RuntimeEffect color-filter child row keeps descriptor define/use and source-cache-hit
   gates, but no descriptor cache-hit gate because grouped replay showed that child effect-handle cache hits can
