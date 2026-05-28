@@ -50,6 +50,10 @@ This is the small working roadmap for the current PoC. The full historical check
   2/2 passed, optional old-artifact rows skipped because no old bundle variables were set, `fallback_sum=1`,
   `jbr_command_frames=664`, matrix
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260528-160241/matrix.tsv`.
+- The focused artifact rows also passed after fixing Magic Jewel's JBR API helper to remove its temporary
+  `com.jetbrains.exported.JBRApi` desktop-overlay stub on exit: `current-all` replayed commands and
+  `missing-public-api` fell back once as expected, matrix
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260528-173847/matrix.tsv`.
 - Magic Jewel full default screenshot parity passed after the command-probe, compatibility, and artifact refreshes:
   106/106 passed, `fallback_sum=10`, `jbr_picture_frames=0`, `jbr_command_frames=76760`, average
   `bad_pixel_ratio=0.05158`, suite
@@ -137,7 +141,8 @@ This is the small working roadmap for the current PoC. The full historical check
 - JBR parser-only `JBRSkiaApiTest` passed against freshly rebuilt local overlay artifacts and
   `/tmp/jbr-skia-native/libjbrskiainterop.dylib` after the Skiko gate.
 - Magic Jewel now has `scripts/test-jbr-skia-api.sh` to rebuild the local overlay, patch the temporary JBR API stub,
-  compile `JBRSkiaApiTest`, and run it headlessly; the helper passed end-to-end.
+  compile `JBRSkiaApiTest`, run it headlessly, and remove the temporary desktop-overlay stub on exit; the helper
+  passed end-to-end.
 - CMP full focused `JbrSkiaCommandRecorderTest` class passed after the JBR/Skiko gates: 132/132 desktop tests,
   zero skipped/failures/errors.
 - Magic Jewel RuntimeEffect source-cache eviction rows now require descriptor-handle cache-hit markers in command and

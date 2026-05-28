@@ -60,6 +60,10 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `current-all` replayed commands with 664 JBR command frames, `missing-public-api` fell back exactly once, and the
   optional old-artifact rows were skipped because no bundle variables were set:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260528-160241/matrix.tsv`.
+- A follow-up focused artifact matrix also passed after fixing Magic Jewel's JBR API helper to remove its temporary
+  `com.jetbrains.exported.JBRApi` desktop-overlay stub on exit: `current-all` replayed commands with 460 JBR command
+  frames, and `missing-public-api` fell back exactly once:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260528-173847/matrix.tsv`.
 - The latest full default screenshot parity checkpoint passed after the command-probe, compatibility, and artifact
   refreshes. Aggregate: 106/106 passed, `fallback_sum=10`, zero JBR picture frames, 76,760 JBR command frames,
   average `bad_pixel_ratio=0.05158`, and 107 TSV lines including the header:
@@ -75,7 +79,8 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - The latest JBR parser/API-side gate passed after rebuilding local overlay artifacts with Magic Jewel's helper and
   running `JBRSkiaApiTest` against `/tmp/jbr-skia-run/desktop` plus `/tmp/jbr-skia-native/libjbrskiainterop.dylib`.
 - Magic Jewel now exposes that gate as `scripts/test-jbr-skia-api.sh`; the helper passed end-to-end and prints
-  `JBR_SKIA_API_TEST passed`.
+  `JBR_SKIA_API_TEST passed`. The helper removes its temporary desktop-overlay `JBRApi` stub on exit so later artifact
+  matrix runs do not inherit split-package state.
 - The latest CMP recorder gate passed after the JBR/Skiko gates:
   `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest`
   reported 132/132 desktop tests with zero skipped/failures/errors.
