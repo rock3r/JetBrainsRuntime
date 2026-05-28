@@ -48,8 +48,8 @@ This is the small working roadmap for the current PoC. The full historical check
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260528-153111/matrix.tsv`.
 - Magic Jewel artifact matrix passed on current ABI 106 local artifacts after the compatibility refresh: required rows
   2/2 passed, optional old-artifact rows skipped because no old bundle variables were set, `fallback_sum=1`,
-  `jbr_command_frames=479`, matrix
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260527-081549/matrix.tsv`.
+  `jbr_command_frames=664`, matrix
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260528-160241/matrix.tsv`.
 - Magic Jewel full default screenshot parity passed after the command-probe, compatibility, and artifact refreshes:
   106/106 passed, `fallback_sum=12`, `jbr_picture_frames=0`, `jbr_command_frames=107121`, average
   `bad_pixel_ratio=0.05158`, suite
