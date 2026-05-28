@@ -175,6 +175,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   the local overlay by default, patches the temporary `JBRApi` stub back into the desktop overlay for runtime, compiles
   `JBRSkiaApiTest`, runs it headlessly, and passed end-to-end with `JBR_SKIA_API_TEST passed`. A follow-up
   `REBUILD_LOCAL_ARTIFACTS=false ./scripts/test-jbr-skia-api.sh` reuse check also passed.
+- Fixed that helper to remove the temporary `com.jetbrains.exported.JBRApi` stub classes from the desktop overlay on
+  exit after a focused artifact-matrix `current-all` rerun exposed a split-package module conflict. The unreferenced
+  failed output `out/jbr-skia-artifact-matrix/20260528-173711` was trimmed after diagnosis. The replacement focused
+  artifact matrix passed for `CASES="current-all missing-public-api"`: `current-all` reported no fallback and 460 JBR
+  command frames, while `missing-public-api` reported one expected fallback and zero command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260528-173847/matrix.tsv`.
 - CMP full focused recorder regression class passed after the JBR/Skiko gates:
   `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest`.
   The XML result reported 132 tests, zero skipped, zero failures, and zero errors; Gradle completed successfully in
