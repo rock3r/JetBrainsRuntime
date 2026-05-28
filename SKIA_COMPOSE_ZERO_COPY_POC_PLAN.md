@@ -81,9 +81,9 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - Magic Jewel now exposes that gate as `scripts/test-jbr-skia-api.sh`; the helper passed end-to-end and prints
   `JBR_SKIA_API_TEST passed`. The helper removes its temporary desktop-overlay `JBRApi` stub on exit so later artifact
   matrix runs do not inherit split-package state.
-- The latest CMP recorder gate passed after the refreshed JBR/Skiko gates:
+- The latest CMP recorder gate passed after adding color-filter and shader descriptor-handle eviction recorder guards:
   `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest`
-  reported 132/132 desktop tests with zero skipped/failures/errors.
+  reported 134/134 desktop tests with zero skipped/failures/errors.
 - RuntimeEffect source-cache eviction rows now assert descriptor-handle cache reuse in both command and visual suites.
   The RuntimeEffect color-filter child row keeps descriptor define/use and source-cache-hit gates, but omits the
   descriptor cache-hit gate after grouped replay showed that child effect-handle cache hits can legitimately be zero.
