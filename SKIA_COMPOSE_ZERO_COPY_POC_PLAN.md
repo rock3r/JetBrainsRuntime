@@ -74,14 +74,14 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - The latest full default benchmark checkpoint passed after the screenshot parity refresh. Aggregate: 5/5 passed,
   `fallback_sum=0`, 85 old-side CPU samples, 87 new-side CPU samples, and `jbr_command_frames=17016`:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-benchmark-suite/20260529-011527/suite.tsv`.
-- The latest Skiko focused source-side gate passed after the broad validation refresh:
+- The latest Skiko focused source-side gate passed after the refreshed broad command/visual/benchmark validations:
   `./gradlew --no-daemon --no-configuration-cache :awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`.
-- The latest JBR parser/API-side gate passed after rebuilding local overlay artifacts with Magic Jewel's helper and
+- The latest JBR parser/API-side gate passed with Magic Jewel's helper after rebuilding local overlay artifacts and
   running `JBRSkiaApiTest` against `/tmp/jbr-skia-run/desktop` plus `/tmp/jbr-skia-native/libjbrskiainterop.dylib`.
 - Magic Jewel now exposes that gate as `scripts/test-jbr-skia-api.sh`; the helper passed end-to-end and prints
   `JBR_SKIA_API_TEST passed`. The helper removes its temporary desktop-overlay `JBRApi` stub on exit so later artifact
   matrix runs do not inherit split-package state.
-- The latest CMP recorder gate passed after the JBR/Skiko gates:
+- The latest CMP recorder gate passed after the refreshed JBR/Skiko gates:
   `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest`
   reported 132/132 desktop tests with zero skipped/failures/errors.
 - RuntimeEffect source-cache eviction rows now assert descriptor-handle cache reuse in both command and visual suites.

@@ -134,14 +134,14 @@ This is the small working roadmap for the current PoC. The full historical check
 - Magic Jewel full default benchmark suite passed after the screenshot parity refresh: 5/5 passed,
   `fallback_sum=0`, `jbr_command_frames=17016`, picture FPS `241.2`, and command FPS row total `850.8`, suite
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-benchmark-suite/20260529-011527/suite.tsv`.
-- Skiko full focused `JbrSkiaInteropTest` class passed after the broad validation refresh:
+- Skiko full focused `JbrSkiaInteropTest` class passed after the refreshed broad command/visual/benchmark validations:
   `./gradlew --no-daemon --no-configuration-cache :awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`.
-- JBR parser-only `JBRSkiaApiTest` passed against freshly rebuilt local overlay artifacts and
+- JBR parser-only `JBRSkiaApiTest` passed via Magic Jewel's helper against freshly rebuilt local overlay artifacts and
   `/tmp/jbr-skia-native/libjbrskiainterop.dylib` after the Skiko gate.
 - Magic Jewel now has `scripts/test-jbr-skia-api.sh` to rebuild the local overlay, patch the temporary JBR API stub,
   compile `JBRSkiaApiTest`, run it headlessly, and remove the temporary desktop-overlay stub on exit; the helper
   passed end-to-end.
-- CMP full focused `JbrSkiaCommandRecorderTest` class passed after the JBR/Skiko gates: 132/132 desktop tests,
+- CMP full focused `JbrSkiaCommandRecorderTest` class passed after the refreshed JBR/Skiko gates: 132/132 desktop tests,
   zero skipped/failures/errors.
 - Magic Jewel RuntimeEffect source-cache eviction rows now require descriptor-handle cache-hit markers in command and
   screenshot suites. The RuntimeEffect color-filter child row keeps descriptor define/use and source-cache-hit gates,
