@@ -88,9 +88,9 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `JBR_SKIA_API_TEST passed`. The helper removes its temporary desktop-overlay `JBRApi` stub on exit so later artifact
   matrix runs do not inherit split-package state.
 - The latest CMP recorder gate passed after adding color-filter/shader descriptor-handle eviction guards plus shader
-  descriptor cache-reuse and surface-clear guards:
+  and image-filter descriptor cache-reuse and surface-clear guards:
   `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest`
-  reported 136/136 desktop tests with zero skipped/failures/errors.
+  reported 138/138 desktop tests with zero skipped/failures/errors.
 - RuntimeEffect source-cache eviction rows now assert descriptor-handle cache reuse in both command and visual suites.
   The RuntimeEffect color-filter child row keeps descriptor define/use and source-cache-hit gates, but omits the
   descriptor cache-hit gate after grouped replay showed that child effect-handle cache hits can legitimately be zero.

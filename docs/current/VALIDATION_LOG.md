@@ -218,10 +218,10 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   rebuilt local JBR Skia artifacts, patched the temporary `JBRApi` stub into the java.desktop overlay, compiled
   `JBRSkiaApiTest`, ran it headlessly, and printed `JBR_SKIA_API_TEST passed`.
 - CMP focused recorder regression passed after adding recorder guards for color-filter/shader descriptor-handle eviction
-  records and shader descriptor cache reuse across frames plus interop-surface cache clearing. Command:
+  records plus shader and image-filter descriptor cache reuse across frames and interop-surface cache clearing. Command:
   `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest`.
-  The XML result reported 136 tests, 0 skipped, 0 failures, and 0 errors. CMP commits: `40d696832d7`,
-  `44fb970451e`.
+  The XML result reported 138 tests, 0 skipped, 0 failures, and 0 errors. CMP commits: `40d696832d7`,
+  `44fb970451e`, `28a586275d1`.
 - Magic Jewel report validator passed after the refreshed broad/source gates. Command:
   `./scripts/test-jbr-skia-report-validation.sh`. The script exercised an expected strict command-validation negative
   path, then completed with `JBR_SKIA_REPORT_VALIDATION_TESTS passed`.

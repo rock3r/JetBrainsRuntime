@@ -147,8 +147,8 @@ This is the small working roadmap for the current PoC. The full historical check
 - Magic Jewel now has `scripts/test-jbr-skia-api.sh` to rebuild the local overlay, patch the temporary JBR API stub,
   compile `JBRSkiaApiTest`, run it headlessly, and remove the temporary desktop-overlay stub on exit; the helper
   passed end-to-end.
-- CMP full focused `JbrSkiaCommandRecorderTest` class passed after adding descriptor-handle eviction and shader
-  descriptor cache-reuse recorder guards: 136/136 desktop tests, zero skipped/failures/errors.
+- CMP full focused `JbrSkiaCommandRecorderTest` class passed after adding descriptor-handle eviction plus shader and
+  image-filter descriptor cache-reuse recorder guards: 138/138 desktop tests, zero skipped/failures/errors.
 - Magic Jewel RuntimeEffect source-cache eviction rows now require descriptor-handle cache-hit markers in command and
   screenshot suites. The RuntimeEffect color-filter child row keeps descriptor define/use and source-cache-hit gates,
   but not a descriptor cache-hit gate because grouped replay can legitimately produce zero child effect-handle cache
