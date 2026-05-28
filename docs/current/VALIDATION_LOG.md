@@ -5,13 +5,15 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
-- Magic Jewel full default command-probe sweep passed after the focused color-filter, RuntimeEffect,
-  descriptor-lifecycle, and smoke refreshes. Aggregate: 487/487 passed, `fallback_sum=350`,
-  `unsupported_rows=26`, `jbr_picture_frames=24888`, and `jbr_command_frames=140464`. The unsupported rows remain
-  the intentional raw/unsupported shader, color-filter, path-effect, graphics-layer, saveLayer, and RuntimeEffect
-  schema fallback sentinels. The TSV has 488 lines including the header. The run was 1.6G under Magic Jewel `out`,
-  with `out` at 36G and the volume at about 369Gi free after completion. Suite:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-131448/suite.tsv`.
+- Magic Jewel full default command-probe sweep passed in command-marker-only mode after the focused native text,
+  surface/transform/UI, saveLayer shader-fallback, shader/effect, RuntimeEffect, graphics-layer, and parser-guard
+  refreshes. Aggregate: 487/487 passed, `fallback_sum=350`, `unsupported_rows=26`, `jbr_picture_frames=27683`, and
+  `jbr_command_frames=179362`. The unsupported rows remain the intentional raw/unsupported shader, color-filter,
+  path-effect, graphics-layer, saveLayer, and RuntimeEffect schema fallback sentinels. The TSV has 488 lines including
+  the header. The run used `EXPECT_SCREENSHOT_ASSERTION=false` because local macOS screenshot assertions are currently
+  failing independently of command replay on supported rows. The run was 1.7G under Magic Jewel `out`, with `out` at
+  40G and the volume at about 356Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260528-012135/suite.tsv`.
 - Magic Jewel compatibility matrix passed after the full command-probe consolidation refresh. Aggregate: 57/57 passed,
   `fallback_sum=56`, `jbr_command_frames=1130`, and `background_window=true` on every row. The only command frames
   came from the happy path; all ABI, native ABI, command-capability, high-capability, feature-capability, and public

@@ -38,10 +38,11 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
-- Magic Jewel full default command-probe sweep passed after the latest focused color-filter, RuntimeEffect,
-  descriptor-lifecycle, and smoke refreshes: 487/487 passed, `fallback_sum=350`, `unsupported_rows=26`,
-  `jbr_picture_frames=24888`, `jbr_command_frames=140464`, suite
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-131448/suite.tsv`.
+- Magic Jewel full default command-probe sweep passed in command-marker-only mode after the latest focused native text,
+  surface/transform/UI, saveLayer shader-fallback, shader/effect, RuntimeEffect, graphics-layer, and parser-guard
+  refreshes: 487/487 passed, `fallback_sum=350`, `unsupported_rows=26`, `jbr_picture_frames=27683`,
+  `jbr_command_frames=179362`, suite
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260528-012135/suite.tsv`.
 - Magic Jewel compatibility matrix passed after the full command-probe consolidation refresh: 57/57 passed,
   `fallback_sum=56`, `jbr_command_frames=1130`, background-window mode true for all rows, matrix
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260527-074723/matrix.tsv`.

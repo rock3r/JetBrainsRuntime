@@ -43,19 +43,14 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   sweeps for periodic consolidation. Long broad sweeps can be resumed with `CASES_FROM=...` after a failing/flaky row
   is understood, so already-green prefixes do not need to be repeated. The current fast loop is exact row, quick group
   or bounded adjacent range, Skiko focused publication, `JbrSkiaInteropTest`, and then a periodic full sweep once a
-  coherent batch of sentinels has landed. The latest periodic default command-probe consolidation used that split
-  workflow across four clean roots:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-143223/suite.tsv`,
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-160910/suite.tsv`,
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-192154/suite.tsv`, and
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-200157/suite.tsv`,
-  for a combined 486/486 passed, `fallback_sum=349`, `unsupported_rows=26`, `picture_frames=31265`, and
-  `command_frames=189208`. The split recovered from a transient local JBR Skia `public-api-missing` artifact state by
-  rebuilding local artifacts, then used command-marker-only validation for the final tail after macOS `screencapture`
-  began failing independently of command replay.
-- The latest full default command-probe checkpoint passed after the focused color-filter, RuntimeEffect,
-  descriptor-lifecycle, and smoke refreshes. Aggregate: 487/487 passed, `fallback_sum=350`,
-  `unsupported_rows=26`, `picture_frames=24888`, and `command_frames=140464`:
+  coherent batch of sentinels has landed. The latest periodic default command-probe consolidation passed as a single
+  command-marker-only full sweep after the focused native text, surface/transform/UI, saveLayer shader-fallback,
+  shader/effect, RuntimeEffect, graphics-layer, and parser-guard refreshes. Aggregate: 487/487 passed,
+  `fallback_sum=350`, `unsupported_rows=26`, `picture_frames=27683`, and `command_frames=179362`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260528-012135/suite.tsv`.
+- The previous full default command-probe checkpoint after the focused color-filter, RuntimeEffect,
+  descriptor-lifecycle, and smoke refreshes passed 487/487 with `fallback_sum=350`, `unsupported_rows=26`,
+  `picture_frames=24888`, and `command_frames=140464`:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-131448/suite.tsv`.
 - The latest compatibility matrix checkpoint passed after that full command-probe consolidation refresh, with 57/57
   rows passed, `fallback_sum=56`, 1,130 JBR command frames from the happy path, and background-window mode on every
