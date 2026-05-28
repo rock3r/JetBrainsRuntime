@@ -136,6 +136,8 @@ This is the small working roadmap for the current PoC. The full historical check
   `./gradlew --no-daemon --no-configuration-cache :awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`.
 - JBR parser-only `JBRSkiaApiTest` passed against freshly rebuilt local overlay artifacts and
   `/tmp/jbr-skia-native/libjbrskiainterop.dylib` after the Skiko gate.
+- Magic Jewel now has `scripts/test-jbr-skia-api.sh` to rebuild the local overlay, patch the temporary JBR API stub,
+  compile `JBRSkiaApiTest`, and run it headlessly; the helper passed end-to-end.
 - CMP full focused `JbrSkiaCommandRecorderTest` class passed after the JBR/Skiko gates: 132/132 desktop tests,
   zero skipped/failures/errors.
 - Magic Jewel RuntimeEffect source-cache eviction rows now require descriptor-handle cache-hit markers in command and
