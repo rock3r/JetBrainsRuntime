@@ -48,6 +48,9 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   and core-drawing refreshes. Aggregate: 487/487 passed, `fallback_sum=350`, `unsupported_rows=26`,
   `picture_frames=24367`, and `command_frames=145456`:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260528-190348/suite.tsv`.
+- The latest exact descriptor-handle eviction command row passed after adding matching CMP recorder eviction guards.
+  Aggregate: 1/1 passed, `fallback_sum=0`, `unsupported_rows=0`, zero picture frames, and 59 command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-013713/suite.tsv`.
 - The previous full default command-probe checkpoint after the focused color-filter, RuntimeEffect,
   descriptor-lifecycle, and smoke refreshes passed 487/487 with `fallback_sum=350`, `unsupported_rows=26`,
   `picture_frames=24888`, and `command_frames=140464`:

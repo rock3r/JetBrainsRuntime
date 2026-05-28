@@ -42,6 +42,9 @@ This is the small working roadmap for the current PoC. The full historical check
   shader/effect, descriptor-lifecycle, graphics-layer, core-effect, and core-drawing refreshes: 487/487 passed,
   `fallback_sum=350`, `unsupported_rows=26`, `jbr_picture_frames=24367`, `jbr_command_frames=145456`, suite
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260528-190348/suite.tsv`.
+- Magic Jewel exact command-probe `CASES=commands-descriptor-eviction` passed after the CMP recorder eviction guard:
+  1/1 passed, `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, `jbr_command_frames=59`, suite
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-013713/suite.tsv`.
 - Magic Jewel compatibility matrix passed after the full command-probe consolidation refresh: 57/57 passed,
   `fallback_sum=56`, `jbr_command_frames=340`, background-window mode true for all rows, matrix
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260528-234902/matrix.tsv`.
