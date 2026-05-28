@@ -207,6 +207,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   RuntimeEffect color filters, and RuntimeEffect source-cache eviction. The TSV has 19 lines including the header. The
   run was 265M under Magic Jewel `out`, with `out` at 40G and the volume at about 351Gi free after completion. Suite:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260528-180839/suite.tsv`.
+- Magic Jewel paired focused descriptor-lifecycle screenshot parity passed: `CASE_GROUPS=descriptor-lifecycle`
+  covered 6/6 rows with `fallback_sum=1`, `jbr_picture_frames=0`, `jbr_command_frames=3624`, average pixel delta
+  `2.127`, average `bad_pixel_ratio=0.05078`, average header-button `bad_pixel_ratio=0.00677`, average Compose-canvas
+  `bad_pixel_ratio=0.07421`, average bottom-label `bad_pixel_ratio=0.10763`, and average paragraph-probe
+  `bad_pixel_ratio=0.08565`. The TSV has 7 lines including the header. The run was 137M under Magic Jewel `out`, with
+  `out` at 40G and the volume at about 351Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260528-182142/suite.tsv`.
 - CMP full focused recorder regression class passed after the JBR/Skiko gates:
   `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest`.
   The XML result reported 132 tests, zero skipped, zero failures, and zero errors; Gradle completed successfully in
