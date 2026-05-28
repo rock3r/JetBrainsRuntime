@@ -181,6 +181,11 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   artifact matrix passed for `CASES="current-all missing-public-api"`: `current-all` reported no fallback and 460 JBR
   command frames, while `missing-public-api` reported one expected fallback and zero command frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260528-173847/matrix.tsv`.
+- Magic Jewel post-helper command-probe smoke passed after the cleanup/artifact rerun: `CASE_GROUPS=smoke` covered
+  6/6 rows with `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=7612`. The TSV
+  has 7 lines including the header. The run was 24M under Magic Jewel `out`, with `out` at 40G and the volume at about
+  352Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260528-174413/suite.tsv`.
 - CMP full focused recorder regression class passed after the JBR/Skiko gates:
   `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest`.
   The XML result reported 132 tests, zero skipped, zero failures, and zero errors; Gradle completed successfully in
