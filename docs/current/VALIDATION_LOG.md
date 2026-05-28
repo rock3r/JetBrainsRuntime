@@ -175,6 +175,9 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest`.
   The XML result reported 132 tests, zero skipped, zero failures, and zero errors; Gradle completed successfully in
   1m11s.
+- Magic Jewel report-validator regression tests passed after the broad/source-side refresh:
+  `./scripts/test-jbr-skia-report-validation.sh`. The script exercised its expected strict-validation negative fixture
+  and then reported `JBR_SKIA_REPORT_VALIDATION_TESTS passed`.
 - Magic Jewel RuntimeEffect source-cache eviction rows now require descriptor-handle cache-hit markers in both command
   and screenshot suites. The RuntimeEffect color-filter child row keeps descriptor define/use and source-cache-hit
   gates, but no descriptor cache-hit gate because grouped replay showed that child effect-handle cache hits can
