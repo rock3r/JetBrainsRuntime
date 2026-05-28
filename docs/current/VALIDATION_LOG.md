@@ -5,6 +5,15 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel full default command-probe sweep passed in command-marker-only mode after the latest focused
+  shader/effect, descriptor-lifecycle, graphics-layer, core-effect, and core-drawing refreshes. Aggregate: 487/487
+  passed, `fallback_sum=350`, `unsupported_rows=26`, `jbr_picture_frames=24367`, and
+  `jbr_command_frames=145456`. The unsupported rows remain intentional raw/unsupported shader, color-filter,
+  path-effect, graphics-layer, saveLayer, and RuntimeEffect/schema fallback sentinels. The TSV has 488 lines including
+  the header. The run used `EXPECT_SCREENSHOT_ASSERTION=false` because local macOS screenshot assertions are currently
+  failing independently of command replay on supported rows. The run was 1.6G under Magic Jewel `out`, with `out` at
+  42G and the volume at about 343Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260528-190348/suite.tsv`.
 - Magic Jewel full default command-probe sweep passed in command-marker-only mode after the focused native text,
   surface/transform/UI, saveLayer shader-fallback, shader/effect, RuntimeEffect, graphics-layer, and parser-guard
   refreshes. Aggregate: 487/487 passed, `fallback_sum=350`, `unsupported_rows=26`, `jbr_picture_frames=27683`, and
