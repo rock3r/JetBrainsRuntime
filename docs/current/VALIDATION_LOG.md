@@ -214,6 +214,14 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   `bad_pixel_ratio=0.08565`. The TSV has 7 lines including the header. The run was 137M under Magic Jewel `out`, with
   `out` at 40G and the volume at about 351Gi free after completion. Suite:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260528-182142/suite.tsv`.
+- Magic Jewel focused graphics-layer command checkpoint passed after the descriptor refresh:
+  `CASE_GROUPS=graphics-layer` covered 21/21 rows with `fallback_sum=0`, `unsupported_rows=0`,
+  `jbr_picture_frames=0`, and `jbr_command_frames=25548`. The run covered base layers, ModulateAlpha/Offscreen,
+  rectangular/rounded/path clips and shadows, blend/color-filter/color-matrix/render-effect rows, offset/chained
+  effects, and 3D scale/rotation/near-camera/off-center-pivot transforms. The TSV has 22 lines including the header.
+  The run was 74M under Magic Jewel `out`, with `out` at 41G and the volume at about 350Gi free after completion.
+  Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260528-182721/suite.tsv`.
 - CMP full focused recorder regression class passed after the JBR/Skiko gates:
   `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest`.
   The XML result reported 132 tests, zero skipped, zero failures, and zero errors; Gradle completed successfully in
