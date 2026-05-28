@@ -38,18 +38,17 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
-- Magic Jewel full default command-probe sweep passed in command-marker-only mode after the latest focused native text,
-  surface/transform/UI, saveLayer shader-fallback, shader/effect, RuntimeEffect, graphics-layer, and parser-guard
-  refreshes: 487/487 passed, `fallback_sum=350`, `unsupported_rows=26`, `jbr_picture_frames=27683`,
-  `jbr_command_frames=179362`, suite
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260528-012135/suite.tsv`.
+- Magic Jewel full default command-probe sweep passed in command-marker-only mode after the latest focused
+  shader/effect, descriptor-lifecycle, graphics-layer, core-effect, and core-drawing refreshes: 487/487 passed,
+  `fallback_sum=350`, `unsupported_rows=26`, `jbr_picture_frames=24367`, `jbr_command_frames=145456`, suite
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260528-190348/suite.tsv`.
 - Magic Jewel compatibility matrix passed after the full command-probe consolidation refresh: 57/57 passed,
-  `fallback_sum=56`, `jbr_command_frames=400`, background-window mode true for all rows, matrix
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260528-153111/matrix.tsv`.
+  `fallback_sum=56`, `jbr_command_frames=340`, background-window mode true for all rows, matrix
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260528-234902/matrix.tsv`.
 - Magic Jewel artifact matrix passed on current ABI 106 local artifacts after the compatibility refresh: required rows
   2/2 passed, optional old-artifact rows skipped because no old bundle variables were set, `fallback_sum=1`,
-  `jbr_command_frames=664`, matrix
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260528-160241/matrix.tsv`.
+  `jbr_command_frames=498`, matrix
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260529-001357/matrix.tsv`.
 - The focused artifact rows also passed after fixing Magic Jewel's JBR API helper to remove its temporary
   `com.jetbrains.exported.JBRApi` desktop-overlay stub on exit: `current-all` replayed commands and
   `missing-public-api` fell back once as expected, matrix

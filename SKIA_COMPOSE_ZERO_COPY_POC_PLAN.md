@@ -44,22 +44,22 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   is understood, so already-green prefixes do not need to be repeated. The current fast loop is exact row, quick group
   or bounded adjacent range, Skiko focused publication, `JbrSkiaInteropTest`, and then a periodic full sweep once a
   coherent batch of sentinels has landed. The latest periodic default command-probe consolidation passed as a single
-  command-marker-only full sweep after the focused native text, surface/transform/UI, saveLayer shader-fallback,
-  shader/effect, RuntimeEffect, graphics-layer, and parser-guard refreshes. Aggregate: 487/487 passed,
-  `fallback_sum=350`, `unsupported_rows=26`, `picture_frames=27683`, and `command_frames=179362`:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260528-012135/suite.tsv`.
+  command-marker-only full sweep after the focused shader/effect, descriptor-lifecycle, graphics-layer, core-effect,
+  and core-drawing refreshes. Aggregate: 487/487 passed, `fallback_sum=350`, `unsupported_rows=26`,
+  `picture_frames=24367`, and `command_frames=145456`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260528-190348/suite.tsv`.
 - The previous full default command-probe checkpoint after the focused color-filter, RuntimeEffect,
   descriptor-lifecycle, and smoke refreshes passed 487/487 with `fallback_sum=350`, `unsupported_rows=26`,
   `picture_frames=24888`, and `command_frames=140464`:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-131448/suite.tsv`.
 - The latest compatibility matrix checkpoint passed after that full command-probe consolidation refresh, with 57/57
-  rows passed, `fallback_sum=56`, 400 JBR command frames from the happy path, and background-window mode on every
+  rows passed, `fallback_sum=56`, 340 JBR command frames from the happy path, and background-window mode on every
   row:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260528-153111/matrix.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260528-234902/matrix.tsv`.
 - The latest artifact matrix checkpoint passed the required current-artifact rows on ABI 106 local artifacts:
-  `current-all` replayed commands with 664 JBR command frames, `missing-public-api` fell back exactly once, and the
+  `current-all` replayed commands with 498 JBR command frames, `missing-public-api` fell back exactly once, and the
   optional old-artifact rows were skipped because no bundle variables were set:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260528-160241/matrix.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260529-001357/matrix.tsv`.
 - A follow-up focused artifact matrix also passed after fixing Magic Jewel's JBR API helper to remove its temporary
   `com.jetbrains.exported.JBRApi` desktop-overlay stub on exit: `current-all` replayed commands with 460 JBR command
   frames, and `missing-public-api` fell back exactly once:
