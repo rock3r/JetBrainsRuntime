@@ -27,6 +27,15 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   header. The run was 17M under Magic Jewel `out`, with `out` at 43G and the volume at about 342Gi free after
   completion. Suite:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-014358/suite.tsv`.
+- Magic Jewel focused graphics-layer render-effect descriptor rows passed after the CMP recorder gained image-filter
+  descriptor cache-reuse and surface-clear tests. Cases: `commands-graphics-layer-render-effect`,
+  `commands-resize-graphics-layer-render-effect`, and `commands-forced-context-graphics-layer-render-effect`.
+  Aggregate: 3/3 passed, `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, and
+  `jbr_command_frames=4465`. The base row reported one effect-handle define plus cache hits, while the resize and
+  forced-context rows reported command cache clears, two effect-handle defines, and effect-handle cache hits. The TSV
+  has 4 lines including the header. The run was 15M under Magic Jewel `out`, with `out` at 43G and the volume at about
+  342Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-015048/suite.tsv`.
 - Magic Jewel compatibility matrix passed after the latest full command-probe consolidation. Aggregate: 57/57 passed,
   `fallback_sum=56`, `jbr_command_frames=340`, and `background_window=true` on every row. The only command frames came
   from the happy path; all ABI, native ABI, command-capability, high-capability, feature-capability, and public API

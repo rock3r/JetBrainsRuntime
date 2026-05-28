@@ -54,6 +54,10 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - The paired focused color-shader descriptor command rows passed after the CMP shader descriptor cache-reuse guard.
   Aggregate: 3/3 passed, `fallback_sum=0`, `unsupported_rows=0`, zero picture frames, and 5,423 command frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-014358/suite.tsv`.
+- The paired focused graphics-layer render-effect descriptor command rows passed after the CMP image-filter descriptor
+  cache-reuse guard. Aggregate: 3/3 passed, `fallback_sum=0`, `unsupported_rows=0`, zero picture frames, and 4,465
+  command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-015048/suite.tsv`.
 - The previous full default command-probe checkpoint after the focused color-filter, RuntimeEffect,
   descriptor-lifecycle, and smoke refreshes passed 487/487 with `fallback_sum=350`, `unsupported_rows=26`,
   `picture_frames=24888`, and `command_frames=140464`:
