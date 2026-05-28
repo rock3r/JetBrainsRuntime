@@ -163,6 +163,10 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   `132.8`, dynamic images `123.2`, and resize dynamic images `112.2`. The run was 42M under Magic Jewel `out`, with
   `out` at 40G and the volume at about 345Gi free after completion. Suite:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-benchmark-suite/20260528-171658/suite.tsv`.
+- Skiko full focused `JbrSkiaInteropTest` class passed after the broad validation refresh. Command:
+  `./gradlew --no-daemon --no-configuration-cache :awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`.
+  The run completed in 15s and covered public-API fallback, command-frame cache behavior, and service canvas acquire
+  checks.
 - Magic Jewel RuntimeEffect source-cache eviction rows now require descriptor-handle cache-hit markers in both command
   and screenshot suites. The RuntimeEffect color-filter child row keeps descriptor define/use and source-cache-hit
   gates, but no descriptor cache-hit gate because grouped replay showed that child effect-handle cache hits can

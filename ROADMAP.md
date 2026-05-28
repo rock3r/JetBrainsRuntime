@@ -132,6 +132,8 @@ This is the small working roadmap for the current PoC. The full historical check
   `fallback_sum=0`, `jbr_command_frames=11675`, picture FPS `132.9`, and command FPS rows `215.6`, `132.8`,
   `123.2`, and `112.2`, suite
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-benchmark-suite/20260528-171658/suite.tsv`.
+- Skiko full focused `JbrSkiaInteropTest` class passed after the broad validation refresh:
+  `./gradlew --no-daemon --no-configuration-cache :awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`.
 - Magic Jewel RuntimeEffect source-cache eviction rows now require descriptor-handle cache-hit markers in command and
   screenshot suites. The RuntimeEffect color-filter child row keeps descriptor define/use and source-cache-hit gates,
   but not a descriptor cache-hit gate because grouped replay can legitimately produce zero child effect-handle cache

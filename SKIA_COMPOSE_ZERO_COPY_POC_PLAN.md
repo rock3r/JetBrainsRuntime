@@ -70,6 +70,8 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - The latest full default benchmark checkpoint passed after the screenshot parity refresh. Aggregate: 5/5 passed,
   `fallback_sum=0`, 85 old-side CPU samples, 81 new-side CPU samples, and `jbr_command_frames=11675`:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-benchmark-suite/20260528-171658/suite.tsv`.
+- The latest Skiko focused source-side gate passed after the broad validation refresh:
+  `./gradlew --no-daemon --no-configuration-cache :awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`.
 - RuntimeEffect source-cache eviction rows now assert descriptor-handle cache reuse in both command and visual suites.
   The RuntimeEffect color-filter child row keeps descriptor define/use and source-cache-hit gates, but omits the
   descriptor cache-hit gate after grouped replay showed that child effect-handle cache hits can legitimately be zero.
