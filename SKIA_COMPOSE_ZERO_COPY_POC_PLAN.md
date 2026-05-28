@@ -67,9 +67,9 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - Current no-run discovery helpers cover the command-probe, screenshot parity, compatibility matrix, artifact matrix,
   and benchmark suite loops. Use `LIST_CASES=true` / `LIST_CASE_COUNT=true` where available for exact row discovery;
   command and screenshot suites also expose `CASE_GROUPS=...` plus group listing/count helpers.
-- The latest full default benchmark checkpoint passed after the invalid-refresh validation gates. Aggregate: 5/5
-  passed, `fallback_sum=0`, 85 old-side CPU samples, 83 new-side CPU samples, and `jbr_command_frames=12205`:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-benchmark-suite/20260527-092418/suite.tsv`.
+- The latest full default benchmark checkpoint passed after the screenshot parity refresh. Aggregate: 5/5 passed,
+  `fallback_sum=0`, 85 old-side CPU samples, 81 new-side CPU samples, and `jbr_command_frames=11675`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-benchmark-suite/20260528-171658/suite.tsv`.
 - RuntimeEffect source-cache eviction rows now assert descriptor-handle cache reuse in both command and visual suites.
   The RuntimeEffect color-filter child row keeps descriptor define/use and source-cache-hit gates, but omits the
   descriptor cache-hit gate after grouped replay showed that child effect-handle cache hits can legitimately be zero.
