@@ -61,9 +61,9 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   optional old-artifact rows were skipped because no bundle variables were set:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260528-160241/matrix.tsv`.
 - The latest full default screenshot parity checkpoint passed after the command-probe, compatibility, and artifact
-  refreshes. Aggregate: 106/106 passed, `fallback_sum=12`, zero JBR picture frames, 107,121 JBR command frames,
+  refreshes. Aggregate: 106/106 passed, `fallback_sum=10`, zero JBR picture frames, 76,760 JBR command frames,
   average `bad_pixel_ratio=0.05158`, and 107 TSV lines including the header:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260527-081758/suite.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260528-160820/suite.tsv`.
 - Current no-run discovery helpers cover the command-probe, screenshot parity, compatibility matrix, artifact matrix,
   and benchmark suite loops. Use `LIST_CASES=true` / `LIST_CASE_COUNT=true` where available for exact row discovery;
   command and screenshot suites also expose `CASE_GROUPS=...` plus group listing/count helpers.

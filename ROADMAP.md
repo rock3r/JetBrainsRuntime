@@ -51,9 +51,9 @@ This is the small working roadmap for the current PoC. The full historical check
   `jbr_command_frames=664`, matrix
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260528-160241/matrix.tsv`.
 - Magic Jewel full default screenshot parity passed after the command-probe, compatibility, and artifact refreshes:
-  106/106 passed, `fallback_sum=12`, `jbr_picture_frames=0`, `jbr_command_frames=107121`, average
+  106/106 passed, `fallback_sum=10`, `jbr_picture_frames=0`, `jbr_command_frames=76760`, average
   `bad_pixel_ratio=0.05158`, suite
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260527-081758/suite.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260528-160820/suite.tsv`.
 - Magic Jewel screenshot parity suite now has no-run `LIST_CASES=true`, `LIST_CASE_COUNT=true`, and
   `CASES_FROM=... CASES_UNTIL=...` helpers. `parity-button-chrome` passed after the helper change with
   `fallback_sum=0`, `jbr_picture_frames=0`, `jbr_command_frames=1723`, suite
