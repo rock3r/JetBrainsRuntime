@@ -26,6 +26,14 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   because no old bundle variables were configured. The TSV has 8 lines including the header. The run was 2.9M under
   Magic Jewel `out`, with `out` at 42G and the volume at about 343Gi free after completion. Matrix:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260529-001357/matrix.tsv`.
+- Magic Jewel full default screenshot parity passed after the latest command-probe, compatibility, and artifact
+  refreshes. Aggregate: 106/106 passed, `fallback_sum=12`, `jbr_picture_frames=0`, `jbr_command_frames=110255`,
+  average pixel delta `2.158`, average `bad_pixel_ratio=0.05158`, average header-button
+  `bad_pixel_ratio=0.00594`, average Compose-canvas `bad_pixel_ratio=0.07632`, average bottom-label
+  `bad_pixel_ratio=0.11884`, and average paragraph-probe `bad_pixel_ratio=0.08648`. The TSV has 107 lines including
+  the header. The run was 571M under Magic Jewel `out`, with `out` at 43G and the volume at about 333Gi free after
+  completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260529-001725/suite.tsv`.
 - Magic Jewel full default command-probe sweep passed in command-marker-only mode after the focused native text,
   surface/transform/UI, saveLayer shader-fallback, shader/effect, RuntimeEffect, graphics-layer, and parser-guard
   refreshes. Aggregate: 487/487 passed, `fallback_sum=350`, `unsupported_rows=26`, `jbr_picture_frames=27683`, and
