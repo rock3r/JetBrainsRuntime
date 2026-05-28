@@ -173,7 +173,8 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   `/tmp/jbr-skia-native/libjbrskiainterop.dylib`. The parser/API-side run exited 0.
 - Added Magic Jewel `scripts/test-jbr-skia-api.sh` to make that parser/API-side gate reproducible. The helper rebuilds
   the local overlay by default, patches the temporary `JBRApi` stub back into the desktop overlay for runtime, compiles
-  `JBRSkiaApiTest`, runs it headlessly, and passed end-to-end with `JBR_SKIA_API_TEST passed`.
+  `JBRSkiaApiTest`, runs it headlessly, and passed end-to-end with `JBR_SKIA_API_TEST passed`. A follow-up
+  `REBUILD_LOCAL_ARTIFACTS=false ./scripts/test-jbr-skia-api.sh` reuse check also passed.
 - CMP full focused recorder regression class passed after the JBR/Skiko gates:
   `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest`.
   The XML result reported 132 tests, zero skipped, zero failures, and zero errors; Gradle completed successfully in
