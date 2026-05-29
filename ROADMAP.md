@@ -425,8 +425,8 @@ This is the small working roadmap for the current PoC. The full historical check
   The screenshot-enabled broad attempt was blocked at `commands-point-lines` by `screencapture` while command markers
   were healthy.
 - Magic Jewel `CASE_GROUPS=native-text` passed as a supported native text/font replay refresh: 14/14 passed,
-  `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, `jbr_command_frames=16173`, suite
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-205921/suite.tsv`.
+  `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, `jbr_command_frames=16516`, suite
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-110350/suite.tsv`.
 - Magic Jewel exact native-text slices passed before consolidation: base text 5/5 at
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-204934/suite.tsv`
   with `jbr_command_frames=5082`, resize 4/4 at
