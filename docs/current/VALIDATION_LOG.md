@@ -273,18 +273,19 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   `132.8`, dynamic images `123.2`, and resize dynamic images `112.2`. The run was 42M under Magic Jewel `out`, with
   `out` at 40G and the volume at about 345Gi free after completion. Suite:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-benchmark-suite/20260528-171658/suite.tsv`.
-- Skiko full focused `JbrSkiaInteropTest` class passed after the latest broad command/visual/benchmark refresh.
+- Skiko full focused `JbrSkiaInteropTest` class passed after the latest 20260529 broad command/visual/benchmark
+  refresh.
   Command:
   `./gradlew --no-daemon --no-configuration-cache :awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`.
-  The Gradle run completed successfully in `/Users/rock3r/src/jbr-skia-zero-copy/skiko/skiko`.
-- Magic Jewel `scripts/test-jbr-skia-api.sh` passed end-to-end after the latest broad validation refresh. The helper
-  rebuilt local JBR Skia artifacts, patched the temporary `JBRApi` stub into the java.desktop overlay, compiled
-  `JBRSkiaApiTest`, ran it headlessly, and printed `JBR_SKIA_API_TEST passed`.
-- CMP focused recorder regression passed after adding recorder guards for color-filter/shader descriptor-handle eviction
-  records plus shader and image-filter descriptor cache reuse across frames and interop-surface cache clearing. Command:
+  The Gradle run completed successfully in `/Users/rock3r/src/jbr-skia-zero-copy/skiko/skiko` with 28 actionable
+  tasks, 1 executed, and 27 up-to-date.
+- Magic Jewel `scripts/test-jbr-skia-api.sh` passed end-to-end after the latest broad validation refresh using
+  `REBUILD_LOCAL_ARTIFACTS=false`. The helper patched the temporary `JBRApi` stub into the java.desktop overlay,
+  compiled `JBRSkiaApiTest`, ran it headlessly, and printed `JBR_SKIA_API_TEST passed`.
+- CMP focused recorder regression passed after the refreshed Skiko and JBR parser/API gates. Command:
   `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest`.
-  The XML result reported 138 tests, 0 skipped, 0 failures, and 0 errors. CMP commits: `40d696832d7`,
-  `44fb970451e`, `28a586275d1`.
+  The Gradle run completed successfully with 79 actionable tasks, 12 executed, and 67 up-to-date; the XML result
+  reported 138 tests, 0 skipped, 0 failures, and 0 errors.
 - Magic Jewel report validator passed after the refreshed broad/source gates. Command:
   `./scripts/test-jbr-skia-report-validation.sh`. The script exercised an expected strict command-validation negative
   path, then completed with `JBR_SKIA_REPORT_VALIDATION_TESTS passed`.

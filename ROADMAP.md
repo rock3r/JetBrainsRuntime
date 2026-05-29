@@ -170,15 +170,16 @@ This is the small working roadmap for the current PoC. The full historical check
 - Magic Jewel full default benchmark suite passed after the screenshot parity refresh: 5/5 passed,
   `fallback_sum=0`, `jbr_command_frames=11221`, picture FPS `160.4`, and command FPS row total `561.1`, suite
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-benchmark-suite/20260529-101522/suite.tsv`.
-- Skiko full focused `JbrSkiaInteropTest` class passed after the refreshed broad command/visual/benchmark validations:
+- Skiko full focused `JbrSkiaInteropTest` class passed after the refreshed 20260529 command/visual/benchmark
+  validations:
   `./gradlew --no-daemon --no-configuration-cache :awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`.
-- JBR parser-only `JBRSkiaApiTest` passed via Magic Jewel's helper against freshly rebuilt local overlay artifacts and
-  `/tmp/jbr-skia-native/libjbrskiainterop.dylib` after the Skiko gate.
+- JBR parser-only `JBRSkiaApiTest` passed via Magic Jewel's helper against the current local overlay artifacts and
+  `/tmp/jbr-skia-native/libjbrskiainterop.dylib` after the Skiko gate, using `REBUILD_LOCAL_ARTIFACTS=false`.
 - Magic Jewel now has `scripts/test-jbr-skia-api.sh` to rebuild the local overlay, patch the temporary JBR API stub,
   compile `JBRSkiaApiTest`, run it headlessly, and remove the temporary desktop-overlay stub on exit; the helper
   passed end-to-end.
-- CMP full focused `JbrSkiaCommandRecorderTest` class passed after adding descriptor-handle eviction plus shader and
-  image-filter descriptor cache-reuse recorder guards: 138/138 desktop tests, zero skipped/failures/errors.
+- CMP full focused `JbrSkiaCommandRecorderTest` class passed after the refreshed source gates: 138/138 desktop tests,
+  zero skipped/failures/errors.
 - Magic Jewel RuntimeEffect source-cache eviction rows now require descriptor-handle cache-hit markers in command and
   screenshot suites. The RuntimeEffect color-filter child row keeps descriptor define/use and source-cache-hit gates,
   but not a descriptor cache-hit gate because grouped replay can legitimately produce zero child effect-handle cache
