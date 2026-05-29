@@ -376,9 +376,9 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   direct parser-test additions for blur, offset, corner/stamped path-effect, and chain path-effect descriptor bounds:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-184925/suite.tsv`.
 - The current focused RuntimeEffect parser/semantic guard refresh is `CASE_GROUPS=runtime-effect-invalid`, which passed
-  62/62 with `fallback_sum=56`, six intentional unsupported-picture rows, 7,511 JBR picture frames, and zero JBR
+  62/62 with `fallback_sum=56`, six intentional unsupported-picture rows, 5,670 JBR picture frames, and zero JBR
   command frames across source, SKSL, uniform, child, named-count, compile/build, and child-type bounds:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-213510/suite.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-164124/suite.tsv`.
 - The current quick happy-path command replay checkpoint is `CASE_GROUPS=smoke`, which passed 6/6 with no fallback,
   no unsupported rows, no picture fallback, and 7,759 JBR command frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-130948/suite.tsv`.

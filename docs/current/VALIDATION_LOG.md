@@ -506,11 +506,11 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-205626/suite.tsv`.
 - Magic Jewel focused command-probe `CASE_GROUPS=runtime-effect-invalid` passed as the current RuntimeEffect
   parser/schema guard checkpoint. Aggregate: 62/62 passed, `fallback_sum=56`, `unsupported_rows=6`,
-  `jbr_picture_frames=7511`, and `jbr_command_frames=0`. The six unsupported rows are the intentional invalid
+  `jbr_picture_frames=5670`, and `jbr_command_frames=0`. The six unsupported rows are the intentional invalid
   uniform, child, and nested-child schema fallbacks for shader and color-filter RuntimeEffect descriptors; all other
-  metadata/source/count/name/index/compile/build/child-type rows used structured command fallback. The run was 379M
-  under Magic Jewel `out`, with `out` at 38G and the volume at about 366Gi free after completion. Suite:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-213510/suite.tsv`.
+  metadata/source/count/name/index/compile/build/child-type rows used structured command fallback. The run was 241M
+  under Magic Jewel `out`, with `out` at 49G and the volume at about 312Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-164124/suite.tsv`.
 - Magic Jewel command-probe quick-group coverage now spans every resolved default case. `LIST_UNGROUPED_CASES=true`
   returns no rows after adding the supported surface/transform/UI, shader-rendering, shader-composition/RuntimeEffect,
   core-effects, graphics-layer-extras, and saveLayer/shader-fallback quick groups. `LIST_CASE_GROUP_COUNTS=true`
