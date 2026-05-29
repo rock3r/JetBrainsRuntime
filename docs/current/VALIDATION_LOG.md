@@ -103,13 +103,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   Magic Jewel `out`, with `out` at 46G and the volume at about 328Gi free after completion. Matrix:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260529-091159/matrix.tsv`.
 - Magic Jewel full default screenshot parity passed after the latest command-probe, compatibility, and artifact
-  refreshes. Aggregate: 106/106 passed, `fallback_sum=12`, `jbr_picture_frames=0`, `jbr_command_frames=110255`,
+  refreshes. Aggregate: 106/106 passed, `fallback_sum=11`, `jbr_picture_frames=0`, `jbr_command_frames=111257`,
   average pixel delta `2.158`, average `bad_pixel_ratio=0.05158`, average header-button
   `bad_pixel_ratio=0.00594`, average Compose-canvas `bad_pixel_ratio=0.07632`, average bottom-label
   `bad_pixel_ratio=0.11884`, and average paragraph-probe `bad_pixel_ratio=0.08648`. The TSV has 107 lines including
-  the header. The run was 571M under Magic Jewel `out`, with `out` at 43G and the volume at about 333Gi free after
+  the header. The run was 518M under Magic Jewel `out`, with `out` at 47G and the volume at about 335Gi free after
   completion. Suite:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260529-001725/suite.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260529-091416/suite.tsv`.
 - Magic Jewel full default benchmark suite passed after the latest screenshot parity refresh. Aggregate: 5/5 passed,
   `fallback_sum=0`, 85 old-side CPU samples, 87 new-side CPU samples, one picture-FPS row at `241.2`, command-FPS row
   total `850.8`, and `jbr_command_frames=17016`. The TSV has 6 lines including the header. The run was 55M under

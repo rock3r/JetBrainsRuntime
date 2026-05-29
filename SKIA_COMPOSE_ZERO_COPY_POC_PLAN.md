@@ -102,9 +102,9 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   frames, and `missing-public-api` fell back exactly once:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260528-173847/matrix.tsv`.
 - The latest full default screenshot parity checkpoint passed after the command-probe, compatibility, and artifact
-  refreshes. Aggregate: 106/106 passed, `fallback_sum=12`, zero JBR picture frames, 110,255 JBR command frames,
+  refreshes. Aggregate: 106/106 passed, `fallback_sum=11`, zero JBR picture frames, 111,257 JBR command frames,
   average `bad_pixel_ratio=0.05158`, and 107 TSV lines including the header:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260529-001725/suite.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260529-091416/suite.tsv`.
 - Current no-run discovery helpers cover the command-probe, screenshot parity, compatibility matrix, artifact matrix,
   and benchmark suite loops. Use `LIST_CASES=true` / `LIST_CASE_COUNT=true` where available for exact row discovery;
   command and screenshot suites also expose `CASE_GROUPS=...` plus group listing/count helpers.
