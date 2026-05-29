@@ -205,11 +205,11 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-104223/suite.tsv`.
 - Magic Jewel focused command-probe `CASE_GROUPS=save-layer-shader-fallbacks` passed in command-marker-only mode after a
   screenshot assertion failure independent of command replay. Aggregate: 7/7 passed, `fallback_sum=0`,
-  `unsupported_rows=5`, `jbr_picture_frames=3149`, and `jbr_command_frames=674`. The supported saveLayer filter and
+  `unsupported_rows=5`, `jbr_picture_frames=6640`, and `jbr_command_frames=2760`. The supported saveLayer filter and
   blend-mode rows stayed on command replay; the raw color-filter, opaque/composite/picture shader, and invalid-gradient
-  sentinels used intentional unsupported picture replay. The run was 12M under Magic Jewel `out`, with `out` at 38G and
-  the volume at about 365Gi free after completion. Suite:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260528-004224/suite.tsv`.
+  sentinels used intentional unsupported picture replay. The TSV has 8 lines including the header. The run was 29M
+  under Magic Jewel `out`, with `out` at 51G and the volume at about 307Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-221530/suite.tsv`.
 - Magic Jewel focused screenshot parity `CASE_GROUPS=core-drawing` passed through the new visual group path. Aggregate:
   16/16 passed, `fallback_sum=0`, `jbr_picture_frames=0`, `jbr_command_frames=13217`, average pixel delta `2.175`,
   and average `bad_pixel_ratio=0.05197`. This refreshes the core visual group after the latest command-probe
@@ -517,11 +517,11 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   core-effects, graphics-layer-extras, and saveLayer/shader-fallback quick groups. `LIST_CASE_GROUP_COUNTS=true`
   reports the new group sizes as 11, 13, 15, 7, 14, and 7 rows, respectively.
 - Magic Jewel exact saveLayer/shader-fallback uncovered command-probe tail passed. Aggregate: 7/7 passed,
-  `fallback_sum=0`, `unsupported_rows=5`, `jbr_picture_frames=4757`, and `jbr_command_frames=1765`. It covered
+  `fallback_sum=0`, `unsupported_rows=5`, `jbr_picture_frames=6640`, and `jbr_command_frames=2760`. It covered
   saveLayer filter and blend-mode replay, saveLayer raw color-filter fallback, opaque/composite opaque/picture shader
-  fallbacks, and invalid-gradient fallback. The TSV has 8 lines including the header. The run was 23M under Magic
-  Jewel `out`, with `out` at 47G and the volume at about 334Gi free after completion. Suite:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-114732/suite.tsv`.
+  fallbacks, and invalid-gradient fallback. The TSV has 8 lines including the header. The run was 29M under Magic
+  Jewel `out`, with `out` at 51G and the volume at about 307Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-221530/suite.tsv`.
 - Magic Jewel focused command-probe `CASE_GROUPS=graphics-layer-extras` passed as the current graphics-layer extras
   command checkpoint. Aggregate: 14/14 passed, `fallback_sum=0`, `unsupported_rows=2`, `jbr_picture_frames=2458`,
   and `jbr_command_frames=18868`. It covered graphics-layer color-matrix and render-effect resize/forced-context
