@@ -72,6 +72,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   came from the invalid image-cache-clear record-flags row. The TSV has 28 lines including the header. The run was
   105M under Magic Jewel `out`, with `out` at 44G and the volume at about 341Gi free after completion. Suite:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-025555/suite.tsv`.
+- Magic Jewel focused `color-filters` command-probe group passed after the image-handle invalid guardrails. Command:
+  `CASE_GROUPS=color-filters ./scripts/jbr-skia-command-probe-suite.sh`. Aggregate: 10/10 passed, `fallback_sum=0`,
+  `unsupported_rows=1`, `jbr_picture_frames=945`, and `jbr_command_frames=14978`. The unsupported row was the expected
+  raw blend color-filter fallback path. The TSV has 11 lines including the header. The run was 50M under Magic Jewel
+  `out`, with `out` at 44G and the volume at about 332Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-031149/suite.tsv`.
 - Magic Jewel compatibility matrix passed after the latest full command-probe consolidation. Aggregate: 57/57 passed,
   `fallback_sum=56`, `jbr_command_frames=340`, and `background_window=true` on every row. The only command frames came
   from the happy path; all ABI, native ABI, command-capability, high-capability, feature-capability, and public API
