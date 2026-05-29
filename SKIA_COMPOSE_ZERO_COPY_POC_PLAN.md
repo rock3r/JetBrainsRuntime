@@ -61,6 +61,9 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - The focused `native-text-invalid` command-probe group passed as the next small guardrail batch. Aggregate: 11/11
   passed, `fallback_sum=11`, `unsupported_rows=0`, zero picture frames, and 1,895 command frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-015408/suite.tsv`.
+- The focused `primitive-invalid` command-probe group passed after `native-text-invalid`. Aggregate: 13/13 passed,
+  `fallback_sum=13`, `unsupported_rows=0`, zero picture frames, and zero command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-020114/suite.tsv`.
 - The previous full default command-probe checkpoint after the focused color-filter, RuntimeEffect,
   descriptor-lifecycle, and smoke refreshes passed 487/487 with `fallback_sum=350`, `unsupported_rows=26`,
   `picture_frames=24888`, and `command_frames=140464`:

@@ -54,6 +54,9 @@ This is the small working roadmap for the current PoC. The full historical check
 - Magic Jewel focused command-probe `CASE_GROUPS=native-text-invalid` passed: 11/11 passed, `fallback_sum=11`,
   `unsupported_rows=0`, `jbr_picture_frames=0`, `jbr_command_frames=1895`, suite
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-015408/suite.tsv`.
+- Magic Jewel focused command-probe `CASE_GROUPS=primitive-invalid` passed: 13/13 passed, `fallback_sum=13`,
+  `unsupported_rows=0`, `jbr_picture_frames=0`, `jbr_command_frames=0`, suite
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-020114/suite.tsv`.
 - Magic Jewel compatibility matrix passed after the full command-probe consolidation refresh: 57/57 passed,
   `fallback_sum=56`, `jbr_command_frames=340`, background-window mode true for all rows, matrix
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260528-234902/matrix.tsv`.

@@ -42,6 +42,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   lines including the header. The run was 45M under Magic Jewel `out`, with `out` at 43G and the volume at about
   342Gi free after completion. Suite:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-015408/suite.tsv`.
+- Magic Jewel focused `primitive-invalid` command-probe group passed after `native-text-invalid`. Command:
+  `CASE_GROUPS=primitive-invalid ./scripts/jbr-skia-command-probe-suite.sh`. Aggregate: 13/13 passed,
+  `fallback_sum=13`, `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=0`. The TSV has 14 lines
+  including the header. The run was 52M under Magic Jewel `out`, with `out` at 43G and the volume at about 342Gi free
+  after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-020114/suite.tsv`.
 - Magic Jewel compatibility matrix passed after the latest full command-probe consolidation. Aggregate: 57/57 passed,
   `fallback_sum=56`, `jbr_command_frames=340`, and `background_window=true` on every row. The only command frames came
   from the happy path; all ABI, native ABI, command-capability, high-capability, feature-capability, and public API
