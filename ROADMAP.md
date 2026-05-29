@@ -168,8 +168,8 @@ This is the small working roadmap for the current PoC. The full historical check
   `fallback_sum=0`, one old/new CPU sample per row, and `jbr_command_frames=1079`, suite
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-benchmark-suite/20260526-093925/suite.tsv`.
 - Magic Jewel full default benchmark suite passed after the screenshot parity refresh: 5/5 passed,
-  `fallback_sum=0`, `jbr_command_frames=17016`, picture FPS `241.2`, and command FPS row total `850.8`, suite
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-benchmark-suite/20260529-011527/suite.tsv`.
+  `fallback_sum=0`, `jbr_command_frames=11221`, picture FPS `160.4`, and command FPS row total `561.1`, suite
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-benchmark-suite/20260529-101522/suite.tsv`.
 - Skiko full focused `JbrSkiaInteropTest` class passed after the refreshed broad command/visual/benchmark validations:
   `./gradlew --no-daemon --no-configuration-cache :awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`.
 - JBR parser-only `JBRSkiaApiTest` passed via Magic Jewel's helper against freshly rebuilt local overlay artifacts and

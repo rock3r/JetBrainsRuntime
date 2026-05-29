@@ -109,8 +109,8 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   and benchmark suite loops. Use `LIST_CASES=true` / `LIST_CASE_COUNT=true` where available for exact row discovery;
   command and screenshot suites also expose `CASE_GROUPS=...` plus group listing/count helpers.
 - The latest full default benchmark checkpoint passed after the screenshot parity refresh. Aggregate: 5/5 passed,
-  `fallback_sum=0`, 85 old-side CPU samples, 87 new-side CPU samples, and `jbr_command_frames=17016`:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-benchmark-suite/20260529-011527/suite.tsv`.
+  `fallback_sum=0`, 84 old-side CPU samples, 86 new-side CPU samples, and `jbr_command_frames=11221`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-benchmark-suite/20260529-101522/suite.tsv`.
 - The latest Skiko focused source-side gate passed after the refreshed broad command/visual/benchmark validations:
   `./gradlew --no-daemon --no-configuration-cache :awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`.
 - The latest JBR parser/API-side gate passed with Magic Jewel's helper after rebuilding local overlay artifacts and
