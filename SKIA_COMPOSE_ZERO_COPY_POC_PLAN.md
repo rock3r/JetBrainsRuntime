@@ -142,10 +142,10 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-211340/suite.tsv` and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260527-103209/suite.tsv`.
 - The latest focused core drawing/effect checkpoints passed: command `CASE_GROUPS=core-effects` covered 7 rows with
-  `fallback_sum=0`, 2 unsupported fallback-sentinel rows, 1,720 picture frames, and 5,244 JBR command frames; screenshot
+  `fallback_sum=0`, 2 unsupported fallback-sentinel rows, 2,724 picture frames, and 7,649 JBR command frames; screenshot
   `CASE_GROUPS=core-drawing` covered 16 rows with zero fallback, zero picture frames, 13,217 JBR command frames, and
   average `bad_pixel_ratio=0.05197`:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-104223/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-215950/suite.tsv` and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260527-104710/suite.tsv`.
 - The latest focused descriptor lifecycle command/visual checkpoints passed: command
   `CASE_GROUPS=descriptor-lifecycle` covered 18 rows with zero fallback, zero picture frames, and 23,175 JBR command
@@ -219,10 +219,10 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   render-effect combinations, and the near-camera chained render-effect variant:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-113727/suite.tsv`.
 - The current exact core effects uncovered command-probe checkpoint passed 7/7, with `fallback_sum=0`, two intentional
-  unsupported fallback rows, 1,972 JBR picture frames, and 6,196 JBR command frames across stroked gradients, image
+  unsupported fallback rows, 2,724 JBR picture frames, and 7,649 JBR command frames across stroked gradients, image
   filters, descriptor path effects, path-effect color-filter fallback, raw discrete path-effect fallback, vertices,
   and blend-mode rendering:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-113217/suite.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-215950/suite.tsv`.
 - The current exact shader composition and RuntimeEffect uncovered command-probe checkpoint passed 15/15, with
   `fallback_sum=0`, two intentional unsupported fallback rows, 2,386 JBR picture frames, and 16,985 JBR command frames
   across image/composite/transformed shaders, shader color-filter combinations, RuntimeEffect shader and color-filter

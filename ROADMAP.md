@@ -128,9 +128,9 @@ This is the small working roadmap for the current PoC. The full historical check
   `fallback_sum=2`, `jbr_picture_frames=0`, `jbr_command_frames=9822`, average `bad_pixel_ratio=0.04758`, suite
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260527-110758/suite.tsv`.
 - Magic Jewel focused command-probe `CASE_GROUPS=core-effects` passed as the paired command refresh for core visual
-  drawing/effect coverage: 7/7 passed, `fallback_sum=0`, `unsupported_rows=2`, `jbr_picture_frames=1720`,
-  `jbr_command_frames=5244`, suite
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-104223/suite.tsv`.
+  drawing/effect coverage: 7/7 passed, `fallback_sum=0`, `unsupported_rows=2`, `jbr_picture_frames=2724`,
+  `jbr_command_frames=7649`, suite
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-215950/suite.tsv`.
 - Magic Jewel focused command-probe `CASE_GROUPS=save-layer-shader-fallbacks` passed in command-marker-only mode after a
   screenshot assertion failure independent of command replay: 7/7 passed, `fallback_sum=0`, `unsupported_rows=5`,
   `jbr_picture_frames=3149`, `jbr_command_frames=674`, suite
@@ -272,8 +272,8 @@ This is the small working roadmap for the current PoC. The full historical check
   `unsupported_rows=2`, `jbr_picture_frames=1956`, `jbr_command_frames=15490`, suite
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-113727/suite.tsv`.
 - Magic Jewel exact core effects uncovered command-probe slice passed: 7/7 passed, `fallback_sum=0`,
-  `unsupported_rows=2`, `jbr_picture_frames=1972`, `jbr_command_frames=6196`, suite
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-113217/suite.tsv`.
+  `unsupported_rows=2`, `jbr_picture_frames=2724`, `jbr_command_frames=7649`, suite
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-215950/suite.tsv`.
 - Magic Jewel exact shader composition and RuntimeEffect uncovered command-probe slice passed: 15/15 passed,
   `fallback_sum=0`, `unsupported_rows=2`, `jbr_picture_frames=2386`, `jbr_command_frames=16985`, suite
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-214834/suite.tsv`.
