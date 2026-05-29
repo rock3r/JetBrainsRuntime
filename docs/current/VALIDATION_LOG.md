@@ -422,13 +422,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   free after completion. Suite:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260527-130309/suite.tsv`.
 - Magic Jewel focused command-probe `CASE_GROUPS=shader-composition-runtime` passed as the current shader composition
-  and RuntimeEffect command checkpoint. Aggregate: 15/15 passed, `fallback_sum=0`, `unsupported_rows=3`,
-  `jbr_picture_frames=2068`, and `jbr_command_frames=19883`. The unsupported rows are the intentional raw
-  RuntimeEffect shader and raw RuntimeEffect color-filter fallback sentinels plus the interop-scope marker on the
-  descriptor-backed RuntimeEffect shader/color-filter row; descriptor-backed RuntimeEffect and shader-composition rows
-  stayed on command replay. The run was 77M under Magic Jewel `out`, with `out` at 34G and the volume at about 383Gi
-  free after completion. Suite:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-122909/suite.tsv`.
+  and RuntimeEffect command checkpoint. Aggregate: 15/15 passed, `fallback_sum=0`, `unsupported_rows=2`,
+  `jbr_picture_frames=2386`, and `jbr_command_frames=16985`. The unsupported rows are the intentional raw
+  RuntimeEffect shader and raw RuntimeEffect color-filter fallback sentinels; descriptor-backed RuntimeEffect and
+  shader-composition rows stayed on command replay. The TSV has 16 lines including the header. The run was 71M under
+  Magic Jewel `out`, with `out` at 51G and the volume at about 317Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-214834/suite.tsv`.
 - Magic Jewel focused screenshot parity `CASE_GROUPS=runtime-effect` passed as the paired RuntimeEffect visual
   checkpoint after the shader composition command checkpoint. Aggregate: 14/14 passed, `fallback_sum=2`,
   `jbr_picture_frames=0`, `jbr_command_frames=12380`, average pixel delta `2.054`, average
@@ -537,12 +536,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   `out`, with `out` at 47G and the volume at about 334Gi free after completion. Suite:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-113217/suite.tsv`.
 - Magic Jewel exact shader composition and RuntimeEffect uncovered command-probe slice passed. Aggregate: 15/15
-  passed, `fallback_sum=0`, `unsupported_rows=2`, `jbr_picture_frames=2318`, and `jbr_command_frames=17754`. It
+  passed, `fallback_sum=0`, `unsupported_rows=2`, `jbr_picture_frames=2386`, and `jbr_command_frames=16985`. It
   covered image/composite/transformed shaders, shader color-filter combinations, RuntimeEffect shader and color-filter
   replay, pure/uniform/child RuntimeEffects, and raw RuntimeEffect shader/color-filter fallback sentinels. The TSV has
-  16 lines including the header. The run was 75M under Magic Jewel `out`, with `out` at 47G and the volume at about
-  334Gi free after completion. Suite:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-112213/suite.tsv`.
+  16 lines including the header. The run was 71M under Magic Jewel `out`, with `out` at 51G and the volume at about
+  317Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-214834/suite.tsv`.
 - Magic Jewel focused command-probe `CASE_GROUPS=shader-rendering` passed as the current shader-rendering command
   checkpoint. Aggregate: 13/13 passed, `fallback_sum=0`, `unsupported_rows=8`, `jbr_picture_frames=9129`, and
   `jbr_command_frames=5472`. It covered forced-context dynamic image-cache replay, image path-effect fallback, image

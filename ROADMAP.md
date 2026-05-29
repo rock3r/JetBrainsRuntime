@@ -211,9 +211,9 @@ This is the small working roadmap for the current PoC. The full historical check
   `bad_pixel_ratio=0.05078`, suite
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260527-130309/suite.tsv`.
 - Magic Jewel focused command-probe `CASE_GROUPS=shader-composition-runtime` passed as the current shader composition
-  and RuntimeEffect command checkpoint: 15/15 passed, `fallback_sum=0`, `unsupported_rows=3`,
-  `jbr_picture_frames=2068`, `jbr_command_frames=19883`, suite
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-122909/suite.tsv`.
+  and RuntimeEffect command checkpoint: 15/15 passed, `fallback_sum=0`, `unsupported_rows=2`,
+  `jbr_picture_frames=2386`, `jbr_command_frames=16985`, suite
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-214834/suite.tsv`.
 - Magic Jewel focused screenshot parity `CASE_GROUPS=runtime-effect` passed as the paired RuntimeEffect visual
   checkpoint: 14/14 passed, `fallback_sum=2`, `jbr_picture_frames=0`, `jbr_command_frames=12380`, average
   `bad_pixel_ratio=0.04879`, suite
@@ -275,8 +275,8 @@ This is the small working roadmap for the current PoC. The full historical check
   `unsupported_rows=2`, `jbr_picture_frames=1972`, `jbr_command_frames=6196`, suite
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-113217/suite.tsv`.
 - Magic Jewel exact shader composition and RuntimeEffect uncovered command-probe slice passed: 15/15 passed,
-  `fallback_sum=0`, `unsupported_rows=2`, `jbr_picture_frames=2318`, `jbr_command_frames=17754`, suite
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-112213/suite.tsv`.
+  `fallback_sum=0`, `unsupported_rows=2`, `jbr_picture_frames=2386`, `jbr_command_frames=16985`, suite
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-214834/suite.tsv`.
 - Magic Jewel focused command-probe `CASE_GROUPS=shader-rendering` passed: 13/13 passed, `fallback_sum=0`,
   `unsupported_rows=8`, `jbr_picture_frames=9129`, `jbr_command_frames=5472`, suite
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-213937/suite.tsv`.
