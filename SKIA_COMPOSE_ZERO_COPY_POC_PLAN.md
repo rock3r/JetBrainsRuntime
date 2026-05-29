@@ -208,10 +208,10 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   returns no rows after adding supported surface/transform/UI, shader-rendering, shader-composition/RuntimeEffect,
   core-effects, graphics-layer-extras, and saveLayer/shader-fallback groups.
 - The current exact saveLayer/shader-fallback uncovered command-probe tail passed 7/7, with `fallback_sum=0`, five
-  intentional unsupported fallback rows, 4,933 JBR picture frames, and 2,579 JBR command frames across saveLayer filter
+  intentional unsupported fallback rows, 4,757 JBR picture frames, and 1,765 JBR command frames across saveLayer filter
   and blend-mode replay, saveLayer raw color-filter fallback, opaque/composite opaque/picture shader fallbacks, and
   invalid-gradient fallback:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-120619/suite.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-114732/suite.tsv`.
 - The current focused graphics-layer extras command-probe checkpoint is `CASE_GROUPS=graphics-layer-extras`, which
   passed 14/14 with `fallback_sum=0`, two intentional unsupported fallback rows, 1,956 JBR picture frames, and 15,490
   JBR command frames across graphics-layer color-matrix/render-effect resize and forced-context lifecycle rows, raw

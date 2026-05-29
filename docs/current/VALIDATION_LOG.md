@@ -516,11 +516,11 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   core-effects, graphics-layer-extras, and saveLayer/shader-fallback quick groups. `LIST_CASE_GROUP_COUNTS=true`
   reports the new group sizes as 11, 13, 15, 7, 14, and 7 rows, respectively.
 - Magic Jewel exact saveLayer/shader-fallback uncovered command-probe tail passed. Aggregate: 7/7 passed,
-  `fallback_sum=0`, `unsupported_rows=5`, `jbr_picture_frames=4933`, and `jbr_command_frames=2579`. It covered
+  `fallback_sum=0`, `unsupported_rows=5`, `jbr_picture_frames=4757`, and `jbr_command_frames=1765`. It covered
   saveLayer filter and blend-mode replay, saveLayer raw color-filter fallback, opaque/composite opaque/picture shader
-  fallbacks, and invalid-gradient fallback. The run was 26M under Magic Jewel `out`, with `out` at 34G and the volume
-  at about 383Gi free after completion. Suite:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-120619/suite.tsv`.
+  fallbacks, and invalid-gradient fallback. The TSV has 8 lines including the header. The run was 23M under Magic
+  Jewel `out`, with `out` at 47G and the volume at about 334Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-114732/suite.tsv`.
 - Magic Jewel focused command-probe `CASE_GROUPS=graphics-layer-extras` passed as the current graphics-layer extras
   command checkpoint. Aggregate: 14/14 passed, `fallback_sum=0`, `unsupported_rows=2`, `jbr_picture_frames=1956`,
   and `jbr_command_frames=15490`. It covered graphics-layer color-matrix and render-effect resize/forced-context

@@ -266,8 +266,8 @@ This is the small working roadmap for the current PoC. The full historical check
   returns no rows after adding supported surface/transform/UI, shader-rendering, shader-composition/RuntimeEffect,
   core-effects, graphics-layer-extras, and saveLayer/shader-fallback groups.
 - Magic Jewel exact saveLayer/shader-fallback uncovered command-probe tail passed: 7/7 passed, `fallback_sum=0`,
-  `unsupported_rows=5`, `jbr_picture_frames=4933`, `jbr_command_frames=2579`, suite
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-120619/suite.tsv`.
+  `unsupported_rows=5`, `jbr_picture_frames=4757`, `jbr_command_frames=1765`, suite
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-114732/suite.tsv`.
 - Magic Jewel focused command-probe `CASE_GROUPS=graphics-layer-extras` passed: 14/14 passed, `fallback_sum=0`,
   `unsupported_rows=2`, `jbr_picture_frames=1956`, `jbr_command_frames=15490`, suite
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-113727/suite.tsv`.
