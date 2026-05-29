@@ -229,11 +229,11 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   replay, pure/uniform/child RuntimeEffects, and raw RuntimeEffect shader/color-filter fallback sentinels:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-112213/suite.tsv`.
 - The current focused shader-rendering command-probe checkpoint is `CASE_GROUPS=shader-rendering`, which passed 13/13
-  with `fallback_sum=0`, eight intentional unsupported fallback rows, 8,059 JBR picture frames, and 5,487 JBR command
+  with `fallback_sum=0`, eight intentional unsupported fallback rows, 9,129 JBR picture frames, and 5,472 JBR command
   frames across forced-context dynamic images, image path-effect fallback, image shader replay, descriptor
   stroke-shader fallback, gradient/noise/turbulence shader descriptors, and raw image/gradient/noise/turbulence
   fallback sentinels:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-111324/suite.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-213937/suite.tsv`.
 - The current focused surface/transform/UI command-probe checkpoint passed 11/11 in command-marker-only mode after a
   macOS screenshot-capture failure independent of command replay, with `fallback_sum=0`, no unsupported rows, zero JBR
   picture frames, and 13,359 JBR command frames across native bridge loading, drawPoints lines/dots, concat/skew
