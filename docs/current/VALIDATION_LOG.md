@@ -328,11 +328,11 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260528-175750/suite.tsv`.
 - Magic Jewel focused descriptor-lifecycle command checkpoint passed after the shader command/visual refresh:
   `CASE_GROUPS=descriptor-lifecycle` covered 18/18 rows with `fallback_sum=0`, `unsupported_rows=0`,
-  `jbr_picture_frames=0`, and `jbr_command_frames=18116`. The run covered descriptor eviction, resize and forced
+  `jbr_picture_frames=0`, and `jbr_command_frames=26336`. The run covered descriptor eviction, resize and forced
   destination-context redefinition for effect/shader/color/noise/turbulence/composite descriptors, stable
   RuntimeEffect color filters, and RuntimeEffect source-cache eviction. The TSV has 19 lines including the header. The
-  run was 265M under Magic Jewel `out`, with `out` at 40G and the volume at about 351Gi free after completion. Suite:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260528-180839/suite.tsv`.
+  run was 270M under Magic Jewel `out`, with `out` at 47G and the volume at about 335Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-102539/suite.tsv`.
 - Magic Jewel paired focused descriptor-lifecycle screenshot parity passed: `CASE_GROUPS=descriptor-lifecycle`
   covered 6/6 rows with `fallback_sum=1`, `jbr_picture_frames=0`, `jbr_command_frames=3624`, average pixel delta
   `2.127`, average `bad_pixel_ratio=0.05078`, average header-button `bad_pixel_ratio=0.00677`, average Compose-canvas
