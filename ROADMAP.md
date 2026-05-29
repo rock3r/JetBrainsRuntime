@@ -354,12 +354,12 @@ This is the small working roadmap for the current PoC. The full historical check
   The six unsupported rows are the intentional shader/color-filter invalid uniform, child, and nested-child schema
   cases; the remaining malformed rows failed before replay with structured fallback markers.
 - Magic Jewel supported command-replay refresh passed in command-marker-only mode while local macOS screenshot capture
-  remains broken independently of replay: `smoke` 6/6 with `jbr_command_frames=7336`, `color-filters` 10/10 with
+  remains broken independently of replay: `smoke` 6/6 with `jbr_command_frames=8392`, `color-filters` 10/10 with
   `unsupported_rows=1`, `jbr_picture_frames=979`, and `jbr_command_frames=11118`, `descriptor-lifecycle` 18/18 with
   `jbr_command_frames=20144`, `native-text` 14/14 with `jbr_command_frames=15012`, and `graphics-layer` 21/21 with
   `jbr_command_frames=26150`. All supported rows in these runs had `fallback_sum=0`; the single unsupported row is the
   intentional raw blend color-filter sentinel. Suites:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-063438/suite.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-203230/suite.tsv`,
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-063910/suite.tsv`,
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-064533/suite.tsv`,
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-065848/suite.tsv`, and
@@ -819,8 +819,8 @@ This is the small working roadmap for the current PoC. The full historical check
   The font-data record-flags row is recoverable after the one-shot invalid definition, accounting for the JBR command
   frames.
 - Magic Jewel `CASE_GROUPS=smoke` passed as the quick happy-path command replay check: 6/6, `fallback_sum=0`,
-  `unsupported_rows=0`, `picture_frames=0`, and `command_frames=7759`:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-130948/suite.tsv`.
+  `unsupported_rows=0`, `picture_frames=0`, and `command_frames=8392`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-203230/suite.tsv`.
 - Magic Jewel `CASE_GROUPS=stream-invalid` passed as the quick command-stream parser guard check: 8/8,
   `fallback_sum=8`, `unsupported_rows=0`, `picture_frames=0`, and `command_frames=0`:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-004208/suite.tsv`.

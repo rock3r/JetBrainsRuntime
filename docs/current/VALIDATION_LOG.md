@@ -675,13 +675,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-072243/suite.tsv`.
 - Magic Jewel supported command-replay refresh passed in command-marker-only mode while the local macOS screenshot
   capture path remains unavailable. Results: `smoke` 6/6, `fallback_sum=0`, `unsupported_rows=0`,
-  `jbr_picture_frames=0`, `jbr_command_frames=7336`; `color-filters` 10/10, `fallback_sum=0`,
+  `jbr_picture_frames=0`, `jbr_command_frames=8392`; `color-filters` 10/10, `fallback_sum=0`,
   `unsupported_rows=1`, `jbr_picture_frames=979`, `jbr_command_frames=11118`; `descriptor-lifecycle` 18/18,
   `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, `jbr_command_frames=20144`; `native-text` 14/14,
   `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, `jbr_command_frames=15012`; and
   `graphics-layer` 21/21, `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`,
   `jbr_command_frames=26150`. The only unsupported row is the intentional raw blend color-filter sentinel. Suites:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-063438/suite.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-203230/suite.tsv`,
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-063910/suite.tsv`,
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-064533/suite.tsv`,
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-065848/suite.tsv`, and
@@ -1363,9 +1363,10 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   The final font-data record-flags row intentionally recovered after the one-shot invalid definition, so it is the
   only row with JBR command frames.
 - Magic Jewel `CASE_GROUPS=smoke` passed as the quick happy-path command replay checkpoint. Aggregate: 6/6,
-  `fallback_sum=0`, `unsupported_rows=0`, `picture_frames=0`, and `command_frames=7759`. The run was 25M under Magic
-  Jewel `out`, with `out` at 35G and the volume at about 382Gi free after completion. Suite:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-130948/suite.tsv`.
+  `fallback_sum=0`, `unsupported_rows=0`, `picture_frames=0`, and `command_frames=8392`. The TSV has 7 lines
+  including the header. The run was 27M under Magic Jewel `out`, with `out` at 50G and the volume at about 319Gi free
+  after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-203230/suite.tsv`.
 - Magic Jewel `CASE_GROUPS=stream-invalid` passed as the quick command-stream parser guard checkpoint. Aggregate: 8/8,
   `fallback_sum=8`, `unsupported_rows=0`, `picture_frames=0`, and `command_frames=0`:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-004208/suite.tsv`.

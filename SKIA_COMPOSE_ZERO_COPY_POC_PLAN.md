@@ -162,11 +162,11 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   487/487 passed, `fallback_sum=350`, `unsupported_rows=26`, `picture_frames=33702`, and `command_frames=188677`:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-083629/suite.tsv`.
 - The latest supported command-replay refresh passed in command-marker-only mode while the local macOS screenshot
-  capture path remains unavailable: `smoke` 6/6 with 7,336 command frames, `color-filters` 10/10 with one intentional
+  capture path remains unavailable: `smoke` 6/6 with 8,392 command frames, `color-filters` 10/10 with one intentional
   unsupported raw blend color-filter row, 979 picture frames, and 11,118 command frames, `descriptor-lifecycle` 18/18
   with 20,144 command frames, `native-text` 14/14 with 15,012 command frames, and `graphics-layer` 21/21 with 26,150
   command frames. All supported rows stayed on command replay with `fallback_sum=0`:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-063438/suite.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-203230/suite.tsv`,
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-063910/suite.tsv`,
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-064533/suite.tsv`,
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-065848/suite.tsv`, and
@@ -381,8 +381,8 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   command frames across source, SKSL, uniform, child, named-count, compile/build, and child-type bounds:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-164124/suite.tsv`.
 - The current quick happy-path command replay checkpoint is `CASE_GROUPS=smoke`, which passed 6/6 with no fallback,
-  no unsupported rows, no picture fallback, and 7,759 JBR command frames:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-130948/suite.tsv`.
+  no unsupported rows, no picture fallback, and 8,392 JBR command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-203230/suite.tsv`.
 - The current quick command-stream parser guard checkpoint is `CASE_GROUPS=stream-invalid`, which passed 8/8 with
   `fallback_sum=8`, zero unsupported rows, and zero JBR frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-201711/suite.tsv`.
