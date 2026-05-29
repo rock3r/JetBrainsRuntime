@@ -136,10 +136,10 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260526-225720/suite.tsv`.
 - The latest focused graphics-layer command/visual checkpoints passed: command `CASE_GROUPS=graphics-layer` covered 21
-  rows with zero fallback and 35,358 JBR command frames, while screenshot
+  rows with zero fallback, zero picture frames, and 28,545 JBR command frames, while screenshot
   `CASE_GROUPS=graphics-layer-clip-shadow-transform` covered 14 clip/shadow/3D rows with zero fallback, zero picture
   frames, 14,847 JBR command frames, and average `bad_pixel_ratio=0.05296`:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-222040/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-103850/suite.tsv` and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260527-103209/suite.tsv`.
 - The latest focused core drawing/effect checkpoints passed: command `CASE_GROUPS=core-effects` covered 7 rows with
   `fallback_sum=0`, 2 unsupported fallback-sentinel rows, 1,720 picture frames, and 5,244 JBR command frames; screenshot
