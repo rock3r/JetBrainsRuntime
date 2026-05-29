@@ -213,11 +213,11 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   invalid-gradient fallback:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-120619/suite.tsv`.
 - The current focused graphics-layer extras command-probe checkpoint is `CASE_GROUPS=graphics-layer-extras`, which
-  passed 14/14 with `fallback_sum=0`, two intentional unsupported fallback rows, 2,207 JBR picture frames, and 20,463
+  passed 14/14 with `fallback_sum=0`, two intentional unsupported fallback rows, 1,956 JBR picture frames, and 15,490
   JBR command frames across graphics-layer color-matrix/render-effect resize and forced-context lifecycle rows, raw
   color-filter/render-effect fallback sentinels, render-effect color/blend/color-matrix combinations, offset/chained
   render-effect combinations, and the near-camera chained render-effect variant:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-223616/suite.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-113727/suite.tsv`.
 - The current exact core effects uncovered command-probe checkpoint passed 7/7, with `fallback_sum=0`, two intentional
   unsupported fallback rows, 1,972 JBR picture frames, and 6,196 JBR command frames across stroked gradients, image
   filters, descriptor path effects, path-effect color-filter fallback, raw discrete path-effect fallback, vertices,
