@@ -196,8 +196,8 @@ This is the small working roadmap for the current PoC. The full historical check
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260526-225720/suite.tsv`.
 - Magic Jewel focused command-probe `CASE_GROUPS=graphics-layer` passed as the current graphics-layer command replay
   checkpoint: 21/21 passed, `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`,
-  `jbr_command_frames=28545`, suite
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-103850/suite.tsv`.
+  `jbr_command_frames=27255`, suite
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-211340/suite.tsv`.
 - Magic Jewel focused screenshot parity `CASE_GROUPS=graphics-layer-clip-shadow-transform` passed as the paired visual
   checkpoint: 14/14 passed, `fallback_sum=0`, `jbr_picture_frames=0`, `jbr_command_frames=14847`, average
   `bad_pixel_ratio=0.05296`, suite
@@ -357,13 +357,13 @@ This is the small working roadmap for the current PoC. The full historical check
   remains broken independently of replay: `smoke` 6/6 with `jbr_command_frames=8392`, `color-filters` 10/10 with
   `unsupported_rows=1`, `jbr_picture_frames=1047`, and `jbr_command_frames=13204`, `descriptor-lifecycle` 18/18 with
   `jbr_command_frames=23175`, `native-text` 14/14 with `jbr_command_frames=16132`, and `graphics-layer` 21/21 with
-  `jbr_command_frames=26150`. All supported rows in these runs had `fallback_sum=0`; the single unsupported row is the
+  `jbr_command_frames=27255`. All supported rows in these runs had `fallback_sum=0`; the single unsupported row is the
   intentional raw blend color-filter sentinel. Suites:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-203230/suite.tsv`,
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-203750/suite.tsv`,
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-204612/suite.tsv`,
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-210151/suite.tsv`, and
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-070741/suite.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-211340/suite.tsv`.
 - Magic Jewel small invalid-group refresh passed: `stream-invalid` 8/8, `shader-ref-invalid` 3/3,
   `fill-rect-color-filter-invalid` 5/5, and `blend-mode-invalid` 2/2. All four runs had expected fallback sums, zero
   unsupported rows, zero JBR picture frames, and zero JBR command frames. Suites:
@@ -436,8 +436,8 @@ This is the small working roadmap for the current PoC. The full historical check
   with `jbr_command_frames=6494`; all had `fallback_sum=0`, `unsupported_rows=0`, and
   `jbr_picture_frames=0`.
 - Magic Jewel `CASE_GROUPS=graphics-layer` passed as a supported graphics-layer command replay refresh: 21/21
-  passed, `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, `jbr_command_frames=23622`, suite
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-203342/suite.tsv`.
+  passed, `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, `jbr_command_frames=27255`, suite
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-211340/suite.tsv`.
 - Magic Jewel exact graphics-layer slices passed before consolidation: base/clip/blend 7/7 at
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-201824/suite.tsv`
   with `jbr_command_frames=9525`, filters/effects 5/5 at
@@ -696,8 +696,8 @@ This is the small working roadmap for the current PoC. The full historical check
   `fallback_sum=0`, `unsupported_rows=0`, `picture_frames=0`, and `command_frames=27551`:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260523-051647/suite.tsv`.
 - Magic Jewel `CASE_GROUPS=graphics-layer` passed as a focused graphics-layer transform/effect refresh: 21/21,
-  `fallback_sum=0`, `unsupported_rows=0`, `picture_frames=0`, and `command_frames=42087`:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260523-052656/suite.tsv`.
+  `fallback_sum=0`, `unsupported_rows=0`, `picture_frames=0`, and `command_frames=27255`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-211340/suite.tsv`.
 - Magic Jewel `CASE_GROUPS=gradient-path-invalid` passed as a focused gradient path parser/fallback refresh: 18/18,
   `fallback_sum=18`, `unsupported_rows=0`, `picture_frames=0`, and `command_frames=0`:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260523-054125/suite.tsv`.
@@ -787,8 +787,8 @@ This is the small working roadmap for the current PoC. The full historical check
   The command frames come from the recoverable image-cache-clear record-flags row; the other malformed rows rejected
   before replay.
 - Magic Jewel `CASE_GROUPS=graphics-layer` passed as the focused graphics-layer command replay checkpoint: 21/21,
-  `fallback_sum=0`, `unsupported_rows=0`, `picture_frames=0`, and `command_frames=30306`:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-104254/suite.tsv`.
+  `fallback_sum=0`, `unsupported_rows=0`, `picture_frames=0`, and `command_frames=27255`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-211340/suite.tsv`.
   This covers layer clips, blend/color filters, render effects, shadows, 3D rotations, scale/translate, camera, and
   pivot variants.
 - Magic Jewel `CASE_GROUPS=gradient-path-invalid` passed as the focused gradient path parser guard checkpoint: 18/18,

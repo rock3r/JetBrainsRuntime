@@ -397,11 +397,11 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260526-225720/suite.tsv`.
 - Magic Jewel focused command-probe `CASE_GROUPS=graphics-layer` passed as the current graphics-layer command replay
   checkpoint. Aggregate: 21/21 passed, `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, and
-  `jbr_command_frames=28545`. The run covered base layer replay, ModulateAlpha/Offscreen, rectangular/rounded/path
+  `jbr_command_frames=27255`. The run covered base layer replay, ModulateAlpha/Offscreen, rectangular/rounded/path
   clips and shadows, blend/color-filter/color-matrix/render-effect rows, offset/chained effects, and 3D
-  scale/rotation/near-camera/off-center-pivot transforms. The TSV has 22 lines including the header. The run was 76M
-  under Magic Jewel `out`, with `out` at 47G and the volume at about 335Gi free after completion. Suite:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-103850/suite.tsv`.
+  scale/rotation/near-camera/off-center-pivot transforms. The TSV has 22 lines including the header. The run was 75M
+  under Magic Jewel `out`, with `out` at 50G and the volume at about 318Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-211340/suite.tsv`.
 - Magic Jewel focused screenshot parity `CASE_GROUPS=graphics-layer-clip-shadow-transform` passed as the paired visual
   checkpoint for clip/shadow/3D graphics-layer replay. Aggregate: 14/14 passed, `fallback_sum=0`,
   `jbr_picture_frames=0`, `jbr_command_frames=14847`, average pixel delta `2.223`, and average
@@ -680,12 +680,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, `jbr_command_frames=23175`; `native-text` 14/14,
   `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, `jbr_command_frames=16132`; and
   `graphics-layer` 21/21, `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`,
-  `jbr_command_frames=26150`. The only unsupported row is the intentional raw blend color-filter sentinel. Suites:
+  `jbr_command_frames=27255`. The only unsupported row is the intentional raw blend color-filter sentinel. Suites:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-203230/suite.tsv`,
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-203750/suite.tsv`,
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-204612/suite.tsv`,
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-210151/suite.tsv`, and
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-070741/suite.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-211340/suite.tsv`.
 - Magic Jewel small invalid-group refresh passed for stream envelope and tiny fill/blend descriptor guards. Results:
   `stream-invalid` 8/8, `fallback_sum=8`;
   `shader-ref-invalid` 3/3, `fallback_sum=3`;
@@ -799,8 +799,8 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-204934/suite.tsv`.
 - Magic Jewel `CASE_GROUPS=graphics-layer` passed as a supported graphics-layer command replay refresh after exact
   base/clip/blend, filters/effects, and shadows/transforms slices. Aggregate: 21/21 passed, `fallback_sum=0`,
-  `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=23622`. Suite:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-203342/suite.tsv`.
+  `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=27255`. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-211340/suite.tsv`.
 - Magic Jewel exact graphics-layer shadows/transforms slice passed for shadow, round shadow, path shadow, rotation,
   scale/translate, near-camera, and off-center pivot rows. Aggregate: 9/9 passed, `fallback_sum=0`,
   `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=10778`. Suite:
@@ -1203,8 +1203,8 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   The group covers custom-font image text, generic/loaded/resource/system fonts, same-context resize, and forced
   destination-context migration.
 - Magic Jewel `CASE_GROUPS=graphics-layer` passed as a focused graphics-layer transform/effect refresh. Aggregate:
-  21/21 passed, `fallback_sum=0`, `unsupported_rows=0`, `picture_frames=0`, and `command_frames=42087`:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260523-052656/suite.tsv`.
+  21/21 passed, `fallback_sum=0`, `unsupported_rows=0`, `picture_frames=0`, and `command_frames=27255`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-211340/suite.tsv`.
   The group covers layer alpha/offscreen/clip variants, blend/color-filter/render-effect rows, shadows, rotations,
   scale/translate, near-camera, and off-center pivot replay.
 - Magic Jewel `CASE_GROUPS=gradient-path-invalid` passed as a focused gradient path parser/fallback refresh.
@@ -1329,8 +1329,10 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   The command frames come from the recoverable image-cache-clear record-flags row; the other malformed rows rejected
   before replay.
 - Magic Jewel `CASE_GROUPS=graphics-layer` passed as a focused graphics-layer command replay checkpoint. Aggregate:
-  21/21, `fallback_sum=0`, `unsupported_rows=0`, `picture_frames=0`, and `command_frames=30306`:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-104254/suite.tsv`.
+  21/21, `fallback_sum=0`, `unsupported_rows=0`, `picture_frames=0`, and `command_frames=27255`. The TSV has 22
+  lines including the header. The run was 75M under Magic Jewel `out`, with `out` at 50G and the volume at about
+  318Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-211340/suite.tsv`.
   This covers layer clips, blend/color filters, render effects, shadows, 3D rotations, scale/translate, camera, and
   pivot variants.
 - Magic Jewel `CASE_GROUPS=gradient-path-invalid` passed as a focused gradient path parser guard checkpoint. Aggregate:
