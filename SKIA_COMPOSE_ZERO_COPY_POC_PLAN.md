@@ -79,6 +79,9 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - The focused `color-filters` command-probe group passed after the image-handle invalid guardrails. Aggregate: 10/10
   passed, `fallback_sum=0`, `unsupported_rows=1`, 945 picture frames, and 14,978 command frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-031149/suite.tsv`.
+- The focused `save-layer-invalid` command-probe group passed after `color-filters`. Aggregate: 37/37 passed,
+  `fallback_sum=37`, `unsupported_rows=0`, zero picture frames, and zero command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-031820/suite.tsv`.
 - The previous full default command-probe checkpoint after the focused color-filter, RuntimeEffect,
   descriptor-lifecycle, and smoke refreshes passed 487/487 with `fallback_sum=350`, `unsupported_rows=26`,
   `picture_frames=24888`, and `command_frames=140464`:
