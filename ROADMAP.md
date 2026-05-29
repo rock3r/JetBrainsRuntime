@@ -275,8 +275,8 @@ This is the small working roadmap for the current PoC. The full historical check
   `unsupported_rows=2`, `jbr_picture_frames=2492`, `jbr_command_frames=9772`, suite
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-224656/suite.tsv`.
 - Magic Jewel exact shader composition and RuntimeEffect uncovered command-probe slice passed: 15/15 passed,
-  `fallback_sum=0`, `unsupported_rows=2`, `jbr_picture_frames=2550`, `jbr_command_frames=24094`, suite
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-225415/suite.tsv`.
+  `fallback_sum=0`, `unsupported_rows=2`, `jbr_picture_frames=2318`, `jbr_command_frames=17754`, suite
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-112213/suite.tsv`.
 - Magic Jewel focused command-probe `CASE_GROUPS=shader-rendering` passed: 13/13 passed, `fallback_sum=0`,
   `unsupported_rows=8`, `jbr_picture_frames=8059`, `jbr_command_frames=5487`, suite
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-111324/suite.tsv`.
