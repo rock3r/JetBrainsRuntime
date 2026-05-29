@@ -342,10 +342,10 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   supported saveLayer filter/blend-mode replay and raw color-filter/shader/invalid-gradient fallback sentinels:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260528-004224/suite.tsv`.
 - The current image handle/ref parser fallback checkpoint is `CASE_GROUPS=image-handles-invalid`, which passed 27/27
-  with `fallback_sum=27`, zero unsupported rows, zero JBR picture frames, and 1,109 JBR command frames across malformed
+  with `fallback_sum=27`, zero unsupported rows, zero JBR picture frames, and 1,042 JBR command frames across malformed
   image define/cache-clear/evict records, image use/use-after-evict, image-ref scalar corruption, color-filter
   image-ref/use/ref rows, and descriptor-ref scalar guards:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-192940/suite.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-185310/suite.tsv`.
 - The current descriptor handle/family parser checkpoint is `CASE_GROUPS=descriptor-handles-invalid`, which passed
   48/48 with `fallback_sum=48`, zero unsupported rows, zero JBR picture frames, and zero JBR command frames across
   undefined/evicted top-level handles, saveLayer descriptor handles, shader/effect child use-after-evict, missing
