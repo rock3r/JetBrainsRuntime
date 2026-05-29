@@ -453,9 +453,9 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 - Magic Jewel focused command-probe `CASE_GROUPS=path-invalid` passed as the current path/path-effect parser guard
   checkpoint. Aggregate: 22/22 passed, `fallback_sum=22`, `unsupported_rows=0`, `jbr_picture_frames=0`, and
   `jbr_command_frames=0`. The run covered clip/draw/stroke/shadow path verb guards plus dash path-effect interval,
-  bounds, radii, stroke metadata, phase, and interval guards. The run was 51M under Magic Jewel `out`, with `out` at
-  34G and the volume at about 377Gi free after completion. Suite:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-112747/suite.tsv`.
+  bounds, radii, stroke metadata, phase, and interval guards. The run was 43M under Magic Jewel `out`, with `out` at
+  50G and the volume at about 321Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-194915/suite.tsv`.
 - Magic Jewel focused command-probe `CASE_GROUPS=effect-descriptor-invalid` passed as the current effect descriptor
   parser guard checkpoint. Aggregate: 28/28 passed, `fallback_sum=28`, `unsupported_rows=0`,
   `jbr_picture_frames=0`, and `jbr_command_frames=0`. The run covered descriptor header/type/version/length guards,
