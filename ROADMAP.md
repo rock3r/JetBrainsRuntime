@@ -278,8 +278,8 @@ This is the small working roadmap for the current PoC. The full historical check
   `fallback_sum=0`, `unsupported_rows=2`, `jbr_picture_frames=2550`, `jbr_command_frames=24094`, suite
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-225415/suite.tsv`.
 - Magic Jewel focused command-probe `CASE_GROUPS=shader-rendering` passed: 13/13 passed, `fallback_sum=0`,
-  `unsupported_rows=8`, `jbr_picture_frames=9898`, `jbr_command_frames=9047`, suite
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-230549/suite.tsv`.
+  `unsupported_rows=8`, `jbr_picture_frames=8059`, `jbr_command_frames=5487`, suite
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-111324/suite.tsv`.
 - Magic Jewel focused command-probe `CASE_GROUPS=surface-transform-ui` passed in command-marker-only mode after a
   macOS screenshot-capture failure independent of command replay: 11/11 passed, `fallback_sum=0`,
   `unsupported_rows=0`, `jbr_picture_frames=0`, `jbr_command_frames=10163`, suite
