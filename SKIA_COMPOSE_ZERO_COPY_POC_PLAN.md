@@ -70,6 +70,9 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - The focused `effect-descriptor-invalid` command-probe group passed after `path-invalid`. Aggregate: 28/28 passed,
   `fallback_sum=28`, `unsupported_rows=0`, zero picture frames, and zero command frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-022214/suite.tsv`.
+- The focused `shader-descriptor-invalid` command-probe group passed after `effect-descriptor-invalid`. Aggregate:
+  30/30 passed, `fallback_sum=30`, `unsupported_rows=0`, zero picture frames, and zero command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-023829/suite.tsv`.
 - The previous full default command-probe checkpoint after the focused color-filter, RuntimeEffect,
   descriptor-lifecycle, and smoke refreshes passed 487/487 with `fallback_sum=350`, `unsupported_rows=26`,
   `picture_frames=24888`, and `command_frames=140464`:

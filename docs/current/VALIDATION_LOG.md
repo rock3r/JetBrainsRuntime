@@ -60,6 +60,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   including the header. The run was 114M under Magic Jewel `out`, with `out` at 43G and the volume at about 342Gi
   free after completion. Suite:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-022214/suite.tsv`.
+- Magic Jewel focused `shader-descriptor-invalid` command-probe group passed after `effect-descriptor-invalid`.
+  Command: `CASE_GROUPS=shader-descriptor-invalid ./scripts/jbr-skia-command-probe-suite.sh`. Aggregate: 30/30
+  passed, `fallback_sum=30`, `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=0`. The TSV has
+  31 lines including the header. The run was 135M under Magic Jewel `out`, with `out` at 44G and the volume at about
+  341Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-023829/suite.tsv`.
 - Magic Jewel compatibility matrix passed after the latest full command-probe consolidation. Aggregate: 57/57 passed,
   `fallback_sum=56`, `jbr_command_frames=340`, and `background_window=true` on every row. The only command frames came
   from the happy path; all ABI, native ABI, command-capability, high-capability, feature-capability, and public API
