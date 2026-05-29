@@ -122,8 +122,8 @@ This is the small working roadmap for the current PoC. The full historical check
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260526-074310/suite.tsv`.
 - Magic Jewel focused command-probe `CASE_GROUPS=native-text` passed in command-marker-only mode after a screenshot
   assertion failure independent of command replay: 14/14 passed, `fallback_sum=0`, `unsupported_rows=0`,
-  `jbr_picture_frames=0`, `jbr_command_frames=5486`, suite
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260528-001410/suite.tsv`.
+  `jbr_picture_frames=0`, `jbr_command_frames=16132`, suite
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-210151/suite.tsv`.
 - Magic Jewel focused visual `CASE_GROUPS=native-text` passed through the new screenshot group path: 14/14 passed,
   `fallback_sum=2`, `jbr_picture_frames=0`, `jbr_command_frames=9822`, average `bad_pixel_ratio=0.04758`, suite
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260527-110758/suite.tsv`.
@@ -356,13 +356,13 @@ This is the small working roadmap for the current PoC. The full historical check
 - Magic Jewel supported command-replay refresh passed in command-marker-only mode while local macOS screenshot capture
   remains broken independently of replay: `smoke` 6/6 with `jbr_command_frames=8392`, `color-filters` 10/10 with
   `unsupported_rows=1`, `jbr_picture_frames=1047`, and `jbr_command_frames=13204`, `descriptor-lifecycle` 18/18 with
-  `jbr_command_frames=23175`, `native-text` 14/14 with `jbr_command_frames=15012`, and `graphics-layer` 21/21 with
+  `jbr_command_frames=23175`, `native-text` 14/14 with `jbr_command_frames=16132`, and `graphics-layer` 21/21 with
   `jbr_command_frames=26150`. All supported rows in these runs had `fallback_sum=0`; the single unsupported row is the
   intentional raw blend color-filter sentinel. Suites:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-203230/suite.tsv`,
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-203750/suite.tsv`,
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-204612/suite.tsv`,
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-065848/suite.tsv`, and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-210151/suite.tsv`, and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-070741/suite.tsv`.
 - Magic Jewel small invalid-group refresh passed: `stream-invalid` 8/8, `shader-ref-invalid` 3/3,
   `fill-rect-color-filter-invalid` 5/5, and `blend-mode-invalid` 2/2. All four runs had expected fallback sums, zero
@@ -425,8 +425,8 @@ This is the small working roadmap for the current PoC. The full historical check
   The screenshot-enabled broad attempt was blocked at `commands-point-lines` by `screencapture` while command markers
   were healthy.
 - Magic Jewel `CASE_GROUPS=native-text` passed as a supported native text/font replay refresh: 14/14 passed,
-  `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, `jbr_command_frames=16516`, suite
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-110350/suite.tsv`.
+  `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, `jbr_command_frames=16132`, suite
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-210151/suite.tsv`.
 - Magic Jewel exact native-text slices passed before consolidation: base text 5/5 at
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-204934/suite.tsv`
   with `jbr_command_frames=5082`, resize 4/4 at
@@ -795,8 +795,8 @@ This is the small working roadmap for the current PoC. The full historical check
   `fallback_sum=18`, `unsupported_rows=0`, `picture_frames=0`, and `command_frames=0`:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-102856/suite.tsv`.
 - Magic Jewel `CASE_GROUPS=native-text` passed as the focused native text/font-data command replay checkpoint: 14/14,
-  `fallback_sum=0`, `unsupported_rows=0`, `picture_frames=0`, and `command_frames=15912`:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-101728/suite.tsv`.
+  `fallback_sum=0`, `unsupported_rows=0`, `picture_frames=0`, and `command_frames=16132`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-210151/suite.tsv`.
   This covers custom, generic, loaded-font-data, resource, system, resize, and forced-context native text rows.
 - Magic Jewel `CASE_GROUPS=color-filters` passed as the focused color-filter command replay checkpoint: 10/10,
   `fallback_sum=0`, `unsupported_rows=1`, `picture_frames=1047`, and `command_frames=13204`:
