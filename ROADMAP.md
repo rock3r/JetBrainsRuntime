@@ -83,8 +83,8 @@ This is the small working roadmap for the current PoC. The full historical check
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260529-084700/matrix.tsv`.
 - Magic Jewel artifact matrix passed on current ABI 106 local artifacts after the compatibility refresh: required rows
   2/2 passed, optional old-artifact rows skipped because no old bundle variables were set, `fallback_sum=1`,
-  `jbr_command_frames=498`, matrix
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260529-001357/matrix.tsv`.
+  `jbr_command_frames=599`, matrix
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260529-091159/matrix.tsv`.
 - The focused artifact rows also passed after fixing Magic Jewel's JBR API helper to remove its temporary
   `com.jetbrains.exported.JBRApi` desktop-overlay stub on exit: `current-all` replayed commands and
   `missing-public-api` fell back once as expected, matrix
