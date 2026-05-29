@@ -529,10 +529,11 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   was 77M under Magic Jewel `out`, with `out` at 38G and the volume at about 366Gi free after completion. Suite:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-223616/suite.tsv`.
 - Magic Jewel exact core effects uncovered command-probe slice passed. Aggregate: 7/7 passed, `fallback_sum=0`,
-  `unsupported_rows=2`, `jbr_picture_frames=2492`, and `jbr_command_frames=9772`. It covered stroked gradients,
+  `unsupported_rows=2`, `jbr_picture_frames=1972`, and `jbr_command_frames=6196`. It covered stroked gradients,
   image filters, descriptor path effects, path-effect color-filter fallback, raw discrete path-effect fallback,
-  vertices, and blend-mode rendering. Suite:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-224656/suite.tsv`.
+  vertices, and blend-mode rendering. The TSV has 8 lines including the header. The run was 26M under Magic Jewel
+  `out`, with `out` at 47G and the volume at about 334Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-113217/suite.tsv`.
 - Magic Jewel exact shader composition and RuntimeEffect uncovered command-probe slice passed. Aggregate: 15/15
   passed, `fallback_sum=0`, `unsupported_rows=2`, `jbr_picture_frames=2318`, and `jbr_command_frames=17754`. It
   covered image/composite/transformed shaders, shader color-filter combinations, RuntimeEffect shader and color-filter
