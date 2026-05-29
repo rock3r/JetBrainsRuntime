@@ -91,11 +91,11 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   free after completion. Suite:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-033938/suite.tsv`.
 - Magic Jewel compatibility matrix passed after the latest full command-probe consolidation. Aggregate: 57/57 passed,
-  `fallback_sum=56`, `jbr_command_frames=340`, and `background_window=true` on every row. The only command frames came
+  `fallback_sum=56`, `jbr_command_frames=980`, and `background_window=true` on every row. The only command frames came
   from the happy path; all ABI, native ABI, command-capability, high-capability, feature-capability, and public API
-  mismatch rows fell back exactly once. The TSV has 58 lines including the header. The run was 60M under Magic Jewel
-  `out`, with `out` at 42G and the volume at about 343Gi free after completion. Matrix:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260528-234902/matrix.tsv`.
+  mismatch rows fell back exactly once. The TSV has 58 lines including the header. The run was 86M under Magic Jewel
+  `out`, with `out` at 46G and the volume at about 337Gi free after completion. Matrix:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260529-084700/matrix.tsv`.
 - Magic Jewel artifact matrix passed on current ABI 106 local artifacts after the latest compatibility refresh.
   Required rows: `current-all` passed with no fallback and 498 JBR command frames, and `missing-public-api` passed with
   one expected public API fallback and zero command frames. The five optional old-artifact rows were recorded as skipped
