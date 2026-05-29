@@ -46,8 +46,8 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   coherent batch of sentinels has landed. The latest periodic default command-probe consolidation passed as a single
   command-marker-only full sweep after the focused descriptor, invalid, color-filter, saveLayer, and graphics-layer
   render-effect refreshes. Aggregate: 487/487 passed, `fallback_sum=350`, `unsupported_rows=26`,
-  `picture_frames=35212`, and `command_frames=194462`:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-040713/suite.tsv`.
+  `picture_frames=29771`, and `command_frames=149695`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-120117/suite.tsv`.
 - The latest exact descriptor-handle eviction command row passed after adding matching CMP recorder eviction guards.
   Aggregate: 1/1 passed, `fallback_sum=0`, `unsupported_rows=0`, zero picture frames, and 59 command frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-013713/suite.tsv`.

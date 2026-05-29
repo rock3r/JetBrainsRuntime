@@ -40,8 +40,8 @@ This is the small working roadmap for the current PoC. The full historical check
 
 - Magic Jewel full default command-probe sweep passed in command-marker-only mode after the latest focused descriptor,
   invalid, color-filter, saveLayer, and graphics-layer render-effect refreshes: 487/487 passed, `fallback_sum=350`,
-  `unsupported_rows=26`, `jbr_picture_frames=35212`, `jbr_command_frames=194462`, suite
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-040713/suite.tsv`.
+  `unsupported_rows=26`, `jbr_picture_frames=29771`, `jbr_command_frames=149695`, suite
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-120117/suite.tsv`.
 - Magic Jewel exact command-probe `CASES=commands-descriptor-eviction` passed after the CMP recorder eviction guard:
   1/1 passed, `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, `jbr_command_frames=59`, suite
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-013713/suite.tsv`.
