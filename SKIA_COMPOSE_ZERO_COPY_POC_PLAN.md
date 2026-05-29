@@ -63,7 +63,7 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-015408/suite.tsv`.
 - The focused `primitive-invalid` command-probe group passed after `native-text-invalid`. Aggregate: 13/13 passed,
   `fallback_sum=13`, `unsupported_rows=0`, zero picture frames, and zero command frames:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-020114/suite.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-200527/suite.tsv`.
 - The focused `path-invalid` command-probe group passed after `primitive-invalid`. Aggregate: 22/22 passed,
   `fallback_sum=22`, `unsupported_rows=0`, zero picture frames, and zero command frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-020918/suite.tsv`.
@@ -327,7 +327,7 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - The current primitive paint/draw parser fallback checkpoint is `CASE_GROUPS=primitive-invalid`, which passed 13/13
   with `fallback_sum=13`, zero unsupported rows, zero JBR picture frames, and zero JBR command frames across invalid
   stroke cap, transform flags, clip operation, drawPoints, and drawVertices payload guards:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-111842/suite.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-200527/suite.tsv`.
 - The current path and path-effect parser fallback checkpoint is `CASE_GROUPS=path-invalid`, which passed 22/22 with
   `fallback_sum=22`, zero unsupported rows, zero JBR picture frames, and zero JBR command frames across malformed
   clip/draw path verbs, dash path-effect line/rect/round-rect/generic-path payloads, and drawShadow path verbs:
@@ -392,7 +392,7 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-090411/suite.tsv`.
 - The current focused primitive command parser guard checkpoint is `CASE_GROUPS=primitive-invalid`, which passed 13/13
   with `fallback_sum=13`, zero unsupported rows, zero JBR picture frames, and zero JBR command frames:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-091344/suite.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-200527/suite.tsv`.
   The adjacent default-order primitive/image/path range from `commands-core-primitives` through
   `commands-point-lines` also passed 38/38 with `fallback_sum=36`, zero unsupported rows, zero JBR picture frames, and
   3,398 JBR command frames:

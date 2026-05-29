@@ -56,7 +56,7 @@ This is the small working roadmap for the current PoC. The full historical check
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-015408/suite.tsv`.
 - Magic Jewel focused command-probe `CASE_GROUPS=primitive-invalid` passed: 13/13 passed, `fallback_sum=13`,
   `unsupported_rows=0`, `jbr_picture_frames=0`, `jbr_command_frames=0`, suite
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-020114/suite.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-200527/suite.tsv`.
 - Magic Jewel focused command-probe `CASE_GROUPS=path-invalid` passed: 22/22 passed, `fallback_sum=22`,
   `unsupported_rows=0`, `jbr_picture_frames=0`, `jbr_command_frames=0`, suite
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-020918/suite.tsv`.
@@ -225,7 +225,7 @@ This is the small working roadmap for the current PoC. The full historical check
 - Magic Jewel focused command-probe `CASE_GROUPS=primitive-invalid` passed as the current primitive parser guard
   checkpoint: 13/13 passed, `fallback_sum=13`, `unsupported_rows=0`, `jbr_picture_frames=0`,
   `jbr_command_frames=0`, suite
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-111842/suite.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-200527/suite.tsv`.
 - Magic Jewel focused command-probe `CASE_GROUPS=path-invalid` passed as the current path/path-effect parser guard
   checkpoint: 22/22 passed, `fallback_sum=22`, `unsupported_rows=0`, `jbr_picture_frames=0`,
   `jbr_command_frames=0`, suite
