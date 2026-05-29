@@ -692,15 +692,16 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   `fill-rect-color-filter-invalid` 5/5, `fallback_sum=5`;
   `blend-mode-invalid` 2/2, `fallback_sum=2`. All four runs had `unsupported_rows=0`,
   `jbr_picture_frames=0`, and `jbr_command_frames=0`. Suites:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-062055/suite.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-201711/suite.tsv`,
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-062610/suite.tsv`,
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-062808/suite.tsv`, and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-063118/suite.tsv`.
 - Magic Jewel focused command-probe `CASE_GROUPS=stream-invalid` passed as the current command-stream parser guard
   checkpoint. Aggregate: 8/8 passed, `fallback_sum=8`, `unsupported_rows=0`, `jbr_picture_frames=0`, and
-  `jbr_command_frames=0`. The run was 28M under Magic Jewel `out`, with `out` at 34G and the volume at about 384Gi
+  `jbr_command_frames=0`. The TSV has 9 lines including the header. The run was 20M under Magic Jewel `out`, with
+  `out` at 50G and the volume at about 319Gi
   free after completion. Suite:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-115943/suite.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-201711/suite.tsv`.
 - Magic Jewel focused command-probe `CASE_GROUPS=blend-mode-invalid` passed as the current fill-rect blend-mode
   parser guard checkpoint. Aggregate: 2/2 passed, `fallback_sum=2`, `unsupported_rows=0`, `jbr_picture_frames=0`,
   and `jbr_command_frames=0`. The run was 4.2M under Magic Jewel `out`, with `out` at 34G and the volume at about
