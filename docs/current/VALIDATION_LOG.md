@@ -491,12 +491,14 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   under Magic Jewel `out`, with `out` at 47G and the volume at about 334Gi free after completion. Suite:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-105239/suite.tsv`.
 - Magic Jewel focused command-probe `CASE_GROUPS=save-layer-invalid` passed as the current saveLayer parser guard
-  checkpoint. Aggregate: 37/37 passed, `fallback_sum=37`, `unsupported_rows=0`, `jbr_picture_frames=0`, and
+  checkpoint. Aggregate: 37/37 passed, `fallback_sum=37`, `unsupported_rows=1`, `jbr_picture_frames=0`, and
   `jbr_command_frames=0`. The run covered saveLayer alpha, record flags, record lengths, color-filter/blend/image
   filter bounds, blend modes, and descriptor-ref record/bounds guards for color-filter, blend+color-filter, and
-  image-filter variants. The run was 149M under Magic Jewel `out`, with `out` at 37G and the volume at about 368Gi
-  free after completion. Suite:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-194753/suite.tsv`.
+  image-filter variants. The only unsupported row was the intentionally invalid
+  `commands-invalid-save-layer-blend-color-filter-height-fallback` path, with `height` and `width` markers, while
+  still taking structured fallback. The run was 87M under Magic Jewel `out`, with `out` at 50G and the volume at
+  about 322Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-175853/suite.tsv`.
 - Magic Jewel focused command-probe `CASE_GROUPS=gradient-invalid` passed as the current gradient parser guard
   checkpoint. Aggregate: 60/60 passed, `fallback_sum=60`, `unsupported_rows=0`, `jbr_picture_frames=0`, and
   `jbr_command_frames=0`. The run covered linear/radial/sweep gradient stroke width, tile mode, color-count,
