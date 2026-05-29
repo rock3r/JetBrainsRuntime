@@ -77,8 +77,8 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   passed, `fallback_sum=27`, `unsupported_rows=0`, zero picture frames, and 1,331 command frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-025555/suite.tsv`.
 - The focused `color-filters` command-probe group passed after the image-handle invalid guardrails. Aggregate: 10/10
-  passed, `fallback_sum=0`, `unsupported_rows=1`, 945 picture frames, and 14,978 command frames:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-031149/suite.tsv`.
+  passed, `fallback_sum=0`, `unsupported_rows=1`, 1,047 picture frames, and 13,204 command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-203750/suite.tsv`.
 - The focused `save-layer-invalid` command-probe group passed after `color-filters`. Aggregate: 37/37 passed,
   `fallback_sum=37`, `unsupported_rows=0`, zero picture frames, and zero command frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-031820/suite.tsv`.
@@ -163,11 +163,11 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-083629/suite.tsv`.
 - The latest supported command-replay refresh passed in command-marker-only mode while the local macOS screenshot
   capture path remains unavailable: `smoke` 6/6 with 8,392 command frames, `color-filters` 10/10 with one intentional
-  unsupported raw blend color-filter row, 979 picture frames, and 11,118 command frames, `descriptor-lifecycle` 18/18
+  unsupported raw blend color-filter row, 1,047 picture frames, and 13,204 command frames, `descriptor-lifecycle` 18/18
   with 20,144 command frames, `native-text` 14/14 with 15,012 command frames, and `graphics-layer` 21/21 with 26,150
   command frames. All supported rows stayed on command replay with `fallback_sum=0`:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-203230/suite.tsv`,
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-063910/suite.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-203750/suite.tsv`,
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-064533/suite.tsv`,
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-065848/suite.tsv`, and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-070741/suite.tsv`.
@@ -333,9 +333,9 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   clip/draw path verbs, dash path-effect line/rect/round-rect/generic-path payloads, and drawShadow path verbs:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-194915/suite.tsv`.
 - The current supported color-filter/graphics-layer replay checkpoint is `CASE_GROUPS=color-filters`, which passed
-  10/10 with no fallback, one intentional unsupported raw color-filter sentinel, 982 JBR picture frames for that row,
-  and 13,865 JBR command frames across the supported color-filter, lighting, and graphics-layer color-filter rows:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-122130/suite.tsv`.
+  10/10 with no fallback, one intentional unsupported raw color-filter sentinel, 1,047 JBR picture frames for that row,
+  and 13,204 JBR command frames across the supported color-filter, lighting, and graphics-layer color-filter rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-203750/suite.tsv`.
 - The current save-layer shader fallback checkpoint is `CASE_GROUPS=save-layer-shader-fallbacks`, which passed 7/7 in
   command-marker-only mode after a screenshot assertion failure independent of command replay, with `fallback_sum=0`,
   five intentional unsupported picture-replay rows, 3,149 JBR picture frames, and 674 JBR command frames across
@@ -401,9 +401,9 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `fallback_sum=22`, zero unsupported rows, zero JBR picture frames, and zero JBR command frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-194915/suite.tsv`.
 - The current focused color-filter command replay checkpoint is `CASE_GROUPS=color-filters`, which passed 10/10 with
-  `fallback_sum=0`, one intentional unsupported raw blend color-filter row, 1,197 JBR picture frames, and 10,861 JBR
+  `fallback_sum=0`, one intentional unsupported raw blend color-filter row, 1,047 JBR picture frames, and 13,204 JBR
   command frames across the supported descriptor and graphics-layer color-filter rows:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-100853/suite.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-203750/suite.tsv`.
 - The current focused native text/font-data command replay checkpoint is `CASE_GROUPS=native-text`, which passed 14/14
   with `fallback_sum=0`, zero unsupported rows, zero JBR picture frames, and 16,516 JBR command frames across custom,
   generic, loaded-font-data, resource, system, resize, and forced-context native text rows:

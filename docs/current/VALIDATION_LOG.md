@@ -74,10 +74,10 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-025555/suite.tsv`.
 - Magic Jewel focused `color-filters` command-probe group passed after the image-handle invalid guardrails. Command:
   `CASE_GROUPS=color-filters ./scripts/jbr-skia-command-probe-suite.sh`. Aggregate: 10/10 passed, `fallback_sum=0`,
-  `unsupported_rows=1`, `jbr_picture_frames=945`, and `jbr_command_frames=14978`. The unsupported row was the expected
-  raw blend color-filter fallback path. The TSV has 11 lines including the header. The run was 50M under Magic Jewel
-  `out`, with `out` at 44G and the volume at about 332Gi free after completion. Suite:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-031149/suite.tsv`.
+  `unsupported_rows=1`, `jbr_picture_frames=1047`, and `jbr_command_frames=13204`. The unsupported row was the
+  expected raw blend color-filter fallback path. The TSV has 11 lines including the header. The run was 44M under
+  Magic Jewel `out`, with `out` at 50G and the volume at about 319Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-203750/suite.tsv`.
 - Magic Jewel focused `save-layer-invalid` command-probe group passed after `color-filters`. Command:
   `CASE_GROUPS=save-layer-invalid ./scripts/jbr-skia-command-probe-suite.sh`. Aggregate: 37/37 passed,
   `fallback_sum=37`, `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=0`. The TSV has 38 lines
@@ -676,13 +676,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 - Magic Jewel supported command-replay refresh passed in command-marker-only mode while the local macOS screenshot
   capture path remains unavailable. Results: `smoke` 6/6, `fallback_sum=0`, `unsupported_rows=0`,
   `jbr_picture_frames=0`, `jbr_command_frames=8392`; `color-filters` 10/10, `fallback_sum=0`,
-  `unsupported_rows=1`, `jbr_picture_frames=979`, `jbr_command_frames=11118`; `descriptor-lifecycle` 18/18,
+  `unsupported_rows=1`, `jbr_picture_frames=1047`, `jbr_command_frames=13204`; `descriptor-lifecycle` 18/18,
   `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, `jbr_command_frames=20144`; `native-text` 14/14,
   `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, `jbr_command_frames=15012`; and
   `graphics-layer` 21/21, `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`,
   `jbr_command_frames=26150`. The only unsupported row is the intentional raw blend color-filter sentinel. Suites:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-203230/suite.tsv`,
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-063910/suite.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-203750/suite.tsv`,
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-064533/suite.tsv`,
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-065848/suite.tsv`, and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-070741/suite.tsv`.
@@ -1343,8 +1343,8 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-110350/suite.tsv`.
   This covers custom, generic, loaded-font-data, resource, system, resize, and forced-context native text rows.
 - Magic Jewel `CASE_GROUPS=color-filters` passed as a focused color-filter command replay checkpoint. Aggregate:
-  10/10, `fallback_sum=0`, `unsupported_rows=1`, `picture_frames=1197`, and `command_frames=10861`:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-100853/suite.tsv`.
+  10/10, `fallback_sum=0`, `unsupported_rows=1`, `picture_frames=1047`, and `command_frames=13204`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-203750/suite.tsv`.
   The single unsupported row is the intentional raw blend color-filter fallback; supported descriptor and
   graphics-layer color-filter rows replayed through JBR commands.
 - Magic Jewel `CASE_GROUPS=path-invalid` passed as a focused path/path-effect parser guard checkpoint. Aggregate:
