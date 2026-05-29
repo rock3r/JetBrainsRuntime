@@ -148,10 +148,10 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-104223/suite.tsv` and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260527-104710/suite.tsv`.
 - The latest focused descriptor lifecycle command/visual checkpoints passed: command
-  `CASE_GROUPS=descriptor-lifecycle` covered 18 rows with zero fallback, zero picture frames, and 26,336 JBR command
+  `CASE_GROUPS=descriptor-lifecycle` covered 18 rows with zero fallback, zero picture frames, and 23,175 JBR command
   frames, while screenshot `CASE_GROUPS=descriptor-lifecycle` covered 6 rows with `fallback_sum=1`, zero picture
   frames, 7,237 JBR command frames, and average `bad_pixel_ratio=0.05078`:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-102539/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-204612/suite.tsv` and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260527-130309/suite.tsv`.
 - The previous full default command-probe checkpoint passed with screenshot assertions enabled after the focused
   screenshot parity refreshes and macOS capture retry fix. Aggregate: 487/487 passed, `fallback_sum=350`,
@@ -164,11 +164,11 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - The latest supported command-replay refresh passed in command-marker-only mode while the local macOS screenshot
   capture path remains unavailable: `smoke` 6/6 with 8,392 command frames, `color-filters` 10/10 with one intentional
   unsupported raw blend color-filter row, 1,047 picture frames, and 13,204 command frames, `descriptor-lifecycle` 18/18
-  with 20,144 command frames, `native-text` 14/14 with 15,012 command frames, and `graphics-layer` 21/21 with 26,150
+  with 23,175 command frames, `native-text` 14/14 with 15,012 command frames, and `graphics-layer` 21/21 with 26,150
   command frames. All supported rows stayed on command replay with `fallback_sum=0`:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-203230/suite.tsv`,
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-203750/suite.tsv`,
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-064533/suite.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-204612/suite.tsv`,
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-065848/suite.tsv`, and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-070741/suite.tsv`.
 - The current small invalid-group refresh passed for `stream-invalid`, `shader-ref-invalid`,
@@ -308,10 +308,10 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   graphics-layer variants:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260525-152754/suite.tsv`.
 - The current focused stable descriptor lifecycle checkpoint is `CASE_GROUPS=descriptor-lifecycle`, which passed 18/18
-  with no fallback, no unsupported rows, zero JBR picture frames, and 24,188 JBR command frames across descriptor
+  with no fallback, no unsupported rows, zero JBR picture frames, and 23,175 JBR command frames across descriptor
   eviction, same-context resize/forced-context redefine, stable RuntimeEffect color-filter, and RuntimeEffect
   source-cache eviction rows:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-124935/suite.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-204612/suite.tsv`.
 - The current focused native text lifecycle checkpoint is `CASE_GROUPS=native-text`, which passed 14/14 in
   command-marker-only mode after a screenshot assertion failure independent of command replay, with no fallback, no
   unsupported rows, zero JBR picture frames, and 5,486 JBR command frames across custom-font image text,

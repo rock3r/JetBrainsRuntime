@@ -204,8 +204,8 @@ This is the small working roadmap for the current PoC. The full historical check
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260527-103209/suite.tsv`.
 - Magic Jewel focused command-probe `CASE_GROUPS=descriptor-lifecycle` passed as the current descriptor lifecycle
   command checkpoint: 18/18 passed, `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`,
-  `jbr_command_frames=26336`, suite
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-102539/suite.tsv`.
+  `jbr_command_frames=23175`, suite
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-204612/suite.tsv`.
 - Magic Jewel focused screenshot parity `CASE_GROUPS=descriptor-lifecycle` passed as the paired descriptor lifecycle
   visual checkpoint: 6/6 passed, `fallback_sum=1`, `jbr_picture_frames=0`, `jbr_command_frames=7237`, average
   `bad_pixel_ratio=0.05078`, suite
@@ -356,12 +356,12 @@ This is the small working roadmap for the current PoC. The full historical check
 - Magic Jewel supported command-replay refresh passed in command-marker-only mode while local macOS screenshot capture
   remains broken independently of replay: `smoke` 6/6 with `jbr_command_frames=8392`, `color-filters` 10/10 with
   `unsupported_rows=1`, `jbr_picture_frames=1047`, and `jbr_command_frames=13204`, `descriptor-lifecycle` 18/18 with
-  `jbr_command_frames=20144`, `native-text` 14/14 with `jbr_command_frames=15012`, and `graphics-layer` 21/21 with
+  `jbr_command_frames=23175`, `native-text` 14/14 with `jbr_command_frames=15012`, and `graphics-layer` 21/21 with
   `jbr_command_frames=26150`. All supported rows in these runs had `fallback_sum=0`; the single unsupported row is the
   intentional raw blend color-filter sentinel. Suites:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-203230/suite.tsv`,
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-203750/suite.tsv`,
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-064533/suite.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-204612/suite.tsv`,
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-065848/suite.tsv`, and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-070741/suite.tsv`.
 - Magic Jewel small invalid-group refresh passed: `stream-invalid` 8/8, `shader-ref-invalid` 3/3,
@@ -447,8 +447,8 @@ This is the small working roadmap for the current PoC. The full historical check
   with `jbr_command_frames=10778`; all had `fallback_sum=0`, `unsupported_rows=0`, and
   `jbr_picture_frames=0`.
 - Magic Jewel `CASE_GROUPS=descriptor-lifecycle` passed as a supported descriptor lifecycle/source-cache refresh:
-  18/18 passed, `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, `jbr_command_frames=23330`,
-  suite `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-200304/suite.tsv`.
+  18/18 passed, `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, `jbr_command_frames=23175`,
+  suite `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-204612/suite.tsv`.
 - Magic Jewel exact descriptor lifecycle slices passed before consolidation: descriptor eviction/redefine 13/13 at
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260524-194922/suite.tsv`
   with `jbr_command_frames=18104`, and RuntimeEffect lifecycle/source-cache 5/5 at
