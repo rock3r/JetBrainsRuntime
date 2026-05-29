@@ -73,6 +73,9 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - The focused `shader-descriptor-invalid` command-probe group passed after `effect-descriptor-invalid`. Aggregate:
   30/30 passed, `fallback_sum=30`, `unsupported_rows=0`, zero picture frames, and zero command frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-023829/suite.tsv`.
+- The focused `image-handles-invalid` command-probe group passed after `shader-descriptor-invalid`. Aggregate: 27/27
+  passed, `fallback_sum=27`, `unsupported_rows=0`, zero picture frames, and 1,331 command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-025555/suite.tsv`.
 - The previous full default command-probe checkpoint after the focused color-filter, RuntimeEffect,
   descriptor-lifecycle, and smoke refreshes passed 487/487 with `fallback_sum=350`, `unsupported_rows=26`,
   `picture_frames=24888`, and `command_frames=140464`:
