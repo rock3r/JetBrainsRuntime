@@ -693,9 +693,9 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   `blend-mode-invalid` 2/2, `fallback_sum=2`. All four runs had `unsupported_rows=0`,
   `jbr_picture_frames=0`, and `jbr_command_frames=0`. Suites:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-201711/suite.tsv`,
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-062610/suite.tsv`,
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-062808/suite.tsv`, and
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260525-063118/suite.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-202316/suite.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-202527/suite.tsv`, and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-202909/suite.tsv`.
 - Magic Jewel focused command-probe `CASE_GROUPS=stream-invalid` passed as the current command-stream parser guard
   checkpoint. Aggregate: 8/8 passed, `fallback_sum=8`, `unsupported_rows=0`, `jbr_picture_frames=0`, and
   `jbr_command_frames=0`. The TSV has 9 lines including the header. The run was 20M under Magic Jewel `out`, with
@@ -704,19 +704,19 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-201711/suite.tsv`.
 - Magic Jewel focused command-probe `CASE_GROUPS=blend-mode-invalid` passed as the current fill-rect blend-mode
   parser guard checkpoint. Aggregate: 2/2 passed, `fallback_sum=2`, `unsupported_rows=0`, `jbr_picture_frames=0`,
-  and `jbr_command_frames=0`. The run was 4.2M under Magic Jewel `out`, with `out` at 34G and the volume at about
-  384Gi free after completion. Suite:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-114958/suite.tsv`.
+  and `jbr_command_frames=0`. The TSV has 3 lines including the header. The run was 3.4M under Magic Jewel `out`,
+  with `out` at 50G and the volume at about 319Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-202909/suite.tsv`.
 - Magic Jewel focused command-probe `CASE_GROUPS=fill-rect-color-filter-invalid` passed as the current fill-rect
   color-filter parser guard checkpoint. Aggregate: 5/5 passed, `fallback_sum=5`, `unsupported_rows=0`,
-  `jbr_picture_frames=0`, and `jbr_command_frames=0`. The run was 12M under Magic Jewel `out`, with `out` at 34G and
-  the volume at about 384Gi free after completion. Suite:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-115236/suite.tsv`.
+  `jbr_picture_frames=0`, and `jbr_command_frames=0`. The TSV has 6 lines including the header. The run was 9.3M
+  under Magic Jewel `out`, with `out` at 50G and the volume at about 319Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-202527/suite.tsv`.
 - Magic Jewel focused command-probe `CASE_GROUPS=shader-ref-invalid` passed as the current fill-rect shader-ref parser
   guard checkpoint. Aggregate: 3/3 passed, `fallback_sum=3`, `unsupported_rows=0`, `jbr_picture_frames=0`, and
-  `jbr_command_frames=0`. The run was 11M under Magic Jewel `out`, with `out` at 34G and the volume at about 384Gi
-  free after completion. Suite:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-115651/suite.tsv`.
+  `jbr_command_frames=0`. The TSV has 4 lines including the header. The run was 6.6M under Magic Jewel `out`, with
+  `out` at 50G and the volume at about 319Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-202316/suite.tsv`.
 - Magic Jewel `CASE_GROUPS=gradient-invalid` passed as the broader gradient parser refresh after the focused
   `gradient-path-invalid` run. Aggregate: 60/60 passed, `fallback_sum=60`, `unsupported_rows=0`,
   `jbr_picture_frames=0`, and `jbr_command_frames=0`. It covered stroke-width, tile-mode, radius, color-count, and
