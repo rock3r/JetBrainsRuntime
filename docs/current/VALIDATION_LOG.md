@@ -293,7 +293,7 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest`.
   The Gradle run completed successfully with 79 actionable tasks, 12 executed, and 67 up-to-date; the XML result
   reported 138 tests, 0 skipped, 0 failures, and 0 errors.
-- Magic Jewel report validator passed after the refreshed broad/source gates. Command:
+- Magic Jewel report validator passed after the refreshed 20260530 broad/source gates. Command:
   `./scripts/test-jbr-skia-report-validation.sh`. The script exercised an expected strict command-validation negative
   path, then completed with `JBR_SKIA_REPORT_VALIDATION_TESTS passed`.
 - Skiko full focused `JbrSkiaInteropTest` class passed after the broad validation refresh. Command:
