@@ -93,12 +93,15 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   including the header. The run was 213M under Magic Jewel `out`, with `out` at 53G and the volume at about 315Gi
   free after completion. Suite:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260530-041151/suite.tsv`.
-- Magic Jewel compatibility matrix passed after the latest full command-probe consolidation. Aggregate: 57/57 passed,
-  `fallback_sum=56`, `jbr_command_frames=980`, and `background_window=true` on every row. The only command frames came
-  from the happy path; all ABI, native ABI, command-capability, high-capability, feature-capability, and public API
-  mismatch rows fell back exactly once. The TSV has 58 lines including the header. The run was 86M under Magic Jewel
-  `out`, with `out` at 46G and the volume at about 337Gi free after completion. Matrix:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260529-084700/matrix.tsv`.
+- Magic Jewel compatibility matrix passed in command-marker-only mode after the resumed full command-probe
+  consolidation. Aggregate: 57/57 passed, `fallback_sum=56`, `jbr_command_frames=1050`, and
+  `background_window=true` on every row. The first attempt with screenshot assertions enabled failed on `happy`
+  because the screenshot assertion did not pass/run, while command replay was healthy; the passing rerun used
+  `EXPECT_SCREENSHOT_ASSERTION=false`. The only command frames came from the happy path; all ABI, native ABI,
+  command-capability, high-capability, feature-capability, and public API mismatch rows fell back exactly once. The
+  TSV has 58 lines including the header. The passing run was 70M under Magic Jewel `out`, with `out` at 56G and the
+  volume at about 307Gi free after completion. Matrix:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260530-113437/matrix.tsv`.
 - Magic Jewel artifact matrix passed on current ABI 106 local artifacts after the latest compatibility refresh.
   Required rows: `current-all` passed with no fallback and 599 JBR command frames, and `missing-public-api` passed with
   one expected public API fallback and zero command frames. The five optional old-artifact rows were recorded as skipped

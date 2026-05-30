@@ -90,10 +90,10 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   descriptor-lifecycle, and smoke refreshes passed 487/487 with `fallback_sum=350`, `unsupported_rows=26`,
   `picture_frames=24888`, and `command_frames=140464`:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-131448/suite.tsv`.
-- The latest compatibility matrix checkpoint passed after that full command-probe consolidation refresh, with 57/57
-  rows passed, `fallback_sum=56`, 980 JBR command frames from the happy path, and background-window mode on every
-  row:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260529-084700/matrix.tsv`.
+- The latest compatibility matrix checkpoint passed in command-marker-only mode after the resumed full command-probe
+  consolidation, with 57/57 rows passed, `fallback_sum=56`, 1,050 JBR command frames from the happy path, and
+  background-window mode on every row:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260530-113437/matrix.tsv`.
 - The latest artifact matrix checkpoint passed the required current-artifact rows on ABI 106 local artifacts:
   `current-all` replayed commands with 599 JBR command frames, `missing-public-api` fell back exactly once, and the
   optional old-artifact rows were skipped because no bundle variables were set:
