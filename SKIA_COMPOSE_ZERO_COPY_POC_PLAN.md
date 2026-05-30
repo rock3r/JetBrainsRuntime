@@ -66,7 +66,7 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-200527/suite.tsv`.
 - The focused `path-invalid` command-probe group passed after `primitive-invalid`. Aggregate: 22/22 passed,
   `fallback_sum=22`, `unsupported_rows=0`, zero picture frames, and zero command frames:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-020918/suite.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260530-030433/suite.tsv`.
 - The focused `effect-descriptor-invalid` command-probe group passed after `path-invalid`. Aggregate: 28/28 passed,
   `fallback_sum=28`, `unsupported_rows=0`, zero picture frames, and zero command frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-022214/suite.tsv`.
@@ -331,7 +331,7 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - The current path and path-effect parser fallback checkpoint is `CASE_GROUPS=path-invalid`, which passed 22/22 with
   `fallback_sum=22`, zero unsupported rows, zero JBR picture frames, and zero JBR command frames across malformed
   clip/draw path verbs, dash path-effect line/rect/round-rect/generic-path payloads, and drawShadow path verbs:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-194915/suite.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260530-030433/suite.tsv`.
 - The current supported color-filter/graphics-layer replay checkpoint is `CASE_GROUPS=color-filters`, which passed
   10/10 with no fallback, one intentional unsupported raw color-filter sentinel, 1,047 JBR picture frames for that row,
   and 13,204 JBR command frames across the supported color-filter, lighting, and graphics-layer color-filter rows:
@@ -399,7 +399,7 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-092240/suite.tsv`.
 - The current focused path/path-effect parser guard checkpoint is `CASE_GROUPS=path-invalid`, which passed 22/22 with
   `fallback_sum=22`, zero unsupported rows, zero JBR picture frames, and zero JBR command frames:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-194915/suite.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260530-030433/suite.tsv`.
 - The current focused color-filter command replay checkpoint is `CASE_GROUPS=color-filters`, which passed 10/10 with
   `fallback_sum=0`, one intentional unsupported raw blend color-filter row, 1,047 JBR picture frames, and 13,204 JBR
   command frames across the supported descriptor and graphics-layer color-filter rows:
