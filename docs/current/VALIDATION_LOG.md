@@ -23,6 +23,11 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   the header. The run was 28M under Magic Jewel `out`, with `out` at 57G and the volume at about 305Gi free after
   completion. Suite:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260530-143004/suite.tsv`.
+- Magic Jewel focused command-probe primitive invalid refresh passed after the marker-only parity consolidation:
+  `CASE_GROUPS=primitive-invalid` covered 13/13 rows with `fallback_sum=13`, `unsupported_rows=0`,
+  `jbr_picture_frames=0`, and `jbr_command_frames=0`. The TSV has 14 lines including the header. The run was 46M
+  under Magic Jewel `out`, with `out` at 57G and the volume at about 305Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260530-143801/suite.tsv`.
 - Magic Jewel exact command-probe `CASES=commands-descriptor-eviction` passed after the CMP recorder gained matching
   color-filter and shader descriptor-handle eviction tests. Aggregate: 1/1 passed, `fallback_sum=0`,
   `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=59`. The report contained native effect-handle
