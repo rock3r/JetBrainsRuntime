@@ -67,6 +67,10 @@ This is the small working roadmap for the current PoC. The full historical check
   consolidation: 13/13 passed, `fallback_sum=0`, eight intentional unsupported-picture rows,
   `jbr_picture_frames=11161`, and `jbr_command_frames=9643`, suite
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260530-151449/suite.tsv`.
+- Magic Jewel focused command-probe `CASE_GROUPS=shader-composition-runtime` refreshed after the marker-only parity
+  consolidation: 15/15 passed, `fallback_sum=0`, two intentional unsupported-picture rows,
+  `jbr_picture_frames=3016`, and `jbr_command_frames=28748`, suite
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260530-152335/suite.tsv`.
 - Magic Jewel exact command-probe `CASES=commands-descriptor-eviction` passed after the CMP recorder eviction guard:
   1/1 passed, `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, `jbr_command_frames=59`, suite
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-013713/suite.tsv`.
