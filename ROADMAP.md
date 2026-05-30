@@ -118,6 +118,9 @@ This is the small working roadmap for the current PoC. The full historical check
 - Focused marker-only screenshot parity for `CASE_GROUPS=shader-rendering` passed 18/18 with `fallback_sum=4`,
   `jbr_picture_frames=0`, `jbr_command_frames=25540`, and intentionally missing pixel metrics:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260530-130246/suite.tsv`.
+- Focused marker-only screenshot parity for `CASE_GROUPS=graphics-layer-effects` passed 14/14 with `fallback_sum=2`,
+  `jbr_picture_frames=0`, `jbr_command_frames=29594`, and intentionally missing pixel metrics:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260530-131305/suite.tsv`.
 - Magic Jewel screenshot parity suite now has no-run `LIST_CASES=true`, `LIST_CASE_COUNT=true`, and
   `CASES_FROM=... CASES_UNTIL=...` helpers. `parity-button-chrome` passed after the helper change with
   `fallback_sum=0`, `jbr_picture_frames=0`, `jbr_command_frames=1723`, suite
