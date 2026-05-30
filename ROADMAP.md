@@ -174,8 +174,8 @@ This is the small working roadmap for the current PoC. The full historical check
   mode: 5/5 passed, `fallback_sum=0`, 84 old-side CPU samples, 49 new-side CPU samples,
   `jbr_command_frames=13695`, picture FPS `229.4`, and command FPS row total `684.8`, suite
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-benchmark-suite/20260530-120858/suite.tsv`.
-- Skiko full focused `JbrSkiaInteropTest` class passed after the refreshed 20260529 command/visual/benchmark
-  validations:
+- Skiko full focused `JbrSkiaInteropTest` class passed after the refreshed 20260530 command, compatibility,
+  artifact, and benchmark validations:
   `./gradlew --no-daemon --no-configuration-cache :awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`.
 - JBR parser-only `JBRSkiaApiTest` passed via Magic Jewel's helper against the current local overlay artifacts and
   `/tmp/jbr-skia-native/libjbrskiainterop.dylib` after the Skiko gate, using `REBUILD_LOCAL_ARTIFACTS=false`.

@@ -280,8 +280,8 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   `132.8`, dynamic images `123.2`, and resize dynamic images `112.2`. The run was 42M under Magic Jewel `out`, with
   `out` at 40G and the volume at about 345Gi free after completion. Suite:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-benchmark-suite/20260528-171658/suite.tsv`.
-- Skiko full focused `JbrSkiaInteropTest` class passed after the latest 20260529 broad command/visual/benchmark
-  refresh.
+- Skiko full focused `JbrSkiaInteropTest` class passed after the latest 20260530 command, compatibility, artifact,
+  and benchmark refreshes.
   Command:
   `./gradlew --no-daemon --no-configuration-cache :awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`.
   The Gradle run completed successfully in `/Users/rock3r/src/jbr-skia-zero-copy/skiko/skiko` with 28 actionable

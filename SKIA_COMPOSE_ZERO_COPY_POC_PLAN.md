@@ -114,8 +114,8 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   49 new-side CPU samples, picture FPS `229.4`, command FPS row total `684.8`, and
   `jbr_command_frames=13695`:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-benchmark-suite/20260530-120858/suite.tsv`.
-- The latest Skiko focused source-side gate passed after the refreshed 20260529 broad command/visual/benchmark
-  validations:
+- The latest Skiko focused source-side gate passed after the refreshed 20260530 command, compatibility, artifact,
+  and benchmark validations:
   `./gradlew --no-daemon --no-configuration-cache :awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`.
 - The latest JBR parser/API-side gate passed with Magic Jewel's helper using `REBUILD_LOCAL_ARTIFACTS=false` and
   running `JBRSkiaApiTest` against `/tmp/jbr-skia-run/desktop` plus `/tmp/jbr-skia-native/libjbrskiainterop.dylib`.
