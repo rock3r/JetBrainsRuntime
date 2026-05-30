@@ -87,9 +87,9 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 - Magic Jewel focused `descriptor-handles-invalid` command-probe group passed after `save-layer-invalid`. Command:
   `CASE_GROUPS=descriptor-handles-invalid ./scripts/jbr-skia-command-probe-suite.sh`. Aggregate: 48/48 passed,
   `fallback_sum=48`, `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=0`. The TSV has 49 lines
-  including the header. The run was 221M under Magic Jewel `out`, with `out` at 44G and the volume at about 341Gi
+  including the header. The run was 213M under Magic Jewel `out`, with `out` at 53G and the volume at about 315Gi
   free after completion. Suite:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-033938/suite.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260530-041151/suite.tsv`.
 - Magic Jewel compatibility matrix passed after the latest full command-probe consolidation. Aggregate: 57/57 passed,
   `fallback_sum=56`, `jbr_command_frames=980`, and `background_window=true` on every row. The only command frames came
   from the happy path; all ABI, native ABI, command-capability, high-capability, feature-capability, and public API
@@ -481,8 +481,8 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   `jbr_picture_frames=0`, and `jbr_command_frames=0`. The run covered descriptor use/use-after-evict, descriptor
   evict record flags, saveLayer descriptor refs, child use-after-evict, missing children, and wrong-family child/type
   checks across shader, color-filter, image-filter, path-effect, and RuntimeEffect descriptor families. The run was
-  149M under Magic Jewel `out`, with `out` at 50G and the volume at about 321Gi free after completion. Suite:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-182142/suite.tsv`.
+  213M under Magic Jewel `out`, with `out` at 53G and the volume at about 315Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260530-041151/suite.tsv`.
 - Magic Jewel focused command-probe `CASE_GROUPS=gradient-path-invalid` passed as the current gradient path parser
   guard checkpoint. Aggregate: 18/18 passed, `fallback_sum=18`, `unsupported_rows=0`, `jbr_picture_frames=0`, and
   `jbr_command_frames=0`. The run covered linear/radial/sweep gradient path tile, color-count, stop-order, fill-type,
