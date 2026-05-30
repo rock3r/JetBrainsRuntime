@@ -138,6 +138,9 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - Combined across the nine focused marker-only screenshot parity groups after the wrapper fix, all 106 parity rows
   passed with `fallback_sum=13`, zero JBR picture frames, 184,246 JBR command frames, and intentionally missing pixel
   metrics because local screenshot comparison was skipped.
+- A periodic full default screenshot parity marker-only consolidation then passed as a single TSV: 106/106 passed,
+  `fallback_sum=12`, zero JBR picture frames, 186,106 JBR command frames, and intentionally missing pixel metrics:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260530-133012/suite.tsv`.
 - Current no-run discovery helpers cover the command-probe, screenshot parity, compatibility matrix, artifact matrix,
   and benchmark suite loops. Use `LIST_CASES=true` / `LIST_CASE_COUNT=true` where available for exact row discovery;
   command and screenshot suites also expose `CASE_GROUPS=...` plus group listing/count helpers.

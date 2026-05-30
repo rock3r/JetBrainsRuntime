@@ -127,6 +127,9 @@ This is the small working roadmap for the current PoC. The full historical check
 - Combined across the nine focused marker-only screenshot parity groups after the wrapper fix, all 106 parity rows
   passed with `fallback_sum=13`, `jbr_picture_frames=0`, `jbr_command_frames=184246`, and intentionally missing pixel
   metrics because local screenshot comparison was skipped.
+- A periodic full default marker-only screenshot parity consolidation then passed as a single TSV: 106/106 passed,
+  `fallback_sum=12`, `jbr_picture_frames=0`, `jbr_command_frames=186106`, and intentionally missing pixel metrics:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260530-133012/suite.tsv`.
 - Magic Jewel screenshot parity suite now has no-run `LIST_CASES=true`, `LIST_CASE_COUNT=true`, and
   `CASES_FROM=... CASES_UNTIL=...` helpers. `parity-button-chrome` passed after the helper change with
   `fallback_sum=0`, `jbr_picture_frames=0`, `jbr_command_frames=1723`, suite
