@@ -96,6 +96,10 @@ This is the small working roadmap for the current PoC. The full historical check
   106/106 passed, `fallback_sum=11`, `jbr_picture_frames=0`, `jbr_command_frames=111257`, average
   `bad_pixel_ratio=0.05158`, suite
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260529-091416/suite.tsv`.
+- Magic Jewel screenshot parity now honors `EXPECT_SCREENSHOT_ASSERTION=false` by skipping the image diff wrapper after
+  the interop report succeeds. A focused marker-only `CASE_GROUPS=smoke` refresh passed 3/3 with `fallback_sum=0`,
+  `jbr_picture_frames=0`, `jbr_command_frames=5603`, and intentionally missing pixel metrics:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260530-122221/suite.tsv`.
 - Magic Jewel screenshot parity suite now has no-run `LIST_CASES=true`, `LIST_CASE_COUNT=true`, and
   `CASES_FROM=... CASES_UNTIL=...` helpers. `parity-button-chrome` passed after the helper change with
   `fallback_sum=0`, `jbr_picture_frames=0`, `jbr_command_frames=1723`, suite

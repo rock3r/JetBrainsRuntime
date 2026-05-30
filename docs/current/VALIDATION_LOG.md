@@ -116,6 +116,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   the header. The run was 518M under Magic Jewel `out`, with `out` at 47G and the volume at about 335Gi free after
   completion. Suite:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260529-091416/suite.tsv`.
+- Magic Jewel focused screenshot parity smoke refresh passed in marker-only mode after the wrapper learned to honor
+  `EXPECT_SCREENSHOT_ASSERTION=false` by skipping the image diff after command/report validation succeeds. Aggregate:
+  3/3 passed, `fallback_sum=0`, `jbr_picture_frames=0`, `jbr_command_frames=5603`, and pixel metrics intentionally
+  missing because the image comparison was skipped. The TSV has 4 lines including the header. The run was 12M under
+  Magic Jewel `out`, with `out` at 56G and the volume at about 295Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260530-122221/suite.tsv`.
 - Magic Jewel full default benchmark suite passed after the compatibility/artifact refreshes in command-marker-only
   mode. Aggregate: 5/5 passed, `fallback_sum=0`, 84 old-side CPU samples, 49 new-side CPU samples, one picture-FPS
   row at `229.4`, command-FPS row total `684.8`, and `jbr_command_frames=13695`. The TSV has 6 lines including the
