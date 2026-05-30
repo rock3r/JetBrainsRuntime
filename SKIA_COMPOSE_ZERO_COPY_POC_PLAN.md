@@ -59,8 +59,8 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   command frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-015048/suite.tsv`.
 - The focused `native-text-invalid` command-probe group passed as the next small guardrail batch. Aggregate: 11/11
-  passed, `fallback_sum=11`, `unsupported_rows=0`, zero picture frames, and 1,895 command frames:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-015408/suite.tsv`.
+  passed, `fallback_sum=11`, `unsupported_rows=0`, zero picture frames, and 1,519 command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260530-055310/suite.tsv`.
 - The focused `primitive-invalid` command-probe group passed after `native-text-invalid`. Aggregate: 13/13 passed,
   `fallback_sum=13`, `unsupported_rows=0`, zero picture frames, and zero command frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-200527/suite.tsv`.
@@ -321,9 +321,9 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-210151/suite.tsv` and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260527-110758/suite.tsv`.
 - The current native text/font parser fallback checkpoint is `CASE_GROUPS=native-text-invalid`, which passed 11/11
-  with `fallback_sum=11`, zero unsupported rows, zero JBR picture frames, and 396 JBR command frames across invalid
+  with `fallback_sum=11`, zero unsupported rows, zero JBR picture frames, and 1,519 JBR command frames across invalid
   font size/weight/width/slant/family-count rows and the invalid font-data record flags sentinel:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-235140/suite.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260530-055310/suite.tsv`.
 - The current primitive paint/draw parser fallback checkpoint is `CASE_GROUPS=primitive-invalid`, which passed 13/13
   with `fallback_sum=13`, zero unsupported rows, zero JBR picture frames, and zero JBR command frames across invalid
   stroke cap, transform flags, clip operation, drawPoints, and drawVertices payload guards:
@@ -387,9 +387,9 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `fallback_sum=8`, zero unsupported rows, and zero JBR frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-201711/suite.tsv`.
 - The current focused native text/font-data parser guard checkpoint is `CASE_GROUPS=native-text-invalid`, which passed
-  11/11 with `fallback_sum=11`, zero unsupported rows, zero JBR picture frames, and 728 JBR command frames from the
+  11/11 with `fallback_sum=11`, zero unsupported rows, zero JBR picture frames, and 1,519 JBR command frames from the
   recoverable font-data record-flags row:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-090411/suite.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260530-055310/suite.tsv`.
 - The current focused primitive command parser guard checkpoint is `CASE_GROUPS=primitive-invalid`, which passed 13/13
   with `fallback_sum=13`, zero unsupported rows, zero JBR picture frames, and zero JBR command frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-200527/suite.tsv`.

@@ -38,10 +38,10 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-015048/suite.tsv`.
 - Magic Jewel focused `native-text-invalid` command-probe group passed as the next small fallback validation batch.
   Command: `CASE_GROUPS=native-text-invalid ./scripts/jbr-skia-command-probe-suite.sh`. Aggregate: 11/11 passed,
-  `fallback_sum=11`, `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=1895`. The TSV has 12
-  lines including the header. The run was 45M under Magic Jewel `out`, with `out` at 43G and the volume at about
-  342Gi free after completion. Suite:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-015408/suite.tsv`.
+  `fallback_sum=11`, `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=1519`. The TSV has 12
+  lines including the header. The run was 41M under Magic Jewel `out`, with `out` at 54G and the volume at about
+  314Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260530-055310/suite.tsv`.
 - Magic Jewel focused `primitive-invalid` command-probe group passed after `native-text-invalid`. Command:
   `CASE_GROUPS=primitive-invalid ./scripts/jbr-skia-command-probe-suite.sh`. Aggregate: 13/13 passed,
   `fallback_sum=13`, `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=0`. The TSV has 14 lines
@@ -438,11 +438,11 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260527-123909/suite.tsv`.
 - Magic Jewel focused command-probe `CASE_GROUPS=native-text-invalid` passed as the current native text/font-data
   parser guard checkpoint. Aggregate: 11/11 passed, `fallback_sum=11`, `unsupported_rows=0`,
-  `jbr_picture_frames=0`, and `jbr_command_frames=396`. The text and paragraph scalar/font-family guard rows fell
+  `jbr_picture_frames=0`, and `jbr_command_frames=1519`. The text and paragraph scalar/font-family guard rows fell
   back before command replay; the font-data record-flags sentinel retained the expected setup command frames before
-  fallback. The run was 7.6M under Magic Jewel `out`, with `out` at 38G and the volume at about 366Gi free after
-  completion. Suite:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-235140/suite.tsv`.
+  fallback. The TSV has 12 lines including the header. The run was 41M under Magic Jewel `out`, with `out` at 54G and
+  the volume at about 314Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260530-055310/suite.tsv`.
 - Magic Jewel focused command-probe `CASE_GROUPS=primitive-invalid` passed as the current primitive parser guard
   checkpoint. Aggregate: 13/13 passed, `fallback_sum=13`, `unsupported_rows=0`, `jbr_picture_frames=0`, and
   `jbr_command_frames=0`. The run covered stroke-cap, transform record flags, clip operation, drawPoints count/length
