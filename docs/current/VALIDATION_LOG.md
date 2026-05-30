@@ -1174,22 +1174,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260523-163821/matrix.tsv`.
   The matrix covers the happy command path plus ABI mismatch, native ABI mismatch, low/high command capability
   mismatches, and the explicit `public-api-missing` fallback case.
-- Magic Jewel periodic default command-probe consolidation passed after the descriptor lifecycle, native text,
-  graphics-layer, and gradient quick refreshes. The run used `EXPECT_SCREENSHOT_ASSERTION=false` and split resume
-  roots after a transient local `public-api-missing` artifact state surfaced at
-  `commands-forced-context-turbulence-shader-descriptor-redefine`; rebuilding local JBR Skia artifacts repaired the
-  exact row, and the tail resumed from the next default case. Combined aggregate across the three passing roots:
-  486/486 passed, `fallback_sum=349`, `unsupported_rows=26`, `picture_frames=34318`, and
-  `command_frames=200336`:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260523-063205/suite.tsv`,
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260523-153433/suite.tsv`,
-  and
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260523-153519/suite.tsv`.
-  The discarded failed roots are
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260523-153035/suite.tsv`
-  and
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260523-153235/suite.tsv`;
-  both reported `SKIKO_JBR_INTEROP_FALLBACK reason=public-api-missing` before the rebuild.
+- Magic Jewel periodic default command-probe consolidation passed after the latest focused quick-group refreshes and
+  parser/fallback sentinel checks. The run used `EXPECT_SCREENSHOT_ASSERTION=false` and completed as a single full
+  default sweep in command-marker-only mode. Aggregate: 487/487 passed, `fallback_sum=350`,
+  `unsupported_rows=26`, `picture_frames=33632`, and `command_frames=183989`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-222152/suite.tsv`.
+  The TSV has 488 lines including the header; the run directory is 2.2G, `magic-jewel/out` is 53G, and the validation
+  volume had 316Gi free after the run.
 - Magic Jewel now exposes `CASE_GROUPS=descriptor-lifecycle` as a no-run quick group for the stable descriptor
   create/redefine/reuse/cache-eviction rows. The focused group passed 18/18 with `fallback_sum=0`,
   `unsupported_rows=0`, `picture_frames=0`, and `command_frames=34840`:

@@ -44,10 +44,10 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   is understood, so already-green prefixes do not need to be repeated. The current fast loop is exact row, quick group
   or bounded adjacent range, Skiko focused publication, `JbrSkiaInteropTest`, and then a periodic full sweep once a
   coherent batch of sentinels has landed. The latest periodic default command-probe consolidation passed as a single
-  command-marker-only full sweep after the focused descriptor, invalid, color-filter, saveLayer, and graphics-layer
-  render-effect refreshes. Aggregate: 487/487 passed, `fallback_sum=350`, `unsupported_rows=26`,
-  `picture_frames=29771`, and `command_frames=149695`:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-120117/suite.tsv`.
+  command-marker-only full sweep after the latest focused quick-group refreshes and parser/fallback sentinel checks.
+  Aggregate: 487/487 passed, `fallback_sum=350`, `unsupported_rows=26`, `picture_frames=33632`, and
+  `command_frames=183989`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-222152/suite.tsv`.
 - The latest exact descriptor-handle eviction command row passed after adding matching CMP recorder eviction guards.
   Aggregate: 1/1 passed, `fallback_sum=0`, `unsupported_rows=0`, zero picture frames, and 59 command frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-013713/suite.tsv`.
