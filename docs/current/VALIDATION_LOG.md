@@ -68,10 +68,10 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260530-033644/suite.tsv`.
 - Magic Jewel focused `image-handles-invalid` command-probe group passed after `shader-descriptor-invalid`. Command:
   `CASE_GROUPS=image-handles-invalid ./scripts/jbr-skia-command-probe-suite.sh`. Aggregate: 27/27 passed,
-  `fallback_sum=27`, `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=1331`. The command frames
+  `fallback_sum=27`, `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=1036`. The command frames
   came from the invalid image-cache-clear record-flags row. The TSV has 28 lines including the header. The run was
-  105M under Magic Jewel `out`, with `out` at 44G and the volume at about 341Gi free after completion. Suite:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-025555/suite.tsv`.
+  108M under Magic Jewel `out`, with `out` at 53G and the volume at about 315Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260530-035452/suite.tsv`.
 - Magic Jewel focused `color-filters` command-probe group passed after the image-handle invalid guardrails. Command:
   `CASE_GROUPS=color-filters ./scripts/jbr-skia-command-probe-suite.sh`. Aggregate: 10/10 passed, `fallback_sum=0`,
   `unsupported_rows=1`, `jbr_picture_frames=1047`, and `jbr_command_frames=13204`. The unsupported row was the
@@ -471,11 +471,11 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260530-033644/suite.tsv`.
 - Magic Jewel focused command-probe `CASE_GROUPS=image-handles-invalid` passed as the current image handle/cache parser
   guard checkpoint. Aggregate: 27/27 passed, `fallback_sum=27`, `unsupported_rows=0`, `jbr_picture_frames=0`, and
-  `jbr_command_frames=1042`. The run covered image define/cache-clear/evict record flags, image dimensions/pixel
+  `jbr_command_frames=1036`. The run covered image define/cache-clear/evict record flags, image dimensions/pixel
   bounds, undefined and evicted image handles, image-ref scalar guards, color-filter image refs, and descriptor-backed
   color-filter image-ref bounds. The only command frames came from the cache-clear setup row before fallback. The run
-  was 90M under Magic Jewel `out`, with `out` at 50G and the volume at about 321Gi free after completion. Suite:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-185310/suite.tsv`.
+  was 108M under Magic Jewel `out`, with `out` at 53G and the volume at about 315Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260530-035452/suite.tsv`.
 - Magic Jewel focused command-probe `CASE_GROUPS=descriptor-handles-invalid` passed as the current descriptor handle
   lifetime/type guard checkpoint. Aggregate: 48/48 passed, `fallback_sum=48`, `unsupported_rows=0`,
   `jbr_picture_frames=0`, and `jbr_command_frames=0`. The run covered descriptor use/use-after-evict, descriptor

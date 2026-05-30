@@ -74,8 +74,8 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   30/30 passed, `fallback_sum=30`, `unsupported_rows=0`, zero picture frames, and zero command frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260530-033644/suite.tsv`.
 - The focused `image-handles-invalid` command-probe group passed after `shader-descriptor-invalid`. Aggregate: 27/27
-  passed, `fallback_sum=27`, `unsupported_rows=0`, zero picture frames, and 1,331 command frames:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-025555/suite.tsv`.
+  passed, `fallback_sum=27`, `unsupported_rows=0`, zero picture frames, and 1,036 command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260530-035452/suite.tsv`.
 - The focused `color-filters` command-probe group passed after the image-handle invalid guardrails. Aggregate: 10/10
   passed, `fallback_sum=0`, `unsupported_rows=1`, 1,047 picture frames, and 13,204 command frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-203750/suite.tsv`.
