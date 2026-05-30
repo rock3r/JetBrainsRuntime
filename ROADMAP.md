@@ -100,6 +100,9 @@ This is the small working roadmap for the current PoC. The full historical check
   the interop report succeeds. A focused marker-only `CASE_GROUPS=smoke` refresh passed 3/3 with `fallback_sum=0`,
   `jbr_picture_frames=0`, `jbr_command_frames=5603`, and intentionally missing pixel metrics:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260530-122221/suite.tsv`.
+- The next focused marker-only screenshot parity group, `CASE_GROUPS=descriptor-lifecycle`, passed 6/6 with
+  `fallback_sum=1`, `jbr_picture_frames=0`, `jbr_command_frames=10185`, and intentionally missing pixel metrics:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260530-122542/suite.tsv`.
 - Magic Jewel screenshot parity suite now has no-run `LIST_CASES=true`, `LIST_CASE_COUNT=true`, and
   `CASES_FROM=... CASES_UNTIL=...` helpers. `parity-button-chrome` passed after the helper change with
   `fallback_sum=0`, `jbr_picture_frames=0`, `jbr_command_frames=1723`, suite
