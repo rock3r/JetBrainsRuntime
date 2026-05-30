@@ -114,6 +114,9 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - The next focused screenshot parity marker-only checkpoint also passed: 6/6 `CASE_GROUPS=descriptor-lifecycle`
   rows, `fallback_sum=1`, zero JBR picture frames, 10,185 JBR command frames, and intentionally missing pixel metrics:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260530-122542/suite.tsv`.
+- Focused screenshot parity marker-only `CASE_GROUPS=graphics-layer-basic` passed 7/7 with `fallback_sum=0`, zero JBR
+  picture frames, 16,730 JBR command frames, and intentionally missing pixel metrics:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260530-123134/suite.tsv`.
 - Current no-run discovery helpers cover the command-probe, screenshot parity, compatibility matrix, artifact matrix,
   and benchmark suite loops. Use `LIST_CASES=true` / `LIST_CASE_COUNT=true` where available for exact row discovery;
   command and screenshot suites also expose `CASE_GROUPS=...` plus group listing/count helpers.
