@@ -286,9 +286,9 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   `./gradlew --no-daemon --no-configuration-cache :awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`.
   The Gradle run completed successfully in `/Users/rock3r/src/jbr-skia-zero-copy/skiko/skiko` with 28 actionable
   tasks, 1 executed, and 27 up-to-date.
-- Magic Jewel `scripts/test-jbr-skia-api.sh` passed end-to-end after the latest broad validation refresh using
-  `REBUILD_LOCAL_ARTIFACTS=false`. The helper patched the temporary `JBRApi` stub into the java.desktop overlay,
-  compiled `JBRSkiaApiTest`, ran it headlessly, and printed `JBR_SKIA_API_TEST passed`.
+- Magic Jewel `scripts/test-jbr-skia-api.sh` passed end-to-end after the latest broad validation refresh and refreshed
+  20260530 Skiko gate using `REBUILD_LOCAL_ARTIFACTS=false`. The helper patched the temporary `JBRApi` stub into the
+  java.desktop overlay, compiled `JBRSkiaApiTest`, ran it headlessly, and printed `JBR_SKIA_API_TEST passed`.
 - CMP focused recorder regression passed after the refreshed Skiko and JBR parser/API gates. Command:
   `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest`.
   The Gradle run completed successfully with 79 actionable tasks, 12 executed, and 67 up-to-date; the XML result

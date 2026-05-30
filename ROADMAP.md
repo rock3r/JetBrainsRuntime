@@ -178,7 +178,8 @@ This is the small working roadmap for the current PoC. The full historical check
   artifact, and benchmark validations:
   `./gradlew --no-daemon --no-configuration-cache :awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`.
 - JBR parser-only `JBRSkiaApiTest` passed via Magic Jewel's helper against the current local overlay artifacts and
-  `/tmp/jbr-skia-native/libjbrskiainterop.dylib` after the Skiko gate, using `REBUILD_LOCAL_ARTIFACTS=false`.
+  `/tmp/jbr-skia-native/libjbrskiainterop.dylib` after the refreshed 20260530 Skiko gate, using
+  `REBUILD_LOCAL_ARTIFACTS=false`.
 - Magic Jewel now has `scripts/test-jbr-skia-api.sh` to rebuild the local overlay, patch the temporary JBR API stub,
   compile `JBRSkiaApiTest`, run it headlessly, and remove the temporary desktop-overlay stub on exit; the helper
   passed end-to-end.

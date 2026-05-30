@@ -117,8 +117,9 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - The latest Skiko focused source-side gate passed after the refreshed 20260530 command, compatibility, artifact,
   and benchmark validations:
   `./gradlew --no-daemon --no-configuration-cache :awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`.
-- The latest JBR parser/API-side gate passed with Magic Jewel's helper using `REBUILD_LOCAL_ARTIFACTS=false` and
-  running `JBRSkiaApiTest` against `/tmp/jbr-skia-run/desktop` plus `/tmp/jbr-skia-native/libjbrskiainterop.dylib`.
+- The latest JBR parser/API-side gate passed after the refreshed 20260530 Skiko gate with Magic Jewel's helper using
+  `REBUILD_LOCAL_ARTIFACTS=false` and running `JBRSkiaApiTest` against `/tmp/jbr-skia-run/desktop` plus
+  `/tmp/jbr-skia-native/libjbrskiainterop.dylib`.
 - Magic Jewel now exposes that gate as `scripts/test-jbr-skia-api.sh`; the helper passed end-to-end and prints
   `JBR_SKIA_API_TEST passed`. The helper removes its temporary desktop-overlay `JBRApi` stub on exit so later artifact
   matrix runs do not inherit split-package state.
