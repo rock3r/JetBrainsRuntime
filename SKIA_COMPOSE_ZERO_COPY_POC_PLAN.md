@@ -72,7 +72,7 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260530-031858/suite.tsv`.
 - The focused `shader-descriptor-invalid` command-probe group passed after `effect-descriptor-invalid`. Aggregate:
   30/30 passed, `fallback_sum=30`, `unsupported_rows=0`, zero picture frames, and zero command frames:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-023829/suite.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260530-033644/suite.tsv`.
 - The focused `image-handles-invalid` command-probe group passed after `shader-descriptor-invalid`. Aggregate: 27/27
   passed, `fallback_sum=27`, `unsupported_rows=0`, zero picture frames, and 1,331 command frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-025555/suite.tsv`.
@@ -428,7 +428,7 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   passed 30/30 with `fallback_sum=30`, zero unsupported rows, zero JBR picture frames, and zero JBR command frames
   across shader descriptor headers, color/filter payloads, transformed/composite shader guards, gradient/image shader
   descriptor bounds, and Perlin noise descriptor guards:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-113757/suite.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260530-033644/suite.tsv`.
 - The current focused saveLayer parser guard checkpoint is `CASE_GROUPS=save-layer-invalid`, which passed 37/37 with
   `fallback_sum=37`, zero unsupported rows, zero JBR picture frames, and zero JBR command frames across alpha, record
   flags, record lengths, width/height, blend modes, and descriptor-backed color/image-filter saveLayer variants:
