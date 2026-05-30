@@ -257,7 +257,7 @@ This is the small working roadmap for the current PoC. The full historical check
 - Magic Jewel focused command-probe `CASE_GROUPS=gradient-invalid` passed as the current gradient parser guard
   checkpoint: 60/60 passed, `fallback_sum=60`, `unsupported_rows=0`, `jbr_picture_frames=0`,
   `jbr_command_frames=0`, suite
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-172336/suite.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260530-045310/suite.tsv`.
 - Magic Jewel focused command-probe `CASE_GROUPS=runtime-effect-invalid` passed as the current RuntimeEffect
   parser/schema guard checkpoint: 62/62 passed, `fallback_sum=56`, `unsupported_rows=6`,
   `jbr_picture_frames=5670`, `jbr_command_frames=0`, suite
