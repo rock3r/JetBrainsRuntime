@@ -377,9 +377,9 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   direct parser-test additions for blur, offset, corner/stamped path-effect, and chain path-effect descriptor bounds:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260530-031858/suite.tsv`.
 - The current focused RuntimeEffect parser/semantic guard refresh is `CASE_GROUPS=runtime-effect-invalid`, which passed
-  62/62 with `fallback_sum=56`, six intentional unsupported-picture rows, 5,670 JBR picture frames, and zero JBR
+  62/62 with `fallback_sum=56`, six intentional unsupported-picture rows, 7,806 JBR picture frames, and zero JBR
   command frames across source, SKSL, uniform, child, named-count, compile/build, and child-type bounds:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-164124/suite.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260530-060107/suite.tsv`.
 - The current quick happy-path command replay checkpoint is `CASE_GROUPS=smoke`, which passed 6/6 with no fallback,
   no unsupported rows, no picture fallback, and 8,392 JBR command frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-203230/suite.tsv`.
@@ -444,10 +444,10 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   malformed-stream guards:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260530-045310/suite.tsv`.
 - The current focused RuntimeEffect parser/semantic guard checkpoint is `CASE_GROUPS=runtime-effect-invalid`, which
-  passed 62/62 with `fallback_sum=56`, six intentional unsupported-picture rows, 7,511 JBR picture frames, and zero
+  passed 62/62 with `fallback_sum=56`, six intentional unsupported-picture rows, 7,806 JBR picture frames, and zero
   JBR command frames. The unsupported rows are the invalid uniform/child/nested-child schema fallbacks for shader and
   color-filter RuntimeEffect descriptors; the remaining rows rejected through structured command fallback:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260527-213510/suite.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260530-060107/suite.tsv`.
 - Descriptor/effect child handle validation has a default-order quick path for blur image-filter children too. The
   existing blur use-after-evict, missing-child, and wrong-effect-type sentinels are now inserted into the default
   command-probe order beside the offset image-filter child cases. Exact validation passed at
