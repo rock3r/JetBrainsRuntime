@@ -57,9 +57,9 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 - Magic Jewel focused `effect-descriptor-invalid` command-probe group passed after `path-invalid`. Command:
   `CASE_GROUPS=effect-descriptor-invalid ./scripts/jbr-skia-command-probe-suite.sh`. Aggregate: 28/28 passed,
   `fallback_sum=28`, `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=0`. The TSV has 29 lines
-  including the header. The run was 114M under Magic Jewel `out`, with `out` at 43G and the volume at about 342Gi
+  including the header. The run was 113M under Magic Jewel `out`, with `out` at 53G and the volume at about 315Gi
   free after completion. Suite:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-022214/suite.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260530-031858/suite.tsv`.
 - Magic Jewel focused `shader-descriptor-invalid` command-probe group passed after `effect-descriptor-invalid`.
   Command: `CASE_GROUPS=shader-descriptor-invalid ./scripts/jbr-skia-command-probe-suite.sh`. Aggregate: 30/30
   passed, `fallback_sum=30`, `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=0`. The TSV has
@@ -459,9 +459,9 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   parser guard checkpoint. Aggregate: 28/28 passed, `fallback_sum=28`, `unsupported_rows=0`,
   `jbr_picture_frames=0`, and `jbr_command_frames=0`. The run covered descriptor header/type/version/length guards,
   lighting/tint/color-matrix color-filter descriptors, blur/offset image-filter descriptors, and corner/stamped/chain
-  path-effect descriptor payload guards. The run was 71M under Magic Jewel `out`, with `out` at 50G and the volume at
-  about 310Gi free after completion. Suite:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-191117/suite.tsv`.
+  path-effect descriptor payload guards. The run was 113M under Magic Jewel `out`, with `out` at 53G and the volume at
+  about 315Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260530-031858/suite.tsv`.
 - Magic Jewel focused command-probe `CASE_GROUPS=shader-descriptor-invalid` passed as the current shader descriptor
   parser guard checkpoint. Aggregate: 30/30 passed, `fallback_sum=30`, `unsupported_rows=0`,
   `jbr_picture_frames=0`, and `jbr_command_frames=0`. The run covered shader descriptor header/type/length guards,

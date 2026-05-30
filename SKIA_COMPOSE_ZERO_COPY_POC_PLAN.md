@@ -69,7 +69,7 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260530-030433/suite.tsv`.
 - The focused `effect-descriptor-invalid` command-probe group passed after `path-invalid`. Aggregate: 28/28 passed,
   `fallback_sum=28`, `unsupported_rows=0`, zero picture frames, and zero command frames:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-022214/suite.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260530-031858/suite.tsv`.
 - The focused `shader-descriptor-invalid` command-probe group passed after `effect-descriptor-invalid`. Aggregate:
   30/30 passed, `fallback_sum=30`, `unsupported_rows=0`, zero picture frames, and zero command frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-023829/suite.tsv`.
@@ -375,7 +375,7 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - The current focused effect descriptor parser guard refresh is `CASE_GROUPS=effect-descriptor-invalid`, which passed
   28/28 with `fallback_sum=28`, zero unsupported rows, zero JBR picture frames, and zero JBR command frames after the
   direct parser-test additions for blur, offset, corner/stamped path-effect, and chain path-effect descriptor bounds:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-191117/suite.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260530-031858/suite.tsv`.
 - The current focused RuntimeEffect parser/semantic guard refresh is `CASE_GROUPS=runtime-effect-invalid`, which passed
   62/62 with `fallback_sum=56`, six intentional unsupported-picture rows, 5,670 JBR picture frames, and zero JBR
   command frames across source, SKSL, uniform, child, named-count, compile/build, and child-type bounds:
@@ -423,7 +423,7 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   passed 28/28 with `fallback_sum=28`, zero unsupported rows, zero JBR picture frames, and zero JBR command frames
   across descriptor header guards, color/image filter payloads, and corner/stamped/chain path-effect descriptor parser
   guards:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260522-111754/suite.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260530-031858/suite.tsv`.
 - The current focused shader descriptor parser guard checkpoint is `CASE_GROUPS=shader-descriptor-invalid`, which
   passed 30/30 with `fallback_sum=30`, zero unsupported rows, zero JBR picture frames, and zero JBR command frames
   across shader descriptor headers, color/filter payloads, transformed/composite shader guards, gradient/image shader
