@@ -157,6 +157,14 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   missing because the image comparison was skipped. The TSV has 15 lines including the header. The run was 85M under
   Magic Jewel `out`, with `out` at 57G and the volume at about 306Gi free after completion. Suite:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260530-131305/suite.tsv`.
+- Magic Jewel focused screenshot parity graphics-layer-clip-shadow-transform refresh also passed in marker-only mode.
+  Aggregate: 14/14 passed, `fallback_sum=0`, `jbr_picture_frames=0`, `jbr_command_frames=34196`, and pixel metrics
+  intentionally missing because the image comparison was skipped. The TSV has 15 lines including the header. The run
+  was 75M under Magic Jewel `out`, with `out` at 57G and the volume at about 306Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260530-132134/suite.tsv`.
+- Combined across the nine focused marker-only screenshot parity groups after the wrapper fix, all 106 parity rows
+  passed with `fallback_sum=13`, `jbr_picture_frames=0`, `jbr_command_frames=184246`, and intentionally missing pixel
+  metrics because the image comparison was skipped.
 - Magic Jewel full default benchmark suite passed after the compatibility/artifact refreshes in command-marker-only
   mode. Aggregate: 5/5 passed, `fallback_sum=0`, 84 old-side CPU samples, 49 new-side CPU samples, one picture-FPS
   row at `229.4`, command-FPS row total `684.8`, and `jbr_command_frames=13695`. The TSV has 6 lines including the
