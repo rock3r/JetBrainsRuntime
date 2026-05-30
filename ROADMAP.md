@@ -52,6 +52,10 @@ This is the small working roadmap for the current PoC. The full historical check
   consolidation: 13/13 passed, `fallback_sum=13`, `unsupported_rows=0`, `jbr_picture_frames=0`, and
   `jbr_command_frames=0`, suite
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260530-143801/suite.tsv`.
+- Magic Jewel focused command-probe `CASE_GROUPS=native-text-invalid` refreshed after the marker-only parity
+  consolidation: 11/11 passed, `fallback_sum=11`, `unsupported_rows=0`, `jbr_picture_frames=0`, and
+  `jbr_command_frames=1857`, suite
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260530-144639/suite.tsv`.
 - Magic Jewel exact command-probe `CASES=commands-descriptor-eviction` passed after the CMP recorder eviction guard:
   1/1 passed, `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, `jbr_command_frames=59`, suite
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-013713/suite.tsv`.
@@ -61,9 +65,6 @@ This is the small working roadmap for the current PoC. The full historical check
 - Magic Jewel focused graphics-layer render-effect descriptor rows passed after the CMP image-filter descriptor cache
   gate: 3/3 passed, `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, `jbr_command_frames=4465`, suite
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-015048/suite.tsv`.
-- Magic Jewel focused command-probe `CASE_GROUPS=native-text-invalid` passed: 11/11 passed, `fallback_sum=11`,
-  `unsupported_rows=0`, `jbr_picture_frames=0`, `jbr_command_frames=1519`, suite
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260530-055310/suite.tsv`.
 - Magic Jewel focused command-probe `CASE_GROUPS=primitive-invalid` passed: 13/13 passed, `fallback_sum=13`,
   `unsupported_rows=0`, `jbr_picture_frames=0`, `jbr_command_frames=0`, suite
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-200527/suite.tsv`.
