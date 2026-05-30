@@ -62,6 +62,10 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - Focused command-probe `CASE_GROUPS=path-invalid` refreshed after the marker-only parity consolidation:
   22/22 passed, `fallback_sum=22`, no unsupported rows, zero picture frames, and zero command frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260530-145405/suite.tsv`.
+- Focused command-probe `CASE_GROUPS=color-filters` refreshed after the marker-only parity consolidation:
+  10/10 passed, `fallback_sum=0`, one intentional unsupported-picture row, 1,451 picture frames, and 19,801 command
+  frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260530-150741/suite.tsv`.
 - The latest exact descriptor-handle eviction command row passed after adding matching CMP recorder eviction guards.
   Aggregate: 1/1 passed, `fallback_sum=0`, `unsupported_rows=0`, zero picture frames, and 59 command frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-013713/suite.tsv`.
