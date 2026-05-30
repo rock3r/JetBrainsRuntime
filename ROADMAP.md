@@ -38,10 +38,12 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
-- Magic Jewel full default command-probe sweep passed in command-marker-only mode after the latest focused quick-group
-  refreshes and parser/fallback sentinel checks: 487/487 passed, `fallback_sum=350`, `unsupported_rows=26`,
-  `jbr_picture_frames=33632`, `jbr_command_frames=183989`, suite
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-222152/suite.tsv`.
+- Magic Jewel full default command-probe consolidation passed in command-marker-only mode after the latest focused
+  invalid/parser guard refreshes. The run was split by a Codex restart and resumed from
+  `commands-invalid-linear-gradient-stroke-color-count-fallback`; combined aggregate: 487/487 passed,
+  `fallback_sum=350`, `unsupported_rows=26`, `jbr_picture_frames=34406`, `jbr_command_frames=226952`, suites
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260530-064308/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260530-094245/suite.tsv`.
 - Magic Jewel exact command-probe `CASES=commands-descriptor-eviction` passed after the CMP recorder eviction guard:
   1/1 passed, `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, `jbr_command_frames=59`, suite
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-013713/suite.tsv`.

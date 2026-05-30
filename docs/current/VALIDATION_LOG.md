@@ -5,15 +5,18 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
-- Magic Jewel full default command-probe sweep passed in command-marker-only mode after the latest focused descriptor,
-  invalid, color-filter, saveLayer, and graphics-layer render-effect refreshes. Aggregate: 487/487 passed,
-  `fallback_sum=350`, `unsupported_rows=26`, `jbr_picture_frames=29771`, and `jbr_command_frames=149695`. The
+- Magic Jewel full default command-probe consolidation passed in command-marker-only mode after the latest focused
+  invalid/parser guard refreshes. The run was split by a Codex restart: the prefix completed 306 rows in
+  `20260530-064308`, then the tail resumed with
+  `CASES_FROM=commands-invalid-linear-gradient-stroke-color-count-fallback`. Combined aggregate: 487/487 passed,
+  `fallback_sum=350`, `unsupported_rows=26`, `jbr_picture_frames=34406`, and `jbr_command_frames=226952`. The
   unsupported rows remain intentional raw/unsupported shader, color-filter, path-effect, graphics-layer, saveLayer,
-  and RuntimeEffect/schema fallback sentinels. The TSV has 488 lines including the header. The run used
-  `EXPECT_SCREENSHOT_ASSERTION=false` because local macOS screenshot assertions are currently failing independently of
-  command replay on supported rows. The run was 1.8G under Magic Jewel `out`, with `out` at 49G and the volume at
-  about 325Gi free after completion. Suite:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260529-120117/suite.tsv`.
+  and RuntimeEffect/schema fallback sentinels. The prefix TSV has 307 lines including the header and the tail TSV has
+  182 lines including the header. The run used `EXPECT_SCREENSHOT_ASSERTION=false` because local macOS screenshot
+  assertions are currently failing independently of command replay on supported rows. The prefix was 1.2G and the tail
+  was 919M under Magic Jewel `out`, with `out` at 56G and the volume at about 307Gi free after completion. Suites:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260530-064308/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260530-094245/suite.tsv`.
 - Magic Jewel exact command-probe `CASES=commands-descriptor-eviction` passed after the CMP recorder gained matching
   color-filter and shader descriptor-handle eviction tests. Aggregate: 1/1 passed, `fallback_sum=0`,
   `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=59`. The report contained native effect-handle
