@@ -138,6 +138,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   header. The run was 263M under Magic Jewel `out`, with `out` at 59G and the volume at about 291Gi free after
   completion. Suite:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260531-152938/suite.tsv`.
+- Magic Jewel focused command-probe fill-rect color-filter invalid refresh passed after the marker-only parity
+  consolidation: `CASE_GROUPS=fill-rect-color-filter-invalid` covered 5/5 rows with `fallback_sum=5`,
+  `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=0`. The TSV has 6 lines including the header.
+  The successful run was 14M under Magic Jewel `out`, with `out` at 59G and the volume at about 291Gi free after
+  completion. A preceding sandboxed attempt failed before app startup on Gradle's `~/.gradle` lock-file write and is
+  intentionally not referenced as validation evidence. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260531-161535/suite.tsv`.
 - Magic Jewel exact command-probe `CASES=commands-descriptor-eviction` passed after the CMP recorder gained matching
   color-filter and shader descriptor-handle eviction tests. Aggregate: 1/1 passed, `fallback_sum=0`,
   `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=59`. The report contained native effect-handle
