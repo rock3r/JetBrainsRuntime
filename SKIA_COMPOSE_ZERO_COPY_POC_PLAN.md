@@ -1906,6 +1906,11 @@ Current validation gates are intentionally broad but summarized here to keep thi
   rechecking the surrounding default-order slice.
 - Screenshot parity asserts old/new pixel parity plus JBR-owned shader/effect handle definition, use, cache-hit, and
   context-invalidation markers on descriptor rows.
+- Descriptor-backed screenshot parity rows now also carry bounded JBR shader/effect handle definition ceilings for
+  color-filter, shader, RuntimeEffect, and graphics-layer lifecycle probes. These are full-scene runaway guards rather
+  than exact frame-count assertions; the focused descriptor-guard refresh passed 27/27 with `fallback_sum=9`,
+  `jbr_picture_frames=0`, and `jbr_command_frames=17040`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260531-235827/suite.tsv`.
 - `parity-button-chrome` explicitly guards the Pulse primary-button white text and centering regression seen in manual
   screenshots. The latest focused run reported `screenshot_primaryButtonWhiteText=405`,
   `screenshot_primaryButtonDarkText=0`, and `screenshot_parity_region_headerButtons_badPixelRatio=0.00381`.

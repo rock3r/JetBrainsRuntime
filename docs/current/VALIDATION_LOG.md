@@ -5,6 +5,14 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel focused screenshot parity descriptor-guard refresh passed after adding bounded JBR shader/effect handle
+  definition ceilings to descriptor-backed parity rows. The final single-pass focused run covered 27/27 rows with
+  `fallback_sum=9`, `jbr_picture_frames=0`, and `jbr_command_frames=17040`; the resize fallback markers were the
+  expected color-filter/shader/RuntimeEffect/graphics-layer resize sentinels. The run used
+  `EXPECT_SCREENSHOT_ASSERTION=false`, so screenshot pixel metrics were intentionally `missing`, and validated the
+  new ceilings as full-scene runaway guards rather than exact frame-count assertions. The run was 93M under Magic
+  Jewel `out`, with `out` at 62G and the volume at about 289Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260531-235827/suite.tsv`.
 - Magic Jewel full default screenshot parity suite passed in marker-only mode after the 20260531 command-probe,
   compatibility, artifact, and Skiko focused publication/test refreshes. Aggregate: 106/106 passed,
   `fallback_sum=11`, `jbr_picture_frames=0`, and `jbr_command_frames=79348`. All 106 rows had `avg_delta=missing`

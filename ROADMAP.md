@@ -38,6 +38,10 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel focused screenshot parity descriptor-guard refresh passed after adding bounded JBR shader/effect handle
+  definition ceilings to descriptor-backed parity rows: 27/27 passed, `fallback_sum=9`, `jbr_picture_frames=0`, and
+  `jbr_command_frames=17040`, suite
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260531-235827/suite.tsv`.
 - Magic Jewel full default screenshot parity suite passed in marker-only mode after the command, compatibility,
   artifact, and Skiko refreshes: 106/106 passed, `fallback_sum=11`, `jbr_picture_frames=0`, and
   `jbr_command_frames=79348`; all screenshot pixel metrics were intentionally `missing` because
