@@ -45,6 +45,10 @@ This is the small working roadmap for the current PoC. The full historical check
 - Magic Jewel compatibility matrix passed in command-marker-only mode after the full command-probe consolidation:
   57/57 passed, `fallback_sum=56`, `jbr_command_frames=454`, background-window mode true for all rows, matrix
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260531-214046/matrix.tsv`.
+- Magic Jewel artifact matrix passed on current ABI 106 local artifacts after the compatibility refresh: required rows
+  2/2 passed, optional old-artifact rows skipped because no old bundle variables were set, `fallback_sum=1`,
+  `jbr_command_frames=445`, matrix
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260531-221009/matrix.tsv`.
 - Magic Jewel focused command-probe `CASE_GROUPS=save-layer-shader-fallbacks` passed after the marker-only parity
   consolidation: 7/7 passed, `fallback_sum=0`, five intentional unsupported-picture rows,
   `jbr_picture_frames=6491`, and `jbr_command_frames=4020`, suite

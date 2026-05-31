@@ -178,9 +178,9 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   background-window mode on every row:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260531-214046/matrix.tsv`.
 - The latest artifact matrix checkpoint passed the required current-artifact rows on ABI 106 local artifacts:
-  `current-all` replayed commands with 1,081 JBR command frames, `missing-public-api` fell back exactly once, and the
+  `current-all` replayed commands with 445 JBR command frames, `missing-public-api` fell back exactly once, and the
   optional old-artifact rows were skipped because no bundle variables were set:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260530-120135/matrix.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260531-221009/matrix.tsv`.
 - A follow-up focused artifact matrix also passed after fixing Magic Jewel's JBR API helper to remove its temporary
   `com.jetbrains.exported.JBRApi` desktop-overlay stub on exit: `current-all` replayed commands with 460 JBR command
   frames, and `missing-public-api` fell back exactly once:

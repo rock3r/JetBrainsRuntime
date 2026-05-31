@@ -23,6 +23,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   including the header. The run was 67M under Magic Jewel `out`, with `out` at 61G and the volume at about 301Gi free
   after completion. Matrix:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260531-214046/matrix.tsv`.
+- Magic Jewel artifact matrix passed on current ABI 106 local artifacts after the compatibility refresh. Required rows
+  2/2 passed: `current-all` replayed commands with 445 JBR command frames, and `missing-public-api` fell back exactly
+  once. Optional old-artifact rows were skipped because no `OLD_JBR_API_SHIM`, `OLD_JBR_SKIA_LIB`, `OLD_DESKTOP_PATCH`,
+  `OLD_SKIKO_VERSION`, or `OLD_CMP_OUT` variables were set. The TSV has 8 lines including the header. The run was
+  2.8M under Magic Jewel `out`, with `out` at 61G and the volume at about 301Gi free after completion. Matrix:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260531-221009/matrix.tsv`.
 - Magic Jewel full default command-probe consolidation passed in command-marker-only mode after the latest focused
   invalid/parser guard refreshes. The run was split by a Codex restart: the prefix completed 306 rows in
   `20260530-064308`, then the tail resumed with
