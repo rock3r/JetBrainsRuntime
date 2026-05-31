@@ -38,6 +38,11 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel full default screenshot parity suite passed in marker-only mode after the command, compatibility,
+  artifact, and Skiko refreshes: 106/106 passed, `fallback_sum=11`, `jbr_picture_frames=0`, and
+  `jbr_command_frames=79348`; all screenshot pixel metrics were intentionally `missing` because
+  `EXPECT_SCREENSHOT_ASSERTION=false` was set. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260531-221616/suite.tsv`.
 - Magic Jewel full default command-probe consolidation passed in command-marker-only mode after the latest focused
   invalid/parser guard refreshes: 487/487 passed, `fallback_sum=350`, `unsupported_rows=26`,
   `jbr_picture_frames=25686`, and `jbr_command_frames=122355`, suite

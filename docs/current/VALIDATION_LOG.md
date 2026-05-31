@@ -5,6 +5,16 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel full default screenshot parity suite passed in marker-only mode after the 20260531 command-probe,
+  compatibility, artifact, and Skiko focused publication/test refreshes. Aggregate: 106/106 passed,
+  `fallback_sum=11`, `jbr_picture_frames=0`, and `jbr_command_frames=79348`. All 106 rows had `avg_delta=missing`
+  and `bad_pixel_ratio=missing` because the run intentionally used `EXPECT_SCREENSHOT_ASSERTION=false` while local
+  macOS screenshot assertions remain outside the current command-replay signal. The 11 fallback markers were bounded
+  to resize sentinel rows: native generic/system font text, color-filter handle, color/noise/turbulence/composite-noise
+  shaders, RuntimeEffect pure-color/stable color-filter, and graphics-layer color-matrix/render-effect resize rows.
+  The TSV has 107 lines including the header. The run was 492M under Magic Jewel `out`, with `out` at 62G and the
+  volume at about 301Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260531-221616/suite.tsv`.
 - Magic Jewel full default command-probe consolidation passed in command-marker-only mode after refreshing the focused
   invalid/parser guard groups, including `gradient-invalid`, `runtime-effect-invalid`,
   `fill-rect-color-filter-invalid`, `shader-ref-invalid`, and `blend-mode-invalid`. Aggregate: 487/487 passed,

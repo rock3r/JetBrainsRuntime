@@ -47,6 +47,11 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   command-marker-only mode after the latest focused invalid/parser guard refreshes: 487/487 passed,
   `fallback_sum=350`, `unsupported_rows=26`, `picture_frames=25686`, and `command_frames=122355`:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260531-162857/suite.tsv`.
+- The latest full default screenshot parity suite passed in marker-only mode after the command, compatibility,
+  artifact, and Skiko refreshes: 106/106 passed, `fallback_sum=11`, zero JBR picture frames, and 79,348 JBR command
+  frames. The 11 fallback markers are bounded to resize sentinel rows, while all screenshot pixel metrics are
+  intentionally `missing` because `EXPECT_SCREENSHOT_ASSERTION=false` was set:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260531-221616/suite.tsv`.
 - Focused command-probe `CASE_GROUPS=save-layer-shader-fallbacks` passed after the marker-only parity consolidation:
   7/7 passed, `fallback_sum=0`, five intentional unsupported-picture rows, 6,491 JBR picture frames, and 4,020 JBR
   command frames:
