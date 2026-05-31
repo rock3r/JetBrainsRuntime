@@ -44,11 +44,9 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   is understood, so already-green prefixes do not need to be repeated. The current fast loop is exact row, quick group
   or bounded adjacent range, Skiko focused publication, `JbrSkiaInteropTest`, and then a periodic full sweep once a
   coherent batch of sentinels has landed. The latest periodic default command-probe consolidation passed in
-  command-marker-only mode after the latest focused invalid/parser guard refreshes. The run was split by a Codex
-  restart and resumed from `commands-invalid-linear-gradient-stroke-color-count-fallback`. Combined aggregate:
-  487/487 passed, `fallback_sum=350`, `unsupported_rows=26`, `picture_frames=34406`, and `command_frames=226952`:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260530-064308/suite.tsv` and
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260530-094245/suite.tsv`.
+  command-marker-only mode after the latest focused invalid/parser guard refreshes: 487/487 passed,
+  `fallback_sum=350`, `unsupported_rows=26`, `picture_frames=25686`, and `command_frames=122355`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260531-162857/suite.tsv`.
 - Focused command-probe `CASE_GROUPS=save-layer-shader-fallbacks` passed after the marker-only parity consolidation:
   7/7 passed, `fallback_sum=0`, five intentional unsupported-picture rows, 6,491 JBR picture frames, and 4,020 JBR
   command frames:

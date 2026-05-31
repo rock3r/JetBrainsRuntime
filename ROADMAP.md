@@ -39,11 +39,9 @@ This is the small working roadmap for the current PoC. The full historical check
 ## Latest Validations
 
 - Magic Jewel full default command-probe consolidation passed in command-marker-only mode after the latest focused
-  invalid/parser guard refreshes. The run was split by a Codex restart and resumed from
-  `commands-invalid-linear-gradient-stroke-color-count-fallback`; combined aggregate: 487/487 passed,
-  `fallback_sum=350`, `unsupported_rows=26`, `jbr_picture_frames=34406`, `jbr_command_frames=226952`, suites
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260530-064308/suite.tsv` and
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260530-094245/suite.tsv`.
+  invalid/parser guard refreshes: 487/487 passed, `fallback_sum=350`, `unsupported_rows=26`,
+  `jbr_picture_frames=25686`, and `jbr_command_frames=122355`, suite
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260531-162857/suite.tsv`.
 - Magic Jewel focused command-probe `CASE_GROUPS=save-layer-shader-fallbacks` passed after the marker-only parity
   consolidation: 7/7 passed, `fallback_sum=0`, five intentional unsupported-picture rows,
   `jbr_picture_frames=6491`, and `jbr_command_frames=4020`, suite
