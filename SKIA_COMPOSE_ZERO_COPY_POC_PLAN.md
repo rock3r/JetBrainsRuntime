@@ -181,6 +181,10 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `current-all` replayed commands with 445 JBR command frames, `missing-public-api` fell back exactly once, and the
   optional old-artifact rows were skipped because no bundle variables were set:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260531-221009/matrix.tsv`.
+- Skiko focused publication and full focused `JbrSkiaInteropTest` class passed after the 20260531 command,
+  compatibility, and artifact matrix refreshes:
+  `./gradlew publishAwtPublicationToMavenLocal publishAwtRuntimeElementsPublicationToMavenLocal publishKotlinMultiplatformPublicationToMavenLocal`
+  and `./gradlew --no-daemon --no-configuration-cache :awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`.
 - A follow-up focused artifact matrix also passed after fixing Magic Jewel's JBR API helper to remove its temporary
   `com.jetbrains.exported.JBRApi` desktop-overlay stub on exit: `current-all` replayed commands with 460 JBR command
   frames, and `missing-public-api` fell back exactly once:

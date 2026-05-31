@@ -49,6 +49,10 @@ This is the small working roadmap for the current PoC. The full historical check
   2/2 passed, optional old-artifact rows skipped because no old bundle variables were set, `fallback_sum=1`,
   `jbr_command_frames=445`, matrix
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260531-221009/matrix.tsv`.
+- Skiko focused publication and full focused `JbrSkiaInteropTest` class passed after the 20260531 command,
+  compatibility, and artifact matrix refreshes:
+  `./gradlew publishAwtPublicationToMavenLocal publishAwtRuntimeElementsPublicationToMavenLocal publishKotlinMultiplatformPublicationToMavenLocal`
+  and `./gradlew --no-daemon --no-configuration-cache :awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`.
 - Magic Jewel focused command-probe `CASE_GROUPS=save-layer-shader-fallbacks` passed after the marker-only parity
   consolidation: 7/7 passed, `fallback_sum=0`, five intentional unsupported-picture rows,
   `jbr_picture_frames=6491`, and `jbr_command_frames=4020`, suite

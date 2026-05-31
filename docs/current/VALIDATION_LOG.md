@@ -29,6 +29,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   `OLD_SKIKO_VERSION`, or `OLD_CMP_OUT` variables were set. The TSV has 8 lines including the header. The run was
   2.8M under Magic Jewel `out`, with `out` at 61G and the volume at about 301Gi free after completion. Matrix:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260531-221009/matrix.tsv`.
+- Skiko focused publication and full focused `JbrSkiaInteropTest` class passed after the 20260531 command,
+  compatibility, and artifact matrix refreshes. Publication command:
+  `./gradlew publishAwtPublicationToMavenLocal publishAwtRuntimeElementsPublicationToMavenLocal publishKotlinMultiplatformPublicationToMavenLocal`.
+  Test command:
+  `./gradlew --no-daemon --no-configuration-cache :awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`.
+  Publication finished with `BUILD SUCCESSFUL` in 8s, and the focused test finished with `BUILD SUCCESSFUL` in 8s
+  (`:awtTest` was up-to-date).
 - Magic Jewel full default command-probe consolidation passed in command-marker-only mode after the latest focused
   invalid/parser guard refreshes. The run was split by a Codex restart: the prefix completed 306 rows in
   `20260530-064308`, then the tail resumed with
