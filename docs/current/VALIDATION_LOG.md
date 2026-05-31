@@ -15,6 +15,14 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   command replay on supported rows. The run was 1.7G under Magic Jewel `out`, with `out` at 61G and the volume at about
   301Gi free after completion. Suite:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260531-162857/suite.tsv`.
+- Magic Jewel compatibility matrix passed in command-marker-only mode after the full command-probe consolidation.
+  Aggregate: 57/57 passed, `fallback_sum=56`, `jbr_command_frames=454`, and `background_window=true` on every row.
+  The run used `EXPECT_SCREENSHOT_ASSERTION=false` to keep it aligned with the current marker-only command replay
+  validation loop. The only command frames came from the happy path; all ABI, native ABI, command-capability,
+  high-capability, feature-capability, and public API mismatch rows fell back exactly once. The TSV has 58 lines
+  including the header. The run was 67M under Magic Jewel `out`, with `out` at 61G and the volume at about 301Gi free
+  after completion. Matrix:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260531-214046/matrix.tsv`.
 - Magic Jewel full default command-probe consolidation passed in command-marker-only mode after the latest focused
   invalid/parser guard refreshes. The run was split by a Codex restart: the prefix completed 306 rows in
   `20260530-064308`, then the tail resumed with

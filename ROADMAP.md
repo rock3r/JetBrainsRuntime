@@ -42,6 +42,9 @@ This is the small working roadmap for the current PoC. The full historical check
   invalid/parser guard refreshes: 487/487 passed, `fallback_sum=350`, `unsupported_rows=26`,
   `jbr_picture_frames=25686`, and `jbr_command_frames=122355`, suite
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260531-162857/suite.tsv`.
+- Magic Jewel compatibility matrix passed in command-marker-only mode after the full command-probe consolidation:
+  57/57 passed, `fallback_sum=56`, `jbr_command_frames=454`, background-window mode true for all rows, matrix
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260531-214046/matrix.tsv`.
 - Magic Jewel focused command-probe `CASE_GROUPS=save-layer-shader-fallbacks` passed after the marker-only parity
   consolidation: 7/7 passed, `fallback_sum=0`, five intentional unsupported-picture rows,
   `jbr_picture_frames=6491`, and `jbr_command_frames=4020`, suite
