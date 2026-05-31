@@ -10,12 +10,14 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   `jbr_picture_frames=0`, and `jbr_command_frames=3302`; `CASE_GROUPS=runtime-effect` covered 14/14 rows with
   `fallback_sum=2`, `jbr_picture_frames=0`, and `jbr_command_frames=9021`; and
   `CASE_GROUPS=graphics-layer-effects` covered 14/14 rows with `fallback_sum=2`, `jbr_picture_frames=0`, and
-  `jbr_command_frames=9667`. The runs were 157M, 54M, and 49M respectively under Magic Jewel `out`, with `out` at
-  62G and the volume at about 301Gi free after completion. Suites:
+  `jbr_command_frames=9667`. The adjacent `CASE_GROUPS=shader-rendering` refresh also covered 18/18 rows with
+  `fallback_sum=4`, `jbr_picture_frames=0`, and `jbr_command_frames=11904`. The runs were 157M, 54M, 49M, and 65M
+  respectively under Magic Jewel `out`, with `out` at 62G and the volume at about 301Gi free after completion. Suites:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260601-001912/suite.tsv`,
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260601-002358/suite.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260601-003141/suite.tsv`,
   and
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260601-003141/suite.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260601-004029/suite.tsv`.
 - Magic Jewel focused screenshot parity descriptor-guard refresh passed after adding bounded JBR shader/effect handle
   definition ceilings to descriptor-backed parity rows. The final single-pass focused run covered 27/27 rows with
   `fallback_sum=9`, `jbr_picture_frames=0`, and `jbr_command_frames=17040`; the resize fallback markers were the
