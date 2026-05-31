@@ -5,6 +5,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel full default screenshot parity suite passed in marker-only mode after the descriptor-guard harness change
+  and focused group refreshes. Aggregate: 106/106 passed, `fallback_sum=11`, `jbr_picture_frames=0`, and
+  `jbr_command_frames=69504`. All 106 rows had screenshot pixel metrics intentionally `missing` because
+  `EXPECT_SCREENSHOT_ASSERTION=false` was set. The TSV has 107 lines including the header. The run was 442M under
+  Magic Jewel `out`, with `out` at 62G and the volume at about 301Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260601-005125/suite.tsv`.
 - Magic Jewel focused screenshot parity group refreshes passed after the descriptor-guard harness change. With
   `EXPECT_SCREENSHOT_ASSERTION=false`, `CASE_GROUPS=descriptor-lifecycle` covered 6/6 rows with `fallback_sum=1`,
   `jbr_picture_frames=0`, and `jbr_command_frames=3302`; `CASE_GROUPS=runtime-effect` covered 14/14 rows with

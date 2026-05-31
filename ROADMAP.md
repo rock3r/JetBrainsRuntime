@@ -38,6 +38,11 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel full default screenshot parity suite passed in marker-only mode after the descriptor-guard harness
+  change and focused group refreshes: 106/106 passed, `fallback_sum=11`, `jbr_picture_frames=0`, and
+  `jbr_command_frames=69504`; all screenshot pixel metrics were intentionally `missing` because
+  `EXPECT_SCREENSHOT_ASSERTION=false` was set. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260601-005125/suite.tsv`.
 - Magic Jewel focused screenshot parity group refreshes passed after the descriptor-guard harness change:
   `descriptor-lifecycle` 6/6 with `fallback_sum=1`, `runtime-effect` 14/14 with `fallback_sum=2`, and
   `graphics-layer-effects` 14/14 with `fallback_sum=2`; the adjacent `shader-rendering` group passed 18/18 with
