@@ -38,6 +38,13 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel focused screenshot parity group refreshes passed after the descriptor-guard harness change:
+  `descriptor-lifecycle` 6/6 with `fallback_sum=1`, `runtime-effect` 14/14 with `fallback_sum=2`, and
+  `graphics-layer-effects` 14/14 with `fallback_sum=2`; all had `jbr_picture_frames=0`. Suites:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260601-001912/suite.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260601-002358/suite.tsv`,
+  and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260601-003141/suite.tsv`.
 - Magic Jewel focused screenshot parity descriptor-guard refresh passed after adding bounded JBR shader/effect handle
   definition ceilings to descriptor-backed parity rows: 27/27 passed, `fallback_sum=9`, `jbr_picture_frames=0`, and
   `jbr_command_frames=17040`, suite
