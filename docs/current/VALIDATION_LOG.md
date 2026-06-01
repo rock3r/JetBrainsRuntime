@@ -5,6 +5,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel command-probe `gradient-invalid` refresh passed after the descriptor-handle invalid refresh. Aggregate:
+  60/60 passed, `fallback_sum=60`, `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=0`. This
+  covers malformed linear, radial, and sweep gradient payloads across fill, round-rect, stroke, round-rect stroke, and
+  path variants, including stroke width, radius, tile mode, color-count, stop-order, fill type, path length, and path
+  verb validation. The run was 121M under Magic Jewel `out`, with `out` at 63G and the volume at about 299Gi free
+  after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260601-045059/suite.tsv`.
 - Magic Jewel command-probe `descriptor-handles-invalid` refresh passed after the save-layer invalid refresh.
   Aggregate: 48/48 passed, `fallback_sum=48`, `unsupported_rows=0`, `jbr_picture_frames=0`, and
   `jbr_command_frames=0`. This covers invalid descriptor handle use, use-after-evict, malformed evict records,
