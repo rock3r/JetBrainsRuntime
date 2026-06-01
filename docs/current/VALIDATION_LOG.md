@@ -5,6 +5,14 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel command-probe `shader-composition-runtime` refresh passed after the shader rendering refresh. Aggregate:
+  15/15 passed, `fallback_sum=0`, `unsupported_rows=2`, `jbr_picture_frames=1687`, and
+  `jbr_command_frames=14729`. Supported image/composite/transformed shader, shader color-filter, RuntimeEffect shader,
+  RuntimeEffect pure/uniform/child, RuntimeEffect color-filter, and RuntimeEffect color-filter child rows replayed
+  commands; raw RuntimeEffect shader and raw RuntimeEffect color-filter rows stayed on the intentional
+  unsupported-picture path. The TSV has 16 lines including the header. The run was 64M under Magic Jewel `out`, with
+  `out` at 65G and the volume at about 290Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260601-131753/suite.tsv`.
 - Magic Jewel command-probe `shader-rendering` refresh passed after the save-layer/shader fallback refresh. Aggregate:
   13/13 passed, `fallback_sum=0`, `unsupported_rows=8`, `jbr_picture_frames=8130`, and `jbr_command_frames=5325`.
   Supported forced-context dynamic image, image shader, gradient shader, noise shader, and turbulence shader rows
