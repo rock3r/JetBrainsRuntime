@@ -5,6 +5,14 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel compatibility matrix, artifact matrix, and benchmark suite now support `LIST_UNGROUPED_CASES=true`,
+  matching the command-probe and screenshot parity audit helper. The pushed Magic Jewel commit `1e29750` adds the
+  no-run grouped coverage check and README documentation. Validation was no-run only: `bash -n` passed for all three
+  scripts, `LIST_UNGROUPED_CASES=true` printed no rows for compatibility/artifact/benchmark, default
+  `LIST_CASE_COUNT=true` returned 57, 7, and 5 respectively, compatibility `LIST_CASE_GROUP_COUNTS=true` still
+  returned `handshake` 6, `low-word-gradients` 15, `low-word-effects` 18, `high-word-effects` 9, and
+  `high-word-shader-ui` 9, and benchmark `LIST_CASES=true CASE_GROUPS=baseline` still listed `picture` and
+  `commands`. No runtime validation directories were created for this helper-only change.
 - Magic Jewel README now documents the new quick-group selectors for the compatibility matrix, artifact matrix, and
   benchmark suite. The pushed Magic Jewel commit `ea3dddc` covers `CASE_GROUPS=...`,
   `LIST_CASE_GROUPS=true`, `LIST_CASE_GROUP_COUNTS=true`, `LIST_CASES=true`, and `LIST_CASE_COUNT=true` for those
