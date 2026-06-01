@@ -12,8 +12,11 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   unknown-group rejection. A focused real `CASE_GROUPS=required` run passed 2/2: `current-all` replayed commands with
   `jbr_command_frames=333`, and `missing-public-api` fell back exactly once with zero command frames. The TSV has 3
   lines including the header. The run used `EXPECT_SCREENSHOT_ASSERTION=false`, was 3.6M under Magic Jewel `out`, with
-  `out` at 68G and the volume at about 268Gi free after completion. Matrix:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260601-215558/matrix.tsv`.
+  `out` at 68G and the volume at about 268Gi free after completion. A no-launch `CASE_GROUPS=optional-old` run also
+  passed by recording the five expected skipped rows when no old artifact variables were set; that TSV has 6 lines and
+  was 4.0K. Matrices:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260601-215558/matrix.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260601-215818/matrix.tsv`.
 - Magic Jewel focused compatibility high-word groups passed through the new grouped selector after the low-word groups.
   `CASE_GROUPS=high-word-effects` passed 9/9 with `fallback_sum=9`, `jbr_command_frames=0`, and
   `background_window=true` on every row, covering image-filter, offset/chained image-filter, RuntimeEffect
