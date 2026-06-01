@@ -5,6 +5,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel full default screenshot parity suite passed in marker-only mode after the 20260601 command,
+  compatibility, artifact, and Skiko refreshes. Aggregate: 106/106 passed, `fallback_sum=11`,
+  `jbr_picture_frames=0`, and `jbr_command_frames=120808`. All 106 rows had `avg_delta=missing` and
+  `bad_pixel_ratio=missing` because the run intentionally used `EXPECT_SCREENSHOT_ASSERTION=false` while validating
+  replay/fallback/report markers. The TSV has 107 lines including the header. The run was 592M under Magic Jewel
+  `out`, with `out` at 68G and the volume at about 269Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260601-202121/suite.tsv`.
 - Skiko focused publication and full focused `JbrSkiaInteropTest` class passed after the 20260601 command,
   compatibility, and artifact matrix refreshes. Publication command:
   `./gradlew publishAwtPublicationToMavenLocal publishAwtRuntimeElementsPublicationToMavenLocal publishKotlinMultiplatformPublicationToMavenLocal`
