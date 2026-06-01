@@ -5,6 +5,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel command-probe `runtime-effect-invalid` refresh passed after the gradient invalid refresh. Aggregate:
+  62/62 passed, `fallback_sum=56`, `unsupported_rows=6`, `jbr_picture_frames=5339`, and `jbr_command_frames=0`.
+  The six unsupported-picture rows were the intentionally raw invalid RuntimeEffect shader/color-filter
+  uniform-schema, child-schema, and nested-child sentinels; all other malformed RuntimeEffect source, count, schema,
+  child-index, compile, build, and child-type rows emitted structured single fallbacks. The run was 237M under Magic
+  Jewel `out`, with `out` at 63G and the volume at about 286Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260601-052906/suite.tsv`.
 - Magic Jewel command-probe `gradient-invalid` refresh passed after the descriptor-handle invalid refresh. Aggregate:
   60/60 passed, `fallback_sum=60`, `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=0`. This
   covers malformed linear, radial, and sweep gradient payloads across fill, round-rect, stroke, round-rect stroke, and
