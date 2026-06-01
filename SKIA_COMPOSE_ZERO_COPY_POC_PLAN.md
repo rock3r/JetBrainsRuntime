@@ -235,8 +235,9 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `fallback_sum=12`, zero JBR picture frames, 186,106 JBR command frames, and intentionally missing pixel metrics:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260530-133012/suite.tsv`.
 - Current no-run discovery helpers cover the command-probe, screenshot parity, compatibility matrix, artifact matrix,
-  and benchmark suite loops. Use `LIST_CASES=true` / `LIST_CASE_COUNT=true` where available for exact row discovery;
-  command and screenshot suites also expose `CASE_GROUPS=...` plus group listing/count helpers.
+  and benchmark suite loops. Use `LIST_CASES=true` / `LIST_CASE_COUNT=true` for exact row discovery, and
+  `CASE_GROUPS=...`, `LIST_CASE_GROUPS=true`, `LIST_CASE_GROUP_COUNTS=true`, and `LIST_UNGROUPED_CASES=true` for
+  curated slice discovery and grouped-coverage audits.
 - The latest full default benchmark checkpoint passed after the compatibility/artifact refreshes in
   command-marker-only mode. Aggregate: 5/5 passed, `fallback_sum=0`, 84 old-side CPU samples,
   49 new-side CPU samples, picture FPS `229.4`, command FPS row total `684.8`, and
