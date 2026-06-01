@@ -5,6 +5,16 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel compatibility matrix now supports no-run quick-group helpers, matching the command/parity suite
+  workflow: `LIST_CASE_GROUPS=true`, `LIST_CASE_GROUP_COUNTS=true`, and `CASE_GROUPS=...`. The exposed groups cover
+  all 57 compatibility rows: `handshake` 6, `low-word-gradients` 15, `low-word-effects` 18, `high-word-effects` 9,
+  and `high-word-shader-ui` 9. No-run validation confirmed group listing, group counts, `LIST_CASE_COUNT=true
+  CASE_GROUPS=handshake` returning 6, `LIST_CASES=true CASE_GROUPS=low-word-gradients` listing the 15 gradient rows,
+  and unknown-group rejection. A focused real `CASE_GROUPS=handshake` run passed 6/6 with `fallback_sum=5`,
+  `jbr_command_frames=470`, and `background_window=true` on every row. The run used
+  `EXPECT_SCREENSHOT_ASSERTION=false`, was 15M under Magic Jewel `out`, with `out` at 68G and the volume at about
+  269Gi free after completion. Matrix:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260601-212236/matrix.tsv`.
 - Magic Jewel full default screenshot parity suite passed in marker-only mode after the 20260601 command,
   compatibility, artifact, and Skiko refreshes. Aggregate: 106/106 passed, `fallback_sum=11`,
   `jbr_picture_frames=0`, and `jbr_command_frames=120808`. All 106 rows had `avg_delta=missing` and
