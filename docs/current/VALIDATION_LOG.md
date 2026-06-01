@@ -5,6 +5,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel compatibility matrix passed in command-marker-only mode after the 20260601 full command-probe
+  consolidation. Aggregate: 57/57 passed, `fallback_sum=56`, `jbr_command_frames=285`, and `background_window=true`
+  on all rows. The single command-replay row was the happy path; all ABI, native ABI, missing command-capability,
+  high-word capability, and public-API mismatch rows fell back exactly once with zero command frames. The TSV has 58
+  lines including the header. The run used `EXPECT_SCREENSHOT_ASSERTION=false`, was 91M under Magic Jewel `out`, with
+  `out` at 67G and the volume at about 256Gi free after completion. Matrix:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260601-194910/matrix.tsv`.
 - Magic Jewel full default command-probe sweep passed after the focused invalid/parser, shader, graphics-layer, and
   smoke refreshes. Aggregate: 487/487 passed, `fallback_sum=350`, `unsupported_rows=26`,
   `jbr_picture_frames=25751`, and `jbr_command_frames=132652`. The unsupported rows remain intentional
