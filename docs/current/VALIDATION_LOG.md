@@ -5,6 +5,15 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel artifact matrix now supports no-run quick-group helpers: `LIST_CASE_GROUPS=true`,
+  `LIST_CASE_GROUP_COUNTS=true`, and `CASE_GROUPS=...`. The exposed groups are `required` 2 and `optional-old` 5.
+  No-run validation confirmed group listing, group counts, `LIST_CASES=true CASE_GROUPS=required` listing
+  `current-all` and `missing-public-api`, `LIST_CASE_COUNT=true CASE_GROUPS=optional-old` returning 5, and
+  unknown-group rejection. A focused real `CASE_GROUPS=required` run passed 2/2: `current-all` replayed commands with
+  `jbr_command_frames=333`, and `missing-public-api` fell back exactly once with zero command frames. The TSV has 3
+  lines including the header. The run used `EXPECT_SCREENSHOT_ASSERTION=false`, was 3.6M under Magic Jewel `out`, with
+  `out` at 68G and the volume at about 268Gi free after completion. Matrix:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260601-215558/matrix.tsv`.
 - Magic Jewel focused compatibility high-word groups passed through the new grouped selector after the low-word groups.
   `CASE_GROUPS=high-word-effects` passed 9/9 with `fallback_sum=9`, `jbr_command_frames=0`, and
   `background_window=true` on every row, covering image-filter, offset/chained image-filter, RuntimeEffect
