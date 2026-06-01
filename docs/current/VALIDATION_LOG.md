@@ -5,6 +5,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel command-probe `path-invalid` refresh passed after the native text invalid refresh. Aggregate: 22/22
+  passed, `fallback_sum=22`, `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=0`. This covers
+  malformed clip/draw path verbs, path-effect path verbs, dash path-effect interval counts and values, rectangle and
+  round-rectangle geometry/style fields, and drawShadow path verbs without emitting partial command frames. The TSV has
+  23 lines including the header. The run was 50M under Magic Jewel `out`, with `out` at 65G and the volume at about
+  291Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260601-115408/suite.tsv`.
 - Magic Jewel command-probe `native-text-invalid` refresh passed after the primitive invalid refresh. Aggregate: 11/11
   passed, `fallback_sum=11`, `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=807`. This covers
   malformed text and paragraph font size, weight, width, slant, family count, and font-data record flags; only the
