@@ -5,6 +5,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel command-probe `descriptor-handles-invalid` refresh passed after the save-layer invalid refresh.
+  Aggregate: 48/48 passed, `fallback_sum=48`, `unsupported_rows=0`, `jbr_picture_frames=0`, and
+  `jbr_command_frames=0`. This covers invalid descriptor handle use, use-after-evict, malformed evict records,
+  missing children, stale child handles, and wrong-type child refs across shader, color-filter, image-filter,
+  path-effect, RuntimeEffect, and saveLayer descriptor trees. The run was 144M under Magic Jewel `out`, with `out` at
+  63G and the volume at about 300Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260601-042014/suite.tsv`.
 - Magic Jewel command-probe `save-layer-invalid` refresh passed after the image handle invalid refresh. Aggregate:
   37/37 passed, `fallback_sum=37`, `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=0`. This
   covers malformed saveLayer alpha, record flags/lengths, color-filter refs, blend-mode refs, image-filter refs, and
