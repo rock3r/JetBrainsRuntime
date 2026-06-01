@@ -5,6 +5,19 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Focused real validations passed after the matrix/benchmark `LIST_UNGROUPED_CASES=true` helper change. The initial
+  compatibility launch failed under the sandbox because Gradle could not open its `~/.gradle` wrapper lock file; that
+  unreferenced failed output directory was removed. Rerunning with the required Gradle permissions passed
+  compatibility `CASE_GROUPS=handshake` 6/6 with `fallback_sum=5`, `jbr_command_frames=311`, and
+  `background_window=true` on every row. Artifact `CASE_GROUPS=required` passed 2/2 with `fallback_sum=1`,
+  `jbr_command_frames=1295`, and `background_window=true` on both rows. A short benchmark `CASE_GROUPS=baseline`
+  run with `DURATION_SECONDS=5`, `WARMUP_SECONDS=1`, and `SAMPLE_INTERVAL_SECONDS=1` passed 2/2 with
+  `fallback_sum=0`: `picture` produced 910 JBR picture frames, and `commands` produced 1,246 JBR command frames. The
+  runs were 15M, 5.6M, and 5.8M under Magic Jewel `out`, with `out` at 68G and the volume at about 254Gi free after
+  completion. TSVs:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260601-221558/matrix.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260601-221937/matrix.tsv`, and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-benchmark-suite/20260601-222045/suite.tsv`.
 - Magic Jewel compatibility matrix, artifact matrix, and benchmark suite now support `LIST_UNGROUPED_CASES=true`,
   matching the command-probe and screenshot parity audit helper. The pushed Magic Jewel commit `1e29750` adds the
   no-run grouped coverage check and README documentation. Validation was no-run only: `bash -n` passed for all three
