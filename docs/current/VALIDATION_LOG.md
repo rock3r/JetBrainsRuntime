@@ -5,6 +5,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel command-probe `descriptor-lifecycle` refresh passed after the native text refresh. Aggregate: 18/18
+  passed, `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=21178`. This covers
+  descriptor eviction, resize and forced-context descriptor redefinition, shader/color/noise/turbulence/composite shader
+  descriptor lifecycle rows, stable RuntimeEffect color-filter lifecycle, and RuntimeEffect source-cache eviction. The
+  TSV has 19 lines including the header. The run was 306M under Magic Jewel `out`, with `out` at 65G and the volume at
+  about 277Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260601-123015/suite.tsv`.
 - Magic Jewel command-probe `native-text` refresh passed after the color-filter refresh. Aggregate: 14/14 passed,
   `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=15641`. This covers custom,
   generic, loaded font-data, classpath resource, and system native text replay across steady-state, resize, and
