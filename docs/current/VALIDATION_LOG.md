@@ -5,6 +5,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel command-probe `native-text-invalid` refresh passed after the primitive invalid refresh. Aggregate: 11/11
+  passed, `fallback_sum=11`, `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=807`. This covers
+  malformed text and paragraph font size, weight, width, slant, family count, and font-data record flags; only the
+  font-data record-flags row reached command replay before the deliberate malformed record fell back. The TSV has 12
+  lines including the header. The run was 27M under Magic Jewel `out`, with `out` at 65G and the volume at about 292Gi
+  free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260601-114457/suite.tsv`.
 - Magic Jewel command-probe `primitive-invalid` refresh passed after the full default command-probe sweep. Aggregate:
   13/13 passed, `fallback_sum=13`, `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=0`. This
   covers malformed stroke cap, transform record flags, clip operation, drawPoints counts/record length, and drawVertices
