@@ -5,6 +5,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel command-probe `core-effects` refresh passed after the surface/transform/UI refresh. Aggregate: 7/7
+  passed, `fallback_sum=0`, `unsupported_rows=2`, `jbr_picture_frames=1408`, and `jbr_command_frames=5713`. Supported
+  gradient stroke, image-filter, path-effect, vertices, and blend-mode rows replayed commands; the two
+  unsupported-picture rows were the intentional path-effect color-filter and raw discrete path-effect fallback rows.
+  The TSV has 8 lines including the header. The run was 24M under Magic Jewel `out`, with `out` at 65G and the volume
+  at about 291Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260601-125515/suite.tsv`.
 - Magic Jewel command-probe `surface-transform-ui` refresh passed after the descriptor lifecycle refresh. Aggregate:
   11/11 passed, `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=11384`.
   This covers native bridge loading, drawPoints lines/dots, concat and skew transforms, gradient surfaces/paths,
