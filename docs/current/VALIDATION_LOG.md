@@ -5,6 +5,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel command-probe `effect-descriptor-invalid` refresh passed after the stable parity descriptor guard batch.
+  Aggregate: 28/28 passed, `fallback_sum=28`, `unsupported_rows=0`, `jbr_picture_frames=0`, and
+  `jbr_command_frames=0`. This keeps malformed effect, color-filter, image-filter, path-effect, and chain
+  descriptor payloads on structured fallback without emitting partial command frames. The run was 76M under Magic
+  Jewel `out`, with `out` at 63G and the volume at about 300Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260601-030722/suite.tsv`.
 - Magic Jewel stable screenshot parity descriptor guards were extended to the remaining non-dynamic shader/effect rows:
   image color-matrix filter, shader-plus-color-filter variants, transformed shader, and graphics-layer render-effect
   combinations now have full-scene max JBR handle-definition ceilings. Exact touched rows passed 17/17 with
