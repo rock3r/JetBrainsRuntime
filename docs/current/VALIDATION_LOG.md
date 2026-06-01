@@ -5,6 +5,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Skiko focused publication and full focused `JbrSkiaInteropTest` class passed after the 20260601 command,
+  compatibility, and artifact matrix refreshes. Publication command:
+  `./gradlew publishAwtPublicationToMavenLocal publishAwtRuntimeElementsPublicationToMavenLocal publishKotlinMultiplatformPublicationToMavenLocal`
+  completed successfully in 7s with 22 actionable tasks, then
+  `./gradlew --no-daemon --no-configuration-cache :awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`
+  completed successfully in 7s with 28 actionable tasks, confirming the freshly published Skiko artifacts still satisfy
+  the focused JBR Skia interop contract.
 - Magic Jewel artifact matrix passed on current ABI 106 local artifacts after the 20260601 compatibility refresh.
   Required rows 2/2 passed: `current-all` replayed commands with `jbr_command_frames=1300`, and
   `missing-public-api` fell back exactly once with zero command frames. Optional old-artifact rows were skipped because
