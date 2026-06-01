@@ -5,6 +5,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel command-probe `save-layer-invalid` refresh passed after the image handle invalid refresh. Aggregate:
+  37/37 passed, `fallback_sum=37`, `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=0`. This
+  covers malformed saveLayer alpha, record flags/lengths, color-filter refs, blend-mode refs, image-filter refs, and
+  combined blend/color-filter payloads without emitting partial command frames. The run was 89M under Magic Jewel
+  `out`, with `out` at 63G and the volume at about 287Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260601-035634/suite.tsv`.
 - Magic Jewel command-probe `image-handles-invalid` refresh passed after the gradient path invalid refresh. Aggregate:
   27/27 passed, `fallback_sum=27`, `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=847`.
   The only row with command frames was the invalid image-cache-clear record-flags sentinel, which reaches command
