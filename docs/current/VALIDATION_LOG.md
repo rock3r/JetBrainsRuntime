@@ -5,6 +5,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel command-probe `image-handles-invalid` refresh passed after the gradient path invalid refresh. Aggregate:
+  27/27 passed, `fallback_sum=27`, `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=847`.
+  The only row with command frames was the invalid image-cache-clear record-flags sentinel, which reaches command
+  replay before the deliberately malformed cache-clear record falls back; all other malformed image define/use/ref and
+  image color-filter ref rows emitted zero command frames. The run was 63M under Magic Jewel `out`, with `out` at 63G
+  and the volume at about 300Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260601-033906/suite.tsv`.
 - Magic Jewel command-probe `gradient-path-invalid` refresh passed after the effect descriptor invalid refresh.
   Aggregate: 18/18 passed, `fallback_sum=18`, `unsupported_rows=0`, `jbr_picture_frames=0`, and
   `jbr_command_frames=0`. This covers malformed linear, radial, and sweep gradient path payloads across tile mode,
