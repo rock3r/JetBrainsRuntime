@@ -38,6 +38,11 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel command-probe shader invalid descriptor gates were tightened with exact max descriptor-setup counts:
+  exact touched rows passed 13/13 with `fallback_sum=13`, then `CASE_GROUPS=shader-descriptor-invalid` passed 30/30
+  with `fallback_sum=30`, `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=0`. Suites:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260601-015339/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260601-020219/suite.tsv`.
 - Magic Jewel full default screenshot parity suite passed in marker-only mode after the descriptor-guard harness
   change and focused group refreshes: 106/106 passed, `fallback_sum=11`, `jbr_picture_frames=0`, and
   `jbr_command_frames=69504`; all screenshot pixel metrics were intentionally `missing` because

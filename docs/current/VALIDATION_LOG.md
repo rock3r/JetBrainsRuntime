@@ -5,6 +5,16 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel shader invalid descriptor command gates were tightened with exact max JBR descriptor-setup counts for
+  linear-gradient, radial-gradient, sweep-gradient, and image-shader malformed descriptor rows. Exact touched rows
+  passed 13/13 with `fallback_sum=13`, `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=0`;
+  then `CASE_GROUPS=shader-descriptor-invalid` passed 30/30 with `fallback_sum=30`, `unsupported_rows=0`,
+  `jbr_picture_frames=0`, and `jbr_command_frames=0`. Dynamic RuntimeEffect command rows and descriptor eviction were
+  intentionally left without max handle-definition ceilings because their report data shows legitimate per-frame or
+  high-volume descriptor churn. The group run was 86M under Magic Jewel `out`, with `out` at 63G and the volume at
+  about 288Gi free after completion. Suites:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260601-015339/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260601-020219/suite.tsv`.
 - Magic Jewel full default screenshot parity suite passed in marker-only mode after the descriptor-guard harness change
   and focused group refreshes. Aggregate: 106/106 passed, `fallback_sum=11`, `jbr_picture_frames=0`, and
   `jbr_command_frames=69504`. All 106 rows had screenshot pixel metrics intentionally `missing` because
