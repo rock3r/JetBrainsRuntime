@@ -5,6 +5,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel command-probe `surface-transform-ui` refresh passed after the descriptor lifecycle refresh. Aggregate:
+  11/11 passed, `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=11384`.
+  This covers native bridge loading, drawPoints lines/dots, concat and skew transforms, gradient surfaces/paths,
+  popup and real popup-window layering, Swing menu layering, and text-as-image replay. The TSV has 12 lines including
+  the header. The run was 39M under Magic Jewel `out`, with `out` at 65G and the volume at about 291Gi free after
+  completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260601-124618/suite.tsv`.
 - Magic Jewel command-probe `descriptor-lifecycle` refresh passed after the native text refresh. Aggregate: 18/18
   passed, `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=21178`. This covers
   descriptor eviction, resize and forced-context descriptor redefinition, shader/color/noise/turbulence/composite shader
