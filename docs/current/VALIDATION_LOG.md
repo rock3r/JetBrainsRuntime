@@ -5,6 +5,9 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel compatibility matrix audit list order now matches the actual run order for
+  `command-capability-high-mismatch` in pushed commit `8861b08`. No-run validation: `bash -n` passed,
+  `LIST_CASE_COUNT=true` returned 57, and `LIST_UNGROUPED_CASES=true` printed no rows.
 - Focused real validations passed after the matrix/benchmark `LIST_UNGROUPED_CASES=true` helper change. The initial
   compatibility launch failed under the sandbox because Gradle could not open its `~/.gradle` wrapper lock file; that
   unreferenced failed output directory was removed. Rerunning with the required Gradle permissions passed
