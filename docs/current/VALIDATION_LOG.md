@@ -5,6 +5,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel command-probe `primitive-invalid` refresh passed after the full default command-probe sweep. Aggregate:
+  13/13 passed, `fallback_sum=13`, `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=0`. This
+  covers malformed stroke cap, transform record flags, clip operation, drawPoints counts/record length, and drawVertices
+  counts, record length, vertex mode, blend mode, and index counts without emitting partial command frames. The TSV has
+  14 lines including the header. The run was 29M under Magic Jewel `out`, with `out` at 65G and the volume at about
+  292Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260601-113502/suite.tsv`.
 - Magic Jewel full default command-probe sweep passed after the stable parity descriptor guard refresh and focused
   invalid-group refreshes. Aggregate: 487/487 passed, `fallback_sum=350`, `unsupported_rows=26`,
   `jbr_picture_frames=24003`, and `jbr_command_frames=121226`. The unsupported rows remain intentional
