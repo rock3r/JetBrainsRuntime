@@ -5,6 +5,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel command-probe `native-text` refresh passed after the color-filter refresh. Aggregate: 14/14 passed,
+  `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=15641`. This covers custom,
+  generic, loaded font-data, classpath resource, and system native text replay across steady-state, resize, and
+  forced-context paths. The TSV has 15 lines including the header. The run was 52M under Magic Jewel `out`, with
+  `out` at 65G and the volume at about 278Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260601-121934/suite.tsv`.
 - Magic Jewel command-probe `color-filters` refresh passed after the path invalid refresh. Aggregate: 10/10 passed,
   `fallback_sum=0`, `unsupported_rows=1`, `jbr_picture_frames=870`, and `jbr_command_frames=9857`. Supported image,
   tint, color-matrix, lighting, descriptor-handle, and graphics-layer color-filter rows replayed commands; the single
