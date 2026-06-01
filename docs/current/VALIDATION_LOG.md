@@ -5,6 +5,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel README now documents the new quick-group selectors for the compatibility matrix, artifact matrix, and
+  benchmark suite. The pushed Magic Jewel commit `ea3dddc` covers `CASE_GROUPS=...`,
+  `LIST_CASE_GROUPS=true`, `LIST_CASE_GROUP_COUNTS=true`, `LIST_CASES=true`, and `LIST_CASE_COUNT=true` for those
+  harnesses, including the current compatibility groups (`handshake`, `low-word-gradients`, `low-word-effects`,
+  `high-word-effects`, `high-word-shader-ui`), artifact groups (`required`, `optional-old`), and benchmark groups
+  (`baseline`, `image-cache`). This was a docs-only update after the focused grouped validations below; no additional
+  runtime validation was needed.
 - Magic Jewel benchmark suite now supports no-run quick-group helpers: `LIST_CASE_GROUPS=true`,
   `LIST_CASE_GROUP_COUNTS=true`, and `CASE_GROUPS=...`. The exposed groups are `baseline` 2 and `image-cache` 3.
   No-run validation confirmed syntax, group listing/counts, `LIST_CASES=true CASE_GROUPS=image-cache` listing the
