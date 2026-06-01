@@ -5,6 +5,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel command-probe `smoke` refresh passed after the graphics-layer refresh. Aggregate: 6/6 passed,
+  `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=6521`. This covers live
+  animation, core primitives, color shader, color-filter handle, color-matrix filter, and base graphics-layer replay as
+  a compact command-positive sanity pass. The TSV has 7 lines including the header. The run was 19M under Magic Jewel
+  `out`, with `out` at 65G and the volume at about 289Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260601-135810/suite.tsv`.
 - Magic Jewel command-probe `graphics-layer` refresh passed after the graphics-layer extras refresh. Aggregate: 21/21
   passed, `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=23435`. This covers
   base graphics-layer replay, alpha/offscreen modes, rect/round/path clipping, blend/color-filter/color-matrix,
