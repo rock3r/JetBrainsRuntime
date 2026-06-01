@@ -5,6 +5,14 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel focused compatibility `CASE_GROUPS=low-word-effects` passed through the new grouped selector after the
+  low-word gradient group. Aggregate: 18/18 passed, `fallback_sum=18`, `jbr_command_frames=0`, and
+  `background_window=true` on every row. This covers low-word text, image-shader, blend-mode, color-filter,
+  dash-path-effect, saveLayer color-filter/blend/color-filter-ref, color-filter handle lifecycle, effect descriptor,
+  color-matrix, lighting, image color-filter-ref, and blend/color-filter-ref capability removals, all falling back
+  exactly once. The TSV has 19 lines including the header. The run used `EXPECT_SCREENSHOT_ASSERTION=false`, was 26M
+  under Magic Jewel `out`, with `out` at 68G and the volume at about 268Gi free after completion. Matrix:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260601-213556/matrix.tsv`.
 - Magic Jewel focused compatibility `CASE_GROUPS=low-word-gradients` passed through the new grouped selector after the
   quick-group harness change. Aggregate: 15/15 passed, `fallback_sum=15`, `jbr_command_frames=0`, and
   `background_window=true` on every row. This covers low-word fill/stroke linear, radial, and sweep gradient
