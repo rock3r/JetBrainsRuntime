@@ -5,6 +5,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel command-probe `save-layer-shader-fallbacks` refresh passed after the core effects refresh. Aggregate:
+  7/7 passed, `fallback_sum=0`, `unsupported_rows=5`, `jbr_picture_frames=5138`, and `jbr_command_frames=2910`.
+  Supported saveLayer filter and blend-mode rows replayed commands; raw saveLayer color-filter, opaque shader,
+  composite opaque shader, picture shader, and invalid gradient fallback rows stayed on the intentional
+  unsupported-picture path. The TSV has 8 lines including the header. The run was 26M under Magic Jewel `out`, with
+  `out` at 65G and the volume at about 290Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260601-130123/suite.tsv`.
 - Magic Jewel command-probe `core-effects` refresh passed after the surface/transform/UI refresh. Aggregate: 7/7
   passed, `fallback_sum=0`, `unsupported_rows=2`, `jbr_picture_frames=1408`, and `jbr_command_frames=5713`. Supported
   gradient stroke, image-filter, path-effect, vertices, and blend-mode rows replayed commands; the two
