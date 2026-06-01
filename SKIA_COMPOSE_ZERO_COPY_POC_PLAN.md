@@ -44,14 +44,15 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   is understood, so already-green prefixes do not need to be repeated. The current fast loop is exact row, quick group
   or bounded adjacent range, Skiko focused publication, `JbrSkiaInteropTest`, and then a periodic full sweep once a
   coherent batch of sentinels has landed. The latest periodic default command-probe consolidation passed in
-  command-marker-only mode after the latest focused invalid/parser guard refreshes: 487/487 passed,
-  `fallback_sum=350`, `unsupported_rows=26`, `picture_frames=25686`, and `command_frames=122355`:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260531-162857/suite.tsv`.
+  command-marker-only mode after the latest focused invalid/parser, shader, graphics-layer, and smoke refreshes:
+  487/487 passed, `fallback_sum=350`, `unsupported_rows=26`, `picture_frames=25751`, and
+  `command_frames=132652`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260601-140440/suite.tsv`.
 - The latest full default screenshot parity suite passed in marker-only mode after the command, compatibility,
-  artifact, and Skiko refreshes: 106/106 passed, `fallback_sum=11`, zero JBR picture frames, and 79,348 JBR command
+  artifact, and Skiko refreshes: 106/106 passed, `fallback_sum=11`, zero JBR picture frames, and 120,808 JBR command
   frames. The 11 fallback markers are bounded to resize sentinel rows, while all screenshot pixel metrics are
   intentionally `missing` because `EXPECT_SCREENSHOT_ASSERTION=false` was set:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260531-221616/suite.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260601-202121/suite.tsv`.
 - Focused command-probe `CASE_GROUPS=save-layer-shader-fallbacks` passed after the marker-only parity consolidation:
   7/7 passed, `fallback_sum=0`, five intentional unsupported-picture rows, 6,491 JBR picture frames, and 4,020 JBR
   command frames:

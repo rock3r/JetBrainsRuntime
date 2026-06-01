@@ -38,6 +38,26 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel full default screenshot parity suite passed in marker-only mode after the 20260601 command,
+  compatibility, artifact, and Skiko refreshes: 106/106 passed, `fallback_sum=11`, `jbr_picture_frames=0`, and
+  `jbr_command_frames=120808`; all screenshot pixel metrics were intentionally `missing` because
+  `EXPECT_SCREENSHOT_ASSERTION=false` was set. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260601-202121/suite.tsv`.
+- Skiko focused publication and full focused `JbrSkiaInteropTest` class passed after the 20260601 command,
+  compatibility, and artifact matrix refreshes:
+  `./gradlew publishAwtPublicationToMavenLocal publishAwtRuntimeElementsPublicationToMavenLocal publishKotlinMultiplatformPublicationToMavenLocal`
+  and `./gradlew --no-daemon --no-configuration-cache :awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`.
+- Magic Jewel artifact matrix passed on current ABI 106 local artifacts after the 20260601 compatibility refresh:
+  required rows 2/2 passed, optional old-artifact rows skipped because no old bundle variables were set,
+  `fallback_sum=1`, `jbr_command_frames=1300`, matrix
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260601-201802/matrix.tsv`.
+- Magic Jewel compatibility matrix passed in command-marker-only mode after the 20260601 full command-probe
+  consolidation: 57/57 passed, `fallback_sum=56`, `jbr_command_frames=285`, background-window mode true for all rows,
+  matrix `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260601-194910/matrix.tsv`.
+- Magic Jewel full default command-probe consolidation passed in command-marker-only mode after the focused
+  invalid/parser, shader, graphics-layer, and smoke refreshes: 487/487 passed, `fallback_sum=350`,
+  `unsupported_rows=26`, `jbr_picture_frames=25751`, and `jbr_command_frames=132652`, suite
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260601-140440/suite.tsv`.
 - Magic Jewel command-probe shader invalid descriptor gates were tightened with exact max descriptor-setup counts:
   exact touched rows passed 13/13 with `fallback_sum=13`, then `CASE_GROUPS=shader-descriptor-invalid` passed 30/30
   with `fallback_sum=30`, `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=0`. Suites:
