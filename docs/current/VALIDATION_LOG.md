@@ -5,6 +5,24 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel stable screenshot parity descriptor guards were extended to the remaining non-dynamic shader/effect rows:
+  image color-matrix filter, shader-plus-color-filter variants, transformed shader, and graphics-layer render-effect
+  combinations now have full-scene max JBR handle-definition ceilings. Exact touched rows passed 17/17 with
+  `fallback_sum=0`, `jbr_picture_frames=0`, and `jbr_command_frames=10815`; `CASE_GROUPS=shader-rendering` passed
+  18/18 with `fallback_sum=4`, `jbr_picture_frames=0`, and `jbr_command_frames=12640`;
+  `CASE_GROUPS=graphics-layer-effects` passed 14/14 with `fallback_sum=2`, `jbr_picture_frames=0`, and
+  `jbr_command_frames=8252`; and `CASE_GROUPS=core-drawing` passed 16/16 with `fallback_sum=0`,
+  `jbr_picture_frames=0`, and `jbr_command_frames=11785`. All runs used
+  `EXPECT_SCREENSHOT_ASSERTION=false`, so screenshot pixel metrics were intentionally `missing`. A follow-up audit
+  showed the only parity rows still carrying min handle-definition checks without max handle-definition ceilings are
+  descriptor eviction and dynamic/source-cache RuntimeEffect rows, which are intentionally uncapped because they
+  exercise eviction or changing RuntimeEffect payloads. The runs were 58M, 64M, 47M, and 51M respectively under Magic
+  Jewel `out`, with `out` at 63G and the volume at about 300Gi free after completion. Suites:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260601-022741/suite.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260601-023729/suite.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260601-024717/suite.tsv`,
+  and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260601-025513/suite.tsv`.
 - Magic Jewel shader invalid descriptor command gates were tightened with exact max JBR descriptor-setup counts for
   linear-gradient, radial-gradient, sweep-gradient, and image-shader malformed descriptor rows. Exact touched rows
   passed 13/13 with `fallback_sum=13`, `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=0`;
