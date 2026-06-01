@@ -53,6 +53,14 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   frames. The 11 fallback markers are bounded to resize sentinel rows, while all screenshot pixel metrics are
   intentionally `missing` because `EXPECT_SCREENSHOT_ASSERTION=false` was set:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260601-202121/suite.tsv`.
+- Magic Jewel raw Skia two-point conical gradient shader fallback sentinel landed in pushed commit `020dcb3`.
+  No-run discovery now reports 488 default command-probe rows and 14 `shader-rendering` rows, with no ungrouped rows.
+  Focused `CASES=commands-raw-conical-gradient-shader-fallback` passed 1/1 with one intentional
+  unsupported-picture row, 1,496 JBR picture frames, and zero command frames; the adjacent
+  `CASE_GROUPS=shader-rendering` refresh passed 14/14 with nine intentional unsupported-picture rows, 11,653 JBR
+  picture frames, and 7,884 command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260601-223319/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260601-223423/suite.tsv`.
 - Focused command-probe `CASE_GROUPS=save-layer-shader-fallbacks` passed after the marker-only parity consolidation:
   7/7 passed, `fallback_sum=0`, five intentional unsupported-picture rows, 6,491 JBR picture frames, and 4,020 JBR
   command frames:

@@ -38,6 +38,15 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel raw Skia two-point conical gradient shader fallback sentinel landed in pushed commit `020dcb3`.
+  No-run discovery now reports 488 default command-probe rows and 14 `shader-rendering` rows, with no ungrouped rows.
+  Focused `CASES=commands-raw-conical-gradient-shader-fallback` passed 1/1 with one intentional
+  unsupported-picture row, 1,496 JBR picture frames, and zero command frames; the adjacent
+  `CASE_GROUPS=shader-rendering` refresh passed 14/14 with nine intentional unsupported-picture rows, 11,653 JBR
+  picture frames, and 7,884 command frames. Suites:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260601-223319/suite.tsv`
+  and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260601-223423/suite.tsv`.
 - Magic Jewel full default screenshot parity suite passed in marker-only mode after the 20260601 command,
   compatibility, artifact, and Skiko refreshes: 106/106 passed, `fallback_sum=11`, `jbr_picture_frames=0`, and
   `jbr_command_frames=120808`; all screenshot pixel metrics were intentionally `missing` because

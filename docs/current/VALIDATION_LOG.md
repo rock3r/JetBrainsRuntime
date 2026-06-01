@@ -5,6 +5,22 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel now has a raw Skia two-point conical gradient shader fallback sentinel in pushed commit `020dcb3`.
+  No-run validation passed for `bash -n scripts/jbr-skia-command-probe-suite.sh scripts/jbr-skia-interop-report.sh`;
+  `LIST_CASE_COUNT=true` returned 488, `LIST_CASE_COUNT=true CASE_GROUPS=shader-rendering` returned 14,
+  `LIST_CASES=true CASE_GROUPS=shader-rendering` listed the new `commands-raw-conical-gradient-shader-fallback`
+  row after raw sweep, and `LIST_UNGROUPED_CASES=true` printed no rows. An accidental pre-fix
+  `LIST_CASE_COUNT=true` launch exposed the missing command-probe count branch, created only an unreferenced 60K
+  failed output dir, and that failed dir was removed. Focused real validation passed for
+  `CASES=commands-raw-conical-gradient-shader-fallback`: 1/1 passed, `fallback_sum=0`, one intentional
+  unsupported-picture row, `jbr_picture_frames=1496`, and `jbr_command_frames=0`. The adjacent
+  `CASE_GROUPS=shader-rendering` refresh passed 14/14 with `fallback_sum=0`, nine intentional
+  unsupported-picture rows, `jbr_picture_frames=11653`, and `jbr_command_frames=7884`. The exact and group runs
+  were 4.2M and 61M under Magic Jewel `out`; overall `out` stayed at 68G and the volume had about 268Gi free.
+  Suites:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260601-223319/suite.tsv`
+  and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260601-223423/suite.tsv`.
 - Magic Jewel compatibility matrix audit list order now matches the actual run order for
   `command-capability-high-mismatch` in pushed commit `8861b08`. No-run validation: `bash -n` passed,
   `LIST_CASE_COUNT=true` returned 57, and `LIST_UNGROUPED_CASES=true` printed no rows.
