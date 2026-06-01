@@ -5,6 +5,15 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel full default command-probe sweep passed after the stable parity descriptor guard refresh and focused
+  invalid-group refreshes. Aggregate: 487/487 passed, `fallback_sum=350`, `unsupported_rows=26`,
+  `jbr_picture_frames=24003`, and `jbr_command_frames=121226`. The unsupported rows remain intentional
+  raw/unsupported shader, color-filter, path-effect, graphics-layer, saveLayer, and RuntimeEffect/schema fallback
+  sentinels. The TSV has 488 lines including the header, matching the default `LIST_CASES` count of 487 cases. The run
+  used `EXPECT_SCREENSHOT_ASSERTION=false` because this command-marker loop is validating replay/fallback markers
+  rather than local macOS screenshot pixels. The run was 1.4G under Magic Jewel `out`, with `out` at 65G and the
+  volume at about 292Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260601-061239/suite.tsv`.
 - Magic Jewel command-probe `runtime-effect-invalid` refresh passed after the gradient invalid refresh. Aggregate:
   62/62 passed, `fallback_sum=56`, `unsupported_rows=6`, `jbr_picture_frames=5339`, and `jbr_command_frames=0`.
   The six unsupported-picture rows were the intentionally raw invalid RuntimeEffect shader/color-filter
