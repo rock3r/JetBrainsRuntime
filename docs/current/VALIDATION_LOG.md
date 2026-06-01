@@ -5,6 +5,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel command-probe `gradient-path-invalid` refresh passed after the effect descriptor invalid refresh.
+  Aggregate: 18/18 passed, `fallback_sum=18`, `unsupported_rows=0`, `jbr_picture_frames=0`, and
+  `jbr_command_frames=0`. This covers malformed linear, radial, and sweep gradient path payloads across tile mode,
+  color/stop validation, fill type, path data length, and path verb rejection. The run was 37M under Magic Jewel
+  `out`, with `out` at 63G and the volume at about 300Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260601-032701/suite.tsv`.
 - Magic Jewel command-probe `effect-descriptor-invalid` refresh passed after the stable parity descriptor guard batch.
   Aggregate: 28/28 passed, `fallback_sum=28`, `unsupported_rows=0`, `jbr_picture_frames=0`, and
   `jbr_command_frames=0`. This keeps malformed effect, color-filter, image-filter, path-effect, and chain
