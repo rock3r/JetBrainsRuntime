@@ -5,6 +5,15 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel benchmark suite now supports no-run quick-group helpers: `LIST_CASE_GROUPS=true`,
+  `LIST_CASE_GROUP_COUNTS=true`, and `CASE_GROUPS=...`. The exposed groups are `baseline` 2 and `image-cache` 3.
+  No-run validation confirmed syntax, group listing/counts, `LIST_CASES=true CASE_GROUPS=image-cache` listing the
+  three image-cache rows, `LIST_CASE_COUNT=true CASE_GROUPS=baseline` returning 2, and unknown-group rejection. A short
+  focused `CASE_GROUPS=baseline` run with `DURATION_SECONDS=5`, `WARMUP_SECONDS=1`, and `SAMPLE_INTERVAL_SECONDS=1`
+  passed 2/2 with `fallback_sum=0`: `picture` produced 620 JBR picture frames, and `commands` produced 531 JBR command
+  frames. The TSV has 3 lines including the header. The run was 4.7M under Magic Jewel `out`, with `out` at 68G and
+  the volume at about 268Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-benchmark-suite/20260601-215955/suite.tsv`.
 - Magic Jewel artifact matrix now supports no-run quick-group helpers: `LIST_CASE_GROUPS=true`,
   `LIST_CASE_GROUP_COUNTS=true`, and `CASE_GROUPS=...`. The exposed groups are `required` 2 and `optional-old` 5.
   No-run validation confirmed group listing, group counts, `LIST_CASES=true CASE_GROUPS=required` listing
