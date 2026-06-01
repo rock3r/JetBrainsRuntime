@@ -5,6 +5,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel command-probe `color-filters` refresh passed after the path invalid refresh. Aggregate: 10/10 passed,
+  `fallback_sum=0`, `unsupported_rows=1`, `jbr_picture_frames=870`, and `jbr_command_frames=9857`. Supported image,
+  tint, color-matrix, lighting, descriptor-handle, and graphics-layer color-filter rows replayed commands; the single
+  unsupported-picture row was the intentional raw blend color-filter fallback. The TSV has 11 lines including the
+  header. The run was 37M under Magic Jewel `out`, with `out` at 65G and the volume at about 278Gi free after
+  completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260601-121053/suite.tsv`.
 - Magic Jewel command-probe `path-invalid` refresh passed after the native text invalid refresh. Aggregate: 22/22
   passed, `fallback_sum=22`, `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=0`. This covers
   malformed clip/draw path verbs, path-effect path verbs, dash path-effect interval counts and values, rectangle and
