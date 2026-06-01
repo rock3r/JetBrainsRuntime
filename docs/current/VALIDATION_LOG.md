@@ -5,6 +5,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel artifact matrix passed on current ABI 106 local artifacts after the 20260601 compatibility refresh.
+  Required rows 2/2 passed: `current-all` replayed commands with `jbr_command_frames=1300`, and
+  `missing-public-api` fell back exactly once with zero command frames. Optional old-artifact rows were skipped because
+  no `OLD_JBR_API_SHIM`, `OLD_JBR_SKIA_LIB`, `OLD_DESKTOP_PATCH`, `OLD_SKIKO_VERSION`, or `OLD_CMP_OUT` variables were
+  set. The TSV has 8 lines including the header. The run used `EXPECT_SCREENSHOT_ASSERTION=false`, was 5.5M under
+  Magic Jewel `out`, with `out` at 67G and the volume at about 256Gi free after completion. Matrix:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260601-201802/matrix.tsv`.
 - Magic Jewel compatibility matrix passed in command-marker-only mode after the 20260601 full command-probe
   consolidation. Aggregate: 57/57 passed, `fallback_sum=56`, `jbr_command_frames=285`, and `background_window=true`
   on all rows. The single command-replay row was the happy path; all ABI, native ABI, missing command-capability,
