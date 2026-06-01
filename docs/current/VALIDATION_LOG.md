@@ -5,6 +5,17 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel focused compatibility high-word groups passed through the new grouped selector after the low-word groups.
+  `CASE_GROUPS=high-word-effects` passed 9/9 with `fallback_sum=9`, `jbr_command_frames=0`, and
+  `background_window=true` on every row, covering image-filter, offset/chained image-filter, RuntimeEffect
+  color-filter, dash/path-effect, and direct-shadow capability removals. `CASE_GROUPS=high-word-shader-ui` passed 9/9
+  with `fallback_sum=9`, `jbr_command_frames=0`, and `background_window=true` on every row, covering shader
+  descriptor, concat matrix, shader color-filter, draw-points, shader transform, font-data, color/noise shader, and
+  draw-vertices capability removals. Each TSV has 10 lines including the header. The runs used
+  `EXPECT_SCREENSHOT_ASSERTION=false`, were 13M each under Magic Jewel `out`, with `out` at 68G and the volume at
+  about 268Gi free after completion. Matrices:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260601-214522/matrix.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260601-214945/matrix.tsv`.
 - Magic Jewel focused compatibility `CASE_GROUPS=low-word-effects` passed through the new grouped selector after the
   low-word gradient group. Aggregate: 18/18 passed, `fallback_sum=18`, `jbr_command_frames=0`, and
   `background_window=true` on every row. This covers low-word text, image-shader, blend-mode, color-filter,
