@@ -5,6 +5,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel focused compatibility `CASE_GROUPS=low-word-gradients` passed through the new grouped selector after the
+  quick-group harness change. Aggregate: 15/15 passed, `fallback_sum=15`, `jbr_command_frames=0`, and
+  `background_window=true` on every row. This covers low-word fill/stroke linear, radial, and sweep gradient
+  capability-removal rows for rect, round-rect, and path cases, all falling back exactly once. The TSV has 16 lines
+  including the header. The run used `EXPECT_SCREENSHOT_ASSERTION=false`, was 23M under Magic Jewel `out`, with `out`
+  at 68G and the volume at about 269Gi free after completion. Matrix:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260601-212754/matrix.tsv`.
 - Magic Jewel compatibility matrix now supports no-run quick-group helpers, matching the command/parity suite
   workflow: `LIST_CASE_GROUPS=true`, `LIST_CASE_GROUP_COUNTS=true`, and `CASE_GROUPS=...`. The exposed groups cover
   all 57 compatibility rows: `handshake` 6, `low-word-gradients` 15, `low-word-effects` 18, `high-word-effects` 9,
