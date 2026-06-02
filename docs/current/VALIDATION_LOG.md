@@ -5,6 +5,15 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel focused command-probe graphics-layer refreshes passed after the shader rendering/composition refresh:
+  `CASE_GROUPS=graphics-layer` passed 21/21 with `fallback_sum=0`, `unsupported_rows=0`,
+  `jbr_picture_frames=0`, and `jbr_command_frames=29909`; `CASE_GROUPS=graphics-layer-extras` passed 15/15 with
+  `fallback_sum=0`, three intentional unsupported-picture rows, `jbr_picture_frames=3322`, and
+  `jbr_command_frames=18044`. The TSVs have 22 and 16 lines including headers. The runs were 93M and 75M under Magic
+  Jewel `out`; overall `out` stayed at 74G and the volume had about 244Gi free after completion. Suites:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260602-153002/suite.tsv`
+  and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260602-154344/suite.tsv`.
 - Magic Jewel focused command-probe shader rendering/composition refreshes passed after the descriptor lifecycle
   refresh: `CASE_GROUPS=shader-rendering` passed 14/14 with `fallback_sum=0`, nine intentional unsupported-picture
   rows, `jbr_picture_frames=10692`, and `jbr_command_frames=6032`; `CASE_GROUPS=shader-composition-runtime` passed
