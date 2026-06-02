@@ -5,6 +5,15 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel focused command-probe color/saveLayer fallback refreshes passed after the transform/text refresh:
+  `CASE_GROUPS=color-filters` passed 11/11 with `fallback_sum=0`, two intentional unsupported-picture rows,
+  `jbr_picture_frames=2098`, and `jbr_command_frames=11700`; `CASE_GROUPS=save-layer-shader-fallbacks` passed 8/8
+  with `fallback_sum=0`, six intentional unsupported-picture rows, `jbr_picture_frames=7270`, and
+  `jbr_command_frames=2039`. The TSVs have 12 and 9 lines including headers. The runs were 49M and 31M under Magic
+  Jewel `out`; overall `out` stayed at 74G and the volume had about 245Gi free after completion. Suites:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260602-143804/suite.tsv`
+  and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260602-144528/suite.tsv`.
 - Magic Jewel focused command-probe transform/text supported refreshes passed after the supported sanity pair:
   `CASE_GROUPS=surface-transform-ui` passed 11/11 with `fallback_sum=0`, `unsupported_rows=0`, and
   `jbr_command_frames=16553`; `CASE_GROUPS=native-text` passed 14/14 with `fallback_sum=0`, `unsupported_rows=0`,

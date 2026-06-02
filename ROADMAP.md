@@ -38,6 +38,13 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel focused command-probe color/saveLayer fallback refreshes passed after the transform/text refresh:
+  `color-filters` 11/11 with `fallback_sum=0`, two intentional unsupported-picture rows, 2,098 picture frames, and
+  11,700 command frames; `save-layer-shader-fallbacks` 8/8 with `fallback_sum=0`, six intentional
+  unsupported-picture rows, 7,270 picture frames, and 2,039 command frames. Suites:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260602-143804/suite.tsv`
+  and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260602-144528/suite.tsv`.
 - Magic Jewel focused command-probe transform/text supported refreshes passed after the supported sanity pair:
   `surface-transform-ui` 11/11 with `fallback_sum=0`, no unsupported rows, and 16,553 command frames; `native-text`
   14/14 with `fallback_sum=0`, no unsupported rows, and 20,315 command frames. Suites:
