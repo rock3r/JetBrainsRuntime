@@ -5,6 +5,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel focused command-probe descriptor lifecycle refresh passed after the color/saveLayer fallback refresh:
+  `CASE_GROUPS=descriptor-lifecycle` passed 18/18 with `fallback_sum=0`, `unsupported_rows=0`,
+  `jbr_picture_frames=0`, and `jbr_command_frames=25506`. The TSV has 19 lines including the header. The run was
+  291M under Magic Jewel `out`; overall `out` stayed at 74G and the volume had about 244Gi free after completion.
+  Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260602-145219/suite.tsv`.
 - Magic Jewel focused command-probe color/saveLayer fallback refreshes passed after the transform/text refresh:
   `CASE_GROUPS=color-filters` passed 11/11 with `fallback_sum=0`, two intentional unsupported-picture rows,
   `jbr_picture_frames=2098`, and `jbr_command_frames=11700`; `CASE_GROUPS=save-layer-shader-fallbacks` passed 8/8

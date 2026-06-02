@@ -38,6 +38,10 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel focused command-probe descriptor lifecycle refresh passed after the color/saveLayer fallback refresh:
+  `descriptor-lifecycle` 18/18 with `fallback_sum=0`, no unsupported rows, zero picture frames, and 25,506 command
+  frames, suite
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260602-145219/suite.tsv`.
 - Magic Jewel focused command-probe color/saveLayer fallback refreshes passed after the transform/text refresh:
   `color-filters` 11/11 with `fallback_sum=0`, two intentional unsupported-picture rows, 2,098 picture frames, and
   11,700 command frames; `save-layer-shader-fallbacks` 8/8 with `fallback_sum=0`, six intentional
