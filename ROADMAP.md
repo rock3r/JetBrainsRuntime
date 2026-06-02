@@ -38,6 +38,12 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel focused command-probe transform/text supported refreshes passed after the supported sanity pair:
+  `surface-transform-ui` 11/11 with `fallback_sum=0`, no unsupported rows, and 16,553 command frames; `native-text`
+  14/14 with `fallback_sum=0`, no unsupported rows, and 20,315 command frames. Suites:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260602-142012/suite.tsv`
+  and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260602-142743/suite.tsv`.
 - Magic Jewel focused command-probe supported-command sanity refreshes passed after the compact invalid batch:
   `core-effects` 7/7 with `fallback_sum=0`, two intentional unsupported-picture rows, 2,049 picture frames, and
   7,785 command frames; `smoke` 6/6 with `fallback_sum=0`, no unsupported rows, and 7,435 command frames. Suites:

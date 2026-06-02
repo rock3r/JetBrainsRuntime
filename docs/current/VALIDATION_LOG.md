@@ -5,6 +5,15 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel focused command-probe transform/text supported refreshes passed after the supported sanity pair:
+  `CASE_GROUPS=surface-transform-ui` passed 11/11 with `fallback_sum=0`, `unsupported_rows=0`, and
+  `jbr_command_frames=16553`; `CASE_GROUPS=native-text` passed 14/14 with `fallback_sum=0`, `unsupported_rows=0`,
+  and `jbr_command_frames=20315`. Both produced zero picture frames. The TSVs have 12 and 15 lines including headers.
+  The runs were 51M and 61M under Magic Jewel `out`; overall `out` stayed at 74G and the volume had about 229Gi free
+  after completion. Suites:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260602-142012/suite.tsv`
+  and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260602-142743/suite.tsv`.
 - Magic Jewel focused command-probe supported-command sanity refreshes passed after the compact invalid batch:
   `CASE_GROUPS=core-effects` passed 7/7 with `fallback_sum=0`, two intentional unsupported-picture rows,
   `jbr_picture_frames=2049`, and `jbr_command_frames=7785`; `CASE_GROUPS=smoke` passed 6/6 with `fallback_sum=0`,
