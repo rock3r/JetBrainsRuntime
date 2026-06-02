@@ -57,6 +57,13 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   gradient sentinel: 488/488 passed, `fallback_sum=350`, `unsupported_rows=27`, `jbr_picture_frames=34246`, and
   `jbr_command_frames=188703`:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260601-224702/suite.tsv`.
+- Magic Jewel raw Skia table color-filter fallback sentinel landed in pushed commit `55df401`. No-run discovery now
+  reports 489 default command-probe rows and 11 `color-filters` rows, with no ungrouped rows. Focused
+  `CASES=commands-raw-table-color-filter-fallback` passed 1/1 with one intentional unsupported-picture row, 826 JBR
+  picture frames, and zero command frames; the adjacent `CASE_GROUPS=color-filters` refresh passed 11/11 with two
+  intentional unsupported-picture rows, 2,518 JBR picture frames, and 14,110 command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260602-040651/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260602-040750/suite.tsv`.
 - Magic Jewel raw Skia two-point conical gradient shader fallback sentinel landed in pushed commit `020dcb3`.
   No-run discovery now reports 488 default command-probe rows and 14 `shader-rendering` rows, with no ungrouped rows.
   Focused `CASES=commands-raw-conical-gradient-shader-fallback` passed 1/1 with one intentional

@@ -5,6 +5,21 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel now has a raw Skia table color-filter fallback sentinel in pushed commit `55df401`. No-run validation
+  passed for `bash -n scripts/jbr-skia-command-probe-suite.sh scripts/jbr-skia-interop-report.sh`;
+  `LIST_CASE_COUNT=true` returned 489, `LIST_CASE_COUNT=true CASE_GROUPS=color-filters` returned 11,
+  `LIST_CASES=true CASE_GROUPS=color-filters` listed the new `commands-raw-table-color-filter-fallback` row after
+  raw blend, and `LIST_UNGROUPED_CASES=true` printed no rows. The first exact launch failed only because the sandbox
+  blocked Gradle's `~/.gradle` wrapper lock file; that unreferenced 64K failed output dir was removed. Rerunning with
+  the required Gradle permissions passed `CASES=commands-raw-table-color-filter-fallback`: 1/1 passed,
+  `fallback_sum=0`, one intentional unsupported-picture row, `jbr_picture_frames=826`, and `jbr_command_frames=0`.
+  The adjacent `CASE_GROUPS=color-filters` refresh passed 11/11 with `fallback_sum=0`, two intentional
+  unsupported-picture rows, `jbr_picture_frames=2518`, and `jbr_command_frames=14110`. The exact and group runs were
+  2.6M and 53M under Magic Jewel `out`; overall `out` stayed at 70G and the volume had about 252Gi free after
+  completion. Suites:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260602-040651/suite.tsv`
+  and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260602-040750/suite.tsv`.
 - Magic Jewel full default command-probe consolidation passed in command-marker-only mode after adding the raw conical
   gradient shader fallback sentinel. Aggregate: 488/488 passed, `fallback_sum=350`, `unsupported_rows=27`,
   `jbr_picture_frames=34246`, and `jbr_command_frames=188703`. The TSV has 489 lines including the header and covers

@@ -38,6 +38,14 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel raw Skia table color-filter fallback sentinel landed in pushed commit `55df401`. No-run discovery now
+  reports 489 default command-probe rows and 11 `color-filters` rows, with no ungrouped rows. Focused
+  `CASES=commands-raw-table-color-filter-fallback` passed 1/1 with one intentional unsupported-picture row, 826 JBR
+  picture frames, and zero command frames; the adjacent `CASE_GROUPS=color-filters` refresh passed 11/11 with two
+  intentional unsupported-picture rows, 2,518 JBR picture frames, and 14,110 command frames. Suites:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260602-040651/suite.tsv`
+  and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260602-040750/suite.tsv`.
 - Magic Jewel full default command-probe consolidation passed in command-marker-only mode after the raw conical
   gradient sentinel: 488/488 passed, `fallback_sum=350`, `unsupported_rows=27`, `jbr_picture_frames=34246`, and
   `jbr_command_frames=188703`, suite
