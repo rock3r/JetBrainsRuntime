@@ -38,6 +38,15 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel raw Skia table color-filter graphicsLayer fallback sentinel landed in pushed commit `7c1ffcc`. No-run
+  discovery now reports 491 default command-probe rows and 15 `graphics-layer-extras` rows, with no ungrouped rows.
+  Focused `CASES=commands-graphics-layer-raw-table-color-filter-fallback` passed 1/1 with one intentional
+  unsupported-picture row, 1,334 JBR picture frames, and zero command frames; the adjacent
+  `CASE_GROUPS=graphics-layer-extras` refresh passed 15/15 with three intentional unsupported-picture rows, 3,960 JBR
+  picture frames, and 17,534 command frames. Suites:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260602-043200/suite.tsv`
+  and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260602-043305/suite.tsv`.
 - Magic Jewel raw Skia table color-filter saveLayer fallback sentinel landed in pushed commit `02a250f`. No-run
   discovery now reports 490 default command-probe rows and 8 `save-layer-shader-fallbacks` rows, with no ungrouped
   rows. Focused `CASES=commands-save-layer-raw-table-color-filter-fallback` passed 1/1 with one intentional

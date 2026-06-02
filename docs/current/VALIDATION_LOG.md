@@ -5,6 +5,21 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel now has a raw Skia table color-filter graphicsLayer fallback sentinel in pushed commit `7c1ffcc`.
+  No-run validation passed for `bash -n scripts/jbr-skia-command-probe-suite.sh scripts/jbr-skia-interop-report.sh`;
+  `LIST_CASE_COUNT=true` returned 491, `LIST_CASE_GROUP_COUNTS=true` reported `graphics-layer-extras` 15,
+  `LIST_CASES=true CASE_GROUPS=graphics-layer-extras` listed the new
+  `commands-graphics-layer-raw-table-color-filter-fallback` row after the existing raw graphicsLayer color-filter
+  row, and `LIST_UNGROUPED_CASES=true` printed no rows. Focused real validation passed for
+  `CASES=commands-graphics-layer-raw-table-color-filter-fallback`: 1/1 passed, `fallback_sum=0`, one intentional
+  unsupported-picture row, `jbr_picture_frames=1334`, and `jbr_command_frames=0`. The adjacent
+  `CASE_GROUPS=graphics-layer-extras` refresh passed 15/15 with `fallback_sum=0`, three intentional
+  unsupported-picture rows, `jbr_picture_frames=3960`, and `jbr_command_frames=17534`. The exact and group runs were
+  4.0M and 77M under Magic Jewel `out`; overall `out` stayed at 70G and the volume had about 265Gi free after
+  completion. Suites:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260602-043200/suite.tsv`
+  and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260602-043305/suite.tsv`.
 - Magic Jewel now has a raw Skia table color-filter saveLayer fallback sentinel in pushed commit `02a250f`. No-run
   validation passed for `bash -n scripts/jbr-skia-command-probe-suite.sh scripts/jbr-skia-interop-report.sh`;
   `LIST_CASE_COUNT=true` returned 490, `LIST_CASE_GROUP_COUNTS=true` reported `save-layer-shader-fallbacks` 8,
