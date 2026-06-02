@@ -38,6 +38,14 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel full default command-probe consolidation passed after the focused invalid/supported refreshes, resumed
+  from the interrupted prefix instead of replaying already-green rows. Combined suites
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260602-155529/suite.tsv`
+  and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260602-165056/suite.tsv`
+  cover 491/491 default rows with `fallback_sum=350`, 30 intentional unsupported-picture rows,
+  31,269 picture frames, and 158,073 command frames. The resumed tail ended at
+  `commands-invalid-gradient-fallback`, and no non-passed rows were present.
 - Magic Jewel focused command-probe graphics-layer refreshes passed after the shader rendering/composition refresh:
   `graphics-layer` 21/21 with `fallback_sum=0`, no unsupported rows, zero picture frames, and 29,909 command frames;
   `graphics-layer-extras` 15/15 with `fallback_sum=0`, three intentional unsupported-picture rows, 3,322 picture

@@ -43,10 +43,12 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   sweeps for periodic consolidation. Long broad sweeps can be resumed with `CASES_FROM=...` after a failing/flaky row
   is understood, so already-green prefixes do not need to be repeated. The current fast loop is exact row, quick group
   or bounded adjacent range, Skiko focused publication, `JbrSkiaInteropTest`, and then a periodic full sweep once a
-  coherent batch of sentinels has landed. The latest periodic default command-probe consolidation passed in
-  command-marker-only mode after the raw table color-filter sentinel batch: 491/491 passed, `fallback_sum=350`,
-  `unsupported_rows=30`, `picture_frames=38973`, and `command_frames=166320`:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260602-044455/suite.tsv`.
+  coherent batch of sentinels has landed. The latest periodic default command-probe consolidation passed after the
+  focused invalid/supported refreshes by combining the interrupted prefix with a `CASES_FROM=...` resumed tail:
+  491/491 passed, `fallback_sum=350`, `unsupported_rows=30`, `picture_frames=31269`, and
+  `command_frames=158073`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260602-155529/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260602-165056/suite.tsv`.
 - The latest full default screenshot parity suite passed in marker-only mode after the command, compatibility,
   artifact, and Skiko refreshes: 106/106 passed, `fallback_sum=11`, zero JBR picture frames, and 120,808 JBR command
   frames. The 11 fallback markers are bounded to resize sentinel rows, while all screenshot pixel metrics are

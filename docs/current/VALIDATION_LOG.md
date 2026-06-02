@@ -5,6 +5,17 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel full default command-probe consolidation passed after the focused invalid/supported refresh batch. The
+  first run was interrupted after 65 data rows, so the sweep was completed with
+  `CASES_FROM=commands-invalid-text-font-size-fallback` rather than replaying the green prefix. Combined aggregate:
+  491/491 passed, `fallback_sum=350`, 30 intentional unsupported-picture rows, `jbr_picture_frames=31269`, and
+  `jbr_command_frames=158073`; no non-passed rows were present. The TSVs have 66 and 427 lines including headers
+  (493 total header-inclusive lines across the two files), and the resumed tail ended at
+  `commands-invalid-gradient-fallback`. The prefix and resumed run directories were 167M and 1.7G under Magic Jewel
+  `out`; overall `out` was 76G and the volume had about 224Gi free after completion. Suites:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260602-155529/suite.tsv`
+  and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260602-165056/suite.tsv`.
 - Magic Jewel focused command-probe graphics-layer refreshes passed after the shader rendering/composition refresh:
   `CASE_GROUPS=graphics-layer` passed 21/21 with `fallback_sum=0`, `unsupported_rows=0`,
   `jbr_picture_frames=0`, and `jbr_command_frames=29909`; `CASE_GROUPS=graphics-layer-extras` passed 15/15 with
