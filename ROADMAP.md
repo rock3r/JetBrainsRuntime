@@ -38,6 +38,9 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel focused command-probe saveLayer guard refresh passed after the descriptor-handle invalid batch:
+  `save-layer-invalid` 37/37 with `fallback_sum=37`, `unsupported_rows=0`, and zero replay frames, suite
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260602-114844/suite.tsv`.
 - Magic Jewel focused command-probe descriptor handle guard refresh passed after the image-handle invalid batch:
   `descriptor-handles-invalid` 48/48 with `fallback_sum=48`, `unsupported_rows=0`, and zero replay frames, suite
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260602-111739/suite.tsv`.

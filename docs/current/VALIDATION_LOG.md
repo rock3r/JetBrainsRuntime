@@ -5,6 +5,11 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel focused command-probe saveLayer guard refresh passed after the descriptor-handle invalid batch:
+  `CASE_GROUPS=save-layer-invalid` passed 37/37 with `fallback_sum=37`, `unsupported_rows=0`, and zero replay frames.
+  The TSV has 38 lines including the header. The run was 132M under Magic Jewel `out`; overall `out` stayed at 73G
+  and the volume had about 231Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260602-114844/suite.tsv`.
 - Magic Jewel focused command-probe descriptor handle guard refresh passed after the image-handle invalid batch:
   `CASE_GROUPS=descriptor-handles-invalid` passed 48/48 with `fallback_sum=48`, `unsupported_rows=0`, and zero
   replay frames. The TSV has 49 lines including the header. The run was 198M under Magic Jewel `out`; overall `out`

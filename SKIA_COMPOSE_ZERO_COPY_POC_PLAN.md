@@ -101,6 +101,9 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - Focused command-probe descriptor handle guard refresh passed next: `descriptor-handles-invalid` 48/48 with
   `fallback_sum=48`, `unsupported_rows=0`, and zero replay frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260602-111739/suite.tsv`.
+- Focused command-probe saveLayer guard refresh passed next: `save-layer-invalid` 37/37 with `fallback_sum=37`,
+  `unsupported_rows=0`, and zero replay frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260602-114844/suite.tsv`.
 - Magic Jewel raw Skia two-point conical gradient shader fallback sentinel landed in pushed commit `020dcb3`.
   No-run discovery now reports 488 default command-probe rows and 14 `shader-rendering` rows, with no ungrouped rows.
   Focused `CASES=commands-raw-conical-gradient-shader-fallback` passed 1/1 with one intentional
