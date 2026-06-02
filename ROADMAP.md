@@ -38,6 +38,9 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel focused command-probe gradient guard refresh passed after the RuntimeEffect invalid batch:
+  `gradient-invalid` 60/60 with `fallback_sum=60`, `unsupported_rows=0`, and zero replay frames, suite
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260602-131836/suite.tsv`.
 - Magic Jewel focused command-probe RuntimeEffect guard refresh passed after the shader descriptor invalid batch:
   `runtime-effect-invalid` 62/62 with `fallback_sum=56`, six intentional unsupported-picture rows, 7,356 picture
   frames, and zero command frames, suite
