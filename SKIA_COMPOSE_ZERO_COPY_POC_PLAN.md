@@ -44,10 +44,9 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   is understood, so already-green prefixes do not need to be repeated. The current fast loop is exact row, quick group
   or bounded adjacent range, Skiko focused publication, `JbrSkiaInteropTest`, and then a periodic full sweep once a
   coherent batch of sentinels has landed. The latest periodic default command-probe consolidation passed in
-  command-marker-only mode after the latest focused invalid/parser, shader, graphics-layer, and smoke refreshes:
-  487/487 passed, `fallback_sum=350`, `unsupported_rows=26`, `picture_frames=25751`, and
-  `command_frames=132652`:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260601-140440/suite.tsv`.
+  command-marker-only mode after the raw table color-filter sentinel batch: 491/491 passed, `fallback_sum=350`,
+  `unsupported_rows=30`, `picture_frames=38973`, and `command_frames=166320`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260602-044455/suite.tsv`.
 - The latest full default screenshot parity suite passed in marker-only mode after the command, compatibility,
   artifact, and Skiko refreshes: 106/106 passed, `fallback_sum=11`, zero JBR picture frames, and 120,808 JBR command
   frames. The 11 fallback markers are bounded to resize sentinel rows, while all screenshot pixel metrics are
@@ -80,6 +79,10 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   picture frames, and 17,534 command frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260602-043200/suite.tsv` and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260602-043305/suite.tsv`.
+- Magic Jewel full default command-probe consolidation passed in command-marker-only mode after the raw Skia table
+  color-filter sentinel batch: 491/491 passed, `fallback_sum=350`, `unsupported_rows=30`,
+  `jbr_picture_frames=38973`, and `jbr_command_frames=166320`, suite
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260602-044455/suite.tsv`.
 - Magic Jewel raw Skia two-point conical gradient shader fallback sentinel landed in pushed commit `020dcb3`.
   No-run discovery now reports 488 default command-probe rows and 14 `shader-rendering` rows, with no ungrouped rows.
   Focused `CASES=commands-raw-conical-gradient-shader-fallback` passed 1/1 with one intentional

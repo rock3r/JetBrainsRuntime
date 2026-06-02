@@ -38,6 +38,11 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel full default command-probe consolidation passed in command-marker-only mode after the raw table
+  color-filter sentinel batch: 491/491 passed, `fallback_sum=350`, `unsupported_rows=30`,
+  `jbr_picture_frames=38973`, and `jbr_command_frames=166320`. The suite includes 492 TSV lines including the header,
+  the run directory was 2.3G, Magic Jewel `out` was 72G, and the volume had about 247Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260602-044455/suite.tsv`.
 - Magic Jewel raw Skia table color-filter graphicsLayer fallback sentinel landed in pushed commit `7c1ffcc`. No-run
   discovery now reports 491 default command-probe rows and 15 `graphics-layer-extras` rows, with no ungrouped rows.
   Focused `CASES=commands-graphics-layer-raw-table-color-filter-fallback` passed 1/1 with one intentional

@@ -5,6 +5,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel full default command-probe consolidation passed in command-marker-only mode after the raw Skia table
+  color-filter, saveLayer raw table color-filter, and graphicsLayer raw table color-filter sentinels. Aggregate:
+  491/491 passed, `fallback_sum=350`, `unsupported_rows=30`, `jbr_picture_frames=38973`, and
+  `jbr_command_frames=166320`. The TSV has 492 lines including the header and covers all three new raw table
+  color-filter sentinel rows in default order. The run used `EXPECT_SCREENSHOT_ASSERTION=false`; the run directory was
+  2.3G, Magic Jewel `out` was 72G, and the volume had about 247Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260602-044455/suite.tsv`.
 - Magic Jewel now has a raw Skia table color-filter graphicsLayer fallback sentinel in pushed commit `7c1ffcc`.
   No-run validation passed for `bash -n scripts/jbr-skia-command-probe-suite.sh scripts/jbr-skia-interop-report.sh`;
   `LIST_CASE_COUNT=true` returned 491, `LIST_CASE_GROUP_COUNTS=true` reported `graphics-layer-extras` 15,
