@@ -38,6 +38,13 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel focused command-probe shader rendering/composition refreshes passed after the descriptor lifecycle
+  refresh: `shader-rendering` 14/14 with `fallback_sum=0`, nine intentional unsupported-picture rows, 10,692 picture
+  frames, and 6,032 command frames; `shader-composition-runtime` 15/15 with `fallback_sum=0`, two intentional
+  unsupported-picture rows, 2,188 picture frames, and 16,730 command frames. Suites:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260602-150751/suite.tsv`
+  and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260602-151724/suite.tsv`.
 - Magic Jewel focused command-probe descriptor lifecycle refresh passed after the color/saveLayer fallback refresh:
   `descriptor-lifecycle` 18/18 with `fallback_sum=0`, no unsupported rows, zero picture frames, and 25,506 command
   frames, suite
