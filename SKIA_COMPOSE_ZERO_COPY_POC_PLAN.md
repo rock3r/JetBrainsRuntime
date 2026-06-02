@@ -53,6 +53,10 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   frames. The 11 fallback markers are bounded to resize sentinel rows, while all screenshot pixel metrics are
   intentionally `missing` because `EXPECT_SCREENSHOT_ASSERTION=false` was set:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260601-202121/suite.tsv`.
+- The latest full default command-probe consolidation passed in command-marker-only mode after the raw conical
+  gradient sentinel: 488/488 passed, `fallback_sum=350`, `unsupported_rows=27`, `jbr_picture_frames=34246`, and
+  `jbr_command_frames=188703`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260601-224702/suite.tsv`.
 - Magic Jewel raw Skia two-point conical gradient shader fallback sentinel landed in pushed commit `020dcb3`.
   No-run discovery now reports 488 default command-probe rows and 14 `shader-rendering` rows, with no ungrouped rows.
   Focused `CASES=commands-raw-conical-gradient-shader-fallback` passed 1/1 with one intentional

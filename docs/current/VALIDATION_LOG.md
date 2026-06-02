@@ -5,6 +5,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel full default command-probe consolidation passed in command-marker-only mode after adding the raw conical
+  gradient shader fallback sentinel. Aggregate: 488/488 passed, `fallback_sum=350`, `unsupported_rows=27`,
+  `jbr_picture_frames=34246`, and `jbr_command_frames=188703`. The TSV has 489 lines including the header and covers
+  the new `commands-raw-conical-gradient-shader-fallback` row in default order. The run used
+  `EXPECT_SCREENSHOT_ASSERTION=false`; the volume had about 265Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260601-224702/suite.tsv`.
 - Magic Jewel now has a raw Skia two-point conical gradient shader fallback sentinel in pushed commit `020dcb3`.
   No-run validation passed for `bash -n scripts/jbr-skia-command-probe-suite.sh scripts/jbr-skia-interop-report.sh`;
   `LIST_CASE_COUNT=true` returned 488, `LIST_CASE_COUNT=true CASE_GROUPS=shader-rendering` returned 14,
