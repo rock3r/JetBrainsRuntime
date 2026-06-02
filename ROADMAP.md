@@ -38,6 +38,12 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel focused command-probe descriptor/path guard refreshes passed after the primitive/native/path invalid
+  batch: `gradient-path-invalid` 18/18 with `fallback_sum=18` and `effect-descriptor-invalid` 28/28 with
+  `fallback_sum=28`; both had `unsupported_rows=0` and zero replay frames. Suites:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260602-102903/suite.tsv`
+  and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260602-104049/suite.tsv`.
 - Magic Jewel focused command-probe invalid guard refreshes passed after the raw table full-sweep consolidation:
   `primitive-invalid` 13/13 with `fallback_sum=13`, `native-text-invalid` 11/11 with `fallback_sum=11` and 976
   command frames, and `path-invalid` 22/22 with `fallback_sum=22`; all three had `unsupported_rows=0` and zero

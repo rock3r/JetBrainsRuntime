@@ -5,6 +5,14 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel focused command-probe descriptor/path guard refreshes passed after the primitive/native/path invalid
+  batch: `CASE_GROUPS=gradient-path-invalid` passed 18/18 with `fallback_sum=18`, `unsupported_rows=0`, and zero
+  replay frames; `CASE_GROUPS=effect-descriptor-invalid` passed 28/28 with `fallback_sum=28`, `unsupported_rows=0`,
+  and zero replay frames. The TSVs have 19 and 29 lines including headers. The runs were 64M and 101M under Magic
+  Jewel `out`; overall `out` stayed at 73G and the volume had about 247Gi free after completion. Suites:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260602-102903/suite.tsv`
+  and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260602-104049/suite.tsv`.
 - Magic Jewel focused command-probe invalid guard refreshes passed after the raw table full-sweep consolidation:
   `CASE_GROUPS=primitive-invalid` passed 13/13 with `fallback_sum=13`, `unsupported_rows=0`, and zero replay frames;
   `CASE_GROUPS=native-text-invalid` passed 11/11 with `fallback_sum=11`, `unsupported_rows=0`, zero picture frames,
