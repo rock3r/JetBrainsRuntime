@@ -5,6 +5,15 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel focused command-probe supported-command sanity refreshes passed after the compact invalid batch:
+  `CASE_GROUPS=core-effects` passed 7/7 with `fallback_sum=0`, two intentional unsupported-picture rows,
+  `jbr_picture_frames=2049`, and `jbr_command_frames=7785`; `CASE_GROUPS=smoke` passed 6/6 with `fallback_sum=0`,
+  `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=7435`. The TSVs have 8 and 7 lines including
+  headers. The runs were 28M and 26M under Magic Jewel `out`; overall `out` stayed at 74G and the volume had about
+  230Gi free after completion. Suites:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260602-140936/suite.tsv`
+  and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260602-141436/suite.tsv`.
 - Magic Jewel compact focused command-probe invalid refresh passed after the gradient invalid batch. A first no-launch
   attempt with comma-separated `CASE_GROUPS` correctly failed selector parsing; rerunning with whitespace-separated
   groups passed `shader-ref-invalid`, `fill-rect-color-filter-invalid`, `blend-mode-invalid`, and `stream-invalid`
