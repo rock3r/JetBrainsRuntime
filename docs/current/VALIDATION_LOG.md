@@ -5,6 +5,11 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel focused command-probe RuntimeEffect guard refresh passed after the shader descriptor invalid batch:
+  `CASE_GROUPS=runtime-effect-invalid` passed 62/62 with `fallback_sum=56`, six intentional unsupported-picture rows,
+  `jbr_picture_frames=7356`, and `jbr_command_frames=0`. The TSV has 63 lines including the header. The run was 340M
+  under Magic Jewel `out`; overall `out` stayed at 73G and the volume had about 245Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260602-123402/suite.tsv`.
 - Magic Jewel focused command-probe shader descriptor guard refresh passed after the saveLayer invalid batch:
   `CASE_GROUPS=shader-descriptor-invalid` passed 30/30 with `fallback_sum=30`, `unsupported_rows=0`, and zero replay
   frames. The TSV has 31 lines including the header. The run was 129M under Magic Jewel `out`; overall `out` stayed
