@@ -5,6 +5,17 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel focused command-probe invalid guard refreshes passed after the raw table full-sweep consolidation:
+  `CASE_GROUPS=primitive-invalid` passed 13/13 with `fallback_sum=13`, `unsupported_rows=0`, and zero replay frames;
+  `CASE_GROUPS=native-text-invalid` passed 11/11 with `fallback_sum=11`, `unsupported_rows=0`, zero picture frames,
+  and 976 command frames from the font-data record-flags row; `CASE_GROUPS=path-invalid` passed 22/22 with
+  `fallback_sum=22`, `unsupported_rows=0`, and zero replay frames. The TSVs have 14, 12, and 23 lines including
+  headers. The runs were 43M, 39M, and 78M under Magic Jewel `out`; overall `out` was 73G and the volume had about
+  232Gi free after completion. Suites:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260602-095812/suite.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260602-100643/suite.tsv`,
+  and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260602-101406/suite.tsv`.
 - Magic Jewel full default command-probe consolidation passed in command-marker-only mode after the raw Skia table
   color-filter, saveLayer raw table color-filter, and graphicsLayer raw table color-filter sentinels. Aggregate:
   491/491 passed, `fallback_sum=350`, `unsupported_rows=30`, `jbr_picture_frames=38973`, and

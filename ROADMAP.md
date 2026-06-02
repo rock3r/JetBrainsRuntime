@@ -38,6 +38,14 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel focused command-probe invalid guard refreshes passed after the raw table full-sweep consolidation:
+  `primitive-invalid` 13/13 with `fallback_sum=13`, `native-text-invalid` 11/11 with `fallback_sum=11` and 976
+  command frames, and `path-invalid` 22/22 with `fallback_sum=22`; all three had `unsupported_rows=0` and zero
+  picture frames. Suites:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260602-095812/suite.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260602-100643/suite.tsv`,
+  and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260602-101406/suite.tsv`.
 - Magic Jewel full default command-probe consolidation passed in command-marker-only mode after the raw table
   color-filter sentinel batch: 491/491 passed, `fallback_sum=350`, `unsupported_rows=30`,
   `jbr_picture_frames=38973`, and `jbr_command_frames=166320`. The suite includes 492 TSV lines including the header,
