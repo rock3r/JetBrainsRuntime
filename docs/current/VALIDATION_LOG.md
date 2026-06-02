@@ -5,6 +5,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel compact focused command-probe invalid refresh passed after the gradient invalid batch. A first no-launch
+  attempt with comma-separated `CASE_GROUPS` correctly failed selector parsing; rerunning with whitespace-separated
+  groups passed `shader-ref-invalid`, `fill-rect-color-filter-invalid`, `blend-mode-invalid`, and `stream-invalid`
+  together: 18/18 passed, `fallback_sum=18`, `unsupported_rows=0`, and zero replay frames. The TSV has 19 lines
+  including the header. The run was 71M under Magic Jewel `out`; overall `out` stayed at 74G and the volume had about
+  245Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260602-135655/suite.tsv`.
 - Magic Jewel focused command-probe gradient guard refresh passed after the RuntimeEffect invalid batch:
   `CASE_GROUPS=gradient-invalid` passed 60/60 with `fallback_sum=60`, `unsupported_rows=0`, and zero replay frames.
   The TSV has 61 lines including the header. The run was 198M under Magic Jewel `out`; overall `out` was 74G and the
