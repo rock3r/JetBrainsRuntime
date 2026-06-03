@@ -5,6 +5,26 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel added and validated graphics-layer invalid size fallback sentinels after the recorder/layer audit
+  identified `graphicsLayer:sizeWidth` and `graphicsLayer:sizeHeight` as the remaining app-reachable layer validation
+  guards without command-probe rows. The new `MAGIC_JEWEL_COMPOSE_GRAPHICS_LAYER_INVALID_SIZE_WIDTH` and
+  `MAGIC_JEWEL_COMPOSE_GRAPHICS_LAYER_INVALID_SIZE_HEIGHT` branches record remembered layers with negative width or
+  height outside the command-recording draw pass, then draw those layers during command recording so CMP rejects the
+  invalid layer size before replay. No-run validation passed for
+  `bash -n scripts/jbr-skia-command-probe-suite.sh scripts/jbr-skia-interop-report.sh`; `LIST_CASE_COUNT=true`
+  returned 510, `LIST_CASE_GROUP_COUNTS=true` reported `graphics-layer-invalid` 14 and `graphics-layer` 22,
+  `LIST_CASES=true CASE_GROUPS=graphics-layer-invalid` listed the negative size rows plus the prior invalid layer
+  rows, and `LIST_UNGROUPED_CASES=true` printed no rows. Focused exact validation for the two size rows passed 2/2
+  with `fallback_sum=0`, two intentional unsupported-picture rows, 1,953 JBR picture frames, and zero command frames.
+  The adjacent `CASE_GROUPS=graphics-layer-invalid` refresh passed 14/14 with `fallback_sum=0`, fourteen intentional
+  unsupported-picture rows, 14,685 JBR picture frames, and zero JBR command frames. Magic Jewel `out` stayed at 77G
+  and the volume had about 299Gi free after completion. Suites:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260603-204923/suite.tsv`
+  and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260603-205101/suite.tsv`.
+  The remaining `graphicsLayer:shadowOutline` and `graphicsLayer:clipOutline:<type>` checks are defensive against
+  future `Outline` subclasses: `Outline` is sealed and currently defines only `Rectangle`, `Rounded`, and `Generic`,
+  all of which the command layer accepts for shadow/clip handling.
 - Magic Jewel added and validated an unrecorded graphics-layer fallback sentinel after the recorder/layer audit
   identified `graphicsLayer:recording` as an app-reachable layer lifecycle guard without a command-probe row. The new
   `MAGIC_JEWEL_COMPOSE_GRAPHICS_LAYER_UNRECORDED` branch creates a remembered `GraphicsLayer` and draws it without

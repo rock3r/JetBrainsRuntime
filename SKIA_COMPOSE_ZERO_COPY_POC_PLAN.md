@@ -127,6 +127,15 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `fallback_sum=0`, twelve intentional unsupported-picture rows, 11,611 picture frames, and zero command frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260603-203529/suite.tsv` and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260603-203629/suite.tsv`.
+- New Magic Jewel command-probe sentinels cover remembered graphics layers recorded with invalid negative width or
+  height. These exercise the layer-level `graphicsLayer:sizeWidth` and `graphicsLayer:sizeHeight` guards before replay.
+  No-run discovery now reports 510 default command-probe rows and the `graphics-layer-invalid` quick group now has 14
+  rows. Focused exact validation passed 2/2 with 1,953 JBR picture frames and zero command frames; the adjacent
+  `graphics-layer-invalid` group passed 14/14 with `fallback_sum=0`, fourteen intentional unsupported-picture rows,
+  14,685 picture frames, and zero command frames. The remaining shadow/clip outline guards are defensive only with the
+  current sealed `Outline` hierarchy (`Rectangle`, `Rounded`, and `Generic`, all accepted):
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260603-204923/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260603-205101/suite.tsv`.
 - A new Magic Jewel command-probe sentinel covers graphics layers with invalid negative `shadowElevation`. This
   exercises the layer-level `graphicsLayer:shadowElevation` guard before replay. No-run discovery now reports 497
   default command-probe rows and `graphics-layer` 22. Focused exact validation passed 1/1 with 969 JBR picture frames

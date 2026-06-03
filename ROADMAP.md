@@ -38,6 +38,16 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel added graphics-layer invalid size fallback sentinels so the layer validation guards now have app-level
+  coverage for `graphicsLayer:sizeWidth` and `graphicsLayer:sizeHeight`. No-run discovery reports 510 default
+  command-probe rows, `graphics-layer-invalid` 14, and no ungrouped rows. Focused exact validation for the two new
+  rows passed 2/2 with 1,953 JBR picture frames and zero command frames; adjacent `CASE_GROUPS=graphics-layer-invalid`
+  passed 14/14 with `fallback_sum=0`, fourteen intentional unsupported-picture rows, 14,685 picture frames, and zero
+  command frames. The remaining shadow/clip outline checks are defensive because `Outline` is sealed to the accepted
+  `Rectangle`, `Rounded`, and `Generic` variants. Suites:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260603-204923/suite.tsv`
+  and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260603-205101/suite.tsv`.
 - Magic Jewel added an unrecorded graphics-layer fallback sentinel so the layer lifecycle guard now has app-level
   coverage for `graphicsLayer:recording`. No-run discovery reports 508 default command-probe rows,
   `graphics-layer-invalid` 12, and no ungrouped rows. Focused `CASES=commands-graphics-layer-unrecorded-fallback`
