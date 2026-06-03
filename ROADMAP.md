@@ -38,6 +38,16 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel added a graphics-layer invalid rotationY fallback sentinel so the layer validation guard now has
+  app-level coverage for non-finite `rotationY`. No-run discovery reports 506 default command-probe rows,
+  `graphics-layer-invalid` 10, and no ungrouped rows. Focused
+  `CASES=commands-graphics-layer-invalid-rotation-y-fallback` passed 1/1 with the `graphicsLayer:rotationY`
+  unsupported reason present, 1,031 JBR picture frames, and zero command frames; adjacent
+  `CASE_GROUPS=graphics-layer-invalid` passed 10/10 with `fallback_sum=0`, ten intentional unsupported-picture rows,
+  10,196 picture frames, and zero command frames. Suites:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260603-200608/suite.tsv`
+  and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260603-200710/suite.tsv`.
 - Magic Jewel added a graphics-layer invalid rotationX fallback sentinel so the layer validation guard now has
   app-level coverage for non-finite `rotationX`. No-run discovery reports 505 default command-probe rows,
   `graphics-layer-invalid` 9, and no ungrouped rows. Focused
