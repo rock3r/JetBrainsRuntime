@@ -136,6 +136,17 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   current sealed `Outline` hierarchy (`Rectangle`, `Rounded`, and `Generic`, all accepted):
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260603-204923/suite.tsv` and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260603-205101/suite.tsv`.
+- New Magic Jewel command-probe sentinels cover live invalid `clipPath` and `drawPath` structures, complementing the
+  older path parser-corruption rows. These inject non-finite path coordinates through
+  `MAGIC_JEWEL_COMPOSE_INVALID_CLIP_PATH` and `MAGIC_JEWEL_COMPOSE_INVALID_DRAW_PATH`, so CMP rejects the live Compose
+  recording as `clipPath`/`path` before replay; the invalid clip row also exposes the parent `unsupportedScope`
+  surface. No-run discovery now reports 512 default command-probe rows and the `path-invalid` quick group now has 24
+  rows, with no ungrouped rows. Focused exact validation passed 2/2 with `fallback_sum=0`, two intentional
+  unsupported-picture rows, 1,967 JBR picture frames, and zero command frames; the adjacent `path-invalid` group passed
+  24/24 with `fallback_sum=22`, two intentional unsupported-picture rows, 1,789 picture frames, and zero command
+  frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260603-233653/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260603-233834/suite.tsv`.
 - A new Magic Jewel command-probe sentinel covers graphics layers with invalid negative `shadowElevation`. This
   exercises the layer-level `graphicsLayer:shadowElevation` guard before replay. No-run discovery now reports 497
   default command-probe rows and `graphics-layer` 22. Focused exact validation passed 1/1 with 969 JBR picture frames

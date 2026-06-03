@@ -38,6 +38,17 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel added live invalid path-structure fallback sentinels so CMP's app-level `clipPath` and `path` guards now
+  have command-probe coverage instead of only parser-corruption coverage. No-run discovery reports 512 default
+  command-probe rows, `path-invalid` 24, and no ungrouped rows. Focused exact validation for
+  `commands-clip-path-invalid-fallback` and `commands-draw-path-invalid-fallback` passed 2/2 with `fallback_sum=0`,
+  two intentional unsupported-picture rows, 1,967 JBR picture frames, and zero command frames. Adjacent
+  `CASE_GROUPS=path-invalid` passed 24/24 with `fallback_sum=22`, two intentional unsupported-picture rows, 1,789 JBR
+  picture frames, and zero command frames. The invalid clip path also reports `unsupportedScope`, covering that parent
+  unsupported reason from live recorder output. Suites:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260603-233653/suite.tsv`
+  and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260603-233834/suite.tsv`.
 - Magic Jewel added graphics-layer invalid size fallback sentinels so the layer validation guards now have app-level
   coverage for `graphicsLayer:sizeWidth` and `graphicsLayer:sizeHeight`. No-run discovery reports 510 default
   command-probe rows, `graphics-layer-invalid` 14, and no ungrouped rows. Focused exact validation for the two new

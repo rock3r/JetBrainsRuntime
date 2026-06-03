@@ -5,6 +5,25 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel added and validated live invalid path-structure fallback sentinels after the recorder audit identified
+  `clipPath` and `path` as app-level unsupported reasons that still only had parser-corruption rows. The new
+  `MAGIC_JEWEL_COMPOSE_INVALID_CLIP_PATH` and `MAGIC_JEWEL_COMPOSE_INVALID_DRAW_PATH` toggles feed non-finite path
+  coordinates into the existing Compose clipPath/drawPath probes, so the recorder rejects the real path structure
+  before replay rather than relying on mutated command bytes. No-run validation passed for
+  `bash -n scripts/jbr-skia-command-probe-suite.sh scripts/jbr-skia-interop-report.sh`; `LIST_CASE_COUNT=true`
+  returned 512, `LIST_CASE_GROUP_COUNTS=true` reported `path-invalid` 24, `LIST_CASES=true CASE_GROUPS=path-invalid`
+  listed the two live structural rows before the existing 22 parser-corruption rows, and `LIST_UNGROUPED_CASES=true`
+  printed no rows. Focused exact validation for `commands-clip-path-invalid-fallback` and
+  `commands-draw-path-invalid-fallback` passed 2/2 with `fallback_sum=0`, two intentional unsupported-picture rows,
+  1,967 JBR picture frames, and zero command frames; the clip row reported
+  `unsupportedScope:902,clipPath:902,graphicsLayer:childCommands:902,graphicsLayer:902`, and the draw row reported
+  `path:2130,graphicsLayer:childCommands:1065,graphicsLayer:1065`. The adjacent `CASE_GROUPS=path-invalid` refresh
+  passed 24/24 with `fallback_sum=22`, two intentional unsupported-picture rows, 1,789 JBR picture frames, and zero
+  JBR command frames. Magic Jewel `out` was 78G, the exact run was 7.1M, the group run was 69M, and the volume had
+  about 299Gi free after completion. Suites:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260603-233653/suite.tsv`
+  and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260603-233834/suite.tsv`.
 - Magic Jewel added and validated graphics-layer invalid size fallback sentinels after the recorder/layer audit
   identified `graphicsLayer:sizeWidth` and `graphicsLayer:sizeHeight` as the remaining app-reachable layer validation
   guards without command-probe rows. The new `MAGIC_JEWEL_COMPOSE_GRAPHICS_LAYER_INVALID_SIZE_WIDTH` and
