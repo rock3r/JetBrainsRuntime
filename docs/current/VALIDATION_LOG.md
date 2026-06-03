@@ -5,6 +5,23 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel added and validated an image raw Skia table color-filter fallback sentinel after the recorder audit found
+  `drawImageRect` had supported image tint/color-matrix descriptor rows but no app-level unsupported raw image
+  color-filter probe. The new `MAGIC_JEWEL_COMPOSE_IMAGE_RAW_TABLE_COLOR_FILTER` branch draws an image with a raw
+  Skia table color filter, which CMP rejects structurally as `colorFilter` before the generic `image` fallback. No-run
+  validation passed for `bash -n scripts/jbr-skia-command-probe-suite.sh scripts/jbr-skia-interop-report.sh`;
+  `LIST_CASE_COUNT=true` returned 493, `LIST_CASE_GROUP_COUNTS=true` reported `color-filters` 12,
+  `LIST_CASES=true CASE_GROUPS=color-filters` listed `commands-image-raw-table-color-filter-fallback` immediately
+  after `commands-image-color-matrix-filter`, and `LIST_UNGROUPED_CASES=true` printed no rows. Focused real validation
+  passed `CASES=commands-image-raw-table-color-filter-fallback`: 1/1 passed, `fallback_sum=0`, unsupported reasons
+  included `colorFilter`, `image`, and parent graphics-layer reasons, 931 JBR picture frames, and zero command frames.
+  The adjacent `CASE_GROUPS=color-filters` refresh passed 12/12 with `fallback_sum=0`, three intentional
+  unsupported-picture rows, 3,516 JBR picture frames, and 12,920 JBR command frames. The exact and group runs were
+  3.5M and 54M under Magic Jewel `out`; overall `out` stayed at 77G and the volume had about 301Gi free after
+  completion. Suites:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260603-171252/suite.tsv`
+  and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260603-171707/suite.tsv`.
 - Magic Jewel added and validated a `Canvas.drawVertices` raw Skia-backed color-filter fallback sentinel after a focused
   recorder audit found the solid-color-only vertices command path lacked an explicit unsupported-paint probe. No-run
   validation passed for `bash -n scripts/jbr-skia-command-probe-suite.sh scripts/jbr-skia-interop-report.sh`;

@@ -49,6 +49,14 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `command_frames=158073`:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260602-155529/suite.tsv` and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260602-165056/suite.tsv`.
+- A new Magic Jewel command-probe sentinel covers `drawImageRect` with an unsupported raw Skia table color filter,
+  matching the recorder's image-paint guard that only accepts tint/color-matrix descriptor-backed color filters on the
+  command path. No-run discovery now reports 493 default command-probe rows and `color-filters` 12, with no ungrouped
+  rows. Focused exact validation passed 1/1 with the `colorFilter` unsupported reason present, 931 JBR picture frames,
+  and zero command frames; the adjacent `color-filters` group passed 12/12 with `fallback_sum=0`, three intentional
+  unsupported-picture rows, 3,516 picture frames, and 12,920 command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260603-171252/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260603-171707/suite.tsv`.
 - A new Magic Jewel command-probe sentinel covers `Canvas.drawVertices` with raw Skia-backed color-filter paint, which
   CMP intentionally rejects because the vertices command ABI is currently solid-color-only. No-run discovery now reports
   492 default command-probe rows and `core-effects` 8, with no ungrouped rows. Focused exact validation passed 1/1 with

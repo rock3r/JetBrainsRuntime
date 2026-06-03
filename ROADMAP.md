@@ -38,6 +38,16 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel added an image raw Skia table color-filter fallback sentinel so `drawImageRect` now has explicit
+  app-level coverage for unsupported raw image color filters, while descriptor-backed image tint/color-matrix rows stay
+  on the command path. No-run discovery reports 493 default command-probe rows and `color-filters` 12, with no
+  ungrouped rows. Focused `CASES=commands-image-raw-table-color-filter-fallback` passed 1/1 with the `colorFilter`
+  unsupported reason present alongside the generic `image` and graphics-layer parent reasons, 931 JBR picture frames,
+  and zero command frames; adjacent `CASE_GROUPS=color-filters` passed 12/12 with `fallback_sum=0`, three intentional
+  unsupported-picture rows, 3,516 picture frames, and 12,920 command frames. Suites:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260603-171252/suite.tsv`
+  and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260603-171707/suite.tsv`.
 - Magic Jewel added a `Canvas.drawVertices` raw Skia-backed color-filter fallback sentinel so the recorder's
   solid-color-only vertices path now has explicit structural fallback coverage. No-run discovery reports 492 default
   command-probe rows and `core-effects` 8, with no ungrouped rows. Focused
