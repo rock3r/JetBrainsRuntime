@@ -38,6 +38,16 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel added a graphics-layer invalid alpha fallback sentinel so the layer validation guard now has app-level
+  coverage for out-of-range `alpha`. No-run discovery reports 498 default command-probe rows, a new
+  `graphics-layer-invalid` quick group with 2 rows, and no ungrouped rows. Focused
+  `CASES=commands-graphics-layer-invalid-alpha-fallback` passed 1/1 with the `graphicsLayer:alpha` unsupported reason
+  present, 964 JBR picture frames, and zero command frames; adjacent `CASE_GROUPS=graphics-layer-invalid` passed 2/2
+  with `fallback_sum=0`, two intentional unsupported-picture rows, 1,983 picture frames, and zero command frames.
+  Suites:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260603-183358/suite.tsv`
+  and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260603-183507/suite.tsv`.
 - Magic Jewel added a graphics-layer invalid shadow-elevation fallback sentinel so the layer validation guard now has
   app-level coverage for negative `shadowElevation`. No-run discovery reports 497 default command-probe rows and
   `graphics-layer` 22, with no ungrouped rows. Focused
