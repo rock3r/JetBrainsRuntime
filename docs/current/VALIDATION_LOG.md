@@ -5,6 +5,22 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel added and validated an unrecorded graphics-layer fallback sentinel after the recorder/layer audit
+  identified `graphicsLayer:recording` as an app-reachable layer lifecycle guard without a command-probe row. The new
+  `MAGIC_JEWEL_COMPOSE_GRAPHICS_LAYER_UNRECORDED` branch creates a remembered `GraphicsLayer` and draws it without
+  calling `record`, matching the public API's documented no-output state while ensuring the JBR command path falls back
+  before replay. No-run validation passed for `bash -n scripts/jbr-skia-command-probe-suite.sh scripts/jbr-skia-interop-report.sh`;
+  `LIST_CASE_COUNT=true` returned 508, `LIST_CASE_GROUP_COUNTS=true` reported `graphics-layer-invalid` 12 and
+  `graphics-layer` 22, `LIST_CASES=true CASE_GROUPS=graphics-layer-invalid` listed the existing invalid layer rows
+  plus `commands-graphics-layer-unrecorded-fallback`, and `LIST_UNGROUPED_CASES=true` printed no rows. Focused
+  `CASES=commands-graphics-layer-unrecorded-fallback` passed 1/1 with `fallback_sum=0`; unsupported reasons included
+  `graphicsLayer:recording` plus parent graphics-layer reasons, 891 JBR picture frames, and zero command frames. The
+  adjacent `CASE_GROUPS=graphics-layer-invalid` refresh passed 12/12 with `fallback_sum=0`, twelve intentional
+  unsupported-picture rows, 11,611 JBR picture frames, and zero JBR command frames. Magic Jewel `out` stayed at 77G
+  and the volume had about 300Gi free after completion. Suites:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260603-203529/suite.tsv`
+  and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260603-203629/suite.tsv`.
 - Magic Jewel added and validated a graphics-layer invalid blend-mode fallback sentinel after the recorder/layer audit
   identified `graphicsLayer:blendMode` as an app-reachable layer validation guard without an invalid command-probe row.
   The new `MAGIC_JEWEL_COMPOSE_GRAPHICS_LAYER_INVALID_BLEND_MODE` branch overrides the supported graphics-layer blend
