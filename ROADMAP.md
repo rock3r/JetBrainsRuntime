@@ -38,6 +38,16 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel added a `Canvas.drawVertices` raw Skia-backed color-filter fallback sentinel so the recorder's
+  solid-color-only vertices path now has explicit structural fallback coverage. No-run discovery reports 492 default
+  command-probe rows and `core-effects` 8, with no ungrouped rows. Focused
+  `CASES=commands-vertices-raw-color-filter-fallback` passed 1/1 with the `vertices` unsupported reason present,
+  927 JBR picture frames, and zero command frames; adjacent `CASE_GROUPS=core-effects` passed 8/8 with
+  `fallback_sum=0`, three intentional unsupported-picture rows, 3,195 picture frames, and 6,876 command frames.
+  Suites:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260603-155224/suite.tsv`
+  and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260603-160716/suite.tsv`.
 - Magic Jewel refreshed the post-command-sweep compatibility/artifact/parity gates after restoring the local `/tmp`
   JBR Skia artifacts. Missing `/tmp/jbr-api-shim.jar` and `/tmp/jbr-skia-native/libjbrskiainterop.dylib` had caused
   focused `happy` compatibility launches to fall back with `public-api-missing`; rerunning

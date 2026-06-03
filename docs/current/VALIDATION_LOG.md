@@ -5,6 +5,22 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel added and validated a `Canvas.drawVertices` raw Skia-backed color-filter fallback sentinel after a focused
+  recorder audit found the solid-color-only vertices command path lacked an explicit unsupported-paint probe. No-run
+  validation passed for `bash -n scripts/jbr-skia-command-probe-suite.sh scripts/jbr-skia-interop-report.sh`;
+  `LIST_CASE_COUNT=true` returned 492, `LIST_CASE_GROUP_COUNTS=true` reported `core-effects` 8,
+  `LIST_CASES=true CASE_GROUPS=core-effects` listed `commands-vertices-raw-color-filter-fallback` after
+  `commands-vertices`, and `LIST_UNGROUPED_CASES=true` printed no rows. The first exact launch created only a 64K
+  unreferenced failed output dir because the sandbox blocked Gradle's `~/.gradle` wrapper lock. Rerunning with the
+  required Gradle permissions passed `CASES=commands-vertices-raw-color-filter-fallback`: 1/1 passed,
+  `fallback_sum=0`, the `vertices` unsupported reason was present alongside parent graphics-layer reasons, 927 JBR
+  picture frames, and zero command frames. The adjacent `CASE_GROUPS=core-effects` refresh passed 8/8 with
+  `fallback_sum=0`, three intentional unsupported-picture rows, 3,195 JBR picture frames, and 6,876 JBR command
+  frames. The exact and group runs were 2.8M and 31M under Magic Jewel `out`; overall `out` stayed at 76G and the
+  volume had about 302Gi free after completion. Suites:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260603-155224/suite.tsv`
+  and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260603-160716/suite.tsv`.
 - Magic Jewel local artifact state was restored after focused compatibility `happy` retries exposed harness-local
   failures, first `service-unavailable` with stale processes and then repeatable `public-api-missing` once the stale
   processes were gone. The current `/tmp` artifacts were absent (`/tmp/jbr-api-shim.jar`,

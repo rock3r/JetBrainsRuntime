@@ -49,6 +49,14 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `command_frames=158073`:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260602-155529/suite.tsv` and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260602-165056/suite.tsv`.
+- A new Magic Jewel command-probe sentinel covers `Canvas.drawVertices` with raw Skia-backed color-filter paint, which
+  CMP intentionally rejects because the vertices command ABI is currently solid-color-only. No-run discovery now reports
+  492 default command-probe rows and `core-effects` 8, with no ungrouped rows. Focused exact validation passed 1/1 with
+  the `vertices` unsupported reason present, 927 JBR picture frames, and zero command frames; the adjacent
+  `core-effects` group passed 8/8 with `fallback_sum=0`, three intentional unsupported-picture rows, 3,195 picture
+  frames, and 6,876 command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260603-155224/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260603-160716/suite.tsv`.
 - The latest compatibility matrix passed after rebuilding the local `/tmp` JBR Skia artifacts that the harness
   consumes: 57/57 passed, `fallback_sum=56`, 770 command frames, and every row used background-window mode. The
   pre-rebuild focused `happy` failures were artifact-state failures (`public-api-missing` after
