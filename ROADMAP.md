@@ -38,6 +38,16 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel added a graphics-layer invalid translationY fallback sentinel so the layer validation guard now has
+  app-level coverage for non-finite `translationY`. No-run discovery reports 504 default command-probe rows,
+  `graphics-layer-invalid` 8, and no ungrouped rows. Focused
+  `CASES=commands-graphics-layer-invalid-translation-y-fallback` passed 1/1 with the `graphicsLayer:translationY`
+  unsupported reason present, 1,034 JBR picture frames, and zero command frames; adjacent
+  `CASE_GROUPS=graphics-layer-invalid` passed 8/8 with `fallback_sum=0`, eight intentional unsupported-picture rows,
+  7,906 picture frames, and zero command frames. Suites:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260603-193442/suite.tsv`
+  and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260603-193540/suite.tsv`.
 - Magic Jewel added a graphics-layer invalid translationX fallback sentinel so the layer validation guard now has
   app-level coverage for non-finite `translationX`. No-run discovery reports 503 default command-probe rows,
   `graphics-layer-invalid` 7, and no ungrouped rows. Focused

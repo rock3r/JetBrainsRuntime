@@ -5,6 +5,23 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel added and validated a graphics-layer invalid translationY fallback sentinel after the recorder/layer
+  audit identified `graphicsLayer:translationY` as an app-reachable layer validation guard without a command-probe row.
+  The new `MAGIC_JEWEL_COMPOSE_GRAPHICS_LAYER_INVALID_TRANSLATION_Y` branch sets `translationY = Float.NaN` on the
+  graphics-layer probe. No-run validation passed for
+  `bash -n scripts/jbr-skia-command-probe-suite.sh scripts/jbr-skia-interop-report.sh`; `LIST_CASE_COUNT=true`
+  returned 504, `LIST_CASE_GROUP_COUNTS=true` reported `graphics-layer-invalid` 8 and `graphics-layer` 22,
+  `LIST_CASES=true CASE_GROUPS=graphics-layer-invalid` listed the alpha, scaleX, scaleY, rotationZ, translationX,
+  translationY, camera-distance, and shadow-elevation fallback rows, and `LIST_UNGROUPED_CASES=true` printed no rows.
+  Focused `CASES=commands-graphics-layer-invalid-translation-y-fallback` passed 1/1 with `fallback_sum=0`;
+  unsupported reasons included `graphicsLayer:translationY` plus parent graphics-layer reasons, 1,034 JBR picture
+  frames, and zero command frames. The adjacent `CASE_GROUPS=graphics-layer-invalid` refresh passed 8/8 with
+  `fallback_sum=0`, eight intentional unsupported-picture rows, 7,906 JBR picture frames, and zero JBR command frames.
+  The exact and group runs were 3.7M and 28M under Magic Jewel `out`; overall `out` stayed at 77G and the volume had
+  about 283Gi free after completion. Suites:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260603-193442/suite.tsv`
+  and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260603-193540/suite.tsv`.
 - Magic Jewel added and validated a graphics-layer invalid translationX fallback sentinel after the recorder/layer
   audit identified `graphicsLayer:translationX` as an app-reachable layer validation guard without a command-probe row.
   The new `MAGIC_JEWEL_COMPOSE_GRAPHICS_LAYER_INVALID_TRANSLATION_X` branch sets `translationX = Float.NaN` on the
