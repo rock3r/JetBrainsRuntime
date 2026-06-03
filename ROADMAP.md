@@ -38,6 +38,16 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel added a graphics-layer invalid camera-distance fallback sentinel so the layer validation guard now has
+  app-level coverage for non-positive `cameraDistance`. No-run discovery reports 499 default command-probe rows,
+  `graphics-layer-invalid` 3, and no ungrouped rows. Focused
+  `CASES=commands-graphics-layer-invalid-camera-distance-fallback` passed 1/1 with the
+  `graphicsLayer:cameraDistance` unsupported reason present, 956 JBR picture frames, and zero command frames;
+  adjacent `CASE_GROUPS=graphics-layer-invalid` passed 3/3 with `fallback_sum=0`, three intentional
+  unsupported-picture rows, 2,841 picture frames, and zero command frames. Suites:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260603-184223/suite.tsv`
+  and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260603-184326/suite.tsv`.
 - Magic Jewel added a graphics-layer invalid alpha fallback sentinel so the layer validation guard now has app-level
   coverage for out-of-range `alpha`. No-run discovery reports 498 default command-probe rows, a new
   `graphics-layer-invalid` quick group with 2 rows, and no ungrouped rows. Focused

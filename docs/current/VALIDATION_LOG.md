@@ -5,6 +5,23 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel added and validated a graphics-layer invalid camera-distance fallback sentinel after the recorder/layer
+  audit identified `graphicsLayer:cameraDistance` as an app-reachable layer validation guard without a command-probe
+  row. The new `MAGIC_JEWEL_COMPOSE_GRAPHICS_LAYER_INVALID_CAMERA_DISTANCE` branch sets `cameraDistance = 0f` on the
+  graphics-layer probe. No-run validation passed for
+  `bash -n scripts/jbr-skia-command-probe-suite.sh scripts/jbr-skia-interop-report.sh`; `LIST_CASE_COUNT=true`
+  returned 499, `LIST_CASE_GROUP_COUNTS=true` reported `graphics-layer-invalid` 3 and `graphics-layer` 22,
+  `LIST_CASES=true CASE_GROUPS=graphics-layer-invalid` listed the alpha, shadow-elevation, and camera-distance
+  fallback rows, and `LIST_UNGROUPED_CASES=true` printed no rows. Focused
+  `CASES=commands-graphics-layer-invalid-camera-distance-fallback` passed 1/1 with `fallback_sum=0`; unsupported
+  reasons included `graphicsLayer:cameraDistance` plus parent graphics-layer reasons, 956 JBR picture frames, and zero
+  command frames. The adjacent `CASE_GROUPS=graphics-layer-invalid` refresh passed 3/3 with `fallback_sum=0`, three
+  intentional unsupported-picture rows, 2,841 JBR picture frames, and zero JBR command frames. The exact and group
+  runs were 3.6M and 11M under Magic Jewel `out`; overall `out` stayed at 77G and the volume had about 300Gi free
+  after completion. Suites:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260603-184223/suite.tsv`
+  and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260603-184326/suite.tsv`.
 - Magic Jewel added and validated a graphics-layer invalid alpha fallback sentinel after the recorder/layer audit
   identified `graphicsLayer:alpha` as an app-reachable layer validation guard without a command-probe row. The new
   `MAGIC_JEWEL_COMPOSE_GRAPHICS_LAYER_INVALID_ALPHA` branch overrides the graphics-layer probe's normal alpha with
