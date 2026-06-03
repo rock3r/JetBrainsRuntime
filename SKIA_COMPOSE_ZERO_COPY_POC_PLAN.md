@@ -78,6 +78,13 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `fallback_sum=0`, five intentional unsupported-picture rows, 4,669 picture frames, and zero command frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260603-185751/suite.tsv` and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260603-185856/suite.tsv`.
+- A new Magic Jewel command-probe sentinel covers graphics layers with invalid non-finite `rotationZ`. This exercises
+  the layer-level `graphicsLayer:rotationZ` guard before replay. No-run discovery now reports 502 default
+  command-probe rows and the `graphics-layer-invalid` quick group now has 6 rows. Focused exact validation passed 1/1
+  with 1,055 JBR picture frames and zero command frames; the adjacent `graphics-layer-invalid` group passed 6/6 with
+  `fallback_sum=0`, six intentional unsupported-picture rows, 6,172 picture frames, and zero command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260603-190925/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260603-191023/suite.tsv`.
 - A new Magic Jewel command-probe sentinel covers graphics layers with invalid negative `shadowElevation`. This
   exercises the layer-level `graphicsLayer:shadowElevation` guard before replay. No-run discovery now reports 497
   default command-probe rows and `graphics-layer` 22. Focused exact validation passed 1/1 with 969 JBR picture frames
