@@ -38,6 +38,16 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel added a graphics-layer invalid blend-mode fallback sentinel so the layer validation guard now has
+  app-level coverage for unsupported `blendMode`. No-run discovery reports 507 default command-probe rows,
+  `graphics-layer-invalid` 11, and no ungrouped rows. Focused
+  `CASES=commands-graphics-layer-invalid-blend-mode-fallback` passed 1/1 with the `graphicsLayer:blendMode`
+  unsupported reason present, 1,168 JBR picture frames, and zero command frames; adjacent
+  `CASE_GROUPS=graphics-layer-invalid` passed 11/11 with `fallback_sum=0`, eleven intentional unsupported-picture
+  rows, 11,972 picture frames, and zero command frames. Suites:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260603-202228/suite.tsv`
+  and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260603-202314/suite.tsv`.
 - Magic Jewel added a graphics-layer invalid rotationY fallback sentinel so the layer validation guard now has
   app-level coverage for non-finite `rotationY`. No-run discovery reports 506 default command-probe rows,
   `graphics-layer-invalid` 10, and no ungrouped rows. Focused

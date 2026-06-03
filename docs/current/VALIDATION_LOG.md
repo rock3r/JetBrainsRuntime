@@ -5,6 +5,23 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel added and validated a graphics-layer invalid blend-mode fallback sentinel after the recorder/layer audit
+  identified `graphicsLayer:blendMode` as an app-reachable layer validation guard without an invalid command-probe row.
+  The new `MAGIC_JEWEL_COMPOSE_GRAPHICS_LAYER_INVALID_BLEND_MODE` branch overrides the supported graphics-layer blend
+  probe with `BlendMode.Clear`, which CMP rejects as `graphicsLayer:blendMode` before replay. The exact case initially
+  failed only because the generic screenshot color assertion is not valid for a `Clear` blend-mode probe; after scoping
+  that row to the unsupported-reason contract, no-run validation reported 507 default command-probe rows,
+  `graphics-layer-invalid` 11, `graphics-layer` 22, and no ungrouped rows. Focused
+  `CASES=commands-graphics-layer-invalid-blend-mode-fallback` passed 1/1 with `fallback_sum=0`; unsupported reasons
+  included `graphicsLayer:blendMode` plus parent graphics-layer reasons, 1,168 JBR picture frames, and zero command
+  frames. The adjacent `CASE_GROUPS=graphics-layer-invalid` refresh passed 11/11 with `fallback_sum=0`, eleven
+  intentional unsupported-picture rows, 11,972 JBR picture frames, and zero JBR command frames. The successful suites:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260603-202228/suite.tsv`
+  and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260603-202314/suite.tsv`.
+  The unreferenced discovery failure remains small (3.5M) at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260603-201834/` and documents
+  why the screenshot assertion is disabled for this exact visual-disruptive invalid row.
 - Magic Jewel added and validated a graphics-layer invalid rotationY fallback sentinel after the recorder/layer audit
   identified `graphicsLayer:rotationY` as an app-reachable layer validation guard without a command-probe row. The new
   `MAGIC_JEWEL_COMPOSE_GRAPHICS_LAYER_INVALID_ROTATION_Y` branch sets `rotationY = Float.NaN` on the graphics-layer
