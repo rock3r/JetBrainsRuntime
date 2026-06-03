@@ -49,6 +49,13 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `command_frames=158073`:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260602-155529/suite.tsv` and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260602-165056/suite.tsv`.
+- A new Magic Jewel command-probe sentinel covers graphics layers with invalid negative `shadowElevation`. This
+  exercises the layer-level `graphicsLayer:shadowElevation` guard before replay. No-run discovery now reports 497
+  default command-probe rows and `graphics-layer` 22. Focused exact validation passed 1/1 with 969 JBR picture frames
+  and zero command frames; the adjacent `graphics-layer` group passed 22/22 with `fallback_sum=0`, one intentional
+  unsupported-picture row, 879 picture frames, and 24,305 command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260603-175414/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260603-180307/suite.tsv`.
 - New Magic Jewel command-probe sentinels cover stroked linear, radial, and sweep path gradients. CMP currently rejects
   these real Compose probes through the gradient-paint guards (`linearGradientPaint`, `radialGradientPaint`, and
   `sweepGradientPaint`) before the path-specific style checks are reached, so the unsupported surface is now explicitly

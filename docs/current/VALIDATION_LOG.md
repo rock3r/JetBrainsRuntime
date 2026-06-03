@@ -5,6 +5,25 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel added and validated a graphics-layer invalid shadow-elevation fallback sentinel after the recorder/layer
+  audit identified `graphicsLayer:shadowElevation` as an app-reachable layer validation guard without a command-probe
+  row. The new `MAGIC_JEWEL_COMPOSE_GRAPHICS_LAYER_INVALID_SHADOW_ELEVATION` branch sets `shadowElevation = -1f` on
+  the graphics-layer probe. No-run validation passed for
+  `bash -n scripts/jbr-skia-command-probe-suite.sh scripts/jbr-skia-interop-report.sh`; `LIST_CASE_COUNT=true`
+  returned 497, `LIST_CASE_GROUP_COUNTS=true` reported `graphics-layer` 22,
+  `LIST_CASES=true CASE_GROUPS=graphics-layer` listed
+  `commands-graphics-layer-invalid-shadow-elevation-fallback` immediately after `commands-graphics-layer-shadow`, the
+  bounded default-order slice around graphics-layer shadow rows preserved
+  `commands-graphics-layer-chained-render-effect-blend-color-matrix-filter`, and `LIST_UNGROUPED_CASES=true` printed
+  no rows. Focused `CASES=commands-graphics-layer-invalid-shadow-elevation-fallback` passed 1/1 with `fallback_sum=0`;
+  unsupported reasons included `graphicsLayer:shadowElevation` plus parent graphics-layer reasons, 969 JBR picture
+  frames, and zero command frames. The adjacent `CASE_GROUPS=graphics-layer` refresh passed 22/22 with
+  `fallback_sum=0`, one intentional unsupported-picture row, 879 JBR picture frames, and 24,305 JBR command frames.
+  The exact and group runs were 3.6M and 83M under Magic Jewel `out`; overall `out` stayed at 77G and the volume had
+  about 301Gi free after completion. Suites:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260603-175414/suite.tsv`
+  and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260603-180307/suite.tsv`.
 - Magic Jewel added and validated gradient path stroke fallback sentinels after the recorder audit identified path
   gradient non-fill paint as an app-reachable unsupported surface. The new
   `MAGIC_JEWEL_COMPOSE_GRADIENT_PATH_STROKE` toggle reuses the existing linear/radial/sweep path-gradient probes but
