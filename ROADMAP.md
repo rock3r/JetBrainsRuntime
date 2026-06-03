@@ -38,6 +38,20 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel refreshed the post-command-sweep compatibility/artifact/parity gates after restoring the local `/tmp`
+  JBR Skia artifacts. Missing `/tmp/jbr-api-shim.jar` and `/tmp/jbr-skia-native/libjbrskiainterop.dylib` had caused
+  focused `happy` compatibility launches to fall back with `public-api-missing`; rerunning
+  `./scripts/rebuild-jbr-skia-local-artifacts.sh` restored the shim, java.desktop patch, and native dylib. The
+  authoritative compatibility matrix then passed 57/57 with `fallback_sum=56`, 770 command frames, and all rows in
+  background-window mode:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260603-140432/matrix.tsv`.
+- Magic Jewel artifact and screenshot parity refreshes passed after the compatibility matrix: artifact required rows
+  passed 2/2 with `fallback_sum=1` and 438 command frames, optional-old rows recorded five expected skips, and full
+  screenshot parity marker-only passed 106/106 with `fallback_sum=11`, zero picture frames, and 93,672 command frames.
+  Matrices/suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260603-143254/matrix.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260603-143404/matrix.tsv`, and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260603-143459/suite.tsv`.
 - Magic Jewel full default command-probe consolidation passed after the focused invalid/supported refreshes, resumed
   from the interrupted prefix instead of replaying already-green rows. Combined suites
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260602-155529/suite.tsv`

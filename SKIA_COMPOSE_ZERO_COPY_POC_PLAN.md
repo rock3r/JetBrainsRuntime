@@ -49,11 +49,22 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `command_frames=158073`:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260602-155529/suite.tsv` and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260602-165056/suite.tsv`.
-- The latest full default screenshot parity suite passed in marker-only mode after the command, compatibility,
-  artifact, and Skiko refreshes: 106/106 passed, `fallback_sum=11`, zero JBR picture frames, and 120,808 JBR command
-  frames. The 11 fallback markers are bounded to resize sentinel rows, while all screenshot pixel metrics are
-  intentionally `missing` because `EXPECT_SCREENSHOT_ASSERTION=false` was set:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260601-202121/suite.tsv`.
+- The latest compatibility matrix passed after rebuilding the local `/tmp` JBR Skia artifacts that the harness
+  consumes: 57/57 passed, `fallback_sum=56`, 770 command frames, and every row used background-window mode. The
+  pre-rebuild focused `happy` failures were artifact-state failures (`public-api-missing` after
+  `/tmp/jbr-api-shim.jar` and `/tmp/jbr-skia-native/libjbrskiainterop.dylib` were absent), not command ABI
+  regressions:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260603-140432/matrix.tsv`.
+- The latest artifact matrix refresh passed on the restored current artifacts: required rows 2/2 passed with
+  `fallback_sum=1` and 438 command frames, while optional-old rows recorded the five expected skips because no old
+  artifact variables were set:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260603-143254/matrix.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260603-143404/matrix.tsv`.
+- The latest full default screenshot parity suite passed in marker-only mode after the command, compatibility, and
+  artifact refreshes: 106/106 passed, `fallback_sum=11`, zero JBR picture frames, and 93,672 JBR command frames. The
+  11 fallback markers are bounded to resize sentinel rows, while all screenshot pixel metrics are intentionally
+  `missing` because `EXPECT_SCREENSHOT_ASSERTION=false` was set:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260603-143459/suite.tsv`.
 - The latest full default command-probe consolidation passed in command-marker-only mode after the raw conical
   gradient sentinel: 488/488 passed, `fallback_sum=350`, `unsupported_rows=27`, `jbr_picture_frames=34246`, and
   `jbr_command_frames=188703`:

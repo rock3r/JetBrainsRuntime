@@ -5,6 +5,36 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel local artifact state was restored after focused compatibility `happy` retries exposed harness-local
+  failures, first `service-unavailable` with stale processes and then repeatable `public-api-missing` once the stale
+  processes were gone. The current `/tmp` artifacts were absent (`/tmp/jbr-api-shim.jar`,
+  `/tmp/missing-jbr-api-shim.jar`, and `/tmp/jbr-skia-native/libjbrskiainterop.dylib`), so
+  `./scripts/rebuild-jbr-skia-local-artifacts.sh` was rerun successfully. It rebuilt the public API shim, the
+  `/tmp/jbr-skia-run/desktop` java.desktop patch classes, and `/tmp/jbr-skia-native/libjbrskiainterop.dylib`; a
+  focused `CASES=happy` compatibility retry then passed with `fallback_new_count=0`, 671 command frames, and
+  background-window mode true:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260603-105443/matrix.tsv`.
+- Magic Jewel full compatibility matrix passed in marker-only mode after the restored-artifact focused retry. A
+  concurrent subagent attempt created two unreferenced/failed header-only or cross-wired output dirs, so the
+  authoritative run was repeated with a single owner. Aggregate: 57/57 passed, `fallback_sum=56`,
+  `jbr_command_frames=770`, and every row reported `background_window=true`. The TSV has 58 lines including the
+  header, the run directory was 73M, Magic Jewel `out` stayed at 76G, and the volume had about 305Gi free around the
+  run. Matrix:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260603-140432/matrix.tsv`.
+- Magic Jewel artifact matrix refreshed after the compatibility matrix on the restored current ABI 106 artifacts.
+  `CASE_GROUPS=required` passed 2/2 with `fallback_sum=1`, 438 command frames, and background-window mode true for
+  both rows: `current-all` replayed commands and `missing-public-api` fell back exactly once. `CASE_GROUPS=optional-old`
+  recorded the five expected skipped rows because no old artifact variables were set. The required and optional-old
+  matrices were 3.0M and 4.0K under Magic Jewel `out`, which stayed at 76G. Matrices:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260603-143254/matrix.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260603-143404/matrix.tsv`.
+- Magic Jewel full default screenshot parity suite passed in marker-only mode after the restored-artifact
+  compatibility and artifact refreshes: 106/106 passed, `fallback_sum=11`, `jbr_picture_frames=0`, and
+  `jbr_command_frames=93672`; all screenshot pixel metrics were intentionally `missing` because
+  `EXPECT_SCREENSHOT_ASSERTION=false` was set. The TSV has 107 lines including the header, the run directory was
+  529M under Magic Jewel `out`, overall `out` stayed at 76G, and the volume had about 286Gi free after completion.
+  Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260603-143459/suite.tsv`.
 - Magic Jewel full default command-probe consolidation passed after the focused invalid/supported refresh batch. The
   first run was interrupted after 65 data rows, so the sweep was completed with
   `CASES_FROM=commands-invalid-text-font-size-fallback` rather than replaying the green prefix. Combined aggregate:
