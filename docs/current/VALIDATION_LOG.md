@@ -5,6 +5,24 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel added and validated gradient path stroke fallback sentinels after the recorder audit identified path
+  gradient non-fill paint as an app-reachable unsupported surface. The new
+  `MAGIC_JEWEL_COMPOSE_GRADIENT_PATH_STROKE` toggle reuses the existing linear/radial/sweep path-gradient probes but
+  draws them with `Stroke`; supported fill-path gradient replay remains unchanged when the toggle is false. A first
+  focused run expecting the path-specific `linearGradientPathPaint` reason failed, usefully showing that the real
+  recorder path rejects stroked path gradients earlier through the generic gradient-paint guard:
+  `linearGradientPaint`. The failed unreferenced run was 3.6M:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260603-173603/commands-linear-gradient-path-stroke-fallback/report.md`.
+  After correcting expected reasons, no-run validation passed for
+  `bash -n scripts/jbr-skia-command-probe-suite.sh scripts/jbr-skia-interop-report.sh`; `LIST_CASE_COUNT=true`
+  returned 496, `LIST_CASE_GROUP_COUNTS=true` reported `gradient-path-stroke-fallbacks` 3,
+  `LIST_CASES=true CASE_GROUPS=gradient-path-stroke-fallbacks` listed the three new rows, and
+  `LIST_UNGROUPED_CASES=true` printed no rows. Focused `CASE_GROUPS=gradient-path-stroke-fallbacks` passed 3/3 with
+  `fallback_sum=0`; unsupported reasons were `linearGradientPaint`, `radialGradientPaint`, and `sweepGradientPaint`
+  plus parent graphics-layer reasons; the group produced three intentional unsupported-picture rows, 3,245 JBR picture
+  frames, and zero command frames. The successful run was 11M under Magic Jewel `out`; overall `out` stayed at 77G and
+  the volume had about 284Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260603-173734/suite.tsv`.
 - Magic Jewel added and validated an image raw Skia table color-filter fallback sentinel after the recorder audit found
   `drawImageRect` had supported image tint/color-matrix descriptor rows but no app-level unsupported raw image
   color-filter probe. The new `MAGIC_JEWEL_COMPOSE_IMAGE_RAW_TABLE_COLOR_FILTER` branch draws an image with a raw

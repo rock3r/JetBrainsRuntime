@@ -49,6 +49,13 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `command_frames=158073`:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260602-155529/suite.tsv` and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260602-165056/suite.tsv`.
+- New Magic Jewel command-probe sentinels cover stroked linear, radial, and sweep path gradients. CMP currently rejects
+  these real Compose probes through the gradient-paint guards (`linearGradientPaint`, `radialGradientPaint`, and
+  `sweepGradientPaint`) before the path-specific style checks are reached, so the unsupported surface is now explicitly
+  documented by actual recorder output. No-run discovery now reports 496 default command-probe rows and a
+  `gradient-path-stroke-fallbacks` group with 3 rows. The focused group passed 3/3 with `fallback_sum=0`, three
+  intentional unsupported-picture rows, 3,245 picture frames, and zero command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260603-173734/suite.tsv`.
 - A new Magic Jewel command-probe sentinel covers `drawImageRect` with an unsupported raw Skia table color filter,
   matching the recorder's image-paint guard that only accepts tint/color-matrix descriptor-backed color filters on the
   command path. No-run discovery now reports 493 default command-probe rows and `color-filters` 12, with no ungrouped

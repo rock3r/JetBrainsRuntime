@@ -38,6 +38,13 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel added gradient path stroke fallback sentinels for linear, radial, and sweep path gradients. The recorder
+  rejects these real Compose stroked-path probes through the gradient-paint guards (`linearGradientPaint`,
+  `radialGradientPaint`, and `sweepGradientPaint`) before the path-specific paint-style checks are reached. No-run
+  discovery reports 496 default command-probe rows and a new `gradient-path-stroke-fallbacks` group with 3 rows, with
+  no ungrouped rows. Focused `CASE_GROUPS=gradient-path-stroke-fallbacks` passed 3/3 with `fallback_sum=0`, three
+  intentional unsupported-picture rows, 3,245 picture frames, and zero command frames. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260603-173734/suite.tsv`.
 - Magic Jewel added an image raw Skia table color-filter fallback sentinel so `drawImageRect` now has explicit
   app-level coverage for unsupported raw image color filters, while descriptor-backed image tint/color-matrix rows stay
   on the command path. No-run discovery reports 493 default command-probe rows and `color-filters` 12, with no
