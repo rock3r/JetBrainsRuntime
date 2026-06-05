@@ -35,6 +35,11 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   `compose.jbr.skia.command.strict=true`, and `recordNested` nulls child commands when any nested unsupported reason is
   present, so public child failures reach the parent as `graphicsLayer:childCommands` plus the child reason instead of
   reaching the later child-header checks. No new validation suite was needed for this docs-only classification.
+- The same graphics-layer source audit classifies the remaining `graphicsLayer:shadow` and
+  `graphicsLayer:shadowFilter` reasons as defensive after the live `graphicsLayer:shadowPath` sentinel. Invalid
+  layer size/elevation reaches the already-covered layer validation reasons before `addLayerShadow`, and the only
+  fallback shadow filter is an internally synthesized blur descriptor with finite positive sigma and tile mode `3`,
+  which satisfies the descriptor validator's finite non-negative sigma and `0..3` tile-mode bounds.
 - Magic Jewel added and validated live invalid gradient color-count fallback sentinels after the recorder audit found
   that public Brush construction accepts overlarge color lists even though CMP limits command replay to 2..16 colors.
   The new `MAGIC_JEWEL_COMPOSE_INVALID_LINEAR_GRADIENT_COLOR_COUNT`,

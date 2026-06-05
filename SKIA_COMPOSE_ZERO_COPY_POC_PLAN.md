@@ -177,6 +177,10 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   fifteen intentional unsupported-picture rows, 14,768 picture frames, and zero command frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260605-151839/suite.tsv` and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260605-151944/suite.tsv`.
+- The post-shadow-path audit classifies `graphicsLayer:shadow` and `graphicsLayer:shadowFilter` as defensive. Invalid
+  layer size/elevation is rejected before shadow replay, and the fallback shadow blur descriptor is generated
+  internally with finite positive sigma and an accepted tile mode, so public app probes should not reach those two
+  reason strings.
 - New Magic Jewel command-probe sentinels cover live invalid linear, radial, and sweep gradient color counts. Public
   Brush construction accepts 17 colors and attaches JBR gradient metadata, so CMP now rejects these live Compose
   recordings as `linearGradientColorCount`, `radialGradientColorCount`, and `sweepGradientColorCount` before replay.

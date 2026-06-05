@@ -73,6 +73,10 @@ This is the small working roadmap for the current PoC. The full historical check
   unsupported reason, so live public probes surface through `graphicsLayer:childCommands` plus the child reason. The
   later `graphicsLayer:childUnsupported`, `graphicsLayer:childHeaderSize`, and `graphicsLayer:childHeader` checks are
   defensive invariants for non-strict or internally corrupted nested recordings.
+- Recorder audit note: with `graphicsLayer:shadowPath` now covered by a live invalid `Outline.Generic` probe, the
+  remaining `graphicsLayer:shadow` and `graphicsLayer:shadowFilter` reasons are defensive. Layer validation rejects
+  invalid size/elevation before shadow replay, and the fallback shadow blur descriptor is synthesized with finite
+  positive sigma plus an accepted tile mode.
 - Magic Jewel added live invalid gradient-stop sentinels so CMP's app-level `linearGradientStops` and
   `radialGradientStops` guards now have command-probe coverage alongside the existing live `sweepGradientStops` row.
   No-run discovery reports 514 default command-probe rows, a new `gradient-stop-invalid` quick group with 3 rows,
