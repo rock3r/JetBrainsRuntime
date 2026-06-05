@@ -5,6 +5,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel refreshed the focused `blend-mode-invalid` command-probe group. No-run resolution passed with
+  `LIST_CASE_COUNT=true CASE_GROUPS=blend-mode-invalid` returning 2 and
+  `LIST_CASES=true CASE_GROUPS=blend-mode-invalid` listing the fill-rect blend-mode width/height parser guards. The
+  validation run passed 2/2 with `fallback_sum=2`, zero unsupported-picture rows, zero JBR picture frames, and zero
+  JBR command frames. Magic Jewel `out` stayed at 79G, the run was 4.3M, and the volume had about 259Gi free after
+  completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260605-195246/suite.tsv`.
 - Magic Jewel refreshed the focused `save-layer-shader-fallbacks` command-probe group after tightening the raw table
   saveLayer row expectation. The first group attempt reached the expected structured `saveLayer` fallback for
   `commands-save-layer-raw-table-color-filter-fallback` but failed the generic screenshot assertion because the raw

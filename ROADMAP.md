@@ -38,6 +38,9 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel refreshed `CASE_GROUPS=blend-mode-invalid` as a focused fill-rect blend-mode parser checkpoint. The run
+  passed 2/2 with `fallback_sum=2`, zero unsupported-picture rows, zero JBR picture frames, and zero command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260605-195246/suite.tsv`.
 - Magic Jewel refreshed `CASE_GROUPS=save-layer-shader-fallbacks` after disabling the generic green-pixel screenshot
   assertion for the raw table saveLayer fallback row while preserving the required `saveLayer` fallback assertion.
   Exact `commands-save-layer-raw-table-color-filter-fallback` passed 1/1, and the group rerun passed 8/8 with
