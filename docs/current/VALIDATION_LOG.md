@@ -5,6 +5,23 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel added and validated a live invalid image-shader image fallback sentinel after the recorder audit
+  identified CMP's `imageShaderImage` guard as app-reachable from public Compose `ImageShader` construction. The new
+  `MAGIC_JEWEL_COMPOSE_INVALID_IMAGE_SHADER_IMAGE` toggle reuses the supported image-shader probe with an oversized
+  `ImageBitmap(2049, 1)`, so CMP rejects the real Compose recording during image-shader serialization before replay.
+  No-run validation passed for `bash -n scripts/jbr-skia-command-probe-suite.sh scripts/jbr-skia-interop-report.sh`;
+  `LIST_CASE_COUNT=true` returned 522, `LIST_CASE_GROUP_COUNTS=true` reported `image-shader-invalid` 1 and
+  `shader-rendering` 15, `LIST_CASES=true CASE_GROUPS=image-shader-invalid` listed
+  `commands-image-shader-invalid-image-fallback`, duplicate default-case detection printed no rows, and
+  `LIST_UNGROUPED_CASES=true` printed no rows. Focused exact validation passed 1/1 with `fallback_sum=0`, one
+  intentional unsupported-picture row, 1,467 JBR picture frames, and zero command frames; the row reported
+  `imageShaderImage` alongside parent `graphicsLayer:childCommands`/`graphicsLayer`. The adjacent
+  `CASE_GROUPS=shader-rendering` refresh passed 15/15 with `fallback_sum=0`, ten intentional unsupported-picture
+  rows, 10,204 JBR picture frames, and 6,076 JBR command frames. Magic Jewel `out` stayed at 78G, the exact run was
+  4.0M, the group run was 57M, and the volume had about 282Gi free after completion. Suites:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260605-161033/suite.tsv`
+  and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260605-171211/suite.tsv`.
 - Magic Jewel added and validated live invalid gradient-path structure fallback sentinels after the recorder audit
   identified `linearGradientPath`, `radialGradientPath`, and `sweepGradientPath` as app-reachable path-gradient guards
   that only had parser-corruption coverage. The new `MAGIC_JEWEL_COMPOSE_INVALID_GRADIENT_PATH` toggle reuses the

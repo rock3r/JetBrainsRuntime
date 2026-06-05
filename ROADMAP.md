@@ -38,6 +38,17 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel added a live invalid image-shader image fallback sentinel so CMP's app-level `imageShaderImage` guard
+  now has command-probe coverage through a public `ImageShader` backed by an oversized `ImageBitmap(2049, 1)`. No-run
+  discovery reports 522 default command-probe rows, a new `image-shader-invalid` quick group with 1 row,
+  `shader-rendering` 15, and no ungrouped or duplicate default rows. Focused
+  `CASES=commands-image-shader-invalid-image-fallback` passed 1/1 with `fallback_sum=0`, one intentional
+  unsupported-picture row, 1,467 JBR picture frames, and zero command frames. Adjacent
+  `CASE_GROUPS=shader-rendering` passed 15/15 with `fallback_sum=0`, ten intentional unsupported-picture rows, 10,204
+  JBR picture frames, and 6,076 command frames. Suites:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260605-161033/suite.tsv`
+  and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260605-171211/suite.tsv`.
 - Magic Jewel added live invalid gradient-path structure sentinels so CMP's app-level `linearGradientPath`,
   `radialGradientPath`, and `sweepGradientPath` guards now have command-probe coverage from public gradient-filled
   paths with non-finite path data. No-run discovery reports 521 default command-probe rows, a new

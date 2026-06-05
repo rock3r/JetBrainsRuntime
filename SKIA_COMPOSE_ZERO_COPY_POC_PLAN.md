@@ -192,6 +192,16 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   zero command frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260605-154145/suite.tsv` and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260605-154451/suite.tsv`.
+- A new Magic Jewel command-probe sentinel covers an oversized public Compose image used as an `ImageShader`. This
+  exercises CMP's app-level `imageShaderImage` guard before replay rather than relying only on image-shader descriptor
+  parser-corruption rows. No-run discovery now reports 522 default command-probe rows, a new `image-shader-invalid`
+  quick group with 1 row, and `shader-rendering` 15. Focused
+  `CASES=commands-image-shader-invalid-image-fallback` passed 1/1 with `fallback_sum=0`, one intentional
+  unsupported-picture row, 1,467 JBR picture frames, and zero command frames; the adjacent `shader-rendering` group
+  passed 15/15 with `fallback_sum=0`, ten intentional unsupported-picture rows, 10,204 picture frames, and 6,076
+  command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260605-161033/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260605-171211/suite.tsv`.
 - New Magic Jewel command-probe sentinels cover live invalid linear, radial, and sweep gradient color counts. Public
   Brush construction accepts 17 colors and attaches JBR gradient metadata, so CMP now rejects these live Compose
   recordings as `linearGradientColorCount`, `radialGradientColorCount`, and `sweepGradientColorCount` before replay.
