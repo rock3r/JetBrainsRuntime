@@ -38,6 +38,10 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel refreshed `CASE_GROUPS=surface-transform-ui` as a compact UI/surface replay checkpoint. The run passed
+  11/11 with `fallback_sum=0`, zero unsupported-picture rows, zero JBR picture frames, and 16,494 command frames across
+  native bridge load-library, points, transforms, gradients, popup/menu layering, and text-image rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260605-211704/suite.tsv`.
 - Magic Jewel refreshed `CASE_GROUPS=graphics-layer` as the supported replay pair for the recent layer invalid/extras
   refreshes. The run passed 22/22 with `fallback_sum=0`, one intentional unsupported-picture row from invalid shadow
   elevation, 1,152 JBR picture frames, and 31,905 command frames across base layers, clips, blend/filter/effect,

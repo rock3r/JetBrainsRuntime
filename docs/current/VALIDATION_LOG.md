@@ -5,6 +5,14 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel refreshed the focused `surface-transform-ui` command-probe group. No-run resolution passed with
+  `LIST_CASE_COUNT=true CASE_GROUPS=surface-transform-ui` returning 11 and
+  `LIST_CASES=true CASE_GROUPS=surface-transform-ui` listing native bridge load-library, point line/dot replay,
+  concat/skew transforms, gradient surfaces/paths, popup, popup-window, menu, and text-image rows. The validation run
+  passed 11/11 with `fallback_sum=0`, zero unsupported-picture rows, zero JBR picture frames, and 16,494 JBR command
+  frames; every row stayed on command replay, including popup-window and menu layering capture. Magic Jewel `out`
+  stayed at 79G, the run was 47M, and the volume had about 273Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260605-211704/suite.tsv`.
 - Magic Jewel refreshed the focused `graphics-layer` command-probe group after the adjacent invalid/extras layer
   refreshes. No-run resolution passed with `LIST_CASE_COUNT=true CASE_GROUPS=graphics-layer` returning 22 and
   `LIST_CASES=true CASE_GROUPS=graphics-layer` listing base, ModulateAlpha/Offscreen, rectangular/rounded/path clips,
