@@ -38,6 +38,16 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel added a live invalid graphics-layer shadow-path fallback sentinel so CMP's `graphicsLayer:shadowPath`
+  guard now has app-level command-probe coverage through a public `GenericShape` with non-finite path data and positive
+  shadow elevation. No-run discovery reports 518 default command-probe rows, `graphics-layer-invalid` 15, and no
+  ungrouped or duplicate default rows. Focused `CASES=commands-graphics-layer-invalid-shadow-path-fallback` passed
+  1/1 with `fallback_sum=0`, one intentional unsupported-picture row, 961 JBR picture frames, and zero command frames.
+  Adjacent `CASE_GROUPS=graphics-layer-invalid` passed 15/15 with `fallback_sum=0`, fifteen intentional
+  unsupported-picture rows, 14,768 JBR picture frames, and zero command frames. Suites:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260605-151839/suite.tsv`
+  and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260605-151944/suite.tsv`.
 - Magic Jewel added live invalid gradient color-count sentinels so CMP's app-level `linearGradientColorCount`,
   `radialGradientColorCount`, and `sweepGradientColorCount` guards now have command-probe coverage from public Brush
   calls with 17 colors. No-run discovery reports 517 default command-probe rows, a new

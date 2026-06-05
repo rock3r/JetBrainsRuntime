@@ -170,6 +170,13 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   unsupported output nulls the child command stream, so public probes exercise `graphicsLayer:childCommands` plus the
   child reason; `graphicsLayer:childUnsupported`, `graphicsLayer:childHeaderSize`, and `graphicsLayer:childHeader`
   remain defensive checks for non-strict/internal-corruption states.
+- A new Magic Jewel command-probe sentinel covers graphics layers whose generic shadow outline serializes to an invalid
+  path. This exercises the app-level `graphicsLayer:shadowPath` guard before replay. No-run discovery now reports 518
+  default command-probe rows and `graphics-layer-invalid` 15. Focused exact validation passed 1/1 with 961 JBR picture
+  frames and zero command frames; the adjacent `graphics-layer-invalid` group passed 15/15 with `fallback_sum=0`,
+  fifteen intentional unsupported-picture rows, 14,768 picture frames, and zero command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260605-151839/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260605-151944/suite.tsv`.
 - New Magic Jewel command-probe sentinels cover live invalid linear, radial, and sweep gradient color counts. Public
   Brush construction accepts 17 colors and attaches JBR gradient metadata, so CMP now rejects these live Compose
   recordings as `linearGradientColorCount`, `radialGradientColorCount`, and `sweepGradientColorCount` before replay.

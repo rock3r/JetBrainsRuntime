@@ -5,6 +5,24 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel added and validated a graphics-layer invalid shadow-path fallback sentinel after the recorder audit
+  identified `graphicsLayer:shadowPath` as an app-reachable layer replay guard without a command-probe row. The new
+  `MAGIC_JEWEL_COMPOSE_GRAPHICS_LAYER_INVALID_SHADOW_PATH` branch applies a public `GenericShape` containing
+  non-finite path data while keeping positive shadow elevation, so CMP accepts the sealed `Outline.Generic` layer shape
+  and then rejects the shadow path during command serialization before replay. No-run validation passed for
+  `bash -n scripts/jbr-skia-command-probe-suite.sh scripts/jbr-skia-interop-report.sh`; `LIST_CASE_COUNT=true`
+  returned 518, `LIST_CASE_GROUP_COUNTS=true` reported `graphics-layer-invalid` 15, the exact row resolved through
+  `LIST_CASES=true CASES=commands-graphics-layer-invalid-shadow-path-fallback`, duplicate default-case detection
+  printed no rows, and `LIST_UNGROUPED_CASES=true` printed no rows. Focused exact validation passed 1/1 with
+  `fallback_sum=0`, one intentional unsupported-picture row, 961 JBR picture frames, and zero command frames; the row
+  reported `graphicsLayer:shadowPath` alongside parent `graphicsLayer:childCommands`/`graphicsLayer` and the secondary
+  `clipPath` fallback from the shadow fallback pass clipping the same invalid path. The adjacent
+  `CASE_GROUPS=graphics-layer-invalid` refresh passed 15/15 with `fallback_sum=0`, fifteen intentional
+  unsupported-picture rows, 14,768 JBR picture frames, and zero JBR command frames. Magic Jewel `out` stayed at 78G,
+  the exact run was 3.6M, the group run was 53M, and the volume had about 282Gi free after completion. Suites:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260605-151839/suite.tsv`
+  and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260605-151944/suite.tsv`.
 - The recorder reachability audit continued after the gradient color-count batch and classified remaining guards that
   should not be treated as missing app-level Magic Jewel sentinels. CMP's `linearGradientPoints`,
   `radialGradientGeometry`, and `sweepGradientGeometry` checks live in the recorder's JBR gradient metadata
