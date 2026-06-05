@@ -5,6 +5,14 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel refreshed the focused `effect-descriptor-invalid` command-probe group. No-run resolution passed with
+  `LIST_CASE_COUNT=true CASE_GROUPS=effect-descriptor-invalid` returning 28 and
+  `LIST_CASES=true CASE_GROUPS=effect-descriptor-invalid` listing effect descriptor header guards plus lighting,
+  tint, color-matrix, blur/offset image-filter, corner/stamped/chain path-effect descriptor payload guards. The
+  validation run passed 28/28 with `fallback_sum=28`, zero unsupported-picture rows, zero JBR picture frames, and zero
+  JBR command frames; every row reported exactly one expected strict fallback. Magic Jewel `out` stayed at 78G, the
+  run was 93M, and the volume had about 279Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260605-180727/suite.tsv`.
 - Magic Jewel refreshed the focused `path-invalid` command-probe group. No-run resolution passed with
   `LIST_CASE_COUNT=true CASE_GROUPS=path-invalid` returning 24 and
   `LIST_CASES=true CASE_GROUPS=path-invalid` listing the live invalid clip/draw path rows plus clip/draw/stroke/shadow

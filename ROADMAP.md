@@ -38,6 +38,11 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel refreshed `CASE_GROUPS=effect-descriptor-invalid` as a focused descriptor parser checkpoint. No-run
+  discovery resolved 28 rows covering effect descriptor headers plus lighting, tint, color-matrix, blur/offset
+  image-filter, and corner/stamped/chain path-effect descriptor payload guards. The run passed 28/28 with
+  `fallback_sum=28`, zero unsupported-picture rows, zero JBR picture frames, and zero command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260605-180727/suite.tsv`.
 - Magic Jewel refreshed `CASE_GROUPS=path-invalid` as a focused path parser/live-structure checkpoint. No-run
   discovery resolved 24 rows covering live invalid clip/draw paths plus clip/draw/stroke/shadow path verb and dash
   path-effect parser guards. The run passed 24/24 with `fallback_sum=22`, two intentional unsupported-picture rows,
