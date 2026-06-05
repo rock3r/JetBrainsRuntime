@@ -5,6 +5,15 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel refreshed the focused `gradient-path-stroke-fallbacks` command-probe group. No-run resolution passed with
+  `LIST_CASE_COUNT=true CASE_GROUPS=gradient-path-stroke-fallbacks` returning 3 and
+  `LIST_CASES=true CASE_GROUPS=gradient-path-stroke-fallbacks` listing linear, radial, and sweep gradient stroked-path
+  fallback rows. The validation run passed 3/3 with `fallback_sum=0`, three intentional unsupported-picture rows,
+  3,864 JBR picture frames, and zero JBR command frames. The rows reported `linearGradientPaint`,
+  `radialGradientPaint`, and `sweepGradientPaint` alongside parent graphics-layer reasons, preserving the documented
+  generic gradient-paint fallback ordering for stroked gradient paths. Magic Jewel `out` stayed at 79G, the run was
+  12M, and the volume had about 273Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260605-212527/suite.tsv`.
 - Magic Jewel refreshed the focused `surface-transform-ui` command-probe group. No-run resolution passed with
   `LIST_CASE_COUNT=true CASE_GROUPS=surface-transform-ui` returning 11 and
   `LIST_CASES=true CASE_GROUPS=surface-transform-ui` listing native bridge load-library, point line/dot replay,

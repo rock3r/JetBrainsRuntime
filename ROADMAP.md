@@ -38,6 +38,10 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel refreshed `CASE_GROUPS=gradient-path-stroke-fallbacks` as the stroked gradient-path fallback checkpoint.
+  The run passed 3/3 with `fallback_sum=0`, three intentional unsupported-picture rows, 3,864 JBR picture frames, and
+  zero command frames across linear/radial/sweep gradient-paint fallback ordering:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260605-212527/suite.tsv`.
 - Magic Jewel refreshed `CASE_GROUPS=surface-transform-ui` as a compact UI/surface replay checkpoint. The run passed
   11/11 with `fallback_sum=0`, zero unsupported-picture rows, zero JBR picture frames, and 16,494 command frames across
   native bridge load-library, points, transforms, gradients, popup/menu layering, and text-image rows:
