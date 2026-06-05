@@ -5,6 +5,14 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel refreshed the focused `native-text-invalid` command-probe group. No-run resolution passed with
+  `LIST_CASE_COUNT=true CASE_GROUPS=native-text-invalid` returning 11 and
+  `LIST_CASES=true CASE_GROUPS=native-text-invalid` listing text and paragraph font size/weight/width/slant/family
+  count guards plus the font-data record-flags guard. The validation run passed 11/11 with `fallback_sum=11`, zero
+  unsupported-picture rows, zero JBR picture frames, and 1,041 JBR command frames; only
+  `commands-invalid-font-data-record-flags-fallback` reported command frames while also counting its expected fallback.
+  Magic Jewel `out` stayed at 78G, the run was 28M, and the volume had about 265Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260605-174043/suite.tsv`.
 - Magic Jewel refreshed the focused `primitive-invalid` command-probe group after the image-shader and defensive paint
   reason audit work. No-run resolution passed with `LIST_CASE_COUNT=true CASE_GROUPS=primitive-invalid` returning 13
   and `LIST_CASES=true CASE_GROUPS=primitive-invalid` listing stroke-cap, transform flags, clip operation,

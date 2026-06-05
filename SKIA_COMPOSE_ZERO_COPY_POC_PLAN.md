@@ -212,6 +212,10 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   passed 13/13 with `fallback_sum=13`, zero unsupported-picture rows, zero picture frames, and zero command frames
   across stroke-cap, transform flags, clip operation, draw-points, and draw-vertices parser corruptions:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260605-172804/suite.tsv`.
+- The focused `native-text-invalid` command-probe group was refreshed next. It passed 11/11 with `fallback_sum=11`,
+  zero unsupported-picture rows, zero picture frames, and 1,041 command frames from the font-data record-flags row
+  across text/paragraph font parser guards and font-data record flags:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260605-174043/suite.tsv`.
 - New Magic Jewel command-probe sentinels cover live invalid linear, radial, and sweep gradient color counts. Public
   Brush construction accepts 17 colors and attaches JBR gradient metadata, so CMP now rejects these live Compose
   recordings as `linearGradientColorCount`, `radialGradientColorCount`, and `sweepGradientColorCount` before replay.

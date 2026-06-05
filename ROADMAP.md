@@ -38,6 +38,11 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel refreshed `CASE_GROUPS=native-text-invalid` as a focused native-text parser checkpoint. No-run discovery
+  resolved 11 rows covering text and paragraph font size/weight/width/slant/family-count guards plus font-data
+  record-flags. The run passed 11/11 with `fallback_sum=11`, zero unsupported-picture rows, zero JBR picture frames,
+  and 1,041 command frames from the font-data record-flags row:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260605-174043/suite.tsv`.
 - Magic Jewel refreshed `CASE_GROUPS=primitive-invalid` as a focused parser/primitive checkpoint. No-run discovery
   resolved 13 rows covering stroke-cap, transform flags, clip operation, draw-points count/length, and draw-vertices
   count/mode/blend/index corruptions. The run passed 13/13 with `fallback_sum=13`, zero unsupported-picture rows,
