@@ -5,6 +5,14 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel refreshed the focused `native-text` command-probe group after the adjacent parser-invalid refresh.
+  No-run resolution passed with `LIST_CASE_COUNT=true CASE_GROUPS=native-text` returning 14 and
+  `LIST_CASES=true CASE_GROUPS=native-text` listing native custom-font text/image, generic-family text, loaded
+  byte-array font-data text, classpath resource font-data text, named system-font text, same-context resize variants,
+  and forced destination-context variants. The validation run passed 14/14 with `fallback_sum=0`, zero
+  unsupported-picture rows, zero JBR picture frames, and 19,683 JBR command frames; every row stayed on command replay.
+  Magic Jewel `out` stayed at 79G, the run was 56M, and the volume had about 274Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260605-204659/suite.tsv`.
 - Magic Jewel refreshed the focused `shader-composition-runtime` command-probe group. No-run resolution passed with
   `LIST_CASE_COUNT=true CASE_GROUPS=shader-composition-runtime` returning 15 and
   `LIST_CASES=true CASE_GROUPS=shader-composition-runtime` listing image-shader/color-filter, composite shader,

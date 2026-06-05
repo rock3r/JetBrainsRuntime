@@ -38,6 +38,11 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel refreshed `CASE_GROUPS=native-text` as the supported native text replay pair for the recently refreshed
+  `native-text-invalid` parser guards. The run passed 14/14 with `fallback_sum=0`, zero unsupported-picture rows, zero
+  JBR picture frames, and 19,683 command frames across custom/generic/loaded/resource/system fonts plus resize and
+  forced-context variants:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260605-204659/suite.tsv`.
 - Magic Jewel refreshed `CASE_GROUPS=shader-composition-runtime` as a supported shader composition and RuntimeEffect
   descriptor checkpoint. The run passed 15/15 with `fallback_sum=0`, two intentional unsupported-picture rows from raw
   RuntimeEffect shader/color-filter fallbacks, 2,043 JBR picture frames, and 16,907 command frames; supported rows

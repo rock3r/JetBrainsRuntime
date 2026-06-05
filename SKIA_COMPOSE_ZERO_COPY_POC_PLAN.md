@@ -263,6 +263,11 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   image/composite/transformed shader descriptors and RuntimeEffect shader/color-filter descriptor rows; only raw
   RuntimeEffect shader/color-filter probes fell back structurally:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260605-203324/suite.tsv`.
+- The focused `native-text` command-probe group was refreshed next as the supported replay pair for the recent
+  `native-text-invalid` parser checkpoint. It passed 14/14 with `fallback_sum=0`, zero unsupported-picture rows, zero
+  picture frames, and 19,683 command frames across custom/generic/loaded/resource/system fonts plus same-context resize
+  and forced destination-context variants:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260605-204659/suite.tsv`.
 - New Magic Jewel command-probe sentinels cover live invalid linear, radial, and sweep gradient color counts. Public
   Brush construction accepts 17 colors and attaches JBR gradient metadata, so CMP now rejects these live Compose
   recordings as `linearGradientColorCount`, `radialGradientColorCount`, and `sweepGradientColorCount` before replay.
