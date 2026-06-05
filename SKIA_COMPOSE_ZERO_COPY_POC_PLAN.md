@@ -163,6 +163,13 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   (`Can't wrap nullptr`) before CMP can count unsupported command frames, so no live Magic Jewel sentinel was landed.
   The attempted output directories were unreferenced and trimmed; keep this guard classified as defensive or
   parser-adjacent unless a lower-level public construction path appears.
+- The follow-on recorder audit classified the remaining live gradient geometry and nested graphics-layer internal
+  guards. Public non-finite Brush geometry fails during Skia shader construction before CMP can produce
+  `linearGradientPoints`, `radialGradientGeometry`, or `sweepGradientGeometry` unsupported frames; malformed command
+  payload geometry remains covered by parser-corruption rows. In strict command mode, nested graphics-layer child
+  unsupported output nulls the child command stream, so public probes exercise `graphicsLayer:childCommands` plus the
+  child reason; `graphicsLayer:childUnsupported`, `graphicsLayer:childHeaderSize`, and `graphicsLayer:childHeader`
+  remain defensive checks for non-strict/internal-corruption states.
 - New Magic Jewel command-probe sentinels cover live invalid linear, radial, and sweep gradient color counts. Public
   Brush construction accepts 17 colors and attaches JBR gradient metadata, so CMP now rejects these live Compose
   recordings as `linearGradientColorCount`, `radialGradientColorCount`, and `sweepGradientColorCount` before replay.

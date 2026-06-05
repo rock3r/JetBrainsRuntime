@@ -5,6 +5,18 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- The recorder reachability audit continued after the gradient color-count batch and classified remaining guards that
+  should not be treated as missing app-level Magic Jewel sentinels. CMP's `linearGradientPoints`,
+  `radialGradientGeometry`, and `sweepGradientGeometry` checks live in the recorder's JBR gradient metadata
+  serialization, but public non-finite Brush coordinates/radii fail during Skia shader construction (`Can't wrap
+  nullptr`) before CMP can record unsupported command frames. Existing parser-corruption rows still cover malformed
+  command payload geometry, so these live recorder reason strings stay defensive unless a lower-level public path can
+  attach invalid gradient metadata to an otherwise valid Skia shader. The same audit classified
+  `graphicsLayer:childUnsupported`, `graphicsLayer:childHeaderSize`, and `graphicsLayer:childHeader` as nested
+  recording invariants rather than live strict-mode sentinels: Magic Jewel enables
+  `compose.jbr.skia.command.strict=true`, and `recordNested` nulls child commands when any nested unsupported reason is
+  present, so public child failures reach the parent as `graphicsLayer:childCommands` plus the child reason instead of
+  reaching the later child-header checks. No new validation suite was needed for this docs-only classification.
 - Magic Jewel added and validated live invalid gradient color-count fallback sentinels after the recorder audit found
   that public Brush construction accepts overlarge color lists even though CMP limits command replay to 2..16 colors.
   The new `MAGIC_JEWEL_COMPOSE_INVALID_LINEAR_GRADIENT_COLOR_COUNT`,

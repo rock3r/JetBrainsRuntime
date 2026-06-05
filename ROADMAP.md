@@ -54,6 +54,15 @@ This is the small working roadmap for the current PoC. The full historical check
   color-filter construction with `Can't wrap nullptr` before CMP recorded unsupported command frames. No Magic Jewel
   sentinel was landed for this guard; keep treating it as defensive/parser-adjacent unless a lower-level app-reachable
   construction path appears.
+- Recorder audit note: CMP still contains gradient geometry unsupported reasons (`linearGradientPoints`,
+  `radialGradientGeometry`, and `sweepGradientGeometry`), but public non-finite Brush geometry is rejected while
+  constructing the underlying Skia shader before CMP can record a live unsupported frame. Parser-corruption coverage
+  still owns malformed command payload geometry; keep these live recorder guards classified as defensive around
+  malformed JBR gradient metadata unless a lower-level public construction path appears.
+- Recorder audit note: strict nested graphics-layer recording nulls child command streams when a child records any
+  unsupported reason, so live public probes surface through `graphicsLayer:childCommands` plus the child reason. The
+  later `graphicsLayer:childUnsupported`, `graphicsLayer:childHeaderSize`, and `graphicsLayer:childHeader` checks are
+  defensive invariants for non-strict or internally corrupted nested recordings.
 - Magic Jewel added live invalid gradient-stop sentinels so CMP's app-level `linearGradientStops` and
   `radialGradientStops` guards now have command-probe coverage alongside the existing live `sweepGradientStops` row.
   No-run discovery reports 514 default command-probe rows, a new `gradient-stop-invalid` quick group with 3 rows,
