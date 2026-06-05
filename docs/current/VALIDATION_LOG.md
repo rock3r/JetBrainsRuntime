@@ -5,6 +5,26 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel added and validated live invalid gradient-stop fallback sentinels after the recorder audit identified
+  `linearGradientStops` and `radialGradientStops` as app-level unsupported reasons that still only had parser-corruption
+  rows. A first geometry attempt using non-finite public Brush coordinates was rejected earlier by Skia shader creation
+  (`Can't wrap nullptr`) and never reached CMP's gradient geometry guards; that failed, unreferenced output directory
+  was trimmed after the stop-order batch. The landed `MAGIC_JEWEL_COMPOSE_INVALID_LINEAR_GRADIENT_STOPS` and
+  `MAGIC_JEWEL_COMPOSE_INVALID_RADIAL_GRADIENT_STOPS` toggles instead use duplicate public Brush stops, matching the
+  existing sweep stop sentinel and reaching the recorder's live stop validation. No-run validation passed for
+  `bash -n scripts/jbr-skia-command-probe-suite.sh scripts/jbr-skia-interop-report.sh`; `LIST_CASE_COUNT=true`
+  returned 514, `LIST_CASE_GROUP_COUNTS=true` reported `gradient-stop-invalid` 3 and `gradient-invalid` 63,
+  `LIST_CASES=true CASE_GROUPS=gradient-stop-invalid` listed the linear/radial/sweep stop rows, duplicate default-case
+  detection printed no rows, and `LIST_UNGROUPED_CASES=true` printed no rows. Focused
+  `CASE_GROUPS=gradient-stop-invalid` passed 3/3 with `fallback_sum=0`, three intentional unsupported-picture rows,
+  2,947 JBR picture frames, and zero command frames; the rows reported `linearGradientStops`, `radialGradientStops`,
+  and `sweepGradientStops`, each with graphics-layer parent reasons. The adjacent `CASE_GROUPS=gradient-invalid`
+  refresh passed 63/63 with `fallback_sum=60`, three intentional unsupported-picture rows, 3,215 JBR picture frames,
+  and zero JBR command frames. Magic Jewel `out` stayed at 78G, the focused stop run was 9.1M, the broader
+  gradient-invalid run was 178M, and the volume had about 286Gi free after trimming the failed geometry run. Suites:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260605-091009/suite.tsv`
+  and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260605-091243/suite.tsv`.
 - Magic Jewel added and validated live invalid path-structure fallback sentinels after the recorder audit identified
   `clipPath` and `path` as app-level unsupported reasons that still only had parser-corruption rows. The new
   `MAGIC_JEWEL_COMPOSE_INVALID_CLIP_PATH` and `MAGIC_JEWEL_COMPOSE_INVALID_DRAW_PATH` toggles feed non-finite path

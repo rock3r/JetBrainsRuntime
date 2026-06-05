@@ -38,6 +38,16 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel added live invalid gradient-stop sentinels so CMP's app-level `linearGradientStops` and
+  `radialGradientStops` guards now have command-probe coverage alongside the existing live `sweepGradientStops` row.
+  No-run discovery reports 514 default command-probe rows, a new `gradient-stop-invalid` quick group with 3 rows,
+  `gradient-invalid` 63, and no ungrouped rows. Focused `CASE_GROUPS=gradient-stop-invalid` passed 3/3 with
+  `fallback_sum=0`, three intentional unsupported-picture rows, 2,947 JBR picture frames, and zero command frames.
+  Adjacent `CASE_GROUPS=gradient-invalid` passed 63/63 with `fallback_sum=60`, three intentional unsupported-picture
+  rows, 3,215 JBR picture frames, and zero command frames. Suites:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260605-091009/suite.tsv`
+  and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260605-091243/suite.tsv`.
 - Magic Jewel added live invalid path-structure fallback sentinels so CMP's app-level `clipPath` and `path` guards now
   have command-probe coverage instead of only parser-corruption coverage. No-run discovery reports 512 default
   command-probe rows, `path-invalid` 24, and no ungrouped rows. Focused exact validation for

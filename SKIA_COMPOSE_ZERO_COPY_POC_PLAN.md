@@ -147,6 +147,17 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260603-233653/suite.tsv` and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260603-233834/suite.tsv`.
+- New Magic Jewel command-probe sentinels cover live invalid linear and radial gradient stop order, complementing the
+  existing live invalid sweep-gradient stop row. These use duplicate public Brush stops through
+  `MAGIC_JEWEL_COMPOSE_INVALID_LINEAR_GRADIENT_STOPS` and
+  `MAGIC_JEWEL_COMPOSE_INVALID_RADIAL_GRADIENT_STOPS`, so CMP rejects the live Compose recording as
+  `linearGradientStops`/`radialGradientStops` before replay. No-run discovery now reports 514 default command-probe
+  rows, a `gradient-stop-invalid` quick group with 3 rows, and `gradient-invalid` 63. Focused
+  `CASE_GROUPS=gradient-stop-invalid` passed 3/3 with `fallback_sum=0`, three intentional unsupported-picture rows,
+  2,947 JBR picture frames, and zero command frames; the adjacent `gradient-invalid` group passed 63/63 with
+  `fallback_sum=60`, three intentional unsupported-picture rows, 3,215 picture frames, and zero command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260605-091009/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260605-091243/suite.tsv`.
 - A new Magic Jewel command-probe sentinel covers graphics layers with invalid negative `shadowElevation`. This
   exercises the layer-level `graphicsLayer:shadowElevation` guard before replay. No-run discovery now reports 497
   default command-probe rows and `graphics-layer` 22. Focused exact validation passed 1/1 with 969 JBR picture frames
