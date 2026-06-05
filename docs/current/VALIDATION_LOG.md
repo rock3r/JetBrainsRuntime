@@ -5,6 +5,15 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel refreshed the focused `path-invalid` command-probe group. No-run resolution passed with
+  `LIST_CASE_COUNT=true CASE_GROUPS=path-invalid` returning 24 and
+  `LIST_CASES=true CASE_GROUPS=path-invalid` listing the live invalid clip/draw path rows plus clip/draw/stroke/shadow
+  path verb and dash path-effect parser guards. The validation run passed 24/24 with `fallback_sum=22`, two
+  intentional unsupported-picture rows, 2,075 JBR picture frames, and zero JBR command frames. The live rows reported
+  `clipPath`/`unsupportedScope` and `path` alongside parent graphics-layer reasons; parser-corruption rows reported
+  one expected fallback each and no unsupported-picture frames. Magic Jewel `out` stayed at 78G, the run was 65M, and
+  the volume had about 280Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260605-174939/suite.tsv`.
 - Magic Jewel refreshed the focused `native-text-invalid` command-probe group. No-run resolution passed with
   `LIST_CASE_COUNT=true CASE_GROUPS=native-text-invalid` returning 11 and
   `LIST_CASES=true CASE_GROUPS=native-text-invalid` listing text and paragraph font size/weight/width/slant/family
