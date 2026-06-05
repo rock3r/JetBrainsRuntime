@@ -38,6 +38,11 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel refreshed `CASE_GROUPS=graphics-layer` as the supported replay pair for the recent layer invalid/extras
+  refreshes. The run passed 22/22 with `fallback_sum=0`, one intentional unsupported-picture row from invalid shadow
+  elevation, 1,152 JBR picture frames, and 31,905 command frames across base layers, clips, blend/filter/effect,
+  shadows, and 2D/3D transforms:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260605-205726/suite.tsv`.
 - Magic Jewel refreshed `CASE_GROUPS=native-text` as the supported native text replay pair for the recently refreshed
   `native-text-invalid` parser guards. The run passed 14/14 with `fallback_sum=0`, zero unsupported-picture rows, zero
   JBR picture frames, and 19,683 command frames across custom/generic/loaded/resource/system fonts plus resize and

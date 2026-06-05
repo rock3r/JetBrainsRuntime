@@ -5,6 +5,18 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel refreshed the focused `graphics-layer` command-probe group after the adjacent invalid/extras layer
+  refreshes. No-run resolution passed with `LIST_CASE_COUNT=true CASE_GROUPS=graphics-layer` returning 22 and
+  `LIST_CASES=true CASE_GROUPS=graphics-layer` listing base, ModulateAlpha/Offscreen, rectangular/rounded/path clips,
+  blend-mode, tint/color-matrix filters, render/offset/chained effects, rectangular/rounded/path shadows, invalid
+  shadow-elevation fallback, rotationX/Y/XY, scale/translate, near-camera, and off-center pivot rows. The validation
+  run passed 22/22 with `fallback_sum=0`, one intentional unsupported-picture row, 1,152 JBR picture frames, and
+  31,905 JBR command frames. The only unsupported row was
+  `commands-graphics-layer-invalid-shadow-elevation-fallback`
+  (`graphicsLayer:shadowElevation:1152,graphicsLayer:childCommands:1152,graphicsLayer:1152`); all supported
+  layer/clip/effect/shadow/transform rows stayed on command replay. Magic Jewel `out` stayed at 79G, the run was 96M,
+  and the volume had about 274Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260605-205726/suite.tsv`.
 - Magic Jewel refreshed the focused `native-text` command-probe group after the adjacent parser-invalid refresh.
   No-run resolution passed with `LIST_CASE_COUNT=true CASE_GROUPS=native-text` returning 14 and
   `LIST_CASES=true CASE_GROUPS=native-text` listing native custom-font text/image, generic-family text, loaded
