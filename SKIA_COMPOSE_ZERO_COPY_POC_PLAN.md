@@ -163,6 +163,16 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   (`Can't wrap nullptr`) before CMP can count unsupported command frames, so no live Magic Jewel sentinel was landed.
   The attempted output directories were unreferenced and trimmed; keep this guard classified as defensive or
   parser-adjacent unless a lower-level public construction path appears.
+- New Magic Jewel command-probe sentinels cover live invalid linear, radial, and sweep gradient color counts. Public
+  Brush construction accepts 17 colors and attaches JBR gradient metadata, so CMP now rejects these live Compose
+  recordings as `linearGradientColorCount`, `radialGradientColorCount`, and `sweepGradientColorCount` before replay.
+  No-run discovery now reports 517 default command-probe rows, a `gradient-color-count-invalid` quick group with
+  3 rows, and `gradient-invalid` 66. Focused `CASE_GROUPS=gradient-color-count-invalid` passed 3/3 with
+  `fallback_sum=0`, three intentional unsupported-picture rows, 2,989 JBR picture frames, and zero command frames;
+  the adjacent `gradient-invalid` group passed 66/66 with `fallback_sum=60`, six intentional unsupported-picture rows,
+  5,587 JBR picture frames, and zero command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260605-141516/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260605-141803/suite.tsv`.
 - A new Magic Jewel command-probe sentinel covers graphics layers with invalid negative `shadowElevation`. This
   exercises the layer-level `graphicsLayer:shadowElevation` guard before replay. No-run discovery now reports 497
   default command-probe rows and `graphics-layer` 22. Focused exact validation passed 1/1 with 969 JBR picture frames

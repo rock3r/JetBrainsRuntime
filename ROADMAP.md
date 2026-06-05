@@ -38,6 +38,17 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel added live invalid gradient color-count sentinels so CMP's app-level `linearGradientColorCount`,
+  `radialGradientColorCount`, and `sweepGradientColorCount` guards now have command-probe coverage from public Brush
+  calls with 17 colors. No-run discovery reports 517 default command-probe rows, a new
+  `gradient-color-count-invalid` quick group with 3 rows, `gradient-invalid` 66, and no ungrouped rows. Focused
+  `CASE_GROUPS=gradient-color-count-invalid` passed 3/3 with `fallback_sum=0`, three intentional
+  unsupported-picture rows, 2,989 JBR picture frames, and zero command frames. Adjacent
+  `CASE_GROUPS=gradient-invalid` passed 66/66 with `fallback_sum=60`, six intentional unsupported-picture rows, 5,587
+  JBR picture frames, and zero command frames. Suites:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260605-141516/suite.tsv`
+  and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260605-141803/suite.tsv`.
 - Recorder audit note: CMP still contains a defensive `colorMatrixNonfinite` unsupported reason, but a live public
   Compose probe using `ColorFilter.colorMatrix(ColorMatrix().apply { this[3, 3] = Float.NaN })` failed at Skia
   color-filter construction with `Can't wrap nullptr` before CMP recorded unsupported command frames. No Magic Jewel

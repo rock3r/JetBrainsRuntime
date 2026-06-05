@@ -5,6 +5,26 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel added and validated live invalid gradient color-count fallback sentinels after the recorder audit found
+  that public Brush construction accepts overlarge color lists even though CMP limits command replay to 2..16 colors.
+  The new `MAGIC_JEWEL_COMPOSE_INVALID_LINEAR_GRADIENT_COLOR_COUNT`,
+  `MAGIC_JEWEL_COMPOSE_INVALID_RADIAL_GRADIENT_COLOR_COUNT`, and
+  `MAGIC_JEWEL_COMPOSE_INVALID_SWEEP_GRADIENT_COLOR_COUNT` toggles feed 17 colors into the existing live rect gradient
+  probes, so the recorder rejects the real Compose recording as `linearGradientColorCount`,
+  `radialGradientColorCount`, or `sweepGradientColorCount` before replay. No-run validation passed for
+  `bash -n scripts/jbr-skia-command-probe-suite.sh scripts/jbr-skia-interop-report.sh`; `LIST_CASE_COUNT=true`
+  returned 517, `LIST_CASE_GROUP_COUNTS=true` reported `gradient-color-count-invalid` 3 and `gradient-invalid` 66,
+  `LIST_CASES=true CASE_GROUPS=gradient-color-count-invalid` listed the linear/radial/sweep color-count rows,
+  duplicate default-case detection printed no rows, and `LIST_UNGROUPED_CASES=true` printed no rows. Focused
+  `CASE_GROUPS=gradient-color-count-invalid` passed 3/3 with `fallback_sum=0`, three intentional
+  unsupported-picture rows, 2,989 JBR picture frames, and zero command frames. The adjacent
+  `CASE_GROUPS=gradient-invalid` refresh passed 66/66 with `fallback_sum=60`, six intentional unsupported-picture
+  rows, 5,587 JBR picture frames, and zero JBR command frames. Magic Jewel `out` stayed at 78G, the focused color-count
+  run was 9.8M, the broader gradient-invalid run was 193M, and the volume had about 282Gi free after completion.
+  Suites:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260605-141516/suite.tsv`
+  and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260605-141803/suite.tsv`.
 - The follow-up recorder audit tried to turn CMP's `colorMatrixNonfinite` guard into live Magic Jewel coverage across
   image, fill-rect, and graphics-layer color-matrix filter probes. The public Compose path
   `ColorFilter.colorMatrix(ColorMatrix().apply { this[3, 3] = Float.NaN })` did not reach CMP fallback recording:
