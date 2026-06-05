@@ -251,6 +251,13 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   unsupported-picture rows, 2,815 picture frames, and 5,031 command frames across gradient stroke, image filter, path
   effect, raw path-effect/color-filter fallbacks, vertices, and blend mode; supported rows stayed on command replay:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260605-195810/suite.tsv`.
+- The focused `graphics-layer-extras` command-probe group was refreshed next after narrowing the raw table
+  graphics-layer color-filter row to skip only the generic screenshot assertion while still requiring
+  `graphicsLayer:colorFilter` fallback. Exact validation passed 1/1, and the group rerun passed 15/15 with
+  `fallback_sum=0`, three intentional unsupported-picture rows, 3,097 picture frames, and 13,989 command frames across
+  graphics-layer color-matrix/render-effect lifecycle, raw filter fallback, and descriptor-combination rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260605-202046/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260605-202136/suite.tsv`.
 - New Magic Jewel command-probe sentinels cover live invalid linear, radial, and sweep gradient color counts. Public
   Brush construction accepts 17 colors and attaches JBR gradient metadata, so CMP now rejects these live Compose
   recordings as `linearGradientColorCount`, `radialGradientColorCount`, and `sweepGradientColorCount` before replay.

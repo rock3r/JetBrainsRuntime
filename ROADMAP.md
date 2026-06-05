@@ -38,6 +38,13 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel refreshed `CASE_GROUPS=graphics-layer-extras` after disabling the generic green-pixel screenshot
+  assertion for the raw table graphics-layer color-filter fallback row while preserving the required
+  `graphicsLayer:colorFilter` fallback assertion. Exact
+  `commands-graphics-layer-raw-table-color-filter-fallback` passed 1/1, and the group rerun passed 15/15 with
+  `fallback_sum=0`, three intentional unsupported-picture rows, 3,097 JBR picture frames, and 13,989 command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260605-202046/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260605-202136/suite.tsv`.
 - Magic Jewel refreshed `CASE_GROUPS=core-effects` after the sidecar unsupported-reason audit. No-run discovery
   resolved 8 rows covering gradient stroke, image filter, path effect, path-effect/color-filter fallback, raw discrete
   path-effect fallback, vertices, vertices raw color-filter fallback, and blend mode. The run passed 8/8 with

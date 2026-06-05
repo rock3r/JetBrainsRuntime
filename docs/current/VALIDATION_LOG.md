@@ -5,6 +5,21 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel refreshed the focused `graphics-layer-extras` command-probe group after narrowing the raw table
+  graphics-layer color-filter row to skip the generic green-pixel screenshot assertion while preserving the required
+  `graphicsLayer:colorFilter` fallback assertion. The first group attempt stopped on
+  `commands-graphics-layer-raw-table-color-filter-fallback`: the structured fallback was present, but the table filter
+  produced zero green marker pixels. Focused exact validation then passed 1/1 with `fallback_sum=0`, one intentional
+  unsupported-picture row, 1,178 JBR picture frames, and zero command frames. The rerun
+  `CASE_GROUPS=graphics-layer-extras` passed 15/15 with `fallback_sum=0`, three intentional unsupported-picture rows,
+  3,097 JBR picture frames, and 13,989 JBR command frames. Supported resize/context color-matrix and render-effect
+  rows, plus render-effect/color-filter/blend combinations, stayed on command replay; raw blend/table color-filter and
+  raw render-effect rows stayed on structured graphics-layer fallback. Magic Jewel `out` stayed at 79G; the failed
+  first run was 14M, the exact rerun was 3.7M, the successful group rerun was 62M, and the volume had about 274Gi free
+  after completion. Suites:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260605-202046/suite.tsv`
+  and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260605-202136/suite.tsv`.
 - Magic Jewel refreshed the focused `core-effects` command-probe group after the sidecar unsupported-reason audit.
   No-run resolution passed with `LIST_CASE_COUNT=true CASE_GROUPS=core-effects` returning 8 and
   `LIST_CASES=true CASE_GROUPS=core-effects` listing gradient stroke, image filter, path effect, path-effect
