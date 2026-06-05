@@ -38,6 +38,11 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel refreshed `CASE_GROUPS=shader-descriptor-invalid` as a focused shader descriptor parser checkpoint.
+  No-run discovery resolved 30 rows covering shader descriptor headers plus color, transformed, composite, gradient,
+  image shader, and Perlin/noise descriptor payload guards. The run passed 30/30 with `fallback_sum=30`, zero
+  unsupported-picture rows, zero JBR picture frames, and zero command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260605-182940/suite.tsv`.
 - Magic Jewel refreshed `CASE_GROUPS=effect-descriptor-invalid` as a focused descriptor parser checkpoint. No-run
   discovery resolved 28 rows covering effect descriptor headers plus lighting, tint, color-matrix, blur/offset
   image-filter, and corner/stamped/chain path-effect descriptor payload guards. The run passed 28/28 with
