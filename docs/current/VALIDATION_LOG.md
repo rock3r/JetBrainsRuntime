@@ -5,6 +5,15 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel refreshed the focused `descriptor-lifecycle` command-probe group. No-run resolution passed with
+  `LIST_CASE_COUNT=true CASE_GROUPS=descriptor-lifecycle` returning 18 and
+  `LIST_CASES=true CASE_GROUPS=descriptor-lifecycle` listing descriptor eviction, resize/forced-context descriptor
+  redefinition, shader/color/noise/turbulence/composite-noise descriptor redefinition, stable RuntimeEffect
+  color-filter resize/forced-context reuse, and RuntimeEffect shader/color-filter source-cache eviction rows. The
+  validation run passed 18/18 with `fallback_sum=0`, zero unsupported-picture rows, zero JBR picture frames, and
+  22,342 JBR command frames; every row stayed on command replay. Magic Jewel `out` rose to 79G, the run was 291M, and
+  the volume had about 277Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260605-192007/suite.tsv`.
 - Magic Jewel refreshed the focused `color-filters` command-probe group. No-run resolution passed with
   `LIST_CASE_COUNT=true CASE_GROUPS=color-filters` returning 12 and
   `LIST_CASES=true CASE_GROUPS=color-filters` listing image color-matrix, raw image/table/blend color-filter fallback,
