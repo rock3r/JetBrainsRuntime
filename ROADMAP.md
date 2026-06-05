@@ -38,6 +38,11 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Recorder audit note: CMP still contains a defensive `colorMatrixNonfinite` unsupported reason, but a live public
+  Compose probe using `ColorFilter.colorMatrix(ColorMatrix().apply { this[3, 3] = Float.NaN })` failed at Skia
+  color-filter construction with `Can't wrap nullptr` before CMP recorded unsupported command frames. No Magic Jewel
+  sentinel was landed for this guard; keep treating it as defensive/parser-adjacent unless a lower-level app-reachable
+  construction path appears.
 - Magic Jewel added live invalid gradient-stop sentinels so CMP's app-level `linearGradientStops` and
   `radialGradientStops` guards now have command-probe coverage alongside the existing live `sweepGradientStops` row.
   No-run discovery reports 514 default command-probe rows, a new `gradient-stop-invalid` quick group with 3 rows,

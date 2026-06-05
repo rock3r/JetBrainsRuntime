@@ -5,6 +5,17 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- The follow-up recorder audit tried to turn CMP's `colorMatrixNonfinite` guard into live Magic Jewel coverage across
+  image, fill-rect, and graphics-layer color-matrix filter probes. The public Compose path
+  `ColorFilter.colorMatrix(ColorMatrix().apply { this[3, 3] = Float.NaN })` did not reach CMP fallback recording:
+  the first exact row failed during Skia color-filter creation with `Can't wrap nullptr`, initially under sandboxed
+  Gradle lock failure and then, after escalation, in a real app loop that produced repeated construction exceptions
+  and no `colorMatrixNonfinite` unsupported frames. The unvalidated Magic Jewel edits were backed out, no sentinel was
+  landed, no docs-retained suite path was kept, and the failed unreferenced output directories
+  `20260605-134149` and `20260605-134306` were trimmed. No-run discovery after the backout returned to 514 default
+  rows and the previous quick-group counts (`color-filters` 12, no `color-matrix-invalid` group). Treat
+  `colorMatrixNonfinite` as defensive/parser-adjacent for public app-level coverage unless a lower-level construction
+  path appears.
 - Magic Jewel added and validated live invalid gradient-stop fallback sentinels after the recorder audit identified
   `linearGradientStops` and `radialGradientStops` as app-level unsupported reasons that still only had parser-corruption
   rows. A first geometry attempt using non-finite public Brush coordinates was rejected earlier by Skia shader creation

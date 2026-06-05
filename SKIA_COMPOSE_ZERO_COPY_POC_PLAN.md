@@ -158,6 +158,11 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `fallback_sum=60`, three intentional unsupported-picture rows, 3,215 picture frames, and zero command frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260605-091009/suite.tsv` and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260605-091243/suite.tsv`.
+- The next recorder audit checked `colorMatrixNonfinite` for app-level reachability. Public Compose
+  `ColorFilter.colorMatrix` with a non-finite matrix entry fails during Skia color-filter construction
+  (`Can't wrap nullptr`) before CMP can count unsupported command frames, so no live Magic Jewel sentinel was landed.
+  The attempted output directories were unreferenced and trimmed; keep this guard classified as defensive or
+  parser-adjacent unless a lower-level public construction path appears.
 - A new Magic Jewel command-probe sentinel covers graphics layers with invalid negative `shadowElevation`. This
   exercises the layer-level `graphicsLayer:shadowElevation` guard before replay. No-run discovery now reports 497
   default command-probe rows and `graphics-layer` 22. Focused exact validation passed 1/1 with 969 JBR picture frames
