@@ -5,6 +5,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel refreshed the focused `primitive-invalid` command-probe group after the image-shader and defensive paint
+  reason audit work. No-run resolution passed with `LIST_CASE_COUNT=true CASE_GROUPS=primitive-invalid` returning 13
+  and `LIST_CASES=true CASE_GROUPS=primitive-invalid` listing stroke-cap, transform flags, clip operation,
+  draw-points count/length, and draw-vertices count/mode/blend/index corruptions. The validation run passed 13/13 with
+  `fallback_sum=13`, zero unsupported-picture rows, zero JBR picture frames, and zero JBR command frames. Magic Jewel
+  `out` stayed at 78G, the run was 40M, and the volume had about 265Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260605-172804/suite.tsv`.
 - Magic Jewel added and validated a live invalid image-shader image fallback sentinel after the recorder audit
   identified CMP's `imageShaderImage` guard as app-reachable from public Compose `ImageShader` construction. The new
   `MAGIC_JEWEL_COMPOSE_INVALID_IMAGE_SHADER_IMAGE` toggle reuses the supported image-shader probe with an oversized

@@ -38,6 +38,11 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel refreshed `CASE_GROUPS=primitive-invalid` as a focused parser/primitive checkpoint. No-run discovery
+  resolved 13 rows covering stroke-cap, transform flags, clip operation, draw-points count/length, and draw-vertices
+  count/mode/blend/index corruptions. The run passed 13/13 with `fallback_sum=13`, zero unsupported-picture rows,
+  zero JBR picture frames, and zero JBR command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260605-172804/suite.tsv`.
 - Magic Jewel added a live invalid image-shader image fallback sentinel so CMP's app-level `imageShaderImage` guard
   now has command-probe coverage through a public `ImageShader` backed by an oversized `ImageBitmap(2049, 1)`. No-run
   discovery reports 522 default command-probe rows, a new `image-shader-invalid` quick group with 1 row,
