@@ -5,6 +5,27 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel refreshed the focused `core-effects` command-probe group after the sidecar unsupported-reason audit.
+  No-run resolution passed with `LIST_CASE_COUNT=true CASE_GROUPS=core-effects` returning 8 and
+  `LIST_CASES=true CASE_GROUPS=core-effects` listing gradient stroke, image filter, path effect, path-effect
+  color-filter fallback, raw discrete path-effect fallback, vertices, vertices raw color-filter fallback, and
+  blend-mode rows. The validation run passed 8/8 with `fallback_sum=0`, three intentional unsupported-picture rows,
+  2,815 JBR picture frames, and 5,031 JBR command frames. Supported gradient-stroke, image-filter, path-effect,
+  vertices, and blend-mode rows stayed on command replay; the unsupported rows were
+  `commands-path-effect-color-filter-fallback`
+  (`colorFilter:1044,graphicsLayer:childCommands:1044,graphicsLayer:1044`),
+  `commands-raw-discrete-path-effect-fallback`
+  (`graphicsLayer:childCommands:936,pathEffect:936,graphicsLayer:936`), and
+  `commands-vertices-raw-color-filter-fallback`
+  (`colorFilter:834,graphicsLayer:childCommands:834,vertices:834,graphicsLayer:834`). Magic Jewel `out` stayed at
+  79G, the run was 28M, and the volume had about 275Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260605-195810/suite.tsv`.
+- Unsupported-reason sidecar audit: Ramanujan rechecked CMP/JBR Skia recorder and layer guard reachability after the
+  recent fallback sentinels. No remaining app-reachable undocumented guard jumped out. The app-reachable reasons remain
+  covered by existing Magic Jewel rows (`graphicsLayer:shadowPath`, `linearGradientPath`, `radialGradientPath`,
+  `sweepGradientPath`, and `imageShaderImage`), while `graphicsLayer:shadow`, `graphicsLayer:shadowFilter`,
+  `graphicsLayer:childUnsupported`, `graphicsLayer:childHeaderSize`, `graphicsLayer:childHeader`, `roundRectStyle`,
+  and the path-specific gradient-paint reasons remain classified as defensive or shadowed by earlier generic checks.
 - Magic Jewel refreshed the focused `blend-mode-invalid` command-probe group. No-run resolution passed with
   `LIST_CASE_COUNT=true CASE_GROUPS=blend-mode-invalid` returning 2 and
   `LIST_CASES=true CASE_GROUPS=blend-mode-invalid` listing the fill-rect blend-mode width/height parser guards. The

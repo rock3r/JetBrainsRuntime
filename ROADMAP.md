@@ -38,6 +38,15 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel refreshed `CASE_GROUPS=core-effects` after the sidecar unsupported-reason audit. No-run discovery
+  resolved 8 rows covering gradient stroke, image filter, path effect, path-effect/color-filter fallback, raw discrete
+  path-effect fallback, vertices, vertices raw color-filter fallback, and blend mode. The run passed 8/8 with
+  `fallback_sum=0`, three intentional unsupported-picture rows, 2,815 JBR picture frames, and 5,031 command frames;
+  supported rows stayed on command replay:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260605-195810/suite.tsv`.
+- Unsupported-reason sidecar audit found no remaining app-reachable undocumented recorder/layer guard. Existing live
+  rows already cover `graphicsLayer:shadowPath`, `linearGradientPath`, `radialGradientPath`, `sweepGradientPath`, and
+  `imageShaderImage`; the remaining reviewed layer/paint reasons stay defensive or shadowed by earlier generic guards.
 - Magic Jewel refreshed `CASE_GROUPS=blend-mode-invalid` as a focused fill-rect blend-mode parser checkpoint. The run
   passed 2/2 with `fallback_sum=2`, zero unsupported-picture rows, zero JBR picture frames, and zero command frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260605-195246/suite.tsv`.
