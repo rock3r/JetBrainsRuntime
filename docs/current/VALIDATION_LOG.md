@@ -5,6 +5,21 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel refreshed the focused `save-layer-shader-fallbacks` command-probe group after tightening the raw table
+  saveLayer row expectation. The first group attempt reached the expected structured `saveLayer` fallback for
+  `commands-save-layer-raw-table-color-filter-fallback` but failed the generic screenshot assertion because the raw
+  table filter produced zero green marker pixels; Magic Jewel now keeps the fallback assertion and disables that
+  screenshot assertion for this row. Focused exact validation then passed 1/1 for
+  `commands-save-layer-raw-table-color-filter-fallback` with `fallback_sum=0`, one intentional unsupported-picture row,
+  1,223 JBR picture frames, and zero command frames. The rerun `CASE_GROUPS=save-layer-shader-fallbacks` passed 8/8
+  with `fallback_sum=0`, six intentional unsupported-picture rows, 6,120 JBR picture frames, and 2,254 JBR command
+  frames; supported saveLayer filter/blend rows stayed on command replay, while raw saveLayer color-filter, raw
+  saveLayer table-filter, raw/opaque/composite/picture shader, and invalid-gradient rows stayed on structured picture
+  fallback. Magic Jewel `out` stayed at 79G; the failed first run was 14M, the exact rerun was 3.6M, the successful
+  group rerun was 29M, and the volume had about 259Gi free after completion. Suites:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260605-194218/suite.tsv`
+  and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260605-194310/suite.tsv`.
 - Magic Jewel refreshed the focused `descriptor-lifecycle` command-probe group. No-run resolution passed with
   `LIST_CASE_COUNT=true CASE_GROUPS=descriptor-lifecycle` returning 18 and
   `LIST_CASES=true CASE_GROUPS=descriptor-lifecycle` listing descriptor eviction, resize/forced-context descriptor

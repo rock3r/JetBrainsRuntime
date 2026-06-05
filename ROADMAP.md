@@ -38,6 +38,12 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel refreshed `CASE_GROUPS=save-layer-shader-fallbacks` after disabling the generic green-pixel screenshot
+  assertion for the raw table saveLayer fallback row while preserving the required `saveLayer` fallback assertion.
+  Exact `commands-save-layer-raw-table-color-filter-fallback` passed 1/1, and the group rerun passed 8/8 with
+  `fallback_sum=0`, six intentional unsupported-picture rows, 6,120 JBR picture frames, and 2,254 command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260605-194218/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260605-194310/suite.tsv`.
 - Magic Jewel refreshed `CASE_GROUPS=descriptor-lifecycle` as a focused descriptor lifecycle checkpoint. No-run
   discovery resolved 18 rows covering eviction, resize/forced-context redefinition, stable RuntimeEffect color-filter
   reuse, and RuntimeEffect source-cache eviction. The run passed 18/18 with `fallback_sum=0`, zero
