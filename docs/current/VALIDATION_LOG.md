@@ -5,6 +5,26 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel added and validated live invalid gradient-path structure fallback sentinels after the recorder audit
+  identified `linearGradientPath`, `radialGradientPath`, and `sweepGradientPath` as app-reachable path-gradient guards
+  that only had parser-corruption coverage. The new `MAGIC_JEWEL_COMPOSE_INVALID_GRADIENT_PATH` toggle reuses the
+  supported linear/radial/sweep gradient-filled path probes but injects non-finite path data, so CMP rejects the real
+  Compose recording during gradient path serialization before replay. No-run validation passed for
+  `bash -n scripts/jbr-skia-command-probe-suite.sh scripts/jbr-skia-interop-report.sh`; `LIST_CASE_COUNT=true`
+  returned 521, `LIST_CASE_GROUP_COUNTS=true` reported `gradient-path-structure-invalid` 3,
+  `gradient-path-invalid` 21, and `gradient-invalid` 69, `LIST_CASES=true CASE_GROUPS=gradient-path-structure-invalid`
+  listed the linear/radial/sweep live path rows, duplicate default-case detection printed no rows, and
+  `LIST_UNGROUPED_CASES=true` printed no rows. Focused `CASE_GROUPS=gradient-path-structure-invalid` passed 3/3 with
+  `fallback_sum=0`, three intentional unsupported-picture rows, 3,003 JBR picture frames, and zero command frames; the
+  rows reported `linearGradientPath`, `radialGradientPath`, and `sweepGradientPath` alongside parent graphics-layer
+  reasons and the existing white-outline `path` fallback from drawing the same invalid path. The adjacent
+  `CASE_GROUPS=gradient-path-invalid` refresh passed 21/21 with `fallback_sum=18`, three intentional
+  unsupported-picture rows, 2,946 JBR picture frames, and zero JBR command frames. Magic Jewel `out` stayed at 78G,
+  the focused run was 10M, the adjacent group run was 54M, and the volume had about 264Gi free after completion.
+  Suites:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260605-154145/suite.tsv`
+  and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260605-154451/suite.tsv`.
 - Magic Jewel added and validated a graphics-layer invalid shadow-path fallback sentinel after the recorder audit
   identified `graphicsLayer:shadowPath` as an app-reachable layer replay guard without a command-probe row. The new
   `MAGIC_JEWEL_COMPOSE_GRAPHICS_LAYER_INVALID_SHADOW_PATH` branch applies a public `GenericShape` containing

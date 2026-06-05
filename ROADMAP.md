@@ -38,6 +38,17 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel added live invalid gradient-path structure sentinels so CMP's app-level `linearGradientPath`,
+  `radialGradientPath`, and `sweepGradientPath` guards now have command-probe coverage from public gradient-filled
+  paths with non-finite path data. No-run discovery reports 521 default command-probe rows, a new
+  `gradient-path-structure-invalid` quick group with 3 rows, `gradient-path-invalid` 21, `gradient-invalid` 69, and no
+  ungrouped or duplicate default rows. Focused `CASE_GROUPS=gradient-path-structure-invalid` passed 3/3 with
+  `fallback_sum=0`, three intentional unsupported-picture rows, 3,003 JBR picture frames, and zero command frames.
+  Adjacent `CASE_GROUPS=gradient-path-invalid` passed 21/21 with `fallback_sum=18`, three intentional
+  unsupported-picture rows, 2,946 JBR picture frames, and zero command frames. Suites:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260605-154145/suite.tsv`
+  and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260605-154451/suite.tsv`.
 - Magic Jewel added a live invalid graphics-layer shadow-path fallback sentinel so CMP's `graphicsLayer:shadowPath`
   guard now has app-level command-probe coverage through a public `GenericShape` with non-finite path data and positive
   shadow elevation. No-run discovery reports 518 default command-probe rows, `graphics-layer-invalid` 15, and no

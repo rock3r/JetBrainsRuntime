@@ -181,6 +181,17 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   layer size/elevation is rejected before shadow replay, and the fallback shadow blur descriptor is generated
   internally with finite positive sigma and an accepted tile mode, so public app probes should not reach those two
   reason strings.
+- New Magic Jewel command-probe sentinels cover live invalid linear, radial, and sweep gradient-filled paths. These
+  reuse the supported gradient path probes with non-finite path data, so CMP now rejects the real Compose recordings as
+  `linearGradientPath`, `radialGradientPath`, and `sweepGradientPath` before replay instead of relying only on mutated
+  command bytes. No-run discovery now reports 521 default command-probe rows, `gradient-path-structure-invalid` 3,
+  `gradient-path-invalid` 21, and `gradient-invalid` 69. Focused
+  `CASE_GROUPS=gradient-path-structure-invalid` passed 3/3 with `fallback_sum=0`, three intentional
+  unsupported-picture rows, 3,003 JBR picture frames, and zero command frames; the adjacent `gradient-path-invalid`
+  group passed 21/21 with `fallback_sum=18`, three intentional unsupported-picture rows, 2,946 picture frames, and
+  zero command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260605-154145/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260605-154451/suite.tsv`.
 - New Magic Jewel command-probe sentinels cover live invalid linear, radial, and sweep gradient color counts. Public
   Brush construction accepts 17 colors and attaches JBR gradient metadata, so CMP now rejects these live Compose
   recordings as `linearGradientColorCount`, `radialGradientColorCount`, and `sweepGradientColorCount` before replay.
