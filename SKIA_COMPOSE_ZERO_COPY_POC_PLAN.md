@@ -170,6 +170,12 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   unsupported output nulls the child command stream, so public probes exercise `graphicsLayer:childCommands` plus the
   child reason; `graphicsLayer:childUnsupported`, `graphicsLayer:childHeaderSize`, and `graphicsLayer:childHeader`
   remain defensive checks for non-strict/internal-corruption states.
+- The recorder audit also classifies `roundRectStyle` and the path-specific
+  `linearGradientPathPaint`/`radialGradientPathPaint`/`sweepGradientPathPaint` reasons as defensive/shadow guards.
+  Public Compose round-rect drawing only supplies Fill or Stroke paint styles, and stroked path gradients are rejected
+  first by the generic gradient payload helpers as `linearGradientPaint`, `radialGradientPaint`, or
+  `sweepGradientPaint`; the earlier failed path-stroke validation expecting `linearGradientPathPaint` proves that
+  ordering.
 - A new Magic Jewel command-probe sentinel covers graphics layers whose generic shadow outline serializes to an invalid
   path. This exercises the app-level `graphicsLayer:shadowPath` guard before replay. No-run discovery now reports 518
   default command-probe rows and `graphics-layer-invalid` 15. Focused exact validation passed 1/1 with 961 JBR picture

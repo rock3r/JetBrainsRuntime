@@ -77,6 +77,14 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   layer size/elevation reaches the already-covered layer validation reasons before `addLayerShadow`, and the only
   fallback shadow filter is an internally synthesized blur descriptor with finite positive sigma and tile mode `3`,
   which satisfies the descriptor validator's finite non-negative sigma and `0..3` tile-mode bounds.
+- The follow-up recorder audit classifies `roundRectStyle`, `linearGradientPathPaint`, `radialGradientPathPaint`, and
+  `sweepGradientPathPaint` as defensive/shadow guards rather than missing app-level sentinels. `roundRectStyle` sits
+  behind the same public Skia `PaintingStyle` enum surface as other round-rect and path paint-style checks, while
+  public Compose drawing only supplies Fill or Stroke. The path-gradient paint reasons are also shadowed: the
+  recorder calls `linearGradientPayload()`/`radialGradientPayload()`/`sweepGradientPayload()` before the path-specific
+  style branch, and those helpers reject stroked path gradients first as `linearGradientPaint`, `radialGradientPaint`,
+  or `sweepGradientPaint`. The earlier failed focused path-stroke run expecting `linearGradientPathPaint` is retained
+  below as the concrete validation evidence for that ordering.
 - Magic Jewel added and validated live invalid gradient color-count fallback sentinels after the recorder audit found
   that public Brush construction accepts overlarge color lists even though CMP limits command replay to 2..16 colors.
   The new `MAGIC_JEWEL_COMPOSE_INVALID_LINEAR_GRADIENT_COLOR_COUNT`,

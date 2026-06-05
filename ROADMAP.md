@@ -91,6 +91,10 @@ This is the small working roadmap for the current PoC. The full historical check
   constructing the underlying Skia shader before CMP can record a live unsupported frame. Parser-corruption coverage
   still owns malformed command payload geometry; keep these live recorder guards classified as defensive around
   malformed JBR gradient metadata unless a lower-level public construction path appears.
+- Recorder audit note: `roundRectStyle` is defensive behind public Skia `PaintingStyle` enum values that are already
+  Fill/Stroke in Compose drawing, and `linearGradientPathPaint`/`radialGradientPathPaint`/`sweepGradientPathPaint` are
+  shadowed by the generic gradient-paint helpers, which reject stroked path gradients first as
+  `linearGradientPaint`/`radialGradientPaint`/`sweepGradientPaint`.
 - Recorder audit note: strict nested graphics-layer recording nulls child command streams when a child records any
   unsupported reason, so live public probes surface through `graphicsLayer:childCommands` plus the child reason. The
   later `graphicsLayer:childUnsupported`, `graphicsLayer:childHeaderSize`, and `graphicsLayer:childHeader` checks are
