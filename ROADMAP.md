@@ -38,6 +38,12 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel refreshed `CASE_GROUPS=color-filters` as a focused color-filter replay/fallback checkpoint. No-run
+  discovery resolved 12 rows covering image color-matrix, raw image/table/blend color-filter fallback,
+  tint/color-matrix/lighting descriptors, descriptor handle reuse, and graphics-layer color-filter/blend combinations.
+  The run passed 12/12 with `fallback_sum=0`, three intentional unsupported-picture rows, 4,499 JBR picture frames,
+  and 15,627 command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260605-185044/suite.tsv`.
 - Magic Jewel refreshed `CASE_GROUPS=shader-descriptor-invalid` as a focused shader descriptor parser checkpoint.
   No-run discovery resolved 30 rows covering shader descriptor headers plus color, transformed, composite, gradient,
   image shader, and Perlin/noise descriptor payload guards. The run passed 30/30 with `fallback_sum=30`, zero

@@ -5,6 +5,16 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel refreshed the focused `color-filters` command-probe group. No-run resolution passed with
+  `LIST_CASE_COUNT=true CASE_GROUPS=color-filters` returning 12 and
+  `LIST_CASES=true CASE_GROUPS=color-filters` listing image color-matrix, raw image/table/blend color-filter fallback,
+  tint/color-matrix/lighting descriptor replay, descriptor handle reuse, and graphics-layer color-filter/blend
+  combinations. The validation run passed 12/12 with `fallback_sum=0`, three intentional unsupported-picture rows,
+  4,499 JBR picture frames, and 15,627 JBR command frames. The unsupported rows were the raw table/blend color-filter
+  fallbacks, each reporting `colorFilter` plus parent graphics-layer reasons; supported descriptor rows stayed on
+  command replay. Magic Jewel `out` stayed at 78G, the run was 63M, and the volume had about 279Gi free after
+  completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260605-185044/suite.tsv`.
 - Magic Jewel refreshed the focused `shader-descriptor-invalid` command-probe group. No-run resolution passed with
   `LIST_CASE_COUNT=true CASE_GROUPS=shader-descriptor-invalid` returning 30 and
   `LIST_CASES=true CASE_GROUPS=shader-descriptor-invalid` listing shader descriptor header guards plus color,
