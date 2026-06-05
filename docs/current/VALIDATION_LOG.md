@@ -5,6 +5,18 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel refreshed the focused `shader-composition-runtime` command-probe group. No-run resolution passed with
+  `LIST_CASE_COUNT=true CASE_GROUPS=shader-composition-runtime` returning 15 and
+  `LIST_CASES=true CASE_GROUPS=shader-composition-runtime` listing image-shader/color-filter, composite shader,
+  composite-noise shader, composite shader/color-filter, transformed shader, RuntimeEffect shader, raw RuntimeEffect
+  shader fallback, RuntimeEffect shader/color-filter, linear-gradient shader/color-filter, RuntimeEffect pure-color,
+  uniform-only, child-only, color-filter, raw RuntimeEffect color-filter fallback, and RuntimeEffect
+  color-filter-child rows. The validation run passed 15/15 with `fallback_sum=0`, two intentional
+  unsupported-picture rows, 2,043 JBR picture frames, and 16,907 JBR command frames. Only the raw RuntimeEffect shader
+  and raw RuntimeEffect color-filter rows fell back structurally (`shader:995,...` and `colorFilter:1048,...`);
+  supported shader composition and RuntimeEffect descriptor rows stayed on command replay. Magic Jewel `out` stayed at
+  79G, the run was 73M, and the volume had about 274Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260605-203324/suite.tsv`.
 - Magic Jewel refreshed the focused `graphics-layer-extras` command-probe group after narrowing the raw table
   graphics-layer color-filter row to skip the generic green-pixel screenshot assertion while preserving the required
   `graphicsLayer:colorFilter` fallback assertion. The first group attempt stopped on

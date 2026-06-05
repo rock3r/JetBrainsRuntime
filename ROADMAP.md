@@ -38,6 +38,11 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel refreshed `CASE_GROUPS=shader-composition-runtime` as a supported shader composition and RuntimeEffect
+  descriptor checkpoint. The run passed 15/15 with `fallback_sum=0`, two intentional unsupported-picture rows from raw
+  RuntimeEffect shader/color-filter fallbacks, 2,043 JBR picture frames, and 16,907 command frames; supported rows
+  stayed on command replay:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260605-203324/suite.tsv`.
 - Magic Jewel refreshed `CASE_GROUPS=graphics-layer-extras` after disabling the generic green-pixel screenshot
   assertion for the raw table graphics-layer color-filter fallback row while preserving the required
   `graphicsLayer:colorFilter` fallback assertion. Exact
