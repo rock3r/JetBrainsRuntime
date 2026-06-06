@@ -5,6 +5,14 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel completed a periodic full default command-probe consolidation after the focused core/effects/layer/text
+  refreshes. No-run discovery still resolved 522 default rows, `LIST_UNGROUPED_CASES=true` printed no rows, and
+  duplicate default-case detection printed no rows. The full sweep passed 522/522 with `fallback_sum=350`, 61
+  intentional unsupported-picture rows, 81,988 JBR picture frames, and 171,971 JBR command frames. The run included the
+  newly tightened raw table graphics-layer color-filter row, the recent image-shader/gradient-path/graphics-layer live
+  fallback sentinels, supported native text/layer/RuntimeEffect replay, and the saveLayer/shader fallback tail. Magic
+  Jewel `out` rose to 81G, the run was 2.3G, and the volume had about 269Gi free after completion. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260605-212906/suite.tsv`.
 - Magic Jewel refreshed the focused `gradient-path-stroke-fallbacks` command-probe group. No-run resolution passed with
   `LIST_CASE_COUNT=true CASE_GROUPS=gradient-path-stroke-fallbacks` returning 3 and
   `LIST_CASES=true CASE_GROUPS=gradient-path-stroke-fallbacks` listing linear, radial, and sweep gradient stroked-path

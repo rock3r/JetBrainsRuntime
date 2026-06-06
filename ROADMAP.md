@@ -38,6 +38,10 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel completed a periodic full default command-probe consolidation after the focused refresh batch. Discovery
+  still resolved 522 default rows with no ungrouped or duplicate cases. The full sweep passed 522/522 with
+  `fallback_sum=350`, 61 intentional unsupported-picture rows, 81,988 JBR picture frames, and 171,971 command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260605-212906/suite.tsv`.
 - Magic Jewel refreshed `CASE_GROUPS=gradient-path-stroke-fallbacks` as the stroked gradient-path fallback checkpoint.
   The run passed 3/3 with `fallback_sum=0`, three intentional unsupported-picture rows, 3,864 JBR picture frames, and
   zero command frames across linear/radial/sweep gradient-paint fallback ordering:
