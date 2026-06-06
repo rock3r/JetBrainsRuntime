@@ -38,6 +38,10 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- CMP now records supported paint-level non-`SrcOver` blend modes for linear, radial, and sweep gradient rects,
+  round-rects, and filled paths by wrapping the existing gradient command records in tight
+  `COMMAND_SAVE_LAYER_BLEND_MODE` layers over fill/stroke/path bounds. Focused `JbrSkiaCommandRecorderTest` desktop
+  validation passed.
 - CMP now records supported paint-level non-`SrcOver` blend modes for image refs, image-shader rects, and shader
   descriptor rects by wrapping the existing image/shader command records in tight `COMMAND_SAVE_LAYER_BLEND_MODE`
   layers over destination/fill bounds. Focused `JbrSkiaCommandRecorderTest` desktop validation passed.

@@ -5,6 +5,11 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- CMP gradient blend-mode recorder checkpoint: supported paint-level non-`SrcOver` blend modes now stay on command
+  replay for linear, radial, and sweep gradient rects, round-rects, and filled paths by wrapping existing gradient
+  command records in `COMMAND_SAVE_LAYER_BLEND_MODE` over fill/stroke/path bounds. Focused validation passed:
+  `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests
+  androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest`.
 - CMP image/shader blend-mode recorder checkpoint: supported paint-level non-`SrcOver` blend modes now stay on command
   replay for image refs, image-shader rects, and shader descriptor rects by wrapping existing image/shader command
   records in `COMMAND_SAVE_LAYER_BLEND_MODE` over destination/fill bounds. Focused validation passed:
