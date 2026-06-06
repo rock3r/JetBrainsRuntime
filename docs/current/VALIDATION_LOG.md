@@ -5,6 +5,23 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel refreshed the full compatibility matrix after the 522-row command-probe consolidation. No-run discovery
+  resolved 57 default rows with the expected group sizes (`handshake` 6, `low-word-gradients` 15, `low-word-effects`
+  18, `high-word-effects` 9, and `high-word-shader-ui` 9). The matrix passed 57/57 with `fallback_sum=56`, 824 JBR
+  command frames from the happy path, and background-window mode on all 57 rows. Every forced ABI, native ABI,
+  low/high-word capability, exact feature-capability, and public-API-missing row produced exactly one structured
+  fallback and zero command frames. Magic Jewel `out` stayed at 81G, the run was 96M, and the volume had about 252Gi
+  free after completion. Matrix:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260606-031518/matrix.tsv`.
+- Magic Jewel refreshed the required artifact matrix on the current ABI 106 local artifacts. No-run discovery resolved
+  the expected groups (`required` 2 and `optional-old` 5), and `CASE_GROUPS=required` passed 2/2 with `fallback_sum=1`,
+  754 JBR command frames, and background-window mode on both rows. `current-all` replayed commands with no fallback;
+  `missing-public-api` produced the expected single `public-api-missing` fallback and no command frames. The run was
+  4.3M. Matrix:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260606-133156/matrix.tsv`.
+- Skiko refreshed the focused JBR Skia interop gate after the Magic Jewel compatibility/artifact refreshes:
+  `./gradlew --no-daemon --no-configuration-cache :awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`
+  completed successfully on the current branch/artifacts.
 - Magic Jewel completed a periodic full default command-probe consolidation after the focused core/effects/layer/text
   refreshes. No-run discovery still resolved 522 default rows, `LIST_UNGROUPED_CASES=true` printed no rows, and
   duplicate default-case detection printed no rows. The full sweep passed 522/522 with `fallback_sum=350`, 61

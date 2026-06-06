@@ -38,6 +38,17 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel refreshed the full compatibility matrix after the 522-row command-probe consolidation. No-run discovery
+  still resolved 57 rows. The matrix passed 57/57 with `fallback_sum=56`, the happy path produced 824 JBR command
+  frames, every forced ABI/capability/public-API mismatch produced exactly one structured fallback with no command
+  frames, and all rows used background-window mode:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260606-031518/matrix.tsv`.
+- Magic Jewel refreshed the required artifact matrix on the current ABI 106 local artifacts. Required rows passed 2/2:
+  `current-all` replayed 754 JBR command frames with no fallback, while `missing-public-api` produced the expected
+  single structured fallback and no command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260606-133156/matrix.tsv`.
+- Skiko refreshed the focused `JbrSkiaInteropTest` class against the current branch/artifacts:
+  `./gradlew --no-daemon --no-configuration-cache :awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`.
 - Magic Jewel completed a periodic full default command-probe consolidation after the focused refresh batch. Discovery
   still resolved 522 default rows with no ungrouped or duplicate cases. The full sweep passed 522/522 with
   `fallback_sum=350`, 61 intentional unsupported-picture rows, 81,988 JBR picture frames, and 171,971 command frames:

@@ -44,11 +44,19 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   is understood, so already-green prefixes do not need to be repeated. The current fast loop is exact row, quick group
   or bounded adjacent range, Skiko focused publication, `JbrSkiaInteropTest`, and then a periodic full sweep once a
   coherent batch of sentinels has landed. The latest periodic default command-probe consolidation passed after the
-  focused invalid/supported refreshes by combining the interrupted prefix with a `CASES_FROM=...` resumed tail:
-  491/491 passed, `fallback_sum=350`, `unsupported_rows=30`, `picture_frames=31269`, and
-  `command_frames=158073`:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260602-155529/suite.tsv` and
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260602-165056/suite.tsv`.
+  focused invalid/supported refreshes: 522/522 passed, `fallback_sum=350`, `unsupported_rows=61`,
+  `picture_frames=81988`, and `command_frames=171971`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260605-212906/suite.tsv`.
+- The latest compatibility matrix checkpoint passed after that command-probe consolidation: 57/57 rows,
+  `fallback_sum=56`, 824 happy-path command frames, exact structured fallback for every forced
+  ABI/capability/public-API mismatch, and background-window mode on every row:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260606-031518/matrix.tsv`.
+- The latest required artifact matrix checkpoint passed on the current ABI 106 local artifacts: required rows 2/2,
+  `fallback_sum=1`, 754 current-artifact command frames, and the expected `public-api-missing` fallback for the
+  missing-public-API row:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260606-133156/matrix.tsv`.
+- Skiko focused `JbrSkiaInteropTest` also passed against the current branch/artifacts:
+  `./gradlew --no-daemon --no-configuration-cache :awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`.
 - A new Magic Jewel command-probe sentinel covers graphics layers with invalid out-of-range `alpha`. This exercises the
   layer-level `graphicsLayer:alpha` guard before replay. No-run discovery now reports 498 default command-probe rows,
   `graphics-layer` 22, and a `graphics-layer-invalid` quick group with 2 rows. Focused exact validation passed 1/1
