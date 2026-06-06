@@ -5,6 +5,16 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel app-level linear-gradient path blend-mode checkpoint: added `commands-linear-gradient-path-blend-mode`,
+  enabled by `MAGIC_JEWEL_COMPOSE_LINEAR_GRADIENT_PATH_BLEND_MODE`, to draw a filled linear-gradient path with
+  `BlendMode.Plus`. No-run discovery passed for the exact row, `LIST_UNGROUPED_CASES=true` printed no rows, default
+  duplicate-case detection printed no rows, and `LIST_CASE_GROUP_COUNTS=true` now reports
+  `surface-transform-ui	13`. Focused exact validation passed 1/1 with `fallback_sum=0`, `unsupported_rows=0`,
+  `jbr_picture_frames=0`, and `jbr_command_frames=1379`. The adjacent `CASE_GROUPS=surface-transform-ui` refresh
+  passed 13/13 with `fallback_sum=0`, zero unsupported-picture rows, zero JBR picture frames, and 18,553 JBR command
+  frames. Magic Jewel `out` stayed at 82G, and the volume had about 272Gi free after completion. Suites:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260606-162640/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260606-162742/suite.tsv`.
 - Magic Jewel app-level linear-gradient blend-mode checkpoint: added `commands-linear-gradient-blend-mode`, enabled by
   `MAGIC_JEWEL_COMPOSE_LINEAR_GRADIENT_BLEND_MODE`, to draw a linear-gradient rect with `BlendMode.Plus`. No-run
   discovery passed for the exact row, and `LIST_CASE_GROUP_COUNTS=true` now reports `surface-transform-ui	12`.
