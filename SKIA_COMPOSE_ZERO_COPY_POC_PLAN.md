@@ -47,6 +47,12 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   passed 16/16 with supported rows staying on command replay and raw/invalid shader rows falling back intentionally:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260606-165652/suite.tsv` and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260606-165819/suite.tsv`.
+- Magic Jewel now has a direct app-level `commands-image-shader-blend-mode` sentinel for the image-shader rect
+  blend-layer path. The exact row passed with no fallback/picture frames, and the adjacent `shader-rendering` group now
+  resolves 17 rows and passed 17/17 with supported rows staying on command replay and raw/invalid shader rows falling
+  back intentionally:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260606-171148/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260606-171254/suite.tsv`.
 - CMP now keeps paint-level supported non-`SrcOver` blend modes for `drawVertices` on command replay by wrapping
   `COMMAND_DRAW_VERTICES` in a tight blend-mode layer over vertex bounds.
 - CMP now applies the same ABI-neutral blend-layer strategy to dashed solid primitive commands and path-effect

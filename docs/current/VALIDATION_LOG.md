@@ -5,6 +5,16 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel app-level image-shader blend-mode checkpoint: added `commands-image-shader-blend-mode`, enabled by
+  `MAGIC_JEWEL_COMPOSE_IMAGE_SHADER_BLEND_MODE`, to draw an image-shader rect with `BlendMode.Plus`. No-run discovery
+  passed for the exact row, `LIST_UNGROUPED_CASES=true` printed no rows, default duplicate-case detection printed no
+  rows, and `LIST_CASE_GROUP_COUNTS=true` now reports `shader-rendering	17`. Focused exact validation passed 1/1
+  with `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=1281`. The adjacent
+  `CASE_GROUPS=shader-rendering` refresh passed 17/17 with `fallback_sum=0`, ten intentional unsupported-picture rows
+  from raw/invalid shader fallback sentinels, 9,922 JBR picture frames, and 8,322 JBR command frames. Magic Jewel `out`
+  stayed at 82G, and the volume had about 272Gi free after completion. Suites:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260606-171148/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260606-171254/suite.tsv`.
 - Magic Jewel app-level image-ref blend-mode checkpoint: added `commands-image-blend-mode`, enabled by
   `MAGIC_JEWEL_COMPOSE_IMAGE_BLEND_MODE`, to draw an image ref with `BlendMode.Plus`. No-run discovery passed for the
   exact row, `LIST_UNGROUPED_CASES=true` printed no rows, default duplicate-case detection printed no rows, and
