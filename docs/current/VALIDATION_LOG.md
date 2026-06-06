@@ -5,6 +5,19 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Cross-repo ABI/capability audit after the broad command, compatibility, artifact, Skiko, and parity refresh found no
+  constant drift or native opcode replay gap. A normalized extractor compared shared `ABI_ID`, `NATIVE_ABI_VERSION`,
+  `COMMAND_*`, and `COMMAND_CAP*` constants across
+  `/Users/rock3r/src/jbr-skia-zero-copy/jbr/src/java.desktop/share/classes/com/jetbrains/desktop/JBRSkia.java`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/jbr-api/src/com/jetbrains/JBRSkia.java`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/jbr/src/java.desktop/macosx/native/libawt_lwawt/java2d/metal/JBRSkiaInterop.mm`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/skiko/skiko/src/awtMain/kotlin/org/jetbrains/skiko/jbr/JbrSkiaInterop.kt`,
+  and
+  `/Users/rock3r/src/jbr-skia-zero-copy/cmp/compose/ui/ui-graphics/src/skikoMain/kotlin/androidx/compose/ui/graphics/JbrSkiaCommandRecorder.skiko.kt`.
+  Result: zero shared constant value mismatches. JBR private/API mirrors both parsed 212 constants. Native replay parsed
+  129 constants, Skiko interop 84, and CMP recorder 116; CMP's only extra set symbol was the local
+  `COMMAND_STREAM_ABI_ID=106` stream-header alias. A native opcode audit found 67 command opcodes and 67 replay switch
+  cases; CMP's 65 emitted opcode constants were all present in native replay.
 - Magic Jewel refreshed the full default screenshot parity suite after the command-probe, compatibility, artifact, and
   Skiko interop checkpoints. No-run discovery resolved 106 default rows, `LIST_UNGROUPED_CASES=true` printed no rows,
   and `CASE_GROUPS=smoke` resolved to `parity-rich`, `parity-button-chrome`, and `parity-geometry-clean`. The smoke

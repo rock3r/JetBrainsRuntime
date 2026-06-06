@@ -38,6 +38,11 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Cross-repo ABI/capability audit found no constant drift across the JBR private API, JBR API mirror, JBR native
+  replay, Skiko interop gate, and CMP recorder after normalizing Java/Kotlin/C++ numeric literal syntax. Shared
+  constants reported zero value mismatches. JBR private/API mirrors both expose 212 parsed constants. Native replay
+  defines 67 command opcodes and has a switch case for all 67; CMP's 65 emitted opcode constants are all present in
+  native replay. CMP's extra `COMMAND_STREAM_ABI_ID` is a local stream-header alias set to 106.
 - Magic Jewel refreshed the full default screenshot parity suite after the command, compatibility, artifact, and Skiko
   interop gates. The run was split into a 3-row `CASE_GROUPS=smoke` prefix and a resumed
   `CASES_FROM=parity-skew-transform` tail so already-green smoke rows were not repeated. Combined result: 106/106

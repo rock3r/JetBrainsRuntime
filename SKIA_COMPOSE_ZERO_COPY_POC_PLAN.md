@@ -63,6 +63,10 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260606-133617/suite.tsv`
   and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260606-133836/suite.tsv`.
+- Cross-repo ABI/capability drift audit is clean for the current command surface: shared constants across JBR private
+  API, JBR API mirror, native replay, Skiko interop, and CMP recorder had zero normalized value mismatches; JBR
+  private/API constant sets match; native replay has switch cases for all 67 native command opcodes; and every CMP
+  emitted opcode constant is present in native replay.
 - A new Magic Jewel command-probe sentinel covers graphics layers with invalid out-of-range `alpha`. This exercises the
   layer-level `graphicsLayer:alpha` guard before replay. No-run discovery now reports 498 default command-probe rows,
   `graphics-layer` 22, and a `graphics-layer-invalid` quick group with 2 rows. Focused exact validation passed 1/1
