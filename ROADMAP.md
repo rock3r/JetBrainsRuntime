@@ -38,6 +38,12 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- CMP now records supported non-`SrcOver` solid-color primitive blend modes for lines, stroked/fill rect fallbacks,
+  round-rects, ovals, arcs, paths, points, and raw points by wrapping the existing primitive command in a tight
+  `COMMAND_SAVE_LAYER_BLEND_MODE`/restore pair when no direct primitive blend opcode exists. This is ABI-neutral and
+  preserves the existing direct `COMMAND_FILL_RECT_BLEND_MODE` path. Focused recorder validation passed:
+  `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests
+  androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest`.
 - Skiko now defaults `JbrSkiaSwingLayer` to command replay when CMP enables the JBR interop layer and no explicit
   Skiko diagnostic/picture/texture render mode is requested. Magic Jewel added an `auto` render mode that leaves the
   Skiko render-mode properties unset, then validated a short app smoke in that mode. The run reported

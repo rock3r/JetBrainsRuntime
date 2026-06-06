@@ -5,6 +5,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- CMP primitive blend-mode recorder checkpoint: supported non-`SrcOver` solid-color blend modes now stay on command
+  replay for lines, rect stroke fallback, round-rects, ovals, arcs, paths, points, and raw points by wrapping bounded
+  primitive commands in `COMMAND_SAVE_LAYER_BLEND_MODE` plus restore when there is no direct primitive blend opcode.
+  The existing filled-rect `COMMAND_FILL_RECT_BLEND_MODE` fast path is unchanged, and unsupported blend modes still
+  report `blendMode_*`. Focused validation passed:
+  `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests
+  androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest`.
 - Skiko default command-mode checkpoint: `JbrSkiaSwingLayer` now records/replays command frames by default when CMP
   creates the JBR interop Swing layer and no explicit Skiko picture/diagnostic/texture render mode is requested.
   Magic Jewel added `JBR_SKIA_RENDER_MODE=auto` to leave Skiko render-mode properties unset, published the updated

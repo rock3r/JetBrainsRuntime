@@ -12,6 +12,11 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 ## Current Snapshot
 
 - ABI 106 artifacts are current across JBR private API, JBR API mirror, Skiko, CMP, and Magic Jewel.
+- CMP's solid-color primitive recorder now keeps supported non-`SrcOver` blend modes on command replay for lines,
+  rect stroke fallback, round-rects, ovals, arcs, paths, points, and raw points by emitting tight
+  `COMMAND_SAVE_LAYER_BLEND_MODE` wrappers around the existing primitive commands. The direct filled-rect blend-mode
+  opcode remains unchanged. Focused `JbrSkiaCommandRecorderTest` desktop validation passed after this ABI-neutral
+  closure.
 - Skiko's JBR Swing layer now defaults to command replay when CMP creates the JBR interop layer and no explicit
   diagnostic/picture/texture mode is requested. The old explicit picture/diagnostic/texture properties still override
   the default, and `skiko.jbr.interop.renderCommands=false` keeps the probe-only Swing fallback path available for
