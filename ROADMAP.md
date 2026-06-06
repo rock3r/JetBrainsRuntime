@@ -38,6 +38,13 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel added `commands-radial-gradient-stroke-blend-mode` and
+  `commands-sweep-gradient-round-rect-blend-mode` to prove the remaining unit-covered gradient blend-layer shapes at
+  app level. The exact two-row slice passed with zero fallback, zero unsupported rows, zero picture frames, and 2,374
+  command frames; the refreshed `CASE_GROUPS=surface-transform-ui` discovery now resolves 15 rows and passed 15/15
+  with `fallback_sum=0`, zero unsupported-picture rows, zero JBR picture frames, and 21,548 command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260606-164027/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260606-164210/suite.tsv`.
 - Magic Jewel added `commands-linear-gradient-path-blend-mode` to prove the gradient filled-path paint blend-mode
   replay path at app level. The exact row passed with zero fallback, zero unsupported rows, zero picture frames, and
   1,379 command frames; the refreshed `CASE_GROUPS=surface-transform-ui` discovery now resolves 13 rows and passed

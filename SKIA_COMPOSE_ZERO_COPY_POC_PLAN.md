@@ -33,6 +33,12 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `surface-transform-ui` group now resolves 13 rows and passed 13/13 with every row staying on command replay:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260606-162640/suite.tsv` and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260606-162742/suite.tsv`.
+- Magic Jewel now has direct app-level `commands-radial-gradient-stroke-blend-mode` and
+  `commands-sweep-gradient-round-rect-blend-mode` sentinels for the remaining unit-covered gradient blend-layer shapes.
+  The exact pair passed with no fallback/picture frames, and the adjacent `surface-transform-ui` group now resolves 15
+  rows and passed 15/15 with every row staying on command replay:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260606-164027/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260606-164210/suite.tsv`.
 - CMP now keeps paint-level supported non-`SrcOver` blend modes for image refs, image-shader rects, and shader
   descriptor rects on command replay by wrapping the existing image/shader command records in tight blend-mode layers
   over destination/fill bounds.

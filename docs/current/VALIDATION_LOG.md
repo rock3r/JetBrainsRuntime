@@ -5,6 +5,20 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel app-level radial/sweep gradient blend-mode checkpoint: added
+  `commands-radial-gradient-stroke-blend-mode`, enabled by
+  `MAGIC_JEWEL_COMPOSE_RADIAL_GRADIENT_STROKE_BLEND_MODE`, and
+  `commands-sweep-gradient-round-rect-blend-mode`, enabled by
+  `MAGIC_JEWEL_COMPOSE_SWEEP_GRADIENT_ROUND_RECT_BLEND_MODE`. The rows cover a stroked radial-gradient rect and a
+  filled sweep-gradient round-rect with `BlendMode.Plus`, matching the remaining unit-covered gradient blend-layer
+  shapes. No-run discovery passed for the exact two-row slice, `LIST_UNGROUPED_CASES=true` printed no rows, default
+  duplicate-case detection printed no rows, and `LIST_CASE_GROUP_COUNTS=true` now reports
+  `surface-transform-ui	15`. Focused exact validation passed 2/2 with `fallback_sum=0`, `unsupported_rows=0`,
+  `jbr_picture_frames=0`, and `jbr_command_frames=2374`. The adjacent `CASE_GROUPS=surface-transform-ui` refresh
+  passed 15/15 with `fallback_sum=0`, zero unsupported-picture rows, zero JBR picture frames, and 21,548 JBR command
+  frames. Magic Jewel `out` stayed at 82G, and the volume had about 272Gi free after completion. Suites:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260606-164027/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260606-164210/suite.tsv`.
 - Magic Jewel app-level linear-gradient path blend-mode checkpoint: added `commands-linear-gradient-path-blend-mode`,
   enabled by `MAGIC_JEWEL_COMPOSE_LINEAR_GRADIENT_PATH_BLEND_MODE`, to draw a filled linear-gradient path with
   `BlendMode.Plus`. No-run discovery passed for the exact row, `LIST_UNGROUPED_CASES=true` printed no rows, default
