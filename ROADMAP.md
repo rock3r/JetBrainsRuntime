@@ -38,6 +38,12 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Skiko now defaults `JbrSkiaSwingLayer` to command replay when CMP enables the JBR interop layer and no explicit
+  Skiko diagnostic/picture/texture render mode is requested. Magic Jewel added an `auto` render mode that leaves the
+  Skiko render-mode properties unset, then validated a short app smoke in that mode. The run reported
+  `SKIKO_JBR_INTEROP_RENDER_MODE commands=true picture=false diagnostic=false texture=false delegateCommands=true`,
+  zero fallback markers, zero picture frames, 847 Skiko/JBR command frames, and 848 CMP command-recorder frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-interop-report/20260606-145913/report.md`.
 - Cross-repo ABI/capability audit found no constant drift across the JBR private API, JBR API mirror, JBR native
   replay, Skiko interop gate, and CMP recorder after normalizing Java/Kotlin/C++ numeric literal syntax. Shared
   constants reported zero value mismatches. JBR private/API mirrors both expose 212 parsed constants. Native replay

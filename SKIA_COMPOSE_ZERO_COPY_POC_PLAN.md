@@ -12,6 +12,10 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 ## Current Snapshot
 
 - ABI 106 artifacts are current across JBR private API, JBR API mirror, Skiko, CMP, and Magic Jewel.
+- Skiko's JBR Swing layer now defaults to command replay when CMP creates the JBR interop layer and no explicit
+  diagnostic/picture/texture mode is requested. The old explicit picture/diagnostic/texture properties still override
+  the default, and `skiko.jbr.interop.renderCommands=false` keeps the probe-only Swing fallback path available for
+  debugging.
 - Command replay supports the current broad scene set: primitives, gradients, images, text/font-data, point dots,
   shader/effect descriptors, RuntimeEffect shaders/color filters, image filters, path effects, blend modes, shadows,
   and graphics-layer variants.
@@ -67,6 +71,11 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   API, JBR API mirror, native replay, Skiko interop, and CMP recorder had zero normalized value mismatches; JBR
   private/API constant sets match; native replay has switch cases for all 67 native command opcodes; and every CMP
   emitted opcode constant is present in native replay.
+- Magic Jewel's new `JBR_SKIA_RENDER_MODE=auto` harness mode leaves Skiko render-mode properties unset so the default
+  command path is testable. A focused auto-mode app smoke passed with zero fallback markers, zero picture frames, 847
+  Skiko/JBR command frames, 848 CMP recorder frames, and an effective render-mode marker of
+  `commands=true picture=false diagnostic=false texture=false delegateCommands=true`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-interop-report/20260606-145913/report.md`.
 - A new Magic Jewel command-probe sentinel covers graphics layers with invalid out-of-range `alpha`. This exercises the
   layer-level `graphicsLayer:alpha` guard before replay. No-run discovery now reports 498 default command-probe rows,
   `graphics-layer` 22, and a `graphics-layer-invalid` quick group with 2 rows. Focused exact validation passed 1/1

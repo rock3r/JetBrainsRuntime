@@ -5,6 +5,17 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Skiko default command-mode checkpoint: `JbrSkiaSwingLayer` now records/replays command frames by default when CMP
+  creates the JBR interop Swing layer and no explicit Skiko picture/diagnostic/texture render mode is requested.
+  Magic Jewel added `JBR_SKIA_RENDER_MODE=auto` to leave Skiko render-mode properties unset, published the updated
+  Skiko `0.0.0-SNAPSHOT` artifacts locally, and ran a focused background-window app smoke:
+  `JBR_SKIA_RENDER_MODE=auto SKIKO_VERSION=0.0.0-SNAPSHOT DURATION_SECONDS=4 WARMUP_SECONDS=1
+  MAGIC_JEWEL_BACKGROUND_WINDOW=true EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-interop-report.sh`. The run
+  reported `SKIKO_JBR_INTEROP_RENDER_MODE commands=true picture=false diagnostic=false texture=false
+  delegateCommands=true`, zero fallback markers, zero Skiko/JBR picture replay frames, 847 Skiko command frames, 847
+  JBR command frames, 848 CMP command-recorder frames, and no unsupported recorder frames. Output size was 8.0M and
+  Magic Jewel `out` stayed at 82G. Report:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-interop-report/20260606-145913/report.md`.
 - Cross-repo ABI/capability audit after the broad command, compatibility, artifact, Skiko, and parity refresh found no
   constant drift or native opcode replay gap. A normalized extractor compared shared `ABI_ID`, `NATIVE_ABI_VERSION`,
   `COMMAND_*`, and `COMMAND_CAP*` constants across
