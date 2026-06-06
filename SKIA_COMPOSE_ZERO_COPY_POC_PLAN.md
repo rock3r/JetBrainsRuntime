@@ -12,6 +12,9 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 ## Current Snapshot
 
 - ABI 106 artifacts are current across JBR private API, JBR API mirror, Skiko, CMP, and Magic Jewel.
+- CMP now keeps paint-level supported non-`SrcOver` blend modes for fill-rect color-filter commands on command replay,
+  covering direct tint filters and handle-backed tint/color-matrix/lighting/descriptor filters through tight
+  blend-mode layers around the existing native color-filter rect records.
 - CMP now keeps paint-level supported non-`SrcOver` blend modes for linear, radial, and sweep gradient rects,
   round-rects, and filled paths on command replay by wrapping the existing gradient command records in tight blend-mode
   layers over fill/stroke/path bounds.
