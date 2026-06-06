@@ -5,6 +5,15 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel app-level linear-gradient blend-mode checkpoint: added `commands-linear-gradient-blend-mode`, enabled by
+  `MAGIC_JEWEL_COMPOSE_LINEAR_GRADIENT_BLEND_MODE`, to draw a linear-gradient rect with `BlendMode.Plus`. No-run
+  discovery passed for the exact row, and `LIST_CASE_GROUP_COUNTS=true` now reports `surface-transform-ui	12`.
+  Focused exact validation passed 1/1 with `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, and
+  `jbr_command_frames=1418`. The adjacent `CASE_GROUPS=surface-transform-ui` refresh passed 12/12 with
+  `fallback_sum=0`, zero unsupported-picture rows, zero JBR picture frames, and 17,354 JBR command frames. Magic Jewel
+  `out` stayed at 82G, and the volume had about 272Gi free after completion. Suites:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260606-161407/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260606-161521/suite.tsv`.
 - Magic Jewel app-level color-filter blend-mode checkpoint: added `commands-color-filter-blend-mode`, enabled by
   `MAGIC_JEWEL_COMPOSE_COLOR_FILTER_BLEND_MODE`, to draw a direct tint color-filter fill-rect with
   `BlendMode.Plus`. No-run discovery passed for the exact row, and `LIST_CASE_GROUP_COUNTS=true` now reports

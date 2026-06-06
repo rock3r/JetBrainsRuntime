@@ -38,6 +38,12 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel added `commands-linear-gradient-blend-mode` to prove the new linear-gradient paint blend-mode replay path
+  at app level. The exact row passed with zero fallback, zero unsupported rows, zero picture frames, and 1,418 command
+  frames; the refreshed `CASE_GROUPS=surface-transform-ui` discovery now resolves 12 rows and passed 12/12 with
+  `fallback_sum=0`, zero unsupported-picture rows, zero JBR picture frames, and 17,354 command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260606-161407/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260606-161521/suite.tsv`.
 - Magic Jewel added `commands-color-filter-blend-mode` to prove the new fill-rect color-filter paint blend-mode
   closure at app level. The exact row passed with zero fallback, zero unsupported rows, zero picture frames, and 1,223
   command frames; the refreshed `CASE_GROUPS=color-filters` discovery now resolves 13 rows and passed 13/13 with
