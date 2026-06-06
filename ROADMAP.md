@@ -38,6 +38,9 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- CMP now records supported paint-level non-`SrcOver` blend modes for image refs, image-shader rects, and shader
+  descriptor rects by wrapping the existing image/shader command records in tight `COMMAND_SAVE_LAYER_BLEND_MODE`
+  layers over destination/fill bounds. Focused `JbrSkiaCommandRecorderTest` desktop validation passed.
 - CMP now records supported paint-level non-`SrcOver` blend modes for `drawVertices` by wrapping the existing
   `COMMAND_DRAW_VERTICES` record in a tight `COMMAND_SAVE_LAYER_BLEND_MODE` layer over vertex bounds. Focused
   `JbrSkiaCommandRecorderTest` desktop validation passed.

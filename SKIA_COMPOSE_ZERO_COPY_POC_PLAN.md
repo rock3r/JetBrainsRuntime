@@ -12,6 +12,9 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 ## Current Snapshot
 
 - ABI 106 artifacts are current across JBR private API, JBR API mirror, Skiko, CMP, and Magic Jewel.
+- CMP now keeps paint-level supported non-`SrcOver` blend modes for image refs, image-shader rects, and shader
+  descriptor rects on command replay by wrapping the existing image/shader command records in tight blend-mode layers
+  over destination/fill bounds.
 - CMP now keeps paint-level supported non-`SrcOver` blend modes for `drawVertices` on command replay by wrapping
   `COMMAND_DRAW_VERTICES` in a tight blend-mode layer over vertex bounds.
 - CMP now applies the same ABI-neutral blend-layer strategy to dashed solid primitive commands and path-effect
