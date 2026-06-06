@@ -12,6 +12,9 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 ## Current Snapshot
 
 - ABI 106 artifacts are current across JBR private API, JBR API mirror, Skiko, CMP, and Magic Jewel.
+- CMP now applies the same ABI-neutral blend-layer strategy to dashed solid primitive commands and path-effect
+  descriptor path commands, with stroke-padded layer bounds. This closes the adjacent supported non-`SrcOver`
+  blend-mode fallbacks without adding command opcodes.
 - CMP's solid-color primitive recorder now keeps supported non-`SrcOver` blend modes on command replay for lines,
   rect stroke fallback, round-rects, ovals, arcs, paths, points, and raw points by emitting tight
   `COMMAND_SAVE_LAYER_BLEND_MODE` wrappers around the existing primitive commands. The direct filled-rect blend-mode

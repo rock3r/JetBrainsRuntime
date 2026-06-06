@@ -5,6 +5,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- CMP dashed/path-effect blend-mode recorder checkpoint: supported non-`SrcOver` solid-color blend modes now stay on
+  command replay for dashed lines, dashed rects, dashed round-rects, dashed paths, and path-effect descriptor paths by
+  wrapping the existing native command records in `COMMAND_SAVE_LAYER_BLEND_MODE` layers with stroke-padded bounds.
+  Focused validation passed:
+  `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests
+  androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest`.
 - CMP primitive blend-mode recorder checkpoint: supported non-`SrcOver` solid-color blend modes now stay on command
   replay for lines, rect stroke fallback, round-rects, ovals, arcs, paths, points, and raw points by wrapping bounded
   primitive commands in `COMMAND_SAVE_LAYER_BLEND_MODE` plus restore when there is no direct primitive blend opcode.

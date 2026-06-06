@@ -38,6 +38,9 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- CMP also records supported non-`SrcOver` blend modes for dashed solid primitives and path-effect descriptor paths by
+  wrapping the existing dashed/path-effect command records in tight `COMMAND_SAVE_LAYER_BLEND_MODE` layers with
+  stroke-padded bounds. Focused `JbrSkiaCommandRecorderTest` desktop validation passed after this follow-up.
 - CMP now records supported non-`SrcOver` solid-color primitive blend modes for lines, stroked/fill rect fallbacks,
   round-rects, ovals, arcs, paths, points, and raw points by wrapping the existing primitive command in a tight
   `COMMAND_SAVE_LAYER_BLEND_MODE`/restore pair when no direct primitive blend opcode exists. This is ABI-neutral and
