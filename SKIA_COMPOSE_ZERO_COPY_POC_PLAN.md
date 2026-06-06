@@ -2208,8 +2208,8 @@ Magic Jewel now has a structured fallback sentinel for `Canvas.drawVertices`:
 
 ## Previous Skew Slice
 
-`Canvas.skew` now lowers through the existing ABI 105 3x3 concat-matrix command instead of marking the command stream
-unsupported:
+The ABI 105 skew slice introduced `Canvas.skew` lowering through the 3x3 concat-matrix command instead of marking the
+command stream unsupported; current ABI 106 keeps that replay path:
 
 - CMP records `Canvas.skew(sx, sy)` as `COMMAND_CONCAT_MATRIX33` with skew terms in the matrix.
 - Magic Jewel added `commands-skew-transform` and `parity-skew-transform` rows.
