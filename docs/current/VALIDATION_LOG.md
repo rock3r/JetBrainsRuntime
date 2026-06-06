@@ -5,6 +5,15 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel app-level color-filter blend-mode checkpoint: added `commands-color-filter-blend-mode`, enabled by
+  `MAGIC_JEWEL_COMPOSE_COLOR_FILTER_BLEND_MODE`, to draw a direct tint color-filter fill-rect with
+  `BlendMode.Plus`. No-run discovery passed for the exact row, and `LIST_CASE_GROUP_COUNTS=true` now reports
+  `color-filters	13`. Focused exact validation passed 1/1 with `fallback_sum=0`, `unsupported_rows=0`,
+  `jbr_picture_frames=0`, and `jbr_command_frames=1223`. The adjacent `CASE_GROUPS=color-filters` refresh passed
+  13/13 with `fallback_sum=0`, three intentional unsupported-picture rows from the raw color-filter fallback cases,
+  3,253 JBR picture frames, and 15,199 JBR command frames. Suites:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260606-155652/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260606-155803/suite.tsv`.
 - CMP fill-rect color-filter blend-mode recorder checkpoint: supported paint-level non-`SrcOver` blend modes now stay
   on command replay for direct tint filters and handle-backed tint/color-matrix/lighting/descriptor fill-rect
   color-filter commands by wrapping existing native color-filter rect records in `COMMAND_SAVE_LAYER_BLEND_MODE`.

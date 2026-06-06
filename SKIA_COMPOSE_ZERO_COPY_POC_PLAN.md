@@ -15,6 +15,11 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - CMP now keeps paint-level supported non-`SrcOver` blend modes for fill-rect color-filter commands on command replay,
   covering direct tint filters and handle-backed tint/color-matrix/lighting/descriptor filters through tight
   blend-mode layers around the existing native color-filter rect records.
+- Magic Jewel now has a direct app-level `commands-color-filter-blend-mode` sentinel for that fill-rect color-filter
+  blend-mode path. The exact row passed with no fallback/picture frames, and the adjacent `color-filters` group now
+  resolves 13 rows and passed 13/13 with supported rows staying on command replay:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260606-155652/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260606-155803/suite.tsv`.
 - CMP now keeps paint-level supported non-`SrcOver` blend modes for linear, radial, and sweep gradient rects,
   round-rects, and filled paths on command replay by wrapping the existing gradient command records in tight blend-mode
   layers over fill/stroke/path bounds.

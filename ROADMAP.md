@@ -38,6 +38,12 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel added `commands-color-filter-blend-mode` to prove the new fill-rect color-filter paint blend-mode
+  closure at app level. The exact row passed with zero fallback, zero unsupported rows, zero picture frames, and 1,223
+  command frames; the refreshed `CASE_GROUPS=color-filters` discovery now resolves 13 rows and passed 13/13 with
+  `fallback_sum=0`, three intentional unsupported-picture rows, 3,253 JBR picture frames, and 15,199 command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260606-155652/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260606-155803/suite.tsv`.
 - CMP now records supported paint-level non-`SrcOver` blend modes for fill-rect color-filter commands, including direct
   tint filters and handle-backed tint/color-matrix/lighting/descriptor filters, by wrapping the existing native
   color-filter rect command records in tight `COMMAND_SAVE_LAYER_BLEND_MODE` layers. Focused
