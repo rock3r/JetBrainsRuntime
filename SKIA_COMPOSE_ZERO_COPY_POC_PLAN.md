@@ -57,6 +57,12 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260606-133156/matrix.tsv`.
 - Skiko focused `JbrSkiaInteropTest` also passed against the current branch/artifacts:
   `./gradlew --no-daemon --no-configuration-cache :awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`.
+- The latest full default screenshot parity checkpoint then passed as a split smoke-plus-tail refresh. The
+  `CASE_GROUPS=smoke` prefix passed 3/3, and the `CASES_FROM=parity-skew-transform` tail passed 103/103. Combined
+  result: 106/106 passed, `fallback_sum=11`, zero JBR picture frames, and 105,068 JBR command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260606-133617/suite.tsv`
+  and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260606-133836/suite.tsv`.
 - A new Magic Jewel command-probe sentinel covers graphics layers with invalid out-of-range `alpha`. This exercises the
   layer-level `graphicsLayer:alpha` guard before replay. No-run discovery now reports 498 default command-probe rows,
   `graphics-layer` 22, and a `graphics-layer-invalid` quick group with 2 rows. Focused exact validation passed 1/1

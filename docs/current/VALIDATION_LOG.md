@@ -5,6 +5,18 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel refreshed the full default screenshot parity suite after the command-probe, compatibility, artifact, and
+  Skiko interop checkpoints. No-run discovery resolved 106 default rows, `LIST_UNGROUPED_CASES=true` printed no rows,
+  and `CASE_GROUPS=smoke` resolved to `parity-rich`, `parity-button-chrome`, and `parity-geometry-clean`. The smoke
+  prefix passed 3/3 with `fallback_sum=0`, zero JBR picture frames, and 3,248 JBR command frames. The resumed
+  `CASES_FROM=parity-skew-transform` tail passed 103/103 with `fallback_sum=11`, zero JBR picture frames, and 101,820
+  JBR command frames. Combined result: 106/106 passed with `fallback_sum=11`, zero JBR picture frames, and 105,068 JBR
+  command frames. The 11 fallback markers remained bounded to resize/lifecycle sentinel rows; all rows stayed off
+  JBR picture fallback. Magic Jewel `out` rose to 82G, the smoke run was 10M, the tail run was 568M, and the volume
+  had about 269Gi free after completion. Suites:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260606-133617/suite.tsv`
+  and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260606-133836/suite.tsv`.
 - Magic Jewel refreshed the full compatibility matrix after the 522-row command-probe consolidation. No-run discovery
   resolved 57 default rows with the expected group sizes (`handshake` 6, `low-word-gradients` 15, `low-word-effects`
   18, `high-word-effects` 9, and `high-word-shader-ui` 9). The matrix passed 57/57 with `fallback_sum=56`, 824 JBR

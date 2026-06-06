@@ -38,6 +38,13 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel refreshed the full default screenshot parity suite after the command, compatibility, artifact, and Skiko
+  interop gates. The run was split into a 3-row `CASE_GROUPS=smoke` prefix and a resumed
+  `CASES_FROM=parity-skew-transform` tail so already-green smoke rows were not repeated. Combined result: 106/106
+  passed with `fallback_sum=11`, zero JBR picture frames, and 105,068 JBR command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260606-133617/suite.tsv`
+  and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260606-133836/suite.tsv`.
 - Magic Jewel refreshed the full compatibility matrix after the 522-row command-probe consolidation. No-run discovery
   still resolved 57 rows. The matrix passed 57/57 with `fallback_sum=56`, the happy path produced 824 JBR command
   frames, every forced ABI/capability/public-API mismatch produced exactly one structured fallback with no command
