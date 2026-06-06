@@ -38,6 +38,13 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel added `commands-color-shader-blend-mode` to prove the JBR-owned shader descriptor paint blend-mode replay
+  path at app level. The exact row passed with zero fallback, zero unsupported rows, zero picture frames, and 1,225
+  command frames while enforcing shader-handle lifecycle gates; the refreshed `CASE_GROUPS=shader-rendering`
+  discovery now resolves 18 rows and passed 18/18 with `fallback_sum=0`, ten intentional unsupported-picture rows from
+  raw/invalid shader fallback sentinels, 10,135 JBR picture frames, and 10,015 command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260606-172738/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260606-172840/suite.tsv`.
 - Magic Jewel added `commands-image-shader-blend-mode` to prove the image-shader rect paint blend-mode replay path at
   app level. The exact row passed with zero fallback, zero unsupported rows, zero picture frames, and 1,281 command
   frames; the refreshed `CASE_GROUPS=shader-rendering` discovery now resolves 17 rows and passed 17/17 with
