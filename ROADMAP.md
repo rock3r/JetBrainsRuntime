@@ -38,6 +38,22 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel added `commands-save-layer-blend-color-filter` to prove the public Compose plain `Canvas.saveLayer`
+  blend+color-filter path now records the existing combined saveLayer opcode at app level. No-run discovery now
+  resolves 531 default command-probe rows, `CASE_GROUPS=save-layer-shader-fallbacks` resolves 9 rows, and ungrouped
+  plus duplicate-case checks printed no rows. The exact row passed with zero fallback, zero unsupported rows, zero
+  picture frames, and 2,062 command frames; the adjacent group passed 9/9 with `fallback_sum=0`, six intentional
+  unsupported-picture rows, 6,195 JBR picture frames, and 4,079 command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260607-084917/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260607-111237/suite.tsv`.
+- CMP commit `f7bb15f788b` keeps plain saveLayer blend+color-filter combinations on command replay: direct tint
+  filters plus blend use `COMMAND_SAVE_LAYER_BLEND_COLOR_FILTER`, descriptor-backed color filters plus blend use
+  `COMMAND_SAVE_LAYER_BLEND_COLOR_FILTER_REF`, and supported descriptor filters without blend route through the
+  handle-backed saveLayer path. The focused two-test slice and full `JbrSkiaCommandRecorderTest` class both passed.
+- Magic Jewel completed a periodic full default command-probe consolidation after the blend sentinel batch. Discovery
+  resolved 530 default rows with no ungrouped or duplicate cases, and the sweep passed 530/530 with
+  `fallback_sum=350`, 62 intentional unsupported-picture rows, 67,344 JBR picture frames, and 171,452 command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260606-174336/suite.tsv`.
 - Magic Jewel added `commands-color-shader-blend-mode` to prove the JBR-owned shader descriptor paint blend-mode replay
   path at app level. The exact row passed with zero fallback, zero unsupported rows, zero picture frames, and 1,225
   command frames while enforcing shader-handle lifecycle gates; the refreshed `CASE_GROUPS=shader-rendering`

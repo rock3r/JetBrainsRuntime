@@ -5,6 +5,29 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel app-level saveLayer blend+color-filter checkpoint: added
+  `commands-save-layer-blend-color-filter`, enabled by
+  `MAGIC_JEWEL_COMPOSE_SAVELAYER_BLEND_COLOR_FILTER`, to draw a public Compose plain `Canvas.saveLayer` whose paint
+  has both `BlendMode.Plus` and a tint `ColorFilter`. This covers the CMP fix in commit `f7bb15f788b`, where direct
+  tint+blend saveLayer paints now emit `COMMAND_SAVE_LAYER_BLEND_COLOR_FILTER`, descriptor-backed
+  color-filter+blend paints emit `COMMAND_SAVE_LAYER_BLEND_COLOR_FILTER_REF`, and supported descriptor filters without
+  blend route through the handle-backed saveLayer path. CMP validation passed both the focused two-test slice and the
+  full `JbrSkiaCommandRecorderTest` class. Magic Jewel no-run discovery now reports 531 default command-probe rows,
+  9 `save-layer-shader-fallbacks` rows, no ungrouped rows, and no duplicate case names. Focused exact validation passed
+  1/1 with `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=2062`. The adjacent
+  `CASE_GROUPS=save-layer-shader-fallbacks` refresh passed 9/9 with `fallback_sum=0`, six intentional
+  unsupported-picture rows from raw saveLayer/shader fallback sentinels, 6,195 JBR picture frames, and 4,079 command
+  frames. Magic Jewel `out` stayed at 84G, and the volume had about 277Gi free after completion; an accidental
+  header-only unreferenced output directory from a mistaken duplicate-list flag was trimmed. Suites:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260607-084917/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260607-111237/suite.tsv`.
+- Magic Jewel completed a periodic full default command-probe consolidation after the app-level blend sentinel batch.
+  Discovery resolved 530 default rows with no ungrouped rows and no duplicate case names. The full sweep passed 530/530
+  with `fallback_sum=350`, 62 intentional unsupported-picture rows, 67,344 JBR picture frames, and 171,452 JBR command
+  frames. The run covered the newly added fill-rect color-filter, gradient, image, image-shader, and color-shader
+  blend-mode app sentinels while preserving the existing raw/invalid structural fallback rows. Magic Jewel `out` was
+  about 84G after the run and the volume had about 277Gi free at the next checkpoint. Suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260606-174336/suite.tsv`.
 - Magic Jewel app-level color-shader blend-mode checkpoint: added `commands-color-shader-blend-mode`, enabled by
   `MAGIC_JEWEL_COMPOSE_COLOR_SHADER_BLEND_MODE`, to draw a JBR-owned color-shader descriptor rect with
   `BlendMode.Plus`. No-run discovery passed for the exact row, `LIST_UNGROUPED_CASES=true` printed no rows, default

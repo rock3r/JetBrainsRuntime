@@ -12,6 +12,18 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 ## Current Snapshot
 
 - ABI 106 artifacts are current across JBR private API, JBR API mirror, Skiko, CMP, and Magic Jewel.
+- CMP commit `f7bb15f788b` closes the plain `Canvas.saveLayer` blend+color-filter escape. Direct tint saveLayer paints
+  with supported non-`SrcOver` blend modes now emit `COMMAND_SAVE_LAYER_BLEND_COLOR_FILTER`, descriptor-backed
+  color-filter paints with blend emit `COMMAND_SAVE_LAYER_BLEND_COLOR_FILTER_REF`, and supported descriptor filters
+  without blend route through the handle-backed saveLayer path. The focused two-test slice and full
+  `JbrSkiaCommandRecorderTest` class passed.
+- Magic Jewel now has a direct app-level `commands-save-layer-blend-color-filter` sentinel for that plain saveLayer
+  combined paint path. No-run discovery reports 531 default command-probe rows, no ungrouped rows, no duplicate case
+  names, and 9 `save-layer-shader-fallbacks` rows. The exact row passed with no fallback/picture frames; the adjacent
+  group passed 9/9 with supported saveLayer rows on command replay and raw saveLayer/shader rows falling back
+  intentionally:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260607-084917/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260607-111237/suite.tsv`.
 - CMP now keeps paint-level supported non-`SrcOver` blend modes for fill-rect color-filter commands on command replay,
   covering direct tint filters and handle-backed tint/color-matrix/lighting/descriptor filters through tight
   blend-mode layers around the existing native color-filter rect records.
@@ -105,9 +117,10 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   is understood, so already-green prefixes do not need to be repeated. The current fast loop is exact row, quick group
   or bounded adjacent range, Skiko focused publication, `JbrSkiaInteropTest`, and then a periodic full sweep once a
   coherent batch of sentinels has landed. The latest periodic default command-probe consolidation passed after the
-  focused invalid/supported refreshes: 522/522 passed, `fallback_sum=350`, `unsupported_rows=61`,
-  `picture_frames=81988`, and `command_frames=171971`:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260605-212906/suite.tsv`.
+  app-level blend sentinel batch: discovery resolved 530 default rows with no ungrouped or duplicate cases, and the
+  sweep passed 530/530 with `fallback_sum=350`, `unsupported_rows=62`, `picture_frames=67344`, and
+  `command_frames=171452`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260606-174336/suite.tsv`.
 - The latest compatibility matrix checkpoint passed after that command-probe consolidation: 57/57 rows,
   `fallback_sum=56`, 824 happy-path command frames, exact structured fallback for every forced
   ABI/capability/public-API mismatch, and background-window mode on every row:
