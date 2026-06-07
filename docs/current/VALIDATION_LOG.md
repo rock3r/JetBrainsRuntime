@@ -5,6 +5,21 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel app-level blend-layer bounds fallback checkpoint: added
+  `commands-invalid-blend-layer-bounds-fallback`, enabled by
+  `MAGIC_JEWEL_COMPOSE_INVALID_BLEND_LAYER_BOUNDS`, after the recorder unsupported-reason audit found that public
+  Compose can feed a non-finite primitive coordinate into CMP's ABI-neutral blend-layer wrapper when a supported
+  non-`SrcOver` blend mode is present. The row draws a `BlendMode.Plus` line with a non-finite start coordinate and
+  verifies the live `blendLayerBounds` unsupported reason before command replay. No-run discovery now reports 532
+  default command-probe rows, 14 `primitive-invalid` rows, no ungrouped rows, and no duplicate case names. Focused
+  exact validation passed 1/1 with `fallback_sum=0`, one unsupported-picture row
+  (`graphicsLayer:childCommands`, `blendLayerBounds`, `graphicsLayer`), 766 JBR picture frames, and zero command
+  frames. The adjacent `CASE_GROUPS=primitive-invalid` refresh passed 14/14 with `fallback_sum=13`, one
+  unsupported-picture row, 946 JBR picture frames, and zero command frames; the other 13 rows stayed on the expected
+  `command-stream-invalid` parser fallback path. Magic Jewel `out` stayed at 84G, and the volume had about 275Gi free
+  after completion. Suites:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260607-122501/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260607-122615/suite.tsv`.
 - Magic Jewel app-level saveLayer blend+color-filter checkpoint: added
   `commands-save-layer-blend-color-filter`, enabled by
   `MAGIC_JEWEL_COMPOSE_SAVELAYER_BLEND_COLOR_FILTER`, to draw a public Compose plain `Canvas.saveLayer` whose paint

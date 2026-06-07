@@ -12,6 +12,14 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 ## Current Snapshot
 
 - ABI 106 artifacts are current across JBR private API, JBR API mirror, Skiko, CMP, and Magic Jewel.
+- Magic Jewel now covers CMP's `blendLayerBounds` live fallback guard with
+  `commands-invalid-blend-layer-bounds-fallback`. Public Compose can feed a non-finite primitive coordinate into the
+  ABI-neutral blend-layer wrapper when a supported non-`SrcOver` blend mode is present; the new row proves CMP falls
+  back structurally before emitting command replay. No-run discovery reports 532 default command-probe rows, no
+  ungrouped rows, no duplicate case names, and 14 `primitive-invalid` rows. The exact row passed with the
+  `blendLayerBounds` unsupported reason, and the adjacent primitive-invalid group passed 14/14:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260607-122501/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260607-122615/suite.tsv`.
 - CMP commit `f7bb15f788b` closes the plain `Canvas.saveLayer` blend+color-filter escape. Direct tint saveLayer paints
   with supported non-`SrcOver` blend modes now emit `COMMAND_SAVE_LAYER_BLEND_COLOR_FILTER`, descriptor-backed
   color-filter paints with blend emit `COMMAND_SAVE_LAYER_BLEND_COLOR_FILTER_REF`, and supported descriptor filters

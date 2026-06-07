@@ -38,6 +38,15 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel added `commands-invalid-blend-layer-bounds-fallback` after the recorder unsupported-reason audit found
+  public non-finite primitive coordinates can reach CMP's ABI-neutral blend-layer wrapper. The row draws a
+  `BlendMode.Plus` line with a non-finite start coordinate and proves CMP reports `blendLayerBounds` before emitting an
+  incomplete command stream. No-run discovery now resolves 532 default rows, `CASE_GROUPS=primitive-invalid` resolves
+  14 rows, and ungrouped plus duplicate-case checks printed no rows. The exact row passed with one unsupported-picture
+  row, 766 JBR picture frames, and zero command frames; the adjacent primitive-invalid group passed 14/14 with
+  `fallback_sum=13`, one unsupported-picture row, 946 JBR picture frames, and zero command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260607-122501/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260607-122615/suite.tsv`.
 - Magic Jewel added `commands-save-layer-blend-color-filter` to prove the public Compose plain `Canvas.saveLayer`
   blend+color-filter path now records the existing combined saveLayer opcode at app level. No-run discovery now
   resolves 531 default command-probe rows, `CASE_GROUPS=save-layer-shader-fallbacks` resolves 9 rows, and ungrouped
