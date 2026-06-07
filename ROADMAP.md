@@ -38,6 +38,15 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel added `commands-invalid-point-dots-fallback` after the recorder unsupported-reason audit found public
+  `Canvas.drawPoints(PointMode.Points, ...)` can reach CMP's live non-finite point-coordinate guard. The row feeds one
+  `Float.NaN` point through the public point-dots path and proves CMP reports `points` before command replay. No-run
+  discovery now resolves 533 default rows, `CASE_GROUPS=primitive-invalid` resolves 15 rows, and ungrouped plus
+  duplicate-case checks printed no rows. The exact row passed with one unsupported-picture row, 852 JBR picture frames,
+  and zero command frames; the adjacent primitive-invalid group passed 15/15 with `fallback_sum=13`, two
+  unsupported-picture rows, 2,115 JBR picture frames, and zero command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260607-154421/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260607-154533/suite.tsv`.
 - Magic Jewel added `commands-invalid-blend-layer-bounds-fallback` after the recorder unsupported-reason audit found
   public non-finite primitive coordinates can reach CMP's ABI-neutral blend-layer wrapper. The row draws a
   `BlendMode.Plus` line with a non-finite start coordinate and proves CMP reports `blendLayerBounds` before emitting an

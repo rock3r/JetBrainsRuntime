@@ -5,6 +5,21 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel app-level invalid point-dots fallback checkpoint: added `commands-invalid-point-dots-fallback`, enabled by
+  `MAGIC_JEWEL_COMPOSE_INVALID_POINT_DOTS`, after the recorder unsupported-reason audit found that public Compose can
+  feed a non-finite point into CMP's `drawPoints` guard. The row uses `Canvas.drawPoints(PointMode.Points, ...)` with
+  one `Float.NaN` coordinate and verifies the live `points` unsupported reason before command replay. No-run discovery
+  now reports 533 default command-probe rows, 15 `primitive-invalid` rows, no ungrouped rows, and no duplicate case
+  names. Focused exact validation passed 1/1 with `fallback_sum=0`, one unsupported-picture row
+  (`points`, `graphicsLayer:childCommands`, `graphicsLayer`), 852 JBR picture frames, and zero command frames. The
+  adjacent `CASE_GROUPS=primitive-invalid` refresh passed 15/15 with `fallback_sum=13`, two unsupported-picture rows,
+  2,115 JBR picture frames, and zero command frames; the two unsupported rows are the live `points` and
+  `blendLayerBounds` guards, while the other 13 rows stay on the expected command-stream-invalid parser fallback path.
+  Magic Jewel `out` stayed at 84G, the exact run was 3.5M, the group run was 45M, and the volume had about 277Gi free
+  after completion. One sandboxed preflight attempt failed before app startup because Gradle could not write its
+  `~/.gradle` lock file; its unreferenced 64K output directory was removed. Suites:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260607-154421/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260607-154533/suite.tsv`.
 - Magic Jewel app-level blend-layer bounds fallback checkpoint: added
   `commands-invalid-blend-layer-bounds-fallback`, enabled by
   `MAGIC_JEWEL_COMPOSE_INVALID_BLEND_LAYER_BOUNDS`, after the recorder unsupported-reason audit found that public
