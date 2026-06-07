@@ -38,6 +38,15 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel added `commands-vertices-invalid-blend-mode-fallback` after the recorder unsupported-reason audit found
+  public `Canvas.drawVertices(..., BlendMode.Clear, ...)` can reach CMP's dynamic unsupported blend-mode guard. The
+  row proves CMP reports `blendMode_Clear` and the public `vertices` fallback before command replay. No-run discovery
+  now resolves 535 default rows, `CASE_GROUPS=blend-mode-invalid` resolves 3 rows, and ungrouped plus duplicate-case
+  checks printed no rows. The exact row passed with one unsupported-picture row, 972 JBR picture frames, and zero
+  command frames; the adjacent blend-mode-invalid group passed 3/3 with `fallback_sum=2`, one unsupported-picture row,
+  1,683 JBR picture frames, and zero command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260607-193518/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260607-193626/suite.tsv`.
 - Magic Jewel added `commands-invalid-concat-transform-fallback` after the recorder unsupported-reason audit found
   public `Canvas.concat(Matrix)` can reach CMP's live non-finite transform guard. The row feeds a `Float.NaN`
   translation through the public concat path and proves CMP reports `transform` before command replay. No-run discovery

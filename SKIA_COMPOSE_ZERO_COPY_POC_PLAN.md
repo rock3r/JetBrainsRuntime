@@ -12,6 +12,14 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 ## Current Snapshot
 
 - ABI 106 artifacts are current across JBR private API, JBR API mirror, Skiko, CMP, and Magic Jewel.
+- Magic Jewel now covers the live dynamic `blendMode_Clear` fallback guard with
+  `commands-vertices-invalid-blend-mode-fallback`. Public Compose can feed `BlendMode.Clear` into
+  `Canvas.drawVertices`; the new row proves CMP falls back structurally before emitting command replay. No-run
+  discovery reports 535 default command-probe rows, no ungrouped rows, no duplicate case names, and 3
+  `blend-mode-invalid` rows. The exact row passed with the `blendMode_Clear` unsupported reason, and the adjacent
+  blend-mode-invalid group passed 3/3:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260607-193518/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260607-193626/suite.tsv`.
 - Magic Jewel now covers CMP's `transform` live fallback guard with `commands-invalid-concat-transform-fallback`.
   Public Compose can feed a non-finite matrix value into `Canvas.concat(Matrix)`; the new row proves CMP falls back
   structurally before emitting command replay. No-run discovery reports 534 default command-probe rows, no ungrouped

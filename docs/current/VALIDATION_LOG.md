@@ -5,6 +5,21 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel app-level invalid vertices blend-mode fallback checkpoint: added
+  `commands-vertices-invalid-blend-mode-fallback`, enabled by
+  `MAGIC_JEWEL_COMPOSE_VERTICES_INVALID_BLEND_MODE`, after the recorder unsupported-reason audit found that public
+  Compose can feed `BlendMode.Clear` into CMP's `drawVertices` blend-mode guard. The row uses
+  `Canvas.drawVertices(..., BlendMode.Clear, ...)` and verifies the live `blendMode_Clear` unsupported reason before
+  command replay. No-run discovery now reports 535 default command-probe rows, 3 `blend-mode-invalid` rows, no
+  ungrouped rows, and no duplicate case names. Focused exact validation passed 1/1 with `fallback_sum=0`, one
+  unsupported-picture row (`graphicsLayer:childCommands`, `vertices`, `blendMode_Clear`, `graphicsLayer`), 972 JBR
+  picture frames, and zero command frames. The adjacent `CASE_GROUPS=blend-mode-invalid` refresh passed 3/3 with
+  `fallback_sum=2`, one unsupported-picture row, 1,683 JBR picture frames, and zero command frames; the other two rows
+  stay on the expected command-stream-invalid parser fallback path for fill-rect blend-mode width/height bounds. Magic
+  Jewel `out` stayed at 84G, the exact run was 3.8M, the group run was 9.9M, and the volume had about 275Gi free after
+  completion. Suites:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260607-193518/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260607-193626/suite.tsv`.
 - Magic Jewel app-level invalid concat transform fallback checkpoint: added
   `commands-invalid-concat-transform-fallback`, enabled by
   `MAGIC_JEWEL_COMPOSE_INVALID_CONCAT_TRANSFORM`, after the recorder unsupported-reason audit found that public
