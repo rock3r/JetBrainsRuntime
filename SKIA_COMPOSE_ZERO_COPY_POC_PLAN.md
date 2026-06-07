@@ -12,6 +12,13 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 ## Current Snapshot
 
 - ABI 106 artifacts are current across JBR private API, JBR API mirror, Skiko, CMP, and Magic Jewel.
+- Magic Jewel now covers CMP's `transform` live fallback guard with `commands-invalid-concat-transform-fallback`.
+  Public Compose can feed a non-finite matrix value into `Canvas.concat(Matrix)`; the new row proves CMP falls back
+  structurally before emitting command replay. No-run discovery reports 534 default command-probe rows, no ungrouped
+  rows, no duplicate case names, and 16 `primitive-invalid` rows. The exact row passed with the `transform`
+  unsupported reason, and the adjacent primitive-invalid group passed 16/16:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260607-160032/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260607-160142/suite.tsv`.
 - Magic Jewel now covers CMP's `points` live fallback guard with `commands-invalid-point-dots-fallback`. Public
   Compose can feed a non-finite point into `Canvas.drawPoints(PointMode.Points, ...)`; the new row proves CMP falls
   back structurally before emitting command replay. No-run discovery reports 533 default command-probe rows, no

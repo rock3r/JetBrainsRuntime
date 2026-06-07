@@ -38,6 +38,15 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel added `commands-invalid-concat-transform-fallback` after the recorder unsupported-reason audit found
+  public `Canvas.concat(Matrix)` can reach CMP's live non-finite transform guard. The row feeds a `Float.NaN`
+  translation through the public concat path and proves CMP reports `transform` before command replay. No-run discovery
+  now resolves 534 default rows, `CASE_GROUPS=primitive-invalid` resolves 16 rows, and ungrouped plus duplicate-case
+  checks printed no rows. The exact row passed with one unsupported-picture row, 963 JBR picture frames, and zero
+  command frames; the adjacent primitive-invalid group passed 16/16 with `fallback_sum=13`, three unsupported-picture
+  rows, 3,043 JBR picture frames, and zero command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260607-160032/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260607-160142/suite.tsv`.
 - Magic Jewel added `commands-invalid-point-dots-fallback` after the recorder unsupported-reason audit found public
   `Canvas.drawPoints(PointMode.Points, ...)` can reach CMP's live non-finite point-coordinate guard. The row feeds one
   `Float.NaN` point through the public point-dots path and proves CMP reports `points` before command replay. No-run

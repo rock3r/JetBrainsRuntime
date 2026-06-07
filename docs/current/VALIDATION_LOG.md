@@ -5,6 +5,21 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel app-level invalid concat transform fallback checkpoint: added
+  `commands-invalid-concat-transform-fallback`, enabled by
+  `MAGIC_JEWEL_COMPOSE_INVALID_CONCAT_TRANSFORM`, after the recorder unsupported-reason audit found that public
+  Compose can feed a non-finite matrix value into CMP's `concat` guard. The row uses `Canvas.concat(Matrix)` with a
+  `Float.NaN` translation and verifies the live `transform` unsupported reason before command replay. No-run discovery
+  now reports 534 default command-probe rows, 16 `primitive-invalid` rows, no ungrouped rows, and no duplicate case
+  names. Focused exact validation passed 1/1 with `fallback_sum=0`, one unsupported-picture row
+  (`unsupportedScope`, `graphicsLayer:childCommands`, `transform`, `graphicsLayer`), 963 JBR picture frames, and zero
+  command frames. The adjacent `CASE_GROUPS=primitive-invalid` refresh passed 16/16 with `fallback_sum=13`, three
+  unsupported-picture rows, 3,043 JBR picture frames, and zero command frames; the three unsupported rows are the live
+  `blendLayerBounds`, `transform`, and `points` guards, while the other 13 rows stay on the expected
+  command-stream-invalid parser fallback path. Magic Jewel `out` stayed at 84G, the exact run was 3.6M, the group run
+  was 55M, and the volume had about 275Gi free after completion. Suites:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260607-160032/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260607-160142/suite.tsv`.
 - Magic Jewel app-level invalid point-dots fallback checkpoint: added `commands-invalid-point-dots-fallback`, enabled by
   `MAGIC_JEWEL_COMPOSE_INVALID_POINT_DOTS`, after the recorder unsupported-reason audit found that public Compose can
   feed a non-finite point into CMP's `drawPoints` guard. The row uses `Canvas.drawPoints(PointMode.Points, ...)` with
