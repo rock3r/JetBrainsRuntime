@@ -12,6 +12,10 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 ## Current Snapshot
 
 - ABI 106 artifacts are current across JBR private API, JBR API mirror, Skiko, CMP, and Magic Jewel.
+- CMP's nested graphics-layer child stream guards are now explicitly covered in focused strict-mode recorder tests.
+  The audit classified `graphicsLayer:childCommands`, `graphicsLayer:childUnsupported`,
+  `graphicsLayer:childHeaderSize`, and `graphicsLayer:childHeader` as internal nested-recording integrity guards rather
+  than public app command shapes, and the focused `JbrSkiaCommandRecorderTest` class passed after adding the coverage.
 - Magic Jewel now has public app-level sentinels for all three live gradient geometry guards covered by the CMP
   invalid-geometry factory hardening: linear points, radial radius geometry, and sweep center geometry. Discovery now
   reports 538 default command-probe rows, `gradient-geometry-invalid` 3, and `gradient-invalid` 72. The exact

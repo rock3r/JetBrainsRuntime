@@ -38,6 +38,10 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- CMP now has focused strict-mode unit coverage for the nested graphics-layer child stream integrity guards:
+  `graphicsLayer:childCommands`, `graphicsLayer:childUnsupported`, `graphicsLayer:childHeaderSize`, and
+  `graphicsLayer:childHeader`. These are internal nested-recording corruption/unsupported-child guards, not separate
+  public app command shapes. The focused `JbrSkiaCommandRecorderTest` class passed after adding the coverage.
 - Magic Jewel added the radial/sweep public companions for the invalid-gradient-geometry fallback checkpoint:
   `commands-radial-gradient-invalid-geometry-fallback`, `commands-sweep-gradient-invalid-geometry-fallback`, and a
   compact `gradient-geometry-invalid` quick group. Discovery now resolves 538 default command-probe rows and

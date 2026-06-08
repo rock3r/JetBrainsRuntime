@@ -5,6 +5,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- CMP nested graphics-layer child stream integrity audit: the remaining `graphicsLayer:childCommands`,
+  `graphicsLayer:childUnsupported`, `graphicsLayer:childHeaderSize`, and `graphicsLayer:childHeader` unsupported
+  reasons are internal nested-recording integrity guards rather than public app command shapes. Added focused
+  strict-mode recorder tests that construct missing, unsupported, short-header, and mismatched-header child recordings
+  and prove layer replay rejects them before emitting a command stream. Focused CMP validation passed:
+  `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests
+  androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest`.
 - Magic Jewel completed the radial/sweep companion live-gradient geometry checkpoint after the CMP invalid-geometry
   shader-factory fix. Added `commands-radial-gradient-invalid-geometry-fallback` and
   `commands-sweep-gradient-invalid-geometry-fallback`, enabled by
