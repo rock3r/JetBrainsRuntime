@@ -38,6 +38,10 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel refreshed the focused `path-invalid` command-probe group after the native-text invalid slice. The group
+  passed 24/24 with `fallback_sum=22`, two unsupported-picture rows from live `clipPath`/`path` sentinels, 1,805
+  picture frames, and zero command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260608-214338/suite.tsv`.
 - Magic Jewel refreshed the focused `native-text-invalid` command-probe group after the graphics-layer child stream
   guard audit. The group passed 11/11 with `fallback_sum=11`, zero unsupported rows, zero picture frames, and 1,165
   command frames:
