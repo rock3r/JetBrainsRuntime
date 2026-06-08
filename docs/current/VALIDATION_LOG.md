@@ -5,6 +5,11 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel refreshed the focused `native-text-invalid` command-probe group after the unsupported-reason audit moved
+  past graphics-layer child stream guards. The no-run group still resolves 11 rows covering text/paragraph font scalar
+  bounds plus invalid font-data record flags. Focused validation passed 11/11 with `fallback_sum=11`, zero unsupported
+  rows, zero JBR picture frames, and 1,165 JBR command frames from the font-data record-flags row:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260608-194120/suite.tsv`.
 - CMP nested graphics-layer child stream integrity audit: the remaining `graphicsLayer:childCommands`,
   `graphicsLayer:childUnsupported`, `graphicsLayer:childHeaderSize`, and `graphicsLayer:childHeader` unsupported
   reasons are internal nested-recording integrity guards rather than public app command shapes. Added focused

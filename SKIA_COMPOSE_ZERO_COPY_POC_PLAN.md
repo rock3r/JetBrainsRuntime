@@ -12,6 +12,9 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 ## Current Snapshot
 
 - ABI 106 artifacts are current across JBR private API, JBR API mirror, Skiko, CMP, and Magic Jewel.
+- The focused `native-text-invalid` command-probe group refreshed cleanly after the current unsupported-reason audit:
+  11/11 passed with `fallback_sum=11`, zero unsupported rows, zero picture frames, and 1,165 command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260608-194120/suite.tsv`.
 - CMP's nested graphics-layer child stream guards are now explicitly covered in focused strict-mode recorder tests.
   The audit classified `graphicsLayer:childCommands`, `graphicsLayer:childUnsupported`,
   `graphicsLayer:childHeaderSize`, and `graphicsLayer:childHeader` as internal nested-recording integrity guards rather

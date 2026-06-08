@@ -38,6 +38,10 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel refreshed the focused `native-text-invalid` command-probe group after the graphics-layer child stream
+  guard audit. The group passed 11/11 with `fallback_sum=11`, zero unsupported rows, zero picture frames, and 1,165
+  command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260608-194120/suite.tsv`.
 - CMP now has focused strict-mode unit coverage for the nested graphics-layer child stream integrity guards:
   `graphicsLayer:childCommands`, `graphicsLayer:childUnsupported`, `graphicsLayer:childHeaderSize`, and
   `graphicsLayer:childHeader`. These are internal nested-recording corruption/unsupported-child guards, not separate
