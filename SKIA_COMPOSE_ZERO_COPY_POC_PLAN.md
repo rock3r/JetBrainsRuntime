@@ -12,6 +12,12 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 ## Current Snapshot
 
 - ABI 106 artifacts are current across JBR private API, JBR API mirror, Skiko, CMP, and Magic Jewel.
+- The latest 535-row default command-probe consolidation is green as a split run: a 403-row prefix, a 10-row resumed
+  descriptor chunk, an exact forced-context color-shader descriptor rerun after Magic Jewel report-parser hardening,
+  and a 121-row suffix together passed 535/535 with `fallback_sum=350`, 65 unsupported-picture rows, 74,635 JBR
+  picture frames, and 193,776 JBR command frames. The split was needed because stale `/tmp` local JBR artifacts first
+  caused command-canvas `service-unavailable`, then an interleaved log token `unsupported=6ecc00` exposed an overly
+  permissive numeric parser in the Magic Jewel report harness.
 - Magic Jewel now covers the live dynamic `blendMode_Clear` fallback guard with
   `commands-vertices-invalid-blend-mode-fallback`. Public Compose can feed `BlendMode.Clear` into
   `Canvas.drawVertices`; the new row proves CMP falls back structurally before emitting command replay. No-run

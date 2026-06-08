@@ -5,6 +5,25 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel completed the 535-row default command-probe consolidation as a split sweep after the first broad run
+  reached `commands-color-filter-blend-mode` with stale local `/tmp` JBR artifacts. The interrupted prefix had already
+  appended 403/403 passing rows in
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260607-194343/suite.tsv`
+  (`fallback_sum=304`, 37 unsupported-picture rows, 42,095 JBR picture frames, 105,899 JBR command frames). Rebuilding
+  `/tmp/jbr-api-shim.jar`, `/tmp/jbr-skia-run/desktop`, and `/tmp/jbr-skia-native/libjbrskiainterop.dylib` restored
+  command-canvas acquisition; exact `commands-core-primitives` then passed with 1,172 command frames, and exact
+  `commands-color-filter-blend-mode` passed with 932 command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260608-090946/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260608-091045/suite.tsv`.
+  The resumed descriptor tail first passed 10 rows before a concurrent log-write interleave produced a malformed
+  `unsupported=6ecc00` token in `commands-forced-context-color-shader-descriptor-redefine`; Magic Jewel now ignores
+  non-decimal recorder field values when computing max numeric recorder fields. The exact forced-context color-shader
+  row then passed with 1,476 command frames, and the remaining 121-row suffix passed. Combined split consolidation:
+  535/535 passed, `fallback_sum=350`, 65 unsupported-picture rows, 74,635 JBR picture frames, and 193,776 JBR command
+  frames. Tail suites:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260608-091146/suite.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260608-092405/suite.tsv`, and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260608-092509/suite.tsv`.
 - Magic Jewel app-level invalid vertices blend-mode fallback checkpoint: added
   `commands-vertices-invalid-blend-mode-fallback`, enabled by
   `MAGIC_JEWEL_COMPOSE_VERTICES_INVALID_BLEND_MODE`, after the recorder unsupported-reason audit found that public

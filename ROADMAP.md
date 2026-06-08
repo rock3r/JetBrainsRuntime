@@ -38,6 +38,17 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel completed the 535-row default command-probe consolidation as a split run after stale `/tmp` local JBR
+  artifacts caused command-canvas `service-unavailable` in the first broad sweep. Rebuilding the local API shim,
+  desktop patch, and native bridge restored command replay; Magic Jewel also hardened the report parser so interleaved
+  log tokens such as `unsupported=6ecc00` are not treated as numeric unsupported counts. Combined split result:
+  535/535 passed, `fallback_sum=350`, 65 unsupported-picture rows, 74,635 JBR picture frames, and 193,776 JBR command
+  frames across:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260607-194343/suite.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260608-091146/suite.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260608-092405/suite.tsv`,
+  and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260608-092509/suite.tsv`.
 - Magic Jewel added `commands-vertices-invalid-blend-mode-fallback` after the recorder unsupported-reason audit found
   public `Canvas.drawVertices(..., BlendMode.Clear, ...)` can reach CMP's dynamic unsupported blend-mode guard. The
   row proves CMP reports `blendMode_Clear` and the public `vertices` fallback before command replay. No-run discovery
