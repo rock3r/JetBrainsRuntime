@@ -5,6 +5,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel no-run command-probe discovery remains tidy after the focused invalid-slice refreshes: 538 default rows,
+  no ungrouped rows, and no duplicate case names. The one-row `image-shader-invalid` quick group
+  (`commands-image-shader-invalid-image-fallback`) also passed 1/1 with `imageShaderImage` plus parent graphics-layer
+  unsupported reasons, 1,109 JBR picture frames, and zero command frames. The output directory is 3.8M; Magic Jewel
+  `out` is 87G with about 279Gi free:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260608-221233/suite.tsv`.
 - Magic Jewel refreshed the focused `path-invalid` command-probe group as the next medium invalid parser/live fallback
   slice. The group still resolves 24 rows, covering public invalid clip/draw paths, direct malformed path verbs,
   dashed path-effect geometry/style/payload bounds, and invalid draw-shadow path data. Focused validation passed 24/24
