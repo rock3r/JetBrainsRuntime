@@ -38,6 +38,10 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel refreshed the focused `primitive-invalid` command-probe group. The group passed 16/16 with
+  `fallback_sum=13`, three unsupported-picture rows from live `blendLayerBounds`/`transform`/`points` sentinels, 3,189
+  picture frames, and zero command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260608-222055/suite.tsv`.
 - Magic Jewel no-run discovery still reports 538 default command-probe rows with no ungrouped or duplicate cases. The
   one-row `image-shader-invalid` quick group also passed with `imageShaderImage`, one unsupported-picture row, 1,109
   picture frames, and zero command frames:
