@@ -5,6 +5,19 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel completed the radial/sweep companion live-gradient geometry checkpoint after the CMP invalid-geometry
+  shader-factory fix. Added `commands-radial-gradient-invalid-geometry-fallback` and
+  `commands-sweep-gradient-invalid-geometry-fallback`, enabled by
+  `MAGIC_JEWEL_COMPOSE_INVALID_RADIAL_GRADIENT_GEOMETRY` and
+  `MAGIC_JEWEL_COMPOSE_INVALID_SWEEP_GRADIENT_GEOMETRY`, plus a compact `gradient-geometry-invalid` quick group
+  covering linear/radial/sweep geometry guards. No-run discovery now reports 538 default command-probe rows,
+  `gradient-geometry-invalid` 3 rows, and `gradient-invalid` 72 rows, with no ungrouped or duplicate default cases.
+  The exact radial/sweep slice passed 2/2 with `radialGradientGeometry` and `sweepGradientGeometry`, two
+  unsupported-picture rows, 1,776 JBR picture frames, and zero command frames. The compact geometry group passed 3/3
+  with `fallback_sum=0`, three unsupported-picture rows, 3,535 JBR picture frames, and zero command frames. Magic
+  Jewel `out` stayed at 86G with about 262Gi free. Suites:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260608-173150/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260608-173634/suite.tsv`.
 - CMP/Magic Jewel invalid linear-gradient points checkpoint: public Compose `Brush.linearGradient` with a non-finite
   point previously hit Skia's null shader path before the JBR command recorder could report CMP's
   `linearGradientPoints` guard. CMP now creates a harmless solid fallback Skia shader for invalid linear/radial/sweep

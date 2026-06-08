@@ -12,6 +12,13 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 ## Current Snapshot
 
 - ABI 106 artifacts are current across JBR private API, JBR API mirror, Skiko, CMP, and Magic Jewel.
+- Magic Jewel now has public app-level sentinels for all three live gradient geometry guards covered by the CMP
+  invalid-geometry factory hardening: linear points, radial radius geometry, and sweep center geometry. Discovery now
+  reports 538 default command-probe rows, `gradient-geometry-invalid` 3, and `gradient-invalid` 72. The exact
+  radial/sweep geometry slice passed 2/2 with zero command frames, and the compact linear/radial/sweep geometry group
+  passed 3/3 with zero command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260608-173150/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260608-173634/suite.tsv`.
 - Public invalid gradient geometry no longer escapes as a Skia shader-construction crash before recorder fallback.
   CMP's Skiko linear/radial/sweep gradient factories now preserve JBR metadata while using a harmless solid Skia shader
   for invalid geometry, so strict recording reports `linearGradientPoints`/geometry unsupported reasons and falls back

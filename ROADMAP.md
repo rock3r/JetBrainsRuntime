@@ -38,6 +38,13 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel added the radial/sweep public companions for the invalid-gradient-geometry fallback checkpoint:
+  `commands-radial-gradient-invalid-geometry-fallback`, `commands-sweep-gradient-invalid-geometry-fallback`, and a
+  compact `gradient-geometry-invalid` quick group. Discovery now resolves 538 default command-probe rows and
+  `gradient-invalid` 72 rows. The exact radial/sweep slice passed 2/2 with zero command frames, and the compact
+  linear/radial/sweep geometry group passed 3/3 with zero command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260608-173150/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260608-173634/suite.tsv`.
 - CMP and Magic Jewel now cover public invalid linear-gradient geometry without an EDT crash. CMP's Skiko gradient
   factories keep JBR metadata while substituting a harmless solid Skia shader for invalid linear/radial/sweep geometry,
   letting strict recording report `linearGradientPoints`/geometry guards and fall back structurally. The focused
