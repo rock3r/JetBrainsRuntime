@@ -38,6 +38,14 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- CMP and Magic Jewel now cover public invalid linear-gradient geometry without an EDT crash. CMP's Skiko gradient
+  factories keep JBR metadata while substituting a harmless solid Skia shader for invalid linear/radial/sweep geometry,
+  letting strict recording report `linearGradientPoints`/geometry guards and fall back structurally. The focused
+  `JbrSkiaCommandRecorderTest` class passed, Magic Jewel discovery now resolves 536 default command-probe rows, and
+  the new exact `commands-linear-gradient-invalid-points-fallback` plus adjacent `gradient-stop-invalid` quick group
+  passed with zero command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260608-152702/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260608-162415/suite.tsv`.
 - Magic Jewel completed the 535-row default command-probe consolidation as a split run after stale `/tmp` local JBR
   artifacts caused command-canvas `service-unavailable` in the first broad sweep. Rebuilding the local API shim,
   desktop patch, and native bridge restored command replay; Magic Jewel also hardened the report parser so interleaved

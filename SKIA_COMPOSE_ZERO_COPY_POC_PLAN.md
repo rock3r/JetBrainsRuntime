@@ -12,6 +12,15 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 ## Current Snapshot
 
 - ABI 106 artifacts are current across JBR private API, JBR API mirror, Skiko, CMP, and Magic Jewel.
+- Public invalid gradient geometry no longer escapes as a Skia shader-construction crash before recorder fallback.
+  CMP's Skiko linear/radial/sweep gradient factories now preserve JBR metadata while using a harmless solid Skia shader
+  for invalid geometry, so strict recording reports `linearGradientPoints`/geometry unsupported reasons and falls back
+  structurally. Magic Jewel added the live `commands-linear-gradient-invalid-points-fallback` row; no-run discovery now
+  reports 536 default command-probe rows, `gradient-stop-invalid` 4, and `gradient-invalid` 70. The exact row passed
+  with `linearGradientPoints`, one unsupported-picture row, 976 picture frames, and zero command frames; the adjacent
+  `gradient-stop-invalid` quick group passed 4/4 with zero command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260608-152702/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260608-162415/suite.tsv`.
 - The latest 535-row default command-probe consolidation is green as a split run: a 403-row prefix, a 10-row resumed
   descriptor chunk, an exact forced-context color-shader descriptor rerun after Magic Jewel report-parser hardening,
   and a 121-row suffix together passed 535/535 with `fallback_sum=350`, 65 unsupported-picture rows, 74,635 JBR

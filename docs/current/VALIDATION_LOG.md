@@ -5,6 +5,25 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- CMP/Magic Jewel invalid linear-gradient points checkpoint: public Compose `Brush.linearGradient` with a non-finite
+  point previously hit Skia's null shader path before the JBR command recorder could report CMP's
+  `linearGradientPoints` guard. CMP now creates a harmless solid fallback Skia shader for invalid linear/radial/sweep
+  gradient geometry while preserving the JBR gradient metadata, so strict command recording can reject the stream
+  structurally instead of throwing on the EDT. Focused CMP validation passed:
+  `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests
+  androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest`, including new strict-mode tests for invalid linear,
+  radial, and sweep geometry. The updated `ui-graphics-desktop` artifact was published to Maven local; the follow-on
+  metadata publication attempt reached the iOS cinterop path and failed because this host has no `xcodebuild`, after
+  the desktop publication had already completed. Magic Jewel added
+  `commands-linear-gradient-invalid-points-fallback`, enabled by
+  `MAGIC_JEWEL_COMPOSE_INVALID_LINEAR_GRADIENT_POINTS`, and refreshed no-run discovery to 536 default command-probe
+  rows, `gradient-stop-invalid` 4 rows, and `gradient-invalid` 70 rows. The exact row passed with
+  `linearGradientPoints`, one unsupported-picture row, 976 JBR picture frames, and zero command frames. The adjacent
+  `CASE_GROUPS=gradient-stop-invalid` refresh passed 4/4 with `fallback_sum=0`, four unsupported-picture rows, 4,093
+  JBR picture frames, and zero command frames. The failed pre-fix NaN exception-storm output directory was trimmed as
+  unreferenced; passing suites:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260608-152702/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260608-162415/suite.tsv`.
 - Magic Jewel completed the 535-row default command-probe consolidation as a split sweep after the first broad run
   reached `commands-color-filter-blend-mode` with stale local `/tmp` JBR artifacts. The interrupted prefix had already
   appended 403/403 passing rows in
