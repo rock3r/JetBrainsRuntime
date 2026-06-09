@@ -12,6 +12,14 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 ## Current Snapshot
 
 - ABI 106 artifacts are current across JBR private API, JBR API mirror, Skiko, CMP, and Magic Jewel.
+- Magic Jewel now covers the public low-level canvas paths for the three gradient stroke-round-rect radius fallback
+  guards. Exact `commands-linear-gradient-stroke-round-rect-invalid-radius-fallback` passed first, then
+  `gradient-stroke-round-rect-radius-invalid` passed 3/3 with family-specific unsupported reasons and zero command
+  frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260609-231026/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260609-231339/suite.tsv`.
+  The unsupported-reason audit is now narrowed to dynamic/internal/defensive candidates rather than obviously missing
+  public gradient-shape rows.
 - Magic Jewel now covers the public low-level canvas paths for gradient stroke-width and round-rect-radius fallback
   guards. Added six public sentinels across linear/radial/sweep families; exact linear radius and stroke-width rows
   passed first, then `gradient-round-rect-radius-invalid` and `gradient-stroke-width-invalid` each passed 3/3 with

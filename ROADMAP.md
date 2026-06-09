@@ -38,6 +38,15 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel added and validated public low-level canvas sentinels for the three gradient stroke-round-rect radius
+  guards. Exact linear validation passed first, then `gradient-stroke-round-rect-radius-invalid` passed 3/3 with
+  `linearGradientStrokeRoundRectRadius`, `radialGradientStrokeRoundRectRadius`, and
+  `sweepGradientStrokeRoundRectRadius`, all on unsupported-picture fallback with zero command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260609-231026/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260609-231339/suite.tsv`.
+  The remaining unsupported-reason mismatch list is now down to dynamic/internal/defensive candidates:
+  `blendMode_${blendMode.toReasonToken()}`, graphics-layer child/header/shadow internals, gradient path-paint shadows,
+  `roundRectStyle`, and `unsupportedScope`.
 - Magic Jewel now has public app-level low-level canvas sentinels for gradient stroke-width and round-rect-radius
   fallback guards. Exact linear-gradient radius and stroke-width rows passed, then the compact
   `gradient-round-rect-radius-invalid` and `gradient-stroke-width-invalid` groups passed 3/3 each with family-specific
