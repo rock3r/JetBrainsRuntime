@@ -38,6 +38,9 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel refreshed the focused `graphics-layer-invalid` command-probe group. The group passed 15/15 with zero
+  command frames across invalid size, transform scalar, camera, shadow, blend, and unrecorded-layer fallbacks:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260609-082414/suite.tsv`.
 - Magic Jewel refreshed the focused `primitive-invalid` command-probe group. The group passed 16/16 with
   `fallback_sum=13`, three unsupported-picture rows from live `blendLayerBounds`/`transform`/`points` sentinels, 3,189
   picture frames, and zero command frames:

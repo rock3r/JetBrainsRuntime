@@ -5,6 +5,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel refreshed the focused `graphics-layer-invalid` command-probe group after the primitive invalid slice. The
+  group still resolves 15 rows covering invalid size, alpha, transform scalars, camera distance, shadow elevation,
+  shadow path, blend mode, and unrecorded layer fallback. Focused validation passed 15/15 with `fallback_sum=0`, 15
+  intentional unsupported-picture rows, 16,327 JBR picture frames, and zero command frames. The output directory is
+  56M; Magic Jewel `out` is 87G with about 279Gi free:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260609-082414/suite.tsv`.
 - Magic Jewel refreshed the focused `primitive-invalid` command-probe group after the path and image-shader invalid
   slices. The group still resolves 16 rows covering live primitive fallback guards (`blendLayerBounds`, `transform`,
   and `points`) plus draw-points/draw-vertices parser bounds. Focused validation passed 16/16 with `fallback_sum=13`,
