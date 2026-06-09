@@ -38,6 +38,9 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel refreshed the focused `gradient-color-count-invalid` command-probe group. The group passed 3/3 with live
+  linear/radial/sweep gradient color-count unsupported-picture fallbacks and zero command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260609-090205/suite.tsv`.
 - Magic Jewel refreshed the focused `graphics-layer-invalid` command-probe group. The group passed 15/15 with zero
   command frames across invalid size, transform scalar, camera, shadow, blend, and unrecorded-layer fallbacks:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260609-082414/suite.tsv`.
