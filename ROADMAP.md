@@ -38,6 +38,9 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel refreshed the focused `smoke` command-probe group after the invalid-slice batch. The group passed 6/6
+  with no fallback/unsupported rows, zero picture frames, and 8,625 command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260609-092508/suite.tsv`.
 - Magic Jewel refreshed the focused `blend-mode-invalid` command-probe group. The group passed 3/3 with
   `fallback_sum=2`, one unsupported-picture row from the live vertices `BlendMode.Clear` sentinel, and zero command
   frames:

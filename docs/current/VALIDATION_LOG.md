@@ -5,6 +5,11 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel refreshed the focused `smoke` command-probe group after the invalid-slice batch to sanity-check supported
+  replay paths. The group passed 6/6 with `fallback_sum=0`, zero unsupported rows, zero JBR picture frames, and 8,625
+  JBR command frames across live animation, core primitives, color shader, color-filter handle, color-matrix filter,
+  and graphics-layer rows. The output directory is 27M; Magic Jewel `out` is 87G with about 261Gi free:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260609-092508/suite.tsv`.
 - Magic Jewel refreshed the focused `blend-mode-invalid` command-probe group after the color-filter invalid slice. The
   group passed 3/3 with `fallback_sum=2`, one unsupported-picture row from the live
   `commands-vertices-invalid-blend-mode-fallback`/`blendMode_Clear` sentinel, 1,222 JBR picture frames, and zero
