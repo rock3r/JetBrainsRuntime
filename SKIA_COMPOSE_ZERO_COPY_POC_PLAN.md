@@ -12,6 +12,12 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 ## Current Snapshot
 
 - ABI 106 artifacts are current across JBR private API, JBR API mirror, Skiko, CMP, and Magic Jewel.
+- Magic Jewel now has a public app-level nested graphics-layer unsupported-child sentinel. The row proves raw shader
+  content inside a valid graphics layer falls back structurally with `graphicsLayer:childCommands`; CMP's
+  `graphicsLayer:childUnsupported` remains classified as a synthetic/internal guard where commands are present but
+  `unsupportedCount > 0`. Exact validation passed, and `graphics-layer-extras` refreshed 16/16:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260609-165600/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260609-180353/suite.tsv`.
 - The latest full default command-probe consolidation passed after the focused invalid-slice refreshes: 538/538 rows,
   `fallback_sum=350`, 68 unsupported-picture rows, 82,301 JBR picture frames, and 200,046 JBR command frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260609-094809/suite.tsv`.

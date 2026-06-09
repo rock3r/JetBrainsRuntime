@@ -5,6 +5,19 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel added `commands-graphics-layer-unsupported-child-fallback`, enabled by
+  `MAGIC_JEWEL_COMPOSE_GRAPHICS_LAYER_CHILD_UNSUPPORTED`, after the unsupported-reason audit looked for a public
+  app-level nested graphics-layer child fallback. The row draws unsupported raw-shader content inside an otherwise
+  valid graphics layer. The first attempt intentionally expected `graphicsLayer:childUnsupported`, but the live report
+  showed strict child recording drops the child command stream when `unsupportedCount > 0`, so public app content
+  reports `graphicsLayer:childCommands`; the synthetic `graphicsLayer:childUnsupported` guard remains covered by CMP
+  unit tests that construct a recording with commands plus a non-zero unsupported count. The failed 4.1M exploratory
+  output directory was trimmed as unreferenced. The corrected exact row passed 1/1 with one unsupported-picture row,
+  1,239 JBR picture frames, and zero command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260609-165600/suite.tsv`.
+  The adjacent `graphics-layer-extras` group now resolves 16 rows and passed 16/16 with `fallback_sum=0`, four
+  unsupported-picture rows, 4,468 JBR picture frames, and 19,792 JBR command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260609-180353/suite.tsv`.
 - Magic Jewel completed a full default command-probe consolidation after the focused invalid-slice refreshes and nested
   graphics-layer child guard audit. The sweep passed 538/538 data rows with `fallback_sum=350`, 68 intentional
   unsupported-picture rows, 82,301 JBR picture frames, and 200,046 JBR command frames. It revalidated the recent

@@ -38,6 +38,12 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel added and validated `commands-graphics-layer-unsupported-child-fallback`, a public app-level sentinel that
+  draws raw-shader content inside an otherwise valid graphics layer. Strict recording falls back structurally with the
+  public parent reason `graphicsLayer:childCommands`; the synthetic `graphicsLayer:childUnsupported` guard remains
+  covered by CMP unit tests. The exact row passed 1/1, and the adjacent `graphics-layer-extras` group passed 16/16:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260609-165600/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260609-180353/suite.tsv`.
 - Magic Jewel completed a full default command-probe consolidation after the focused invalid-slice refreshes. The sweep
   passed 538/538 with `fallback_sum=350`, 68 unsupported-picture rows, 82,301 JBR picture frames, and 200,046 JBR
   command frames:
