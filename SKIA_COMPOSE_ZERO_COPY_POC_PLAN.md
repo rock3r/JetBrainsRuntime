@@ -12,6 +12,13 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 ## Current Snapshot
 
 - ABI 106 artifacts are current across JBR private API, JBR API mirror, Skiko, CMP, and Magic Jewel.
+- CMP now preserves public non-finite color-matrix metadata without letting Skia's native color-filter constructor throw
+  on the EDT. Invalid matrices use a harmless native fallback filter while strict command recording reports
+  `colorMatrixNonfinite` and falls back structurally. The full `JbrSkiaCommandRecorderTest` class passed, Magic Jewel
+  discovery now reports 540 default command-probe rows and `fill-rect-color-filter-invalid` 6 rows, the exact
+  `commands-color-matrix-filter-nonfinite-fallback` row passed 1/1, and the adjacent group passed 6/6:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260609-205901/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260609-222615/suite.tsv`.
 - Magic Jewel now has a public app-level nested graphics-layer unsupported-child sentinel. The row proves raw shader
   content inside a valid graphics layer falls back structurally with `graphicsLayer:childCommands`; CMP's
   `graphicsLayer:childUnsupported` remains classified as a synthetic/internal guard where commands are present but

@@ -5,6 +5,23 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- CMP/Magic Jewel non-finite color-matrix checkpoint: public `ColorFilter.colorMatrix` with a non-finite matrix value
+  previously threw `RuntimeException: Can't wrap nullptr` from Skia before CMP could report the existing
+  `colorMatrixNonfinite` unsupported reason. CMP now constructs a benign native fallback color filter for non-finite
+  matrices while retaining the original Compose matrix for JBR metadata, so strict command recording rejects the draw
+  structurally instead of exception-storming the EDT. Focused CMP validation passed first, then the full
+  `JbrSkiaCommandRecorderTest` class passed:
+  `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests
+  androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest`. Magic Jewel added
+  `commands-color-matrix-filter-nonfinite-fallback`, enabled by
+  `MAGIC_JEWEL_COMPOSE_INVALID_COLOR_MATRIX_FILTER`; no-run discovery now reports 540 default command-probe rows and
+  `fill-rect-color-filter-invalid` 6 rows. The first pre-fix exact run produced a 677M unreferenced exception-storm
+  output directory and was trimmed after the fix. The corrected exact row passed 1/1 with `colorMatrixNonfinite`, one
+  unsupported-picture row, 1,178 JBR picture frames, and zero command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260609-205901/suite.tsv`.
+  The adjacent `fill-rect-color-filter-invalid` group passed 6/6 with `fallback_sum=5`, one unsupported-picture row
+  from the live non-finite matrix sentinel, 1,319 JBR picture frames, and zero command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260609-222615/suite.tsv`.
 - Magic Jewel added `commands-graphics-layer-unsupported-child-fallback`, enabled by
   `MAGIC_JEWEL_COMPOSE_GRAPHICS_LAYER_CHILD_UNSUPPORTED`, after the unsupported-reason audit looked for a public
   app-level nested graphics-layer child fallback. The row draws unsupported raw-shader content inside an otherwise

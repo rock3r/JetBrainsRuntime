@@ -38,6 +38,12 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- CMP now hardens public non-finite `ColorMatrixColorFilter` construction by using a benign Skia fallback filter while
+  preserving the original matrix metadata for strict recording. The full `JbrSkiaCommandRecorderTest` class passed.
+  Magic Jewel added and validated `commands-color-matrix-filter-nonfinite-fallback`; exact validation passed 1/1 with
+  `colorMatrixNonfinite`, and the adjacent `fill-rect-color-filter-invalid` group now passes 6/6:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260609-205901/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260609-222615/suite.tsv`.
 - Magic Jewel added and validated `commands-graphics-layer-unsupported-child-fallback`, a public app-level sentinel that
   draws raw-shader content inside an otherwise valid graphics layer. Strict recording falls back structurally with the
   public parent reason `graphicsLayer:childCommands`; the synthetic `graphicsLayer:childUnsupported` guard remains
