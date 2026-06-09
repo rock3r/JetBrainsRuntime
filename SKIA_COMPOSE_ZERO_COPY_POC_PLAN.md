@@ -365,11 +365,9 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `fallback_sum=60`, three intentional unsupported-picture rows, 3,215 picture frames, and zero command frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260605-091009/suite.tsv` and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260605-091243/suite.tsv`.
-- The next recorder audit checked `colorMatrixNonfinite` for app-level reachability. Public Compose
-  `ColorFilter.colorMatrix` with a non-finite matrix entry fails during Skia color-filter construction
-  (`Can't wrap nullptr`) before CMP can count unsupported command frames, so no live Magic Jewel sentinel was landed.
-  The attempted output directories were unreferenced and trimmed; keep this guard classified as defensive or
-  parser-adjacent unless a lower-level public construction path appears.
+- Superseded recorder audit note: the earlier `colorMatrixNonfinite` app-level attempt failed during Skia color-filter
+  construction (`Can't wrap nullptr`) before CMP could count unsupported command frames. CMP now preserves non-finite
+  matrix metadata with a benign native fallback filter, so Magic Jewel covers the live `colorMatrixNonfinite` fallback.
 - The follow-on recorder audit classified the remaining live gradient geometry and nested graphics-layer internal
   guards. Public non-finite Brush geometry fails during Skia shader construction before CMP can produce
   `linearGradientPoints`, `radialGradientGeometry`, or `sweepGradientGeometry` unsupported frames; malformed command

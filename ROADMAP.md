@@ -403,11 +403,9 @@ This is the small working roadmap for the current PoC. The full historical check
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260605-141516/suite.tsv`
   and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260605-141803/suite.tsv`.
-- Recorder audit note: CMP still contains a defensive `colorMatrixNonfinite` unsupported reason, but a live public
-  Compose probe using `ColorFilter.colorMatrix(ColorMatrix().apply { this[3, 3] = Float.NaN })` failed at Skia
-  color-filter construction with `Can't wrap nullptr` before CMP recorded unsupported command frames. No Magic Jewel
-  sentinel was landed for this guard; keep treating it as defensive/parser-adjacent unless a lower-level app-reachable
-  construction path appears.
+- Superseded recorder audit note: the earlier public `colorMatrixNonfinite` attempt failed at Skia color-filter
+  construction with `Can't wrap nullptr`, so no sentinel was landed at that time. CMP now preserves non-finite matrix
+  metadata with a benign native fallback filter, and Magic Jewel covers the live `colorMatrixNonfinite` fallback.
 - Recorder audit note: CMP still contains gradient geometry unsupported reasons (`linearGradientPoints`,
   `radialGradientGeometry`, and `sweepGradientGeometry`), but public non-finite Brush geometry is rejected while
   constructing the underlying Skia shader before CMP can record a live unsupported frame. Parser-corruption coverage
