@@ -38,6 +38,9 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel refreshed the focused `fill-rect-color-filter-invalid` command-probe group. The group passed 5/5 with
+  `fallback_sum=5`, zero unsupported rows, and zero picture/command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260609-091041/suite.tsv`.
 - Magic Jewel refreshed the focused `gradient-stop-invalid` command-probe group. The group passed 4/4 with live
   linear/radial/sweep gradient stop/points unsupported-picture fallbacks and zero command frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260609-090605/suite.tsv`.

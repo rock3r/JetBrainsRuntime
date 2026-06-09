@@ -5,6 +5,11 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel refreshed the focused `fill-rect-color-filter-invalid` command-probe group after the gradient stop
+  slice. The group passed 5/5 across blend-mode, bounds, and ref-bounds parser fallbacks with `fallback_sum=5`, zero
+  unsupported rows, zero JBR picture frames, and zero command frames. The output directory is 16M; Magic Jewel `out` is
+  87G with about 279Gi free:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260609-091041/suite.tsv`.
 - Magic Jewel refreshed the focused `gradient-stop-invalid` command-probe group after the gradient color-count slice.
   The group passed 4/4 with live `linearGradientStops`, `linearGradientPoints`, `radialGradientStops`, and
   `sweepGradientStops` unsupported-picture fallbacks, `fallback_sum=0`, 3,653 JBR picture frames, and zero command
