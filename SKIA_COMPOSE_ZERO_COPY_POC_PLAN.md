@@ -12,6 +12,9 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 ## Current Snapshot
 
 - ABI 106 artifacts are current across JBR private API, JBR API mirror, Skiko, CMP, and Magic Jewel.
+- The focused `gradient-stop-invalid` command-probe group refreshed cleanly: 4/4 passed with live linear/radial/sweep
+  gradient stop/points unsupported-picture fallbacks, 3,653 picture frames, and zero command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260609-090605/suite.tsv`.
 - The focused `gradient-color-count-invalid` command-probe group refreshed cleanly: 3/3 passed with live
   linear/radial/sweep gradient color-count unsupported-picture fallbacks, 3,041 picture frames, and zero command
   frames:
