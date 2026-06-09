@@ -12,8 +12,9 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   `MAGIC_JEWEL_COMPOSE_INVALID_LINEAR_GRADIENT_STROKE_ROUND_RECT_RADIUS`,
   `MAGIC_JEWEL_COMPOSE_INVALID_RADIAL_GRADIENT_STROKE_ROUND_RECT_RADIUS`, and
   `MAGIC_JEWEL_COMPOSE_INVALID_SWEEP_GRADIENT_STROKE_ROUND_RECT_RADIUS`. No-run discovery now reports 549 default
-  command-probe rows, `gradient-stroke-round-rect-radius-invalid` 3 rows, no ungrouped rows, and no duplicate case
-  names. `compileKotlin` passed for Magic Jewel. Exact linear validation passed 1/1 with
+  command-probe rows, `gradient-stroke-round-rect-radius-invalid` 3 rows, the broad `gradient-invalid` group 81 rows,
+  no ungrouped rows, and no duplicate case names. `compileKotlin` passed for Magic Jewel. Exact linear validation
+  passed 1/1 with
   `linearGradientStrokeRoundRectRadius`, one unsupported-picture row, 1,146 picture frames, and zero command frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260609-231026/suite.tsv`.
   The focused group passed 3/3 with `linearGradientStrokeRoundRectRadius`,
