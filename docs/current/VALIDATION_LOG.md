@@ -5,6 +5,11 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel refreshed the focused `surface-transform-ui` command-probe group after the smoke sanity check. The group
+  passed 15/15 with `fallback_sum=0`, zero unsupported rows, zero JBR picture frames, and 21,502 JBR command frames
+  across native bridge load, point primitives, concat/skew transforms, gradient surfaces/paths, gradient blend-layer
+  rows, popup/menu, and text-image rows. The output directory is 64M; Magic Jewel `out` is 87G with about 260Gi free:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260609-093056/suite.tsv`.
 - Magic Jewel refreshed the focused `smoke` command-probe group after the invalid-slice batch to sanity-check supported
   replay paths. The group passed 6/6 with `fallback_sum=0`, zero unsupported rows, zero JBR picture frames, and 8,625
   JBR command frames across live animation, core primitives, color shader, color-filter handle, color-matrix filter,

@@ -38,6 +38,9 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel refreshed the focused `surface-transform-ui` command-probe group. The group passed 15/15 with no
+  fallback/unsupported rows, zero picture frames, and 21,502 command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260609-093056/suite.tsv`.
 - Magic Jewel refreshed the focused `smoke` command-probe group after the invalid-slice batch. The group passed 6/6
   with no fallback/unsupported rows, zero picture frames, and 8,625 command frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260609-092508/suite.tsv`.
