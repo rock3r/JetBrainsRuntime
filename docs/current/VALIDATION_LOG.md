@@ -5,6 +5,14 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel completed a full default command-probe consolidation after the focused invalid-slice refreshes and nested
+  graphics-layer child guard audit. The sweep passed 538/538 data rows with `fallback_sum=350`, 68 intentional
+  unsupported-picture rows, 82,301 JBR picture frames, and 200,046 JBR command frames. It revalidated the recent
+  native-text/path/image-shader/primitive/graphics-layer/gradient/color-filter/blend invalid rows, the shader/effect
+  descriptor parser rows, descriptor-handle wrong-family/missing/evicted rows, descriptor lifecycle/forced-context
+  rows, graphics-layer transform/effect/shadow rows, and saveLayer scalar/ref bounds. The output directory is 2.1G;
+  Magic Jewel `out` is 89G with about 258Gi free:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260609-094809/suite.tsv`.
 - Magic Jewel refreshed the focused `surface-transform-ui` command-probe group after the smoke sanity check. The group
   passed 15/15 with `fallback_sum=0`, zero unsupported rows, zero JBR picture frames, and 21,502 JBR command frames
   across native bridge load, point primitives, concat/skew transforms, gradient surfaces/paths, gradient blend-layer
