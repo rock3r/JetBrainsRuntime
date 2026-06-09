@@ -12,6 +12,14 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 ## Current Snapshot
 
 - ABI 106 artifacts are current across JBR private API, JBR API mirror, Skiko, CMP, and Magic Jewel.
+- Magic Jewel now covers the public low-level canvas paths for gradient stroke-width and round-rect-radius fallback
+  guards. Added six public sentinels across linear/radial/sweep families; exact linear radius and stroke-width rows
+  passed first, then `gradient-round-rect-radius-invalid` and `gradient-stroke-width-invalid` each passed 3/3 with
+  family-specific unsupported reasons and zero command frames. Command-probe discovery now reports 546 default rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260609-225707/suite.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260609-225806/suite.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260609-225855/suite.tsv`, and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260609-230157/suite.tsv`.
 - CMP now preserves public non-finite color-matrix metadata without letting Skia's native color-filter constructor throw
   on the EDT. Invalid matrices use a harmless native fallback filter while strict command recording reports
   `colorMatrixNonfinite` and falls back structurally. The full `JbrSkiaCommandRecorderTest` class passed, Magic Jewel

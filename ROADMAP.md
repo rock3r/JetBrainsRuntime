@@ -38,6 +38,15 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel now has public app-level low-level canvas sentinels for gradient stroke-width and round-rect-radius
+  fallback guards. Exact linear-gradient radius and stroke-width rows passed, then the compact
+  `gradient-round-rect-radius-invalid` and `gradient-stroke-width-invalid` groups passed 3/3 each with family-specific
+  unsupported reasons and zero command frames. Discovery now reports 546 default command-probe rows, with no ungrouped
+  or duplicate cases:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260609-225707/suite.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260609-225806/suite.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260609-225855/suite.tsv`, and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260609-230157/suite.tsv`.
 - CMP now hardens public non-finite `ColorMatrixColorFilter` construction by using a benign Skia fallback filter while
   preserving the original matrix metadata for strict recording. The full `JbrSkiaCommandRecorderTest` class passed.
   Magic Jewel added and validated `commands-color-matrix-filter-nonfinite-fallback`; exact validation passed 1/1 with

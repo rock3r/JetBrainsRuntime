@@ -5,6 +5,31 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel public gradient shape invalid checkpoint: the unsupported-reason audit found the gradient
+  round-rect-radius and stroke-width guards are reachable through public low-level `Canvas` drawing with
+  `LinearGradientShader`, `RadialGradientShader`, and `SweepGradientShader` paints, not just through direct recorder
+  tests or parser-corruption rows. Added six app-level sentinels:
+  `commands-linear-gradient-invalid-stroke-width-public-fallback`,
+  `commands-radial-gradient-invalid-stroke-width-public-fallback`,
+  `commands-sweep-gradient-invalid-stroke-width-public-fallback`,
+  `commands-linear-gradient-round-rect-invalid-radius-fallback`,
+  `commands-radial-gradient-round-rect-invalid-radius-fallback`, and
+  `commands-sweep-gradient-round-rect-invalid-radius-fallback`. No-run discovery now reports 546 default
+  command-probe rows, `gradient-stroke-width-invalid` 3 rows, `gradient-round-rect-radius-invalid` 3 rows, no
+  ungrouped rows, and no duplicate case names. `compileKotlin` passed for Magic Jewel. Exact linear radius validation
+  passed 1/1 with `linearGradientRoundRectRadius`, one unsupported-picture row, 1,048 picture frames, and zero command
+  frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260609-225707/suite.tsv`.
+  Exact linear stroke-width validation passed 1/1 with `linearGradientStrokeWidth`, one unsupported-picture row, 1,272
+  picture frames, and zero command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260609-225806/suite.tsv`.
+  The focused `gradient-round-rect-radius-invalid` group passed 3/3 with `linearGradientRoundRectRadius`,
+  `radialGradientRoundRectRadius`, and `sweepGradientRoundRectRadius`, 3,698 picture frames, and zero command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260609-225855/suite.tsv`.
+  The focused `gradient-stroke-width-invalid` group passed 3/3 with `linearGradientStrokeWidth`,
+  `radialGradientStrokeWidth`, and `sweepGradientStrokeWidth`, 3,630 picture frames, and zero command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260609-230157/suite.tsv`.
+  Magic Jewel `out` is 89G with about 278Gi free.
 - CMP/Magic Jewel non-finite color-matrix checkpoint: public `ColorFilter.colorMatrix` with a non-finite matrix value
   previously threw `RuntimeException: Can't wrap nullptr` from Skia before CMP could report the existing
   `colorMatrixNonfinite` unsupported reason. CMP now constructs a benign native fallback color filter for non-finite
