@@ -5,6 +5,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel focused `effect-descriptor-invalid` command-probe refresh after `descriptor-lifecycle`:
+  `CASE_GROUPS=effect-descriptor-invalid` passed 28/28. Aggregate: `fallback_sum=28`, `unsupported_rows=0`, zero JBR
+  picture frames, and zero JBR command frames. The group rechecked malformed effect descriptor headers plus lighting,
+  tint, color-matrix, blur, offset, corner, stamped, and chained path-effect descriptor fallback guards. Magic Jewel
+  `out` is 92G with about 258Gi free:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260610-202519/suite.tsv`.
 - Magic Jewel focused `descriptor-lifecycle` command-probe refresh after `color-filters`:
   `CASE_GROUPS=descriptor-lifecycle` passed 18/18. Aggregate: `fallback_sum=0`, `unsupported_rows=0`, zero JBR picture
   frames, and 22,552 JBR command frames. The group covered descriptor eviction, resize/forced-context descriptor
