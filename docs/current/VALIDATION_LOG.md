@@ -5,6 +5,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel focused `save-layer-shader-fallbacks` command-probe refresh after the gradient path groups:
+  `CASE_GROUPS=save-layer-shader-fallbacks` passed 9/9. Aggregate: `fallback_sum=0`, six unsupported-picture rows,
+  6,984 JBR picture frames, and 4,511 JBR command frames. Supported saveLayer filter/blend/color-filter rows replayed
+  commands; raw color-filter, raw table color-filter, opaque shader, composite opaque shader, picture shader, and
+  invalid sweep-gradient rows stayed on structured picture fallback. Magic Jewel `out` remains 91G; volume free space
+  is about 240Gi:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260610-191700/suite.tsv`.
 - Magic Jewel focused `gradient-path-stroke-fallbacks` command-probe refresh after path-structure validation:
   `CASE_GROUPS=gradient-path-stroke-fallbacks` passed 3/3. Aggregate: `fallback_sum=0`, three unsupported-picture rows,
   2,923 JBR picture frames, and zero JBR command frames. The rows reported `linearGradientPaint`,
