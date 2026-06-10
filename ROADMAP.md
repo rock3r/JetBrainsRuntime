@@ -38,6 +38,9 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel refreshed the focused `graphics-layer-extras` command-probe group after `graphics-layer`. It passed 16/16
+  with no fallback, four unsupported-picture rows, 4,221 picture frames, and 15,698 command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260610-221556/suite.tsv`.
 - Magic Jewel refreshed the focused `graphics-layer` command-probe group after `surface-transform-ui`. It passed 22/22
   with no fallback, one unsupported-picture row, 1,071 picture frames, and 31,583 command frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260610-215954/suite.tsv`.
