@@ -5,6 +5,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel focused `graphics-layer` command-probe refresh after `surface-transform-ui`:
+  `CASE_GROUPS=graphics-layer` passed 22/22. Aggregate: `fallback_sum=0`, one unsupported-picture row, 1,071 JBR
+  picture frames, and 31,583 JBR command frames. The group rechecked base/modulate/offscreen/clip layers, blend and
+  color-filter layers, render effects, shadows, 3D rotation, camera, scale/translate, and pivot replay. Magic Jewel
+  `out` is 92G with about 259Gi free:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260610-215954/suite.tsv`.
 - Magic Jewel focused `surface-transform-ui` command-probe refresh after `graphics-layer-invalid`:
   `CASE_GROUPS=surface-transform-ui` passed 15/15. Aggregate: `fallback_sum=0`, `unsupported_rows=0`, zero JBR
   picture frames, and 18,966 JBR command frames. The group rechecked native bridge loading, point rendering, concat and
