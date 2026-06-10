@@ -38,6 +38,9 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel refreshed the focused `core-effects` command-probe group after `save-layer-shader-fallbacks`. It passed
+  8/8 with three unsupported-picture rows, 3,051 picture frames, and 6,875 command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260610-192454/suite.tsv`.
 - Magic Jewel refreshed the focused `save-layer-shader-fallbacks` command-probe group after the gradient path groups.
   It passed 9/9 with six unsupported-picture rows, 6,984 picture frames, and 4,511 command frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260610-191700/suite.tsv`.
