@@ -38,6 +38,11 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Cross-repo ABI/capability drift audit refreshed cleanly after the matrix checkpoints. Shared ABI 106 constants match
+  across the JBR private API, JBR API mirror, JBR native parser subset, Skiko discovery/layer subsets, and the CMP
+  recorder subset. The public mirror exposes 65 low-word capability bits with required mask `-1`
+  (`0xffffffffffffffff`) and 18 high-word bits with required mask `262143` (`0x000000000003ffff`); no shared constant
+  mismatches were found.
 - Magic Jewel refreshed the required artifact matrix on the current ABI 106 local artifacts after the compatibility
   refresh. Required rows passed 2/2: `current-all` replayed commands with 334 JBR command frames and no fallback, while
   `missing-public-api` produced the expected `public-api-missing` fallback with zero command frames; both rows used

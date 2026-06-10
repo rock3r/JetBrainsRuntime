@@ -12,6 +12,10 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 ## Current Snapshot
 
 - ABI 106 artifacts are current across JBR private API, JBR API mirror, Skiko, CMP, and Magic Jewel.
+- A scoped cross-repo ABI/capability audit found no shared constant drift across the JBR private API, JBR API mirror,
+  JBR native parser subset, Skiko discovery/layer subsets, and the CMP recorder subset. Current masks remain
+  `low=-1` (`0xffffffffffffffff`) across 65 low-word capability bits and `high=262143`
+  (`0x000000000003ffff`) across 18 high-word bits.
 - The required artifact matrix also passed on the current ABI 106 local artifacts after the compatibility refresh:
   required rows 2/2, `current-all` with 334 JBR command frames and no fallback, and `missing-public-api` with the
   expected fallback and zero command frames:

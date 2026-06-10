@@ -5,6 +5,15 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Cross-repo ABI/capability drift audit after the compatibility and artifact matrix refreshes: extracted
+  `ABI_ID`, `NATIVE_ABI_VERSION`, `COMMAND_*`, `COMMAND_CAP_*`, and `COMMAND_CAP64_*` definitions from the scoped
+  bridge files only: JBR private API `JBRSkia.java`, JBR API mirror `JBRSkia.java`, JBR native
+  `JBRSkiaInterop.mm`, Skiko `JbrSkiaInterop.kt`/`JbrSkiaSwingLayer.kt`, and CMP
+  `JbrSkiaCommandRecorder.skiko.kt`. The JBR private API and public mirror matched exactly across 212 constants.
+  Shared constants in the native parser subset, Skiko discovery/layer subsets, and CMP recorder subset had zero
+  mismatches against the public mirror. Required capability masks computed from the mirror remain 65 low-word bits
+  with `low=-1`/`0xffffffffffffffff` and 18 high-word bits with `high=262143`/`0x000000000003ffff`. Subset-only
+  omissions are intentional because native/Skiko/CMP duplicate only the constants they parse, gate, or emit.
 - Magic Jewel required artifact matrix refresh on current ABI 106 local artifacts: no-run discovery still reports
   `required` 2 rows and `optional-old` 5 rows. Ran `CASE_GROUPS=required`; both required rows passed with
   `background_window=true`. Aggregate: rows=2, passed=2, failed=0, skipped=0, `fallback_sum=1`, and 334 JBR command
