@@ -5,6 +5,11 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel focused `shader-ref-invalid` command-probe refresh after `blend-mode-invalid`:
+  `CASE_GROUPS=shader-ref-invalid` passed 3/3. Aggregate: `fallback_sum=3`, zero unsupported rows, zero JBR picture
+  frames, and zero JBR command frames. The fill-rect shader-ref horizontal bounds, vertical bounds, and alpha malformed
+  stream rows all failed closed with exact fallback markers:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260610-183824/suite.tsv`.
 - Magic Jewel focused `blend-mode-invalid` command-probe refresh after `path-invalid`: `CASE_GROUPS=blend-mode-invalid`
   passed 3/3. Aggregate: `fallback_sum=2`, one unsupported-picture row, 957 JBR picture frames, and zero JBR command
   frames. The live vertices row reported the dynamic `blendMode_Clear` unsupported reason, while fill-rect blend-mode
