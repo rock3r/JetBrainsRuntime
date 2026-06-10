@@ -12,6 +12,14 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 ## Current Snapshot
 
 - ABI 106 artifacts are current across JBR private API, JBR API mirror, Skiko, CMP, and Magic Jewel.
+- The latest default Magic Jewel command-probe consolidation now covers all 549 default rows after the public gradient
+  shape expansion. Because fresh broad starts hit launch-only SIGTERM/no-sample interruptions before any app markers,
+  the passing checkpoint is a split run: exact `commands-live-animation`, focused `stream-invalid`, and a suffix from
+  `commands-native-bridge-load-library` through `commands-invalid-gradient-fallback`. Combined result: 549/549 passed,
+  `fallback_sum=350`, 79 unsupported-picture rows, 69,200 picture frames, and 111,092 command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260610-103258/suite.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260610-104522/suite.tsv`, and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260610-105340/suite.tsv`.
 - CMP focused recorder validation passed after the gradient invalid consolidation:
   `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests
   androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest`. The current remaining unsupported-reason audit is therefore

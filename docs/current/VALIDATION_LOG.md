@@ -5,6 +5,21 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel 549-row default command-probe consolidation: after the public gradient shape rows expanded default
+  discovery to 549 rows, a full default sweep was refreshed as split evidence. Two fresh broad starts failed before any
+  app/process samples or CMP/Skiko/JBR markers because `:runJbrSkiaInterop` exited 143/SIGTERM; the same rows passed
+  immediately as exact/focused reruns, so those failed output directories are treated as launch interruptions, not
+  command validation evidence. Passing slices:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260610-103258/suite.tsv`
+  (`commands-live-animation`, 1/1 passed),
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260610-104522/suite.tsv`
+  (`stream-invalid`, 8/8 passed), and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260610-105340/suite.tsv`
+  (suffix from `commands-native-bridge-load-library`, 540/540 passed). Combined aggregate: 549/549 passed,
+  `fallback_sum=350`, 79 unsupported-picture rows, 69,200 JBR picture frames, and 111,092 JBR command frames. The
+  sweep revalidated the new public gradient stroke-width, round-rect radius, and stroked round-rect radius sentinels
+  inside the default suite, plus descriptor lifecycle, RuntimeEffect compile/build/failure telemetry, color-filter,
+  graphics-layer, shadow, and saveLayer rows. Magic Jewel `out` is 91G with about 262Gi free.
 - CMP current unsupported-reason audit validation: after the Magic Jewel gradient shape rows and expanded
   `gradient-invalid` refresh, the full focused `JbrSkiaCommandRecorderTest` desktop class passed:
   `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests

@@ -38,6 +38,14 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel completed a 549-row default command-probe consolidation after the public gradient shape expansion. The
+  first broad attempts exposed launch-only SIGTERM/no-sample interruptions on the first JBR-side process of a suite
+  invocation, so the passing evidence is split across exact `commands-live-animation`, focused `stream-invalid`, and a
+  suffix from `commands-native-bridge-load-library` through the final fallback row. Combined result: 549/549 passed,
+  `fallback_sum=350`, 79 unsupported-picture rows, 69,200 picture frames, and 111,092 command frames across:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260610-103258/suite.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260610-104522/suite.tsv`, and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260610-105340/suite.tsv`.
 - CMP focused recorder validation passed on the current unsupported-reason audit state:
   `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests
   androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest`. This re-anchors the remaining mismatch classifications
