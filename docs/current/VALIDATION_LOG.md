@@ -5,6 +5,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel focused `shader-rendering` command-probe refresh after `core-effects`:
+  `CASE_GROUPS=shader-rendering` passed 18/18. Aggregate: `fallback_sum=0`, ten unsupported-picture rows, 9,154 JBR
+  picture frames, and 10,048 JBR command frames. Command replay covered forced-context dynamic images, image
+  blend-mode, image/color/gradient/noise/turbulence shader rows; raw image/gradient/noise/turbulence shader rows,
+  descriptor-stroke shader, image path-effect, and invalid image-shader rows stayed on structured picture fallback.
+  Magic Jewel `out` remains 91G; volume free space is about 240Gi:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260610-193254/suite.tsv`.
 - Magic Jewel focused `core-effects` command-probe refresh after `save-layer-shader-fallbacks`:
   `CASE_GROUPS=core-effects` passed 8/8. Aggregate: `fallback_sum=0`, three unsupported-picture rows, 3,051 JBR
   picture frames, and 6,875 JBR command frames. Gradient stroke, image-filter, path-effect, vertices, and blend-mode

@@ -12,6 +12,9 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 ## Current Snapshot
 
 - ABI 106 artifacts are current across JBR private API, JBR API mirror, Skiko, CMP, and Magic Jewel.
+- Focused `shader-rendering` command-probe validation refreshed after `core-effects`: 18/18 passed with ten
+  unsupported-picture rows, 9,154 picture frames, and 10,048 command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260610-193254/suite.tsv`.
 - Focused `core-effects` command-probe validation refreshed after `save-layer-shader-fallbacks`: 8/8 passed with
   three unsupported-picture rows, 3,051 picture frames, and 6,875 command frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260610-192454/suite.tsv`.
