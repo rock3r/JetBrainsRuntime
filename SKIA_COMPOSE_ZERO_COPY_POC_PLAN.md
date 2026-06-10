@@ -12,6 +12,9 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 ## Current Snapshot
 
 - ABI 106 artifacts are current across JBR private API, JBR API mirror, Skiko, CMP, and Magic Jewel.
+- Focused `gradient-stroke-round-rect-radius-invalid` command-probe validation refreshed after round-rect radius
+  validation: 3/3 passed with three unsupported-picture rows, 3,360 picture frames, and zero command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260610-190701/suite.tsv`.
 - Focused `gradient-round-rect-radius-invalid` command-probe validation refreshed after stroke-width validation: 3/3
   passed with three unsupported-picture rows, 3,126 picture frames, and zero command frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260610-190334/suite.tsv`.
