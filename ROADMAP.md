@@ -38,6 +38,9 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel refreshed the focused `gradient-invalid` command-probe group after `runtime-effect-invalid`. It passed
+  81/81 with `fallback_sum=60`, 21 unsupported-picture rows, 23,049 picture frames, and no command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260611-003036/suite.tsv`.
 - Magic Jewel refreshed the focused `runtime-effect-invalid` command-probe group after
   `descriptor-handles-invalid`. It passed 62/62 with `fallback_sum=56`, six unsupported-picture rows, 6,399 picture
   frames, and no command frames:
