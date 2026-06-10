@@ -38,6 +38,9 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel refreshed the focused `path-invalid` command-probe group after `primitive-invalid`. It passed 24/24
+  with `fallback_sum=22`, two unsupported-picture rows, 2,125 picture frames, and zero command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260610-181836/suite.tsv`.
 - Magic Jewel refreshed the focused `primitive-invalid` command-probe group after `native-text-invalid`. It passed
   16/16 with `fallback_sum=13`, three unsupported-picture rows, 3,196 picture frames, and zero command frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260610-180642/suite.tsv`.

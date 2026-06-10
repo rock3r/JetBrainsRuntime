@@ -5,6 +5,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel focused `path-invalid` command-probe refresh after `primitive-invalid`: `CASE_GROUPS=path-invalid`
+  passed 24/24. Aggregate: `fallback_sum=22`, two unsupported-picture rows, 2,125 JBR picture frames, and zero JBR
+  command frames. The public invalid clip/draw path rows reported structured picture fallback; path verb, dash
+  path-effect, round-rect dash, stroke-path dash, and shadow-path malformed stream rows failed closed with exact
+  fallback markers. Magic Jewel `out` is 91G with about 261Gi free:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260610-181836/suite.tsv`.
 - Magic Jewel focused `primitive-invalid` command-probe refresh after `native-text-invalid`: `CASE_GROUPS=primitive-invalid`
   passed 16/16. Aggregate: `fallback_sum=13`, three unsupported-picture rows, 3,196 JBR picture frames, and zero JBR
   command frames. The unsupported-picture rows were `blendLayerBounds`, `transform`/`unsupportedScope`, and `points`;
