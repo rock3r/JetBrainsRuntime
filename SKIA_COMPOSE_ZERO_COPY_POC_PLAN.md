@@ -12,6 +12,9 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 ## Current Snapshot
 
 - ABI 106 artifacts are current across JBR private API, JBR API mirror, Skiko, CMP, and Magic Jewel.
+- Focused `shader-descriptor-invalid` command-probe validation refreshed after `effect-descriptor-invalid`: 30/30
+  passed with `fallback_sum=30`, no unsupported rows, no picture frames, and no command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260610-204523/suite.tsv`.
 - Focused `effect-descriptor-invalid` command-probe validation refreshed after `descriptor-lifecycle`: 28/28 passed
   with `fallback_sum=28`, no unsupported rows, no picture frames, and no command frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260610-202519/suite.tsv`.

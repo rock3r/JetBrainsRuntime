@@ -5,6 +5,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel focused `shader-descriptor-invalid` command-probe refresh after `effect-descriptor-invalid`:
+  `CASE_GROUPS=shader-descriptor-invalid` passed 30/30. Aggregate: `fallback_sum=30`, `unsupported_rows=0`, zero JBR
+  picture frames, and zero JBR command frames. The group rechecked malformed shader descriptor headers plus color,
+  shader-color-filter, transformed, composite, gradient, image, and Perlin-noise descriptor fallback guards. Magic
+  Jewel `out` is 92G with about 257Gi free:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260610-204523/suite.tsv`.
 - Magic Jewel focused `effect-descriptor-invalid` command-probe refresh after `descriptor-lifecycle`:
   `CASE_GROUPS=effect-descriptor-invalid` passed 28/28. Aggregate: `fallback_sum=28`, `unsupported_rows=0`, zero JBR
   picture frames, and zero JBR command frames. The group rechecked malformed effect descriptor headers plus lighting,
