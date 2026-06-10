@@ -38,6 +38,11 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel refreshed the required artifact matrix on the current ABI 106 local artifacts after the compatibility
+  refresh. Required rows passed 2/2: `current-all` replayed commands with 334 JBR command frames and no fallback, while
+  `missing-public-api` produced the expected `public-api-missing` fallback with zero command frames; both rows used
+  background-window mode:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260610-175047/matrix.tsv`.
 - Magic Jewel refreshed the full compatibility matrix after the 549-row command-probe consolidation. No-run discovery
   still resolves 57 rows across handshake, low/high capability, and public-API fallback groups with no ungrouped
   cases. The matrix passed 57/57 with `fallback_sum=56`, the happy path produced 573 JBR command frames, all mismatch

@@ -5,6 +5,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel required artifact matrix refresh on current ABI 106 local artifacts: no-run discovery still reports
+  `required` 2 rows and `optional-old` 5 rows. Ran `CASE_GROUPS=required`; both required rows passed with
+  `background_window=true`. Aggregate: rows=2, passed=2, failed=0, skipped=0, `fallback_sum=1`, and 334 JBR command
+  frames. `current-all` replayed commands with no fallback; `missing-public-api` produced the expected
+  `public-api-missing` fallback with zero command frames. Magic Jewel `out` is 91G with about 262Gi free:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260610-175047/matrix.tsv`.
 - Magic Jewel compatibility matrix refresh after the 549-row command-probe consolidation: no-run discovery resolved
   57 total rows (`handshake` 6, `low-word-gradients` 15, `low-word-effects` 18, `high-word-effects` 9, and
   `high-word-shader-ui` 9) with no ungrouped cases. The full matrix passed 57/57 with `fallback_sum=56`, 573 JBR
