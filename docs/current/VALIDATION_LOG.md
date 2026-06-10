@@ -5,6 +5,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel focused `gradient-path-structure-invalid` command-probe refresh after the public gradient shape trio:
+  `CASE_GROUPS=gradient-path-structure-invalid` passed 3/3. Aggregate: `fallback_sum=0`, three unsupported-picture
+  rows, 3,236 JBR picture frames, and zero JBR command frames. The rows reported `linearGradientPath`,
+  `radialGradientPath`, and `sweepGradientPath` fallback reasons alongside path/graphics-layer metadata. Volume free
+  space is about 260Gi:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260610-191022/suite.tsv`.
 - Magic Jewel focused `gradient-stroke-round-rect-radius-invalid` command-probe refresh after round-rect radius
   validation: `CASE_GROUPS=gradient-stroke-round-rect-radius-invalid` passed 3/3. Aggregate: `fallback_sum=0`, three
   unsupported-picture rows, 3,360 JBR picture frames, and zero JBR command frames. The rows reported

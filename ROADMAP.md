@@ -38,6 +38,9 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel refreshed the focused `gradient-path-structure-invalid` command-probe group after the public gradient
+  shape trio. It passed 3/3 with three unsupported-picture rows, 3,236 picture frames, and zero command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260610-191022/suite.tsv`.
 - Magic Jewel refreshed the focused `gradient-stroke-round-rect-radius-invalid` command-probe group after round-rect
   radius validation. It passed 3/3 with three unsupported-picture rows, 3,360 picture frames, and zero command frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260610-190701/suite.tsv`.
