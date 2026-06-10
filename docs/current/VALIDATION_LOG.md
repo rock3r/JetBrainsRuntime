@@ -5,6 +5,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel focused `color-filters` command-probe refresh after shader composition/runtime validation:
+  `CASE_GROUPS=color-filters` passed 13/13. Aggregate: `fallback_sum=0`, three unsupported-picture rows, 2,738 JBR
+  picture frames, and 11,697 JBR command frames. Supported image, fill-rect, descriptor-handle, matrix/lighting, and
+  graphics-layer color-filter rows replayed commands; raw table/blend color-filter rows stayed on structured picture
+  fallback. Magic Jewel `out` remains 91G; volume free space is about 259Gi:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260610-195849/suite.tsv`.
 - Magic Jewel focused `shader-composition-runtime` command-probe refresh after `shader-rendering`:
   `CASE_GROUPS=shader-composition-runtime` passed 15/15. Aggregate: `fallback_sum=0`, two unsupported-picture rows,
   1,690 JBR picture frames, and 17,687 JBR command frames. RuntimeEffect shader/color-filter, composite shader,
