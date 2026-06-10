@@ -5,6 +5,11 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel focused `gradient-geometry-invalid` command-probe refresh after `gradient-stop-invalid`:
+  `CASE_GROUPS=gradient-geometry-invalid` passed 3/3. Aggregate: `fallback_sum=0`, three unsupported-picture rows,
+  3,107 JBR picture frames, and zero JBR command frames. The rows reported `linearGradientPoints`,
+  `radialGradientGeometry`, and `sweepGradientGeometry` fallback reasons:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260610-185303/suite.tsv`.
 - Magic Jewel focused `gradient-stop-invalid` command-probe refresh after `image-shader-invalid`:
   `CASE_GROUPS=gradient-stop-invalid` passed 4/4. Aggregate: `fallback_sum=0`, four unsupported-picture rows, 4,226
   JBR picture frames, and zero JBR command frames. The rows reported family-specific
