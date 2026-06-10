@@ -5,6 +5,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel focused `image-handles-invalid` command-probe refresh after `shader-descriptor-invalid`:
+  `CASE_GROUPS=image-handles-invalid` passed 27/27. Aggregate: `fallback_sum=27`, `unsupported_rows=0`, zero JBR
+  picture frames, and 892 JBR command frames. The group rechecked malformed image define/cache/evict records, invalid
+  image/image-color-filter handle use, use-after-evict, image refs, blend modes, and descriptor-ref fallback guards.
+  Magic Jewel `out` is 92G with about 238Gi free:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260610-210711/suite.tsv`.
 - Magic Jewel focused `shader-descriptor-invalid` command-probe refresh after `effect-descriptor-invalid`:
   `CASE_GROUPS=shader-descriptor-invalid` passed 30/30. Aggregate: `fallback_sum=30`, `unsupported_rows=0`, zero JBR
   picture frames, and zero JBR command frames. The group rechecked malformed shader descriptor headers plus color,

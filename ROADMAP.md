@@ -38,6 +38,9 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel refreshed the focused `image-handles-invalid` command-probe group after `shader-descriptor-invalid`. It
+  passed 27/27 with `fallback_sum=27`, no unsupported rows, no picture frames, and 892 command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260610-210711/suite.tsv`.
 - Magic Jewel refreshed the focused `shader-descriptor-invalid` command-probe group after `effect-descriptor-invalid`.
   It passed 30/30 with `fallback_sum=30`, no unsupported rows, no picture frames, and no command frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260610-204523/suite.tsv`.
