@@ -38,6 +38,9 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel refreshed the focused `primitive-invalid` command-probe group after `native-text-invalid`. It passed
+  16/16 with `fallback_sum=13`, three unsupported-picture rows, 3,196 picture frames, and zero command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260610-180642/suite.tsv`.
 - Magic Jewel refreshed the focused `native-text-invalid` command-probe group after the ABI drift audit. It passed
   11/11 with `fallback_sum=11`, no unsupported rows, no picture frames, and 1,369 command frames from the
   font-data record-flags row:
