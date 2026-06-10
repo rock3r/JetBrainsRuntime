@@ -38,6 +38,9 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel refreshed the focused `surface-transform-ui` command-probe group after `graphics-layer-invalid`. It
+  passed 15/15 with no fallback, no unsupported rows, no picture frames, and 18,966 command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260610-214838/suite.tsv`.
 - Magic Jewel refreshed the focused `graphics-layer-invalid` command-probe group after `native-text`. It passed 15/15
   with no fallback, 15 unsupported-picture rows, 15,986 picture frames, and no command frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260610-213721/suite.tsv`.
