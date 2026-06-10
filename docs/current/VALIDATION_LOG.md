@@ -5,6 +5,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel focused `runtime-effect-invalid` command-probe refresh after `descriptor-handles-invalid`:
+  `CASE_GROUPS=runtime-effect-invalid` passed 62/62. Aggregate: `fallback_sum=56`, six unsupported-picture rows, 6,399
+  JBR picture frames, and zero JBR command frames. The group rechecked RuntimeEffect shader/color-filter source, SkSL,
+  uniform/child schema, named refs, child indices, invalid schemas, compile/build, and child-type fallback guards.
+  Magic Jewel `out` is 93G with about 247Gi free:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260610-234517/suite.tsv`.
 - Magic Jewel focused `descriptor-handles-invalid` command-probe refresh after `save-layer-invalid`:
   `CASE_GROUPS=descriptor-handles-invalid` passed 48/48. Aggregate: `fallback_sum=48`, `unsupported_rows=0`, zero JBR
   picture frames, and zero JBR command frames. The group rechecked invalid descriptor handle use, use-after-evict,
