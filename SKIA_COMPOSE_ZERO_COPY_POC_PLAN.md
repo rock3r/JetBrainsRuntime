@@ -12,6 +12,11 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 ## Current Snapshot
 
 - ABI 106 artifacts are current across JBR private API, JBR API mirror, Skiko, CMP, and Magic Jewel.
+- CMP focused recorder validation passed after the gradient invalid consolidation:
+  `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests
+  androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest`. The current remaining unsupported-reason audit is therefore
+  backed by current recorder tests for nested child/header invariants, shadow replay, gradient path paint guards, and
+  public gradient shape fallbacks.
 - The expanded `gradient-invalid` medium group refreshed green as a split run after an environment refresh interrupted
   the first attempt after four rows. Combined result: 81/81 passed, `fallback_sum=60`, 21 unsupported-picture rows,
   22,222 picture frames, and zero command frames:

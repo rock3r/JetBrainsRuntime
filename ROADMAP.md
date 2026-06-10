@@ -38,6 +38,11 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- CMP focused recorder validation passed on the current unsupported-reason audit state:
+  `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests
+  androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest`. This re-anchors the remaining mismatch classifications
+  against current code, including nested graphics-layer child/header invariants, shadow replay, gradient path paint
+  guards, and the latest public gradient shape rows.
 - Magic Jewel refreshed the expanded `gradient-invalid` command-probe group as a split run after an environment refresh
   interrupted the first attempt after four passing rows. Combined result: 81/81 passed, `fallback_sum=60`, 21
   unsupported-picture rows, 22,222 picture frames, and zero command frames across:

@@ -5,6 +5,15 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- CMP current unsupported-reason audit validation: after the Magic Jewel gradient shape rows and expanded
+  `gradient-invalid` refresh, the full focused `JbrSkiaCommandRecorderTest` desktop class passed:
+  `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests
+  androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest`. This revalidates the current recorder state behind the
+  remaining mismatch classifications, including direct coverage for nested graphics-layer child command/header
+  invariants (`nestedRecordingRejectsMissingChildCommands`, `nestedRecordingRejectsChildUnsupportedCount`,
+  `nestedRecordingRejectsShortChildHeader`, and `nestedRecordingRejectsMismatchedChildHeader`), supported shadow
+  replay, gradient path paint strict-mode guards, invalid gradient geometry/payload guards, non-finite color-matrix
+  rejection, and the broad supported command replay surface.
 - Magic Jewel expanded `gradient-invalid` group refresh: after adding the nine public gradient shape rows to the broad
   gradient invalid group, `CASE_GROUPS=gradient-invalid` was refreshed as a split run because an environment refresh
   interrupted the first attempt after four passing rows. Prefix:
