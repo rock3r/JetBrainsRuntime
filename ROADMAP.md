@@ -38,6 +38,9 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel refreshed the focused `gradient-path-invalid` command-probe group after `graphics-layer-extras`. It
+  passed 21/21 with `fallback_sum=18`, three unsupported-picture rows, 3,542 picture frames, and no command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260610-222857/suite.tsv`.
 - Magic Jewel refreshed the focused `graphics-layer-extras` command-probe group after `graphics-layer`. It passed 16/16
   with no fallback, four unsupported-picture rows, 4,221 picture frames, and 15,698 command frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260610-221556/suite.tsv`.

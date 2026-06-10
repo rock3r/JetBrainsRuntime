@@ -5,6 +5,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel focused `gradient-path-invalid` command-probe refresh after `graphics-layer-extras`:
+  `CASE_GROUPS=gradient-path-invalid` passed 21/21. Aggregate: `fallback_sum=18`, three unsupported-picture rows, 3,542
+  JBR picture frames, and zero JBR command frames. The group rechecked linear, radial, and sweep gradient path picture
+  fallbacks plus malformed tile-mode, color-count, stop-order, fill-type, path data-length, and path-verb guards. Magic
+  Jewel `out` is 92G with about 259Gi free:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260610-222857/suite.tsv`.
 - Magic Jewel focused `graphics-layer-extras` command-probe refresh after `graphics-layer`:
   `CASE_GROUPS=graphics-layer-extras` passed 16/16. Aggregate: `fallback_sum=0`, four unsupported-picture rows, 4,221
   JBR picture frames, and 15,698 JBR command frames. The group rechecked resize/forced-context graphics-layer color
