@@ -5,6 +5,15 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel expanded `gradient-invalid` group refresh: after adding the nine public gradient shape rows to the broad
+  gradient invalid group, `CASE_GROUPS=gradient-invalid` was refreshed as a split run because an environment refresh
+  interrupted the first attempt after four passing rows. Prefix:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260610-091843/suite.tsv`
+  covered the first four live gradient rows. Suffix:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260610-092520/suite.tsv`
+  resumed from `commands-radial-gradient-invalid-stops-fallback` and covered the remaining 77 rows. Combined result:
+  81/81 passed, `fallback_sum=60`, 21 unsupported-picture rows, 22,222 picture frames, and zero command frames. Magic
+  Jewel `out` is 89G with about 267Gi free.
 - Magic Jewel public gradient stroke-round-rect radius checkpoint: after the first public gradient shape batch, the
   unsupported-reason audit still showed `linearGradientStrokeRoundRectRadius`, `radialGradientStrokeRoundRectRadius`,
   and `sweepGradientStrokeRoundRectRadius` were not direct expected reasons in the suite. Added three explicit

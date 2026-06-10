@@ -38,6 +38,11 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel refreshed the expanded `gradient-invalid` command-probe group as a split run after an environment refresh
+  interrupted the first attempt after four passing rows. Combined result: 81/81 passed, `fallback_sum=60`, 21
+  unsupported-picture rows, 22,222 picture frames, and zero command frames across:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260610-091843/suite.tsv` and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260610-092520/suite.tsv`.
 - Magic Jewel added and validated public low-level canvas sentinels for the three gradient stroke-round-rect radius
   guards. Exact linear validation passed first, then `gradient-stroke-round-rect-radius-invalid` passed 3/3 with
   `linearGradientStrokeRoundRectRadius`, `radialGradientStrokeRoundRectRadius`, and
