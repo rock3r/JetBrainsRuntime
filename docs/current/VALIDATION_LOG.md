@@ -5,6 +5,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel focused `gradient-round-rect-radius-invalid` command-probe refresh after stroke-width validation:
+  `CASE_GROUPS=gradient-round-rect-radius-invalid` passed 3/3. Aggregate: `fallback_sum=0`, three
+  unsupported-picture rows, 3,126 JBR picture frames, and zero JBR command frames. The rows reported
+  `linearGradientRoundRectRadius`, `radialGradientRoundRectRadius`, and `sweepGradientRoundRectRadius` fallback
+  reasons:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260610-190334/suite.tsv`.
 - Magic Jewel focused `gradient-stroke-width-invalid` command-probe refresh after color-count validation:
   `CASE_GROUPS=gradient-stroke-width-invalid` passed 3/3. Aggregate: `fallback_sum=0`, three unsupported-picture rows,
   3,610 JBR picture frames, and zero JBR command frames. The public rows reported `linearGradientStrokeWidth`,
