@@ -5,6 +5,10 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel one-row `image-shader-invalid` command-probe refresh after the color-filter invalid refresh:
+  `CASE_GROUPS=image-shader-invalid` passed 1/1. The row reported `imageShaderImage`, one unsupported-picture row,
+  1,034 JBR picture frames, and zero JBR command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260610-184709/suite.tsv`.
 - Magic Jewel focused `fill-rect-color-filter-invalid` command-probe refresh after `shader-ref-invalid`:
   `CASE_GROUPS=fill-rect-color-filter-invalid` passed 6/6. Aggregate: `fallback_sum=5`, one unsupported-picture row,
   1,061 JBR picture frames, and zero JBR command frames. The non-finite color-matrix row reported

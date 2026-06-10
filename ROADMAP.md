@@ -38,6 +38,9 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel refreshed the one-row `image-shader-invalid` command-probe group after the color-filter invalid refresh.
+  It passed 1/1 with `imageShaderImage`, one unsupported-picture row, 1,034 picture frames, and zero command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260610-184709/suite.tsv`.
 - Magic Jewel refreshed the focused `fill-rect-color-filter-invalid` command-probe group after `shader-ref-invalid`.
   It passed 6/6 with `fallback_sum=5`, one unsupported-picture row, 1,061 picture frames, and zero command frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260610-184147/suite.tsv`.
