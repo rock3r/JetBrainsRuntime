@@ -5,6 +5,11 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel focused `blend-mode-invalid` command-probe refresh after `path-invalid`: `CASE_GROUPS=blend-mode-invalid`
+  passed 3/3. Aggregate: `fallback_sum=2`, one unsupported-picture row, 957 JBR picture frames, and zero JBR command
+  frames. The live vertices row reported the dynamic `blendMode_Clear` unsupported reason, while fill-rect blend-mode
+  width/height malformed stream rows failed closed with fallback markers:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260610-183512/suite.tsv`.
 - Magic Jewel focused `path-invalid` command-probe refresh after `primitive-invalid`: `CASE_GROUPS=path-invalid`
   passed 24/24. Aggregate: `fallback_sum=22`, two unsupported-picture rows, 2,125 JBR picture frames, and zero JBR
   command frames. The public invalid clip/draw path rows reported structured picture fallback; path verb, dash
