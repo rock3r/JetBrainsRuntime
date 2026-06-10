@@ -5,6 +5,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel focused `fill-rect-color-filter-invalid` command-probe refresh after `shader-ref-invalid`:
+  `CASE_GROUPS=fill-rect-color-filter-invalid` passed 6/6. Aggregate: `fallback_sum=5`, one unsupported-picture row,
+  1,061 JBR picture frames, and zero JBR command frames. The non-finite color-matrix row reported
+  `colorMatrixNonfinite`; direct and descriptor-backed fill-rect color-filter width/height/blend-mode malformed stream
+  rows failed closed with fallback markers. Volume free space is about 261Gi:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260610-184147/suite.tsv`.
 - Magic Jewel focused `shader-ref-invalid` command-probe refresh after `blend-mode-invalid`:
   `CASE_GROUPS=shader-ref-invalid` passed 3/3. Aggregate: `fallback_sum=3`, zero unsupported rows, zero JBR picture
   frames, and zero JBR command frames. The fill-rect shader-ref horizontal bounds, vertical bounds, and alpha malformed
