@@ -12,6 +12,10 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 ## Current Snapshot
 
 - ABI 106 artifacts are current across JBR private API, JBR API mirror, Skiko, CMP, and Magic Jewel.
+- The latest compatibility matrix checkpoint passed after the 549-row command-probe consolidation. Discovery resolved
+  57/57 grouped rows with no ungrouped cases, and the matrix passed 57/57 with `fallback_sum=56`, 573 happy-path JBR
+  command frames, zero command frames on all mismatch rows, and background-window mode on every row:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260610-171921/matrix.tsv`.
 - The latest default Magic Jewel command-probe consolidation now covers all 549 default rows after the public gradient
   shape expansion. Because fresh broad starts hit launch-only SIGTERM/no-sample interruptions before any app markers,
   the passing checkpoint is a split run: exact `commands-live-animation`, focused `stream-invalid`, and a suffix from

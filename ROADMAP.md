@@ -38,6 +38,11 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel refreshed the full compatibility matrix after the 549-row command-probe consolidation. No-run discovery
+  still resolves 57 rows across handshake, low/high capability, and public-API fallback groups with no ungrouped
+  cases. The matrix passed 57/57 with `fallback_sum=56`, the happy path produced 573 JBR command frames, all mismatch
+  rows fell back without command replay, and every row stayed in background-window mode:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260610-171921/matrix.tsv`.
 - Magic Jewel completed a 549-row default command-probe consolidation after the public gradient shape expansion. The
   first broad attempts exposed launch-only SIGTERM/no-sample interruptions on the first JBR-side process of a suite
   invocation, so the passing evidence is split across exact `commands-live-animation`, focused `stream-invalid`, and a

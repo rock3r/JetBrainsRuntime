@@ -5,6 +5,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel compatibility matrix refresh after the 549-row command-probe consolidation: no-run discovery resolved
+  57 total rows (`handshake` 6, `low-word-gradients` 15, `low-word-effects` 18, `high-word-effects` 9, and
+  `high-word-shader-ui` 9) with no ungrouped cases. The full matrix passed 57/57 with `fallback_sum=56`, 573 JBR
+  command frames from the happy path, zero command frames on every ABI/capability/public-API mismatch row, and
+  `background_window=true` on all rows. Magic Jewel `out` is 91G with about 243Gi free:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260610-171921/matrix.tsv`.
 - Magic Jewel 549-row default command-probe consolidation: after the public gradient shape rows expanded default
   discovery to 549 rows, a full default sweep was refreshed as split evidence. Two fresh broad starts failed before any
   app/process samples or CMP/Skiko/JBR markers because `:runJbrSkiaInterop` exited 143/SIGTERM; the same rows passed
