@@ -38,6 +38,10 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel refreshed the focused `native-text-invalid` command-probe group after the ABI drift audit. It passed
+  11/11 with `fallback_sum=11`, no unsupported rows, no picture frames, and 1,369 command frames from the
+  font-data record-flags row:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260610-175826/suite.tsv`.
 - Cross-repo ABI/capability drift audit refreshed cleanly after the matrix checkpoints. Shared ABI 106 constants match
   across the JBR private API, JBR API mirror, JBR native parser subset, Skiko discovery/layer subsets, and the CMP
   recorder subset. The public mirror exposes 65 low-word capability bits with required mask `-1`

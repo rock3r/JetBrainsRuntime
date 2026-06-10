@@ -12,6 +12,9 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 ## Current Snapshot
 
 - ABI 106 artifacts are current across JBR private API, JBR API mirror, Skiko, CMP, and Magic Jewel.
+- Focused `native-text-invalid` command-probe validation refreshed after the ABI drift audit: 11/11 passed,
+  `fallback_sum=11`, zero unsupported rows, zero picture frames, and 1,369 command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260610-175826/suite.tsv`.
 - A scoped cross-repo ABI/capability audit found no shared constant drift across the JBR private API, JBR API mirror,
   JBR native parser subset, Skiko discovery/layer subsets, and the CMP recorder subset. Current masks remain
   `low=-1` (`0xffffffffffffffff`) across 65 low-word capability bits and `high=262143`

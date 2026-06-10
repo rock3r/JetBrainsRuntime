@@ -5,6 +5,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel focused `native-text-invalid` command-probe refresh after the ABI drift audit: no-run group discovery
+  reported 11 rows, and `CASE_GROUPS=native-text-invalid` passed 11/11. Aggregate: `fallback_sum=11`,
+  `unsupported_rows=0`, zero JBR picture frames, and 1,369 JBR command frames. The text and paragraph metadata rows
+  failed closed with one fallback marker each and no replay frames; the font-data record-flags row also produced the
+  expected fallback marker while exercising command replay frames. Magic Jewel `out` is 91G with about 262Gi free:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260610-175826/suite.tsv`.
 - Cross-repo ABI/capability drift audit after the compatibility and artifact matrix refreshes: extracted
   `ABI_ID`, `NATIVE_ABI_VERSION`, `COMMAND_*`, `COMMAND_CAP_*`, and `COMMAND_CAP64_*` definitions from the scoped
   bridge files only: JBR private API `JBRSkia.java`, JBR API mirror `JBRSkia.java`, JBR native
