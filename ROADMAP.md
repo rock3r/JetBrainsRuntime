@@ -38,6 +38,9 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel refreshed the focused `descriptor-handles-invalid` command-probe group after `save-layer-invalid`. It
+  passed 48/48 with `fallback_sum=48`, no unsupported rows, no picture frames, and no command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260610-231048/suite.tsv`.
 - Magic Jewel refreshed the focused `save-layer-invalid` command-probe group after `gradient-path-invalid`. It passed
   37/37 with `fallback_sum=37`, no unsupported rows, no picture frames, and no command frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260610-224435/suite.tsv`.

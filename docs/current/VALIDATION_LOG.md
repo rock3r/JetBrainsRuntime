@@ -5,6 +5,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel focused `descriptor-handles-invalid` command-probe refresh after `save-layer-invalid`:
+  `CASE_GROUPS=descriptor-handles-invalid` passed 48/48. Aggregate: `fallback_sum=48`, `unsupported_rows=0`, zero JBR
+  picture frames, and zero JBR command frames. The group rechecked invalid descriptor handle use, use-after-evict,
+  missing children, wrong effect-type refs, shader/color-filter/image-filter/path-effect children, and saveLayer
+  descriptor-handle guards. Magic Jewel `out` is 92G with about 227Gi free:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260610-231048/suite.tsv`.
 - Magic Jewel focused `save-layer-invalid` command-probe refresh after `gradient-path-invalid`:
   `CASE_GROUPS=save-layer-invalid` passed 37/37. Aggregate: `fallback_sum=37`, `unsupported_rows=0`, zero JBR picture
   frames, and zero JBR command frames. The group rechecked malformed saveLayer alpha, record flags/lengths, color
