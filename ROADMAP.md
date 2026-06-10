@@ -38,6 +38,9 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel refreshed the focused `gradient-stop-invalid` command-probe group after `image-shader-invalid`. It
+  passed 4/4 with four unsupported-picture rows, 4,226 picture frames, and zero command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260610-184901/suite.tsv`.
 - Magic Jewel refreshed the one-row `image-shader-invalid` command-probe group after the color-filter invalid refresh.
   It passed 1/1 with `imageShaderImage`, one unsupported-picture row, 1,034 picture frames, and zero command frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260610-184709/suite.tsv`.
