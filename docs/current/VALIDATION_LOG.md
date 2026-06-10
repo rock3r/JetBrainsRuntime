@@ -5,6 +5,11 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel focused `graphics-layer-invalid` command-probe refresh after `native-text`:
+  `CASE_GROUPS=graphics-layer-invalid` passed 15/15. Aggregate: `fallback_sum=0`, 15 unsupported-picture rows, 15,986
+  JBR picture frames, and zero JBR command frames. The group rechecked invalid graphics-layer size, alpha, transform,
+  camera distance, shadow, blend-mode, and unrecorded-layer fallbacks. Magic Jewel `out` is 92G with about 238Gi free:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260610-213721/suite.tsv`.
 - Magic Jewel focused `native-text` command-probe refresh after `image-handles-invalid`:
   `CASE_GROUPS=native-text` passed 14/14. Aggregate: `fallback_sum=0`, `unsupported_rows=0`, zero JBR picture frames,
   and 17,781 JBR command frames. The group rechecked custom font text images plus generic, loaded-data, resource, and
