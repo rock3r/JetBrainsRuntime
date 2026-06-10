@@ -38,6 +38,9 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel refreshed the focused `shader-composition-runtime` command-probe group after `shader-rendering`. It
+  passed 15/15 with two unsupported-picture rows, 1,690 picture frames, and 17,687 command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260610-194645/suite.tsv`.
 - Magic Jewel refreshed the focused `shader-rendering` command-probe group after `core-effects`. It passed 18/18 with
   ten unsupported-picture rows, 9,154 picture frames, and 10,048 command frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260610-193254/suite.tsv`.
