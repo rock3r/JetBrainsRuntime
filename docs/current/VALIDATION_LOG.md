@@ -5,6 +5,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel focused `save-layer-invalid` command-probe refresh after `gradient-path-invalid`:
+  `CASE_GROUPS=save-layer-invalid` passed 37/37. Aggregate: `fallback_sum=37`, `unsupported_rows=0`, zero JBR picture
+  frames, and zero JBR command frames. The group rechecked malformed saveLayer alpha, record flags/lengths, color
+  filter/blend/image-filter refs, dimensions, alpha, and blend-mode fallback guards. Magic Jewel `out` is 92G with
+  about 259Gi free:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260610-224435/suite.tsv`.
 - Magic Jewel focused `gradient-path-invalid` command-probe refresh after `graphics-layer-extras`:
   `CASE_GROUPS=gradient-path-invalid` passed 21/21. Aggregate: `fallback_sum=18`, three unsupported-picture rows, 3,542
   JBR picture frames, and zero JBR command frames. The group rechecked linear, radial, and sweep gradient path picture

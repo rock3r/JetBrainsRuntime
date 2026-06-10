@@ -12,6 +12,9 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 ## Current Snapshot
 
 - ABI 106 artifacts are current across JBR private API, JBR API mirror, Skiko, CMP, and Magic Jewel.
+- Focused `save-layer-invalid` command-probe validation refreshed after `gradient-path-invalid`: 37/37 passed with
+  `fallback_sum=37`, no unsupported rows, no picture frames, and no command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260610-224435/suite.tsv`.
 - Focused `gradient-path-invalid` command-probe validation refreshed after `graphics-layer-extras`: 21/21 passed with
   `fallback_sum=18`, three unsupported-picture rows, 3,542 picture frames, and no command frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260610-222857/suite.tsv`.
