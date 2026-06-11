@@ -38,6 +38,9 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Skiko refreshed the focused `JbrSkiaInteropTest` class after the compatibility and artifact matrix refreshes:
+  `./gradlew --no-daemon --no-configuration-cache :awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`
+  passed in `/Users/rock3r/src/jbr-skia-zero-copy/skiko/skiko` with `BUILD SUCCESSFUL`.
 - Magic Jewel refreshed the required artifact matrix on the current ABI 106 local artifacts after the compatibility
   refresh. Required rows passed 2/2: `current-all` replayed 654 command frames with no fallback, `missing-public-api`
   fell back once as expected, and the five optional old-artifact rows were skipped because no old bundle variables

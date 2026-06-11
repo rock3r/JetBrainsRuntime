@@ -12,6 +12,9 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 ## Current Snapshot
 
 - ABI 106 artifacts are current across JBR private API, JBR API mirror, Skiko, CMP, and Magic Jewel.
+- Skiko focused interop validation refreshed after the matrix gates:
+  `./gradlew --no-daemon --no-configuration-cache :awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`
+  passed with `BUILD SUCCESSFUL`.
 - Current-artifact matrix refreshed after the compatibility matrix: required rows passed 2/2. `current-all` replayed
   654 command frames with no fallback, `missing-public-api` fell back once as expected, and the five optional
   old-artifact rows were skipped because no old bundle variables were set:

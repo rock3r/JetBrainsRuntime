@@ -5,6 +5,10 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Skiko focused `JbrSkiaInteropTest` after the matrix gates:
+  `./gradlew --no-daemon --no-configuration-cache :awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`
+  passed in `/Users/rock3r/src/jbr-skia-zero-copy/skiko/skiko` with `BUILD SUCCESSFUL`; Gradle reported 28 actionable
+  tasks, one executed and 27 up-to-date.
 - Magic Jewel current-artifact matrix after the compatibility refresh:
   default `./scripts/jbr-skia-artifact-matrix.sh` passed. Required rows passed 2/2: `current-all` had no fallback and
   654 JBR command frames; `missing-public-api` produced one expected structured fallback with no command frames. The
