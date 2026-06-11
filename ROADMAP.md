@@ -38,6 +38,10 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel refreshed the focused `native-text` screenshot parity group after `runtime-effect`. It passed 14/14
+  with `fallback_sum=3`, no picture frames, 11,672 command frames, mean `avg_delta=2.037`, and mean
+  `bad_pixel_ratio=0.04758`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260611-075039/suite.tsv`.
 - Magic Jewel refreshed the focused `runtime-effect` screenshot parity group after `shader-rendering`. It passed
   14/14 with `fallback_sum=2`, no picture frames, 11,139 command frames, mean `avg_delta=2.054`, and mean
   `bad_pixel_ratio=0.04879`:

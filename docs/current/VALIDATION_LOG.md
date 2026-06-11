@@ -5,6 +5,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel focused `native-text` screenshot parity refresh after `runtime-effect`: `CASE_GROUPS=native-text`
+  passed 14/14. Aggregate: `fallback_sum=3`, zero JBR picture frames, 11,672 JBR command frames, mean
+  `avg_delta=2.037`, and mean `bad_pixel_ratio=0.04758`. The group rechecked custom text images, generic font,
+  loaded-data font, resource font, and system font text across base, resize, and forced-context replay. Magic Jewel
+  `out` is 95G with about 247Gi free:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260611-075039/suite.tsv`.
 - Magic Jewel focused `runtime-effect` screenshot parity refresh after `shader-rendering`:
   `CASE_GROUPS=runtime-effect` passed 14/14. Aggregate: `fallback_sum=2`, zero JBR picture frames, 11,139 JBR
   command frames, mean `avg_delta=2.054`, and mean `bad_pixel_ratio=0.04879`. The group rechecked RuntimeEffect
