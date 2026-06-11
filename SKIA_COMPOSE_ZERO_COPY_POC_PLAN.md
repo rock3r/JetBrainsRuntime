@@ -12,6 +12,10 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 ## Current Snapshot
 
 - ABI 106 artifacts are current across JBR private API, JBR API mirror, Skiko, CMP, and Magic Jewel.
+- Current-artifact matrix refreshed after the compatibility matrix: required rows passed 2/2. `current-all` replayed
+  654 command frames with no fallback, `missing-public-api` fell back once as expected, and the five optional
+  old-artifact rows were skipped because no old bundle variables were set:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260611-101223/matrix.tsv`.
 - Full compatibility matrix refreshed after the full command and screenshot parity sweeps: 57/57 passed with
   `fallback_sum=56`; the happy path produced 474 JBR command frames, every mismatch row produced exactly one
   structured fallback with no command frames, and all rows stayed in background-window mode:

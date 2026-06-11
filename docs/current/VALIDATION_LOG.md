@@ -5,6 +5,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel current-artifact matrix after the compatibility refresh:
+  default `./scripts/jbr-skia-artifact-matrix.sh` passed. Required rows passed 2/2: `current-all` had no fallback and
+  654 JBR command frames; `missing-public-api` produced one expected structured fallback with no command frames. The
+  five optional old-artifact rows were skipped because `OLD_JBR_API_SHIM`, `OLD_JBR_SKIA_LIB`, `OLD_DESKTOP_PATCH`,
+  `OLD_SKIKO_VERSION`, and `OLD_CMP_OUT` were unset. Magic Jewel `out` is 96G with about 246Gi free:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260611-101223/matrix.tsv`.
 - Magic Jewel full compatibility matrix after the full command and screenshot parity sweeps:
   default `./scripts/jbr-skia-compatibility-matrix.sh` passed 57/57. No-run discovery still resolved 57 rows.
   Aggregate: `fallback_sum=56`, 474 JBR command frames from the happy path, and all 57 rows reported
