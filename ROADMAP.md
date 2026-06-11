@@ -38,6 +38,9 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel report-validation unit script refreshed after the CMP recorder validation:
+  `./scripts/test-jbr-skia-report-validation.sh` passed with `JBR_SKIA_REPORT_VALIDATION_TESTS passed`; its expected
+  negative strict-validation case emitted the temporary failure report line.
 - CMP refreshed the focused recorder validation after the source-level unsupported-reason scan:
   `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests
   androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest` passed in
