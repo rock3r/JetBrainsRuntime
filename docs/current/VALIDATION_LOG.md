@@ -5,6 +5,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel focused `graphics-layer-extras` command-probe group after `graphics-layer`:
+  `CASE_GROUPS=graphics-layer-extras ./scripts/jbr-skia-command-probe-suite.sh` passed 16/16. Aggregate:
+  `fallback_sum=0`, four unsupported-picture rows, 5,374 JBR picture frames, and 22,521 JBR command frames. The group
+  rechecked resize/forced-context graphics-layer color-matrix and render-effect rows, raw color-filter/image-filter
+  fallbacks, unsupported-child fallback, and chained render-effect/color-filter/blend/color-matrix combinations:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260611-114204/suite.tsv`.
 - Magic Jewel focused `graphics-layer` command-probe group after the shadow guard audit:
   `CASE_GROUPS=graphics-layer ./scripts/jbr-skia-command-probe-suite.sh` passed 22/22. Aggregate:
   `fallback_sum=0`, one expected unsupported-picture row from invalid shadow elevation, 1,401 JBR picture frames, and
