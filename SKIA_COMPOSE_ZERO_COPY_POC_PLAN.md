@@ -12,6 +12,9 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 ## Current Snapshot
 
 - ABI 106 artifacts are current across JBR private API, JBR API mirror, Skiko, CMP, and Magic Jewel.
+- CMP focused recorder validation refreshed after the unsupported-reason source scan:
+  `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests
+  androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest` passed with `BUILD SUCCESSFUL`.
 - Cross-repo ABI/capability drift audit is clean: JBR private API, JBR API mirror, Skiko discovery/stream writer, and
   CMP recorder are aligned on command stream ABI 106 and native ABI 3; the low-word and high-word capability tails
   match through the current drawVertices bit.

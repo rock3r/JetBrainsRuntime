@@ -5,6 +5,11 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- CMP focused recorder validation after the unsupported-reason source scan:
+  `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests
+  androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest` passed in
+  `/Users/rock3r/src/jbr-skia-zero-copy/cmp` with `BUILD SUCCESSFUL`; Gradle reported 79 actionable tasks, 12
+  executed and 67 up-to-date.
 - Cross-repo ABI/capability drift audit after the matrix and Skiko checkpoints:
   scoped `rg` checks found JBR private API and JBR API mirror at `ABI_ID=106` and `NATIVE_ABI_VERSION=3`, JBR native
   metadata at native ABI 3, Skiko discovery at expected ABI 106/native ABI 3, Skiko stream writer and CMP recorder at

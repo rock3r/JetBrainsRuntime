@@ -38,6 +38,10 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- CMP refreshed the focused recorder validation after the source-level unsupported-reason scan:
+  `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests
+  androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest` passed in
+  `/Users/rock3r/src/jbr-skia-zero-copy/cmp` with `BUILD SUCCESSFUL`.
 - Cross-repo ABI/capability drift audit refreshed cleanly after the matrix and Skiko checkpoints. JBR private API,
   JBR API mirror, Skiko discovery/stream writer, and CMP recorder are still aligned on command stream ABI 106 and
   native ABI 3; low-word tail `COMMAND_CAP64_SAVE_LAYER_BLEND_COLOR_FILTER_REF` and high-word tail bits through
