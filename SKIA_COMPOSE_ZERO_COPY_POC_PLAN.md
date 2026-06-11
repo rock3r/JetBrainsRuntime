@@ -12,6 +12,9 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 ## Current Snapshot
 
 - ABI 106 artifacts are current across JBR private API, JBR API mirror, Skiko, CMP, and Magic Jewel.
+- Focused `native-text-invalid` command-probe group refreshed after the full sweep: 11/11 passed with
+  `fallback_sum=11`, no unsupported-picture rows, no picture frames, and 1,996 command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260612-003034/suite.tsv`.
 - Full default command-probe structured-marker sweep refreshed after the saveLayer/shader fallback tail repair:
   `EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-command-probe-suite.sh` passed 549/549 with
   `fallback_sum=350`, 80 unsupported-picture rows, 127,181 picture frames, and 306,312 command frames:

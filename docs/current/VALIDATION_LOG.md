@@ -5,6 +5,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel focused `native-text-invalid` command-probe refresh after the full structured-marker sweep:
+  `EXPECT_SCREENSHOT_ASSERTION=false CASE_GROUPS=native-text-invalid ./scripts/jbr-skia-command-probe-suite.sh`
+  passed 11/11. Aggregate: `fallback_sum=11`, zero unsupported-picture rows, zero JBR picture frames, and 1,996 JBR
+  command frames from the font-data setup row before its invalid record-flags fallback. The group rechecked text and
+  paragraph font size/weight/width/slant/family-count parser guards plus font-data record-flags fallback. Magic Jewel
+  `out` is 101G with about 233Gi free:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260612-003034/suite.tsv`.
 - Magic Jewel full default command-probe sweep after the saveLayer/shader fallback tail repair:
   `EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-command-probe-suite.sh` passed 549/549 using structured
   command/fallback markers while local macOS screenshot capture was unavailable (`screencapture` could not create a

@@ -38,6 +38,9 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel refreshed the focused `native-text-invalid` command-probe group after the full structured-marker sweep.
+  It passed 11/11 with `fallback_sum=11`, no unsupported-picture rows, no picture frames, and 1,996 command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260612-003034/suite.tsv`.
 - Magic Jewel completed a full default command-probe sweep after the saveLayer/shader fallback tail repair, using
   `EXPECT_SCREENSHOT_ASSERTION=false` because local macOS screenshot capture could not create a window/region image.
   Structured command/fallback validation passed 549/549 with `fallback_sum=350`, 80 unsupported-picture rows, 127,181
