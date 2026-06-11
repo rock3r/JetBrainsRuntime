@@ -38,6 +38,10 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel refreshed the combined `shader-rendering color-filters` command-probe groups after image fallback marker
+  hardening. It passed 31/31 with `fallback_sum=0`, 15,814 picture frames from expected fallback sentinels, and 30,519
+  command frames from supported rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260611-104452/suite.tsv`.
 - Magic Jewel hardened image-paint fallback command probes to require the live recorder `image=1` marker in addition
   to the paint-specific unsupported reason. Exact `CASES` validation passed 2/2 with 2,431 picture frames and no
   command frames:

@@ -5,6 +5,15 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel combined `shader-rendering color-filters` command-probe refresh after image fallback marker hardening:
+  `CASE_GROUPS='shader-rendering color-filters' ./scripts/jbr-skia-command-probe-suite.sh` passed 31/31. Aggregate:
+  `fallback_sum=0`, 15,814 JBR picture frames from expected raw/invalid fallback sentinels, and 30,519 JBR command
+  frames from supported shader, image, color-filter, and graphics-layer color-filter rows. The newly hardened image
+  fallback rows passed in group context with unsupported summaries
+  `graphicsLayer:childCommands:1265,image:1265,pathEffect:1265,graphicsLayer:1265` and
+  `colorFilter:1238,graphicsLayer:childCommands:1238,image:1238,graphicsLayer:1238`. Magic Jewel `out` is 96G with
+  about 246Gi free:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260611-104452/suite.tsv`.
 - Magic Jewel exact command-probe hardening for live image fallback markers:
   `CASES='commands-image-path-effect-fallback commands-image-raw-table-color-filter-fallback'
   ./scripts/jbr-skia-command-probe-suite.sh` passed 2/2 after adding `EXPECT_COMMAND_FALLBACK_MARKER=image=1` to the

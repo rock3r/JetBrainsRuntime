@@ -12,6 +12,9 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 ## Current Snapshot
 
 - ABI 106 artifacts are current across JBR private API, JBR API mirror, Skiko, CMP, and Magic Jewel.
+- Combined `shader-rendering color-filters` command-probe refresh passed after image fallback marker hardening: 31/31
+  passed with `fallback_sum=0`, 15,814 picture frames, and 30,519 command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260611-104452/suite.tsv`.
 - Magic Jewel command probes now require the live recorder `image=1` marker on image path-effect and raw table
   color-filter fallback rows. Exact `CASES` validation passed 2/2 with 2,431 picture frames and no command frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260611-104135/suite.tsv`.
