@@ -38,6 +38,10 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel refreshed the focused `graphics-layer-effects` screenshot parity group after `descriptor-lifecycle`. It
+  passed 14/14 with `fallback_sum=2`, no picture frames, 17,833 command frames, mean `avg_delta=2.341`, and mean
+  `bad_pixel_ratio=0.05725`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260611-081932/suite.tsv`.
 - Magic Jewel refreshed the focused `descriptor-lifecycle` screenshot parity group after `core-drawing`. It passed
   6/6 with `fallback_sum=1`, no picture frames, 6,461 command frames, mean `avg_delta=2.127`, and mean
   `bad_pixel_ratio=0.05078`:

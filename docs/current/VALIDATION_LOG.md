@@ -5,6 +5,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel focused `graphics-layer-effects` screenshot parity refresh after `descriptor-lifecycle`:
+  `CASE_GROUPS=graphics-layer-effects` passed 14/14. Aggregate: `fallback_sum=2`, zero JBR picture frames, 17,833 JBR
+  command frames, mean `avg_delta=2.341`, and mean `bad_pixel_ratio=0.05725`. The group rechecked resize and
+  forced-context graphics-layer color-matrix/render-effect rows, offset/chained/near-camera render effects, and
+  render-effect blend/color-filter/color-matrix combinations. Magic Jewel `out` is 96G with about 246Gi free:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260611-081932/suite.tsv`.
 - Magic Jewel focused `descriptor-lifecycle` screenshot parity refresh after `core-drawing`:
   `CASE_GROUPS=descriptor-lifecycle` passed 6/6. Aggregate: `fallback_sum=1`, zero JBR picture frames, 6,461 JBR
   command frames, mean `avg_delta=2.127`, and mean `bad_pixel_ratio=0.05078`. The group rechecked color-filter
