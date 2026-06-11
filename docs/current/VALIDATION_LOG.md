@@ -5,6 +5,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel focused `graphics-layer-clip-shadow-transform` screenshot parity refresh after
+  `graphics-layer-basic`: `CASE_GROUPS=graphics-layer-clip-shadow-transform` passed 14/14. Aggregate:
+  `fallback_sum=0`, zero JBR picture frames, 19,849 JBR command frames, mean `avg_delta=2.223`, and mean
+  `bad_pixel_ratio=0.05296`. The group rechecked rectangle/round/path clipping, rectangle/round/path shadows,
+  modulate/offscreen compositing, rotation X/Y/XY, scale/translate, near-camera, and off-center pivot replay. Magic
+  Jewel `out` is 95G with about 227Gi free:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260611-071806/suite.tsv`.
 - Magic Jewel focused `graphics-layer-basic` screenshot parity refresh after the full command sweep:
   `CASE_GROUPS=graphics-layer-basic` passed 7/7. Aggregate: `fallback_sum=0`, zero JBR picture frames, 8,142 JBR
   command frames, mean `avg_delta=2.194`, and mean `bad_pixel_ratio=0.05223`. The group rechecked basic layer replay,
