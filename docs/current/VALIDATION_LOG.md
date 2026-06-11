@@ -5,6 +5,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel focused `graphics-layer-basic` screenshot parity refresh after the full command sweep:
+  `CASE_GROUPS=graphics-layer-basic` passed 7/7. Aggregate: `fallback_sum=0`, zero JBR picture frames, 8,142 JBR
+  command frames, mean `avg_delta=2.194`, and mean `bad_pixel_ratio=0.05223`. The group rechecked basic layer replay,
+  render effects, blend-mode layers, color filters, color-matrix filters, and blended filter combinations. Magic Jewel
+  `out` is 95G with about 247Gi free:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260611-071236/suite.tsv`.
 - Magic Jewel full default command-probe sweep after the focused group refresh batch:
   default `./scripts/jbr-skia-command-probe-suite.sh` passed 549/549. Aggregate: `fallback_sum=350`, 79
   unsupported-picture rows, 87,188 JBR picture frames, and 188,270 JBR command frames. The sweep consolidated the

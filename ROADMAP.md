@@ -38,6 +38,10 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel refreshed the focused `graphics-layer-basic` screenshot parity group after the full command sweep. It
+  passed 7/7 with no fallback, no picture frames, 8,142 command frames, mean `avg_delta=2.194`, and mean
+  `bad_pixel_ratio=0.05223`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260611-071236/suite.tsv`.
 - Magic Jewel completed a full 549-row default command-probe sweep after the focused group refresh batch. It passed
   549/549 with `fallback_sum=350`, 79 unsupported-picture rows, 87,188 picture frames, and 188,270 command frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260611-012205/suite.tsv`.
