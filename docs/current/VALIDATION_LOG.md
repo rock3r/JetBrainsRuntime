@@ -5,6 +5,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel full default screenshot parity sweep after the focused visual parity refresh batch:
+  default `./scripts/jbr-skia-screenshot-parity-suite.sh` passed 106/106. Aggregate: `fallback_sum=12`, zero JBR
+  picture frames, 102,236 JBR command frames, mean `avg_delta=2.158`, and mean `bad_pixel_ratio=0.05158`. The sweep
+  consolidated smoke, core drawing, native text, shader rendering, RuntimeEffect, descriptor lifecycle, and
+  graphics-layer basic/effects/clip/shadow/transform parity coverage refreshed in the preceding focused runs. Magic
+  Jewel `out` is 96G with about 225Gi free:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260611-083428/suite.tsv`.
 - Magic Jewel focused `smoke` screenshot parity refresh after `graphics-layer-effects`: `CASE_GROUPS=smoke` passed
   3/3. Aggregate: `fallback_sum=0`, zero JBR picture frames, 3,176 JBR command frames, mean `avg_delta=2.398`, and
   mean `bad_pixel_ratio=0.05816`. The group rechecked the rich scene, button chrome, and geometry-clean smoke views.

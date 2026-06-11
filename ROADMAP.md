@@ -38,6 +38,10 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel completed a full 106-row default screenshot parity sweep after the focused visual parity refresh batch.
+  It passed 106/106 with `fallback_sum=12`, no picture frames, 102,236 command frames, mean `avg_delta=2.158`, and
+  mean `bad_pixel_ratio=0.05158`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260611-083428/suite.tsv`.
 - Magic Jewel refreshed the focused `smoke` screenshot parity group after `graphics-layer-effects`. It passed 3/3
   with no fallback, no picture frames, 3,176 command frames, mean `avg_delta=2.398`, and mean
   `bad_pixel_ratio=0.05816`:
