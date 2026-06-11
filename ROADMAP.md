@@ -38,6 +38,11 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel refreshed the full compatibility matrix after the full command and screenshot parity sweeps. No-run
+  discovery still resolved 57 rows. The matrix passed 57/57 with `fallback_sum=56`; the happy path produced 474 JBR
+  command frames, all mismatch rows produced one structured fallback with no command frames, and all rows stayed in
+  background-window mode:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260611-094313/matrix.tsv`.
 - Magic Jewel completed a full 106-row default screenshot parity sweep after the focused visual parity refresh batch.
   It passed 106/106 with `fallback_sum=12`, no picture frames, 102,236 command frames, mean `avg_delta=2.158`, and
   mean `bad_pixel_ratio=0.05158`:

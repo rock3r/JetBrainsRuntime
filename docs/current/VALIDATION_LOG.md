@@ -5,6 +5,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel full compatibility matrix after the full command and screenshot parity sweeps:
+  default `./scripts/jbr-skia-compatibility-matrix.sh` passed 57/57. No-run discovery still resolved 57 rows.
+  Aggregate: `fallback_sum=56`, 474 JBR command frames from the happy path, and all 57 rows reported
+  `background_window=true`. Every forced ABI, native ABI, command-capability, high-capability, exact capability, and
+  public API mismatch row produced exactly one structured fallback with no command frames. Magic Jewel `out` is 96G
+  with about 246Gi free:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260611-094313/matrix.tsv`.
 - Magic Jewel full default screenshot parity sweep after the focused visual parity refresh batch:
   default `./scripts/jbr-skia-screenshot-parity-suite.sh` passed 106/106. Aggregate: `fallback_sum=12`, zero JBR
   picture frames, 102,236 JBR command frames, mean `avg_delta=2.158`, and mean `bad_pixel_ratio=0.05158`. The sweep
