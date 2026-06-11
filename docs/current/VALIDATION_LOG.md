@@ -5,6 +5,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Cross-repo ABI/capability drift audit after the matrix and Skiko checkpoints:
+  scoped `rg` checks found JBR private API and JBR API mirror at `ABI_ID=106` and `NATIVE_ABI_VERSION=3`, JBR native
+  metadata at native ABI 3, Skiko discovery at expected ABI 106/native ABI 3, Skiko stream writer and CMP recorder at
+  `COMMAND_STREAM_ABI_ID=106`, and matching capability tail constants including
+  `COMMAND_CAP64_SAVE_LAYER_BLEND_COLOR_FILTER_REF`, `COMMAND_CAP64_HIGH_SHADER_DESCRIPTOR_PERLIN_NOISE`, and
+  `COMMAND_CAP64_HIGH_DRAW_VERTICES`.
 - Skiko focused `JbrSkiaInteropTest` after the matrix gates:
   `./gradlew --no-daemon --no-configuration-cache :awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest`
   passed in `/Users/rock3r/src/jbr-skia-zero-copy/skiko/skiko` with `BUILD SUCCESSFUL`; Gradle reported 28 actionable
