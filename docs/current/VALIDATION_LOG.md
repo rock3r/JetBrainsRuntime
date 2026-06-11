@@ -5,6 +5,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel focused `runtime-effect` screenshot parity refresh after `shader-rendering`:
+  `CASE_GROUPS=runtime-effect` passed 14/14. Aggregate: `fallback_sum=2`, zero JBR picture frames, 11,139 JBR
+  command frames, mean `avg_delta=2.054`, and mean `bad_pixel_ratio=0.04879`. The group rechecked RuntimeEffect
+  shader/color-filter pure, uniform, child, source-cache eviction, resize, forced-context, shader-color-filter, stable
+  color-filter, and child color-filter rows. Magic Jewel `out` is 95G with about 227Gi free:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260611-074046/suite.tsv`.
 - Magic Jewel focused `shader-rendering` screenshot parity refresh after the graphics-layer visual groups:
   `CASE_GROUPS=shader-rendering` passed 18/18. Aggregate: `fallback_sum=4`, zero JBR picture frames, 13,787 JBR
   command frames, mean `avg_delta=2.081`, and mean `bad_pixel_ratio=0.04995`. The group rechecked image/color/noise/
