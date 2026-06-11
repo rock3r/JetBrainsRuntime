@@ -5,6 +5,14 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel focused `effect-descriptor-invalid` command-probe refresh after `path-invalid`:
+  `EXPECT_SCREENSHOT_ASSERTION=false CASE_GROUPS=effect-descriptor-invalid ./scripts/jbr-skia-command-probe-suite.sh`
+  passed 28/28. Aggregate: `fallback_sum=28`, zero unsupported-picture rows, zero JBR picture frames, and zero JBR
+  command frames. The group rechecked effect/color/image/path-effect descriptor parser sentinels, including descriptor
+  type/version/flags/length, lighting/tint/color-matrix/blur/offset payload guards, corner path-effect radius guards,
+  stamped path-effect advance/phase/style/fill/path-data/path-verb guards, and chain path-effect payload count.
+  Magic Jewel `out` is 102G with about 211Gi free:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260612-010824/suite.tsv`.
 - Magic Jewel focused `path-invalid` command-probe refresh after `primitive-invalid`:
   `EXPECT_SCREENSHOT_ASSERTION=false CASE_GROUPS=path-invalid ./scripts/jbr-skia-command-probe-suite.sh` passed 24/24.
   Aggregate: `fallback_sum=22`, two unsupported-picture rows, 3,181 JBR picture frames, and zero JBR command frames.
