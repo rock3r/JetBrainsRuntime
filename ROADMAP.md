@@ -38,6 +38,11 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel refreshed the focused graphics-layer shadow command probes while auditing the internal
+  `graphicsLayer:shadowFilter` guard. Exact `CASES` validation passed 5/5: supported rectangular/round/path shadow
+  rows produced 5,274 command frames with no unsupported reasons, and invalid elevation/path rows produced expected
+  picture fallback summaries:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260611-112032/suite.tsv`.
 - CMP added defensive unit coverage for the recorder-only `roundRectStyle` fallback branch. A direct
   `rejectsUnknownRoundRectPaintStyleInStrictMode` run passed, then the full focused `JbrSkiaCommandRecorderTest`
   class passed with `BUILD SUCCESSFUL` in `/Users/rock3r/src/jbr-skia-zero-copy/cmp`.

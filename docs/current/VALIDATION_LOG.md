@@ -5,6 +5,15 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel focused graphics-layer shadow command probes during the `graphicsLayer:shadowFilter` audit:
+  `CASES='commands-graphics-layer-shadow commands-graphics-layer-round-shadow commands-graphics-layer-path-shadow
+  commands-graphics-layer-invalid-shadow-elevation-fallback commands-graphics-layer-invalid-shadow-path-fallback'
+  ./scripts/jbr-skia-command-probe-suite.sh` passed 5/5. Supported rectangular, round, and path shadow rows reported
+  no unsupported reasons and 5,274 JBR command frames. Invalid elevation/path rows reported expected
+  `graphicsLayer:shadowElevation` and `graphicsLayer:shadowPath` fallback summaries with 2,529 JBR picture frames and
+  zero command frames. `graphicsLayer:shadowFilter` remains classified as an internal blur image-filter descriptor
+  definition guard rather than a public app-row gap:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260611-112032/suite.tsv`.
 - CMP defensive recorder coverage for the recorder-only `roundRectStyle` unsupported branch:
   `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests
   androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.rejectsUnknownRoundRectPaintStyleInStrictMode` passed, then

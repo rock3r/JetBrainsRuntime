@@ -12,6 +12,10 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 ## Current Snapshot
 
 - ABI 106 artifacts are current across JBR private API, JBR API mirror, Skiko, CMP, and Magic Jewel.
+- Magic Jewel focused graphics-layer shadow validation passed 5/5 while auditing `graphicsLayer:shadowFilter` as an
+  internal image-filter descriptor-definition guard: supported shadow rows replayed 5,274 command frames with no
+  unsupported reasons, and invalid elevation/path rows fell back with the expected public shadow summaries:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260611-112032/suite.tsv`.
 - CMP now has direct defensive unit coverage for the recorder-only `roundRectStyle` unsupported branch. The exact
   `rejectsUnknownRoundRectPaintStyleInStrictMode` method passed, followed by the full focused
   `JbrSkiaCommandRecorderTest` class with `BUILD SUCCESSFUL`.
