@@ -38,6 +38,12 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel repaired the command-probe saveLayer/shader fallback tail after a broad default sweep reached 543 green
+  rows and exposed a `not-run` generic screenshot assertion on `commands-save-layer-raw-color-filter-fallback` despite
+  correct structured fallback markers. Exact saveLayer command/fallback rows passed 4/4, then
+  `CASE_GROUPS=save-layer-shader-fallbacks` passed 9/9 with `fallback_sum=0`, six unsupported-picture rows, 9,440
+  picture frames, and 7,901 command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260611-180417/suite.tsv`.
 - Magic Jewel refreshed the focused `graphics-layer-extras` command-probe group after `graphics-layer`. It passed
   16/16 with `fallback_sum=0`, four unsupported-picture rows, 5,374 picture frames, and 22,521 command frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260611-114204/suite.tsv`.

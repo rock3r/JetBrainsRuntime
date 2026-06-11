@@ -12,6 +12,11 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 ## Current Snapshot
 
 - ABI 106 artifacts are current across JBR private API, JBR API mirror, Skiko, CMP, and Magic Jewel.
+- SaveLayer/shader command-probe fallback tail was refreshed after a broad default sweep reached 543 passing rows and
+  exposed screenshot-gate brittleness on the raw saveLayer color-filter sentinel. Exact saveLayer command/fallback rows
+  passed 4/4, and `CASE_GROUPS=save-layer-shader-fallbacks` passed 9/9 with `fallback_sum=0`, six
+  unsupported-picture rows, 9,440 picture frames, and 7,901 command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260611-180417/suite.tsv`.
 - Focused `graphics-layer-extras` command-probe validation refreshed after `graphics-layer`: 16/16 passed with
   `fallback_sum=0`, four unsupported-picture rows, 5,374 picture frames, and 22,521 command frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260611-114204/suite.tsv`.

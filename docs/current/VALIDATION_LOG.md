@@ -5,6 +5,19 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel default command-probe sweep tail repair for saveLayer/shader fallback rows. A broad default
+  `./scripts/jbr-skia-command-probe-suite.sh` reached 543 passed rows before stopping at
+  `commands-save-layer-raw-color-filter-fallback`; the row had the required `saveLayer` unsupported marker, JBR
+  picture fallback, and zero command frames, but the generic screenshot assertion was `not-run`. Magic Jewel now keeps
+  these command-probe rows focused on structured command/fallback markers by disabling the generic screenshot assertion
+  for the supported saveLayer command rows and the raw/opaque/picture shader fallback sentinels in this tail cluster.
+  Exact `CASES='commands-save-layer-filter commands-save-layer-blend-mode commands-save-layer-blend-color-filter
+  commands-save-layer-raw-color-filter-fallback'` passed 4/4, then `CASE_GROUPS=save-layer-shader-fallbacks` passed
+  9/9 with `fallback_sum=0`, six unsupported-picture rows, 9,440 JBR picture frames, and 7,901 JBR command frames.
+  Magic Jewel `out` is 99G with about 242Gi free. Suites:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260611-115351/suite.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260611-175636/suite.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260611-180417/suite.tsv`.
 - Magic Jewel focused `graphics-layer-extras` command-probe group after `graphics-layer`:
   `CASE_GROUPS=graphics-layer-extras ./scripts/jbr-skia-command-probe-suite.sh` passed 16/16. Aggregate:
   `fallback_sum=0`, four unsupported-picture rows, 5,374 JBR picture frames, and 22,521 JBR command frames. The group
