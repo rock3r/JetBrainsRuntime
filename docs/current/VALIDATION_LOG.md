@@ -5,6 +5,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel full default benchmark suite after the parser/API and report-validation refreshes:
+  default `./scripts/jbr-skia-benchmark-suite.sh` passed 5/5. Aggregate: `fallback_sum=0`, 82 old-side CPU samples,
+  80 new-side CPU samples, and 13,724 JBR command frames across command cases. Per-case command frames were
+  `commands=5358`, `commands-stable-images=2844`, `commands-dynamic-images=2820`, and
+  `commands-resize-dynamic-images=2702`; the picture baseline produced 4,220 JBR picture frames. Magic Jewel `out` is
+  96G with about 246Gi free:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-benchmark-suite/20260611-102359/suite.tsv`.
 - JBR parser/API helper against the current local overlay artifacts:
   `REBUILD_LOCAL_ARTIFACTS=false ./scripts/test-jbr-skia-api.sh` patched the temporary JBRApi stub into the
   java.desktop overlay, compiled `JBRSkiaApiTest`, ran it headlessly, and printed `JBR_SKIA_API_TEST passed`.

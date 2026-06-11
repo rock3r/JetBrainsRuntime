@@ -12,6 +12,9 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 ## Current Snapshot
 
 - ABI 106 artifacts are current across JBR private API, JBR API mirror, Skiko, CMP, and Magic Jewel.
+- Full default benchmark suite refreshed after the parser/API and report-validation gates: 5/5 passed with no fallback,
+  82 old-side CPU samples, 80 new-side CPU samples, and 13,724 command frames across command cases:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-benchmark-suite/20260611-102359/suite.tsv`.
 - JBR parser/API helper refreshed against the current local overlay artifacts:
   `REBUILD_LOCAL_ARTIFACTS=false ./scripts/test-jbr-skia-api.sh` passed with `JBR_SKIA_API_TEST passed`.
 - Magic Jewel report-validation unit script refreshed: `./scripts/test-jbr-skia-report-validation.sh` passed with

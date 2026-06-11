@@ -38,6 +38,10 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel completed a full default benchmark suite after the parser/API and report-validation refreshes. It passed
+  5/5 with no fallback, 82 old-side CPU samples, 80 new-side CPU samples, and 13,724 command frames across the command
+  cases:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-benchmark-suite/20260611-102359/suite.tsv`.
 - JBR parser/API helper refreshed against the current local overlay artifacts:
   `REBUILD_LOCAL_ARTIFACTS=false ./scripts/test-jbr-skia-api.sh` patched the temporary JBRApi stub into the
   java.desktop overlay, compiled `JBRSkiaApiTest`, ran it headlessly, and printed `JBR_SKIA_API_TEST passed`.
