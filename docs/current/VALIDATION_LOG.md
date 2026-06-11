@@ -5,6 +5,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel focused `shader-rendering` screenshot parity refresh after the graphics-layer visual groups:
+  `CASE_GROUPS=shader-rendering` passed 18/18. Aggregate: `fallback_sum=4`, zero JBR picture frames, 13,787 JBR
+  command frames, mean `avg_delta=2.081`, and mean `bad_pixel_ratio=0.04995`. The group rechecked image/color/noise/
+  turbulence/composite/transformed shaders, resize and forced-context descriptor lifecycle rows, and shader
+  color-filter combinations. Magic Jewel `out` is 95G with about 227Gi free:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260611-072815/suite.tsv`.
 - Magic Jewel focused `graphics-layer-clip-shadow-transform` screenshot parity refresh after
   `graphics-layer-basic`: `CASE_GROUPS=graphics-layer-clip-shadow-transform` passed 14/14. Aggregate:
   `fallback_sum=0`, zero JBR picture frames, 19,849 JBR command frames, mean `avg_delta=2.223`, and mean

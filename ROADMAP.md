@@ -38,6 +38,10 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel refreshed the focused `shader-rendering` screenshot parity group after the graphics-layer visual groups.
+  It passed 18/18 with `fallback_sum=4`, no picture frames, 13,787 command frames, mean `avg_delta=2.081`, and mean
+  `bad_pixel_ratio=0.04995`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260611-072815/suite.tsv`.
 - Magic Jewel refreshed the focused `graphics-layer-clip-shadow-transform` screenshot parity group after
   `graphics-layer-basic`. It passed 14/14 with no fallback, no picture frames, 19,849 command frames, mean
   `avg_delta=2.223`, and mean `bad_pixel_ratio=0.05296`:

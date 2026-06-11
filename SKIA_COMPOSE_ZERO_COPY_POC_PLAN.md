@@ -12,6 +12,10 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 ## Current Snapshot
 
 - ABI 106 artifacts are current across JBR private API, JBR API mirror, Skiko, CMP, and Magic Jewel.
+- Focused `shader-rendering` screenshot parity refreshed after the graphics-layer visual groups: 18/18 passed with
+  `fallback_sum=4`, no picture frames, 13,787 command frames, mean `avg_delta=2.081`, and mean
+  `bad_pixel_ratio=0.04995`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260611-072815/suite.tsv`.
 - Focused `graphics-layer-clip-shadow-transform` screenshot parity refreshed after `graphics-layer-basic`: 14/14
   passed with no fallback, no picture frames, 19,849 command frames, mean `avg_delta=2.223`, and mean
   `bad_pixel_ratio=0.05296`:
