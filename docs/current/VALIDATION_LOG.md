@@ -5,6 +5,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel focused `core-drawing` screenshot parity refresh after `native-text`: `CASE_GROUPS=core-drawing`
+  passed 16/16. Aggregate: `fallback_sum=0`, zero JBR picture frames, 15,732 JBR command frames, mean
+  `avg_delta=2.175`, and mean `bad_pixel_ratio=0.05197`. The group rechecked skew, vertices, saveLayer filter,
+  forced-context image refs, point dots, path effects, shapes, clips, blend modes, gradient surfaces/paths/shaders/
+  stroke, image filters, and image color-matrix filters. Magic Jewel `out` is 95G with about 247Gi free:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260611-080125/suite.tsv`.
 - Magic Jewel focused `native-text` screenshot parity refresh after `runtime-effect`: `CASE_GROUPS=native-text`
   passed 14/14. Aggregate: `fallback_sum=3`, zero JBR picture frames, 11,672 JBR command frames, mean
   `avg_delta=2.037`, and mean `bad_pixel_ratio=0.04758`. The group rechecked custom text images, generic font,
