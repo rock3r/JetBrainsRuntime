@@ -5,6 +5,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel full default command-probe sweep after the focused group refresh batch:
+  default `./scripts/jbr-skia-command-probe-suite.sh` passed 549/549. Aggregate: `fallback_sum=350`, 79
+  unsupported-picture rows, 87,188 JBR picture frames, and 188,270 JBR command frames. The sweep consolidated the
+  native text, primitive/path invalid, shader/effect descriptor, image handle, graphics-layer, color-filter,
+  RuntimeEffect, gradient, and saveLayer coverage refreshed in the preceding focused runs. Magic Jewel `out` is 95G
+  with about 246Gi free:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260611-012205/suite.tsv`.
 - Magic Jewel focused `gradient-invalid` command-probe refresh after `runtime-effect-invalid`:
   `CASE_GROUPS=gradient-invalid` passed 81/81. Aggregate: `fallback_sum=60`, 21 unsupported-picture rows, 23,049 JBR
   picture frames, and zero JBR command frames. The group rechecked public gradient unsupported-picture fallback rows
