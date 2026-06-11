@@ -12,6 +12,8 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 ## Current Snapshot
 
 - ABI 106 artifacts are current across JBR private API, JBR API mirror, Skiko, CMP, and Magic Jewel.
+- JBR parser/API helper refreshed against the current local overlay artifacts:
+  `REBUILD_LOCAL_ARTIFACTS=false ./scripts/test-jbr-skia-api.sh` passed with `JBR_SKIA_API_TEST passed`.
 - Magic Jewel report-validation unit script refreshed: `./scripts/test-jbr-skia-report-validation.sh` passed with
   `JBR_SKIA_REPORT_VALIDATION_TESTS passed`.
 - CMP focused recorder validation refreshed after the unsupported-reason source scan:

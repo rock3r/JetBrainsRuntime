@@ -38,6 +38,9 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- JBR parser/API helper refreshed against the current local overlay artifacts:
+  `REBUILD_LOCAL_ARTIFACTS=false ./scripts/test-jbr-skia-api.sh` patched the temporary JBRApi stub into the
+  java.desktop overlay, compiled `JBRSkiaApiTest`, ran it headlessly, and printed `JBR_SKIA_API_TEST passed`.
 - Magic Jewel report-validation unit script refreshed after the CMP recorder validation:
   `./scripts/test-jbr-skia-report-validation.sh` passed with `JBR_SKIA_REPORT_VALIDATION_TESTS passed`; its expected
   negative strict-validation case emitted the temporary failure report line.

@@ -5,6 +5,9 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- JBR parser/API helper against the current local overlay artifacts:
+  `REBUILD_LOCAL_ARTIFACTS=false ./scripts/test-jbr-skia-api.sh` patched the temporary JBRApi stub into the
+  java.desktop overlay, compiled `JBRSkiaApiTest`, ran it headlessly, and printed `JBR_SKIA_API_TEST passed`.
 - Magic Jewel report-validation unit script after the CMP recorder validation:
   `./scripts/test-jbr-skia-report-validation.sh` passed with `JBR_SKIA_REPORT_VALIDATION_TESTS passed`. The script's
   expected negative strict-validation case printed a temporary failure report path before the final pass marker.
