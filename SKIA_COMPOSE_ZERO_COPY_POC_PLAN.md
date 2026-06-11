@@ -12,6 +12,9 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 ## Current Snapshot
 
 - ABI 106 artifacts are current across JBR private API, JBR API mirror, Skiko, CMP, and Magic Jewel.
+- CMP now has direct defensive unit coverage for the recorder-only `roundRectStyle` unsupported branch. The exact
+  `rejectsUnknownRoundRectPaintStyleInStrictMode` method passed, followed by the full focused
+  `JbrSkiaCommandRecorderTest` class with `BUILD SUCCESSFUL`.
 - CMP now emits path-specific unsupported reasons for gradient path stroke paint fallbacks by checking non-fill style
   before generic gradient payload extraction. Focused `JbrSkiaCommandRecorderTest` passed; exact Magic Jewel `CASES`
   validation passed 3/3 with `linearGradientPathPaint`, `radialGradientPathPaint`, and `sweepGradientPathPaint`

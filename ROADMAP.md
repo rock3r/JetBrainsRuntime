@@ -38,6 +38,9 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- CMP added defensive unit coverage for the recorder-only `roundRectStyle` fallback branch. A direct
+  `rejectsUnknownRoundRectPaintStyleInStrictMode` run passed, then the full focused `JbrSkiaCommandRecorderTest`
+  class passed with `BUILD SUCCESSFUL` in `/Users/rock3r/src/jbr-skia-zero-copy/cmp`.
 - CMP now reports gradient path stroke paint fallbacks with path-specific unsupported reasons before attempting to
   materialize generic gradient payloads. Focused `JbrSkiaCommandRecorderTest` passed, exact Magic Jewel `CASES`
   validation passed 3/3 with `linearGradientPathPaint`, `radialGradientPathPaint`, and `sweepGradientPathPaint`

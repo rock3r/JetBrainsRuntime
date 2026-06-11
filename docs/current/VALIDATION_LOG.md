@@ -5,6 +5,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- CMP defensive recorder coverage for the recorder-only `roundRectStyle` unsupported branch:
+  `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests
+  androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.rejectsUnknownRoundRectPaintStyleInStrictMode` passed, then
+  the full focused `JbrSkiaCommandRecorderTest` class passed with `BUILD SUCCESSFUL`; Gradle reported 79 actionable
+  tasks, 12 executed and 67 up-to-date on the full-class run. This classifies `roundRectStyle` as a defensive
+  non-public paint-style guard covered by CMP unit tests rather than a Magic Jewel app-row gap.
 - CMP recorder and Magic Jewel command probes after fixing gradient path stroke fallback reason ordering:
   `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests
   androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest` passed in
