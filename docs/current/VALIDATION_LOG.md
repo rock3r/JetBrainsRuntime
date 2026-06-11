@@ -5,6 +5,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel focused `shader-descriptor-invalid` command-probe refresh after `effect-descriptor-invalid`:
+  `EXPECT_SCREENSHOT_ASSERTION=false CASE_GROUPS=shader-descriptor-invalid ./scripts/jbr-skia-command-probe-suite.sh`
+  passed 30/30. Aggregate: `fallback_sum=30`, zero unsupported-picture rows, zero JBR picture frames, and zero JBR
+  command frames. The group rechecked shader descriptor type/flags/count/length/version guards, transformed/composite
+  shader guards, gradient tile/stop/radius/count guards, image shader dimensions/tile modes, and Perlin noise
+  kind/frequency/octaves/tile-size guards. Magic Jewel `out` is 102G with about 232Gi free:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260612-012756/suite.tsv`.
 - Magic Jewel focused `effect-descriptor-invalid` command-probe refresh after `path-invalid`:
   `EXPECT_SCREENSHOT_ASSERTION=false CASE_GROUPS=effect-descriptor-invalid ./scripts/jbr-skia-command-probe-suite.sh`
   passed 28/28. Aggregate: `fallback_sum=28`, zero unsupported-picture rows, zero JBR picture frames, and zero JBR
