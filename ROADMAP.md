@@ -38,6 +38,10 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel refreshed the focused `primitive-invalid` command-probe group after `native-text-invalid`, using
+  structured markers while local screenshot capture remains unavailable. It passed 16/16 with `fallback_sum=13`,
+  three unsupported-picture rows, 5,096 picture frames, and zero command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260612-003919/suite.tsv`.
 - Magic Jewel refreshed the focused `native-text-invalid` command-probe group after the full structured-marker sweep.
   It passed 11/11 with `fallback_sum=11`, no unsupported-picture rows, no picture frames, and 1,996 command frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260612-003034/suite.tsv`.

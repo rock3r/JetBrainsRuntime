@@ -5,6 +5,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel focused `primitive-invalid` command-probe refresh after `native-text-invalid`:
+  `EXPECT_SCREENSHOT_ASSERTION=false CASE_GROUPS=primitive-invalid ./scripts/jbr-skia-command-probe-suite.sh`
+  passed 16/16. Aggregate: `fallback_sum=13`, three unsupported-picture rows, 5,096 JBR picture frames, and zero JBR
+  command frames. The group rechecked primitive parser sentinels, including stroke cap, blend-layer bounds, transform
+  record flags, clip operations, draw-points count/length bounds, and draw-vertices count/mode/blend/index bounds.
+  Magic Jewel `out` is 101G with about 233Gi free:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260612-003919/suite.tsv`.
 - Magic Jewel focused `native-text-invalid` command-probe refresh after the full structured-marker sweep:
   `EXPECT_SCREENSHOT_ASSERTION=false CASE_GROUPS=native-text-invalid ./scripts/jbr-skia-command-probe-suite.sh`
   passed 11/11. Aggregate: `fallback_sum=11`, zero unsupported-picture rows, zero JBR picture frames, and 1,996 JBR
