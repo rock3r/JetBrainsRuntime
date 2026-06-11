@@ -38,6 +38,11 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel completed a full default command-probe sweep after the saveLayer/shader fallback tail repair, using
+  `EXPECT_SCREENSHOT_ASSERTION=false` because local macOS screenshot capture could not create a window/region image.
+  Structured command/fallback validation passed 549/549 with `fallback_sum=350`, 80 unsupported-picture rows, 127,181
+  picture frames, and 306,312 command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260611-181446/suite.tsv`.
 - Magic Jewel repaired the command-probe saveLayer/shader fallback tail after a broad default sweep reached 543 green
   rows and exposed a `not-run` generic screenshot assertion on `commands-save-layer-raw-color-filter-fallback` despite
   correct structured fallback markers. Exact saveLayer command/fallback rows passed 4/4, then

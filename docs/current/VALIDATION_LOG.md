@@ -5,6 +5,15 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel full default command-probe sweep after the saveLayer/shader fallback tail repair:
+  `EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-command-probe-suite.sh` passed 549/549 using structured
+  command/fallback markers while local macOS screenshot capture was unavailable (`screencapture` could not create a
+  window or region image in the failed `20260611-181241` first-row attempt). Aggregate: `fallback_sum=350`, 80
+  unsupported-picture rows, 127,181 JBR picture frames, and 306,312 JBR command frames. The sweep revalidated the
+  newly tightened saveLayer tail rows, the gradient path paint reason ordering, image fallback marker hardening,
+  graphics-layer shadow/transform/effect rows, and all parser/descriptor invalid sentinels. Magic Jewel `out` is 101G
+  with about 233Gi free:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260611-181446/suite.tsv`.
 - Magic Jewel default command-probe sweep tail repair for saveLayer/shader fallback rows. A broad default
   `./scripts/jbr-skia-command-probe-suite.sh` reached 543 passed rows before stopping at
   `commands-save-layer-raw-color-filter-fallback`; the row had the required `saveLayer` unsupported marker, JBR
