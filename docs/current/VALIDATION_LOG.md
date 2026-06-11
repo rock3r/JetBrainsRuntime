@@ -5,6 +5,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel focused `graphics-layer` command-probe group after the shadow guard audit:
+  `CASE_GROUPS=graphics-layer ./scripts/jbr-skia-command-probe-suite.sh` passed 22/22. Aggregate:
+  `fallback_sum=0`, one expected unsupported-picture row from invalid shadow elevation, 1,401 JBR picture frames, and
+  32,675 JBR command frames. The grouped run rechecked base/modulate/offscreen/clip layers, blend/color-filter/render
+  effect rows, rectangular/round/path shadows, 3D rotations, scale/translate, near-camera, and off-center pivot:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260611-112529/suite.tsv`.
 - Magic Jewel focused graphics-layer shadow command probes during the `graphicsLayer:shadowFilter` audit:
   `CASES='commands-graphics-layer-shadow commands-graphics-layer-round-shadow commands-graphics-layer-path-shadow
   commands-graphics-layer-invalid-shadow-elevation-fallback commands-graphics-layer-invalid-shadow-path-fallback'

@@ -12,6 +12,9 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 ## Current Snapshot
 
 - ABI 106 artifacts are current across JBR private API, JBR API mirror, Skiko, CMP, and Magic Jewel.
+- Focused `graphics-layer` command-probe validation refreshed after the shadow guard audit: 22/22 passed with
+  `fallback_sum=0`, one expected unsupported-picture row, 1,401 picture frames, and 32,675 command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260611-112529/suite.tsv`.
 - Magic Jewel focused graphics-layer shadow validation passed 5/5 while auditing `graphicsLayer:shadowFilter` as an
   internal image-filter descriptor-definition guard: supported shadow rows replayed 5,274 command frames with no
   unsupported reasons, and invalid elevation/path rows fell back with the expected public shadow summaries:

@@ -38,6 +38,9 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel refreshed the focused `graphics-layer` command-probe group after the shadow guard audit. It passed
+  22/22 with `fallback_sum=0`, one expected unsupported-picture row, 1,401 picture frames, and 32,675 command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260611-112529/suite.tsv`.
 - Magic Jewel refreshed the focused graphics-layer shadow command probes while auditing the internal
   `graphicsLayer:shadowFilter` guard. Exact `CASES` validation passed 5/5: supported rectangular/round/path shadow
   rows produced 5,274 command frames with no unsupported reasons, and invalid elevation/path rows produced expected
