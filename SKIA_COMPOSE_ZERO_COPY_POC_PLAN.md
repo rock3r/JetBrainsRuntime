@@ -12,6 +12,9 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 ## Current Snapshot
 
 - ABI 106 artifacts are current across JBR private API, JBR API mirror, Skiko, CMP, and Magic Jewel.
+- Magic Jewel screenshot parity now gates graphics-layer color-matrix rows on effect-handle define/use/cache-hit
+  markers. Exact `CASES` validation passed 2/2 with no fallback, no picture frames, and 2,870 command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260611-103423/suite.tsv`.
 - Full default benchmark suite refreshed after the parser/API and report-validation gates: 5/5 passed with no fallback,
   82 old-side CPU samples, 80 new-side CPU samples, and 13,724 command frames across command cases:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-benchmark-suite/20260611-102359/suite.tsv`.

@@ -5,6 +5,15 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel exact screenshot parity hardening for graphics-layer color-matrix effect handles:
+  `CASES='parity-graphics-layer-color-matrix-filter parity-graphics-layer-blend-color-matrix-filter'
+  ./scripts/jbr-skia-screenshot-parity-suite.sh` passed 2/2 after adding strict
+  `EXPECT_MIN_JBR_EFFECT_HANDLE_DEFINES`, `EXPECT_MIN_JBR_EFFECT_HANDLE_USES`,
+  `EXPECT_MIN_JBR_EFFECT_HANDLE_CACHE_HITS`, and `EXPECT_MAX_JBR_EFFECT_HANDLE_DEFINES` gates to those rows.
+  Aggregate: `fallback_sum=0`, zero JBR picture frames, and 2,870 JBR command frames. The plain color-filter graphics
+  layer rows were left ungated because the full sweep showed zero effect-handle counters for those paths. The hardened
+  rows reported 5 effect-handle defines each, with use/cache-hit pairs of 2325/2320 and 2364/2359:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260611-103423/suite.tsv`.
 - Magic Jewel full default benchmark suite after the parser/API and report-validation refreshes:
   default `./scripts/jbr-skia-benchmark-suite.sh` passed 5/5. Aggregate: `fallback_sum=0`, 82 old-side CPU samples,
   80 new-side CPU samples, and 13,724 JBR command frames across command cases. Per-case command frames were

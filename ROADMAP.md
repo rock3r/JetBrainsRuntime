@@ -38,6 +38,9 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel hardened the graphics-layer color-matrix screenshot parity rows with strict effect-handle define/use and
+  cache-hit gates. Exact `CASES` validation passed 2/2 with no fallback, no picture frames, and 2,870 command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260611-103423/suite.tsv`.
 - Magic Jewel completed a full default benchmark suite after the parser/API and report-validation refreshes. It passed
   5/5 with no fallback, 82 old-side CPU samples, 80 new-side CPU samples, and 13,724 command frames across the command
   cases:
