@@ -38,6 +38,10 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel hardened image-paint fallback command probes to require the live recorder `image=1` marker in addition
+  to the paint-specific unsupported reason. Exact `CASES` validation passed 2/2 with 2,431 picture frames and no
+  command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260611-104135/suite.tsv`.
 - Magic Jewel hardened the graphics-layer color-matrix screenshot parity rows with strict effect-handle define/use and
   cache-hit gates. Exact `CASES` validation passed 2/2 with no fallback, no picture frames, and 2,870 command frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260611-103423/suite.tsv`.

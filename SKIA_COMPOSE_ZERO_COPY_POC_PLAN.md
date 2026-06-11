@@ -12,6 +12,9 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 ## Current Snapshot
 
 - ABI 106 artifacts are current across JBR private API, JBR API mirror, Skiko, CMP, and Magic Jewel.
+- Magic Jewel command probes now require the live recorder `image=1` marker on image path-effect and raw table
+  color-filter fallback rows. Exact `CASES` validation passed 2/2 with 2,431 picture frames and no command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260611-104135/suite.tsv`.
 - Magic Jewel screenshot parity now gates graphics-layer color-matrix rows on effect-handle define/use/cache-hit
   markers. Exact `CASES` validation passed 2/2 with no fallback, no picture frames, and 2,870 command frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260611-103423/suite.tsv`.

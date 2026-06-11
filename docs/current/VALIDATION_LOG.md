@@ -5,6 +5,15 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel exact command-probe hardening for live image fallback markers:
+  `CASES='commands-image-path-effect-fallback commands-image-raw-table-color-filter-fallback'
+  ./scripts/jbr-skia-command-probe-suite.sh` passed 2/2 after adding `EXPECT_COMMAND_FALLBACK_MARKER=image=1` to the
+  image path-effect and image raw table color-filter rows. Aggregate: `fallback_sum=0`, 2,431 JBR picture frames, and
+  zero JBR command frames. The unsupported summaries were
+  `graphicsLayer:childCommands:973,image:973,pathEffect:973,graphicsLayer:973` and
+  `colorFilter:1458,graphicsLayer:childCommands:1458,image:1458,graphicsLayer:1458`, proving the top-level image
+  unsupported reason remains present alongside each paint-specific reason:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260611-104135/suite.tsv`.
 - Magic Jewel exact screenshot parity hardening for graphics-layer color-matrix effect handles:
   `CASES='parity-graphics-layer-color-matrix-filter parity-graphics-layer-blend-color-matrix-filter'
   ./scripts/jbr-skia-screenshot-parity-suite.sh` passed 2/2 after adding strict
