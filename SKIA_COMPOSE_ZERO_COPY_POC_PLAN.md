@@ -12,6 +12,13 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 ## Current Snapshot
 
 - ABI 106 artifacts are current across JBR private API, JBR API mirror, Skiko, CMP, and Magic Jewel.
+- CMP now emits path-specific unsupported reasons for gradient path stroke paint fallbacks by checking non-fill style
+  before generic gradient payload extraction. Focused `JbrSkiaCommandRecorderTest` passed; exact Magic Jewel `CASES`
+  validation passed 3/3 with `linearGradientPathPaint`, `radialGradientPathPaint`, and `sweepGradientPathPaint`
+  counters; and `CASE_GROUPS=gradient-path-stroke-fallbacks` refreshed 3/3 with 3,603 picture frames and zero command
+  frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260611-110959/suite.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260611-111207/suite.tsv`.
 - Combined `shader-rendering color-filters` command-probe refresh passed after image fallback marker hardening: 31/31
   passed with `fallback_sum=0`, 15,814 picture frames, and 30,519 command frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260611-104452/suite.tsv`.

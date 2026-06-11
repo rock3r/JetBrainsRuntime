@@ -5,6 +5,19 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- CMP recorder and Magic Jewel command probes after fixing gradient path stroke fallback reason ordering:
+  `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests
+  androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest` passed in
+  `/Users/rock3r/src/jbr-skia-zero-copy/cmp` with `BUILD SUCCESSFUL`; Gradle reported 79 actionable tasks, 14
+  executed and 65 up-to-date. Exact
+  `CASES='commands-linear-gradient-path-stroke-fallback commands-radial-gradient-path-stroke-fallback
+  commands-sweep-gradient-path-stroke-fallback' ./scripts/jbr-skia-command-probe-suite.sh` passed 3/3 with
+  `linearGradientPathPaint`, `radialGradientPathPaint`, and `sweepGradientPathPaint` summaries, 3,579 JBR picture
+  frames, and zero JBR command frames. The named
+  `CASE_GROUPS=gradient-path-stroke-fallbacks ./scripts/jbr-skia-command-probe-suite.sh` refresh also passed 3/3
+  with 3,603 JBR picture frames and zero command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260611-110959/suite.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260611-111207/suite.tsv`.
 - Magic Jewel combined `shader-rendering color-filters` command-probe refresh after image fallback marker hardening:
   `CASE_GROUPS='shader-rendering color-filters' ./scripts/jbr-skia-command-probe-suite.sh` passed 31/31. Aggregate:
   `fallback_sum=0`, 15,814 JBR picture frames from expected raw/invalid fallback sentinels, and 30,519 JBR command

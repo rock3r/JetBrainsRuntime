@@ -38,6 +38,13 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- CMP now reports gradient path stroke paint fallbacks with path-specific unsupported reasons before attempting to
+  materialize generic gradient payloads. Focused `JbrSkiaCommandRecorderTest` passed, exact Magic Jewel `CASES`
+  validation passed 3/3 with `linearGradientPathPaint`, `radialGradientPathPaint`, and `sweepGradientPathPaint`
+  summaries, and the named `gradient-path-stroke-fallbacks` group refreshed 3/3 with 3,603 picture frames and no
+  command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260611-110959/suite.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260611-111207/suite.tsv`.
 - Magic Jewel refreshed the combined `shader-rendering color-filters` command-probe groups after image fallback marker
   hardening. It passed 31/31 with `fallback_sum=0`, 15,814 picture frames from expected fallback sentinels, and 30,519
   command frames from supported rows:
