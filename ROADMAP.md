@@ -38,6 +38,11 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel refreshed the tiny focused command-probe quick-loop batch after `smoke`, covering gradient path/stops,
+  gradient geometry/color-count/stroke/radius, image shader invalid, shader-ref invalid, fill-rect color-filter
+  invalid, and blend-mode invalid groups. It passed 38/38 with `fallback_sum=10`, 28 unsupported-picture rows, 27,825
+  picture frames, and zero command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260612-134712/suite.tsv`.
 - Magic Jewel refreshed the focused `smoke` command-probe group after `stream-invalid`, using structured markers while
   local screenshot capture remains unavailable. It passed 6/6 with no fallback, no unsupported-picture rows, no
   picture frames, and 6,694 command frames:

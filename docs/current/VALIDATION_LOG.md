@@ -5,6 +5,16 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel tiny focused command-probe quick-loop refresh after `smoke`:
+  `EXPECT_SCREENSHOT_ASSERTION=false CASE_GROUPS='gradient-path-stroke-fallbacks gradient-path-structure-invalid
+  gradient-stop-invalid gradient-geometry-invalid gradient-color-count-invalid gradient-stroke-width-invalid
+  gradient-round-rect-radius-invalid gradient-stroke-round-rect-radius-invalid image-shader-invalid shader-ref-invalid
+  fill-rect-color-filter-invalid blend-mode-invalid' ./scripts/jbr-skia-command-probe-suite.sh` passed 38/38.
+  Aggregate: `fallback_sum=10`, 28 unsupported-picture rows, 27,825 JBR picture frames, and zero JBR command frames.
+  The batch refreshed the named tiny quick-loop aliases for gradient path/stops, gradient geometry/color-count/stroke
+  width/round-rect radius, image shader invalid, shader-ref invalid, fill-rect color-filter invalid, and blend-mode
+  invalid guards. Magic Jewel `out` is 104G with about 233Gi free:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260612-134712/suite.tsv`.
 - Magic Jewel focused `smoke` command-probe refresh after `stream-invalid`:
   `EXPECT_SCREENSHOT_ASSERTION=false CASE_GROUPS=smoke ./scripts/jbr-skia-command-probe-suite.sh` passed 6/6.
   Aggregate: `fallback_sum=0`, zero unsupported-picture rows, zero JBR picture frames, and 6,694 JBR command frames.
