@@ -5,6 +5,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel focused `shader-rendering` command-probe refresh after `native-text`:
+  `EXPECT_SCREENSHOT_ASSERTION=false CASE_GROUPS=shader-rendering ./scripts/jbr-skia-command-probe-suite.sh` passed
+  18/18. Aggregate: `fallback_sum=0`, ten unsupported-picture rows, 17,170 JBR picture frames, and 21,380 JBR command
+  frames. The group rechecked image shader/blend, image path-effect fallback, gradient/noise/turbulence shaders, and
+  raw shader fallback rows. Magic Jewel `out` is 103G with about 230Gi free:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260612-040250/suite.tsv`.
 - Magic Jewel focused `native-text` command-probe refresh after `core-effects`:
   `EXPECT_SCREENSHOT_ASSERTION=false CASE_GROUPS=native-text ./scripts/jbr-skia-command-probe-suite.sh` passed 14/14.
   Aggregate: `fallback_sum=0`, zero unsupported-picture rows, zero JBR picture frames, and 33,822 JBR command frames.
