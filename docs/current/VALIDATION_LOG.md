@@ -5,6 +5,14 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel full default command-probe sweep after the focused quick-loop refresh batch:
+  `EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-command-probe-suite.sh` passed 549/549 using structured
+  command/fallback markers while local macOS screenshot capture remains unavailable. Aggregate: `fallback_sum=350`, 79
+  unsupported-picture rows, 78,827 JBR picture frames, and 156,233 JBR command frames. The sweep revalidated the
+  current ABI 106 command rows across stream/primitive/path/text/image/shader/RuntimeEffect/descriptor/gradient/
+  color-filter/graphics-layer/saveLayer coverage after the focused group refreshes. Magic Jewel `out` is 106G with
+  about 196Gi free:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260612-144955/suite.tsv`.
 - Magic Jewel tiny focused command-probe quick-loop refresh after `smoke`:
   `EXPECT_SCREENSHOT_ASSERTION=false CASE_GROUPS='gradient-path-stroke-fallbacks gradient-path-structure-invalid
   gradient-stop-invalid gradient-geometry-invalid gradient-color-count-invalid gradient-stroke-width-invalid
