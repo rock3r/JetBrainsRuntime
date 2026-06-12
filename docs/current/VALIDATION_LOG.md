@@ -5,6 +5,19 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel focused `gradient-invalid` command-probe refresh after `gradient-path-invalid`:
+  `EXPECT_SCREENSHOT_ASSERTION=false CASE_GROUPS=gradient-invalid ./scripts/jbr-skia-command-probe-suite.sh` passed
+  81/81. Aggregate: `fallback_sum=60`, 21 unsupported-picture rows, 17,899 JBR picture frames, and zero JBR command
+  frames. The group rechecked public gradient invalid fallbacks plus internal linear/radial/sweep gradient
+  stroke-width, tile-mode, color-count, stop-order, radius, and path parser guards. Magic Jewel `out` is 103G with
+  about 234Gi free:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260612-102137/suite.tsv`.
+- Subagent validation environment note: delegated Magic Jewel runs for `gradient-invalid`
+  (`20260612-091248`) and `runtime-effect-invalid` (`20260612-091850`) failed their first rows with zero app, CMP
+  recorder, Skiko, and JBR frames. Serial exact rerun of `commands-linear-gradient-invalid-stops-fallback` and
+  `commands-runtime-effect-shader-source-hash-fallback` passed 2/2 at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260612-101933/suite.tsv`, so the
+  subagent failures are not treated as command-stream regressions.
 - Magic Jewel focused `gradient-path-invalid` command-probe refresh after `shader-composition-runtime`:
   `EXPECT_SCREENSHOT_ASSERTION=false CASE_GROUPS=gradient-path-invalid ./scripts/jbr-skia-command-probe-suite.sh`
   passed 21/21. Aggregate: `fallback_sum=18`, three unsupported-picture rows, 5,088 JBR picture frames, and zero JBR

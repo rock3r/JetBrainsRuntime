@@ -12,6 +12,12 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 ## Current Snapshot
 
 - ABI 106 artifacts are current across JBR private API, JBR API mirror, Skiko, CMP, and Magic Jewel.
+- Focused `gradient-invalid` command-probe group refreshed after `gradient-path-invalid`: 81/81 passed with
+  `fallback_sum=60`, 21 unsupported-picture rows, 17,899 picture frames, and zero command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260612-102137/suite.tsv`.
+- Subagent validation can currently fail to produce Magic Jewel GUI frames: delegated `gradient-invalid` and
+  `runtime-effect-invalid` attempts wrote first-row reports with no app/CMP/JBR frames, while serial exact rerun of
+  those first rows passed 2/2. Keep command-probe validation serial unless the subagent GUI issue is isolated.
 - Focused `gradient-path-invalid` command-probe group refreshed after `shader-composition-runtime`: 21/21 passed with
   `fallback_sum=18`, three unsupported-picture rows, 5,088 picture frames, and zero command frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260612-042752/suite.tsv`.
