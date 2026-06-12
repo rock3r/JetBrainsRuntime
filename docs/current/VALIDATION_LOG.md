@@ -5,6 +5,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel focused `graphics-layer-invalid` command-probe refresh after `save-layer-invalid`:
+  `EXPECT_SCREENSHOT_ASSERTION=false CASE_GROUPS=graphics-layer-invalid ./scripts/jbr-skia-command-probe-suite.sh`
+  passed 15/15. Aggregate: `fallback_sum=0`, 15 unsupported-picture rows, 26,029 JBR picture frames, and zero JBR
+  command frames. The group rechecked invalid graphics-layer size, alpha, scale, rotation, translation, camera
+  distance, shadow elevation/path, blend mode, and unrecorded-layer fallbacks. Magic Jewel `out` is 102G with about
+  232Gi free:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260612-030703/suite.tsv`.
 - Magic Jewel focused `save-layer-invalid` command-probe refresh after `descriptor-handles-invalid`:
   `EXPECT_SCREENSHOT_ASSERTION=false CASE_GROUPS=save-layer-invalid ./scripts/jbr-skia-command-probe-suite.sh`
   passed 37/37. Aggregate: `fallback_sum=37`, zero unsupported-picture rows, zero JBR picture frames, and zero JBR
