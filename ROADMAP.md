@@ -38,6 +38,10 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel refreshed the focused `save-layer-invalid` command-probe group after `descriptor-handles-invalid`,
+  using structured markers while local screenshot capture remains unavailable. It passed 37/37 with `fallback_sum=37`,
+  no unsupported-picture rows, no picture frames, and no command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260612-024126/suite.tsv`.
 - Magic Jewel refreshed the focused `descriptor-handles-invalid` command-probe group after `image-handles-invalid`,
   using structured markers while local screenshot capture remains unavailable. It passed 48/48 with `fallback_sum=48`,
   no unsupported-picture rows, no picture frames, and no command frames:

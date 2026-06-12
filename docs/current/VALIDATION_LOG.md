@@ -5,6 +5,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel focused `save-layer-invalid` command-probe refresh after `descriptor-handles-invalid`:
+  `EXPECT_SCREENSHOT_ASSERTION=false CASE_GROUPS=save-layer-invalid ./scripts/jbr-skia-command-probe-suite.sh`
+  passed 37/37. Aggregate: `fallback_sum=37`, zero unsupported-picture rows, zero JBR picture frames, and zero JBR
+  command frames. The group rechecked saveLayer alpha/flags/length parser guards, color-filter/blend/image-filter
+  variants, ref-record guards, bounds/alpha/blend-mode guards, and ref-backed blend color-filter guards. Magic Jewel
+  `out` is 102G with about 232Gi free:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260612-024126/suite.tsv`.
 - Magic Jewel focused `descriptor-handles-invalid` command-probe refresh after `image-handles-invalid`:
   `EXPECT_SCREENSHOT_ASSERTION=false CASE_GROUPS=descriptor-handles-invalid ./scripts/jbr-skia-command-probe-suite.sh`
   passed 48/48. Aggregate: `fallback_sum=48`, zero unsupported-picture rows, zero JBR picture frames, and zero JBR
