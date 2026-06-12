@@ -5,6 +5,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel focused `color-filters` command-probe refresh after `graphics-layer-invalid`:
+  `EXPECT_SCREENSHOT_ASSERTION=false CASE_GROUPS=color-filters ./scripts/jbr-skia-command-probe-suite.sh` passed
+  13/13. Aggregate: `fallback_sum=0`, three unsupported-picture rows, 5,056 JBR picture frames, and 28,945 JBR command
+  frames. The group rechecked supported image, paint, and graphics-layer color-filter replay plus raw table/blend
+  fallback rows. Magic Jewel `out` is 102G with about 209Gi free:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260612-031803/suite.tsv`.
 - Magic Jewel focused `graphics-layer-invalid` command-probe refresh after `save-layer-invalid`:
   `EXPECT_SCREENSHOT_ASSERTION=false CASE_GROUPS=graphics-layer-invalid ./scripts/jbr-skia-command-probe-suite.sh`
   passed 15/15. Aggregate: `fallback_sum=0`, 15 unsupported-picture rows, 26,029 JBR picture frames, and zero JBR

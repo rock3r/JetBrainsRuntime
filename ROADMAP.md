@@ -38,6 +38,10 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel refreshed the focused `color-filters` command-probe group after `graphics-layer-invalid`, using
+  structured markers while local screenshot capture remains unavailable. It passed 13/13 with `fallback_sum=0`, three
+  unsupported-picture rows, 5,056 picture frames, and 28,945 command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260612-031803/suite.tsv`.
 - Magic Jewel refreshed the focused `graphics-layer-invalid` command-probe group after `save-layer-invalid`, using
   structured markers while local screenshot capture remains unavailable. It passed 15/15 with `fallback_sum=0`, 15
   unsupported-picture rows, 26,029 picture frames, and zero command frames:
