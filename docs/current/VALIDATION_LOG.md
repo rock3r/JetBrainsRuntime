@@ -5,6 +5,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel focused `core-effects` command-probe refresh after `descriptor-lifecycle`:
+  `EXPECT_SCREENSHOT_ASSERTION=false CASE_GROUPS=core-effects ./scripts/jbr-skia-command-probe-suite.sh` passed 8/8.
+  Aggregate: `fallback_sum=0`, three unsupported-picture rows, 5,099 JBR picture frames, and 13,321 JBR command
+  frames. The group rechecked gradient stroke, image filter, path effect, vertices, blend mode, and raw
+  color/path-effect fallback rows. Magic Jewel `out` is 103G with about 231Gi free:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260612-034519/suite.tsv`.
 - Magic Jewel focused `descriptor-lifecycle` command-probe refresh after `color-filters`:
   `EXPECT_SCREENSHOT_ASSERTION=false CASE_GROUPS=descriptor-lifecycle ./scripts/jbr-skia-command-probe-suite.sh`
   passed 18/18. Aggregate: `fallback_sum=0`, zero unsupported-picture rows, zero JBR picture frames, and 49,005 JBR
