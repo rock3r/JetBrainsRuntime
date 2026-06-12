@@ -5,6 +5,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel focused `descriptor-lifecycle` command-probe refresh after `color-filters`:
+  `EXPECT_SCREENSHOT_ASSERTION=false CASE_GROUPS=descriptor-lifecycle ./scripts/jbr-skia-command-probe-suite.sh`
+  passed 18/18. Aggregate: `fallback_sum=0`, zero unsupported-picture rows, zero JBR picture frames, and 49,005 JBR
+  command frames. The group rechecked descriptor eviction, resize and forced-context descriptor redefinition for shader
+  families, stable RuntimeEffect color-filter lifecycle, and RuntimeEffect source-cache eviction. Magic Jewel `out` is
+  103G with about 208Gi free:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260612-032814/suite.tsv`.
 - Magic Jewel focused `color-filters` command-probe refresh after `graphics-layer-invalid`:
   `EXPECT_SCREENSHOT_ASSERTION=false CASE_GROUPS=color-filters ./scripts/jbr-skia-command-probe-suite.sh` passed
   13/13. Aggregate: `fallback_sum=0`, three unsupported-picture rows, 5,056 JBR picture frames, and 28,945 JBR command
