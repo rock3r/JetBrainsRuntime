@@ -5,6 +5,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel focused `shader-composition-runtime` command-probe refresh after `shader-rendering`:
+  `EXPECT_SCREENSHOT_ASSERTION=false CASE_GROUPS=shader-composition-runtime ./scripts/jbr-skia-command-probe-suite.sh`
+  passed 15/15. Aggregate: `fallback_sum=0`, two unsupported-picture rows, 3,599 JBR picture frames, and 34,803 JBR
+  command frames. The group rechecked image/composite/transformed shaders, RuntimeEffect shader/color-filter paths,
+  gradient shader color filters, and raw RuntimeEffect fallback rows. Magic Jewel `out` is 103G with about 230Gi free:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260612-041606/suite.tsv`.
 - Magic Jewel focused `shader-rendering` command-probe refresh after `native-text`:
   `EXPECT_SCREENSHOT_ASSERTION=false CASE_GROUPS=shader-rendering ./scripts/jbr-skia-command-probe-suite.sh` passed
   18/18. Aggregate: `fallback_sum=0`, ten unsupported-picture rows, 17,170 JBR picture frames, and 21,380 JBR command

@@ -38,6 +38,10 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel refreshed the focused `shader-composition-runtime` command-probe group after `shader-rendering`, using
+  structured markers while local screenshot capture remains unavailable. It passed 15/15 with `fallback_sum=0`, two
+  unsupported-picture rows, 3,599 picture frames, and 34,803 command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260612-041606/suite.tsv`.
 - Magic Jewel refreshed the focused `shader-rendering` command-probe group after `native-text`, using structured
   markers while local screenshot capture remains unavailable. It passed 18/18 with `fallback_sum=0`, ten
   unsupported-picture rows, 17,170 picture frames, and 21,380 command frames:
