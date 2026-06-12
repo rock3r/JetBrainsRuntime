@@ -5,6 +5,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel focused `gradient-path-invalid` command-probe refresh after `shader-composition-runtime`:
+  `EXPECT_SCREENSHOT_ASSERTION=false CASE_GROUPS=gradient-path-invalid ./scripts/jbr-skia-command-probe-suite.sh`
+  passed 21/21. Aggregate: `fallback_sum=18`, three unsupported-picture rows, 5,088 JBR picture frames, and zero JBR
+  command frames. The group rechecked invalid linear/radial/sweep gradient path fallback, gradient path tile/color/stop
+  parser guards, fill/path-data/verb guards, and radial radius validation. Magic Jewel `out` is 103G with about 230Gi
+  free:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260612-042752/suite.tsv`.
 - Magic Jewel focused `shader-composition-runtime` command-probe refresh after `shader-rendering`:
   `EXPECT_SCREENSHOT_ASSERTION=false CASE_GROUPS=shader-composition-runtime ./scripts/jbr-skia-command-probe-suite.sh`
   passed 15/15. Aggregate: `fallback_sum=0`, two unsupported-picture rows, 3,599 JBR picture frames, and 34,803 JBR

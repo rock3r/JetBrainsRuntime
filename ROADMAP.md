@@ -38,6 +38,10 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel refreshed the focused `gradient-path-invalid` command-probe group after
+  `shader-composition-runtime`, using structured markers while local screenshot capture remains unavailable. It
+  passed 21/21 with `fallback_sum=18`, three unsupported-picture rows, 5,088 picture frames, and zero command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260612-042752/suite.tsv`.
 - Magic Jewel refreshed the focused `shader-composition-runtime` command-probe group after `shader-rendering`, using
   structured markers while local screenshot capture remains unavailable. It passed 15/15 with `fallback_sum=0`, two
   unsupported-picture rows, 3,599 picture frames, and 34,803 command frames:
