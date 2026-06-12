@@ -5,6 +5,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel focused `stream-invalid` command-probe refresh after `save-layer-shader-fallbacks`:
+  `EXPECT_SCREENSHOT_ASSERTION=false CASE_GROUPS=stream-invalid ./scripts/jbr-skia-command-probe-suite.sh` passed
+  8/8. Aggregate: `fallback_sum=8`, zero unsupported-picture rows, zero JBR picture frames, and zero JBR command
+  frames. The group rechecked command stream flags, record flags, coordinate space, paint format, payload
+  length/truncation/extra bytes, and record length parser guards. Magic Jewel `out` is 104G with about 210Gi free:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260612-132344/suite.tsv`.
 - Magic Jewel focused `save-layer-shader-fallbacks` command-probe refresh after `graphics-layer-extras`:
   `EXPECT_SCREENSHOT_ASSERTION=false CASE_GROUPS=save-layer-shader-fallbacks ./scripts/jbr-skia-command-probe-suite.sh`
   passed 9/9. Aggregate: `fallback_sum=0`, six unsupported-picture rows, 6,049 JBR picture frames, and 3,221 JBR
