@@ -5,6 +5,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel focused `runtime-effect-invalid` command-probe refresh after `gradient-invalid`:
+  `EXPECT_SCREENSHOT_ASSERTION=false CASE_GROUPS=runtime-effect-invalid ./scripts/jbr-skia-command-probe-suite.sh`
+  passed 62/62. Aggregate: `fallback_sum=56`, seven unsupported-picture rows, 7,153 JBR picture frames, and zero JBR
+  command frames. The group rechecked RuntimeEffect shader/color-filter source, schema, child index, nested child,
+  compile/build, and child-type parser/fallback guards. Magic Jewel `out` is 104G with about 233Gi free:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260612-112117/suite.tsv`.
 - Magic Jewel focused `gradient-invalid` command-probe refresh after `gradient-path-invalid`:
   `EXPECT_SCREENSHOT_ASSERTION=false CASE_GROUPS=gradient-invalid ./scripts/jbr-skia-command-probe-suite.sh` passed
   81/81. Aggregate: `fallback_sum=60`, 21 unsupported-picture rows, 17,899 JBR picture frames, and zero JBR command
