@@ -5,6 +5,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel focused `native-text` command-probe refresh after `core-effects`:
+  `EXPECT_SCREENSHOT_ASSERTION=false CASE_GROUPS=native-text ./scripts/jbr-skia-command-probe-suite.sh` passed 14/14.
+  Aggregate: `fallback_sum=0`, zero unsupported-picture rows, zero JBR picture frames, and 33,822 JBR command frames.
+  The group rechecked custom/generic/loaded/resource/system font text replay across baseline, resize, and forced-context
+  scenarios. Magic Jewel `out` is 103G with about 231Gi free:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260612-035202/suite.tsv`.
 - Magic Jewel focused `core-effects` command-probe refresh after `descriptor-lifecycle`:
   `EXPECT_SCREENSHOT_ASSERTION=false CASE_GROUPS=core-effects ./scripts/jbr-skia-command-probe-suite.sh` passed 8/8.
   Aggregate: `fallback_sum=0`, three unsupported-picture rows, 5,099 JBR picture frames, and 13,321 JBR command

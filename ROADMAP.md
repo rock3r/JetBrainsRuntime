@@ -38,6 +38,10 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel refreshed the focused `native-text` command-probe group after `core-effects`, using structured markers
+  while local screenshot capture remains unavailable. It passed 14/14 with `fallback_sum=0`, no unsupported-picture
+  rows, no picture frames, and 33,822 command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260612-035202/suite.tsv`.
 - Magic Jewel refreshed the focused `core-effects` command-probe group after `descriptor-lifecycle`, using structured
   markers while local screenshot capture remains unavailable. It passed 8/8 with `fallback_sum=0`, three
   unsupported-picture rows, 5,099 picture frames, and 13,321 command frames:
