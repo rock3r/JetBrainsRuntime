@@ -5,6 +5,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel focused `smoke` command-probe refresh after `stream-invalid`:
+  `EXPECT_SCREENSHOT_ASSERTION=false CASE_GROUPS=smoke ./scripts/jbr-skia-command-probe-suite.sh` passed 6/6.
+  Aggregate: `fallback_sum=0`, zero unsupported-picture rows, zero JBR picture frames, and 6,694 JBR command frames.
+  The group rechecked live animation, core primitives, color shader, color-filter handle, color-matrix filter, and
+  graphics-layer smoke replay. Magic Jewel `out` is 104G with about 210Gi free:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260612-133407/suite.tsv`.
 - Magic Jewel focused `stream-invalid` command-probe refresh after `save-layer-shader-fallbacks`:
   `EXPECT_SCREENSHOT_ASSERTION=false CASE_GROUPS=stream-invalid ./scripts/jbr-skia-command-probe-suite.sh` passed
   8/8. Aggregate: `fallback_sum=8`, zero unsupported-picture rows, zero JBR picture frames, and zero JBR command
