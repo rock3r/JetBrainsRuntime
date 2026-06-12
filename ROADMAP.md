@@ -38,6 +38,10 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel refreshed the focused `surface-transform-ui` command-probe group after `runtime-effect-invalid`, using
+  structured markers while local screenshot capture remains unavailable. It passed 15/15 with no fallback, no
+  unsupported-picture rows, no picture frames, and 23,174 command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260612-121443/suite.tsv`.
 - Magic Jewel refreshed the focused `runtime-effect-invalid` command-probe group after `gradient-invalid`, using
   structured markers while local screenshot capture remains unavailable. It passed 62/62 with `fallback_sum=56`, seven
   unsupported-picture rows, 7,153 picture frames, and zero command frames:

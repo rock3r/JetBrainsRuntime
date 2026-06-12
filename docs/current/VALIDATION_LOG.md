@@ -5,6 +5,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel focused `surface-transform-ui` command-probe refresh after `runtime-effect-invalid`:
+  `EXPECT_SCREENSHOT_ASSERTION=false CASE_GROUPS=surface-transform-ui ./scripts/jbr-skia-command-probe-suite.sh`
+  passed 15/15. Aggregate: `fallback_sum=0`, zero unsupported-picture rows, zero JBR picture frames, and 23,174 JBR
+  command frames. The group rechecked native bridge load, point rendering, concat/skew transforms, gradient surfaces
+  and path blend modes, popup/menu UI chrome, and text-image replay. Magic Jewel `out` is 104G with about 233Gi free:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260612-121443/suite.tsv`.
 - Magic Jewel focused `runtime-effect-invalid` command-probe refresh after `gradient-invalid`:
   `EXPECT_SCREENSHOT_ASSERTION=false CASE_GROUPS=runtime-effect-invalid ./scripts/jbr-skia-command-probe-suite.sh`
   passed 62/62. Aggregate: `fallback_sum=56`, seven unsupported-picture rows, 7,153 JBR picture frames, and zero JBR
