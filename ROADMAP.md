@@ -38,6 +38,10 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel refreshed the focused `save-layer-shader-fallbacks` command-probe group after `graphics-layer-extras`,
+  using structured markers while local screenshot capture remains unavailable. It passed 9/9 with no fallback, six
+  unsupported-picture rows, 6,049 picture frames, and 3,221 command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260612-131608/suite.tsv`.
 - Magic Jewel refreshed the focused `graphics-layer-extras` command-probe group after `graphics-layer`, using
   structured markers while local screenshot capture remains unavailable. It passed 16/16 with no fallback, four
   unsupported-picture rows, 4,104 picture frames, and 12,671 command frames:

@@ -5,6 +5,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel focused `save-layer-shader-fallbacks` command-probe refresh after `graphics-layer-extras`:
+  `EXPECT_SCREENSHOT_ASSERTION=false CASE_GROUPS=save-layer-shader-fallbacks ./scripts/jbr-skia-command-probe-suite.sh`
+  passed 9/9. Aggregate: `fallback_sum=0`, six unsupported-picture rows, 6,049 JBR picture frames, and 3,221 JBR
+  command frames. The group rechecked supported saveLayer filter/blend rows plus raw saveLayer color-filter, opaque
+  shader, picture shader, and invalid-gradient structured fallback sentinels. Magic Jewel `out` is 104G with about
+  210Gi free:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260612-131608/suite.tsv`.
 - Magic Jewel focused `graphics-layer-extras` command-probe refresh after `graphics-layer`:
   `EXPECT_SCREENSHOT_ASSERTION=false CASE_GROUPS=graphics-layer-extras ./scripts/jbr-skia-command-probe-suite.sh`
   passed 16/16. Aggregate: `fallback_sum=0`, four unsupported-picture rows, 4,104 JBR picture frames, and 12,671 JBR
