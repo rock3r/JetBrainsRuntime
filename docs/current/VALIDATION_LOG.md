@@ -5,6 +5,14 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- Magic Jewel focused `descriptor-handles-invalid` command-probe refresh after `image-handles-invalid`:
+  `EXPECT_SCREENSHOT_ASSERTION=false CASE_GROUPS=descriptor-handles-invalid ./scripts/jbr-skia-command-probe-suite.sh`
+  passed 48/48. Aggregate: `fallback_sum=48`, zero unsupported-picture rows, zero JBR picture frames, and zero JBR
+  command frames. The group rechecked descriptor use/use-after-evict/evict parser guards, saveLayer color/image-filter
+  handle guards, nested shader/color-filter/image-filter/path-effect child use-after-evict and missing-child guards,
+  plus wrong-effect-type guards across shader, color-filter, image-filter, and path-effect descriptors. Magic Jewel
+  `out` is 102G with about 232Gi free:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260612-020826/suite.tsv`.
 - Magic Jewel focused `image-handles-invalid` command-probe refresh after `shader-descriptor-invalid`:
   `EXPECT_SCREENSHOT_ASSERTION=false CASE_GROUPS=image-handles-invalid ./scripts/jbr-skia-command-probe-suite.sh`
   passed 27/27. Aggregate: `fallback_sum=27`, zero unsupported-picture rows, zero JBR picture frames, and 1,523 JBR
