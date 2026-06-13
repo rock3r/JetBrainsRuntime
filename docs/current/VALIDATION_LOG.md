@@ -5,6 +5,24 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-13 stable descriptor gate tightening for `parity-color-shader`: the latest broad parity report showed 20
+  JBR effect-handle definitions while the row had shader-handle definition/reuse gates but no effect-handle definition
+  guard. Magic Jewel added `EXPECT_MIN_JBR_EFFECT_HANDLE_DEFINES=1` and
+  `EXPECT_MAX_JBR_EFFECT_HANDLE_DEFINES=32` for this exact row, leaving effect use expectations unset because reports
+  show zero effect-handle use/cache-hit frames. Focused validation
+  `CASES=parity-color-shader ./scripts/jbr-skia-screenshot-parity-suite.sh` passed with `fallback_new_count=0`, zero
+  picture frames, 660 JBR command frames, 20 effect-handle definition frames, zero effect-handle use/cache-hit frames,
+  four shader-handle definition frames, 1,084 shader-handle use frames, 1,080 shader-handle cache-hit frames, zero
+  RuntimeEffect cache markers, zero compile/build failures, zero image-cache clear markers, zero scoped image-cache
+  clear markers, zero Skiko surface-change markers, zero command-cache clear markers, `avg_delta=2.115`,
+  `bad_pixel_ratio=0.05020`, `header_buttons_bad_pixel_ratio=0.00381`, `compose_bad_pixel_ratio=0.07485`,
+  `compose_bottom_labels_bad_pixel_ratio=0.12590`, `compose_paragraph_probes_bad_pixel_ratio=0.08803`,
+  `compose_shader_color_bad_pixel_ratio=0.00000`, `compose_shader_image_bad_pixel_ratio=0.06242`,
+  `compose_shader_composite_bad_pixel_ratio=0.08628`, `compose_shader_linear_bad_pixel_ratio=0.06844`,
+  `compose_shader_noise_bad_pixel_ratio=0.05475`, and `compose_shader_turbulence_bad_pixel_ratio=0.07768`. This is
+  focused descriptor-cap change 7 after the 2026-06-13 19:34 full parity sweep; broad parity remains deferred until
+  roughly ten focused changes or an ABI/capability gate:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260613-210338/suite.tsv`.
 - 2026-06-13 stable descriptor gate tightening for `parity-forced-context-composite-noise-shader`: the latest broad
   parity report showed 45 JBR effect-handle definitions while the row had shader-handle definition/reuse gates and
   forced-context cache-clear gates but no effect-handle definition guard. Magic Jewel added
