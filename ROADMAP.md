@@ -39,6 +39,12 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel tightened `parity-composite-shader-color-filter` from a 32-definition shader-handle cap to 24 after
+  historical rows showed exactly 16 shader definitions. Exact validation passed with no fallback, 848 JBR command
+  frames, 16 shader-handle definitions, 1,249 uses, 1,241 cache-hit frames, 24 effect-handle definitions, four
+  effect-handle uses, and `bad_pixel_ratio=0.04991`. This is focused descriptor-cap change 4 after the 2026-06-13
+  11:44 full parity sweep, so broad parity remains deferred:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260613-132328/suite.tsv`.
 - Magic Jewel tightened `parity-forced-context-runtime-effect-stable-color-filter` from a 144-definition effect-handle
   cap to 72 after historical rows showed 54-60 definitions. Exact validation passed with no fallback, 890 JBR command
   frames, 54 effect-handle definitions, 1,395 uses, 1,386 cache-hit frames, 1,394 RuntimeEffect source-cache hits, one
