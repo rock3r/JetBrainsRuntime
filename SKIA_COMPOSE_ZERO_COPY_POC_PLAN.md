@@ -73,6 +73,12 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   626 JBR command frames, and no fallback. This is focused descriptor-cap change 9 after the 2026-06-13 13:41 full
   parity sweep; after one more focused change, run the next batched broad parity sweep:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260613-151153/suite.tsv`.
+- Stable descriptor gate tightening continued with `parity-image-color-matrix-filter`: its max effect-handle
+  definition guard was reduced from 64 to 32 based on historical 18-30 definition reports. Exact validation passed
+  with 18 effect definitions, 1,077 effect uses, 1,074 effect cache-hit frames, zero shader handles, 668 JBR command
+  frames, and no fallback. This is focused descriptor-cap change 10 after the 2026-06-13 13:41 full parity sweep, so
+  the next step is the batched broad screenshot parity sweep:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260613-151442/suite.tsv`.
 - Local `/tmp` JBR API/desktop/native artifacts were refreshed on 2026-06-13 after stale artifacts caused
   `service-unavailable` fallback in exact compatibility/bridge-load checks. Post-rebuild focused validation passed:
   `commands-native-bridge-load-library` produced 895 JBR command frames with no fallback, compatibility `happy`
