@@ -6,6 +6,18 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 ## Latest Broad Sweeps
 
 - 2026-06-13 focused command-probe hardening for
+  `commands-invalid-linear-gradient-shader-descriptor-tile-mode-fallback`: the latest full command-probe sweep showed
+  shader-handle use/cache-hit frames and one effect-handle use while the row only asserted descriptor definitions and
+  the linear-gradient corrupt tile-mode fallback marker. Magic Jewel added `EXPECT_MIN_JBR_SHADER_HANDLE_USES=1`,
+  `EXPECT_MIN_JBR_SHADER_HANDLE_CACHE_HITS=1`, and `EXPECT_MIN_JBR_EFFECT_HANDLE_USES=1`, preserving the existing
+  definition min/max guards. Focused validation
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES=commands-invalid-linear-gradient-shader-descriptor-tile-mode-fallback ./scripts/jbr-skia-command-probe-suite.sh`
+  passed with `fallback_new_count=1`, `unsupported=none`, zero picture frames, zero command frames after fallback, one
+  effect-handle definition frame, one effect-handle use frame, zero effect-handle cache-hit/evict frames, two
+  shader-handle definition frames, 1,651 shader-handle use frames, 1,649 shader-handle cache-hit frames, zero
+  shader-handle evicts, zero RuntimeEffect cache markers, and zero compile/build failures:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260613-235247/suite.tsv`.
+- 2026-06-13 focused command-probe hardening for
   `commands-invalid-composite-shader-descriptor-blend-mode-fallback`: the latest full command-probe sweep showed three
   JBR shader-handle definitions plus shader-handle use/cache-hit frames while the row only asserted the
   composite-shader corrupt blend-mode fallback marker. Magic Jewel added

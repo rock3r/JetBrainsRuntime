@@ -40,6 +40,16 @@ This is the small working roadmap for the current PoC. The full historical check
 ## Latest Validations
 
 - Magic Jewel tightened the focused command-probe row
+  `commands-invalid-linear-gradient-shader-descriptor-tile-mode-fallback` with shader/effect handle-use guards on top
+  of its existing definition guards: exactly two JBR shader-handle definitions, at least one shader-handle use/cache
+  hit, exactly one JBR effect-handle definition, and at least one effect-handle use before the intentional linear
+  gradient corrupt tile-mode fallback. Exact validation
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES=commands-invalid-linear-gradient-shader-descriptor-tile-mode-fallback ./scripts/jbr-skia-command-probe-suite.sh`
+  passed with one fallback, no unsupported marker, zero picture frames, zero command frames after fallback, one
+  effect-handle definition/use, two shader-handle definitions, 1,651 shader-handle uses, 1,649 shader-handle cache
+  hits, zero effect-handle cache hits, and zero RuntimeEffect markers:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260613-235247/suite.tsv`.
+- Magic Jewel tightened the focused command-probe row
   `commands-invalid-composite-shader-descriptor-blend-mode-fallback` with shader-handle definition/reuse guards:
   exactly three JBR shader-handle definitions, at least one shader-handle use, and at least one shader-handle cache-hit
   frame before the intentional composite-shader corrupt blend-mode fallback. Exact validation
