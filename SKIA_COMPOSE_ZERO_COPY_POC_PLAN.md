@@ -100,6 +100,11 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   with seven definitions, 1,108 uses, 1,101 cache-hit frames, 1,106 RuntimeEffect source-cache hits, and the row's
   expected single fallback:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260613-112823/suite.tsv`.
+- Stable descriptor gate tightening continued with `parity-forced-context-runtime-effect-pure-color`: its max
+  shader-handle definition guard was reduced from 24 to 12 based on historical 7-12 definition reports, then exact
+  validation passed with eight definitions, 935 uses, 927 cache-hit frames, 934 RuntimeEffect source-cache hits, one
+  surface-change marker, and no fallback:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260613-113128/suite.tsv`.
 - Full default command-probe sweep refreshed after the focused quick-loop batch:
   `EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-command-probe-suite.sh` passed 549/549 with
   `fallback_sum=350`, 79 unsupported-picture rows, 78,827 picture frames, and 156,233 command frames:
