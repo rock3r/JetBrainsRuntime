@@ -5,6 +5,24 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-13 stable descriptor gate tightening for `parity-resize-color-shader`: the latest broad parity report showed
+  35 JBR effect-handle definitions while the row had shader-handle definition/reuse gates and resize cache-clear gates
+  but no effect-handle definition guard. Magic Jewel added `EXPECT_MIN_JBR_EFFECT_HANDLE_DEFINES=1` and
+  `EXPECT_MAX_JBR_EFFECT_HANDLE_DEFINES=48` for this exact row, leaving effect use expectations unset because reports
+  show zero effect-handle use/cache-hit frames. Focused validation
+  `CASES=parity-resize-color-shader ./scripts/jbr-skia-screenshot-parity-suite.sh` passed with
+  `fallback_new_count=1`, zero picture frames, 627 JBR command frames, one JBR image-cache clear, one scoped
+  image-cache clear, 30 effect-handle definition frames, zero effect-handle use/cache-hit frames, six shader-handle
+  definition frames, 1,232 shader-handle use frames, 1,226 shader-handle cache-hit frames, zero RuntimeEffect cache
+  markers, zero compile/build failures, one Skiko surface-change marker, one command-cache clear marker,
+  `avg_delta=1.850`, `bad_pixel_ratio=0.04454`, `header_buttons_bad_pixel_ratio=0.02158`,
+  `compose_bad_pixel_ratio=0.06470`, `compose_bottom_labels_bad_pixel_ratio=0.06596`,
+  `compose_paragraph_probes_bad_pixel_ratio=0.07034`, `compose_shader_color_bad_pixel_ratio=0.04801`,
+  `compose_shader_image_bad_pixel_ratio=0.06662`, `compose_shader_composite_bad_pixel_ratio=0.08610`,
+  `compose_shader_linear_bad_pixel_ratio=0.06647`, `compose_shader_noise_bad_pixel_ratio=0.06845`, and
+  `compose_shader_turbulence_bad_pixel_ratio=0.07863`. This is focused descriptor-cap change 8 after the 2026-06-13
+  19:34 full parity sweep; broad parity remains deferred until roughly ten focused changes or an ABI/capability gate:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260613-210633/suite.tsv`.
 - 2026-06-13 stable descriptor gate tightening for `parity-color-shader`: the latest broad parity report showed 20
   JBR effect-handle definitions while the row had shader-handle definition/reuse gates but no effect-handle definition
   guard. Magic Jewel added `EXPECT_MIN_JBR_EFFECT_HANDLE_DEFINES=1` and
