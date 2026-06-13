@@ -39,6 +39,10 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel tightened `parity-turbulence-shader` from an 8-definition shader-handle cap to 4 after prior rows showed
+  exactly four definitions. Exact validation passed with no fallback, 784 JBR command frames, four shader-handle
+  definitions, 1,323 uses, 1,319 cache-hit frames, `avg_delta=2.119`, and `bad_pixel_ratio=0.05035`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260613-094416/suite.tsv`.
 - Magic Jewel tightened `parity-noise-shader` from an 8-definition shader-handle cap to 4 after prior rows showed
   3-4 definitions. Exact validation passed with no fallback, 658 JBR command frames, four shader-handle definitions,
   1,204 uses, 1,200 cache-hit frames, `avg_delta=2.116`, and `bad_pixel_ratio=0.05013`:
