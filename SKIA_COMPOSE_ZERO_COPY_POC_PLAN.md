@@ -79,6 +79,11 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   frames, and no fallback. This is focused descriptor-cap change 10 after the 2026-06-13 13:41 full parity sweep, so
   the next step is the batched broad screenshot parity sweep:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260613-151442/suite.tsv`.
+- Batched broad parity validation refreshed after ten focused descriptor-cap tightenings:
+  `./scripts/jbr-skia-screenshot-parity-suite.sh` passed 106/106 with `fallback_sum=10`, zero picture frames, 92,868
+  JBR command frames, mean `avg_delta=2.158`, and mean `bad_pixel_ratio=0.05158`. This resets the focused descriptor
+  cap change counter to zero:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260613-151647/suite.tsv`.
 - Local `/tmp` JBR API/desktop/native artifacts were refreshed on 2026-06-13 after stale artifacts caused
   `service-unavailable` fallback in exact compatibility/bridge-load checks. Post-rebuild focused validation passed:
   `commands-native-bridge-load-library` produced 895 JBR command frames with no fallback, compatibility `happy`
