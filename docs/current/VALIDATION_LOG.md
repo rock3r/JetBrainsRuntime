@@ -5,6 +5,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-13 batched full screenshot parity sweep after ten focused descriptor-cap tightenings:
+  `./scripts/jbr-skia-screenshot-parity-suite.sh` passed 106/106. Aggregate: `fallback_sum=8`, zero JBR picture
+  frames, 63,790 JBR command frames, mean `avg_delta=2.158`, and mean `bad_pixel_ratio=0.05158`. The sweep covered
+  text/font, image, gradient, shader, RuntimeEffect, color-filter, descriptor lifecycle, resize, forced-context, and
+  graphics-layer parity rows after the latest shader descriptor-definition sentinel tightenings. This resets the
+  focused descriptor-cap change counter to zero. Disk free was about 169Gi after the run:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260613-211500/suite.tsv`.
 - 2026-06-13 stable descriptor gate tightening for `parity-noise-shader`: the latest broad parity report showed 20 JBR
   effect-handle definitions while the row had shader-handle definition/reuse gates but no effect-handle definition
   guard. Magic Jewel added `EXPECT_MIN_JBR_EFFECT_HANDLE_DEFINES=1` and

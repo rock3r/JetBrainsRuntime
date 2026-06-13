@@ -14,6 +14,11 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - ABI 106 artifacts are current across JBR private API, JBR API mirror, Skiko, CMP, and Magic Jewel.
 - Validation should be batched to keep iteration cost under control: use exact cases or tiny focused groups per change,
   and reserve broad command/screenshot/matrix sweeps for every ~10 meaningful changes or explicit ABI/capability gates.
+- Batched broad parity validation refreshed after ten focused descriptor-cap tightenings:
+  `./scripts/jbr-skia-screenshot-parity-suite.sh` passed 106/106 with `fallback_sum=8`, zero picture frames, 63,790
+  JBR command frames, mean `avg_delta=2.158`, and mean `bad_pixel_ratio=0.05158`. This resets the focused descriptor
+  cap change counter to zero. Disk free was about 169Gi after the run:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260613-211500/suite.tsv`.
 - Stable descriptor gate tightening continued with `parity-noise-shader`: minimum and max JBR effect-handle definition
   guards were added after the latest broad sweep showed 20 definitions and no effect-handle uses. Exact validation
   passed with no fallback, zero picture frames, 783 JBR command frames, 20 effect definitions, four shader definitions,
