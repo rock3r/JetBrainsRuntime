@@ -5,6 +5,22 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-13 stable descriptor gate tightening for `parity-forced-context-runtime-effect-pure-color`: the latest broad
+  parity report showed 45 JBR effect-handle definitions while the row had shader-handle and RuntimeEffect cache gates
+  but no effect-handle definition guard. Magic Jewel added `EXPECT_MIN_JBR_EFFECT_HANDLE_DEFINES=1` and
+  `EXPECT_MAX_JBR_EFFECT_HANDLE_DEFINES=56` for this exact row, leaving effect use expectations unset because the
+  report showed zero effect-handle use/cache-hit frames. Focused validation
+  `CASES=parity-forced-context-runtime-effect-pure-color ./scripts/jbr-skia-screenshot-parity-suite.sh` passed with
+  `fallback_new_count=0`, zero picture frames, 909 JBR command frames, one JBR image-cache clear, one scoped
+  image-cache clear, 45 effect-handle definition frames, zero effect-handle use/cache-hit frames, nine shader-handle
+  definition frames, 1,389 shader-handle use frames, 1,380 shader-handle cache-hit frames, 1,388 RuntimeEffect
+  source-cache hits, one RuntimeEffect source-cache miss, zero compile/build failures, one Skiko surface-change
+  marker, one command-cache clear marker, `avg_delta=1.964`, `bad_pixel_ratio=0.04619`,
+  `header_buttons_bad_pixel_ratio=0.00381`, `compose_bad_pixel_ratio=0.06861`,
+  `compose_bottom_labels_bad_pixel_ratio=0.07624`, `compose_paragraph_probes_bad_pixel_ratio=0.09146`, and
+  `compose_shader_color_bad_pixel_ratio=0.07688`. This is focused descriptor-cap change 7 after the 2026-06-13 18:07
+  full parity sweep; broad parity remains deferred until roughly ten focused changes or an ABI/capability gate:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260613-192406/suite.tsv`.
 - 2026-06-13 stable descriptor gate tightening for `parity-resize-runtime-effect-pure-color`: the latest broad parity
   report showed 35 JBR effect-handle definitions while the row had shader-handle and RuntimeEffect cache gates but no
   effect-handle definition guard. Magic Jewel added `EXPECT_MIN_JBR_EFFECT_HANDLE_DEFINES=1` and
