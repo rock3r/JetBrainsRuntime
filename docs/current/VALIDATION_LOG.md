@@ -5,6 +5,17 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-13 stable descriptor gate tightening for `parity-forced-context-runtime-effect-stable-color-filter`:
+  historical parity reports showed the row using 54-60 JBR effect-handle definitions, while the suite allowed up to
+  144. Magic Jewel lowered `EXPECT_MAX_JBR_EFFECT_HANDLE_DEFINES` to 72 for this exact row. Focused validation
+  `CASES=parity-forced-context-runtime-effect-stable-color-filter ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  passed with `fallback_new_count=0`, zero picture frames, 890 JBR command frames, 54 effect-handle definition frames,
+  1,395 effect-handle use frames, 1,386 effect-handle cache-hit frames, zero shader-handle definition frames, 1,394
+  RuntimeEffect source-cache hit frames, one RuntimeEffect source-cache miss, zero RuntimeEffect compile/build
+  failures, one Skiko surface-change marker, one command-cache clear marker, `avg_delta=1.981`, and
+  `bad_pixel_ratio=0.04668`. This is focused descriptor-cap change 3 after the 2026-06-13 11:44 full parity sweep.
+  Disk free was about 198Gi:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260613-131956/suite.tsv`.
 - 2026-06-13 stable descriptor gate tightening for `parity-resize-runtime-effect-stable-color-filter`: historical
   parity reports showed the row using 36-42 JBR effect-handle definitions, while the suite allowed up to 96. Magic
   Jewel lowered `EXPECT_MAX_JBR_EFFECT_HANDLE_DEFINES` to 48 for this exact row. Focused validation
