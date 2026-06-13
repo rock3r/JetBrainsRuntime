@@ -14,6 +14,16 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - ABI 106 artifacts are current across JBR private API, JBR API mirror, Skiko, CMP, and Magic Jewel.
 - Validation should be batched to keep iteration cost under control: use exact cases or tiny focused groups per change,
   and reserve broad command/screenshot/matrix sweeps for every ~10 meaningful changes or explicit ABI/capability gates.
+- Narrow artifact/benchmark validation was refreshed after the compatibility matrix and eight focused descriptor-cap
+  tightenings. Required artifact matrix
+  `CASE_GROUPS=required EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-artifact-matrix.sh` passed 2/2:
+  `current-all` replayed 492 command frames with no fallback, `missing-public-api` produced the expected single
+  fallback with zero command frames, and both rows reported `background_window=true`. Benchmark smoke
+  `CASES=commands ./scripts/jbr-skia-benchmark-suite.sh` passed with no fallback, zero picture frames, 3,898 command
+  frames, `app_new_fps=194.8`, and `jbr_command_fps=194.9`. This does not change the focused descriptor-cap counter,
+  which remains 8 after the 2026-06-13 21:15 full parity sweep:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260613-232728/matrix.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-benchmark-suite/20260613-232907/suite.tsv`.
 - Stable descriptor gate tightening continued with `parity-native-custom-font-text-image`: minimum and max JBR
   effect-handle definition guards were added after the latest broad sweep showed 20 definitions and no effect-handle
   uses. Exact validation passed with no fallback, zero picture frames, 882 JBR command frames, 20 effect definitions,

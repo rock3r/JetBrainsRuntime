@@ -5,6 +5,19 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-13 narrow artifact/benchmark refresh after the compatibility matrix and eight focused descriptor-cap
+  tightenings: required artifact matrix
+  `CASE_GROUPS=required EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-artifact-matrix.sh` passed 2/2.
+  `current-all` reported `fallback_new_count=0`, 492 JBR command frames, and `background_window=true`.
+  `missing-public-api` reported the expected `public-api-missing` fallback, `fallback_new_count=1`, zero JBR command
+  frames, and `background_window=true`. The follow-up single-row benchmark smoke
+  `CASES=commands ./scripts/jbr-skia-benchmark-suite.sh` passed with `fallback_new_count=0`, zero picture frames,
+  3,898 JBR command frames, 16 old-side CPU samples, 17 new-side CPU samples, `old_avg_cpu=72.49`,
+  `new_avg_cpu=77.05`, `app_old_fps=194.1`, `app_new_fps=194.8`, `jbr_picture_fps=0.0`, and
+  `jbr_command_fps=194.9`. This validation refresh does not change the focused descriptor-cap counter, which remains
+  8 after the 2026-06-13 21:15 full parity sweep:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260613-232728/matrix.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-benchmark-suite/20260613-232907/suite.tsv`.
 - 2026-06-13 stable descriptor gate tightening for `parity-native-custom-font-text-image`: the latest broad parity
   report showed 20 JBR effect-handle definitions while the row had custom native text/image coverage and no
   effect-handle definition guard. Magic Jewel added `EXPECT_MIN_JBR_EFFECT_HANDLE_DEFINES=1` and

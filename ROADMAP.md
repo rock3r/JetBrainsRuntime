@@ -39,6 +39,16 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel refreshed the narrow artifact/benchmark checkpoint after the compatibility matrix and eight focused
+  descriptor-cap tightenings. Required artifact matrix
+  `CASE_GROUPS=required EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-artifact-matrix.sh` passed 2/2:
+  `current-all` replayed 492 JBR command frames with no fallback, `missing-public-api` fell back once with zero command
+  frames, and both rows kept `background_window=true`. Single-row benchmark smoke
+  `CASES=commands ./scripts/jbr-skia-benchmark-suite.sh` passed with no fallback, zero picture frames, 3,898 JBR
+  command frames, `app_new_fps=194.8`, and `jbr_command_fps=194.9`. The focused descriptor-cap counter remains 8, so
+  broad parity remains deferred:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260613-232728/matrix.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-benchmark-suite/20260613-232907/suite.tsv`.
 - Magic Jewel added descriptor-definition gates to `parity-native-custom-font-text-image`: at least one JBR
   effect-handle definition and a max of 32, after the latest broad sweep showed 20 definitions and no effect-handle
   uses. Exact validation passed with no fallback, zero picture frames, 882 JBR command frames, 20 effect-handle
