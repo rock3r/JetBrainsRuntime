@@ -5,6 +5,23 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-13 stable descriptor gate tightening for `parity-runtime-effect-child-only`: the row already had a max JBR
+  effect-handle definition guard, but the latest broad parity report showed a stable 20 definitions and no minimum
+  effect-definition sentinel. Magic Jewel added `EXPECT_MIN_JBR_EFFECT_HANDLE_DEFINES=1` for this exact row, preserving
+  `EXPECT_MAX_JBR_EFFECT_HANDLE_DEFINES=32` and leaving effect use expectations unset because the report showed zero
+  effect-handle use/cache-hit frames. Focused validation
+  `CASES=parity-runtime-effect-child-only ./scripts/jbr-skia-screenshot-parity-suite.sh` passed with
+  `fallback_new_count=0`, zero picture frames, 572 JBR command frames, 20 effect-handle definition frames, zero
+  effect-handle use/cache-hit frames, 12 shader-handle definition frames, 1,060 shader-handle use frames, 1,056
+  shader-handle cache-hit frames, 1,059 RuntimeEffect source-cache hits, one RuntimeEffect source-cache miss, zero
+  compile/build failures, zero image-cache clear markers, zero scoped image-cache clear markers, zero Skiko
+  surface-change markers, zero command-cache clear markers, `avg_delta=2.118`, `bad_pixel_ratio=0.05029`,
+  `header_buttons_bad_pixel_ratio=0.00381`, `compose_bad_pixel_ratio=0.07500`,
+  `compose_bottom_labels_bad_pixel_ratio=0.12590`, `compose_paragraph_probes_bad_pixel_ratio=0.08803`, and
+  `compose_shader_image_bad_pixel_ratio=0.06242`. This is focused descriptor-cap change 9 after the 2026-06-13 18:07
+  full parity sweep; after one more focused change, run the next batched broad parity sweep unless an ABI/capability
+  gate supersedes it:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260613-192932/suite.tsv`.
 - 2026-06-13 stable descriptor gate tightening for `parity-runtime-effect-uniform-only`: the row already had a max JBR
   effect-handle definition guard, but the latest broad parity report showed a stable 20 definitions and no minimum
   effect-definition sentinel. Magic Jewel added `EXPECT_MIN_JBR_EFFECT_HANDLE_DEFINES=1` for this exact row, preserving
