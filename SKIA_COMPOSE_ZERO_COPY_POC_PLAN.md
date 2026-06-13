@@ -125,6 +125,11 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `./scripts/jbr-skia-screenshot-parity-suite.sh` passed 106/106 with `fallback_sum=11`, zero picture frames, 103,309
   JBR command frames, mean `avg_delta=2.158`, and mean `bad_pixel_ratio=0.05158`:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260613-114403/suite.tsv`.
+- Full compatibility matrix refreshed after the batched parity reset:
+  `EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-compatibility-matrix.sh` passed 57/57. The `happy` row
+  replayed 475 command frames with no fallback, every forced mismatch/API row produced one structured fallback with
+  zero command frames, and all rows stayed in background-window mode:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260613-124241/matrix.tsv`.
 - Full default command-probe sweep refreshed after the focused quick-loop batch:
   `EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-command-probe-suite.sh` passed 549/549 with
   `fallback_sum=350`, 79 unsupported-picture rows, 78,827 picture frames, and 156,233 command frames:

@@ -5,6 +5,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-13 full compatibility matrix after the batched screenshot parity reset:
+  `EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-compatibility-matrix.sh` passed 57/57 with
+  `fallback_sum=56`. The `happy` row passed with no fallback, 475 JBR command frames, and `background_window=true`.
+  The ABI/native-ABI/public-API rows and low/high-word capability-removal rows each produced exactly one structured
+  fallback, zero command frames, and `background_window=true`. Disk free was about 198Gi:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260613-124241/matrix.tsv`.
 - 2026-06-13 batched full screenshot parity sweep after ten focused descriptor-cap tightenings:
   `./scripts/jbr-skia-screenshot-parity-suite.sh` passed 106/106. Aggregate: `fallback_sum=11`, zero JBR picture
   frames, 103,309 JBR command frames, mean `avg_delta=2.158`, and mean `bad_pixel_ratio=0.05158`. The sweep covered
