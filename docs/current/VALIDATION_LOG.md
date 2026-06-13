@@ -5,6 +5,22 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-13 stable descriptor gate tightening for `parity-resize-runtime-effect-pure-color`: the latest broad parity
+  report showed 35 JBR effect-handle definitions while the row had shader-handle and RuntimeEffect cache gates but no
+  effect-handle definition guard. Magic Jewel added `EXPECT_MIN_JBR_EFFECT_HANDLE_DEFINES=1` and
+  `EXPECT_MAX_JBR_EFFECT_HANDLE_DEFINES=48` for this exact row, leaving effect use expectations unset because the
+  report showed zero effect-handle use/cache-hit frames. Focused validation
+  `CASES=parity-resize-runtime-effect-pure-color ./scripts/jbr-skia-screenshot-parity-suite.sh` passed with
+  `fallback_new_count=1`, zero picture frames, 676 JBR command frames, one JBR image-cache clear, one scoped
+  image-cache clear, 35 effect-handle definition frames, zero effect-handle use/cache-hit frames, seven shader-handle
+  definition frames, 1,129 shader-handle use frames, 1,122 shader-handle cache-hit frames, 1,127 RuntimeEffect
+  source-cache hits, one RuntimeEffect source-cache miss, zero compile/build failures, one Skiko surface-change
+  marker, one command-cache clear marker, `avg_delta=1.845`, `bad_pixel_ratio=0.04438`,
+  `header_buttons_bad_pixel_ratio=0.02158`, `compose_bad_pixel_ratio=0.06443`,
+  `compose_bottom_labels_bad_pixel_ratio=0.06596`, `compose_paragraph_probes_bad_pixel_ratio=0.07034`, and
+  `compose_shader_color_bad_pixel_ratio=0.06967`. This is focused descriptor-cap change 6 after the 2026-06-13 18:07
+  full parity sweep; broad parity remains deferred until roughly ten focused changes or an ABI/capability gate:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260613-192102/suite.tsv`.
 - 2026-06-13 stable descriptor gate tightening for `parity-forced-context-image-refs`: recent broad parity reports
   showed exactly 40 JBR effect-handle definitions while the row had no effect-handle definition guard. Magic Jewel
   added `EXPECT_MIN_JBR_EFFECT_HANDLE_DEFINES=1` and `EXPECT_MAX_JBR_EFFECT_HANDLE_DEFINES=48` for this exact row,
