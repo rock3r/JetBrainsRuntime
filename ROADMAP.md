@@ -39,6 +39,13 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel added the missing minimum descriptor-definition gate to `parity-composite-shader`, preserving its
+  existing max of 40, after the latest broad sweep showed 30 JBR effect-handle definitions. Exact validation passed
+  with no fallback, zero picture frames, 736 JBR command frames, 25 effect-handle definitions, 15 shader-handle
+  definitions, 1,336 shader-handle uses, 1,331 shader-handle cache-hit frames, zero effect-handle uses, zero
+  surface-change/cache-clear markers, and `bad_pixel_ratio=0.06710`. This is focused descriptor-cap change 1 after
+  the 2026-06-13 19:34 full parity sweep, so broad parity remains deferred:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260613-203517/suite.tsv`.
 - Magic Jewel completed the batched full default screenshot parity sweep after ten focused descriptor-cap tightenings.
   `./scripts/jbr-skia-screenshot-parity-suite.sh` passed 106/106 with `fallback_sum=11`, zero picture frames, 90,449
   JBR command frames, mean `avg_delta=2.158`, and mean `bad_pixel_ratio=0.05158`. This resets the focused
