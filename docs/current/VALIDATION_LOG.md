@@ -5,6 +5,17 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-13 stable descriptor gate tightening for `parity-linear-gradient-shader-color-filter`: historical parity
+  reports showed 18-30 JBR effect-handle definitions while the row allowed up to 64. Magic Jewel lowered
+  `EXPECT_MAX_JBR_EFFECT_HANDLE_DEFINES` to 32 for this exact row, leaving the already-tightened shader-handle cap
+  unchanged. Focused validation
+  `CASES=parity-linear-gradient-shader-color-filter ./scripts/jbr-skia-screenshot-parity-suite.sh` passed with
+  `fallback_new_count=0`, zero picture frames, 621 JBR command frames, eight shader-handle definition frames, 1,098
+  shader-handle use frames, 1,090 shader-handle cache-hit frames, 24 effect-handle definition frames, four
+  effect-handle use frames, zero Skiko surface-change markers, zero command-cache clear markers, `avg_delta=2.107`,
+  `bad_pixel_ratio=0.04997`, and `compose_shader_linear_bad_pixel_ratio=0.03938`. This is focused descriptor-cap
+  change 10 after the 2026-06-13 11:44 full parity sweep, so the next step is a batched broad screenshot parity sweep:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260613-133844/suite.tsv`.
 - 2026-06-13 stable descriptor gate tightening for `parity-composite-shader-color-filter`: after the shader-handle cap
   was tightened, historical parity reports still showed exactly 24 JBR effect-handle definitions while the row allowed
   up to 64. Magic Jewel lowered `EXPECT_MAX_JBR_EFFECT_HANDLE_DEFINES` to 32 for this exact row. Focused validation
