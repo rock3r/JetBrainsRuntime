@@ -39,6 +39,15 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel tightened the focused command-probe row
+  `commands-invalid-transformed-shader-descriptor-payload-count-fallback` with shader-handle definition/reuse guards:
+  exactly two JBR shader-handle definitions, at least one shader-handle use, and at least one shader-handle cache-hit
+  frame before the intentional transformed-shader corrupt payload-count fallback. Exact validation
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES=commands-invalid-transformed-shader-descriptor-payload-count-fallback ./scripts/jbr-skia-command-probe-suite.sh`
+  passed with one fallback, no unsupported marker, zero picture frames, zero command frames after fallback, two
+  shader-handle definitions, 1,883 shader-handle uses, 1,882 shader-handle cache hits, zero effect-handle markers, and
+  zero RuntimeEffect markers:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260613-234735/suite.tsv`.
 - Magic Jewel tightened the focused command-probe row `commands-invalid-shader-descriptor-version-fallback` with
   shader-handle definition/reuse guards on the shared descriptor-version case block: exactly one JBR shader-handle
   definition, at least one shader-handle use, and at least one shader-handle cache-hit frame before the intentional
