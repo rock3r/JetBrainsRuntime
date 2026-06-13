@@ -39,6 +39,11 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel refreshed the focused command benchmark smoke after the artifact slice:
+  `CASES=commands DURATION_SECONDS=5 WARMUP_SECONDS=1 EXPECT_SCREENSHOT_ASSERTION=false
+  ./scripts/jbr-skia-benchmark-suite.sh` passed with no fallback, 474 JBR command frames, two new-side CPU samples,
+  and 94.8 command FPS:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-benchmark-suite/20260613-131013/suite.tsv`.
 - Magic Jewel refreshed the required artifact matrix slice after the full compatibility matrix:
   `CASE_GROUPS=required EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-artifact-matrix.sh` passed 2/2.
   `current-all` replayed 711 JBR command frames with no fallback, and `missing-public-api` produced one structured
