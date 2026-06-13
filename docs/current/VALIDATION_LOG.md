@@ -5,6 +5,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-13 exact screenshot parity smoke after the command benchmark smoke:
+  `CASES=parity-rich ./scripts/jbr-skia-screenshot-parity-suite.sh` passed with `fallback_new_count=0`, zero picture
+  frames, 645 JBR command frames, `avg_delta=2.123`, `bad_pixel_ratio=0.05044`,
+  `header_buttons_bad_pixel_ratio=0.00381`, and `compose_bad_pixel_ratio=0.07525`. This intentionally covered one
+  high-signal rich parity row rather than the three-row smoke group or full 106-row parity suite. Disk free was about
+  198Gi:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260613-131153/suite.tsv`.
 - 2026-06-13 single-case benchmark smoke after the required artifact slice:
   `CASES=commands DURATION_SECONDS=5 WARMUP_SECONDS=1 EXPECT_SCREENSHOT_ASSERTION=false
   ./scripts/jbr-skia-benchmark-suite.sh` passed with `fallback_new_count=0`, four old-side CPU samples, two new-side

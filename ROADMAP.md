@@ -39,6 +39,10 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel refreshed the exact `parity-rich` screenshot row after the benchmark smoke:
+  `CASES=parity-rich ./scripts/jbr-skia-screenshot-parity-suite.sh` passed with no fallback, zero picture frames, 645
+  JBR command frames, `avg_delta=2.123`, and `bad_pixel_ratio=0.05044`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260613-131153/suite.tsv`.
 - Magic Jewel refreshed the focused command benchmark smoke after the artifact slice:
   `CASES=commands DURATION_SECONDS=5 WARMUP_SECONDS=1 EXPECT_SCREENSHOT_ASSERTION=false
   ./scripts/jbr-skia-benchmark-suite.sh` passed with no fallback, 474 JBR command frames, two new-side CPU samples,
