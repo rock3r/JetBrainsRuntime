@@ -5,6 +5,17 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-13 stable descriptor gate tightening for `parity-resize-composite-noise-shader`: historical parity reports
+  showed the row using 18-24 JBR shader-handle definitions, while the suite allowed up to 48. Magic Jewel lowered
+  `EXPECT_MAX_JBR_SHADER_HANDLE_DEFINES` to 32 for this exact row. Focused validation
+  `CASES=parity-resize-composite-noise-shader ./scripts/jbr-skia-screenshot-parity-suite.sh` passed with the row's
+  expected `fallback_new_count=1`, zero picture frames, 667 JBR command frames, 21 shader-handle definition frames,
+  1,229 shader-handle use frames, 1,222 shader-handle cache-hit frames, 35 effect-handle definition frames, zero
+  effect-handle uses, one Skiko surface-change marker, one command-cache clear marker, `avg_delta=1.846`,
+  `bad_pixel_ratio=0.04430`, and `compose_shader_composite_bad_pixel_ratio=0.08610`. This is focused
+  descriptor-cap change 6 after the 2026-06-13 11:44 full parity sweep; broad parity remains deferred until roughly
+  ten focused changes or an ABI/capability gate:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260613-132818/suite.tsv`.
 - 2026-06-13 stable descriptor gate tightening for `parity-composite-noise-shader`: historical parity reports showed
   the row using 9-12 JBR shader-handle definitions, while the suite allowed up to 24. Magic Jewel lowered
   `EXPECT_MAX_JBR_SHADER_HANDLE_DEFINES` to 16 for this exact row. Focused validation
