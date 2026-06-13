@@ -6,6 +6,19 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 ## Latest Broad Sweeps
 
 - 2026-06-13 focused command-probe hardening for
+  `commands-invalid-composite-shader-descriptor-blend-mode-fallback`: the latest full command-probe sweep showed three
+  JBR shader-handle definitions plus shader-handle use/cache-hit frames while the row only asserted the
+  composite-shader corrupt blend-mode fallback marker. Magic Jewel added
+  `EXPECT_MIN_JBR_SHADER_HANDLE_DEFINES=3`, `EXPECT_MIN_JBR_SHADER_HANDLE_USES=1`,
+  `EXPECT_MIN_JBR_SHADER_HANDLE_CACHE_HITS=1`, and `EXPECT_MAX_JBR_SHADER_HANDLE_DEFINES=3` to this exact row.
+  Focused validation
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES=commands-invalid-composite-shader-descriptor-blend-mode-fallback ./scripts/jbr-skia-command-probe-suite.sh`
+  passed with `fallback_new_count=1`, `unsupported=none`, zero picture frames, zero command frames after fallback,
+  three shader-handle definition frames, 1,901 shader-handle use frames, 1,900 shader-handle cache-hit frames, zero
+  shader-handle evicts, zero effect-handle definition/use/cache-hit/evict frames, zero RuntimeEffect cache markers,
+  and zero compile/build failures:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260613-235013/suite.tsv`.
+- 2026-06-13 focused command-probe hardening for
   `commands-invalid-transformed-shader-descriptor-payload-count-fallback`: the latest full command-probe sweep showed
   two JBR shader-handle definitions plus shader-handle use/cache-hit frames while the row only asserted the
   transformed-shader corrupt payload-count fallback marker. Magic Jewel added

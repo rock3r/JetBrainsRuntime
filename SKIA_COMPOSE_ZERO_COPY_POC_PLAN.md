@@ -15,6 +15,15 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - Validation should be batched to keep iteration cost under control: use exact cases or tiny focused groups per change,
   and reserve broad command/screenshot/matrix sweeps for every ~10 meaningful changes or explicit ABI/capability gates.
 - Focused command-probe hardening continued with
+  `commands-invalid-composite-shader-descriptor-blend-mode-fallback`: the row now requires exactly three JBR
+  shader-handle definitions plus shader-handle use/cache-hit evidence before the intentional composite-shader corrupt
+  blend-mode fallback. Exact validation
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES=commands-invalid-composite-shader-descriptor-blend-mode-fallback ./scripts/jbr-skia-command-probe-suite.sh`
+  passed with `fallback_new_count=1`, no unsupported marker, zero picture frames, zero command frames after fallback,
+  three shader definitions, 1,901 shader uses, 1,900 shader cache hits, zero effect-handle markers, and zero
+  RuntimeEffect markers:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260613-235013/suite.tsv`.
+- Focused command-probe hardening continued with
   `commands-invalid-transformed-shader-descriptor-payload-count-fallback`: the row now requires exactly two JBR
   shader-handle definitions plus shader-handle use/cache-hit evidence before the intentional transformed-shader corrupt
   payload-count fallback. Exact validation
