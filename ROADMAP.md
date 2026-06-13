@@ -39,6 +39,11 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel completed the batched full default screenshot parity sweep after ten focused descriptor-cap tightenings.
+  `./scripts/jbr-skia-screenshot-parity-suite.sh` passed 106/106 with `fallback_sum=11`, zero picture frames, 98,884
+  JBR command frames, mean `avg_delta=2.158`, and mean `bad_pixel_ratio=0.05158`. This resets the focused
+  descriptor-cap change counter to zero:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260613-134112/suite.tsv`.
 - Magic Jewel tightened `parity-linear-gradient-shader-color-filter` from a 64-definition effect-handle cap to 32
   after historical rows showed 18-30 effect definitions. Exact validation passed with no fallback, 621 JBR command
   frames, eight shader-handle definitions, 1,098 shader uses, 1,090 shader cache-hit frames, 24 effect-handle
