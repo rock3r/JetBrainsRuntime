@@ -5,6 +5,15 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-13 stable descriptor gate tightening for `parity-linear-gradient-shader-color-filter`: historical parity
+  reports showed the row using 6-10 JBR shader-handle definitions, while the suite allowed up to 24. Magic Jewel
+  lowered `EXPECT_MAX_JBR_SHADER_HANDLE_DEFINES` to 12 for this exact row. Focused validation
+  `CASES=parity-linear-gradient-shader-color-filter ./scripts/jbr-skia-screenshot-parity-suite.sh` passed with
+  `fallback_new_count=0`, zero picture frames, 515 JBR command frames, eight shader-handle definition frames,
+  955 shader-handle use frames, 947 shader-handle cache-hit frames, 24 effect-handle definition frames,
+  `avg_delta=2.107`, `bad_pixel_ratio=0.04997`, and `compose_shader_linear_bad_pixel_ratio=0.03938`. Disk free was
+  about 202Gi:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260613-111254/suite.tsv`.
 - 2026-06-13 batched full screenshot parity sweep after ten focused descriptor-cap tightenings:
   `./scripts/jbr-skia-screenshot-parity-suite.sh` passed 106/106. Aggregate: `fallback_sum=11`, zero JBR picture
   frames, 85,489 JBR command frames, mean `avg_delta=2.158`, and mean `bad_pixel_ratio=0.05158`. The sweep covered
