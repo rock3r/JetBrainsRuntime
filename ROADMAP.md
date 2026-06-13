@@ -39,6 +39,17 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel completed the batched full default screenshot parity sweep after ten focused descriptor-cap tightenings.
+  `./scripts/jbr-skia-screenshot-parity-suite.sh` passed 106/106 with `fallback_sum=12`, zero picture frames, 100,079
+  JBR command frames, mean `avg_delta=2.158`, and mean `bad_pixel_ratio=0.05158`. This resets the focused
+  descriptor-cap change counter to zero:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260613-180718/suite.tsv`.
+- Magic Jewel added descriptor-definition gates to `parity-forced-context-native-loaded-font-data-text`: at least one
+  JBR effect-handle definition and a max of 40, based on recent broad sweeps showing exactly 30 definitions. Exact
+  validation passed with no fallback, zero picture frames, 881 JBR command frames, 30 effect-handle definitions, one
+  surface-change marker, one command-cache clear marker, zero effect/shader handle uses, and
+  `bad_pixel_ratio=0.04772`. This was focused descriptor-cap change 10 after the 2026-06-13 16:43 full parity sweep:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260613-180614/suite.tsv`.
 - Magic Jewel added descriptor-definition gates to `parity-resize-native-system-font-text`: at least one JBR
   effect-handle definition and a max of 48, based on recent broad sweeps showing 35-40 definitions. Exact validation
   passed with the row's single fallback, zero picture frames, 659 JBR command frames, 35 effect-handle definitions,
