@@ -14,6 +14,14 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - ABI 106 artifacts are current across JBR private API, JBR API mirror, Skiko, CMP, and Magic Jewel.
 - Validation should be batched to keep iteration cost under control: use exact cases or tiny focused groups per change,
   and reserve broad command/screenshot/matrix sweeps for every ~10 meaningful changes or explicit ABI/capability gates.
+- Focused command-probe hardening continued with `commands-invalid-shader-descriptor-version-fallback`: the shared
+  descriptor-version case block now requires exactly one JBR shader-handle definition plus shader-handle use/cache-hit
+  evidence before the intentional corrupt descriptor-version fallback. Exact validation
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES=commands-invalid-shader-descriptor-version-fallback ./scripts/jbr-skia-command-probe-suite.sh`
+  passed with `fallback_new_count=1`, no unsupported marker, zero picture frames, zero command frames after fallback,
+  one shader definition, 1,544 shader uses, 1,543 shader cache hits, zero effect-handle markers, and zero RuntimeEffect
+  markers:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260613-234432/suite.tsv`.
 - Focused command-probe hardening continued with `commands-invalid-shader-descriptor-record-length-fallback`: the row
   now requires exactly one JBR shader-handle definition plus shader-handle use/cache-hit evidence before the
   intentional corrupt record-length fallback. Exact validation
