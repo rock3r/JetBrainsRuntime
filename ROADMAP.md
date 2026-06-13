@@ -39,6 +39,14 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel added descriptor-definition gates to `parity-resize-noise-shader`: at least one JBR effect-handle
+  definition and a max of 48, after the latest broad sweep showed 30 definitions and exact validation observed 35.
+  Exact validation passed with the row's single resize fallback, zero picture frames, 1,100 JBR command frames, 35
+  effect-handle definitions, seven shader-handle definitions, 1,656 shader-handle uses, 1,649 shader-handle cache-hit
+  frames, one JBR image-cache clear, one scoped image-cache clear, one surface-change marker, one command-cache clear
+  marker, zero effect-handle uses, and `bad_pixel_ratio=0.04439`. This is focused descriptor-cap change 1 after the
+  2026-06-13 21:15 full parity sweep, so broad parity remains deferred:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260613-225853/suite.tsv`.
 - Magic Jewel refreshed the compatibility matrix after the full command-probe sweep and latest batched parity sweep:
   `EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-compatibility-matrix.sh` passed 57/57 with
   `fallback_sum=56`, 182 JBR command frames from the `happy` row, and `background_window=true` on all 57 rows. The
