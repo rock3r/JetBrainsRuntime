@@ -5,6 +5,11 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-13 cadence note: broad validation is now intentionally batched. Run exact cases or tiny focused groups for
+  each change, and run full suites/matrices only after about 10 meaningful changes or when an ABI/capability milestone
+  needs an immediate gate. A full compatibility-matrix attempt was started after the 2026-06-12 command sweep; the
+  first sandboxed run failed before app startup because Gradle could not open its `~/.gradle` wrapper lock, and the
+  escalated rerun was stopped early after this batching policy was clarified.
 - Magic Jewel full default command-probe sweep after the focused quick-loop refresh batch:
   `EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-command-probe-suite.sh` passed 549/549 using structured
   command/fallback markers while local macOS screenshot capture remains unavailable. Aggregate: `fallback_sum=350`, 79

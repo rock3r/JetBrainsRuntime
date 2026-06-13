@@ -31,7 +31,8 @@ This is the small working roadmap for the current PoC. The full historical check
 - Keep old/new screenshot parity coverage broad enough to catch text/color/placement regressions, including button
   chrome, embedded resource fonts, system fonts, point dots, shader descriptors, RuntimeEffect rows, and graphics-layer
   transforms.
-- Keep compatibility matrix coverage current after each ABI/capability-affecting slice.
+- Validation cadence: run very narrow validation for each focused change, and batch broad sweeps/full matrices until
+  roughly 10 meaningful changes accumulate or an ABI/capability milestone requires an immediate gate.
 - Keep branches committed and pushed to the user's GitHub forks at each major step.
 - Keep the top-level plan/roadmap compact. Move verbose historical narrative into `docs/history/` or focused
   `docs/current/` ledgers when these files start to crowd agent context.
