@@ -39,6 +39,11 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel refreshed the required artifact matrix slice after the local artifact rebuild and focused compatibility
+  checks. `CASE_GROUPS=required EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-artifact-matrix.sh` passed 2/2:
+  `current-all` replayed 418 JBR command frames with no fallback, and `missing-public-api` produced one structured
+  `public-api-missing` fallback with zero command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260613-092936/matrix.tsv`.
 - Local JBR API/desktop/native artifacts were refreshed after focused compatibility `happy` and
   `commands-native-bridge-load-library` checks initially fell back with `service-unavailable`. After
   `./scripts/rebuild-jbr-skia-local-artifacts.sh`, exact bridge-load command validation passed with 895 JBR command

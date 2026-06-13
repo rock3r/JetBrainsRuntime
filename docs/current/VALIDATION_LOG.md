@@ -5,6 +5,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-13 required artifact matrix slice after the local artifact rebuild:
+  `CASE_GROUPS=required EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-artifact-matrix.sh` passed 2/2.
+  `current-all` passed with expected `none`, no fallback, 418 JBR command frames, and `background_window=true`.
+  `missing-public-api` passed with expected `public-api-missing`, one structured fallback, zero command frames, and
+  `background_window=true`. Optional old-artifact rows were not run, keeping this to the required focused slice. Disk
+  free remained about 193Gi:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260613-092936/matrix.tsv`.
 - 2026-06-13 focused compatibility/artifact repair note: exact compatibility `happy` and exact
   `commands-native-bridge-load-library` initially failed with `SKIKO_JBR_INTEROP_FALLBACK reason=service-unavailable`
   after CMP command recording succeeded, indicating stale local `/tmp` JBR runtime/native artifacts rather than a
