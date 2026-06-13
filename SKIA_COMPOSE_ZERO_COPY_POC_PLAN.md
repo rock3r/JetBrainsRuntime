@@ -35,10 +35,11 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260613-144931/suite.tsv`.
 - Stable descriptor gate tightening continued with `parity-runtime-effect-shader`: a max effect-handle definition
   guard of 24 was added based on historical 15-20 definition reports, leaving the existing shader-handle guard
-  unchanged. Exact validation passed with 20 effect definitions, zero effect uses, 12 shader definitions, 1,010 shader
-  uses, 1,006 shader cache-hit frames, 1,009 RuntimeEffect source-cache hits, one source-cache miss, 497 JBR command
-  frames, and no fallback. This is focused descriptor-cap change 4 after the 2026-06-13 13:41 full parity sweep:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260613-145253/suite.tsv`.
+  unchanged and correcting the guard placement so `parity-runtime-effect-child-only` remains uncapped. Exact validation
+  passed with 20 effect definitions, zero effect uses, 12 shader definitions, 1,132 shader uses, 1,128 shader
+  cache-hit frames, 1,131 RuntimeEffect source-cache hits, one source-cache miss, 759 JBR command frames, and no
+  fallback. This is focused descriptor-cap change 4 after the 2026-06-13 13:41 full parity sweep:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260613-145634/suite.tsv`.
 - Local `/tmp` JBR API/desktop/native artifacts were refreshed on 2026-06-13 after stale artifacts caused
   `service-unavailable` fallback in exact compatibility/bridge-load checks. Post-rebuild focused validation passed:
   `commands-native-bridge-load-library` produced 895 JBR command frames with no fallback, compatibility `happy`
