@@ -39,6 +39,13 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel added descriptor-definition gates to `parity-forced-context-native-system-font-text`: at least one JBR
+  effect-handle definition and a max of 56, based on recent broad sweeps showing 45 definitions with exact validation
+  observing 50. Exact validation passed with no fallback, zero picture frames, 917 JBR command frames, 50
+  effect-handle definitions, one surface-change marker, one command-cache clear marker, zero effect/shader handle
+  uses, and `bad_pixel_ratio=0.04699`. This is focused descriptor-cap change 3 after the 2026-06-13 18:07 full
+  parity sweep, so broad parity remains deferred:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260613-191045/suite.tsv`.
 - Magic Jewel added descriptor-definition gates to `parity-forced-context-native-generic-font-text`: at least one JBR
   effect-handle definition and a max of 56, based on recent broad sweeps showing exactly 45 definitions. Exact
   validation passed with no fallback, zero picture frames, 838 JBR command frames, 45 effect-handle definitions, one
