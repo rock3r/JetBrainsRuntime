@@ -39,6 +39,11 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel tightened `parity-resize-runtime-effect-stable-color-filter` from a 96-definition effect-handle cap to
+  48 after historical rows showed 36-42 definitions. Exact validation passed with the row's expected single fallback,
+  841 JBR command frames, 42 effect-handle definitions, 1,338 uses, 1,331 cache-hit frames, 1,336 RuntimeEffect
+  source-cache hits, one surface-change marker, and `bad_pixel_ratio=0.04467`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260613-131720/suite.tsv`.
 - Magic Jewel tightened `parity-runtime-effect-stable-color-filter` from a 64-definition effect-handle cap to 24 after
   historical rows showed exactly 24 definitions. Exact validation passed with no fallback, 948 JBR command frames, 24
   effect-handle definitions, 1,391 uses, 1,387 cache-hit frames, 1,390 RuntimeEffect source-cache hits, and
