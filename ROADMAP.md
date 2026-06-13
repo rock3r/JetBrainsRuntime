@@ -39,6 +39,13 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel added descriptor-definition gates to `parity-turbulence-shader`: at least one JBR effect-handle
+  definition and a max of 32, after the latest broad sweep showed 15 definitions. Exact validation passed with no
+  fallback, zero picture frames, 960 JBR command frames, 15 effect-handle definitions, three shader-handle
+  definitions, 1,608 shader-handle uses, 1,605 shader-handle cache-hit frames, zero effect-handle uses, zero
+  RuntimeEffect markers, zero surface-change/cache-clear markers, and `bad_pixel_ratio=0.05035`. This is focused
+  descriptor-cap change 3 after the 2026-06-13 21:15 full parity sweep, so broad parity remains deferred:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260613-230432/suite.tsv`.
 - Magic Jewel added descriptor-definition gates to `parity-forced-context-noise-shader`: at least one JBR
   effect-handle definition and a max of 56, after the latest broad sweep showed 30 definitions and exact validation
   observed 35. Exact validation passed with no fallback, zero picture frames, 564 JBR command frames, 35
