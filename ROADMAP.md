@@ -39,6 +39,12 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel added descriptor-definition gates to `parity-skew-transform`: at least one JBR effect-handle definition
+  and a max of 32, based on recent rows showing 15-30 definitions. Exact validation passed with no fallback, zero
+  picture frames, 1,029 JBR command frames, 25 effect-handle definitions, zero effect/shader handle uses, zero
+  surface-change/cache-clear markers, and `bad_pixel_ratio=0.06742`. This is focused descriptor-cap change 10 after
+  the 2026-06-13 15:16 full parity sweep, so the next step is the batched broad screenshot parity sweep:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260613-164129/suite.tsv`.
 - Magic Jewel added descriptor-definition gates to `parity-clip-rects`: at least one JBR effect-handle definition and a
   max of 24, based on recent rows showing 20 definitions. Exact validation passed with no fallback, zero picture
   frames, 696 JBR command frames, 20 effect-handle definitions, zero effect/shader handle uses, zero
