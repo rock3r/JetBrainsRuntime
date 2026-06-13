@@ -5,6 +5,15 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-13 stable descriptor gate tightening for `parity-forced-context-turbulence-shader`: historical parity reports
+  showed the row using 7-12 JBR shader-handle definitions, while the suite allowed up to 24. Magic Jewel lowered
+  `EXPECT_MAX_JBR_SHADER_HANDLE_DEFINES` to 12 for this exact row. Focused validation
+  `CASES=parity-forced-context-turbulence-shader ./scripts/jbr-skia-screenshot-parity-suite.sh` passed with
+  `fallback_new_count=0`, zero picture frames, 708 JBR command frames, nine shader-handle definition frames,
+  1,081 shader-handle use frames, 1,072 shader-handle cache-hit frames, one surface-change marker, one context-change
+  marker, `avg_delta=1.978`, `bad_pixel_ratio=0.04661`, and `compose_shader_turbulence_bad_pixel_ratio=0.07712`.
+  Disk free was about 190Gi:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260613-100137/suite.tsv`.
 - 2026-06-13 stable descriptor gate tightening for `parity-forced-context-noise-shader`: historical parity reports
   showed the row using 7-11 JBR shader-handle definitions, while the suite allowed up to 24. Magic Jewel lowered
   `EXPECT_MAX_JBR_SHADER_HANDLE_DEFINES` to 12 for this exact row. Focused validation
