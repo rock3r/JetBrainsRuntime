@@ -39,6 +39,16 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Local JBR API/desktop/native artifacts were refreshed after focused compatibility `happy` and
+  `commands-native-bridge-load-library` checks initially fell back with `service-unavailable`. After
+  `./scripts/rebuild-jbr-skia-local-artifacts.sh`, exact bridge-load command validation passed with 895 JBR command
+  frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260613-092558/suite.tsv`.
+- Focused compatibility checks were kept narrow per the batching policy. Exact `happy` passed with no fallback, 184
+  JBR command frames, and background-window mode; exact `public-api-missing` passed with one structured fallback, zero
+  command frames, and background-window mode:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260613-092753/matrix.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260613-092719/matrix.tsv`.
 - Magic Jewel completed a full default command-probe sweep after the focused quick-loop refresh batch, using
   structured markers while local screenshot capture remains unavailable. It passed 549/549 with `fallback_sum=350`, 79
   unsupported-picture rows, 78,827 picture frames, and 156,233 command frames:

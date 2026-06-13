@@ -5,6 +5,20 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-13 focused compatibility/artifact repair note: exact compatibility `happy` and exact
+  `commands-native-bridge-load-library` initially failed with `SKIKO_JBR_INTEROP_FALLBACK reason=service-unavailable`
+  after CMP command recording succeeded, indicating stale local `/tmp` JBR runtime/native artifacts rather than a
+  recorder regression. `./scripts/rebuild-jbr-skia-local-artifacts.sh` refreshed `/tmp/jbr-api-shim.jar`,
+  `/tmp/jbr-skia-run/desktop`, and `/tmp/jbr-skia-native/libjbrskiainterop.dylib`. Focused post-rebuild checks passed:
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES=commands-native-bridge-load-library
+  ./scripts/jbr-skia-command-probe-suite.sh` passed with no fallback and 895 JBR command frames; exact compatibility
+  `happy` passed with no fallback, 184 JBR command frames, and `background_window=true`; exact compatibility
+  `public-api-missing` passed with one structured fallback, zero command frames, and `background_window=true`. The
+  focused compatibility rows were used instead of a full 57-row matrix per the batched validation policy. Disk free was
+  about 193Gi after the focused GUI checks:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260613-092558/suite.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260613-092753/matrix.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260613-092719/matrix.tsv`.
 - 2026-06-13 cadence note: broad validation is now intentionally batched. Run exact cases or tiny focused groups for
   each change, and run full suites/matrices only after about 10 meaningful changes or when an ABI/capability milestone
   needs an immediate gate. A full compatibility-matrix attempt was started after the 2026-06-12 command sweep; the
