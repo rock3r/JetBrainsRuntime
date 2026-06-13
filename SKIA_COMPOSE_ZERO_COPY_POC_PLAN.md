@@ -15,6 +15,15 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - Validation should be batched to keep iteration cost under control: use exact cases or tiny focused groups per change,
   and reserve broad command/screenshot/matrix sweeps for every ~10 meaningful changes or explicit ABI/capability gates.
 - Focused command-probe hardening continued with
+  `commands-invalid-linear-gradient-shader-descriptor-stop-order-fallback`: the row now requires shader/effect handle
+  use evidence in addition to its existing definition guards before the intentional linear-gradient corrupt stop-order
+  fallback. Exact validation
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES=commands-invalid-linear-gradient-shader-descriptor-stop-order-fallback ./scripts/jbr-skia-command-probe-suite.sh`
+  passed with `fallback_new_count=1`, no unsupported marker, zero picture frames, zero command frames after fallback,
+  one effect definition/use, two shader definitions, 1,463 shader uses, 1,461 shader cache hits, zero effect cache
+  hits, and zero RuntimeEffect markers:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260613-235818/suite.tsv`.
+- Focused command-probe hardening continued with
   `commands-invalid-linear-gradient-shader-descriptor-tile-mode-fallback`: the row now requires shader/effect handle
   use evidence in addition to its existing definition guards before the intentional linear-gradient corrupt tile-mode
   fallback. Exact validation
