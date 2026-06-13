@@ -179,6 +179,13 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `bad_pixel_ratio=0.04848`. This is focused descriptor-cap change 4 after the 2026-06-13 16:43 full parity sweep, so
   broad parity remains deferred:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260613-175119/suite.tsv`.
+- Stable descriptor gate tightening continued with `parity-native-system-font-text`: minimum and max JBR effect-handle
+  definition guards were added after recent broad sweeps showed 20-25 definitions and no effect/shader uses. Exact
+  validation passed with no fallback, zero picture frames, 680 JBR command frames, 20 effect definitions, zero
+  effect/shader handle uses, zero surface-change/cache-clear markers, `avg_delta=1.995`, and
+  `bad_pixel_ratio=0.04699`. This is focused descriptor-cap change 5 after the 2026-06-13 16:43 full parity sweep, so
+  broad parity remains deferred:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260613-175343/suite.tsv`.
 - Local `/tmp` JBR API/desktop/native artifacts were refreshed on 2026-06-13 after stale artifacts caused
   `service-unavailable` fallback in exact compatibility/bridge-load checks. Post-rebuild focused validation passed:
   `commands-native-bridge-load-library` produced 895 JBR command frames with no fallback, compatibility `happy`
