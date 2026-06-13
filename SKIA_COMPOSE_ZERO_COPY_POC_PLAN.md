@@ -26,6 +26,10 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `CASE_GROUPS=required EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-artifact-matrix.sh` passed 2/2.
   `current-all` replayed 418 command frames with no fallback, and `missing-public-api` fell back once as expected:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260613-092936/matrix.tsv`.
+- Single-case benchmark smoke refreshed after the artifact slice:
+  `CASES=commands DURATION_SECONDS=5 WARMUP_SECONDS=1 EXPECT_SCREENSHOT_ASSERTION=false
+  ./scripts/jbr-skia-benchmark-suite.sh` passed with no fallback, 404 JBR command frames, and 80.8 command FPS:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-benchmark-suite/20260613-093152/suite.tsv`.
 - Full default command-probe sweep refreshed after the focused quick-loop batch:
   `EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-command-probe-suite.sh` passed 549/549 with
   `fallback_sum=350`, 79 unsupported-picture rows, 78,827 picture frames, and 156,233 command frames:

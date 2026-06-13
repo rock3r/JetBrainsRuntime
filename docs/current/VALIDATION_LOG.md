@@ -5,6 +5,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-13 single-case benchmark smoke after the required artifact slice:
+  `CASES=commands DURATION_SECONDS=5 WARMUP_SECONDS=1 EXPECT_SCREENSHOT_ASSERTION=false
+  ./scripts/jbr-skia-benchmark-suite.sh` passed with `fallback_new_count=0`, four old-side CPU samples, two new-side
+  CPU samples, `old_avg_cpu=104.83`, `new_avg_cpu=97.75`, `app_old_fps=230.8`, `app_new_fps=80.8`, zero picture
+  frames, 404 JBR command frames, and `jbr_command_fps=80.8`. This intentionally covered only the command benchmark
+  smoke row rather than the full five-case benchmark suite. Disk free was about 192Gi:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-benchmark-suite/20260613-093152/suite.tsv`.
 - 2026-06-13 required artifact matrix slice after the local artifact rebuild:
   `CASE_GROUPS=required EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-artifact-matrix.sh` passed 2/2.
   `current-all` passed with expected `none`, no fallback, 418 JBR command frames, and `background_window=true`.
