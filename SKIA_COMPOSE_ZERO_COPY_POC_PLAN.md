@@ -74,6 +74,10 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   definition guard was reduced from 24 to 12 based on historical 6-10 definition reports, then exact validation passed
   with eight definitions, 1,178 uses, 1,170 cache-hit frames, and no fallback:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260613-100541/suite.tsv`.
+- Batched broad parity validation refreshed after the ten focused descriptor-cap tightenings:
+  `./scripts/jbr-skia-screenshot-parity-suite.sh` passed 106/106 with `fallback_sum=11`, zero picture frames, 85,489
+  JBR command frames, mean `avg_delta=2.158`, and mean `bad_pixel_ratio=0.05158`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260613-100819/suite.tsv`.
 - Full default command-probe sweep refreshed after the focused quick-loop batch:
   `EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-command-probe-suite.sh` passed 549/549 with
   `fallback_sum=350`, 79 unsupported-picture rows, 78,827 picture frames, and 156,233 command frames:
