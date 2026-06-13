@@ -175,6 +175,12 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   change 6 after the 2026-06-13 11:44 full parity sweep; the next broad parity sweep remains deferred until roughly
   ten focused changes:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260613-132818/suite.tsv`.
+- Stable descriptor gate tightening continued with `parity-forced-context-composite-noise-shader`: its max
+  shader-handle definition guard was reduced from 72 to 40 based on historical 24-33 definition reports, then exact
+  validation passed with 27 definitions, 1,397 uses, 1,388 cache-hit frames, 45 effect-handle definitions, no fallback,
+  one surface-change marker, and one command-cache clear marker. This is focused descriptor-cap change 7 after the
+  2026-06-13 11:44 full parity sweep; the next broad parity sweep remains deferred until roughly ten focused changes:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260613-133044/suite.tsv`.
 - Full default command-probe sweep refreshed after the focused quick-loop batch:
   `EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-command-probe-suite.sh` passed 549/549 with
   `fallback_sum=350`, 79 unsupported-picture rows, 78,827 picture frames, and 156,233 command frames:
