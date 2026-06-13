@@ -5,6 +5,19 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-13 stable descriptor gate tightening for `parity-resize-native-generic-font-text`: recent broad parity
+  reports showed 35-40 JBR effect-handle definitions while the row had no effect-handle definition guard. Magic Jewel
+  added `EXPECT_MIN_JBR_EFFECT_HANDLE_DEFINES=1` and `EXPECT_MAX_JBR_EFFECT_HANDLE_DEFINES=48` for this exact row,
+  leaving effect/shader use expectations unset because reports consistently show zero use/cache-hit frames. Focused
+  validation `CASES=parity-resize-native-generic-font-text ./scripts/jbr-skia-screenshot-parity-suite.sh` passed with
+  `fallback_new_count=1`, zero picture frames, 687 JBR command frames, 35 effect-handle definition frames, zero
+  effect-handle use/cache-hit frames, zero shader-handle definition/use/cache-hit frames, one Skiko surface-change
+  marker, one command-cache clear marker, `avg_delta=1.982`, `bad_pixel_ratio=0.04633`,
+  `header_buttons_bad_pixel_ratio=0.02158`, `compose_bad_pixel_ratio=0.06723`,
+  `compose_bottom_labels_bad_pixel_ratio=0.08581`, and `compose_paragraph_probes_bad_pixel_ratio=0.06862`. This is
+  focused descriptor-cap change 8 after the 2026-06-13 16:43 full parity sweep; broad parity remains deferred until
+  roughly ten focused changes or an ABI/capability gate:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260613-180106/suite.tsv`.
 - 2026-06-13 stable descriptor gate tightening for `parity-resize-native-resource-font-text`: recent broad parity
   reports showed exactly 25 JBR effect-handle definitions while the row had no effect-handle definition guard. Magic
   Jewel added `EXPECT_MIN_JBR_EFFECT_HANDLE_DEFINES=1` and `EXPECT_MAX_JBR_EFFECT_HANDLE_DEFINES=32` for this exact
