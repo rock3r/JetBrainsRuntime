@@ -142,6 +142,10 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `CASES=parity-rich ./scripts/jbr-skia-screenshot-parity-suite.sh` passed with no fallback, zero picture frames, 645
   JBR command frames, `avg_delta=2.123`, and `bad_pixel_ratio=0.05044`:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260613-131153/suite.tsv`.
+- Stable descriptor gate tightening continued with `parity-runtime-effect-stable-color-filter`: its max effect-handle
+  definition guard was reduced from 64 to 24 based on historical 24-definition reports, then exact validation passed
+  with 24 definitions, 1,391 uses, 1,387 cache-hit frames, 1,390 RuntimeEffect source-cache hits, and no fallback:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260613-131424/suite.tsv`.
 - Full default command-probe sweep refreshed after the focused quick-loop batch:
   `EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-command-probe-suite.sh` passed 549/549 with
   `fallback_sum=350`, 79 unsupported-picture rows, 78,827 picture frames, and 156,233 command frames:
