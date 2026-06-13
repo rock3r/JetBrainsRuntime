@@ -38,6 +38,10 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   reduced from 8 to 4 based on prior report data, then exact validation passed with three definitions, 995 uses, 992
   cache-hit frames, and no fallback:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260613-093718/suite.tsv`.
+- Stable descriptor gate tightening continued with `parity-noise-shader`: its max shader-handle definition guard was
+  reduced from 8 to 4 based on prior report data, then exact validation passed with four definitions, 1,204 uses,
+  1,200 cache-hit frames, and no fallback:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260613-094115/suite.tsv`.
 - Full default command-probe sweep refreshed after the focused quick-loop batch:
   `EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-command-probe-suite.sh` passed 549/549 with
   `fallback_sum=350`, 79 unsupported-picture rows, 78,827 picture frames, and 156,233 command frames:
