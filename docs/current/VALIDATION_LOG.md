@@ -5,6 +5,15 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-13 Magic Jewel compatibility matrix refresh after the full command-probe sweep and latest batched parity
+  sweep: `EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-compatibility-matrix.sh` passed 57/57. Aggregate:
+  `fallback_sum=56`, 182 JBR command frames from the `happy` row, and `background_window=true` on all 57 rows. The
+  matrix covered happy-path command replay plus ABI mismatch, native ABI mismatch, public API missing, full command
+  capability mismatch, and individual low/high command-capability bit fallback rows for gradients, text/font data,
+  image shader, blend mode, color filters, effect descriptors, image filters, RuntimeEffect color filters, path
+  effects, concat transforms, direct shadows, shader color filters, draw points, shader transforms, color shaders,
+  Perlin noise shaders, and vertices. Disk free was about 192Gi after the run:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260613-222843/matrix.tsv`.
 - 2026-06-13 batched full screenshot parity sweep after ten focused descriptor-cap tightenings:
   `./scripts/jbr-skia-screenshot-parity-suite.sh` passed 106/106. Aggregate: `fallback_sum=8`, zero JBR picture
   frames, 63,790 JBR command frames, mean `avg_delta=2.158`, and mean `bad_pixel_ratio=0.05158`. The sweep covered
