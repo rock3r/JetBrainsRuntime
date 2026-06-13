@@ -30,6 +30,10 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `CASES=commands DURATION_SECONDS=5 WARMUP_SECONDS=1 EXPECT_SCREENSHOT_ASSERTION=false
   ./scripts/jbr-skia-benchmark-suite.sh` passed with no fallback, 404 JBR command frames, and 80.8 command FPS:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-benchmark-suite/20260613-093152/suite.tsv`.
+- Exact screenshot parity smoke row refreshed:
+  `CASES=parity-rich ./scripts/jbr-skia-screenshot-parity-suite.sh` passed with no fallback, 642 JBR command frames,
+  `avg_delta=2.123`, and `bad_pixel_ratio=0.05044`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260613-093333/suite.tsv`.
 - Full default command-probe sweep refreshed after the focused quick-loop batch:
   `EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-command-probe-suite.sh` passed 549/549 with
   `fallback_sum=350`, 79 unsupported-picture rows, 78,827 picture frames, and 156,233 command frames:
