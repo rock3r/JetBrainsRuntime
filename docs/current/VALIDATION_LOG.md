@@ -5,6 +5,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-13 required artifact matrix slice after the full compatibility matrix:
+  `CASE_GROUPS=required EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-artifact-matrix.sh` passed 2/2.
+  `current-all` passed with expected `none`, no fallback, 711 JBR command frames, and `background_window=true`.
+  `missing-public-api` passed with expected `public-api-missing`, one structured fallback, zero command frames, and
+  `background_window=true`. Optional old-artifact rows were not run. Disk free was about 198Gi:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260613-130810/matrix.tsv`.
 - 2026-06-13 full compatibility matrix after the batched screenshot parity reset:
   `EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-compatibility-matrix.sh` passed 57/57 with
   `fallback_sum=56`. The `happy` row passed with no fallback, 475 JBR command frames, and `background_window=true`.

@@ -39,6 +39,11 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel refreshed the required artifact matrix slice after the full compatibility matrix:
+  `CASE_GROUPS=required EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-artifact-matrix.sh` passed 2/2.
+  `current-all` replayed 711 JBR command frames with no fallback, and `missing-public-api` produced one structured
+  `public-api-missing` fallback with zero command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260613-130810/matrix.tsv`.
 - Magic Jewel completed the full compatibility matrix after the batched screenshot parity reset:
   `EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-compatibility-matrix.sh` passed 57/57 with
   `fallback_sum=56`. The `happy` row replayed 475 JBR command frames with no fallback, every forced mismatch/API row
