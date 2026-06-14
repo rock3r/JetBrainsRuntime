@@ -51,6 +51,16 @@ This is the small working roadmap for the current PoC. The full historical check
   descriptor/lifecycle change 1 after the 2026-06-14 09:22 full parity sweep, so broad parity remains deferred. Disk
   free was about 148Gi after the exact run:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260614-102147/suite.tsv`.
+- Magic Jewel tightened `parity-resize-graphics-layer-color-matrix-filter` with resize-path JBR image-cache clear
+  sentinels: at least one JBR image-cache clear and at least one scoped JBR image-cache clear are now required in
+  addition to the existing resize surface-change, command-cache clear, and effect-handle definition/use/cache-hit
+  guards. Exact validation `CASES=parity-resize-graphics-layer-color-matrix-filter ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  passed with the row's expected single resize fallback, zero picture frames, 883 JBR command frames, one JBR
+  image-cache clear, one scoped image-cache clear, one Skiko surface-change marker, one command-cache clear marker,
+  eight effect-handle definitions, 1,508 effect-handle uses, 1,500 effect-handle cache hits, zero RuntimeEffect
+  markers, `avg_delta=1.907`, and `bad_pixel_ratio=0.04577`. This is focused descriptor/lifecycle change 2 after the
+  2026-06-14 09:22 full parity sweep, so broad parity remains deferred:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260614-102542/suite.tsv`.
 - Magic Jewel completed the cadence-triggered full screenshot parity sweep after ten focused parity lifecycle/descriptor
   hardenings. `./scripts/jbr-skia-screenshot-parity-suite.sh` passed 106/106 with `fallback_sum=11`, zero picture
   frames, 93,828 JBR command frames, mean `avg_delta=2.158`, and mean `bad_pixel_ratio=0.05158`. The sweep covered the
