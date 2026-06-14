@@ -39,6 +39,15 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel tightened `parity-forced-context-native-generic-font-text` with forced-context JBR image-cache clear
+  sentinels: at least one JBR image-cache clear and at least one scoped JBR image-cache clear are now required in
+  addition to the existing surface-change, command-cache clear, and effect-definition guards. Exact validation
+  `CASES=parity-forced-context-native-generic-font-text ./scripts/jbr-skia-screenshot-parity-suite.sh` passed with no
+  fallback, zero picture frames, 1,032 JBR command frames, one JBR image-cache clear, one scoped image-cache clear,
+  one Skiko surface-change marker, one command-cache clear marker, 45 effect-handle definitions, zero effect/shader
+  handle uses, zero RuntimeEffect markers, `avg_delta=2.129`, and `bad_pixel_ratio=0.04848`. This is focused
+  descriptor/lifecycle change 1 after the 2026-06-14 06:24 full parity sweep, so broad parity remains deferred:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260614-072430/suite.tsv`.
 - Magic Jewel completed the cadence-triggered full screenshot parity sweep after ten focused parity lifecycle/descriptor
   hardenings. `./scripts/jbr-skia-screenshot-parity-suite.sh` passed 106/106 with `fallback_sum=11`, zero picture
   frames, 99,527 JBR command frames, mean `avg_delta=2.158`, and mean `bad_pixel_ratio=0.05158`. The focused parity
