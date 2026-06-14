@@ -5,6 +5,21 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-15 focused command-probe lifecycle hardening for graphics-layer render-effect plus blend/color-filter
+  migration rows: Magic Jewel added `commands-resize-graphics-layer-render-effect-blend-color-filter` and
+  `commands-forced-context-graphics-layer-render-effect-blend-color-filter`. Both rows assert destination migration,
+  command-cache clear, JBR image-cache clear, scoped image-cache clear, and effect-handle
+  redefinition/reuse/cache-hit markers. Focused validation
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES="commands-resize-graphics-layer-render-effect-blend-color-filter commands-forced-context-graphics-layer-render-effect-blend-color-filter" ./scripts/jbr-skia-command-probe-suite.sh`
+  passed 2/2 with `fallback_new_count=0`, `unsupported=none`, and zero picture frames. The resize row reported 852
+  JBR command frames, one JBR image-cache clear, one scoped image-cache clear, two effect-handle definitions, 1,306
+  effect-handle uses, 1,304 effect-handle cache hits, one surface-change marker, and one command-cache clear marker.
+  The forced-context row reported 849 JBR command frames, one JBR image-cache clear, one scoped image-cache clear, two
+  effect-handle definitions, 1,332 effect-handle uses, 1,330 effect-handle cache hits, one surface-change marker, and
+  one command-cache clear marker. This is focused command-probe lifecycle change 6 after the 2026-06-14 18:10 full
+  command-probe sweep, so broad command-probe validation remains deferred until roughly four more focused
+  command-probe changes or an ABI/capability gate. Disk free was about 114Gi:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260615-014743/suite.tsv`.
 - 2026-06-15 focused command-probe lifecycle hardening for graphics-layer render-effect plus color-matrix-filter
   migration rows: Magic Jewel added `commands-resize-graphics-layer-render-effect-color-matrix-filter` and
   `commands-forced-context-graphics-layer-render-effect-color-matrix-filter`. Both rows assert destination migration,
