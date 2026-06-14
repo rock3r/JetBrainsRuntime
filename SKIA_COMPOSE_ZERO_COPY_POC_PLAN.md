@@ -25,6 +25,15 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `fallback_sum=56`, 520 JBR command frames from `happy`, and `background_window=true` on all rows. Disk free remained
   about 176Gi after the run:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260614-054414/matrix.tsv`.
+- Narrow artifact/benchmark validation refreshed after the post-sweep compatibility matrix. Required artifact matrix
+  `CASE_GROUPS=required EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-artifact-matrix.sh` passed 2/2:
+  `current-all` replayed 514 command frames with no fallback, `missing-public-api` produced the expected
+  `public-api-missing` fallback with zero command frames, and both rows reported `background_window=true`. Benchmark
+  smoke `CASES=commands ./scripts/jbr-skia-benchmark-suite.sh` passed with no fallback, zero picture frames, 4,076
+  command frames, `app_new_fps=203.8`, and `jbr_command_fps=203.8`. This does not change the focused descriptor-cap
+  counter, which remains 8 after the 2026-06-13 21:15 full parity sweep:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260614-060948/matrix.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-benchmark-suite/20260614-061056/suite.tsv`.
 - Focused command-probe hardening continued with
   `commands-invalid-radial-gradient-shader-descriptor-radius-fallback`: the row now requires shader-handle reuse/cache
   evidence in addition to its existing definition guards before the intentional radial-gradient corrupt radius

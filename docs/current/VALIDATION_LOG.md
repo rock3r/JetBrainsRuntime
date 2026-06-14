@@ -5,6 +5,18 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-14 narrow artifact/benchmark refresh after the post-sweep compatibility matrix: required artifact matrix
+  `CASE_GROUPS=required EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-artifact-matrix.sh` passed 2/2.
+  `current-all` reported `fallback_new_count=0`, 514 JBR command frames, and `background_window=true`.
+  `missing-public-api` reported the expected `public-api-missing` fallback, `fallback_new_count=1`, zero JBR command
+  frames, and `background_window=true`. The follow-up single-row benchmark smoke
+  `CASES=commands ./scripts/jbr-skia-benchmark-suite.sh` passed with `fallback_new_count=0`, zero picture frames,
+  4,076 JBR command frames, 17 old-side CPU samples, 17 new-side CPU samples, `old_avg_cpu=66.27`,
+  `new_avg_cpu=71.56`, `app_old_fps=255.6`, `app_new_fps=203.8`, `jbr_picture_fps=0.0`, and
+  `jbr_command_fps=203.8`. This validation refresh does not change the focused descriptor-cap counter, which remains
+  8 after the 2026-06-13 21:15 full parity sweep. Disk free remained about 176Gi after the run:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260614-060948/matrix.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-benchmark-suite/20260614-061056/suite.tsv`.
 - 2026-06-14 post-sweep compatibility matrix after the cadence-triggered full command-probe sweep:
   `EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-compatibility-matrix.sh` passed 57/57 with
   `fallback_sum=56`, 520 JBR command frames from the `happy` row, and `background_window=true` on all 57 rows. The
