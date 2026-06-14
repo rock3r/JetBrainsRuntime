@@ -14,6 +14,12 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - ABI 106 artifacts are current across JBR private API, JBR API mirror, Skiko, CMP, and Magic Jewel.
 - Validation should be batched to keep iteration cost under control: use exact cases or tiny focused groups per change,
   and reserve broad command/screenshot/matrix sweeps for every ~10 meaningful changes or explicit ABI/capability gates.
+- Batched full command-probe validation refreshed after ten focused command-probe hardenings:
+  `EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-command-probe-suite.sh` passed 549/549 with
+  `fallback_sum=350`, 80 unsupported rows, 70,982 JBR picture frames, and 130,383 JBR command frames. This resets the
+  focused command-probe change counter to zero; keep subsequent per-change validation exact-row only until roughly ten
+  more meaningful command-probe changes or an ABI/capability gate:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260614-000344/suite.tsv`.
 - Focused command-probe hardening continued with
   `commands-invalid-radial-gradient-shader-descriptor-radius-fallback`: the row now requires shader-handle reuse/cache
   evidence in addition to its existing definition guards before the intentional radial-gradient corrupt radius

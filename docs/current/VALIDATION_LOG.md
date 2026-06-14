@@ -5,6 +5,16 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-14 batched full command-probe sweep after ten focused command-probe hardenings:
+  `EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-command-probe-suite.sh` passed 549/549. Aggregate:
+  `fallback_sum=350`, 80 rows with unsupported markers, 70,982 JBR picture frames, and 130,383 JBR command frames.
+  The sweep covered the newly tightened shader/color-filter/gradient command-probe rows plus the existing ABI,
+  descriptor, image/filter, path-effect, vertices, blend-mode, graphics-layer, render-effect, shadow, save-layer, and
+  legacy raw-family fallback rows. This resets the focused command-probe change counter to zero; next per-change
+  validation should stay exact-row/narrow, with the next full command sweep deferred until roughly ten more meaningful
+  command-probe changes or an ABI/capability gate. Disk free was about 152Gi after the run and stale Magic Jewel Java
+  validation process cleanup:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260614-000344/suite.tsv`.
 - 2026-06-14 focused command-probe hardening for
   `commands-invalid-radial-gradient-shader-descriptor-radius-fallback`: the latest full command-probe sweep showed
   shader-handle use/cache-hit frames while the row only asserted descriptor definitions and the radial-gradient corrupt
