@@ -5,6 +5,21 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-14 focused command-probe lifecycle hardening for
+  `commands-forced-context-graphics-layer-color-matrix-filter`: the latest broad command-probe report showed stable
+  forced-context destination migration markers while the row only asserted Skiko surface/cache markers and
+  effect-handle reuse. Magic Jewel added `EXPECT_MIN_JBR_IMAGE_CACHE_CLEARS=1` and
+  `EXPECT_MIN_JBR_SCOPED_IMAGE_CACHE_CLEARS=1`, preserving the existing effect definition/use/cache-hit guards.
+  Focused validation
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES=commands-forced-context-graphics-layer-color-matrix-filter ./scripts/jbr-skia-command-probe-suite.sh`
+  passed with `fallback_new_count=0`, `unsupported=none`, zero picture frames, 969 JBR command frames, one JBR
+  image-cache clear, one scoped image-cache clear, one Skiko surface-change marker, one command-cache clear marker,
+  two effect-handle definition frames, 1,701 effect-handle use frames, 1,699 effect-handle cache-hit frames, zero
+  effect-handle evicts, zero shader-handle markers, zero RuntimeEffect markers, and `EXPECT_SCREENSHOT_ASSERTION=false`.
+  This is focused command-probe lifecycle change 6 after the 2026-06-14 00:03 full command-probe sweep; broad
+  command-probe validation remains deferred until roughly four more focused command-probe changes or an ABI/capability
+  gate. Disk free remained about 172Gi after the exact run:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260614-111522/suite.tsv`.
 - 2026-06-14 focused command-probe lifecycle hardening for `commands-resize-graphics-layer-color-matrix-filter`: the
   latest broad command-probe report showed stable resize-path destination migration markers while the row only asserted
   Skiko surface/cache markers and effect-handle reuse. Magic Jewel added `EXPECT_MIN_JBR_IMAGE_CACHE_CLEARS=1` and

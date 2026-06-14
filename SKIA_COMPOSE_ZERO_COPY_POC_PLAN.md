@@ -65,6 +65,16 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   definitions, 2,282 effect uses, and 2,280 effect cache hits. This is focused command-probe lifecycle change 5 after
   the 2026-06-14 00:03 full command-probe sweep, so broad command-probe validation remains deferred:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260614-110941/suite.tsv`.
+- Focused command-probe lifecycle hardening continued with
+  `commands-forced-context-graphics-layer-color-matrix-filter`: the row now requires at least one JBR image-cache clear
+  and one scoped JBR image-cache clear alongside its existing forced-context surface/cache and effect-handle reuse
+  guards. Exact validation
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES=commands-forced-context-graphics-layer-color-matrix-filter ./scripts/jbr-skia-command-probe-suite.sh`
+  passed with no fallback, no unsupported reasons, zero picture frames, 969 command frames, one JBR image-cache
+  clear, one scoped image-cache clear, one surface-change marker, one command-cache clear marker, two effect
+  definitions, 1,701 effect uses, and 1,699 effect cache hits. This is focused command-probe lifecycle change 6 after
+  the 2026-06-14 00:03 full command-probe sweep, so broad command-probe validation remains deferred:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260614-111522/suite.tsv`.
 - Post-sweep compatibility matrix refreshed after the full command-probe sweep:
   `EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-compatibility-matrix.sh` passed 57/57 with
   `fallback_sum=56`, 520 JBR command frames from `happy`, and `background_window=true` on all rows. Disk free remained
