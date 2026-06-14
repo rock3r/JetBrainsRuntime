@@ -5,6 +5,21 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-14 focused command-probe lifecycle hardening for color-shader descriptor redefine migration rows:
+  `commands-resize-color-shader-descriptor-redefine` and
+  `commands-forced-context-color-shader-descriptor-redefine` now assert `EXPECT_MIN_JBR_IMAGE_CACHE_CLEARS=1` and
+  `EXPECT_MIN_JBR_SCOPED_IMAGE_CACHE_CLEARS=1` alongside their existing Skiko surface/cache and shader-handle reuse
+  guards. Focused validation
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES="commands-resize-color-shader-descriptor-redefine commands-forced-context-color-shader-descriptor-redefine" ./scripts/jbr-skia-command-probe-suite.sh`
+  passed 2/2 with `fallback_new_count=0`, `unsupported=none`, and zero picture frames. The resize row reported 1,731
+  JBR command frames, one JBR image-cache clear, one scoped image-cache clear, one surface-change marker, one
+  command-cache clear marker, two shader-handle definition frames, 2,330 shader-handle use frames, and 2,328
+  shader-handle cache-hit frames. The forced-context row reported 1,303 JBR command frames, one JBR image-cache clear,
+  one scoped image-cache clear, one surface-change marker, one command-cache clear marker, two shader-handle definition
+  frames, 1,741 shader-handle use frames, and 1,739 shader-handle cache-hit frames. This is focused command-probe
+  lifecycle change 2 after the 2026-06-14 11:32 full command-probe sweep, so broad command-probe validation remains
+  deferred until roughly eight more focused command-probe changes or an ABI/capability gate. Disk free was about 159Gi:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260614-173740/suite.tsv`.
 - 2026-06-14 focused command-probe lifecycle hardening for shader descriptor redefine migration rows: the latest broad
   command-probe report showed stable resize/forced-context destination migration markers while
   `commands-resize-shader-descriptor-redefine` and `commands-forced-context-shader-descriptor-redefine` only asserted
