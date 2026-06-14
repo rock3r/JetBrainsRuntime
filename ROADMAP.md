@@ -39,6 +39,16 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel added resize and forced-context command-probe coverage for graphics-layer offset render effects:
+  `commands-resize-graphics-layer-offset-effect` and `commands-forced-context-graphics-layer-offset-effect` now assert
+  destination migration, command-cache clear, JBR image-cache clear, scoped image-cache clear, and effect-handle
+  redefinition/reuse/cache-hit markers. Exact command-probe validation
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES="commands-resize-graphics-layer-offset-effect commands-forced-context-graphics-layer-offset-effect" ./scripts/jbr-skia-command-probe-suite.sh`
+  passed with no fallback, no unsupported reasons, zero picture frames, 2,302 and 1,077 JBR command frames,
+  respectively. Both rows reported one surface change, one command-cache clear, one JBR image-cache clear, one scoped
+  image-cache clear, two effect-handle definitions, and effect-handle cache hits. This is focused command-probe
+  lifecycle change 1 after the 2026-06-14 18:10 full command-probe sweep, so broad command validation remains deferred:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260615-011920/suite.tsv`.
 - Magic Jewel refreshed the narrow post-matrix artifact/benchmark checks. Required artifact matrix
   `CASE_GROUPS=required EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-artifact-matrix.sh` passed 2/2:
   `current-all` replayed 316 command frames with no fallback, and `missing-public-api` took the expected single

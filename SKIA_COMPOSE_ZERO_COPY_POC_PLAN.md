@@ -38,6 +38,15 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   focused change counter:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260615-011346/matrix.tsv`,
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-benchmark-suite/20260615-011452/suite.tsv`.
+- Focused command-probe lifecycle hardening resumed with graphics-layer offset render-effect resize and forced-context
+  migration rows. Magic Jewel now includes `commands-resize-graphics-layer-offset-effect` and
+  `commands-forced-context-graphics-layer-offset-effect`, both asserting surface/cache migration, JBR image-cache and
+  scoped image-cache clears, and effect-handle redefinition/reuse/cache-hit markers. Exact two-row validation passed
+  with no fallback, no unsupported reasons, zero picture frames, 2,302 and 1,077 command frames, one surface change and
+  one command-cache clear per row, one JBR image-cache clear per row, one scoped image-cache clear per row, and two
+  effect-handle definitions per row. This is focused command-probe lifecycle change 1 after the 2026-06-14 18:10 full
+  command-probe sweep, so broad command-probe validation remains deferred:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260615-011920/suite.tsv`.
 - Batched full command-probe validation refreshed after ten focused command-probe hardenings:
   `EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-command-probe-suite.sh` passed 549/549 with
   `fallback_sum=350`, 80 unsupported rows, 77,679 JBR picture frames, and 152,941 JBR command frames. This resets the
