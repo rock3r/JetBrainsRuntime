@@ -5,6 +5,20 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-14 focused command-probe lifecycle hardening for generic native-font migration rows:
+  `commands-resize-native-generic-font-text` and `commands-forced-context-native-generic-font-text` now assert
+  `EXPECT_MIN_JBR_IMAGE_CACHE_CLEARS=1` and `EXPECT_MIN_JBR_SCOPED_IMAGE_CACHE_CLEARS=1` alongside their existing
+  image/text, surface-change, and command-cache guards. Focused validation
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES="commands-resize-native-generic-font-text commands-forced-context-native-generic-font-text" ./scripts/jbr-skia-command-probe-suite.sh`
+  passed 2/2 with `fallback_new_count=0`, `unsupported=none`, and zero picture frames. The resize row reported 1,247
+  JBR command frames, one JBR image-cache clear, one scoped image-cache clear, one surface-change marker, one
+  command-cache clear marker, three text-command frames, one paragraph-text-command frame, and no unsupported reasons.
+  The forced-context row reported 1,504 JBR command frames, one JBR image-cache clear, one scoped image-cache clear,
+  one surface-change marker, one command-cache clear marker, three text-command frames, one paragraph-text-command
+  frame, and no unsupported reasons. This is focused command-probe lifecycle change 6 after the 2026-06-14 11:32 full
+  command-probe sweep, so broad command-probe validation remains deferred until roughly four more focused command-probe
+  changes or an ABI/capability gate. Disk free stayed about 159Gi:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260614-175231/suite.tsv`.
 - 2026-06-14 focused command-probe lifecycle hardening for composite-noise shader descriptor redefine migration rows:
   `commands-resize-composite-noise-shader-descriptor-redefine` and
   `commands-forced-context-composite-noise-shader-descriptor-redefine` now assert
