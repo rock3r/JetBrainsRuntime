@@ -39,6 +39,16 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel tightened `commands-runtime-effect-shader-source-cache-eviction` with a RuntimeEffect source-cache hit
+  sentinel: at least one JBR RuntimeEffect source-cache hit is now required alongside the existing shader source-cache
+  eviction and shader-handle definition/use/cache-hit guards. Exact command-probe validation
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES=commands-runtime-effect-shader-source-cache-eviction ./scripts/jbr-skia-command-probe-suite.sh`
+  passed with no fallback, no unsupported reasons, zero picture frames, 1,413 JBR command frames, 1,942 RuntimeEffect
+  source-cache hits, 3,887 source-cache misses, 3,885 source-cache evicts, 1,946 shader-handle definitions, 5,829
+  shader-handle uses, 3,885 shader-handle cache hits, 922 shader-handle evicts, and zero RuntimeEffect compile/build
+  failures. This is focused command-probe lifecycle change 1 after the 2026-06-14 00:03 full command-probe sweep, so
+  broad command-probe validation remains deferred:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260614-104548/suite.tsv`.
 - Magic Jewel tightened `parity-runtime-effect-shader-source-cache-eviction` with a RuntimeEffect source-cache hit
   sentinel: at least one JBR RuntimeEffect source-cache hit is now required alongside the existing shader source-cache
   eviction and shader-handle definition/use/cache-hit guards. Exact validation
