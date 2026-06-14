@@ -35,6 +35,14 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   focused change counter:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260614-172951/matrix.tsv`,
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-benchmark-suite/20260614-173051/suite.tsv`.
+- Focused command-probe lifecycle hardening resumed with the shader descriptor redefine migration rows:
+  `commands-resize-shader-descriptor-redefine` and `commands-forced-context-shader-descriptor-redefine` now require at
+  least one JBR image-cache clear and one scoped JBR image-cache clear alongside their existing surface/cache,
+  shader-handle, and RuntimeEffect source-cache guards. Exact two-row validation passed with no fallback, no unsupported
+  reasons, zero picture frames, 1,538 and 1,630 command frames, one JBR image-cache clear per row, and one scoped
+  image-cache clear per row. This is focused command-probe lifecycle change 1 after the 2026-06-14 11:32 full
+  command-probe sweep, so broad command-probe validation remains deferred:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260614-173417/suite.tsv`.
 - Batched full command-probe validation refreshed after ten focused command-probe hardenings:
   `EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-command-probe-suite.sh` passed 549/549 with
   `fallback_sum=350`, 80 unsupported rows, 70,982 JBR picture frames, and 130,383 JBR command frames. This resets the

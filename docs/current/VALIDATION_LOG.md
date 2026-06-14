@@ -5,6 +5,24 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-14 focused command-probe lifecycle hardening for shader descriptor redefine migration rows: the latest broad
+  command-probe report showed stable resize/forced-context destination migration markers while
+  `commands-resize-shader-descriptor-redefine` and `commands-forced-context-shader-descriptor-redefine` only asserted
+  Skiko surface/cache markers, shader-handle reuse, and RuntimeEffect source-cache reuse. Magic Jewel added
+  `EXPECT_MIN_JBR_IMAGE_CACHE_CLEARS=1` and `EXPECT_MIN_JBR_SCOPED_IMAGE_CACHE_CLEARS=1` to both rows. Focused
+  validation
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES="commands-resize-shader-descriptor-redefine commands-forced-context-shader-descriptor-redefine" ./scripts/jbr-skia-command-probe-suite.sh`
+  passed 2/2 with `fallback_new_count=0`, `unsupported=none`, and zero picture frames. The resize row reported 1,538
+  JBR command frames, one JBR image-cache clear, one scoped image-cache clear, one surface-change marker, one
+  command-cache clear marker, two shader-handle definition frames, 2,063 shader-handle use frames, 2,061 shader-handle
+  cache-hit frames, 2,062 RuntimeEffect source-cache hits, and one RuntimeEffect source-cache miss. The forced-context
+  row reported 1,630 JBR command frames, one JBR image-cache clear, one scoped image-cache clear, one surface-change
+  marker, one command-cache clear marker, two shader-handle definition frames, 2,116 shader-handle use frames, 2,114
+  shader-handle cache-hit frames, 2,114 RuntimeEffect source-cache hits, and one RuntimeEffect source-cache miss. This
+  is focused command-probe lifecycle change 1 after the 2026-06-14 11:32 full command-probe sweep, so broad
+  command-probe validation remains deferred until roughly nine more focused command-probe changes or an ABI/capability
+  gate. Disk free remained about 161Gi:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260614-173417/suite.tsv`.
 - 2026-06-14 narrow post-matrix artifact/benchmark refresh:
   `CASE_GROUPS=required EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-artifact-matrix.sh` passed 2/2 on the
   current ABI 106 artifact bundle. `current-all` reported no fallback, 869 command frames, and

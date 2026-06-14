@@ -39,6 +39,14 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel tightened `commands-resize-shader-descriptor-redefine` and
+  `commands-forced-context-shader-descriptor-redefine` with JBR image-cache clear sentinels after the latest broad
+  command sweep showed stable destination migration markers. Exact two-row command-probe validation
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES="commands-resize-shader-descriptor-redefine commands-forced-context-shader-descriptor-redefine" ./scripts/jbr-skia-command-probe-suite.sh`
+  passed with no fallback, no unsupported reasons, zero picture frames, 1,538 and 1,630 JBR command frames,
+  respectively, and one JBR image-cache clear plus one scoped image-cache clear per row. This is focused command-probe
+  lifecycle change 1 after the 2026-06-14 11:32 full command-probe sweep, so broad command validation remains deferred:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260614-173417/suite.tsv`.
 - Magic Jewel refreshed the narrow post-matrix artifact/benchmark checks. Required artifact matrix
   `CASE_GROUPS=required EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-artifact-matrix.sh` passed 2/2:
   `current-all` replayed 869 command frames with no fallback, and `missing-public-api` took the expected single
