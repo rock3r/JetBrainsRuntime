@@ -20,6 +20,11 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   focused command-probe change counter to zero; keep subsequent per-change validation exact-row only until roughly ten
   more meaningful command-probe changes or an ABI/capability gate:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260614-000344/suite.tsv`.
+- Post-sweep compatibility matrix refreshed after the full command-probe sweep:
+  `EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-compatibility-matrix.sh` passed 57/57 with
+  `fallback_sum=56`, 520 JBR command frames from `happy`, and `background_window=true` on all rows. Disk free remained
+  about 176Gi after the run:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260614-054414/matrix.tsv`.
 - Focused command-probe hardening continued with
   `commands-invalid-radial-gradient-shader-descriptor-radius-fallback`: the row now requires shader-handle reuse/cache
   evidence in addition to its existing definition guards before the intentional radial-gradient corrupt radius

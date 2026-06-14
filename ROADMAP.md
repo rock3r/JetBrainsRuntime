@@ -39,6 +39,13 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel refreshed the post-sweep compatibility matrix after the cadence-triggered full command-probe sweep:
+  `EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-compatibility-matrix.sh` passed 57/57 with
+  `fallback_sum=56`, 520 JBR command frames from the `happy` row, and `background_window=true` on all rows. The
+  matrix covered ABI/native-ABI/public-API mismatch fallbacks plus low/high command-capability bit fallbacks for
+  gradients, text/font data, image/shader/color-filter/effect descriptors, path effects, transforms, shadows, points,
+  vertices, and shader Perlin noise. Disk free remained about 176Gi after the run:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260614-054414/matrix.tsv`.
 - Magic Jewel completed the cadence-triggered full command-probe sweep after ten focused command-probe hardenings.
   `EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-command-probe-suite.sh` passed 549/549 with
   `fallback_sum=350`, 80 unsupported rows, 70,982 JBR picture frames, and 130,383 JBR command frames. This resets the

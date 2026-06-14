@@ -5,6 +5,14 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-14 post-sweep compatibility matrix after the cadence-triggered full command-probe sweep:
+  `EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-compatibility-matrix.sh` passed 57/57 with
+  `fallback_sum=56`, 520 JBR command frames from the `happy` row, and `background_window=true` on all 57 rows. The
+  matrix covered ABI mismatch, native ABI mismatch, command-capability mismatch, public API missing, low-word gradient
+  and effect capability removals, and high-word capability removals for image filters, shader descriptors, RuntimeEffect
+  color filters, path effects, transforms, shadows, points, font data, shader color/Perlin noise, and vertices. Disk
+  free remained about 176Gi after the run:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260614-054414/matrix.tsv`.
 - 2026-06-14 batched full command-probe sweep after ten focused command-probe hardenings:
   `EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-command-probe-suite.sh` passed 549/549. Aggregate:
   `fallback_sum=350`, 80 rows with unsupported markers, 70,982 JBR picture frames, and 130,383 JBR command frames.
