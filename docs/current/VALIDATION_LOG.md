@@ -5,6 +5,16 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-14 batched full screenshot parity sweep after ten focused parity lifecycle/descriptor hardenings:
+  `./scripts/jbr-skia-screenshot-parity-suite.sh` passed 106/106. Aggregate: `fallback_sum=11`, zero JBR picture
+  frames, 93,828 JBR command frames, mean `avg_delta=2.158`, and mean `bad_pixel_ratio=0.05158`. The sweep covered the
+  newly tightened forced-context turbulence shader, resize and forced-context composite-noise shader,
+  resize/forced-context RuntimeEffect pure-color, and resize RuntimeEffect stable color-filter rows, alongside existing
+  button chrome, geometry, text/font data, image/filter/shader descriptors, RuntimeEffect, graphics-layer, transform,
+  resize, and forced-context rows. This resets the focused parity change counter to zero; next per-change parity
+  validation should stay exact-row/tiny-group, with the next full parity sweep deferred until roughly ten more
+  meaningful parity changes or an ABI/capability gate. Disk free was about 173Gi after the run:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260614-092237/suite.tsv`.
 - 2026-06-14 focused parity lifecycle hardening for `parity-forced-context-turbulence-shader`: the latest broad parity
   report showed stable forced-context destination migration markers while the row only asserted Skiko surface/cache
   markers plus shader-handle reuse. Magic Jewel added `EXPECT_MIN_JBR_IMAGE_CACHE_CLEARS=1` and
