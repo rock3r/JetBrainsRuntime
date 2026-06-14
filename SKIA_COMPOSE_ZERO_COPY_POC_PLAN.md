@@ -98,6 +98,15 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   hits, `avg_delta=2.045`, and `bad_pixel_ratio=0.04801`. This is focused descriptor/lifecycle change 5 after the
   2026-06-14 09:22 full parity sweep, so broad parity remains deferred:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260614-103622/suite.tsv`.
+- Focused parity lifecycle hardening continued with `parity-runtime-effect-source-cache-eviction`: the row now requires
+  at least one RuntimeEffect source-cache hit alongside its existing color-filter source-cache eviction and
+  effect-handle reuse guards. Exact validation
+  `CASES=parity-runtime-effect-source-cache-eviction ./scripts/jbr-skia-screenshot-parity-suite.sh` passed with no
+  fallback, zero picture frames, 1,004 command frames, 1,427 RuntimeEffect source-cache hits, 2,857 misses, 2,855
+  evicts, 40 effect definitions, 4,284 effect uses, 4,272 effect cache hits, `avg_delta=2.118`, and
+  `bad_pixel_ratio=0.05032`. This is focused descriptor/lifecycle change 6 after the 2026-06-14 09:22 full parity
+  sweep, so broad parity remains deferred:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260614-104020/suite.tsv`.
 - Focused parity lifecycle hardening continued with `parity-forced-context-color-shader`: the row now requires at least
   one JBR image-cache clear and one scoped JBR image-cache clear alongside its existing forced-context surface/cache,
   shader-definition/reuse, and effect-definition guards. Exact validation

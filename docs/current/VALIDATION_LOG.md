@@ -5,6 +5,23 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-14 focused parity lifecycle hardening for `parity-runtime-effect-source-cache-eviction`: the latest broad
+  parity report showed stable RuntimeEffect source-cache reuse before color-filter source-cache eviction while the row
+  only asserted eviction and effect-handle reuse. Magic Jewel added `EXPECT_MIN_JBR_RUNTIME_EFFECT_CACHE_HITS=1`,
+  preserving the existing effect definition/use/cache-hit and RuntimeEffect eviction-type guards. Focused validation
+  `CASES=parity-runtime-effect-source-cache-eviction ./scripts/jbr-skia-screenshot-parity-suite.sh` passed with
+  `fallback_new_count=0`, zero picture frames, 1,004 JBR command frames, 1,427 RuntimeEffect source-cache hits, 2,857
+  RuntimeEffect source-cache misses, 2,855 RuntimeEffect source-cache evicts, zero RuntimeEffect compile/build
+  failures, 40 effect-handle definition frames, 4,284 effect-handle use frames, 4,272 effect-handle cache-hit frames,
+  zero effect-handle evicts, zero shader-handle markers, `avg_delta=2.118`, `bad_pixel_ratio=0.05032`,
+  `header_buttons_bad_pixel_ratio=0.00381`, `compose_bad_pixel_ratio=0.07507`,
+  `compose_bottom_labels_bad_pixel_ratio=0.12590`, `compose_paragraph_probes_bad_pixel_ratio=0.08803`,
+  `compose_shader_color_bad_pixel_ratio=0.07688`, `compose_shader_image_bad_pixel_ratio=0.06242`,
+  `compose_shader_composite_bad_pixel_ratio=0.08628`, `compose_shader_linear_bad_pixel_ratio=0.06844`,
+  `compose_shader_noise_bad_pixel_ratio=0.05475`, and `compose_shader_turbulence_bad_pixel_ratio=0.07768`. This is
+  focused descriptor/lifecycle change 6 after the 2026-06-14 09:22 full parity sweep; broad parity remains deferred
+  until roughly four more focused parity changes or an ABI/capability gate:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260614-104020/suite.tsv`.
 - 2026-06-14 focused parity lifecycle hardening for `parity-forced-context-graphics-layer-render-effect`: the latest
   broad parity report showed stable forced-context destination migration markers while the row only asserted Skiko
   surface/cache markers and effect-handle reuse. Magic Jewel added `EXPECT_MIN_JBR_IMAGE_CACHE_CLEARS=1` and
