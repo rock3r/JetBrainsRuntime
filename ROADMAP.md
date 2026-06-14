@@ -39,6 +39,22 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel completed the cadence-triggered full screenshot parity sweep after ten focused parity lifecycle/descriptor
+  hardenings. `./scripts/jbr-skia-screenshot-parity-suite.sh` passed 106/106 with `fallback_sum=11`, zero picture
+  frames, 99,527 JBR command frames, mean `avg_delta=2.158`, and mean `bad_pixel_ratio=0.05158`. The focused parity
+  change counter resets to zero; keep subsequent per-change parity validation exact-row/tiny-group only until roughly
+  ten more meaningful parity changes or an ABI/capability gate. Disk free was about 175Gi after the run:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260614-062458/suite.tsv`.
+- Magic Jewel tightened `parity-forced-context-native-system-font-text` with forced-context JBR image-cache clear
+  sentinels: at least one JBR image-cache clear and at least one scoped JBR image-cache clear are now required in
+  addition to the existing surface-change, command-cache clear, and effect-definition guards. Exact validation
+  `CASES=parity-forced-context-native-system-font-text ./scripts/jbr-skia-screenshot-parity-suite.sh` passed with no
+  fallback, zero picture frames, 956 JBR command frames, one JBR image-cache clear, one scoped image-cache clear, one
+  Skiko surface-change marker, one command-cache clear marker, 45 effect-handle definitions, zero effect/shader handle
+  uses, zero RuntimeEffect markers, `avg_delta=1.995`, and `bad_pixel_ratio=0.04699`. This was focused
+  descriptor/lifecycle change 10 after the 2026-06-13 21:15 full parity sweep and triggered the batched broad parity
+  sweep above:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260614-062342/suite.tsv`.
 - Magic Jewel tightened `parity-forced-context-native-custom-font-text-image` with forced-context JBR image-cache clear
   sentinels: at least one JBR image-cache clear and at least one scoped JBR image-cache clear are now required in
   addition to the existing surface-change, command-cache clear, and effect-definition guards. Exact validation

@@ -34,6 +34,21 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   counter, which remains 8 after the 2026-06-13 21:15 full parity sweep:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260614-060948/matrix.tsv`,
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-benchmark-suite/20260614-061056/suite.tsv`.
+- Batched broad screenshot parity validation refreshed after ten focused parity lifecycle/descriptor hardenings:
+  `./scripts/jbr-skia-screenshot-parity-suite.sh` passed 106/106 with `fallback_sum=11`, zero picture frames, 99,527
+  JBR command frames, mean `avg_delta=2.158`, and mean `bad_pixel_ratio=0.05158`. This resets the focused parity
+  change counter to zero; keep subsequent per-change parity validation exact-row/tiny-group only until roughly ten more
+  meaningful parity changes or an ABI/capability gate. Disk free was about 175Gi after the run:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260614-062458/suite.tsv`.
+- Focused parity lifecycle hardening continued with `parity-forced-context-native-system-font-text`: the row now
+  requires at least one JBR image-cache clear and one scoped JBR image-cache clear alongside its existing
+  forced-context surface/cache guards and effect-definition guard. Exact validation
+  `CASES=parity-forced-context-native-system-font-text ./scripts/jbr-skia-screenshot-parity-suite.sh` passed with no
+  fallback, zero picture frames, 956 command frames, one JBR image-cache clear, one scoped image-cache clear, one
+  surface-change marker, one command-cache clear marker, 45 effect definitions, `avg_delta=1.995`, and
+  `bad_pixel_ratio=0.04699`. This was focused descriptor/lifecycle change 10 after the 2026-06-13 21:15 full parity
+  sweep and triggered the batched broad parity sweep above:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260614-062342/suite.tsv`.
 - Focused parity lifecycle hardening continued with `parity-forced-context-native-custom-font-text-image`: the row now
   requires at least one JBR image-cache clear and one scoped JBR image-cache clear alongside its existing
   forced-context surface/cache guards and effect-definition guard. Exact validation
