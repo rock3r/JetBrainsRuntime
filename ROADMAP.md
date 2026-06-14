@@ -60,6 +60,17 @@ This is the small working roadmap for the current PoC. The full historical check
   zero RuntimeEffect markers, `avg_delta=1.846`, and `bad_pixel_ratio=0.04430`. This is focused
   descriptor/lifecycle change 6 after the 2026-06-14 07:55 full parity sweep, so broad parity remains deferred:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260614-090959/suite.tsv`.
+- Magic Jewel tightened `parity-forced-context-composite-noise-shader` with forced-context JBR image-cache clear
+  sentinels: at least one JBR image-cache clear and at least one scoped JBR image-cache clear are now required in
+  addition to the existing forced-context surface-change, command-cache clear, shader-handle definition/use/cache-hit,
+  and effect-definition guards. Exact validation
+  `CASES=parity-forced-context-composite-noise-shader ./scripts/jbr-skia-screenshot-parity-suite.sh` passed with no
+  fallback, zero picture frames, 800 JBR command frames, one JBR image-cache clear, one scoped image-cache clear, one
+  Skiko surface-change marker, one command-cache clear marker, 45 effect-handle definitions, 27 shader-handle
+  definitions, 1,324 shader-handle uses, 1,315 shader-handle cache hits, zero RuntimeEffect markers,
+  `avg_delta=1.973`, and `bad_pixel_ratio=0.04630`. This is focused descriptor/lifecycle change 7 after the
+  2026-06-14 07:55 full parity sweep, so broad parity remains deferred:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260614-091228/suite.tsv`.
 - Magic Jewel tightened `parity-resize-turbulence-shader` with resize-path JBR image-cache clear sentinels: at least
   one JBR image-cache clear and at least one scoped JBR image-cache clear are now required in addition to the existing
   resize surface-change, command-cache clear, shader-handle definition/use/cache-hit, and effect-definition guards.
