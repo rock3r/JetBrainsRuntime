@@ -39,6 +39,18 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel tightened `parity-forced-context-runtime-effect-stable-color-filter` with forced-context JBR image-cache
+  clear sentinels: at least one JBR image-cache clear and at least one scoped JBR image-cache clear are now required in
+  addition to the existing forced-context surface-change, command-cache clear, effect-handle definition/use/cache-hit,
+  and RuntimeEffect source-cache guards. Exact validation
+  `CASES=parity-forced-context-runtime-effect-stable-color-filter ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  passed with no fallback, zero picture frames, 697 JBR command frames, one JBR image-cache clear, one scoped
+  image-cache clear, one Skiko surface-change marker, one command-cache clear marker, 54 effect-handle definitions,
+  1,080 effect-handle uses, 1,071 effect-handle cache hits, 1,079 RuntimeEffect source-cache hits, one RuntimeEffect
+  source-cache miss, zero RuntimeEffect failures, `avg_delta=1.981`, and `bad_pixel_ratio=0.04668`. This is focused
+  descriptor/lifecycle change 1 after the 2026-06-14 09:22 full parity sweep, so broad parity remains deferred. Disk
+  free was about 148Gi after the exact run:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260614-102147/suite.tsv`.
 - Magic Jewel completed the cadence-triggered full screenshot parity sweep after ten focused parity lifecycle/descriptor
   hardenings. `./scripts/jbr-skia-screenshot-parity-suite.sh` passed 106/106 with `fallback_sum=11`, zero picture
   frames, 93,828 JBR command frames, mean `avg_delta=2.158`, and mean `bad_pixel_ratio=0.05158`. The sweep covered the
