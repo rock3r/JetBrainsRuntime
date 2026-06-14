@@ -39,6 +39,16 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel completed the cadence-triggered full command-probe sweep after ten focused command-probe lifecycle
+  hardenings. `EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-command-probe-suite.sh` passed 549/549 with
+  `fallback_sum=350`, 80 unsupported rows, 77,679 JBR picture frames, and 152,941 JBR command frames. The sweep covered
+  the newly tightened RuntimeEffect source-cache rows, graphics-layer render-effect/color-matrix resize and
+  forced-context rows, RuntimeEffect stable color-filter resize/forced-context rows, and descriptor redefine
+  resize/forced-context rows, alongside the existing invalid stream, text/font, shader/filter descriptor,
+  graphics-layer, save-layer, transform, and fallback coverage. This resets the focused command-probe counter to zero;
+  keep subsequent per-change command validation exact-row/tiny-group only until roughly ten more meaningful changes or
+  an ABI/capability gate. Disk free was about 162Gi after the run:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260614-113210/suite.tsv`.
 - Magic Jewel tightened `commands-resize-descriptor-redefine` with resize-path JBR image-cache clear sentinels: at
   least one JBR image-cache clear and at least one scoped JBR image-cache clear are now required alongside the existing
   resize surface-change, command-cache clear, and effect-handle definition/use/cache-hit guards. Exact command-probe

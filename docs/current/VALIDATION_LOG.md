@@ -5,6 +5,17 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-14 cadence-triggered full command-probe sweep after ten focused command-probe lifecycle hardenings:
+  `EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-command-probe-suite.sh` passed 549/549. Aggregate:
+  `fallback_sum=350`, 80 unsupported rows, 77,679 JBR picture frames, and 152,941 JBR command frames. The sweep covered
+  the newly tightened RuntimeEffect source-cache rows, graphics-layer render-effect/color-matrix resize and
+  forced-context rows, RuntimeEffect stable color-filter resize/forced-context rows, descriptor redefine
+  resize/forced-context rows, and the existing invalid stream, text/font, shader/filter descriptor, graphics-layer,
+  save-layer, transform, and fallback coverage. This resets the focused command-probe change counter to zero; next
+  per-change command-probe validation should stay exact-row/tiny-group, with the next full command-probe sweep deferred
+  until roughly ten more meaningful command-probe changes or an ABI/capability gate. Disk free was about 162Gi after
+  the run:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260614-113210/suite.tsv`.
 - 2026-06-14 focused command-probe lifecycle hardening for `commands-resize-descriptor-redefine`: the latest broad
   command-probe report showed stable resize-path destination migration markers while the row only asserted Skiko
   surface/cache markers and effect-handle reuse. Magic Jewel added `EXPECT_MIN_JBR_IMAGE_CACHE_CLEARS=1` and
