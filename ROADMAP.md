@@ -39,6 +39,16 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel tightened `parity-runtime-effect-shader-source-cache-eviction` with a RuntimeEffect source-cache hit
+  sentinel: at least one JBR RuntimeEffect source-cache hit is now required alongside the existing shader source-cache
+  eviction and shader-handle definition/use/cache-hit guards. Exact validation
+  `CASES=parity-runtime-effect-shader-source-cache-eviction ./scripts/jbr-skia-screenshot-parity-suite.sh` passed
+  with no fallback, zero picture frames, 938 JBR command frames, 1,449 RuntimeEffect source-cache hits, 2,901
+  source-cache misses, 2,899 source-cache evicts, 20 shader-handle definitions, 4,350 shader-handle uses, 4,338
+  shader-handle cache hits, zero RuntimeEffect compile/build failures, `avg_delta=2.084`, and
+  `bad_pixel_ratio=0.04931`. This is focused descriptor/lifecycle change 7 after the 2026-06-14 09:22 full parity
+  sweep, so broad parity remains deferred:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260614-104239/suite.tsv`.
 - Magic Jewel tightened `parity-runtime-effect-source-cache-eviction` with a RuntimeEffect source-cache hit sentinel:
   at least one JBR RuntimeEffect source-cache hit is now required alongside the existing color-filter source-cache
   eviction and effect-handle definition/use/cache-hit guards. Exact validation
