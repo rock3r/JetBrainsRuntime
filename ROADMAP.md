@@ -39,6 +39,16 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel tightened `parity-resize-color-filter-handle` with resize-path JBR image-cache clear sentinels: at least
+  one JBR image-cache clear and at least one scoped JBR image-cache clear are now required in addition to the existing
+  resize surface-change, command-cache clear, and effect-handle definition/use/cache-hit guards. Exact validation
+  `CASES=parity-resize-color-filter-handle ./scripts/jbr-skia-screenshot-parity-suite.sh` passed with the row's
+  expected single resize fallback, zero picture frames, 1,251 JBR command frames, one JBR image-cache clear, one scoped
+  image-cache clear, one Skiko surface-change marker, one command-cache clear marker, nine effect-handle definitions,
+  2,013 effect-handle uses, 2,004 effect-handle cache hits, zero shader/RuntimeEffect markers, `avg_delta=1.922`, and
+  `bad_pixel_ratio=0.04650`. This is focused descriptor/lifecycle change 8 after the 2026-06-14 06:24 full parity
+  sweep, so broad parity remains deferred:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260614-074820/suite.tsv`.
 - Magic Jewel tightened `parity-resize-native-system-font-text` with resize-path JBR image-cache clear sentinels: at
   least one JBR image-cache clear and at least one scoped JBR image-cache clear are now required in addition to the
   existing resize surface-change, command-cache clear, and effect-definition guards. Exact validation
