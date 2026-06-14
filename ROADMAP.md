@@ -39,6 +39,14 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel tightened `commands-resize-noise-shader-descriptor-redefine` and
+  `commands-forced-context-noise-shader-descriptor-redefine` with JBR image-cache clear sentinels. Exact two-row
+  command-probe validation
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES="commands-resize-noise-shader-descriptor-redefine commands-forced-context-noise-shader-descriptor-redefine" ./scripts/jbr-skia-command-probe-suite.sh`
+  passed with no fallback, no unsupported reasons, zero picture frames, 1,635 and 1,658 JBR command frames,
+  respectively, and one JBR image-cache clear plus one scoped image-cache clear per row. This is focused command-probe
+  lifecycle change 3 after the 2026-06-14 11:32 full command-probe sweep, so broad command validation remains deferred:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260614-174127/suite.tsv`.
 - Magic Jewel tightened `commands-resize-color-shader-descriptor-redefine` and
   `commands-forced-context-color-shader-descriptor-redefine` with JBR image-cache clear sentinels. Exact two-row
   command-probe validation
