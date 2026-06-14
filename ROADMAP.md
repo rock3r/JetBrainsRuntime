@@ -39,6 +39,15 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel completed the cadence-triggered full screenshot parity sweep after ten focused parity lifecycle/descriptor
+  hardenings. `./scripts/jbr-skia-screenshot-parity-suite.sh` passed 106/106 with `fallback_sum=11`, zero picture
+  frames, 97,534 JBR command frames, mean `avg_delta=2.158`, and mean `bad_pixel_ratio=0.05158`. The sweep covered
+  the newly tightened resize native text, color-filter handle, forced-context color-filter handle, and resize
+  color-shader lifecycle rows plus the existing button chrome, geometry, text/font data, image/filter/shader
+  descriptors, RuntimeEffect, graphics-layer, transform, resize, and forced-context rows. The focused parity change
+  counter resets to zero; keep subsequent per-change parity validation exact-row/tiny-group only until roughly ten more
+  meaningful parity changes or an ABI/capability gate. Disk free was about 174Gi after the run:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260614-075504/suite.tsv`.
 - Magic Jewel tightened `parity-resize-color-shader` with resize-path JBR image-cache clear sentinels: at least one JBR
   image-cache clear and at least one scoped JBR image-cache clear are now required in addition to the existing resize
   surface-change, command-cache clear, shader-handle definition/use/cache-hit, and effect-definition guards. Exact

@@ -40,6 +40,12 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   change counter to zero; keep subsequent per-change parity validation exact-row/tiny-group only until roughly ten more
   meaningful parity changes or an ABI/capability gate. Disk free was about 175Gi after the run:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260614-062458/suite.tsv`.
+- Batched broad screenshot parity validation refreshed again after ten more focused parity lifecycle/descriptor
+  hardenings: `./scripts/jbr-skia-screenshot-parity-suite.sh` passed 106/106 with `fallback_sum=11`, zero picture
+  frames, 97,534 JBR command frames, mean `avg_delta=2.158`, and mean `bad_pixel_ratio=0.05158`. This resets the
+  focused parity change counter to zero again; keep subsequent per-change parity validation exact-row/tiny-group only
+  until roughly ten more meaningful parity changes or an ABI/capability gate. Disk free was about 174Gi after the run:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260614-075504/suite.tsv`.
 - Focused parity lifecycle hardening continued with `parity-forced-context-native-generic-font-text`: the row now
   requires at least one JBR image-cache clear and one scoped JBR image-cache clear alongside its existing
   forced-context surface/cache guards and effect-definition guard. Exact validation
