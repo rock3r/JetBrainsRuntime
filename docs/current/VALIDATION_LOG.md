@@ -5,6 +5,21 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-15 focused command-probe lifecycle hardening for graphics-layer render-effect plus color-matrix-filter
+  migration rows: Magic Jewel added `commands-resize-graphics-layer-render-effect-color-matrix-filter` and
+  `commands-forced-context-graphics-layer-render-effect-color-matrix-filter`. Both rows assert destination migration,
+  command-cache clear, JBR image-cache clear, scoped image-cache clear, and color-matrix/effect-handle
+  redefinition/reuse/cache-hit markers. Focused validation
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES="commands-resize-graphics-layer-render-effect-color-matrix-filter commands-forced-context-graphics-layer-render-effect-color-matrix-filter" ./scripts/jbr-skia-command-probe-suite.sh`
+  passed 2/2 with `fallback_new_count=0`, `unsupported=none`, and zero picture frames. The resize row reported 710
+  JBR command frames, one JBR image-cache clear, one scoped image-cache clear, four effect-handle definitions, 2,578
+  effect-handle uses, 2,574 effect-handle cache hits, one surface-change marker, and one command-cache clear marker.
+  The forced-context row reported 906 JBR command frames, one JBR image-cache clear, one scoped image-cache clear, four
+  effect-handle definitions, 2,754 effect-handle uses, 2,750 effect-handle cache hits, one surface-change marker, and
+  one command-cache clear marker. This is focused command-probe lifecycle change 5 after the 2026-06-14 18:10 full
+  command-probe sweep, so broad command-probe validation remains deferred until roughly five more focused
+  command-probe changes or an ABI/capability gate. Disk free was about 115Gi:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260615-014123/suite.tsv`.
 - 2026-06-15 focused command-probe lifecycle hardening for graphics-layer render-effect plus blend-mode migration rows:
   Magic Jewel added `commands-resize-graphics-layer-render-effect-blend-mode` and
   `commands-forced-context-graphics-layer-render-effect-blend-mode`. Both rows assert destination migration,
