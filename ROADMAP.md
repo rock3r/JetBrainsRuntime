@@ -39,6 +39,15 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel tightened `commands-resize-native-system-font-text` and
+  `commands-forced-context-native-system-font-text` with JBR image-cache clear sentinels. Exact two-row command-probe
+  validation
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES="commands-resize-native-system-font-text commands-forced-context-native-system-font-text" ./scripts/jbr-skia-command-probe-suite.sh`
+  passed with no fallback, no unsupported reasons, zero picture frames, 1,466 and 1,710 JBR command frames,
+  respectively, and one JBR image-cache clear plus one scoped image-cache clear per row. This is focused command-probe
+  lifecycle change 9 after the 2026-06-14 11:32 full command-probe sweep, so broad command validation remains deferred
+  until one more focused command-probe change or an ABI/capability gate:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260614-180320/suite.tsv`.
 - Magic Jewel tightened `commands-resize-native-resource-font-text` and
   `commands-forced-context-native-resource-font-text` with JBR image-cache clear sentinels. Exact two-row command-probe
   validation
