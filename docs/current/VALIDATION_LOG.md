@@ -5,6 +5,17 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-14 focused command-probe lifecycle hardening for the forced-context custom-font/text-image row:
+  `commands-forced-context-native-custom-font-text-image` now asserts `EXPECT_MIN_JBR_IMAGE_CACHE_CLEARS=1` and
+  `EXPECT_MIN_JBR_SCOPED_IMAGE_CACHE_CLEARS=1` alongside its existing image-ref, surface-change, and command-cache
+  guards. Focused validation
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES="commands-forced-context-native-custom-font-text-image" ./scripts/jbr-skia-command-probe-suite.sh`
+  passed with `fallback_new_count=0`, `unsupported=none`, zero picture frames, 1,313 JBR command frames, one JBR
+  image-cache clear, one scoped image-cache clear, one surface-change marker, one command-cache clear marker, 15
+  image refs, and no unsupported reasons. This is focused command-probe lifecycle change 10 after the 2026-06-14 11:32
+  full command-probe sweep, so the next validation step is the batched full command-probe sweep. Disk free was about
+  158Gi:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260614-180730/suite.tsv`.
 - 2026-06-14 focused command-probe lifecycle hardening for system native-font migration rows:
   `commands-resize-native-system-font-text` and `commands-forced-context-native-system-font-text` now assert
   `EXPECT_MIN_JBR_IMAGE_CACHE_CLEARS=1` and `EXPECT_MIN_JBR_SCOPED_IMAGE_CACHE_CLEARS=1` alongside their existing

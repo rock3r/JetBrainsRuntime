@@ -107,6 +107,13 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   focused command-probe lifecycle change 9 after the 2026-06-14 11:32 full command-probe sweep, so broad command-probe
   validation remains deferred until one more focused command-probe change or an ABI/capability gate:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260614-180320/suite.tsv`.
+- Focused command-probe lifecycle hardening reached the cadence trigger with
+  `commands-forced-context-native-custom-font-text-image`: the row now requires JBR image-cache and scoped image-cache
+  clear markers alongside its existing image-ref, surface-change, and command-cache guards. Exact validation passed
+  with no fallback, no unsupported reasons, zero picture frames, 1,313 command frames, one JBR image-cache clear, and
+  one scoped image-cache clear. This is focused command-probe lifecycle change 10 after the 2026-06-14 11:32 full
+  command-probe sweep, so the next validation step is the batched full command-probe sweep:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260614-180730/suite.tsv`.
 - Batched full command-probe validation refreshed after ten focused command-probe hardenings:
   `EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-command-probe-suite.sh` passed 549/549 with
   `fallback_sum=350`, 80 unsupported rows, 70,982 JBR picture frames, and 130,383 JBR command frames. This resets the
