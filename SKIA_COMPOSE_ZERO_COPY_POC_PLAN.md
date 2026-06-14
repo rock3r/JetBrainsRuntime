@@ -76,6 +76,15 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `avg_delta=1.982`, and `bad_pixel_ratio=0.04633`. This is focused descriptor/lifecycle change 4 after the
   2026-06-14 06:24 full parity sweep, so broad parity remains deferred:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260614-073613/suite.tsv`.
+- Focused parity lifecycle hardening continued with `parity-resize-native-loaded-font-data-text`: the row now requires
+  at least one JBR image-cache clear and one scoped JBR image-cache clear alongside its existing font-data, resize
+  surface/cache, and effect-definition guards. Exact validation
+  `CASES=parity-resize-native-loaded-font-data-text ./scripts/jbr-skia-screenshot-parity-suite.sh` passed with no
+  fallback, zero picture frames, 673 command frames, one JBR image-cache clear, one scoped image-cache clear, one
+  surface-change marker, one command-cache clear marker, 25 effect definitions, `avg_delta=1.923`, and
+  `bad_pixel_ratio=0.04559`. This is focused descriptor/lifecycle change 5 after the 2026-06-14 06:24 full parity
+  sweep, so broad parity remains deferred:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260614-074046/suite.tsv`.
 - Focused parity lifecycle hardening continued with `parity-forced-context-native-system-font-text`: the row now
   requires at least one JBR image-cache clear and one scoped JBR image-cache clear alongside its existing
   forced-context surface/cache guards and effect-definition guard. Exact validation

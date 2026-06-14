@@ -5,6 +5,24 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-14 focused parity lifecycle hardening for `parity-resize-native-loaded-font-data-text`: the latest broad
+  parity report showed stable resize-path destination migration markers while the row only asserted Skiko surface/cache
+  markers. Magic Jewel added `EXPECT_MIN_JBR_IMAGE_CACHE_CLEARS=1` and
+  `EXPECT_MIN_JBR_SCOPED_IMAGE_CACHE_CLEARS=1`, preserving the existing font-data and effect-definition min/max
+  guards. Focused validation
+  `CASES=parity-resize-native-loaded-font-data-text ./scripts/jbr-skia-screenshot-parity-suite.sh` passed with
+  `fallback_new_count=0`, zero picture frames, 673 JBR command frames, one JBR image-cache clear, one scoped
+  image-cache clear, one Skiko surface-change marker, one command-cache clear marker, 25 effect-handle definition
+  frames, zero effect-handle use/cache-hit/evict frames, zero shader-handle markers, zero RuntimeEffect cache markers,
+  zero compile/build failures, `avg_delta=1.923`, `bad_pixel_ratio=0.04559`,
+  `header_buttons_bad_pixel_ratio=0.02158`, `compose_bad_pixel_ratio=0.06628`,
+  `compose_bottom_labels_bad_pixel_ratio=0.07648`, `compose_paragraph_probes_bad_pixel_ratio=0.07034`,
+  `compose_shader_color_bad_pixel_ratio=0.06967`, `compose_shader_image_bad_pixel_ratio=0.06662`,
+  `compose_shader_composite_bad_pixel_ratio=0.08610`, `compose_shader_linear_bad_pixel_ratio=0.06647`,
+  `compose_shader_noise_bad_pixel_ratio=0.06845`, and `compose_shader_turbulence_bad_pixel_ratio=0.07863`. This is
+  focused descriptor/lifecycle change 5 after the 2026-06-14 06:24 full parity sweep; broad parity remains deferred
+  until roughly five more focused parity changes or an ABI/capability gate:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260614-074046/suite.tsv`.
 - 2026-06-14 focused parity lifecycle hardening for `parity-resize-native-generic-font-text`: the latest broad parity
   report showed stable resize-path destination migration markers while the row only asserted Skiko surface/cache
   markers. Magic Jewel added `EXPECT_MIN_JBR_IMAGE_CACHE_CLEARS=1` and
