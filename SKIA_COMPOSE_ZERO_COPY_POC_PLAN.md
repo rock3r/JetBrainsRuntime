@@ -29,6 +29,15 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   and 922 shader evicts. This is focused command-probe lifecycle change 1 after the 2026-06-14 00:03 full
   command-probe sweep, so broad command-probe validation remains deferred:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260614-104548/suite.tsv`.
+- Focused command-probe lifecycle hardening continued with `commands-runtime-effect-source-cache-eviction`: the row now
+  requires at least one RuntimeEffect source-cache hit alongside its existing color-filter source-cache eviction and
+  effect-handle reuse guards. Exact validation
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES=commands-runtime-effect-source-cache-eviction ./scripts/jbr-skia-command-probe-suite.sh`
+  passed with no fallback, no unsupported reasons, zero picture frames, 1,044 command frames, 1,441 RuntimeEffect
+  source-cache hits, 2,885 misses, 2,883 evicts, 2,887 effect definitions, 4,326 effect uses, 1,441 effect cache hits,
+  and 1,863 effect evicts. This is focused command-probe lifecycle change 2 after the 2026-06-14 00:03 full
+  command-probe sweep, so broad command-probe validation remains deferred:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260614-104811/suite.tsv`.
 - Post-sweep compatibility matrix refreshed after the full command-probe sweep:
   `EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-compatibility-matrix.sh` passed 57/57 with
   `fallback_sum=56`, 520 JBR command frames from `happy`, and `background_window=true` on all rows. Disk free remained

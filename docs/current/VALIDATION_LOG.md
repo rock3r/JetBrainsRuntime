@@ -5,6 +5,20 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-14 focused command-probe lifecycle hardening for `commands-runtime-effect-source-cache-eviction`: the latest
+  broad command-probe report showed stable RuntimeEffect source-cache reuse before color-filter source-cache eviction
+  while the row only asserted eviction and effect-handle reuse. Magic Jewel added
+  `EXPECT_MIN_JBR_RUNTIME_EFFECT_CACHE_HITS=1`, preserving the existing effect definition/use/cache-hit and
+  RuntimeEffect eviction-type guards. Focused validation
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES=commands-runtime-effect-source-cache-eviction ./scripts/jbr-skia-command-probe-suite.sh`
+  passed with `fallback_new_count=0`, `unsupported=none`, zero picture frames, 1,044 JBR command frames, 1,441
+  RuntimeEffect source-cache hits, 2,885 RuntimeEffect source-cache misses, 2,883 RuntimeEffect source-cache evicts,
+  zero RuntimeEffect compile/build failures, 2,887 effect-handle definition frames, 4,326 effect-handle use frames,
+  1,441 effect-handle cache-hit frames, 1,863 effect-handle evict frames, zero shader-handle markers, and
+  `EXPECT_SCREENSHOT_ASSERTION=false`. This is focused command-probe lifecycle change 2 after the 2026-06-14 00:03
+  full command-probe sweep; broad command-probe validation remains deferred until roughly eight more focused
+  command-probe changes or an ABI/capability gate. Disk free remained about 148Gi after the exact run:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260614-104811/suite.tsv`.
 - 2026-06-14 focused command-probe lifecycle hardening for
   `commands-runtime-effect-shader-source-cache-eviction`: the latest broad command-probe report showed stable
   RuntimeEffect source-cache reuse before shader source-cache eviction while the row only asserted eviction and
