@@ -44,7 +44,7 @@ This is the small working roadmap for the current PoC. The full historical check
   `fallback_sum=350`, 80 unsupported rows, 70,982 JBR picture frames, and 130,383 JBR command frames. This resets the
   focused command-probe change counter to zero; continue using exact-row command validation per change and defer the
   next full command sweep until roughly ten more meaningful command-probe changes or an ABI/capability gate. Disk free
-  was about 152Gi after the run and stale Magic Jewel validation process cleanup:
+  was about 176Gi after the run and stale Magic Jewel validation process cleanup:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260614-000344/suite.tsv`.
 - Magic Jewel tightened the focused command-probe row
   `commands-invalid-radial-gradient-shader-descriptor-radius-fallback` with shader-handle reuse guards on top of its

@@ -12,7 +12,7 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   descriptor, image/filter, path-effect, vertices, blend-mode, graphics-layer, render-effect, shadow, save-layer, and
   legacy raw-family fallback rows. This resets the focused command-probe change counter to zero; next per-change
   validation should stay exact-row/narrow, with the next full command sweep deferred until roughly ten more meaningful
-  command-probe changes or an ABI/capability gate. Disk free was about 152Gi after the run and stale Magic Jewel Java
+  command-probe changes or an ABI/capability gate. Disk free was about 176Gi after the run and stale Magic Jewel Java
   validation process cleanup:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260614-000344/suite.tsv`.
 - 2026-06-14 focused command-probe hardening for
