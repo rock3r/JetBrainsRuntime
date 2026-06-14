@@ -39,6 +39,17 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel tightened `parity-forced-context-color-shader` with forced-context JBR image-cache clear sentinels: at
+  least one JBR image-cache clear and at least one scoped JBR image-cache clear are now required in addition to the
+  existing forced-context surface-change, command-cache clear, shader-handle definition/use/cache-hit, and
+  effect-definition guards. Exact validation
+  `CASES=parity-forced-context-color-shader ./scripts/jbr-skia-screenshot-parity-suite.sh` passed with no fallback,
+  zero picture frames, 1,025 JBR command frames, one JBR image-cache clear, one scoped image-cache clear, one Skiko
+  surface-change marker, one command-cache clear marker, 45 effect-handle definitions, nine shader-handle definitions,
+  1,547 shader-handle uses, 1,538 shader-handle cache hits, zero RuntimeEffect markers, `avg_delta=1.974`, and
+  `bad_pixel_ratio=0.04646`. This is focused descriptor/lifecycle change 1 after the 2026-06-14 07:55 full parity
+  sweep, so broad parity remains deferred:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260614-085352/suite.tsv`.
 - Magic Jewel completed the cadence-triggered full screenshot parity sweep after ten focused parity lifecycle/descriptor
   hardenings. `./scripts/jbr-skia-screenshot-parity-suite.sh` passed 106/106 with `fallback_sum=11`, zero picture
   frames, 97,534 JBR command frames, mean `avg_delta=2.158`, and mean `bad_pixel_ratio=0.05158`. The sweep covered
