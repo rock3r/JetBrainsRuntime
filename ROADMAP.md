@@ -39,6 +39,17 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel tightened `commands-resize-graphics-layer-color-matrix-filter` with resize-path JBR image-cache clear
+  sentinels: at least one JBR image-cache clear and at least one scoped JBR image-cache clear are now required
+  alongside the existing resize surface-change, command-cache clear, and effect-handle definition/use/cache-hit guards.
+  Exact command-probe validation
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES=commands-resize-graphics-layer-color-matrix-filter ./scripts/jbr-skia-command-probe-suite.sh`
+  passed with no fallback, no unsupported reasons, zero picture frames, 1,711 JBR command frames, one JBR image-cache
+  clear, one scoped image-cache clear, one Skiko surface-change marker, one command-cache clear marker, two
+  effect-handle definitions, 2,282 effect-handle uses, and 2,280 effect-handle cache hits. This is focused
+  command-probe lifecycle change 5 after the 2026-06-14 00:03 full command-probe sweep, so broad command-probe
+  validation remains deferred:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260614-110941/suite.tsv`.
 - Magic Jewel tightened `commands-forced-context-graphics-layer-render-effect` with forced-context JBR image-cache
   clear sentinels: at least one JBR image-cache clear and at least one scoped JBR image-cache clear are now required
   alongside the existing forced-context surface-change, command-cache clear, and effect-handle
