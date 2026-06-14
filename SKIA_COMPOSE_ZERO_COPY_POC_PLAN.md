@@ -80,6 +80,15 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   effect cache hits, `avg_delta=2.048`, and `bad_pixel_ratio=0.04815`. This is focused descriptor/lifecycle change 3
   after the 2026-06-14 09:22 full parity sweep, so broad parity remains deferred:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260614-102844/suite.tsv`.
+- Focused parity lifecycle hardening continued with `parity-resize-graphics-layer-render-effect`: the row now requires
+  at least one JBR image-cache clear and one scoped JBR image-cache clear alongside its existing resize surface/cache
+  and effect-handle reuse guards. Exact validation
+  `CASES=parity-resize-graphics-layer-render-effect ./scripts/jbr-skia-screenshot-parity-suite.sh` passed with the
+  row's expected single resize fallback, zero picture frames, 1,272 command frames, one JBR image-cache clear, one
+  scoped image-cache clear, one surface-change marker, one command-cache clear marker, eight effect definitions, 1,811
+  effect uses, 1,803 effect cache hits, `avg_delta=1.902`, and `bad_pixel_ratio=0.04557`. This is focused
+  descriptor/lifecycle change 4 after the 2026-06-14 09:22 full parity sweep, so broad parity remains deferred:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260614-103149/suite.tsv`.
 - Focused parity lifecycle hardening continued with `parity-forced-context-color-shader`: the row now requires at least
   one JBR image-cache clear and one scoped JBR image-cache clear alongside its existing forced-context surface/cache,
   shader-definition/reuse, and effect-definition guards. Exact validation
