@@ -5,6 +5,17 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-14 narrow post-matrix artifact/benchmark refresh:
+  `CASE_GROUPS=required EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-artifact-matrix.sh` passed 2/2 on the
+  current ABI 106 artifact bundle. `current-all` reported no fallback, 869 command frames, and
+  `background_window=true`; `missing-public-api` reported the expected `public-api-missing` fallback, one fallback, zero
+  command frames, and `background_window=true`. Command benchmark smoke
+  `CASES=commands ./scripts/jbr-skia-benchmark-suite.sh` passed with no fallback, 16 old/new samples, zero picture
+  frames, 3,848 JBR command frames, `app_new_fps=192.4`, and `jbr_command_fps=192.4`. This was a narrow
+  post-compatibility check, so it does not reset or advance the focused command/parity counters. Disk free remained
+  about 161Gi:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260614-172951/matrix.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-benchmark-suite/20260614-173051/suite.tsv`.
 - 2026-06-14 post-command-sweep compatibility matrix refresh:
   `EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-compatibility-matrix.sh` passed 57/57. Aggregate:
   `fallback_sum=56`, 467 JBR command frames from `happy`, and `background_window=true` on all 57 rows. The matrix

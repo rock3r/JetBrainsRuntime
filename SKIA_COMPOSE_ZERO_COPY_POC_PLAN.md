@@ -26,6 +26,15 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `fallback_sum=56`, 467 JBR command frames from `happy`, and `background_window=true` on all rows. Disk free was about
   161Gi after the run:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260614-170152/matrix.tsv`.
+- Narrow artifact/benchmark validation refreshed after the post-sweep compatibility matrix. Required artifact matrix
+  `CASE_GROUPS=required EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-artifact-matrix.sh` passed 2/2:
+  `current-all` had no fallback and 869 command frames, while `missing-public-api` took the expected single
+  public-API fallback with zero command frames; both rows reported `background_window=true`. Command benchmark smoke
+  `CASES=commands ./scripts/jbr-skia-benchmark-suite.sh` passed with no fallback, zero picture frames, 3,848 command
+  frames, `app_new_fps=192.4`, and `jbr_command_fps=192.4`. This was intentionally narrow and does not advance any
+  focused change counter:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260614-172951/matrix.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-benchmark-suite/20260614-173051/suite.tsv`.
 - Batched full command-probe validation refreshed after ten focused command-probe hardenings:
   `EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-command-probe-suite.sh` passed 549/549 with
   `fallback_sum=350`, 80 unsupported rows, 70,982 JBR picture frames, and 130,383 JBR command frames. This resets the
