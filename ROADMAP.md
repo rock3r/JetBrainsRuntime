@@ -40,6 +40,18 @@ This is the small working roadmap for the current PoC. The full historical check
 ## Latest Validations
 
 - Magic Jewel added resize and forced-context command-probe coverage for graphics-layer render-effect plus blend and
+  color-matrix-filter composition:
+  `commands-resize-graphics-layer-render-effect-blend-color-matrix-filter` and
+  `commands-forced-context-graphics-layer-render-effect-blend-color-matrix-filter` now assert destination migration,
+  command-cache clear, JBR image-cache clear, scoped image-cache clear, and effect-handle redefinition/reuse/cache-hit
+  markers. Exact command-probe validation
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES="commands-resize-graphics-layer-render-effect-blend-color-matrix-filter commands-forced-context-graphics-layer-render-effect-blend-color-matrix-filter" ./scripts/jbr-skia-command-probe-suite.sh`
+  passed with no fallback, no unsupported reasons, zero picture frames, 892 and 750 JBR command frames, respectively.
+  Both rows reported one surface change, one command-cache clear, one JBR image-cache clear, one scoped image-cache
+  clear, four effect-handle definitions, and effect-handle cache hits. This is focused command-probe lifecycle change 7
+  after the 2026-06-14 18:10 full command-probe sweep, so broad command validation remains deferred:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260615-015317/suite.tsv`.
+- Magic Jewel added resize and forced-context command-probe coverage for graphics-layer render-effect plus blend and
   color-filter composition:
   `commands-resize-graphics-layer-render-effect-blend-color-filter` and
   `commands-forced-context-graphics-layer-render-effect-blend-color-filter` now assert destination migration,
