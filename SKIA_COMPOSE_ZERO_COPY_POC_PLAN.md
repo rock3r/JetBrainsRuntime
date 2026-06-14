@@ -59,6 +59,14 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   command-probe lifecycle change 3 after the 2026-06-14 11:32 full command-probe sweep, so broad command-probe
   validation remains deferred:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260614-174127/suite.tsv`.
+- Focused command-probe lifecycle hardening continued with the turbulence-shader descriptor redefine migration rows:
+  `commands-resize-turbulence-shader-descriptor-redefine` and
+  `commands-forced-context-turbulence-shader-descriptor-redefine` now require JBR image-cache and scoped image-cache
+  clear markers alongside their existing surface/cache and shader-handle guards. Exact two-row validation passed with
+  no fallback, no unsupported reasons, zero picture frames, 1,494 and 1,359 command frames, one JBR image-cache clear
+  per row, and one scoped image-cache clear per row. This is focused command-probe lifecycle change 4 after the
+  2026-06-14 11:32 full command-probe sweep, so broad command-probe validation remains deferred:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260614-174439/suite.tsv`.
 - Batched full command-probe validation refreshed after ten focused command-probe hardenings:
   `EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-command-probe-suite.sh` passed 549/549 with
   `fallback_sum=350`, 80 unsupported rows, 70,982 JBR picture frames, and 130,383 JBR command frames. This resets the
