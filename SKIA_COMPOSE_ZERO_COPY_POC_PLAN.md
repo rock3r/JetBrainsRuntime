@@ -21,6 +21,11 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   only until roughly ten more meaningful command-probe changes or an ABI/capability gate. Disk free was about 162Gi
   after the run:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260614-113210/suite.tsv`.
+- Post-sweep compatibility matrix refreshed after the full command-probe sweep:
+  `EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-compatibility-matrix.sh` passed 57/57 with
+  `fallback_sum=56`, 467 JBR command frames from `happy`, and `background_window=true` on all rows. Disk free was about
+  161Gi after the run:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260614-170152/matrix.tsv`.
 - Batched full command-probe validation refreshed after ten focused command-probe hardenings:
   `EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-command-probe-suite.sh` passed 549/549 with
   `fallback_sum=350`, 80 unsupported rows, 70,982 JBR picture frames, and 130,383 JBR command frames. This resets the
