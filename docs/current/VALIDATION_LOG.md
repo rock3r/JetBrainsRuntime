@@ -102,6 +102,25 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   2026-06-14 07:55 full parity sweep; broad parity remains deferred until roughly one more focused parity change or
   an ABI/capability gate:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260614-091740/suite.tsv`.
+- 2026-06-14 focused parity lifecycle hardening for `parity-resize-runtime-effect-stable-color-filter`: the latest
+  broad parity report showed stable resize-path destination migration markers while the row only asserted Skiko
+  surface/cache markers, effect-handle reuse, and RuntimeEffect source-cache reuse. Magic Jewel added
+  `EXPECT_MIN_JBR_IMAGE_CACHE_CLEARS=1` and `EXPECT_MIN_JBR_SCOPED_IMAGE_CACHE_CLEARS=1`, preserving the existing
+  effect definition/use/cache-hit and RuntimeEffect source-cache guards. Focused validation
+  `CASES=parity-resize-runtime-effect-stable-color-filter ./scripts/jbr-skia-screenshot-parity-suite.sh` passed with
+  the row's expected resize `fallback_new_count=1`, zero picture frames, 805 JBR command frames, one JBR image-cache
+  clear, one scoped image-cache clear, one Skiko surface-change marker, one command-cache clear marker, 48
+  effect-handle definition frames, 1,330 effect-handle use frames, 1,322 effect-handle cache-hit frames, zero
+  effect-handle evicts, zero shader-handle markers, 1,328 RuntimeEffect source-cache hits, one RuntimeEffect
+  source-cache miss, zero RuntimeEffect source-cache evicts, zero compile/build failures, `avg_delta=1.855`,
+  `bad_pixel_ratio=0.04467`, `header_buttons_bad_pixel_ratio=0.02158`, `compose_bad_pixel_ratio=0.06492`,
+  `compose_bottom_labels_bad_pixel_ratio=0.06596`, `compose_paragraph_probes_bad_pixel_ratio=0.07034`,
+  `compose_shader_color_bad_pixel_ratio=0.06967`, `compose_shader_image_bad_pixel_ratio=0.06662`,
+  `compose_shader_composite_bad_pixel_ratio=0.08610`, `compose_shader_linear_bad_pixel_ratio=0.06647`,
+  `compose_shader_noise_bad_pixel_ratio=0.06845`, and `compose_shader_turbulence_bad_pixel_ratio=0.07863`. This is
+  focused descriptor/lifecycle change 10 after the 2026-06-14 07:55 full parity sweep; the next validation step is the
+  batched broad parity sweep:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260614-092014/suite.tsv`.
 - 2026-06-14 focused parity lifecycle hardening for `parity-resize-turbulence-shader`: the latest broad parity report
   showed stable resize-path destination migration markers while the row only asserted Skiko surface/cache markers plus
   shader-handle reuse. Magic Jewel added `EXPECT_MIN_JBR_IMAGE_CACHE_CLEARS=1` and
