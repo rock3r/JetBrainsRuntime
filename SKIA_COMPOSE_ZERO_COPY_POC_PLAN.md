@@ -29,6 +29,15 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   failed before frames because Gradle could not create its wrapper lock under `~/.gradle`; the escalated serial rerun
   passed. Disk free was about 115Gi after the run:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260615-004232/matrix.tsv`.
+- Narrow artifact/benchmark validation refreshed after the post-sweep compatibility matrix. Required artifact matrix
+  `CASE_GROUPS=required EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-artifact-matrix.sh` passed 2/2:
+  `current-all` had no fallback and 316 command frames, while `missing-public-api` took the expected single public-API
+  fallback with zero command frames; both rows reported `background_window=true`. Command benchmark smoke
+  `CASES=commands ./scripts/jbr-skia-benchmark-suite.sh` passed with no fallback, zero picture frames, 3,129 command
+  frames, `app_new_fps=156.4`, and `jbr_command_fps=156.4`. This was intentionally narrow and does not advance any
+  focused change counter:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260615-011346/matrix.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-benchmark-suite/20260615-011452/suite.tsv`.
 - Batched full command-probe validation refreshed after ten focused command-probe hardenings:
   `EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-command-probe-suite.sh` passed 549/549 with
   `fallback_sum=350`, 80 unsupported rows, 77,679 JBR picture frames, and 152,941 JBR command frames. This resets the

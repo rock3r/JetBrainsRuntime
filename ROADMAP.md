@@ -39,6 +39,16 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel refreshed the narrow post-matrix artifact/benchmark checks. Required artifact matrix
+  `CASE_GROUPS=required EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-artifact-matrix.sh` passed 2/2:
+  `current-all` replayed 316 command frames with no fallback, and `missing-public-api` took the expected single
+  public-API fallback with zero command frames; both rows kept `background_window=true`. Command benchmark smoke
+  `CASES=commands ./scripts/jbr-skia-benchmark-suite.sh` passed with no fallback, zero picture frames, 3,129 command
+  frames, `app_new_fps=156.4`, and `jbr_command_fps=156.4`. These were narrow post-compatibility checks only; broad
+  command/parity sweeps remain deferred until the usual focused-change cadence or an ABI/capability gate. Disk free
+  was about 115Gi:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260615-011346/matrix.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-benchmark-suite/20260615-011452/suite.tsv`.
 - Magic Jewel refreshed the post-command-sweep compatibility matrix after the latest full command-probe sweep.
   `EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-compatibility-matrix.sh` passed 57/57 with
   `fallback_sum=56`, 229 JBR command frames from `happy`, and `background_window=true` on all 57 rows. The matrix
