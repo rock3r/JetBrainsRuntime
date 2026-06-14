@@ -22,6 +22,13 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   only until roughly ten more meaningful command-probe changes or an ABI/capability gate. Disk free was about 118Gi
   after the run:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260614-181002/suite.tsv`.
+- Post-sweep compatibility matrix refreshed after that full command-probe sweep:
+  `EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-compatibility-matrix.sh` passed 57/57 with
+  `fallback_sum=56`, 229 JBR command frames from `happy`, and `background_window=true` on all rows. This rechecked the
+  ABI/native ABI, command capability, public API, and current capability fallback gates. A sandboxed first attempt
+  failed before frames because Gradle could not create its wrapper lock under `~/.gradle`; the escalated serial rerun
+  passed. Disk free was about 115Gi after the run:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260615-004232/matrix.tsv`.
 - Batched full command-probe validation refreshed after ten focused command-probe hardenings:
   `EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-command-probe-suite.sh` passed 549/549 with
   `fallback_sum=350`, 80 unsupported rows, 77,679 JBR picture frames, and 152,941 JBR command frames. This resets the

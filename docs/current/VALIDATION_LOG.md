@@ -5,6 +5,16 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-15 post-command-sweep compatibility matrix refresh:
+  `EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-compatibility-matrix.sh` passed 57/57. Aggregate:
+  `fallback_sum=56`, 229 JBR command frames from `happy`, and `background_window=true` on all 57 rows. The matrix
+  rechecked ABI mismatch, native ABI mismatch, command capability low/high mismatches, public API absence, and the
+  current gradient, text/font, shader/filter/effect/path/transform/image/vertex capability fallback gates after the
+  2026-06-14 18:10 full command-probe sweep. A first sandboxed attempt at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260615-004143/` failed before
+  producing frames because Gradle could not create its wrapper lock under `~/.gradle`; the escalated serial rerun
+  passed. Disk free was about 115Gi after the successful run:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260615-004232/matrix.tsv`.
 - 2026-06-14 cadence-triggered full command-probe sweep after ten focused command-probe hardenings for shader
   descriptor migration and native-font migration rows:
   `EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-command-probe-suite.sh` passed 549/549. Aggregate:
