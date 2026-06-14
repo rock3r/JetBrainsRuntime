@@ -5,6 +5,18 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-14 cadence-triggered full command-probe sweep after ten focused command-probe hardenings for shader
+  descriptor migration and native-font migration rows:
+  `EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-command-probe-suite.sh` passed 549/549. Aggregate:
+  `fallback_sum=350`, 79 unsupported rows, 65,039 JBR picture frames, and 109,771 JBR command frames. The sweep covered
+  the newly tightened shader, color-shader, noise-shader, turbulence-shader, composite-noise shader, generic native-font,
+  loaded native-font, resource native-font, system native-font, and forced-context custom-font text/image migration
+  sentinels, plus the existing invalid stream, text/font, shader/filter descriptor, RuntimeEffect, graphics-layer,
+  save-layer, transform, vertex, and fallback coverage. This resets the focused command-probe change counter to zero;
+  next per-change command-probe validation should stay exact-row/tiny-group, with the next full command-probe sweep
+  deferred until roughly ten more meaningful command-probe changes or an ABI/capability gate. Disk free was about 118Gi
+  after the run:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260614-181002/suite.tsv`.
 - 2026-06-14 focused command-probe lifecycle hardening for the forced-context custom-font/text-image row:
   `commands-forced-context-native-custom-font-text-image` now asserts `EXPECT_MIN_JBR_IMAGE_CACHE_CLEARS=1` and
   `EXPECT_MIN_JBR_SCOPED_IMAGE_CACHE_CLEARS=1` alongside its existing image-ref, surface-change, and command-cache

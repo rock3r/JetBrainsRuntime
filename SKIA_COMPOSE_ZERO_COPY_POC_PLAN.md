@@ -14,6 +14,14 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - ABI 106 artifacts are current across JBR private API, JBR API mirror, Skiko, CMP, and Magic Jewel.
 - Validation should be batched to keep iteration cost under control: use exact cases or tiny focused groups per change,
   and reserve broad command/screenshot/matrix sweeps for every ~10 meaningful changes or explicit ABI/capability gates.
+- Batched full command-probe validation refreshed after ten focused command-probe hardenings for shader descriptor
+  migration and native-font migration rows:
+  `EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-command-probe-suite.sh` passed 549/549 with
+  `fallback_sum=350`, 79 unsupported rows, 65,039 JBR picture frames, and 109,771 JBR command frames. This resets the
+  focused command-probe change counter to zero; keep subsequent per-change command-probe validation exact-row/tiny-group
+  only until roughly ten more meaningful command-probe changes or an ABI/capability gate. Disk free was about 118Gi
+  after the run:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260614-181002/suite.tsv`.
 - Batched full command-probe validation refreshed after ten focused command-probe hardenings:
   `EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-command-probe-suite.sh` passed 549/549 with
   `fallback_sum=350`, 80 unsupported rows, 77,679 JBR picture frames, and 152,941 JBR command frames. This resets the

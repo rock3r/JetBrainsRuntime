@@ -39,6 +39,16 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel completed the cadence-triggered full command-probe sweep after ten focused command-probe hardenings for
+  shader descriptor migration and native-font migration rows.
+  `EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-command-probe-suite.sh` passed 549/549 with
+  `fallback_sum=350`, 79 unsupported rows, 65,039 JBR picture frames, and 109,771 JBR command frames. The sweep covered
+  the newly tightened shader, color-shader, noise-shader, turbulence-shader, composite-noise shader, generic-font,
+  loaded-font, resource-font, system-font, and custom-font migration sentinels alongside the existing command/fallback
+  coverage. This resets the focused command-probe counter to zero; keep subsequent per-change command validation
+  exact-row/tiny-group only until roughly ten more meaningful changes or an ABI/capability gate. Disk free was about
+  118Gi after the run:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260614-181002/suite.tsv`.
 - Magic Jewel tightened `commands-forced-context-native-custom-font-text-image` with JBR image-cache clear sentinels.
   Exact command-probe validation
   `EXPECT_SCREENSHOT_ASSERTION=false CASES="commands-forced-context-native-custom-font-text-image" ./scripts/jbr-skia-command-probe-suite.sh`
