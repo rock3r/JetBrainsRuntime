@@ -25,6 +25,15 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   exact-row/tiny-group only until the next local-day slot or an explicit ABI/capability gate. Disk free was about
   209Gi:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260615-103914/suite.tsv`.
+- Focused command-probe lifecycle hardening continued with graphics-layer scale/translate resize and forced-context
+  migration rows. Magic Jewel now includes `commands-resize-graphics-layer-scale-translate` and
+  `commands-forced-context-graphics-layer-scale-translate`, asserting destination migration, command-cache clear, JBR
+  image-cache and scoped image-cache clears while graphics-layer scale and translation are enabled. Exact two-row
+  validation passed with no fallback, no unsupported reasons, zero picture frames, 1,384 and 1,305 JBR command frames,
+  one surface change and one command-cache clear per row, one JBR image-cache clear per row, and one scoped
+  image-cache clear per row. This is focused command-probe lifecycle change 18 after the 2026-06-15 daily broad slot,
+  so broad validation remains daily-capped:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260615-191035/suite.tsv`.
 - Focused command-probe lifecycle hardening continued with graphics-layer combined rotation X/Y resize and
   forced-context migration rows. Magic Jewel now includes `commands-resize-graphics-layer-rotationxy` and
   `commands-forced-context-graphics-layer-rotationxy`, asserting destination migration, command-cache clear, JBR
