@@ -5,6 +5,22 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-15 focused command-probe lifecycle hardening for direct RuntimeEffect shader migration rows: Magic Jewel added
+  `commands-resize-runtime-effect-shader` and `commands-forced-context-runtime-effect-shader`. Both rows assert
+  destination migration, command-cache clear, JBR image-cache clear, scoped image-cache clear, RuntimeEffect
+  source-cache reuse, and shader-handle redefinition/use markers. Focused validation
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES="commands-resize-runtime-effect-shader commands-forced-context-runtime-effect-shader" ./scripts/jbr-skia-command-probe-suite.sh`
+  passed 2/2 with `fallback_new_count=0`, `unsupported=none`, and zero picture frames. The resize row reported 833 JBR
+  command frames, one JBR image-cache clear, one scoped image-cache clear, 1,245 shader-handle definitions, 1,239
+  shader-handle uses, 17 shader-handle evictions, 1,238 RuntimeEffect source-cache hits, one source-cache miss, one
+  surface-change marker, and one command-cache clear marker. The forced-context row reported 999 JBR command frames,
+  one JBR image-cache clear, one scoped image-cache clear, 1,484 shader-handle definitions, 1,480 shader-handle uses,
+  456 shader-handle evictions, 1,479 RuntimeEffect source-cache hits, one source-cache miss, one surface-change marker,
+  and one command-cache clear marker. The dynamic shader intentionally produced many shader-handle definitions and
+  evictions, so these rows assert minimum redefinition/use markers without a max definition cap. This is focused
+  command-probe lifecycle change 6 after the 2026-06-15 post-sweep smoke refresh, so broad command-probe validation
+  remains deferred until roughly four more focused changes or an ABI/capability gate. Disk free was about 173Gi:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260615-100848/suite.tsv`.
 - 2026-06-15 focused command-probe lifecycle hardening for RuntimeEffect color-filter child migration rows: Magic Jewel
   added `commands-resize-runtime-effect-color-filter-child` and
   `commands-forced-context-runtime-effect-color-filter-child`. Both rows assert destination migration, command-cache
