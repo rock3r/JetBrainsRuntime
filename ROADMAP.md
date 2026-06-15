@@ -42,6 +42,16 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel added resize and forced-context command-probe coverage for aggregate gradient surface/path migration:
+  `commands-resize-gradient-surfaces`, `commands-forced-context-gradient-surfaces`,
+  `commands-resize-gradient-paths`, and `commands-forced-context-gradient-paths` now assert destination migration,
+  command-cache clear, JBR image-cache clear, and scoped image-cache clear markers while the base aggregate gradient
+  rows remain on command replay. Exact validation
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES="commands-resize-gradient-surfaces commands-forced-context-gradient-surfaces commands-resize-gradient-paths commands-forced-context-gradient-paths" ./scripts/jbr-skia-command-probe-suite.sh`
+  passed 4/4 with no fallback, no unsupported reasons, zero picture frames, and 1,472/1,434/1,021/1,191 JBR command
+  frames. This is focused command-probe lifecycle change 48 after the 2026-06-15 daily broad validation slot; broad
+  validation remains deferred until the next local-day broad slot or an explicit override:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260615-220943/suite.tsv`.
 - Magic Jewel added resize and forced-context command-probe coverage for point primitive migration:
   `commands-resize-point-lines`, `commands-forced-context-point-lines`, `commands-resize-point-dots`, and
   `commands-forced-context-point-dots` now assert destination migration, command-cache clear, JBR image-cache clear,

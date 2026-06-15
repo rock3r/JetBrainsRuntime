@@ -5,6 +5,18 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-15 focused command-probe lifecycle hardening for aggregate gradient surface/path migration rows: Magic Jewel
+  added `commands-resize-gradient-surfaces`, `commands-forced-context-gradient-surfaces`,
+  `commands-resize-gradient-paths`, and `commands-forced-context-gradient-paths`. Exact validation
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES="commands-resize-gradient-surfaces commands-forced-context-gradient-surfaces commands-resize-gradient-paths commands-forced-context-gradient-paths" ./scripts/jbr-skia-command-probe-suite.sh`
+  passed 4/4 with `fallback_new_count=0`, `unsupported=none`, and zero picture frames. The aggregate gradient-surface
+  resize and forced-context rows reported 1,472 and 1,434 JBR command frames; the aggregate gradient-path resize and
+  forced-context rows reported 1,021 and 1,191 JBR command frames. Every row reported one JBR image-cache clear, one
+  scoped image-cache clear, one surface-change marker, and one command-cache clear marker; resize rows reported
+  same-context surface changes, while forced-context rows reported context-change markers. This is focused
+  command-probe lifecycle change 48 after the 2026-06-15 daily broad validation slot; broad validation remains deferred
+  until the next local-day broad slot or an explicit override:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260615-220943/suite.tsv`.
 - 2026-06-15 focused command-probe lifecycle hardening for point primitive migration rows: Magic Jewel added
   `commands-resize-point-lines`, `commands-forced-context-point-lines`, `commands-resize-point-dots`, and
   `commands-forced-context-point-dots`. Exact validation
