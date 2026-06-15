@@ -5,6 +5,19 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-15 Magic Jewel daily broad-validation cap enforcement: added
+  `scripts/jbr-skia-daily-validation-guard.sh` and wired it into the default command-probe sweep, screenshot parity
+  suite, compatibility matrix, and artifact matrix. The guard uses one global `broad.YYYY-MM-DD.stamp` under
+  `out/.jbr-skia-daily-validation/`, blocks a second broad runner on the same local day with exit code 3, and leaves
+  exact `CASES`, focused `CASE_GROUPS`, listing modes, and artifact-matrix dry runs free for narrow validation. The
+  current 2026-06-15 slot was seeded from the already-completed
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260615-144955/suite.tsv` broad
+  sweep. Narrow guard validation only: `bash -n` passed for the helper and all four guarded scripts; a default
+  command-probe run against a pre-existing temp stamp exited 3 before launching cases; and
+  `CASES=commands-live-animation LIST_CASE_COUNT=true` still returned `1` under that stamp. Additional no-work checks:
+  `LIST_CASE_COUNT=true ./scripts/jbr-skia-compatibility-matrix.sh` returned `57`, artifact matrix `--dry-run`
+  enumerated required/skipped rows only, and a default compatibility-matrix invocation against the seeded real
+  2026-06-15 stamp exited 3 before launching any matrix rows.
 - 2026-06-15 focused command-probe lifecycle hardening for plain color-matrix filter migration rows: Magic Jewel added
   `commands-resize-color-matrix-filter` and `commands-forced-context-color-matrix-filter`. Exact validation
   `EXPECT_SCREENSHOT_ASSERTION=false CASES="commands-resize-color-matrix-filter commands-forced-context-color-matrix-filter" ./scripts/jbr-skia-command-probe-suite.sh`

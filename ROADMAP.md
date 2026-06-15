@@ -33,13 +33,24 @@ This is the small working roadmap for the current PoC. The full historical check
   transforms.
 - Validation cadence: run very narrow validation for each focused change. Broad command sweeps, screenshot sweeps, and
   full matrices are capped at one broad validation slot per local calendar day unless the user explicitly asks for
-  another one or an ABI/capability break needs an emergency gate.
+  another one or an ABI/capability break needs an emergency gate. Magic Jewel's broad runners enforce this with
+  `scripts/jbr-skia-daily-validation-guard.sh`; use exact `CASES`/`CASE_GROUPS` for normal iteration, or
+  `JBR_SKIA_ALLOW_EXTRA_BROAD_VALIDATION=true` only for an explicit override.
 - Keep branches committed and pushed to the user's GitHub forks at each major step.
 - Keep the top-level plan/roadmap compact. Move verbose historical narrative into `docs/history/` or focused
   `docs/current/` ledgers when these files start to crowd agent context.
 
 ## Latest Validations
 
+- Magic Jewel installed a shared daily broad-validation guard across the default command-probe sweep, screenshot parity
+  suite, compatibility matrix, and artifact matrix. The guard writes a global local-date stamp under
+  `out/.jbr-skia-daily-validation/` before a broad run starts and blocks additional broad runners that day with exit
+  code 3; exact `CASES`, focused `CASE_GROUPS`, listing modes, and artifact-matrix dry runs remain unblocked. Today's
+  real slot was seeded from the existing 2026-06-15 `20260615-144955` broad command sweep, so broad validation remains
+  unavailable for June 15 unless explicitly overridden with `JBR_SKIA_ALLOW_EXTRA_BROAD_VALIDATION=true`. Validation of
+  the guard was intentionally narrow: `bash -n` passed for the helper and all four guarded scripts; a temp-stamp default
+  command-probe invocation exited 3 before launching cases; `CASES=commands-live-animation LIST_CASE_COUNT=true`
+  returned `1` under the same temp stamp.
 - Magic Jewel added resize and forced-context command-probe coverage for plain color-matrix filter migration:
   `commands-resize-color-matrix-filter` and `commands-forced-context-color-matrix-filter` now assert destination
   migration, command-cache clear, JBR image-cache clear, scoped image-cache clear, and stable effect-handle

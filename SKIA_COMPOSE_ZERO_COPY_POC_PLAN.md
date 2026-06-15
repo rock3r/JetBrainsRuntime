@@ -14,7 +14,10 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - ABI 106 artifacts are current across JBR private API, JBR API mirror, Skiko, CMP, and Magic Jewel.
 - Validation should be batched to keep iteration cost under control: use exact cases or tiny focused groups per change,
   and cap broad command sweeps, screenshot sweeps, and full matrices at one broad validation slot per local calendar
-  day unless the user explicitly asks for another one or an ABI/capability break needs an emergency gate.
+  day unless the user explicitly asks for another one or an ABI/capability break needs an emergency gate. Magic Jewel
+  now enforces that cap with `scripts/jbr-skia-daily-validation-guard.sh` for default command-probe sweeps, screenshot
+  parity suites, compatibility matrices, and artifact matrices. Today's existing 2026-06-15 broad command sweep was
+  seeded into the guard stamp, so continue with exact `CASES`/small `CASE_GROUPS` only until the next local-day slot.
 - Daily-capped broad command-probe validation refreshed after ten focused shader/RuntimeEffect lifecycle changes:
   `EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-command-probe-suite.sh` passed 589/589 with
   `fallback_sum=350`, 79 unsupported rows, 80,698 JBR picture frames, and 202,105 JBR command frames. This is the
