@@ -5,6 +5,22 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-15 focused command-probe lifecycle hardening for sweep-gradient shader plus color-filter migration rows:
+  Magic Jewel added `commands-sweep-gradient-shader-color-filter`,
+  `commands-resize-sweep-gradient-shader-color-filter`, and
+  `commands-forced-context-sweep-gradient-shader-color-filter`. Exact validation
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES="commands-sweep-gradient-shader-color-filter commands-resize-sweep-gradient-shader-color-filter commands-forced-context-sweep-gradient-shader-color-filter" ./scripts/jbr-skia-command-probe-suite.sh`
+  passed 3/3 with `fallback_new_count=0`, `unsupported=none`, and zero picture frames. The base row reported 656 JBR
+  command frames, one effect-handle definition, two shader-handle definitions, 1,042 shader-handle uses, and 1,040
+  shader-handle cache hits. The resize row reported 848 JBR command frames, one JBR image-cache clear, one scoped
+  image-cache clear, two effect-handle definitions, three effect-handle uses, one effect-handle cache hit, six
+  shader-handle definitions, 1,269 shader-handle uses, 1,263 shader-handle cache hits, one surface-change marker, and
+  one command-cache clear marker. The forced-context row reported 622 JBR command frames, one JBR image-cache clear,
+  one scoped image-cache clear, two effect-handle definitions, two effect-handle uses, four shader-handle definitions,
+  1,046 shader-handle uses, 1,042 shader-handle cache hits, one surface-change marker, and one command-cache clear
+  marker. This is focused command-probe lifecycle change 1 after the 2026-06-15 daily broad validation slot, so
+  continue with exact-row/tiny-group validation only:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260615-171845/suite.tsv`.
 - 2026-06-15 daily-capped broad command-probe validation after ten focused shader/RuntimeEffect lifecycle changes:
   `EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-command-probe-suite.sh` passed 589/589 with `fallback_sum=350`,
   79 unsupported rows, 80,698 JBR picture frames, and 202,105 JBR command frames:

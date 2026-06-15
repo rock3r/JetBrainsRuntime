@@ -40,6 +40,16 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel added command-probe coverage for sweep-gradient shader plus color-filter replay and destination
+  migration: `commands-sweep-gradient-shader-color-filter`,
+  `commands-resize-sweep-gradient-shader-color-filter`, and
+  `commands-forced-context-sweep-gradient-shader-color-filter` now assert shader/effect-handle replay plus resize and
+  forced-context cache migration markers. Exact validation
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES="commands-sweep-gradient-shader-color-filter commands-resize-sweep-gradient-shader-color-filter commands-forced-context-sweep-gradient-shader-color-filter" ./scripts/jbr-skia-command-probe-suite.sh`
+  passed 3/3 with no fallback, no unsupported reasons, zero picture frames, and 656/848/622 JBR command frames. This
+  is focused command-probe lifecycle change 1 after the 2026-06-15 daily broad validation slot, so keep subsequent
+  validation exact-row/tiny-group only:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260615-171845/suite.tsv`.
 - Magic Jewel refreshed the daily-capped broad command-probe validation after ten focused shader/RuntimeEffect lifecycle
   changes. `EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-command-probe-suite.sh` passed 589/589 with
   `fallback_sum=350`, 79 unsupported rows, 80,698 JBR picture frames, and 202,105 JBR command frames. This is the
