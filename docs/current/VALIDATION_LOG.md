@@ -5,6 +5,17 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-16 exact RuntimeEffect color-filter child screenshot-parity smoke: Magic Jewel ran
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES=parity-runtime-effect-color-filter-child ./scripts/jbr-skia-screenshot-parity-suite.sh`.
+  The exact row passed with `fallback_new_count=0`, `unsupported=none`, 786 CMP recorder frames, 785 Skiko command
+  frames, 785 JBR command frames, zero picture frames, screenshot status passed, `avg_delta=2.122`,
+  `bad_pixel_ratio=0.05041`, `header_buttons_bad_pixel_ratio=0.00381`, `compose_bad_pixel_ratio=0.07523`,
+  `jbr_runtime_effect_cache_hit_frames=1366`, `jbr_runtime_effect_cache_miss_frames=1`,
+  `jbr_effect_handle_define_frames=32`, and `jbr_effect_handle_use_frames=1367`. Diff image:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-010333/parity-runtime-effect-color-filter-child/report/parity-diff.png`.
+  The output directory was 4.2M, `magic-jewel/out` remained 121G, and disk free was about 200Gi. This was not the full
+  screenshot-parity suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-010333/suite.tsv`.
 - 2026-06-16 exact RuntimeEffect color-filter screenshot-parity smoke: Magic Jewel ran
   `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES=parity-runtime-effect-color-filter ./scripts/jbr-skia-screenshot-parity-suite.sh`.
   The exact row passed with `fallback_new_count=0`, `unsupported=none`, 849 CMP recorder frames, 848 Skiko command
