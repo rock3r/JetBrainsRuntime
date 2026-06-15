@@ -42,6 +42,15 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel added resize and forced-context command-probe coverage for plain lighting filter migration:
+  `commands-resize-lighting-filter` and `commands-forced-context-lighting-filter` now assert destination migration,
+  command-cache clear, JBR image-cache clear, scoped image-cache clear, and stable effect-handle
+  redefine/reuse/cache-hit markers. Exact validation
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES="commands-resize-lighting-filter commands-forced-context-lighting-filter" ./scripts/jbr-skia-command-probe-suite.sh`
+  passed 2/2 with no fallback, no unsupported reasons, zero picture frames, and 994/1,361 JBR command frames. This is
+  focused command-probe lifecycle change 13 after the 2026-06-15 daily broad validation slot; broad validation remains
+  deferred until the next local-day broad slot or an explicit override:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260615-183843/suite.tsv`.
 - Magic Jewel installed a shared daily broad-validation guard across the default command-probe sweep, screenshot parity
   suite, compatibility matrix, and artifact matrix. The guard writes a global local-date stamp under
   `out/.jbr-skia-daily-validation/` before a broad run starts and blocks additional broad runners that day with exit
