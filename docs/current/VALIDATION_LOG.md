@@ -5,6 +5,18 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-15 focused command-probe lifecycle hardening for point primitive migration rows: Magic Jewel added
+  `commands-resize-point-lines`, `commands-forced-context-point-lines`, `commands-resize-point-dots`, and
+  `commands-forced-context-point-dots`. Exact validation
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES="commands-resize-point-lines commands-forced-context-point-lines commands-resize-point-dots commands-forced-context-point-dots" ./scripts/jbr-skia-command-probe-suite.sh`
+  passed 4/4 with `fallback_new_count=0`, `unsupported=none`, and zero picture frames. The point-lines resize and
+  forced-context rows reported 1,545 and 1,134 JBR command frames; the point-dots resize and forced-context rows
+  reported 1,526 and 1,622 JBR command frames. Every row reported one JBR image-cache clear, one scoped image-cache
+  clear, one surface-change marker, and one command-cache clear marker; resize rows reported same-context surface
+  changes, while forced-context rows reported context-change markers. This is focused command-probe lifecycle change 47
+  after the 2026-06-15 daily broad validation slot; broad validation remains deferred until the next local-day broad
+  slot or an explicit override:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260615-220408/suite.tsv`.
 - 2026-06-15 focused command-probe lifecycle hardening for concat/skew transform migration rows: Magic Jewel added
   `commands-resize-concat-transform`, `commands-forced-context-concat-transform`, `commands-resize-skew-transform`,
   and `commands-forced-context-skew-transform`. Exact validation
