@@ -5,6 +5,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-15 optional old-artifact availability check: Magic Jewel ran
+  `CASE_GROUPS=optional-old ./scripts/jbr-skia-artifact-matrix.sh` without launching the app. The matrix recorded all
+  five optional old-artifact rows as skipped: `old-api-current-runtime` needs `OLD_JBR_API_SHIM`,
+  `old-native-current-api` needs `OLD_JBR_SKIA_LIB`, `old-desktop-current-runtime` needs `OLD_DESKTOP_PATCH`,
+  `old-skiko-current-jbr` needs `OLD_SKIKO_VERSION`, and `old-cmp-current-jbr` needs `OLD_CMP_OUT`. No broad
+  validation was launched:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260615-233944/matrix.tsv`.
 - 2026-06-15 artifact missing-public-API fallback smoke: Magic Jewel ran
   `EXPECT_SCREENSHOT_ASSERTION=false CASES=missing-public-api ./scripts/jbr-skia-artifact-matrix.sh`. The exact row
   passed with expected `public-api-missing` fallback, `fallback_new_count=1`, `unsupported=none`, background window

@@ -43,6 +43,12 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel recorded optional old-artifact availability without launching the app:
+  `CASE_GROUPS=optional-old ./scripts/jbr-skia-artifact-matrix.sh` produced a skipped-row matrix for all five optional
+  rows because no old artifact inputs were configured: `OLD_JBR_API_SHIM`, `OLD_JBR_SKIA_LIB`, `OLD_DESKTOP_PATCH`,
+  `OLD_SKIKO_VERSION`, and `OLD_CMP_OUT` are still needed to run those rows. No broad validation or app launch was
+  performed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260615-233944/matrix.tsv`.
 - Magic Jewel ran a narrow artifact-matrix fallback smoke for the missing public API shim artifact:
   `EXPECT_SCREENSHOT_ASSERTION=false CASES=missing-public-api ./scripts/jbr-skia-artifact-matrix.sh` passed 1/1 with
   expected `public-api-missing` fallback, `fallback_new_count=1`, `unsupported=none`, background window shown, 767 CMP
