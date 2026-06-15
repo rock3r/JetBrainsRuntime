@@ -51,6 +51,16 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   image-cache clear per row, and one scoped image-cache clear per row. This is focused command-probe lifecycle change 3
   after the 2026-06-15 daily broad slot, so broad validation remains daily-capped:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260615-172949/suite.tsv`.
+- Focused command-probe lifecycle hardening continued with radial-gradient shader plus color-filter replay and
+  migration rows. Magic Jewel now includes `commands-radial-gradient-shader-color-filter`,
+  `commands-resize-radial-gradient-shader-color-filter`, and
+  `commands-forced-context-radial-gradient-shader-color-filter`, asserting shader/effect-handle replay plus resize and
+  forced-context cache migration markers. Exact three-row validation passed with no fallback, no unsupported reasons,
+  zero picture frames, 953/451/1,046 JBR command frames, one JBR image-cache clear and one scoped image-cache clear on
+  each migration row, one to two effect-handle definitions, two to six shader-handle definitions, and shader-handle
+  cache hits. This is focused command-probe lifecycle change 4 after the 2026-06-15 daily broad slot, so broad
+  validation remains daily-capped:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260615-173931/suite.tsv`.
 - Batched command-probe validation refreshed after ten focused graphics-layer render-effect lifecycle hardenings. The
   original full sweep was interrupted after 564/569 rows had passed; after rebuilding the missing `/tmp` JBR API shim
   and native bridge, the five missing tail rows passed in a scoped recovery run. Combined coverage passed 569/569 with
