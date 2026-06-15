@@ -73,6 +73,14 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   expected `SKIKO_JBR_INTEROP_FALLBACK reason=native-abi-mismatch` marker in `new.log`. This exact row strengthens ABI
   fallback validation under the daily cap without running the full compatibility matrix:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260615-232258/matrix.tsv`.
+- Magic Jewel ran a narrow core-handshake compatibility fallback smoke:
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES="abi-mismatch command-capability-mismatch command-capability-high-mismatch" ./scripts/jbr-skia-compatibility-matrix.sh`
+  passed 3/3 after an initial sandbox-only Gradle wrapper lock failure. Each exact row produced one expected fallback,
+  no unsupported reasons, background window shown, zero Skiko/JBR command frames, zero picture frames, screenshot
+  status passed, and the expected fallback marker in `new.log`; CMP recorder frames were 869 for ABI mismatch, 464 for
+  low-word command capability mismatch, and 838 for high-word command capability mismatch. This keeps compatibility
+  validation moving under the daily cap without running the full matrix:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260615-232825/matrix.tsv`.
 - Magic Jewel tightened daily broad-validation guard startup for bare command-probe and screenshot-parity default runs.
   Cheap guard validation only: `./scripts/jbr-skia-command-probe-suite.sh` and
   `./scripts/jbr-skia-screenshot-parity-suite.sh` exit 3 immediately against the already-consumed 2026-06-15 broad

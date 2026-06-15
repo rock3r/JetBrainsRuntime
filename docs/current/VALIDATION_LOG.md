@@ -5,6 +5,14 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-15 core-handshake compatibility fallback smoke: the first sandboxed exact-row attempt hit only the Gradle
+  wrapper lock in `~/.gradle`, then Magic Jewel reran
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES="abi-mismatch command-capability-mismatch command-capability-high-mismatch" ./scripts/jbr-skia-compatibility-matrix.sh`
+  outside the sandbox. The exact three-row matrix passed with one expected fallback per row, `unsupported=none`,
+  background window shown, zero Skiko command frames, zero JBR command frames, zero picture frames, screenshot status
+  passed, and fallback markers in `new.log` for `abi-mismatch` plus both low/high `command-capability-mismatch` rows.
+  CMP recorder frames were 869, 464, and 838 respectively. This was not the full compatibility matrix:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260615-232825/matrix.tsv`.
 - 2026-06-15 native-ABI compatibility fallback smoke: Magic Jewel ran
   `EXPECT_SCREENSHOT_ASSERTION=false CASES=native-abi-mismatch ./scripts/jbr-skia-compatibility-matrix.sh`. The exact
   row passed with `expect_command_fallback_reason=native-abi-mismatch`, `fallback_new_count=1`, `unsupported=none`,

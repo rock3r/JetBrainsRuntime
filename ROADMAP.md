@@ -43,6 +43,13 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel ran a narrow compatibility fallback smoke for the remaining core handshake gates:
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES="abi-mismatch command-capability-mismatch command-capability-high-mismatch" ./scripts/jbr-skia-compatibility-matrix.sh`
+  passed 3/3 after an initial sandbox-only Gradle wrapper lock failure. The exact rows reported one expected fallback
+  each, `unsupported=none`, background window shown, zero Skiko/JBR command frames, zero picture frames, screenshot
+  status passed, and fallback markers for `abi-mismatch` plus low/high `command-capability-mismatch`. CMP recorder
+  frames were 869, 464, and 838. This was a three-row smoke, not the full compatibility matrix:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260615-232825/matrix.tsv`.
 - Magic Jewel ran a narrow compatibility fallback smoke for the native ABI gate:
   `EXPECT_SCREENSHOT_ASSERTION=false CASES=native-abi-mismatch ./scripts/jbr-skia-compatibility-matrix.sh` passed 1/1
   with `expect_command_fallback_reason=native-abi-mismatch`, `fallback_new_count=1`, `unsupported=none`, background
