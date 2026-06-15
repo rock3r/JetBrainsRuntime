@@ -42,6 +42,16 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel added resize and forced-context command-probe coverage for linear-gradient path blend-mode migration:
+  `commands-resize-linear-gradient-path-blend-mode` and
+  `commands-forced-context-linear-gradient-path-blend-mode` now assert destination migration, command-cache clear, JBR
+  image-cache clear, and scoped image-cache clear markers while the base linear-gradient path blend-mode row remains
+  on command replay. Exact validation
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES="commands-resize-linear-gradient-path-blend-mode commands-forced-context-linear-gradient-path-blend-mode" ./scripts/jbr-skia-command-probe-suite.sh`
+  passed 2/2 with no fallback, no unsupported reasons, zero picture frames, and 1,642/1,161 JBR command frames. This
+  is focused command-probe lifecycle change 50 after the 2026-06-15 daily broad validation slot; broad validation
+  remains deferred until the next local-day broad slot or an explicit override:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260615-222943/suite.tsv`.
 - Magic Jewel tightened the daily broad-validation guard so bare command-probe and screenshot-parity default runs check
   the once-per-local-day stamp before expanding their large default case lists. Cheap guard validation only:
   `./scripts/jbr-skia-command-probe-suite.sh` and `./scripts/jbr-skia-screenshot-parity-suite.sh` now exit 3
