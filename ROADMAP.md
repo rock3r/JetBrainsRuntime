@@ -40,6 +40,14 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel added resize and forced-context command-probe coverage for saveLayer tint color-filter migration:
+  `commands-resize-save-layer-filter` and `commands-forced-context-save-layer-filter` now assert destination migration,
+  command-cache clear, JBR image-cache clear, and scoped image-cache clear markers. Exact validation
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES="commands-resize-save-layer-filter commands-forced-context-save-layer-filter" ./scripts/jbr-skia-command-probe-suite.sh`
+  passed 2/2 with no fallback, no unsupported reasons, zero picture frames, and 1,098/963 JBR command frames. This
+  saveLayer tint path reports zero effect-handle markers, so these rows intentionally assert the cache-migration
+  contract only. This is focused command-probe lifecycle change 9 after the 2026-06-15 daily broad validation slot:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260615-181209/suite.tsv`.
 - Magic Jewel added positive command-probe coverage for saveLayer color-matrix filtering and destination migration:
   `commands-save-layer-color-matrix-filter`, `commands-resize-save-layer-color-matrix-filter`, and
   `commands-forced-context-save-layer-color-matrix-filter` now assert color-filter effect-handle replay plus resize and
