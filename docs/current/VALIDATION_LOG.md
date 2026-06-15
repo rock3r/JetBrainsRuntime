@@ -5,6 +5,17 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-15 focused command-probe lifecycle hardening for plain image-shader migration rows: Magic Jewel added
+  `commands-resize-image-shader` and `commands-forced-context-image-shader`. Exact validation
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES="commands-resize-image-shader commands-forced-context-image-shader" ./scripts/jbr-skia-command-probe-suite.sh`
+  passed 2/2 with `fallback_new_count=0`, `unsupported=none`, and zero picture frames. The resize row reported 1,193
+  JBR command frames, one JBR image-cache clear, one scoped image-cache clear, one surface-change marker, one
+  command-cache clear marker, and ten image refs per command-recorder frame. The forced-context row reported 1,050 JBR
+  command frames, one JBR image-cache clear, one scoped image-cache clear, one surface-change marker, one command-cache
+  clear marker, and ten image refs per command-recorder frame. The current plain image-shader path reports image refs
+  rather than JBR shader-handle markers, so these rows intentionally assert the image-ref/cache-migration contract.
+  This is focused command-probe lifecycle change 3 after the 2026-06-15 daily broad validation slot:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260615-172949/suite.tsv`.
 - 2026-06-15 focused command-probe lifecycle hardening for image shader plus color-filter migration rows: Magic Jewel
   added `commands-resize-image-shader-color-filter` and `commands-forced-context-image-shader-color-filter`. Exact
   validation
