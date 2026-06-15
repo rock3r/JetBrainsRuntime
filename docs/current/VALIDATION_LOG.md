@@ -5,6 +5,18 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-15 daily broad-validation cadence tightening: Magic Jewel README and the JBR current docs now state that the
+  default command-probe sweep, screenshot parity suite, benchmark suite, compatibility matrix, and artifact matrix share
+  one local-day broad-validation slot. This explicitly supersedes the older "after ten focused changes" broad-sweep
+  rhythm. Normal iteration stays on exact `CASES=...` or small `CASE_GROUPS=...`; default-list `CASES_FROM`/`CASES_UNTIL`
+  launches count as broad validation; no-launch list helpers remain allowed; `JBR_SKIA_ALLOW_EXTRA_BROAD_VALIDATION=true`
+  is reserved for explicit user override or emergency ABI/capability gates. Cheap validation only:
+  `LIST_CASE_COUNT=true ./scripts/jbr-skia-command-probe-suite.sh` resolved 696 command-probe cases,
+  `LIST_CASE_GROUP_COUNTS=true ./scripts/jbr-skia-benchmark-suite.sh` reported `baseline=2` and `image-cache=3`, and
+  bare `./scripts/jbr-skia-command-probe-suite.sh` exited 3 before launch because the existing 2026-06-15 stamp was
+  already consumed by
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260615-144955`. No broad
+  validation was launched for this cadence update.
 - 2026-06-15 shader-descriptor compatibility fallback smoke: Magic Jewel ran
   `EXPECT_SCREENSHOT_ASSERTION=false CASES=shader-descriptor-capability-missing ./scripts/jbr-skia-compatibility-matrix.sh`.
   The exact row passed with expected `command-capability-mismatch` fallback, `fallback_new_count=1`,

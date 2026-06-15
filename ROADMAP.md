@@ -36,13 +36,19 @@ This is the small working roadmap for the current PoC. The full historical check
   explicitly asks for another one or an ABI/capability break needs an emergency gate. Magic Jewel's broad runners
   enforce this with `scripts/jbr-skia-daily-validation-guard.sh`; use exact `CASES`/`CASE_GROUPS` for normal iteration, or
   `JBR_SKIA_ALLOW_EXTRA_BROAD_VALIDATION=true` only for an explicit override. Default-list `CASES_FROM`/`CASES_UNTIL`
-  range launches count as broad validation; list-only range helpers remain allowed.
+  range launches count as broad validation; list-only range helpers remain allowed. This daily cap supersedes the
+  earlier "run a broad sweep every ten focused changes" checkpoint rhythm.
 - Keep branches committed and pushed to the user's GitHub forks at each major step.
 - Keep the top-level plan/roadmap compact. Move verbose historical narrative into `docs/history/` or focused
   `docs/current/` ledgers when these files start to crowd agent context.
 
 ## Latest Validations
 
+- Magic Jewel reaffirmed the once-per-local-day broad-validation cap without launching a broad run. No-launch helpers
+  reported 696 command-probe cases and the benchmark groups `baseline=2` / `image-cache=3`; a bare
+  `./scripts/jbr-skia-command-probe-suite.sh` exited 3 before launching because the existing 2026-06-15 stamp was
+  already consumed by `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260615-144955`.
+  The live docs now explicitly say the daily cap supersedes the older "every ten focused changes" broad-sweep rhythm.
 - Magic Jewel ran a narrow compatibility fallback smoke for the shader descriptor capability gate:
   `EXPECT_SCREENSHOT_ASSERTION=false CASES=shader-descriptor-capability-missing ./scripts/jbr-skia-compatibility-matrix.sh`
   passed 1/1 with expected `command-capability-mismatch` fallback, `fallback_new_count=1`, `unsupported=none`,
