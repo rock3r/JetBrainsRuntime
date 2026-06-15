@@ -5,6 +5,22 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-15 focused command-probe lifecycle hardening for surface gradient blend-mode migration rows: Magic Jewel
+  added `commands-resize-linear-gradient-blend-mode`, `commands-forced-context-linear-gradient-blend-mode`,
+  `commands-resize-radial-gradient-stroke-blend-mode`,
+  `commands-forced-context-radial-gradient-stroke-blend-mode`,
+  `commands-resize-sweep-gradient-round-rect-blend-mode`, and
+  `commands-forced-context-sweep-gradient-round-rect-blend-mode`. Exact validation
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES="commands-resize-linear-gradient-blend-mode commands-forced-context-linear-gradient-blend-mode commands-resize-radial-gradient-stroke-blend-mode commands-forced-context-radial-gradient-stroke-blend-mode commands-resize-sweep-gradient-round-rect-blend-mode commands-forced-context-sweep-gradient-round-rect-blend-mode" ./scripts/jbr-skia-command-probe-suite.sh`
+  passed 6/6 with `fallback_new_count=0`, `unsupported=none`, and zero picture frames. The linear-gradient resize and
+  forced-context rows reported 1,329 and 1,284 JBR command frames; the radial-gradient stroke resize and
+  forced-context rows reported 1,503 and 932 JBR command frames; the sweep-gradient round-rect resize and
+  forced-context rows reported 1,629 and 1,525 JBR command frames. Every row reported one JBR image-cache clear, one
+  scoped image-cache clear, one surface-change marker, and one command-cache clear marker; resize rows reported
+  same-context surface changes, while forced-context rows reported context-change markers. This is focused
+  command-probe lifecycle change 49 after the 2026-06-15 daily broad validation slot; broad validation remains deferred
+  until the next local-day broad slot or an explicit override:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260615-221607/suite.tsv`.
 - 2026-06-15 focused command-probe lifecycle hardening for aggregate gradient surface/path migration rows: Magic Jewel
   added `commands-resize-gradient-surfaces`, `commands-forced-context-gradient-surfaces`,
   `commands-resize-gradient-paths`, and `commands-forced-context-gradient-paths`. Exact validation

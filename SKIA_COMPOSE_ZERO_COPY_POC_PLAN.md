@@ -19,6 +19,18 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   sweeps, screenshot parity suites, benchmark suites, compatibility matrices, and artifact matrices. Today's existing
   2026-06-15 broad command sweep was seeded into the guard stamp, so continue with exact `CASES`/small `CASE_GROUPS`
   only until the next local-day slot.
+- Focused command-probe lifecycle hardening continued with surface gradient blend-mode migration rows. Magic Jewel now
+  includes `commands-resize-linear-gradient-blend-mode`, `commands-forced-context-linear-gradient-blend-mode`,
+  `commands-resize-radial-gradient-stroke-blend-mode`,
+  `commands-forced-context-radial-gradient-stroke-blend-mode`,
+  `commands-resize-sweep-gradient-round-rect-blend-mode`, and
+  `commands-forced-context-sweep-gradient-round-rect-blend-mode`, asserting destination migration, command-cache clear,
+  JBR image-cache and scoped image-cache clears while the base gradient blend-mode rows remain on command replay. Exact
+  six-row validation passed with no fallback, no unsupported reasons, zero picture frames, 1,329, 1,284, 1,503, 932,
+  1,629, and 1,525 JBR command frames, one surface change and one command-cache clear per row, one JBR image-cache
+  clear per row, and one scoped image-cache clear per row. This is focused command-probe lifecycle change 49 after the
+  2026-06-15 daily broad slot, so broad validation remains daily-capped:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260615-221607/suite.tsv`.
 - Focused command-probe lifecycle hardening continued with aggregate gradient surface/path migration rows. Magic Jewel
   now includes `commands-resize-gradient-surfaces`, `commands-forced-context-gradient-surfaces`,
   `commands-resize-gradient-paths`, and `commands-forced-context-gradient-paths`, asserting destination migration,
