@@ -60,6 +60,14 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   effect-handle define frames. This keeps the combined RuntimeEffect shader descriptor path covered under the daily cap
   without running the full screenshot-parity suite:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-005306/suite.tsv`.
+- Magic Jewel refreshed the RuntimeEffect shader-plus-color-filter row:
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES=parity-runtime-effect-shader-color-filter ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  passed 1/1 with no fallback, no unsupported reasons, 738 CMP/Skiko/JBR command frames, zero picture frames,
+  screenshot status passed, `avg_delta=2.110`, `bad_pixel_ratio=0.05006`, `compose_bad_pixel_ratio=0.07461`, 1,293
+  JBR RuntimeEffect cache-hit frames, one miss, 8 shader-handle define frames, 1,298 shader-handle use frames, 24
+  effect-handle define frames, and 4 effect-handle use frames. This keeps the combined shader/effect handle path
+  covered under the daily cap without running the full screenshot-parity suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-005545/suite.tsv`.
 - Magic Jewel continued RuntimeEffect parity with an exact stable color-filter row:
   `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES=parity-runtime-effect-stable-color-filter ./scripts/jbr-skia-screenshot-parity-suite.sh`
   passed 1/1 with no fallback, no unsupported reasons, 546 CMP/Skiko/JBR command frames, zero picture frames,
