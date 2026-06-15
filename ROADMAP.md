@@ -42,6 +42,15 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel added resize and forced-context command-probe coverage for gradient-shader migration:
+  `commands-resize-gradient-shaders` and `commands-forced-context-gradient-shaders` now assert destination migration,
+  command-cache clear, JBR image-cache clear, and scoped image-cache clear markers while explicit ShaderBrush
+  linear/radial/sweep gradients lower through dedicated gradient commands. Exact validation
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES="commands-resize-gradient-shaders commands-forced-context-gradient-shaders" ./scripts/jbr-skia-command-probe-suite.sh`
+  passed 2/2 with no fallback, no unsupported reasons, zero picture frames, zero shader-handle markers, and
+  1,195/1,464 JBR command frames. This is focused command-probe lifecycle change 38 after the 2026-06-15 daily broad
+  validation slot; broad validation remains deferred until the next local-day broad slot or an explicit override:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260615-211223/suite.tsv`.
 - Magic Jewel added resize and forced-context command-probe coverage for turbulence-shader migration:
   `commands-resize-turbulence-shader` and `commands-forced-context-turbulence-shader` now assert destination
   migration, command-cache clear, JBR image-cache clear, scoped image-cache clear, and turbulence shader handle
