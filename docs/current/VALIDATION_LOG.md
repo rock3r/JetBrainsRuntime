@@ -5,6 +5,19 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-15 focused command-probe lifecycle hardening for transformed shader migration rows: Magic Jewel added
+  `commands-resize-transformed-shader` and `commands-forced-context-transformed-shader`. Both rows assert destination
+  migration, command-cache clear, JBR image-cache clear, scoped image-cache clear, stable shader-handle redefinition,
+  and shader-handle reuse markers. Focused validation
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES="commands-resize-transformed-shader commands-forced-context-transformed-shader" ./scripts/jbr-skia-command-probe-suite.sh`
+  passed 2/2 with `fallback_new_count=0`, `unsupported=none`, and zero picture frames. The resize row reported 921 JBR
+  command frames, one JBR image-cache clear, one scoped image-cache clear, six shader-handle definitions, 1,477
+  shader-handle uses, 1,474 shader-handle cache hits, one surface-change marker, and one command-cache clear marker.
+  The forced-context row reported 1,011 JBR command frames, one JBR image-cache clear, one scoped image-cache clear,
+  four shader-handle definitions, 1,412 shader-handle uses, 1,410 shader-handle cache hits, one surface-change marker,
+  and one command-cache clear marker. This is focused command-probe lifecycle change 10 after the 2026-06-15 post-sweep
+  smoke refresh, so the batched broad command-probe validation is due next. Disk free was about 173Gi:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260615-103556/suite.tsv`.
 - 2026-06-15 focused command-probe lifecycle hardening for composite shader plus color-filter migration rows: Magic
   Jewel added `commands-resize-composite-shader-color-filter` and
   `commands-forced-context-composite-shader-color-filter`. Both rows assert destination migration, command-cache clear,
