@@ -46,6 +46,18 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel refreshed the exact RuntimeEffect shader resize/forced-context command-probe pair:
+  `EXPECT_SCREENSHOT_ASSERTION=false DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="commands-resize-runtime-effect-shader commands-forced-context-runtime-effect-shader" ./scripts/jbr-skia-command-probe-suite.sh`
+  passed 2/2 with `fallback_new_count=0` and `unsupported=none` for both rows. The resize row recorded 610 CMP
+  recorder frames, 611 Skiko/JBR command frames, `jbr_command_fps=122.2`, one same-context surface-change marker, one
+  command-cache clear, one JBR image-cache clear, one scoped image-cache clear, 1,146 RuntimeEffect source-cache hit
+  frames, one miss, 1,152 shader-handle define frames, and 1,147 shader-handle use frames. The forced-context row
+  recorded 794 CMP recorder frames, 793 Skiko/JBR command frames, `jbr_command_fps=158.6`, one destination
+  context-change marker, one command-cache clear, one JBR image-cache clear, one scoped image-cache clear, 1,350
+  RuntimeEffect source-cache hit frames, one miss, 1,355 shader-handle define frames, and 1,351 shader-handle use
+  frames. This was an exact two-row command-probe refresh, not the full suite; output directory was 6.9M and `out`
+  remained 121G:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260616-014003/suite.tsv`.
 - Magic Jewel refreshed the exact RuntimeEffect shader-plus-color-filter resize/forced-context command-probe pair:
   `EXPECT_SCREENSHOT_ASSERTION=false DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="commands-resize-runtime-effect-shader-color-filter commands-forced-context-runtime-effect-shader-color-filter" ./scripts/jbr-skia-command-probe-suite.sh`
   passed 2/2 with `fallback_new_count=0` and `unsupported=none` for both rows. The resize row recorded 822 CMP

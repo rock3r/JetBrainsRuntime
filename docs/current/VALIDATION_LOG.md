@@ -5,6 +5,19 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-16 exact RuntimeEffect shader resize/forced-context command-probe refresh: Magic Jewel ran
+  `EXPECT_SCREENSHOT_ASSERTION=false DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="commands-resize-runtime-effect-shader commands-forced-context-runtime-effect-shader" ./scripts/jbr-skia-command-probe-suite.sh`.
+  Both exact rows passed with `fallback_new_count=0`, `unsupported=none`, zero picture frames, and screenshot status
+  passed. `commands-resize-runtime-effect-shader` recorded 610 CMP recorder frames, 611 Skiko command frames, 611 JBR
+  command frames, `jbr_command_fps=122.2`, one same-context surface-change marker, one command-cache clear, one JBR
+  image-cache clear, one scoped image-cache clear, 1,146 RuntimeEffect source-cache hit frames, one miss, 1,152
+  shader-handle define frames, and 1,147 shader-handle use frames. `commands-forced-context-runtime-effect-shader`
+  recorded 794 CMP recorder frames, 793 Skiko command frames, 793 JBR command frames, `jbr_command_fps=158.6`, one
+  destination context-change marker, one command-cache clear, one JBR image-cache clear, one scoped image-cache clear,
+  1,350 RuntimeEffect source-cache hit frames, one miss, 1,355 shader-handle define frames, and 1,351 shader-handle use
+  frames. The output directory was 6.9M, `magic-jewel/out` remained 121G, and disk free was about 200Gi. This was not
+  the full command-probe suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260616-014003/suite.tsv`.
 - 2026-06-16 exact RuntimeEffect shader-plus-color-filter resize/forced-context command-probe refresh: Magic Jewel ran
   `EXPECT_SCREENSHOT_ASSERTION=false DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="commands-resize-runtime-effect-shader-color-filter commands-forced-context-runtime-effect-shader-color-filter" ./scripts/jbr-skia-command-probe-suite.sh`.
   Both exact rows passed with `fallback_new_count=0`, `unsupported=none`, zero picture frames, and screenshot status
