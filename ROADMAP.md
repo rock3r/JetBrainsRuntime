@@ -42,6 +42,16 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel added resize and forced-context command-probe coverage for graphics-layer off-center pivot migration:
+  `commands-resize-graphics-layer-offcenter-pivot` and
+  `commands-forced-context-graphics-layer-offcenter-pivot` now assert destination migration, command-cache clear, JBR
+  image-cache clear, and scoped image-cache clear markers while rotation X/Y, near-camera depth, and off-center pivot
+  are enabled. Exact validation
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES="commands-resize-graphics-layer-offcenter-pivot commands-forced-context-graphics-layer-offcenter-pivot" ./scripts/jbr-skia-command-probe-suite.sh`
+  passed 2/2 with no fallback, no unsupported reasons, zero picture frames, and 1,214/1,429 JBR command frames. This
+  is focused command-probe lifecycle change 20 after the 2026-06-15 daily broad validation slot; broad validation
+  remains deferred until the next local-day broad slot or an explicit override:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260615-192229/suite.tsv`.
 - Magic Jewel added resize and forced-context command-probe coverage for graphics-layer near-camera migration:
   `commands-resize-graphics-layer-near-camera` and `commands-forced-context-graphics-layer-near-camera` now assert
   destination migration, command-cache clear, JBR image-cache clear, and scoped image-cache clear markers while
