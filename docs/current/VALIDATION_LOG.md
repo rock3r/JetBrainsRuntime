@@ -5,6 +5,17 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-15 focused command-probe lifecycle hardening for graphics-layer blend-mode-only migration rows: Magic Jewel
+  added `commands-resize-graphics-layer-blend-mode` and `commands-forced-context-graphics-layer-blend-mode`. Exact
+  validation
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES="commands-resize-graphics-layer-blend-mode commands-forced-context-graphics-layer-blend-mode" ./scripts/jbr-skia-command-probe-suite.sh`
+  passed 2/2 with `fallback_new_count=0`, `unsupported=none`, and zero picture frames. The resize row reported 1,371
+  JBR command frames, one JBR image-cache clear, one scoped image-cache clear, one same-context surface-change marker,
+  and one command-cache clear marker. The forced-context row reported 1,316 JBR command frames, one JBR image-cache
+  clear, one scoped image-cache clear, one context-change surface marker, and one command-cache clear marker. This is
+  focused command-probe lifecycle change 16 after the 2026-06-15 daily broad validation slot; broad validation remains
+  deferred until the next local-day broad slot or an explicit override:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260615-185806/suite.tsv`.
 - 2026-06-15 focused command-probe lifecycle hardening for plain composite shader descriptor-tree migration rows: Magic
   Jewel added `commands-resize-composite-shader-descriptor-redefine` and
   `commands-forced-context-composite-shader-descriptor-redefine`. Exact validation
