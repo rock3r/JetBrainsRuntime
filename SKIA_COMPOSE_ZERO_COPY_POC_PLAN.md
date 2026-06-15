@@ -25,6 +25,15 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   exact-row/tiny-group only until the next local-day slot or an explicit ABI/capability gate. Disk free was about
   209Gi:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260615-103914/suite.tsv`.
+- Focused command-probe lifecycle hardening continued with turbulence-shader resize and forced-context migration rows.
+  Magic Jewel now includes `commands-resize-turbulence-shader` and `commands-forced-context-turbulence-shader`,
+  asserting destination migration, command-cache clear, JBR image-cache and scoped image-cache clears, and
+  shader-handle redefine/cache-hit markers. Exact two-row validation passed with no fallback, no unsupported reasons,
+  zero picture frames, two shader-handle defines per row, 1,491 and 1,508 JBR command frames, one surface change and
+  one command-cache clear per row, one JBR image-cache clear per row, and one scoped image-cache clear per row. This
+  is focused command-probe lifecycle change 37 after the 2026-06-15 daily broad slot, so broad validation remains
+  daily-capped:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260615-210800/suite.tsv`.
 - Focused command-probe lifecycle hardening continued with noise-shader resize and forced-context migration rows.
   Magic Jewel now includes `commands-resize-noise-shader` and `commands-forced-context-noise-shader`, asserting
   destination migration, command-cache clear, JBR image-cache and scoped image-cache clears, and shader-handle
