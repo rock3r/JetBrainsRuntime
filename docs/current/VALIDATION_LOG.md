@@ -5,6 +5,17 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-15 focused command-probe lifecycle hardening for graphics-layer tint color-filter migration rows: Magic Jewel
+  added `commands-resize-graphics-layer-color-filter` and
+  `commands-forced-context-graphics-layer-color-filter`. Exact validation
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES="commands-resize-graphics-layer-color-filter commands-forced-context-graphics-layer-color-filter" ./scripts/jbr-skia-command-probe-suite.sh`
+  passed 2/2 with `fallback_new_count=0`, `unsupported=none`, and zero picture frames. The resize row reported 1,408
+  JBR command frames, one JBR image-cache clear, one scoped image-cache clear, one surface-change marker, and one
+  command-cache clear marker. The forced-context row reported 1,211 JBR command frames, one JBR image-cache clear, one
+  scoped image-cache clear, one surface-change marker, and one command-cache clear marker. The tint graphics-layer path
+  reported zero effect-handle definitions and uses, so these rows intentionally assert the cache-migration contract
+  only. This is focused command-probe lifecycle change 5 after the 2026-06-15 daily broad validation slot:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260615-174844/suite.tsv`.
 - 2026-06-15 focused command-probe lifecycle hardening for radial-gradient shader plus color-filter rows: Magic Jewel
   added `commands-radial-gradient-shader-color-filter`, `commands-resize-radial-gradient-shader-color-filter`, and
   `commands-forced-context-radial-gradient-shader-color-filter`. Exact validation

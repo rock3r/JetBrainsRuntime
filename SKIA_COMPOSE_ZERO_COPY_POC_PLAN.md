@@ -61,6 +61,16 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   cache hits. This is focused command-probe lifecycle change 4 after the 2026-06-15 daily broad slot, so broad
   validation remains daily-capped:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260615-173931/suite.tsv`.
+- Focused command-probe lifecycle hardening continued with graphics-layer tint color-filter resize and forced-context
+  migration rows. Magic Jewel now includes `commands-resize-graphics-layer-color-filter` and
+  `commands-forced-context-graphics-layer-color-filter`, asserting destination migration, command-cache clear, JBR
+  image-cache clear, and scoped image-cache clear markers. Exact two-row validation passed with no fallback, no
+  unsupported reasons, zero picture frames, 1,408 and 1,211 JBR command frames, one surface change and one
+  command-cache clear per row, one JBR image-cache clear per row, and one scoped image-cache clear per row. The tint
+  graphics-layer path does not emit effect-handle markers, so these rows intentionally assert the cache-migration
+  contract only. This is focused command-probe lifecycle change 5 after the 2026-06-15 daily broad slot, so broad
+  validation remains daily-capped:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260615-174844/suite.tsv`.
 - Batched command-probe validation refreshed after ten focused graphics-layer render-effect lifecycle hardenings. The
   original full sweep was interrupted after 564/569 rows had passed; after rebuilding the missing `/tmp` JBR API shim
   and native bridge, the five missing tail rows passed in a scoped recovery run. Combined coverage passed 569/569 with
