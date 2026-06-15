@@ -25,6 +25,13 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `./scripts/jbr-skia-screenshot-parity-suite.sh` exit 3 immediately against the already-consumed 2026-06-15 broad
   slot, while exact-case list probes for `commands-core-primitives` and `parity-rich` still work. No broad validation
   was launched.
+- Magic Jewel tightened grouped helper startup for command-probe and screenshot-parity suites: when `CASE_GROUPS` is
+  set and `CASES` is unset, the runners now skip materializing their large default case lists before the existing
+  group expansion. Cheap guard validation only:
+  `CASE_GROUPS=core-effects LIST_CASES=true ./scripts/jbr-skia-command-probe-suite.sh` returned the focused
+  core-effects rows immediately, `CASE_GROUPS=smoke LIST_CASES=true ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  returned the three smoke parity rows immediately, exact-case list probes still work, and bare default runs still exit
+  3 against the already-consumed 2026-06-15 broad slot. No broad validation was launched.
 - Focused command-probe lifecycle hardening continued with gradient-stroke migration rows. Magic Jewel now includes
   `commands-resize-gradient-stroke` and `commands-forced-context-gradient-stroke`, asserting destination migration,
   command-cache clear, JBR image-cache and scoped image-cache clears while the base gradient-stroke row remains on

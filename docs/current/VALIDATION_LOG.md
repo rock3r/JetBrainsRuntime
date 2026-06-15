@@ -5,6 +5,14 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-15 `CASE_GROUPS` helper startup tightening: Magic Jewel now skips large default case-list materialization in
+  command-probe and screenshot-parity suites when grouped selection will replace `CASES`. Cheap guard validation only:
+  `CASE_GROUPS=core-effects LIST_CASES=true ./scripts/jbr-skia-command-probe-suite.sh` returned the core-effects rows
+  immediately, including `commands-resize-gradient-stroke` and `commands-forced-context-gradient-stroke`;
+  `CASE_GROUPS=smoke LIST_CASES=true ./scripts/jbr-skia-screenshot-parity-suite.sh` returned `parity-rich`,
+  `parity-button-chrome`, and `parity-geometry-clean`; exact-case list probes for `commands-core-primitives` and
+  `parity-rich` still returned their selected rows; and bare default command-probe and screenshot-parity runs still
+  exited 3 against the already-consumed 2026-06-15 broad slot. No broad validation was launched.
 - 2026-06-15 focused command-probe lifecycle hardening for gradient-stroke migration rows: Magic Jewel added
   `commands-resize-gradient-stroke` and `commands-forced-context-gradient-stroke`. Exact validation
   `EXPECT_SCREENSHOT_ASSERTION=false CASES="commands-resize-gradient-stroke commands-forced-context-gradient-stroke" ./scripts/jbr-skia-command-probe-suite.sh`

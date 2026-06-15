@@ -42,6 +42,14 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel tightened `CASE_GROUPS` helper startup for command-probe and screenshot-parity suites so grouped
+  `LIST_CASES`/selection checks skip materializing the large default case lists before the existing group expansion.
+  Cheap guard validation only: `CASE_GROUPS=core-effects LIST_CASES=true ./scripts/jbr-skia-command-probe-suite.sh`
+  returned the focused core-effects rows immediately,
+  `CASE_GROUPS=smoke LIST_CASES=true ./scripts/jbr-skia-screenshot-parity-suite.sh` returned the three smoke parity
+  rows immediately, exact-case list probes still returned their selected rows, and bare default command-probe and
+  screenshot-parity runs still exited 3 against the already-consumed 2026-06-15 broad slot. No broad validation was
+  launched.
 - Magic Jewel added resize and forced-context command-probe coverage for gradient-stroke migration:
   `commands-resize-gradient-stroke` and `commands-forced-context-gradient-stroke` now assert destination migration,
   command-cache clear, JBR image-cache clear, and scoped image-cache clear markers while the base gradient-stroke row
