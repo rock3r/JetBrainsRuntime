@@ -43,6 +43,13 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel ran a real screenshot-parity smoke for button chrome:
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES=parity-button-chrome ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  passed 1/1 with `fallback_new_count=0`, `unsupported=none`, 1,501 CMP/Skiko/JBR command frames, zero picture
+  frames, pixel diff enabled, `avg_delta=2.265`, `bad_pixel_ratio=0.05200`, `header_buttons_bad_pixel_ratio=0.00381`,
+  `compose_bad_pixel_ratio=0.07633`, and `compose_bottom_swatches_bad_pixel_ratio=0.00000`. This was an exact
+  one-row parity smoke, not the full screenshot-parity suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260615-231755/suite.tsv`.
 - Magic Jewel ran a short exact benchmark smoke for the command path:
   `EXPECT_SCREENSHOT_ASSERTION=false DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES=commands ./scripts/jbr-skia-benchmark-suite.sh`
   passed 1/1 with `fallback_new_count=0`, `unsupported=none`, background window shown, 843 CMP recorder frames, 842

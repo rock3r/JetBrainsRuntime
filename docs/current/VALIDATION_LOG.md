@@ -5,6 +5,16 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-15 real screenshot-parity smoke: Magic Jewel ran
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES=parity-button-chrome ./scripts/jbr-skia-screenshot-parity-suite.sh` with
+  pixel diff enabled. The exact row passed with `fallback_new_count=0`, `unsupported=none`, 1,501 CMP recorder frames,
+  1,501 Skiko command frames, 1,501 JBR command frames, zero picture frames, `avg_delta=2.265`,
+  `bad_pixel_ratio=0.05200`, `header_buttons_bad_pixel_ratio=0.00381`, `compose_bad_pixel_ratio=0.07633`,
+  `compose_bottom_labels_bad_pixel_ratio=0.07624`, `compose_paragraph_probes_bad_pixel_ratio=0.09146`,
+  `compose_bottom_swatches_bad_pixel_ratio=0.00000`, and diff image
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260615-231755/parity-button-chrome/report/parity-diff.png`.
+  This was not the full screenshot-parity suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260615-231755/suite.tsv`.
 - 2026-06-15 short benchmark smoke: Magic Jewel ran
   `EXPECT_SCREENSHOT_ASSERTION=false DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES=commands ./scripts/jbr-skia-benchmark-suite.sh`.
   The exact row passed with `fallback_new_count=0`, `unsupported=none`, background window shown, 843 CMP recorder

@@ -52,6 +52,13 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   command frames, zero picture frames, `app_new_fps=168.6`, `jbr_command_fps=168.4`, and screenshot status passed. This
   keeps benchmark validation moving under the daily cap without running the full benchmark suite:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-benchmark-suite/20260615-231519/suite.tsv`.
+- Magic Jewel ran a real pixel-diff screenshot-parity smoke:
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES=parity-button-chrome ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  passed 1/1 with no fallback, no unsupported reasons, 1,501 CMP/Skiko/JBR command frames, zero picture frames,
+  `avg_delta=2.265`, `bad_pixel_ratio=0.05200`, `header_buttons_bad_pixel_ratio=0.00381`,
+  `compose_bad_pixel_ratio=0.07633`, and `compose_bottom_swatches_bad_pixel_ratio=0.00000`. This exact row keeps
+  screenshot parity moving under the daily cap without running the full parity suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260615-231755/suite.tsv`.
 - Magic Jewel tightened daily broad-validation guard startup for bare command-probe and screenshot-parity default runs.
   Cheap guard validation only: `./scripts/jbr-skia-command-probe-suite.sh` and
   `./scripts/jbr-skia-screenshot-parity-suite.sh` exit 3 immediately against the already-consumed 2026-06-15 broad
