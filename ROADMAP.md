@@ -43,6 +43,14 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel tightened no-launch helper handling and command-probe group coverage: `LIST_CASE_GROUP_COUNTS=true` is
+  now exempt from daily broad-validation blocking across command-probe, screenshot-parity, compatibility, artifact, and
+  benchmark runners; the shader-composition-runtime command group now includes the sweep-gradient shader color-filter
+  resize/forced-context rows; and the default list now selects the implemented
+  `commands-color-filter-path-effect-wrong-type-fallback` sentinel. Cheap helper validation only: all group-count
+  helpers returned counts, command-probe ungrouped output is empty, the shader-composition-runtime group lists the
+  sweep-gradient shader color-filter trio, bare broad command/screenshot/compatibility runs still exit 3 for the
+  already-consumed 2026-06-15 slot, and no broad validation was launched.
 - Magic Jewel closed the daily broad-validation guard range loophole: default-list command-probe and screenshot-parity
   runs selected with `CASES_FROM`/`CASES_UNTIL` now consume or fail against the single daily broad slot instead of
   bypassing the guard. Cheap guard validation only: range launches for command-probe and screenshot-parity both exited

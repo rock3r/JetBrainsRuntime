@@ -25,6 +25,13 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   Cheap guard validation only: non-list `CASES_FROM`/`CASES_UNTIL` launches for both suites exited 3 against the
   already-consumed 2026-06-15 broad slot, while list-only range helpers still returned the selected command/parity rows.
   No broad validation was launched.
+- Magic Jewel tightened no-launch helper and grouping hygiene after the daily cap work. `LIST_CASE_GROUP_COUNTS=true`
+  now stays list-only across the command-probe, screenshot-parity, compatibility, artifact, and benchmark runners; the
+  shader-composition-runtime command group includes the sweep-gradient shader color-filter migration trio; and the
+  default command list selects the implemented `commands-color-filter-path-effect-wrong-type-fallback` sentinel. Cheap
+  helper validation only: all group-count helpers returned counts, command-probe ungrouped output is empty, and bare
+  command/screenshot/compatibility launches still exit 3 against today's consumed broad slot. No broad validation was
+  launched.
 - Magic Jewel tightened daily broad-validation guard startup for bare command-probe and screenshot-parity default runs.
   Cheap guard validation only: `./scripts/jbr-skia-command-probe-suite.sh` and
   `./scripts/jbr-skia-screenshot-parity-suite.sh` exit 3 immediately against the already-consumed 2026-06-15 broad

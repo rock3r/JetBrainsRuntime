@@ -5,6 +5,18 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-15 no-launch helper and command grouping hygiene: Magic Jewel now exempts
+  `LIST_CASE_GROUP_COUNTS=true` from daily broad-validation blocking across command-probe, screenshot-parity,
+  compatibility, artifact, and benchmark runners; the shader-composition-runtime command group includes
+  `commands-sweep-gradient-shader-color-filter`, `commands-resize-sweep-gradient-shader-color-filter`, and
+  `commands-forced-context-sweep-gradient-shader-color-filter`; and the command default list now selects the implemented
+  `commands-color-filter-path-effect-wrong-type-fallback` sentinel. Cheap helper validation only:
+  `LIST_CASE_GROUP_COUNTS=true` returned counts for all five runners,
+  `LIST_UNGROUPED_CASES=true ./scripts/jbr-skia-command-probe-suite.sh` returned no rows,
+  `CASE_GROUPS=shader-composition-runtime LIST_CASES=true ./scripts/jbr-skia-command-probe-suite.sh` listed the
+  sweep-gradient shader color-filter trio, filtered default-list output showed the corrected wrong-type sentinel, and
+  bare command-probe, screenshot-parity, and compatibility launches still exited 3 against the seeded 2026-06-15 broad
+  slot. No broad validation was launched.
 - 2026-06-15 daily broad-validation cap range tightening: Magic Jewel now treats command-probe and screenshot-parity
   default-list `CASES_FROM`/`CASES_UNTIL` launches as broad validation, so range slices cannot bypass the single daily
   broad slot. Cheap guard validation only:
