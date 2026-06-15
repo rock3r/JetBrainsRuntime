@@ -40,6 +40,17 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel added resize and forced-context command-probe coverage for graphics-layer blend plus tint color-filter
+  migration: `commands-resize-graphics-layer-blend-color-filter` and
+  `commands-forced-context-graphics-layer-blend-color-filter` now assert destination migration, command-cache clear,
+  JBR image-cache clear, and scoped image-cache clear markers while blend mode and tint color filter are both enabled.
+  Exact validation
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES="commands-resize-graphics-layer-blend-color-filter commands-forced-context-graphics-layer-blend-color-filter" ./scripts/jbr-skia-command-probe-suite.sh`
+  passed 2/2 with no fallback, no unsupported reasons, zero picture frames, and 1,673/1,059 JBR command frames. This
+  graphics-layer tint path also reports zero effect-handle markers, so these rows intentionally assert the
+  cache-migration contract only. This is focused command-probe lifecycle change 6 after the 2026-06-15 daily broad
+  validation slot:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260615-175354/suite.tsv`.
 - Magic Jewel added resize and forced-context command-probe coverage for graphics-layer tint color-filter migration:
   `commands-resize-graphics-layer-color-filter` and `commands-forced-context-graphics-layer-color-filter` now assert
   destination migration, command-cache clear, JBR image-cache clear, and scoped image-cache clear markers. Exact
