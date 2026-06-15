@@ -39,6 +39,15 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel added resize and forced-context command-probe coverage for RuntimeEffect pure-color migration:
+  `commands-resize-runtime-effect-pure-color` and `commands-forced-context-runtime-effect-pure-color` now assert
+  destination migration, command-cache clear, JBR image-cache clear, scoped image-cache clear, RuntimeEffect source-cache
+  reuse, and shader-handle redefinition/reuse/cache-hit markers. Exact command-probe validation
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES="commands-resize-runtime-effect-pure-color commands-forced-context-runtime-effect-pure-color" ./scripts/jbr-skia-command-probe-suite.sh`
+  passed 2/2 with no fallback, no unsupported reasons, zero picture frames, and 1,328/1,221 JBR command frames. This
+  is focused command-probe lifecycle change 1 after the 2026-06-15 post-sweep smoke refresh, so broad command
+  validation remains deferred until roughly nine more focused changes or an ABI/capability gate:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260615-093344/suite.tsv`.
 - Magic Jewel refreshed post-command-sweep compatibility and narrow smoke validation after the 569-row command-probe
   coverage. Compatibility matrix
   `EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-compatibility-matrix.sh` passed 57/57 with `fallback_sum=56`,
