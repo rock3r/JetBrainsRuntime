@@ -35,9 +35,10 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - Magic Jewel further expanded the `shader-composition-runtime` command group so it now carries the existing resize and
   forced-context lifecycle companions for composite shader color-filter, transformed shader, RuntimeEffect shader,
   RuntimeEffect shader color-filter, linear/radial/sweep shader color-filter, RuntimeEffect pure/uniform/child rows,
-  RuntimeEffect color-filter, and RuntimeEffect color-filter child rows. Cheap helper validation only: `bash -n`
-  passed, the group lists 49 rows, group counts report `shader-composition-runtime	49`, and ungrouped command cases
-  remain empty. No broad validation was launched.
+  RuntimeEffect shader source-cache eviction, RuntimeEffect color-filter, RuntimeEffect stable color-filter,
+  RuntimeEffect color-filter child rows, and RuntimeEffect source-cache eviction. Cheap helper validation only:
+  `bash -n` passed, the group lists 54 rows, group counts report `shader-composition-runtime	54`, and ungrouped
+  command cases remain empty. No broad validation was launched.
 - Magic Jewel ran a narrow compatibility-matrix smoke for the next validation track:
   `EXPECT_SCREENSHOT_ASSERTION=false CASES=happy ./scripts/jbr-skia-compatibility-matrix.sh` passed 1/1 with no
   fallback, no unsupported reasons, background window shown, 1,245 CMP recorder frames, 1,244 Skiko/JBR command frames,
