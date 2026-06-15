@@ -39,6 +39,13 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   attempt failed on the Gradle wrapper lock. The full compatibility matrix is still deferred to the next local-day
   broad slot:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260615-225927/matrix.tsv`.
+- Magic Jewel ran a narrow current-artifact matrix smoke:
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES=current-all ./scripts/jbr-skia-artifact-matrix.sh` passed 1/1 with no
+  fallback, no unsupported reasons, background window shown, 465 CMP recorder frames, 465 Skiko/JBR command frames,
+  zero picture frames, and screenshot status passed. Current desktop patch, JBR API shim, JBR Skia native library, and
+  CMP output inputs were all present. This exact row keeps artifact validation moving under the daily cap; optional old
+  artifact rows and the full artifact matrix remain pending:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260615-231244/matrix.tsv`.
 - Magic Jewel tightened daily broad-validation guard startup for bare command-probe and screenshot-parity default runs.
   Cheap guard validation only: `./scripts/jbr-skia-command-probe-suite.sh` and
   `./scripts/jbr-skia-screenshot-parity-suite.sh` exit 3 immediately against the already-consumed 2026-06-15 broad

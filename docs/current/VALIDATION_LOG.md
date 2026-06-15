@@ -5,6 +5,14 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-15 narrow artifact-matrix smoke: current artifact inputs existed at `/tmp/jbr-skia-run/desktop`,
+  `/tmp/jbr-api-shim.jar`, `/tmp/jbr-skia-native/libjbrskiainterop.dylib`, and
+  `../cmp/out/compose-multiplatform-core`. The exact row
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES=current-all ./scripts/jbr-skia-artifact-matrix.sh` passed with
+  `fallback_new_count=0`, `unsupported=none`, background window shown, 465 CMP recorder frames, 465 Skiko command
+  frames, 465 JBR command frames, zero picture frames, and screenshot status passed. This was not the full artifact
+  matrix; optional old-artifact rows remain pending until old artifacts are supplied or the next broad slot is used:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260615-231244/matrix.tsv`.
 - 2026-06-15 narrow compatibility-matrix smoke: after a sandboxed exact-row attempt failed before app startup on the
   Gradle wrapper lock, the row was rerun outside the sandbox with
   `EXPECT_SCREENSHOT_ASSERTION=false CASES=happy ./scripts/jbr-skia-compatibility-matrix.sh`. The exact one-row matrix

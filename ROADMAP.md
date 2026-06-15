@@ -43,6 +43,14 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel ran a narrow artifact-matrix smoke for the current artifact set:
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES=current-all ./scripts/jbr-skia-artifact-matrix.sh` passed 1/1 with
+  `fallback_new_count=0`, `unsupported=none`, background window shown, 465 CMP recorder frames, 465 Skiko/JBR command
+  frames, zero picture frames, and screenshot status passed. The current artifact inputs were present at
+  `/tmp/jbr-skia-run/desktop`, `/tmp/jbr-api-shim.jar`, `/tmp/jbr-skia-native/libjbrskiainterop.dylib`, and
+  `../cmp/out/compose-multiplatform-core`. This was an exact one-row smoke, not the full artifact matrix; optional
+  old-artifact rows remain pending until old artifacts are provided or the next broad slot is used:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260615-231244/matrix.tsv`.
 - Magic Jewel ran the first narrow compatibility-matrix smoke under the daily broad-validation cap:
   `EXPECT_SCREENSHOT_ASSERTION=false CASES=happy ./scripts/jbr-skia-compatibility-matrix.sh` passed 1/1 with
   `fallback_new_count=0`, `unsupported=none`, background window shown, 1,245 CMP recorder frames, 1,244 Skiko/JBR
