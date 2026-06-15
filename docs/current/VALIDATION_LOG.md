@@ -5,6 +5,17 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-16 daily broad-validation cap tightening: Magic Jewel changed
+  `scripts/jbr-skia-daily-validation-guard.sh` plus the command-probe, screenshot-parity, benchmark, compatibility, and
+  artifact runners so the once-per-local-day broad slot now covers default launches, default-order ranges, and any
+  resolved selection above `JBR_SKIA_BROAD_VALIDATION_CASE_LIMIT` rows. The default broad limit is 10 rows, while exact
+  one-row/two-row smokes and no-launch list helpers remain allowed. Cheap no-launch/guard validation only:
+  `bash -n` passed for the edited shell scripts; `LIST_CASE_COUNT=true ./scripts/jbr-skia-command-probe-suite.sh`
+  resolved 696 rows; `LIST_CASE_GROUP_COUNTS=true ./scripts/jbr-skia-screenshot-parity-suite.sh` printed group sizes;
+  default benchmark, default compatibility, default artifact, `CASE_GROUPS=runtime-effect` screenshot parity,
+  `CASE_GROUPS=shader-composition-runtime` command probe, and one-row `CASES_FROM`/`CASES_UNTIL` ranges for command
+  probe and screenshot parity all exited 3 against the already consumed 2026-06-16 stamp before launching validation.
+  No broad validation was launched.
 - 2026-06-16 exact RuntimeEffect color-filter resize/forced-context command-probe refresh: Magic Jewel ran
   `EXPECT_SCREENSHOT_ASSERTION=false DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="commands-resize-runtime-effect-color-filter commands-forced-context-runtime-effect-color-filter" ./scripts/jbr-skia-command-probe-suite.sh`.
   Both exact rows passed with `fallback_new_count=0`, `unsupported=none`, zero picture frames, and screenshot status

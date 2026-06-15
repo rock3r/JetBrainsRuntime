@@ -15,13 +15,13 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - Validation should be batched to keep iteration cost under control: use exact cases or tiny focused groups per change,
   and cap broad command sweeps, screenshot sweeps, benchmark suites, and full matrices at one broad validation slot per
   local calendar day unless the user explicitly asks for another one or an ABI/capability break needs an emergency
-  gate. Magic Jewel now enforces that cap with `scripts/jbr-skia-daily-validation-guard.sh` for default command-probe
-  sweeps, screenshot parity suites, benchmark suites, compatibility matrices, and artifact matrices. The 2026-06-16
-  broad slot has now been consumed by the full compatibility matrix, so continue with exact `CASES`/small
-  `CASE_GROUPS` only until the next local-day slot. The command-probe and screenshot-parity default runners now check the stamp
-  before expanding their large default case lists, and default-list `CASES_FROM`/`CASES_UNTIL` range launches now count
-  as broad validation too, so accidental second broad runs on the same day fail fast. This daily cap replaces the older
-  "broad sweep after ten focused changes" checkpoint cadence.
+  gate. Magic Jewel now enforces that cap with `scripts/jbr-skia-daily-validation-guard.sh` for command-probe sweeps,
+  screenshot parity suites, benchmark suites, compatibility matrices, and artifact matrices. The 2026-06-16 broad slot
+  has now been consumed by the full compatibility matrix, so continue with exact small `CASES`/`CASE_GROUPS` only until
+  the next local-day slot. Default launches, default-list `CASES_FROM`/`CASES_UNTIL` range launches, and any resolved
+  selection above `JBR_SKIA_BROAD_VALIDATION_CASE_LIMIT` rows now count as broad validation; the default broad limit is
+  10 rows. The guard runs after row selection and before launching validation, so accidental second broad runs on the
+  same day fail fast. This daily cap replaces the older "broad sweep after ten focused changes" checkpoint cadence.
 - Magic Jewel refreshed the full compatibility matrix in the 2026-06-16 daily broad slot:
   `EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-compatibility-matrix.sh` passed 57/57 with 56 expected fallback
   rows, one happy command row, no unsupported reasons, no validation failures, 45,021 CMP recorder frames, 909
