@@ -43,6 +43,14 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `new_avg_cpu=116.27`. This keeps benchmark coverage moving under the daily cap without running the full benchmark
   suite:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-benchmark-suite/20260616-003352/suite.tsv`.
+- Magic Jewel continued RuntimeEffect lifecycle parity with an exact source-cache eviction row:
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES=parity-runtime-effect-source-cache-eviction ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  passed 1/1 with no fallback, no unsupported reasons, 788 CMP recorder frames, 789 Skiko/JBR command frames, zero
+  picture frames, screenshot status passed, `avg_delta=2.118`, `bad_pixel_ratio=0.05032`,
+  `compose_bad_pixel_ratio=0.07507`, 1,356 JBR RuntimeEffect cache-hit frames, 2,715 cache-miss frames, 40
+  effect-handle define frames, and 4,071 effect-handle use frames. This keeps RuntimeEffect source-cache churn coverage
+  moving under the daily cap without running the full screenshot-parity suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-003700/suite.tsv`.
 - Magic Jewel reaffirmed the daily cap with cheap checks only: `LIST_CASE_COUNT=true ./scripts/jbr-skia-command-probe-suite.sh`
   resolved 696 cases, `LIST_CASE_GROUP_COUNTS=true ./scripts/jbr-skia-benchmark-suite.sh` reported `baseline=2` and
   `image-cache=3`, and bare `./scripts/jbr-skia-command-probe-suite.sh` exited 3 before launch against the consumed

@@ -5,6 +5,17 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-16 exact RuntimeEffect source-cache eviction screenshot-parity smoke: Magic Jewel ran
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES=parity-runtime-effect-source-cache-eviction ./scripts/jbr-skia-screenshot-parity-suite.sh`.
+  The exact row passed with `fallback_new_count=0`, `unsupported=none`, 788 CMP recorder frames, 789 Skiko command
+  frames, 789 JBR command frames, zero picture frames, screenshot status passed, `avg_delta=2.118`,
+  `bad_pixel_ratio=0.05032`, `header_buttons_bad_pixel_ratio=0.00381`, `compose_bad_pixel_ratio=0.07507`,
+  `jbr_runtime_effect_cache_hit_frames=1356`, `jbr_runtime_effect_cache_miss_frames=2715`,
+  `jbr_effect_handle_define_frames=40`, and `jbr_effect_handle_use_frames=4071`. Diff image:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-003700/parity-runtime-effect-source-cache-eviction/report/parity-diff.png`.
+  The output directory was 5.8M, `magic-jewel/out` remained 121G, and disk free was about 174Gi. This was not the full
+  screenshot-parity suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-003700/suite.tsv`.
 - 2026-06-16 shortened picture benchmark smoke: Magic Jewel ran
   `EXPECT_SCREENSHOT_ASSERTION=false DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES=picture ./scripts/jbr-skia-benchmark-suite.sh`.
   The exact row passed with `fallback_new_count=0`, `unsupported=none`, screenshot status passed, 769 Skiko picture
