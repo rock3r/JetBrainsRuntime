@@ -42,6 +42,15 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel added resize and forced-context command-probe coverage for noise-shader migration:
+  `commands-resize-noise-shader` and `commands-forced-context-noise-shader` now assert destination migration,
+  command-cache clear, JBR image-cache clear, scoped image-cache clear, and fractal-noise shader handle
+  redefine/cache-hit markers. Exact validation
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES="commands-resize-noise-shader commands-forced-context-noise-shader" ./scripts/jbr-skia-command-probe-suite.sh`
+  passed 2/2 with no fallback, no unsupported reasons, zero picture frames, two shader-handle defines per row, and
+  1,146/1,053 JBR command frames. This is focused command-probe lifecycle change 36 after the 2026-06-15 daily broad
+  validation slot; broad validation remains deferred until the next local-day broad slot or an explicit override:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260615-210138/suite.tsv`.
 - Magic Jewel added resize and forced-context command-probe coverage for composite-noise-shader migration:
   `commands-resize-composite-noise-shader` and `commands-forced-context-composite-noise-shader` now assert
   destination migration, command-cache clear, JBR image-cache clear, scoped image-cache clear, and composite-noise
