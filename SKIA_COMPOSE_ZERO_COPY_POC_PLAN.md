@@ -71,6 +71,14 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   command frames, zero picture frames, `app_new_fps=168.6`, `jbr_command_fps=168.4`, and screenshot status passed. This
   keeps benchmark validation moving under the daily cap without running the full benchmark suite:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-benchmark-suite/20260615-231519/suite.tsv`.
+- Magic Jewel ran a shortened exact image-cache benchmark smoke:
+  `EXPECT_SCREENSHOT_ASSERTION=false DURATION_SECONDS=5 WARMUP_SECONDS=1 CASE_GROUPS=image-cache ./scripts/jbr-skia-benchmark-suite.sh`
+  passed 3/3 with no fallback, no unsupported reasons, zero picture frames, and screenshot status passed. Stable images
+  stayed cache-stable with zero JBR image-cache evicts/clears at `jbr_command_fps=104.2`; dynamic images reported 4,726
+  JBR image-cache evict frames at `jbr_command_fps=71.2`; resize dynamic images reported 5,276 JBR image-cache evict
+  frames plus one JBR image-cache clear and one scoped clear at `jbr_command_fps=110.4`. This keeps image-cache
+  benchmark validation moving under the daily cap without running the full benchmark suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-benchmark-suite/20260615-234133/suite.tsv`.
 - Magic Jewel ran a real pixel-diff screenshot-parity smoke:
   `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES=parity-button-chrome ./scripts/jbr-skia-screenshot-parity-suite.sh`
   passed 1/1 with no fallback, no unsupported reasons, 1,501 CMP/Skiko/JBR command frames, zero picture frames,

@@ -5,6 +5,16 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-15 short image-cache benchmark smoke: Magic Jewel ran
+  `EXPECT_SCREENSHOT_ASSERTION=false DURATION_SECONDS=5 WARMUP_SECONDS=1 CASE_GROUPS=image-cache ./scripts/jbr-skia-benchmark-suite.sh`.
+  The exact three-row group passed with `fallback_new_count=0`, `unsupported=none`, zero picture frames, and screenshot
+  status passed. `commands-stable-images` reported 521 JBR command frames, `app_new_fps=104.0`,
+  `jbr_command_fps=104.2`, and zero JBR image-cache evict/clear frames. `commands-dynamic-images` reported 356 JBR
+  command frames, `app_new_fps=71.0`, `jbr_command_fps=71.2`, and 4,726 JBR image-cache evict frames.
+  `commands-resize-dynamic-images` reported 552 JBR command frames, `app_new_fps=110.4`, `jbr_command_fps=110.4`,
+  5,276 JBR image-cache evict frames, one JBR image-cache clear, and one scoped image-cache clear. This was not the
+  full benchmark suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-benchmark-suite/20260615-234133/suite.tsv`.
 - 2026-06-15 optional old-artifact availability check: Magic Jewel ran
   `CASE_GROUPS=optional-old ./scripts/jbr-skia-artifact-matrix.sh` without launching the app. The matrix recorded all
   five optional old-artifact rows as skipped: `old-api-current-runtime` needs `OLD_JBR_API_SHIM`,

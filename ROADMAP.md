@@ -43,6 +43,15 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel ran a short exact benchmark smoke for image-cache behavior:
+  `EXPECT_SCREENSHOT_ASSERTION=false DURATION_SECONDS=5 WARMUP_SECONDS=1 CASE_GROUPS=image-cache ./scripts/jbr-skia-benchmark-suite.sh`
+  passed 3/3 with `fallback_new_count=0`, `unsupported=none`, zero picture frames, screenshot status passed, and
+  command replay only. Stable images reported 521 JBR command frames, `app_new_fps=104.0`, `jbr_command_fps=104.2`,
+  and zero JBR image-cache evicts/clears. Dynamic images reported 356 JBR command frames, `app_new_fps=71.0`,
+  `jbr_command_fps=71.2`, and 4,726 JBR image-cache evict frames. Resize dynamic images reported 552 JBR command
+  frames, `app_new_fps=110.4`, `jbr_command_fps=110.4`, 5,276 JBR image-cache evict frames, one JBR image-cache clear,
+  and one scoped image-cache clear. This was a shortened 3-row smoke, not the full benchmark suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-benchmark-suite/20260615-234133/suite.tsv`.
 - Magic Jewel recorded optional old-artifact availability without launching the app:
   `CASE_GROUPS=optional-old ./scripts/jbr-skia-artifact-matrix.sh` produced a skipped-row matrix for all five optional
   rows because no old artifact inputs were configured: `OLD_JBR_API_SHIM`, `OLD_JBR_SKIA_LIB`, `OLD_DESKTOP_PATCH`,
