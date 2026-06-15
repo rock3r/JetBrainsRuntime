@@ -44,6 +44,15 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel ran an exact RuntimeEffect forced-context pure-color screenshot-parity smoke:
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES=parity-forced-context-runtime-effect-pure-color ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  passed 1/1 with `fallback_new_count=0`, `unsupported=none`, 781 CMP recorder frames, 780 Skiko/JBR command frames,
+  zero picture frames, screenshot status passed, `avg_delta=1.964`, `bad_pixel_ratio=0.04619`,
+  `compose_bad_pixel_ratio=0.06861`, one destination context-change marker, one command-cache clear, one JBR
+  image-cache clear, one scoped image-cache clear, 1,411 RuntimeEffect source-cache hit frames, one miss, 9
+  shader-handle define frames, and 1,412 shader-handle use frames. This was an exact one-row parity smoke, not the
+  full screenshot-parity suite; the output directory was 4.1M and `out` remained 121G:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-010938/suite.tsv`.
 - Magic Jewel ran a paired exact RuntimeEffect resize pure-color validation under the daily cap. The screenshot-parity
   row
   `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES=parity-resize-runtime-effect-pure-color ./scripts/jbr-skia-screenshot-parity-suite.sh`

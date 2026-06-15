@@ -95,6 +95,15 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   focused command lifecycle row is clean while preserving the parity-row resize recovery artifact for follow-up:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-010544/suite.tsv`
   and `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260616-010721/suite.tsv`.
+- Magic Jewel paired the resize pure-color row with exact forced-destination-context parity:
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES=parity-forced-context-runtime-effect-pure-color ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  passed 1/1 with no fallback or unsupported reasons, 781 CMP recorder frames, 780 Skiko/JBR command frames, zero
+  picture frames, screenshot status passed, `avg_delta=1.964`, `bad_pixel_ratio=0.04619`,
+  `compose_bad_pixel_ratio=0.06861`, one destination context-change marker, one command-cache clear, one JBR
+  image-cache clear, one scoped image-cache clear, 1,411 RuntimeEffect source-cache hit frames, one miss, 9
+  shader-handle define frames, and 1,412 shader-handle use frames. This keeps RuntimeEffect shader descriptor
+  redefinition across destination context migration covered under the daily cap:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-010938/suite.tsv`.
 - Magic Jewel continued RuntimeEffect parity with an exact stable color-filter row:
   `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES=parity-runtime-effect-stable-color-filter ./scripts/jbr-skia-screenshot-parity-suite.sh`
   passed 1/1 with no fallback, no unsupported reasons, 546 CMP/Skiko/JBR command frames, zero picture frames,

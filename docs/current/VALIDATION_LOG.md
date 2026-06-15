@@ -5,6 +5,18 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-16 exact RuntimeEffect forced-context pure-color screenshot-parity smoke: Magic Jewel ran
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES=parity-forced-context-runtime-effect-pure-color ./scripts/jbr-skia-screenshot-parity-suite.sh`.
+  The exact row passed with `fallback_new_count=0`, `unsupported=none`, 781 CMP recorder frames, 780 Skiko command
+  frames, 780 JBR command frames, zero picture frames, screenshot status passed, `avg_delta=1.964`,
+  `bad_pixel_ratio=0.04619`, `header_buttons_bad_pixel_ratio=0.00381`, `compose_bad_pixel_ratio=0.06861`,
+  one destination context-change marker, one command-cache clear, one JBR image-cache clear, one scoped image-cache
+  clear, 1,411 RuntimeEffect source-cache hit frames, one miss, 45 effect-handle define frames, 9 shader-handle define
+  frames, and 1,412 shader-handle use frames. Diff image:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-010938/parity-forced-context-runtime-effect-pure-color/report/parity-diff.png`.
+  The output directory was 4.1M, `magic-jewel/out` remained 121G, and disk free was about 200Gi. This was not the full
+  screenshot-parity suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-010938/suite.tsv`.
 - 2026-06-16 exact RuntimeEffect resize pure-color paired validation: Magic Jewel first ran
   `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES=parity-resize-runtime-effect-pure-color ./scripts/jbr-skia-screenshot-parity-suite.sh`.
   The exact parity row passed with screenshot status passed, `validation_failures=none`, 826 CMP recorder frames, 827
