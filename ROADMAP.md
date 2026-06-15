@@ -46,6 +46,18 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel refreshed the exact RuntimeEffect compile/build fallback command-probe subset:
+  `EXPECT_SCREENSHOT_ASSERTION=false DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="commands-runtime-effect-compile-fallback commands-runtime-effect-build-fallback commands-runtime-effect-color-filter-compile-fallback commands-runtime-effect-color-filter-build-fallback" ./scripts/jbr-skia-command-probe-suite.sh`
+  passed 4/4 with one expected fallback per row, `unsupported=none`, zero JBR command/picture frames, and screenshot
+  capture not run. The shader compile row recorded 1,216 CMP/Skiko frames, one compile failure, zero build failures,
+  and 7,693 RuntimeEffect cache-hit frames with one miss. The shader build row recorded 810 CMP frames, 809 Skiko
+  frames, zero compile failures, 7,164 build failures, 7,163 cache-hit frames with one miss, and
+  `stage=missing-child`. The color-filter compile row recorded 767 CMP frames, 766 Skiko frames, one compile failure,
+  zero build failures, and 8,197 cache-hit frames with one miss. The color-filter build row recorded 1,214 CMP/Skiko
+  frames, zero compile failures, 8,072 build failures, 8,071 cache-hit frames with one miss, and `stage=child-count`.
+  This was an exact four-row command-probe refresh, not the full suite; output directory was 43M, `out` remained 121G,
+  and disk free was about 173Gi:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260616-015112/suite.tsv`.
 - Magic Jewel refreshed the exact RuntimeEffect child-only resize/forced-context command-probe pair:
   `EXPECT_SCREENSHOT_ASSERTION=false DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="commands-resize-runtime-effect-child-only commands-forced-context-runtime-effect-child-only" ./scripts/jbr-skia-command-probe-suite.sh`
   passed 2/2 with `fallback_new_count=0` and `unsupported=none` for both rows. The resize row recorded 819 CMP

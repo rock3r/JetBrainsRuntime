@@ -5,6 +5,20 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-16 exact RuntimeEffect compile/build fallback command-probe refresh: Magic Jewel ran
+  `EXPECT_SCREENSHOT_ASSERTION=false DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="commands-runtime-effect-compile-fallback commands-runtime-effect-build-fallback commands-runtime-effect-color-filter-compile-fallback commands-runtime-effect-color-filter-build-fallback" ./scripts/jbr-skia-command-probe-suite.sh`.
+  All four exact rows passed with one expected fallback per row, `unsupported=none`, zero JBR command frames, zero JBR
+  picture frames, and screenshot capture not run. `commands-runtime-effect-compile-fallback` recorded 1,216 CMP
+  recorder frames, 1,216 Skiko command frames, one RuntimeEffect compile failure, zero build failures, 7,693
+  RuntimeEffect cache-hit frames, and one miss. `commands-runtime-effect-build-fallback` recorded 810 CMP recorder
+  frames, 809 Skiko command frames, zero compile failures, 7,164 RuntimeEffect build failures, 7,163 cache-hit frames,
+  one miss, and the expected repeated `stage=missing-child` build-failure marker. `commands-runtime-effect-color-filter-compile-fallback`
+  recorded 767 CMP recorder frames, 766 Skiko command frames, one RuntimeEffect compile failure, zero build failures,
+  8,197 cache-hit frames, and one miss. `commands-runtime-effect-color-filter-build-fallback` recorded 1,214 CMP/Skiko
+  command frames, zero compile failures, 8,072 RuntimeEffect build failures, 8,071 cache-hit frames, one miss, and the
+  expected repeated `stage=child-count` color-filter build-failure marker. The output directory was 43M,
+  `magic-jewel/out` remained 121G, and disk free was about 173Gi. This was not the full command-probe suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260616-015112/suite.tsv`.
 - 2026-06-16 exact RuntimeEffect child-only resize/forced-context command-probe refresh: Magic Jewel ran
   `EXPECT_SCREENSHOT_ASSERTION=false DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="commands-resize-runtime-effect-child-only commands-forced-context-runtime-effect-child-only" ./scripts/jbr-skia-command-probe-suite.sh`.
   Both exact rows passed with `fallback_new_count=0`, `unsupported=none`, zero picture frames, and screenshot status
