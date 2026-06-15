@@ -5,6 +5,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-16 shortened picture benchmark smoke: Magic Jewel ran
+  `EXPECT_SCREENSHOT_ASSERTION=false DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES=picture ./scripts/jbr-skia-benchmark-suite.sh`.
+  The exact row passed with `fallback_new_count=0`, `unsupported=none`, screenshot status passed, 769 Skiko picture
+  frames, 769 JBR picture frames, zero Skiko/JBR command frames, `app_old_fps=336.6`, `app_new_fps=153.8`,
+  `jbr_picture_fps=153.8`, `old_avg_cpu=107.24`, and `new_avg_cpu=116.27`. The output directory was 1.7M,
+  `magic-jewel/out` remained 121G, and disk free was about 174Gi. This was not the full benchmark suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-benchmark-suite/20260616-003352/suite.tsv`.
 - 2026-06-16 exact RuntimeEffect stable color-filter screenshot-parity smoke: Magic Jewel ran
   `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES=parity-runtime-effect-stable-color-filter ./scripts/jbr-skia-screenshot-parity-suite.sh`.
   The exact row passed with `fallback_new_count=0`, `unsupported=none`, 546 CMP recorder frames, 546 Skiko command

@@ -44,6 +44,13 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel ran a shortened exact benchmark smoke for the SKP picture baseline:
+  `EXPECT_SCREENSHOT_ASSERTION=false DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES=picture ./scripts/jbr-skia-benchmark-suite.sh`
+  passed 1/1 with `fallback_new_count=0`, `unsupported=none`, screenshot status passed, 769 Skiko/JBR picture frames,
+  zero command frames, `app_old_fps=336.6`, `app_new_fps=153.8`, `jbr_picture_fps=153.8`, `old_avg_cpu=107.24`, and
+  `new_avg_cpu=116.27`. This was a shortened one-row benchmark smoke, not the full benchmark suite; the output
+  directory was 1.7M and `out` remained 121G:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-benchmark-suite/20260616-003352/suite.tsv`.
 - Magic Jewel ran an exact RuntimeEffect stable color-filter screenshot-parity smoke under the consumed 2026-06-16
   broad slot:
   `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES=parity-runtime-effect-stable-color-filter ./scripts/jbr-skia-screenshot-parity-suite.sh`

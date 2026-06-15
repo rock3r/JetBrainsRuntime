@@ -36,6 +36,13 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   frames. This keeps RuntimeEffect stable descriptor/cache parity moving under the daily cap without running the full
   screenshot-parity suite:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-003110/suite.tsv`.
+- Magic Jewel filled the shortened benchmark picture baseline:
+  `EXPECT_SCREENSHOT_ASSERTION=false DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES=picture ./scripts/jbr-skia-benchmark-suite.sh`
+  passed 1/1 with no fallback, no unsupported reasons, screenshot status passed, 769 Skiko/JBR picture frames, zero
+  command frames, `app_old_fps=336.6`, `app_new_fps=153.8`, `jbr_picture_fps=153.8`, `old_avg_cpu=107.24`, and
+  `new_avg_cpu=116.27`. This keeps benchmark coverage moving under the daily cap without running the full benchmark
+  suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-benchmark-suite/20260616-003352/suite.tsv`.
 - Magic Jewel reaffirmed the daily cap with cheap checks only: `LIST_CASE_COUNT=true ./scripts/jbr-skia-command-probe-suite.sh`
   resolved 696 cases, `LIST_CASE_GROUP_COUNTS=true ./scripts/jbr-skia-benchmark-suite.sh` reported `baseline=2` and
   `image-cache=3`, and bare `./scripts/jbr-skia-command-probe-suite.sh` exited 3 before launch against the consumed
