@@ -5,6 +5,21 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-15 focused command-probe lifecycle hardening for RuntimeEffect child-only migration rows: Magic Jewel added
+  `commands-resize-runtime-effect-child-only` and `commands-forced-context-runtime-effect-child-only`. Both rows assert
+  destination migration, command-cache clear, JBR image-cache clear, scoped image-cache clear, RuntimeEffect source-cache
+  reuse, and child shader-handle redefinition/reuse/cache-hit markers. Focused validation
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES="commands-resize-runtime-effect-child-only commands-forced-context-runtime-effect-child-only" ./scripts/jbr-skia-command-probe-suite.sh`
+  passed 2/2 with `fallback_new_count=0`, `unsupported=none`, and zero picture frames. The resize row reported 1,054
+  JBR command frames, one JBR image-cache clear, one scoped image-cache clear, nine shader-handle definitions, 1,490
+  shader-handle uses, 1,487 shader-handle cache hits, 1,489 RuntimeEffect source-cache hits, one source-cache miss, one
+  surface-change marker, and one command-cache clear marker. The forced-context row reported 1,202 JBR command frames,
+  one JBR image-cache clear, one scoped image-cache clear, six shader-handle definitions, 1,684 shader-handle uses,
+  1,682 shader-handle cache hits, 1,683 RuntimeEffect source-cache hits, one source-cache miss, one surface-change
+  marker, and one command-cache clear marker. This is focused command-probe lifecycle change 3 after the 2026-06-15
+  post-sweep smoke refresh, so broad command-probe validation remains deferred until roughly seven more focused changes
+  or an ABI/capability gate. Disk free was about 200Gi:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260615-094747/suite.tsv`.
 - 2026-06-15 focused command-probe lifecycle hardening for RuntimeEffect uniform-only migration rows: Magic Jewel added
   `commands-resize-runtime-effect-uniform-only` and `commands-forced-context-runtime-effect-uniform-only`. Both rows
   assert destination migration, command-cache clear, JBR image-cache clear, scoped image-cache clear, RuntimeEffect

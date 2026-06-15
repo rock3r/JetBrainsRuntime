@@ -39,6 +39,15 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel added resize and forced-context command-probe coverage for RuntimeEffect child-only migration:
+  `commands-resize-runtime-effect-child-only` and `commands-forced-context-runtime-effect-child-only` now assert
+  destination migration, command-cache clear, JBR image-cache clear, scoped image-cache clear, RuntimeEffect source-cache
+  reuse, and child shader-handle redefinition/reuse/cache-hit markers. Exact command-probe validation
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES="commands-resize-runtime-effect-child-only commands-forced-context-runtime-effect-child-only" ./scripts/jbr-skia-command-probe-suite.sh`
+  passed 2/2 with no fallback, no unsupported reasons, zero picture frames, and 1,054/1,202 JBR command frames. This
+  is focused command-probe lifecycle change 3 after the 2026-06-15 post-sweep smoke refresh, so broad command
+  validation remains deferred until roughly seven more focused changes or an ABI/capability gate:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260615-094747/suite.tsv`.
 - Magic Jewel added resize and forced-context command-probe coverage for RuntimeEffect uniform-only migration:
   `commands-resize-runtime-effect-uniform-only` and `commands-forced-context-runtime-effect-uniform-only` now assert
   destination migration, command-cache clear, JBR image-cache clear, scoped image-cache clear, RuntimeEffect source-cache

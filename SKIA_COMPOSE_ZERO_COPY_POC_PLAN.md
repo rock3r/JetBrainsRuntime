@@ -59,6 +59,17 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   This is focused command-probe lifecycle change 2 after the 2026-06-15 post-sweep smoke refresh, so broad
   command-probe validation remains deferred until roughly eight more focused changes or an ABI/capability gate:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260615-094037/suite.tsv`.
+- Focused command-probe lifecycle hardening continued with RuntimeEffect child-only resize and forced-context migration
+  rows. Magic Jewel now includes `commands-resize-runtime-effect-child-only` and
+  `commands-forced-context-runtime-effect-child-only`, both asserting destination migration, command-cache clear, JBR
+  image-cache and scoped image-cache clears, RuntimeEffect source-cache reuse, and child shader-handle
+  redefinition/reuse/cache-hit markers. Exact two-row validation passed with no fallback, no unsupported reasons, zero
+  picture frames, 1,054 and 1,202 command frames, one surface change and one command-cache clear per row, one JBR
+  image-cache clear per row, one scoped image-cache clear per row, six to nine shader-handle definitions, and
+  RuntimeEffect source-cache hits with at most one miss per row. This is focused command-probe lifecycle change 3 after
+  the 2026-06-15 post-sweep smoke refresh, so broad command-probe validation remains deferred until roughly seven more
+  focused changes or an ABI/capability gate:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260615-094747/suite.tsv`.
 - Focused command-probe lifecycle hardening resumed with graphics-layer offset render-effect resize and forced-context
   migration rows. Magic Jewel now includes `commands-resize-graphics-layer-offset-effect` and
   `commands-forced-context-graphics-layer-offset-effect`, both asserting surface/cache migration, JBR image-cache and
