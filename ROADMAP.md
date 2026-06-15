@@ -46,6 +46,19 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel refreshed the exact RuntimeEffect shader-plus-color-filter resize/forced-context command-probe pair:
+  `EXPECT_SCREENSHOT_ASSERTION=false DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="commands-resize-runtime-effect-shader-color-filter commands-forced-context-runtime-effect-shader-color-filter" ./scripts/jbr-skia-command-probe-suite.sh`
+  passed 2/2 with `fallback_new_count=0` and `unsupported=none` for both rows. The resize row recorded 822 CMP
+  recorder frames, 821 Skiko command frames, 822 JBR command frames, `jbr_command_fps=164.4`, one same-context
+  surface-change marker, one command-cache clear, one JBR image-cache clear, one scoped image-cache clear, 1,464
+  RuntimeEffect source-cache hit frames, one miss, 2 effect-handle define frames, 1,464 effect-handle use frames, 1,462
+  effect-handle cache-hit frames, 2,928 shader-handle define frames, and 2,929 shader-handle use frames. The
+  forced-context row recorded 818 CMP recorder frames, 819 Skiko/JBR command frames, `jbr_command_fps=163.8`, one
+  destination context-change marker, one command-cache clear, one JBR image-cache clear, one scoped image-cache clear,
+  1,502 RuntimeEffect source-cache hit frames, one miss, 2 effect-handle define frames, 1,503 effect-handle use frames,
+  1,501 effect-handle cache-hit frames, and 3,006 shader-handle define/use frames. This was an exact two-row
+  command-probe refresh, not the full suite; output directory was 10M and `out` remained 121G:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260616-013644/suite.tsv`.
 - Magic Jewel refreshed the exact RuntimeEffect color-filter resize/forced-context command-probe pair:
   `EXPECT_SCREENSHOT_ASSERTION=false DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="commands-resize-runtime-effect-color-filter commands-forced-context-runtime-effect-color-filter" ./scripts/jbr-skia-command-probe-suite.sh`
   passed 2/2 with `fallback_new_count=0` and `unsupported=none` for both rows. The resize row recorded 810

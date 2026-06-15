@@ -151,6 +151,18 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   image-cache clear, one scoped image-cache clear, 1,421 RuntimeEffect source-cache hit frames, one miss, and 1,423
   effect-handle define/use frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260616-012445/suite.tsv`.
+- Magic Jewel refreshed the RuntimeEffect shader-plus-color-filter resize/forced-context command-probe pair:
+  `EXPECT_SCREENSHOT_ASSERTION=false DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="commands-resize-runtime-effect-shader-color-filter commands-forced-context-runtime-effect-shader-color-filter" ./scripts/jbr-skia-command-probe-suite.sh`
+  passed 2/2 with no fallback or unsupported reasons. Resize reported 822 CMP recorder frames, 821 Skiko command
+  frames, 822 JBR command frames, one same-context surface-change marker, one command-cache clear, one JBR image-cache
+  clear, one scoped image-cache clear, 1,464 RuntimeEffect source-cache hit frames, one miss, 2 effect-handle define
+  frames, 1,464 effect-handle use frames, 1,462 effect-handle cache-hit frames, 2,928 shader-handle define frames, and
+  2,929 shader-handle use frames. Forced context reported 818 CMP recorder frames, 819 Skiko/JBR command frames, one
+  destination context-change marker, one command-cache clear, one JBR image-cache clear, one scoped image-cache clear,
+  1,502 RuntimeEffect source-cache hit frames, one miss, 2 effect-handle define frames, 1,503 effect-handle use frames,
+  1,501 effect-handle cache-hit frames, and 3,006 shader-handle define/use frames. This keeps the combined
+  RuntimeEffect shader/effect handle lifecycle path covered with an exact two-row probe, not a broad suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260616-013644/suite.tsv`.
 - Magic Jewel continued RuntimeEffect parity with an exact stable color-filter row:
   `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES=parity-runtime-effect-stable-color-filter ./scripts/jbr-skia-screenshot-parity-suite.sh`
   passed 1/1 with no fallback, no unsupported reasons, 546 CMP/Skiko/JBR command frames, zero picture frames,
