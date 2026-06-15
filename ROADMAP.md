@@ -44,6 +44,15 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel ran an exact RuntimeEffect color-filter child forced-context command-probe smoke:
+  `EXPECT_SCREENSHOT_ASSERTION=false DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES=commands-forced-context-runtime-effect-color-filter-child ./scripts/jbr-skia-command-probe-suite.sh`
+  passed 1/1 with `fallback_new_count=0`, `unsupported=none`, 666 CMP/Skiko/JBR command frames, zero picture frames,
+  `jbr_command_fps=133.2`, one destination context-change marker, one command-cache clear, one JBR image-cache clear,
+  one scoped image-cache clear, 1,244 RuntimeEffect source-cache hit frames, one miss, 1,247 effect-handle define
+  frames, and 1,245 effect-handle use frames. This pairs with the exact resize child command-probe row while
+  screenshot-parity child resize/forced-context rows remain unimplemented. Output directory was 3.4M and `out`
+  remained 121G:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260616-012135/suite.tsv`.
 - Magic Jewel ran an exact RuntimeEffect color-filter child resize command-probe smoke:
   `EXPECT_SCREENSHOT_ASSERTION=false DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES=commands-resize-runtime-effect-color-filter-child ./scripts/jbr-skia-command-probe-suite.sh`
   passed 1/1 with `fallback_new_count=0`, `unsupported=none`, 779 CMP/Skiko/JBR command frames, zero picture frames,

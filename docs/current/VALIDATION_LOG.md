@@ -5,6 +5,15 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-16 exact RuntimeEffect color-filter child forced-context command-probe smoke: Magic Jewel ran
+  `EXPECT_SCREENSHOT_ASSERTION=false DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES=commands-forced-context-runtime-effect-color-filter-child ./scripts/jbr-skia-command-probe-suite.sh`.
+  The exact command-probe row passed with `fallback_new_count=0`, `unsupported=none`, 666 CMP recorder frames, 666
+  Skiko command frames, 666 JBR command frames, zero picture frames, `jbr_command_fps=133.2`, screenshot status passed,
+  one destination context-change marker, one command-cache clear, one JBR image-cache clear, one scoped image-cache
+  clear, 1,244 RuntimeEffect source-cache hit frames, one miss, 1,247 effect-handle define frames, and 1,245
+  effect-handle use frames. The output directory was 3.4M, `magic-jewel/out` remained 121G, and disk free was about
+  200Gi. This was not the full command-probe suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260616-012135/suite.tsv`.
 - 2026-06-16 exact RuntimeEffect color-filter child resize command-probe smoke: Magic Jewel first confirmed that
   `parity-resize-runtime-effect-color-filter-child` is not an implemented screenshot-parity case, then ran
   `EXPECT_SCREENSHOT_ASSERTION=false DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES=commands-resize-runtime-effect-color-filter-child ./scripts/jbr-skia-command-probe-suite.sh`.

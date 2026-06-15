@@ -135,6 +135,13 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   screenshot-parity suite has only the base child color-filter parity row today, so this exact command-probe row is the
   current narrow resize lifecycle gate until child resize/forced-context parity rows are implemented:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260616-011921/suite.tsv`.
+- Magic Jewel paired that with an exact child color-filter forced-destination-context command-probe row:
+  `EXPECT_SCREENSHOT_ASSERTION=false DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES=commands-forced-context-runtime-effect-color-filter-child ./scripts/jbr-skia-command-probe-suite.sh`
+  passed with no fallback or unsupported reasons, 666 CMP/Skiko/JBR command frames, one destination context-change
+  marker, one command-cache clear, one JBR image-cache clear, one scoped image-cache clear, 1,244 RuntimeEffect
+  source-cache hit frames, one miss, 1,247 effect-handle define frames, and 1,245 effect-handle use frames. Together
+  the resize and forced-context command-probe rows cover the child color-filter lifecycle path until parity rows exist:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260616-012135/suite.tsv`.
 - Magic Jewel continued RuntimeEffect parity with an exact stable color-filter row:
   `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES=parity-runtime-effect-stable-color-filter ./scripts/jbr-skia-screenshot-parity-suite.sh`
   passed 1/1 with no fallback, no unsupported reasons, 546 CMP/Skiko/JBR command frames, zero picture frames,
