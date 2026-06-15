@@ -5,6 +5,22 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-15 focused command-probe lifecycle hardening for graphics-layer near-camera chained render-effect plus
+  blend/color-matrix-filter migration rows: Magic Jewel added
+  `commands-resize-graphics-layer-near-camera-chained-render-effect-blend-color-matrix-filter` and
+  `commands-forced-context-graphics-layer-near-camera-chained-render-effect-blend-color-matrix-filter`. Both rows
+  assert destination migration, command-cache clear, JBR image-cache clear, scoped image-cache clear, and chained
+  effect-handle redefinition/reuse/cache-hit markers while rotation X/Y and near-camera are enabled. Focused validation
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES="commands-resize-graphics-layer-near-camera-chained-render-effect-blend-color-matrix-filter commands-forced-context-graphics-layer-near-camera-chained-render-effect-blend-color-matrix-filter" ./scripts/jbr-skia-command-probe-suite.sh`
+  passed 2/2 with `fallback_new_count=0`, `unsupported=none`, and zero picture frames. The resize row reported 712
+  JBR command frames, one JBR image-cache clear, one scoped image-cache clear, six effect-handle definitions, 2,716
+  effect-handle uses, 2,712 effect-handle cache hits, one surface-change marker, and one command-cache clear marker.
+  The forced-context row reported 613 JBR command frames, one JBR image-cache clear, one scoped image-cache clear, six
+  effect-handle definitions, 1,788 effect-handle uses, 1,784 effect-handle cache hits, one surface-change marker, and
+  one command-cache clear marker. This is focused command-probe lifecycle change 10 after the 2026-06-14 18:10 full
+  command-probe sweep, so the next validation step is the cadence-triggered full command-probe sweep. Disk free was
+  about 112Gi:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260615-021141/suite.tsv`.
 - 2026-06-15 focused command-probe lifecycle hardening for graphics-layer chained render-effect plus
   blend/color-matrix-filter migration rows: Magic Jewel added
   `commands-resize-graphics-layer-chained-render-effect-blend-color-matrix-filter` and

@@ -39,6 +39,20 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel added resize and forced-context command-probe coverage for graphics-layer near-camera chained
+  render-effect plus blend and color-matrix-filter composition:
+  `commands-resize-graphics-layer-near-camera-chained-render-effect-blend-color-matrix-filter` and
+  `commands-forced-context-graphics-layer-near-camera-chained-render-effect-blend-color-matrix-filter` now assert
+  destination migration, command-cache clear, JBR image-cache clear, scoped image-cache clear, and chained
+  effect-handle redefinition/reuse/cache-hit markers while rotation X/Y and near-camera are enabled. Exact
+  command-probe validation
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES="commands-resize-graphics-layer-near-camera-chained-render-effect-blend-color-matrix-filter commands-forced-context-graphics-layer-near-camera-chained-render-effect-blend-color-matrix-filter" ./scripts/jbr-skia-command-probe-suite.sh`
+  passed with no fallback, no unsupported reasons, zero picture frames, 712 and 613 JBR command frames, respectively.
+  Both rows reported one surface change, one command-cache clear, one JBR image-cache clear, one scoped image-cache
+  clear, six effect-handle definitions, and effect-handle cache hits. This is focused command-probe lifecycle change 10
+  after the 2026-06-14 18:10 full command-probe sweep, so the next validation step is the cadence-triggered full
+  command-probe sweep:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260615-021141/suite.tsv`.
 - Magic Jewel added resize and forced-context command-probe coverage for graphics-layer chained render-effect plus blend
   and color-matrix-filter composition:
   `commands-resize-graphics-layer-chained-render-effect-blend-color-matrix-filter` and
