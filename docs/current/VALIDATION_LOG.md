@@ -5,6 +5,22 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-15 focused command-probe lifecycle hardening for composite shader plus color-filter migration rows: Magic
+  Jewel added `commands-resize-composite-shader-color-filter` and
+  `commands-forced-context-composite-shader-color-filter`. Both rows assert destination migration, command-cache clear,
+  JBR image-cache clear, scoped image-cache clear, stable shader/effect-handle redefinition, and shader-handle reuse
+  markers. Focused validation
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES="commands-resize-composite-shader-color-filter commands-forced-context-composite-shader-color-filter" ./scripts/jbr-skia-command-probe-suite.sh`
+  passed 2/2 with `fallback_new_count=0`, `unsupported=none`, and zero picture frames. The resize row reported 1,119
+  JBR command frames, one JBR image-cache clear, one scoped image-cache clear, two effect-handle definitions, three
+  effect-handle uses, one effect-handle cache hit, 12 shader-handle definitions, 1,694 shader-handle uses, 1,688
+  shader-handle cache hits, one surface-change marker, and one command-cache clear marker. The forced-context row
+  reported 1,070 JBR command frames, one JBR image-cache clear, one scoped image-cache clear, two effect-handle
+  definitions, two effect-handle uses, eight shader-handle definitions, 1,585 shader-handle uses, 1,581 shader-handle
+  cache hits, one surface-change marker, and one command-cache clear marker. This is focused command-probe lifecycle
+  change 9 after the 2026-06-15 post-sweep smoke refresh, so broad command-probe validation remains deferred until
+  roughly one more focused change or an ABI/capability gate. Disk free was about 173Gi:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260615-102824/suite.tsv`.
 - 2026-06-15 focused command-probe lifecycle hardening for linear-gradient shader plus color-filter migration rows:
   Magic Jewel added `commands-resize-linear-gradient-shader-color-filter` and
   `commands-forced-context-linear-gradient-shader-color-filter`. Both rows assert destination migration, command-cache
