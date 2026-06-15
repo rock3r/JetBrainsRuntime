@@ -13,11 +13,17 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 
 - ABI 106 artifacts are current across JBR private API, JBR API mirror, Skiko, CMP, and Magic Jewel.
 - Validation should be batched to keep iteration cost under control: use exact cases or tiny focused groups per change,
-  and cap broad command sweeps, screenshot sweeps, and full matrices at one broad validation slot per local calendar
-  day unless the user explicitly asks for another one or an ABI/capability break needs an emergency gate. Magic Jewel
-  now enforces that cap with `scripts/jbr-skia-daily-validation-guard.sh` for default command-probe sweeps, screenshot
-  parity suites, compatibility matrices, and artifact matrices. Today's existing 2026-06-15 broad command sweep was
-  seeded into the guard stamp, so continue with exact `CASES`/small `CASE_GROUPS` only until the next local-day slot.
+  and cap broad command sweeps, screenshot sweeps, benchmark suites, and full matrices at one broad validation slot per
+  local calendar day unless the user explicitly asks for another one or an ABI/capability break needs an emergency
+  gate. Magic Jewel now enforces that cap with `scripts/jbr-skia-daily-validation-guard.sh` for default command-probe
+  sweeps, screenshot parity suites, benchmark suites, compatibility matrices, and artifact matrices. Today's existing
+  2026-06-15 broad command sweep was seeded into the guard stamp, so continue with exact `CASES`/small `CASE_GROUPS`
+  only until the next local-day slot.
+- Magic Jewel extended the once-per-local-day broad-validation guard to `scripts/jbr-skia-benchmark-suite.sh` default
+  runs. Cheap guard validation confirmed `LIST_CASE_COUNT=true ./scripts/jbr-skia-benchmark-suite.sh` still lists 5
+  benchmark cases, default `./scripts/jbr-skia-benchmark-suite.sh` exits 3 against the already-consumed 2026-06-15
+  broad slot before launching cases, and `CASES=commands LIST_CASES=true ./scripts/jbr-skia-benchmark-suite.sh`
+  preserves exact-case selection. No broad validation was run for this guardrail-only change.
 - Daily-capped broad command-probe validation refreshed after ten focused shader/RuntimeEffect lifecycle changes:
   `EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-command-probe-suite.sh` passed 589/589 with
   `fallback_sum=350`, 79 unsupported rows, 80,698 JBR picture frames, and 202,105 JBR command frames. This is the

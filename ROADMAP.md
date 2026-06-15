@@ -31,10 +31,10 @@ This is the small working roadmap for the current PoC. The full historical check
 - Keep old/new screenshot parity coverage broad enough to catch text/color/placement regressions, including button
   chrome, embedded resource fonts, system fonts, point dots, shader descriptors, RuntimeEffect rows, and graphics-layer
   transforms.
-- Validation cadence: run very narrow validation for each focused change. Broad command sweeps, screenshot sweeps, and
-  full matrices are capped at one broad validation slot per local calendar day unless the user explicitly asks for
-  another one or an ABI/capability break needs an emergency gate. Magic Jewel's broad runners enforce this with
-  `scripts/jbr-skia-daily-validation-guard.sh`; use exact `CASES`/`CASE_GROUPS` for normal iteration, or
+- Validation cadence: run very narrow validation for each focused change. Broad command sweeps, screenshot sweeps,
+  benchmark suites, and full matrices are capped at one broad validation slot per local calendar day unless the user
+  explicitly asks for another one or an ABI/capability break needs an emergency gate. Magic Jewel's broad runners
+  enforce this with `scripts/jbr-skia-daily-validation-guard.sh`; use exact `CASES`/`CASE_GROUPS` for normal iteration, or
   `JBR_SKIA_ALLOW_EXTRA_BROAD_VALIDATION=true` only for an explicit override.
 - Keep branches committed and pushed to the user's GitHub forks at each major step.
 - Keep the top-level plan/roadmap compact. Move verbose historical narrative into `docs/history/` or focused
@@ -42,6 +42,13 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel extended the daily broad-validation guard to the default benchmark suite so accidental full benchmark
+  runs share the same once-per-local-day cap as command sweeps, screenshot parity suites, compatibility matrices, and
+  artifact matrices. Cheap guard validation only: `LIST_CASE_COUNT=true ./scripts/jbr-skia-benchmark-suite.sh`
+  reported 5 selected benchmark cases, `./scripts/jbr-skia-benchmark-suite.sh` exited 3 against the already-consumed
+  2026-06-15 broad slot before launching cases, and
+  `CASES=commands LIST_CASES=true ./scripts/jbr-skia-benchmark-suite.sh` reported only `commands`. No broad validation
+  was run.
 - Magic Jewel added resize and forced-context command-probe coverage for color-filter handle migration:
   `commands-resize-color-filter-handle` and `commands-forced-context-color-filter-handle` now assert destination
   migration, command-cache clear, JBR image-cache clear, scoped image-cache clear, and color-filter effect-handle

@@ -5,6 +5,14 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-15 daily broad-validation cap enforcement refresh: Magic Jewel now sources
+  `scripts/jbr-skia-daily-validation-guard.sh` from `scripts/jbr-skia-benchmark-suite.sh` and guards default benchmark
+  suite runs when neither `CASES` nor `CASE_GROUPS` is set. Cheap guard validation only:
+  `LIST_CASE_COUNT=true ./scripts/jbr-skia-benchmark-suite.sh` reported 5 benchmark cases,
+  `./scripts/jbr-skia-benchmark-suite.sh` exited 3 with "Broad JBR Skia validation is capped to once per local day"
+  against the already-consumed 2026-06-15 broad slot, and
+  `CASES=commands LIST_CASES=true ./scripts/jbr-skia-benchmark-suite.sh` reported `commands`. No benchmark or other
+  broad validation was run.
 - 2026-06-15 focused command-probe lifecycle hardening for color-filter handle migration rows: Magic Jewel added
   `commands-resize-color-filter-handle` and `commands-forced-context-color-filter-handle`. Exact validation
   `EXPECT_SCREENSHOT_ASSERTION=false CASES="commands-resize-color-filter-handle commands-forced-context-color-filter-handle" ./scripts/jbr-skia-command-probe-suite.sh`
