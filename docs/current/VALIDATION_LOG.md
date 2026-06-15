@@ -5,6 +5,14 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-15 shader-descriptor compatibility fallback smoke: Magic Jewel ran
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES=shader-descriptor-capability-missing ./scripts/jbr-skia-compatibility-matrix.sh`.
+  The exact row passed with expected `command-capability-mismatch` fallback, `fallback_new_count=1`,
+  `unsupported=none`, background window shown, 879 CMP recorder frames, zero Skiko command frames, zero JBR command
+  frames, zero picture frames, screenshot status passed, and
+  `[SKIKO] warn: SKIKO_JBR_INTEROP_FALLBACK reason=command-capability-mismatch` in `new.log`. This was not the full
+  compatibility matrix:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260615-235048/matrix.tsv`.
 - 2026-06-15 real clean-geometry screenshot-parity smoke: Magic Jewel ran
   `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES=parity-geometry-clean ./scripts/jbr-skia-screenshot-parity-suite.sh` with
   pixel diff enabled. The exact row passed with `fallback_new_count=0`, `unsupported=none`, 885 CMP recorder frames,

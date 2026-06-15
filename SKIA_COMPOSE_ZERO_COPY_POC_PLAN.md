@@ -122,6 +122,13 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   low-word command capability mismatch, and 838 for high-word command capability mismatch. This keeps compatibility
   validation moving under the daily cap without running the full matrix:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260615-232825/matrix.tsv`.
+- Magic Jewel ran a narrow shader-descriptor capability fallback smoke:
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES=shader-descriptor-capability-missing ./scripts/jbr-skia-compatibility-matrix.sh`
+  passed 1/1 with expected `command-capability-mismatch` fallback, one new fallback, no unsupported reasons, background
+  window shown, 879 CMP recorder frames, zero Skiko/JBR command frames, zero picture frames, screenshot status passed,
+  and the expected `SKIKO_JBR_INTEROP_FALLBACK reason=command-capability-mismatch` marker in `new.log`. This keeps
+  shader descriptor gate validation moving under the daily cap without running the full matrix:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260615-235048/matrix.tsv`.
 - Magic Jewel tightened daily broad-validation guard startup for bare command-probe and screenshot-parity default runs.
   Cheap guard validation only: `./scripts/jbr-skia-command-probe-suite.sh` and
   `./scripts/jbr-skia-screenshot-parity-suite.sh` exit 3 immediately against the already-consumed 2026-06-15 broad
