@@ -59,6 +59,13 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `compose_bad_pixel_ratio=0.07633`, and `compose_bottom_swatches_bad_pixel_ratio=0.00000`. This exact row keeps
   screenshot parity moving under the daily cap without running the full parity suite:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260615-231755/suite.tsv`.
+- Magic Jewel ran a narrow public-API compatibility fallback smoke:
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES=public-api-missing ./scripts/jbr-skia-compatibility-matrix.sh` passed 1/1
+  with expected `public-api-missing` fallback, one new fallback, no unsupported reasons, background window shown, 729
+  CMP recorder frames, zero Skiko/JBR command frames, zero picture frames, screenshot status passed, and the expected
+  `SKIKO_JBR_INTEROP_FALLBACK reason=public-api-missing` marker in `new.log`. This exact row strengthens fallback
+  validation under the daily cap without running the full compatibility matrix:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260615-232037/matrix.tsv`.
 - Magic Jewel tightened daily broad-validation guard startup for bare command-probe and screenshot-parity default runs.
   Cheap guard validation only: `./scripts/jbr-skia-command-probe-suite.sh` and
   `./scripts/jbr-skia-screenshot-parity-suite.sh` exit 3 immediately against the already-consumed 2026-06-15 broad
