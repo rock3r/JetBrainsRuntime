@@ -43,6 +43,12 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel ran a short exact benchmark smoke for the command path:
+  `EXPECT_SCREENSHOT_ASSERTION=false DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES=commands ./scripts/jbr-skia-benchmark-suite.sh`
+  passed 1/1 with `fallback_new_count=0`, `unsupported=none`, background window shown, 843 CMP recorder frames, 842
+  Skiko/JBR command frames, zero picture frames, `app_new_fps=168.6`, `jbr_command_fps=168.4`, and screenshot status
+  passed. This was a shortened one-row smoke, not the full benchmark suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-benchmark-suite/20260615-231519/suite.tsv`.
 - Magic Jewel ran a narrow artifact-matrix smoke for the current artifact set:
   `EXPECT_SCREENSHOT_ASSERTION=false CASES=current-all ./scripts/jbr-skia-artifact-matrix.sh` passed 1/1 with
   `fallback_new_count=0`, `unsupported=none`, background window shown, 465 CMP recorder frames, 465 Skiko/JBR command

@@ -5,6 +5,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-15 short benchmark smoke: Magic Jewel ran
+  `EXPECT_SCREENSHOT_ASSERTION=false DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES=commands ./scripts/jbr-skia-benchmark-suite.sh`.
+  The exact row passed with `fallback_new_count=0`, `unsupported=none`, background window shown, 843 CMP recorder
+  frames, 842 Skiko command frames, 842 JBR command frames, zero picture frames, `app_new_fps=168.6`,
+  `jbr_command_fps=168.4`, and screenshot status passed. This used shortened 5s/1s timing and was not the full
+  benchmark suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-benchmark-suite/20260615-231519/suite.tsv`.
 - 2026-06-15 narrow artifact-matrix smoke: current artifact inputs existed at `/tmp/jbr-skia-run/desktop`,
   `/tmp/jbr-api-shim.jar`, `/tmp/jbr-skia-native/libjbrskiainterop.dylib`, and
   `../cmp/out/compose-multiplatform-core`. The exact row

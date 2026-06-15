@@ -46,6 +46,12 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   CMP output inputs were all present. This exact row keeps artifact validation moving under the daily cap; optional old
   artifact rows and the full artifact matrix remain pending:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260615-231244/matrix.tsv`.
+- Magic Jewel ran a shortened exact benchmark smoke:
+  `EXPECT_SCREENSHOT_ASSERTION=false DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES=commands ./scripts/jbr-skia-benchmark-suite.sh`
+  passed 1/1 with no fallback, no unsupported reasons, background window shown, 843 CMP recorder frames, 842 Skiko/JBR
+  command frames, zero picture frames, `app_new_fps=168.6`, `jbr_command_fps=168.4`, and screenshot status passed. This
+  keeps benchmark validation moving under the daily cap without running the full benchmark suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-benchmark-suite/20260615-231519/suite.tsv`.
 - Magic Jewel tightened daily broad-validation guard startup for bare command-probe and screenshot-parity default runs.
   Cheap guard validation only: `./scripts/jbr-skia-command-probe-suite.sh` and
   `./scripts/jbr-skia-screenshot-parity-suite.sh` exit 3 immediately against the already-consumed 2026-06-15 broad
