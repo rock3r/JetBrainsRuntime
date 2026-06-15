@@ -5,6 +5,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-15 daily-capped broad command-probe validation after ten focused shader/RuntimeEffect lifecycle changes:
+  `EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-command-probe-suite.sh` passed 589/589 with `fallback_sum=350`,
+  79 unsupported rows, 80,698 JBR picture frames, and 202,105 JBR command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260615-103914/suite.tsv`.
+  This consumes the 2026-06-15 broad validation slot and resets the focused command-probe counter to zero. Continue
+  with exact-row/tiny-group validation only until the next local-day slot unless the user explicitly asks for another
+  broad run or an ABI/capability break needs an emergency gate. Disk free was about 209Gi after the sweep.
 - 2026-06-15 focused command-probe lifecycle hardening for transformed shader migration rows: Magic Jewel added
   `commands-resize-transformed-shader` and `commands-forced-context-transformed-shader`. Both rows assert destination
   migration, command-cache clear, JBR image-cache clear, scoped image-cache clear, stable shader-handle redefinition,

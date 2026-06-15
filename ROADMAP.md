@@ -31,14 +31,21 @@ This is the small working roadmap for the current PoC. The full historical check
 - Keep old/new screenshot parity coverage broad enough to catch text/color/placement regressions, including button
   chrome, embedded resource fonts, system fonts, point dots, shader descriptors, RuntimeEffect rows, and graphics-layer
   transforms.
-- Validation cadence: run very narrow validation for each focused change, and batch broad sweeps/full matrices until
-  roughly 10 meaningful changes accumulate or an ABI/capability milestone requires an immediate gate.
+- Validation cadence: run very narrow validation for each focused change. Broad command sweeps, screenshot sweeps, and
+  full matrices are capped at one broad validation slot per local calendar day unless the user explicitly asks for
+  another one or an ABI/capability break needs an emergency gate.
 - Keep branches committed and pushed to the user's GitHub forks at each major step.
 - Keep the top-level plan/roadmap compact. Move verbose historical narrative into `docs/history/` or focused
   `docs/current/` ledgers when these files start to crowd agent context.
 
 ## Latest Validations
 
+- Magic Jewel refreshed the daily-capped broad command-probe validation after ten focused shader/RuntimeEffect lifecycle
+  changes. `EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-command-probe-suite.sh` passed 589/589 with
+  `fallback_sum=350`, 79 unsupported rows, 80,698 JBR picture frames, and 202,105 JBR command frames. This is the
+  2026-06-15 broad validation slot and resets the focused command-probe counter to zero; continue with exact-row/tiny
+  focused validation only until the next local-day slot or an explicit ABI/capability gate. Disk free was about 209Gi:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260615-103914/suite.tsv`.
 - Magic Jewel added resize and forced-context command-probe coverage for transformed shader migration:
   `commands-resize-transformed-shader` and `commands-forced-context-transformed-shader` now assert destination
   migration, command-cache clear, JBR image-cache clear, scoped image-cache clear, stable shader-handle redefinition,
