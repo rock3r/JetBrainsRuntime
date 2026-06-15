@@ -5,6 +5,19 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-15 focused command-probe lifecycle hardening for saveLayer color-matrix filter replay and migration rows:
+  Magic Jewel added `commands-save-layer-color-matrix-filter`, `commands-resize-save-layer-color-matrix-filter`, and
+  `commands-forced-context-save-layer-color-matrix-filter`. Exact validation
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES="commands-save-layer-color-matrix-filter commands-resize-save-layer-color-matrix-filter commands-forced-context-save-layer-color-matrix-filter" ./scripts/jbr-skia-command-probe-suite.sh`
+  passed 3/3 with `fallback_new_count=0`, `unsupported=none`, and zero picture frames. The base row reported 762 JBR
+  command frames, one effect-handle definition, 1,158 effect-handle uses, and 1,157 effect-handle cache hits. The
+  resize row reported 1,092 JBR command frames, one JBR image-cache clear, one scoped image-cache clear, two
+  effect-handle definitions, 1,522 effect-handle uses, 1,520 effect-handle cache hits, one same-context surface-change
+  marker, and one command-cache clear marker. The forced-context row reported 1,195 JBR command frames, one JBR
+  image-cache clear, one scoped image-cache clear, two effect-handle definitions, 1,591 effect-handle uses, 1,589
+  effect-handle cache hits, one context-change surface marker, and one command-cache clear marker. This is focused
+  command-probe lifecycle change 8 after the 2026-06-15 daily broad validation slot:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260615-180618/suite.tsv`.
 - 2026-06-15 focused command-probe lifecycle hardening for graphics-layer blend plus color-matrix filter migration rows:
   Magic Jewel added `commands-resize-graphics-layer-blend-color-matrix-filter` and
   `commands-forced-context-graphics-layer-blend-color-matrix-filter`. Exact validation
