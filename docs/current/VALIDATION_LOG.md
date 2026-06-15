@@ -5,6 +5,15 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-15 RuntimeEffect color-filter compatibility fallback smoke: Magic Jewel ran
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES=runtime-color-filter-capability-missing ./scripts/jbr-skia-compatibility-matrix.sh`.
+  The exact row passed with expected `command-capability-mismatch` fallback, `fallback_new_count=1`,
+  `unsupported=none`, background window shown, 560 CMP recorder frames, zero Skiko command frames, zero JBR command
+  frames, zero picture frames, screenshot status passed, and
+  `[SKIKO] warn: SKIKO_JBR_INTEROP_FALLBACK reason=command-capability-mismatch` in `new.log`. The new compatibility
+  output directory was 1.1M, `magic-jewel/out` remained 121G, and disk free remained about 175Gi. This was not the full
+  compatibility matrix:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260615-235857/matrix.tsv`.
 - 2026-06-15 daily broad-validation cadence tightening: Magic Jewel README and the JBR current docs now state that the
   default command-probe sweep, screenshot parity suite, benchmark suite, compatibility matrix, and artifact matrix share
   one local-day broad-validation slot. This explicitly supersedes the older "after ten focused changes" broad-sweep

@@ -44,6 +44,13 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel ran a narrow compatibility fallback smoke for the RuntimeEffect color-filter capability gate:
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES=runtime-color-filter-capability-missing ./scripts/jbr-skia-compatibility-matrix.sh`
+  passed 1/1 with expected `command-capability-mismatch` fallback, `fallback_new_count=1`, `unsupported=none`,
+  background window shown, 560 CMP recorder frames, zero Skiko/JBR command frames, zero picture frames, screenshot
+  status passed, and `[SKIKO] warn: SKIKO_JBR_INTEROP_FALLBACK reason=command-capability-mismatch` in `new.log`. This
+  was an exact one-row compatibility smoke, not the full matrix; the output directory was 1.1M and `out` remained 121G:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260615-235857/matrix.tsv`.
 - Magic Jewel reaffirmed the once-per-local-day broad-validation cap without launching a broad run. No-launch helpers
   reported 696 command-probe cases and the benchmark groups `baseline=2` / `image-cache=3`; a bare
   `./scripts/jbr-skia-command-probe-suite.sh` exited 3 before launching because the existing 2026-06-15 stamp was

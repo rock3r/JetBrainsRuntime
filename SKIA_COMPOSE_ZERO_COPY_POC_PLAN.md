@@ -26,6 +26,13 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   resolved 696 cases, `LIST_CASE_GROUP_COUNTS=true ./scripts/jbr-skia-benchmark-suite.sh` reported `baseline=2` and
   `image-cache=3`, and bare `./scripts/jbr-skia-command-probe-suite.sh` exited 3 before launch against the consumed
   2026-06-15 broad slot. No broad validation was launched.
+- Magic Jewel continued the compatibility fallback track with an exact RuntimeEffect color-filter capability row:
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES=runtime-color-filter-capability-missing ./scripts/jbr-skia-compatibility-matrix.sh`
+  passed 1/1 with expected `command-capability-mismatch`, one new fallback, no unsupported reasons, background window
+  shown, 560 CMP recorder frames, zero Skiko/JBR command frames, zero picture frames, screenshot status passed, and the
+  expected fallback marker in `new.log`. This keeps high-word RuntimeEffect color-filter capability validation moving
+  under the daily cap without running the full matrix:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260615-235857/matrix.tsv`.
 - Magic Jewel closed the daily broad-validation guard range loophole for command-probe and screenshot-parity suites.
   Cheap guard validation only: non-list `CASES_FROM`/`CASES_UNTIL` launches for both suites exited 3 against the
   already-consumed 2026-06-15 broad slot, while list-only range helpers still returned the selected command/parity rows.
