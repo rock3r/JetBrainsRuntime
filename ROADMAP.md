@@ -43,6 +43,15 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel ran a real screenshot-parity smoke for clean geometry:
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES=parity-geometry-clean ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  passed 1/1 with pixel diff enabled, `fallback_new_count=0`, `unsupported=none`, 885 CMP/Skiko/JBR command frames,
+  zero picture frames, screenshot status passed, `avg_delta=2.805`, `bad_pixel_ratio=0.07203`,
+  `header_buttons_bad_pixel_ratio=0.00272`, `compose_bad_pixel_ratio=0.10955`,
+  `compose_bottom_labels_bad_pixel_ratio=0.31738`, `compose_paragraph_probes_bad_pixel_ratio=0.09105`, and
+  `compose_bottom_swatches_bad_pixel_ratio=0.00000`. This was an exact one-row parity smoke, not the full
+  screenshot-parity suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260615-234756/suite.tsv`.
 - Magic Jewel ran a real screenshot-parity smoke for point dots:
   `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES=parity-point-dots ./scripts/jbr-skia-screenshot-parity-suite.sh` passed
   1/1 with pixel diff enabled, `fallback_new_count=0`, `unsupported=none`, 798 CMP/Skiko/JBR command frames, zero

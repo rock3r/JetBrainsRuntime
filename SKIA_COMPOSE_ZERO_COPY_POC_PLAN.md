@@ -93,6 +93,13 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `compose_bad_pixel_ratio=0.07521`, and `compose_bottom_swatches_bad_pixel_ratio=0.00000`. This exact row keeps
   point-dot parity coverage moving under the daily cap without running the full parity suite:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260615-234511/suite.tsv`.
+- Magic Jewel ran a real pixel-diff screenshot-parity smoke for clean geometry:
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES=parity-geometry-clean ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  passed 1/1 with no fallback, no unsupported reasons, 885 CMP/Skiko/JBR command frames, zero picture frames,
+  screenshot status passed, `avg_delta=2.805`, `bad_pixel_ratio=0.07203`, `header_buttons_bad_pixel_ratio=0.00272`,
+  `compose_bad_pixel_ratio=0.10955`, and `compose_bottom_swatches_bad_pixel_ratio=0.00000`. This exact row keeps
+  geometry parity coverage moving under the daily cap without running the full parity suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260615-234756/suite.tsv`.
 - Magic Jewel ran a narrow public-API compatibility fallback smoke:
   `EXPECT_SCREENSHOT_ASSERTION=false CASES=public-api-missing ./scripts/jbr-skia-compatibility-matrix.sh` passed 1/1
   with expected `public-api-missing` fallback, one new fallback, no unsupported reasons, background window shown, 729
