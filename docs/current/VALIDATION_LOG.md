@@ -5,6 +5,14 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-15 daily broad-validation cap range tightening: Magic Jewel now treats command-probe and screenshot-parity
+  default-list `CASES_FROM`/`CASES_UNTIL` launches as broad validation, so range slices cannot bypass the single daily
+  broad slot. Cheap guard validation only:
+  `CASES_FROM=commands-core-primitives CASES_UNTIL=commands-point-lines EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-command-probe-suite.sh`
+  exited 3 against the seeded 2026-06-15 broad slot,
+  `CASES_FROM=parity-rich CASES_UNTIL=parity-button-chrome ./scripts/jbr-skia-screenshot-parity-suite.sh` exited 3
+  against the same slot, and list-only range helpers still returned the selected rows for both suites. No broad
+  validation was launched.
 - 2026-06-15 `CASE_GROUPS` helper startup tightening: Magic Jewel now skips large default case-list materialization in
   command-probe and screenshot-parity suites when grouped selection will replace `CASES`. Cheap guard validation only:
   `CASE_GROUPS=core-effects LIST_CASES=true ./scripts/jbr-skia-command-probe-suite.sh` returned the core-effects rows

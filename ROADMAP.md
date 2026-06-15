@@ -35,13 +35,19 @@ This is the small working roadmap for the current PoC. The full historical check
   benchmark suites, and full matrices are capped at one broad validation slot per local calendar day unless the user
   explicitly asks for another one or an ABI/capability break needs an emergency gate. Magic Jewel's broad runners
   enforce this with `scripts/jbr-skia-daily-validation-guard.sh`; use exact `CASES`/`CASE_GROUPS` for normal iteration, or
-  `JBR_SKIA_ALLOW_EXTRA_BROAD_VALIDATION=true` only for an explicit override.
+  `JBR_SKIA_ALLOW_EXTRA_BROAD_VALIDATION=true` only for an explicit override. Default-list `CASES_FROM`/`CASES_UNTIL`
+  range launches count as broad validation; list-only range helpers remain allowed.
 - Keep branches committed and pushed to the user's GitHub forks at each major step.
 - Keep the top-level plan/roadmap compact. Move verbose historical narrative into `docs/history/` or focused
   `docs/current/` ledgers when these files start to crowd agent context.
 
 ## Latest Validations
 
+- Magic Jewel closed the daily broad-validation guard range loophole: default-list command-probe and screenshot-parity
+  runs selected with `CASES_FROM`/`CASES_UNTIL` now consume or fail against the single daily broad slot instead of
+  bypassing the guard. Cheap guard validation only: range launches for command-probe and screenshot-parity both exited
+  3 against the already-consumed 2026-06-15 slot, while list-only range helpers still returned selected rows. No broad
+  validation was launched.
 - Magic Jewel tightened `CASE_GROUPS` helper startup for command-probe and screenshot-parity suites so grouped
   `LIST_CASES`/selection checks skip materializing the large default case lists before the existing group expansion.
   Cheap guard validation only: `CASE_GROUPS=core-effects LIST_CASES=true ./scripts/jbr-skia-command-probe-suite.sh`

@@ -19,7 +19,12 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   sweeps, screenshot parity suites, benchmark suites, compatibility matrices, and artifact matrices. Today's existing
   2026-06-15 broad command sweep was seeded into the guard stamp, so continue with exact `CASES`/small `CASE_GROUPS`
   only until the next local-day slot. The command-probe and screenshot-parity default runners now check the stamp
-  before expanding their large default case lists, so accidental second broad runs on the same day fail fast.
+  before expanding their large default case lists, and default-list `CASES_FROM`/`CASES_UNTIL` range launches now count
+  as broad validation too, so accidental second broad runs on the same day fail fast.
+- Magic Jewel closed the daily broad-validation guard range loophole for command-probe and screenshot-parity suites.
+  Cheap guard validation only: non-list `CASES_FROM`/`CASES_UNTIL` launches for both suites exited 3 against the
+  already-consumed 2026-06-15 broad slot, while list-only range helpers still returned the selected command/parity rows.
+  No broad validation was launched.
 - Magic Jewel tightened daily broad-validation guard startup for bare command-probe and screenshot-parity default runs.
   Cheap guard validation only: `./scripts/jbr-skia-command-probe-suite.sh` and
   `./scripts/jbr-skia-screenshot-parity-suite.sh` exit 3 immediately against the already-consumed 2026-06-15 broad
