@@ -42,6 +42,15 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel added resize and forced-context command-probe coverage for graphics-layer round-shadow migration:
+  `commands-resize-graphics-layer-round-shadow` and `commands-forced-context-graphics-layer-round-shadow` now assert
+  rounded clipping plus shadow command emission, destination migration, command-cache clear, JBR image-cache clear, and
+  scoped image-cache clear markers. Exact validation
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES="commands-resize-graphics-layer-round-shadow commands-forced-context-graphics-layer-round-shadow" ./scripts/jbr-skia-command-probe-suite.sh`
+  passed 2/2 with no fallback, no unsupported reasons, zero picture frames, one shadow command per row, and 929/1,036
+  JBR command frames. This is focused command-probe lifecycle change 27 after the 2026-06-15 daily broad validation
+  slot; broad validation remains deferred until the next local-day broad slot or an explicit override:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260615-200706/suite.tsv`.
 - Magic Jewel added resize and forced-context command-probe coverage for graphics-layer shadow migration:
   `commands-resize-graphics-layer-shadow` and `commands-forced-context-graphics-layer-shadow` now assert shadow
   command emission, destination migration, command-cache clear, JBR image-cache clear, and scoped image-cache clear
