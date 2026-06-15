@@ -14,30 +14,29 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - ABI 106 artifacts are current across JBR private API, JBR API mirror, Skiko, CMP, and Magic Jewel.
 - Validation should be batched to keep iteration cost under control: use exact cases or tiny focused groups per change,
   and reserve broad command/screenshot/matrix sweeps for every ~10 meaningful changes or explicit ABI/capability gates.
-- Batched full command-probe validation refreshed after ten focused command-probe hardenings for shader descriptor
-  migration and native-font migration rows:
-  `EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-command-probe-suite.sh` passed 549/549 with
-  `fallback_sum=350`, 79 unsupported rows, 65,039 JBR picture frames, and 109,771 JBR command frames. This resets the
+- Batched command-probe validation refreshed after ten focused graphics-layer render-effect lifecycle hardenings. The
+  original full sweep was interrupted after 564/569 rows had passed; after rebuilding the missing `/tmp` JBR API shim
+  and native bridge, the five missing tail rows passed in a scoped recovery run. Combined coverage passed 569/569 with
+  `fallback_sum=350`, 79 unsupported rows, 52,125 JBR picture frames, and 113,849 JBR command frames. This resets the
   focused command-probe change counter to zero; keep subsequent per-change command-probe validation exact-row/tiny-group
-  only until roughly ten more meaningful command-probe changes or an ABI/capability gate. Disk free was about 118Gi
-  after the run:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260614-181002/suite.tsv`.
-- Post-sweep compatibility matrix refreshed after that full command-probe sweep:
+  only until roughly ten more meaningful command-probe changes or an ABI/capability gate. Disk free was about 175Gi
+  after the recovery:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260615-021440/suite.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260615-085024/suite.tsv`.
+- Post-sweep compatibility matrix refreshed after the 569-row command-probe coverage:
   `EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-compatibility-matrix.sh` passed 57/57 with
-  `fallback_sum=56`, 229 JBR command frames from `happy`, and `background_window=true` on all rows. This rechecked the
-  ABI/native ABI, command capability, public API, and current capability fallback gates. A sandboxed first attempt
-  failed before frames because Gradle could not create its wrapper lock under `~/.gradle`; the escalated serial rerun
-  passed. Disk free was about 115Gi after the run:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260615-004232/matrix.tsv`.
+  `fallback_sum=56`, 650 JBR command frames from `happy`, and `background_window=true` on all rows. This rechecked the
+  ABI/native ABI, command capability, public API, and current capability fallback gates:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260615-085511/matrix.tsv`.
 - Narrow artifact/benchmark validation refreshed after the post-sweep compatibility matrix. Required artifact matrix
   `CASE_GROUPS=required EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-artifact-matrix.sh` passed 2/2:
-  `current-all` had no fallback and 316 command frames, while `missing-public-api` took the expected single public-API
+  `current-all` had no fallback and 419 command frames, while `missing-public-api` took the expected single public-API
   fallback with zero command frames; both rows reported `background_window=true`. Command benchmark smoke
-  `CASES=commands ./scripts/jbr-skia-benchmark-suite.sh` passed with no fallback, zero picture frames, 3,129 command
-  frames, `app_new_fps=156.4`, and `jbr_command_fps=156.4`. This was intentionally narrow and does not advance any
+  `CASES=commands ./scripts/jbr-skia-benchmark-suite.sh` passed with no fallback, zero picture frames, 3,661 command
+  frames, `app_new_fps=183.0`, and `jbr_command_fps=183.1`. This was intentionally narrow and does not advance any
   focused change counter:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260615-011346/matrix.tsv`,
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-benchmark-suite/20260615-011452/suite.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260615-092542/matrix.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-benchmark-suite/20260615-092659/suite.tsv`.
 - Focused command-probe lifecycle hardening resumed with graphics-layer offset render-effect resize and forced-context
   migration rows. Magic Jewel now includes `commands-resize-graphics-layer-offset-effect` and
   `commands-forced-context-graphics-layer-offset-effect`, both asserting surface/cache migration, JBR image-cache and
@@ -138,6 +137,34 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   effect-handle definitions per row. This is focused command-probe lifecycle change 10 after the 2026-06-14 18:10 full
   command-probe sweep, so the next validation step is the cadence-triggered full command-probe sweep:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260615-021141/suite.tsv`.
+- Batched command-probe validation refreshed after ten focused graphics-layer render-effect lifecycle hardenings. The
+  cadence-triggered full command
+  `EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-command-probe-suite.sh` was interrupted after 564/569 rows had
+  passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260615-021440/suite.tsv`.
+  The five missing tail rows initially exposed a stale validation environment because `/tmp/jbr-api-shim.jar` and
+  `/tmp/jbr-skia-native/libjbrskiainterop.dylib` were missing; after
+  `./scripts/rebuild-jbr-skia-local-artifacts.sh`, the scoped recovery command
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES_FROM=commands-save-layer-raw-table-color-filter-fallback ./scripts/jbr-skia-command-probe-suite.sh`
+  passed 5/5:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260615-085024/suite.tsv`.
+  Combined coverage passed 569/569 with `fallback_sum=350`, 79 unsupported rows, 52,125 JBR picture frames, and 113,849
+  JBR command frames. This resets the focused command-probe counter to zero.
+- Post-sweep compatibility matrix refreshed after the recovered 569-row command-probe coverage:
+  `EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-compatibility-matrix.sh` passed 57/57 with
+  `fallback_sum=56`, 650 JBR command frames from `happy`, and `background_window=true` on all rows. The matrix
+  rechecked ABI/native ABI mismatch handling, command capability low/high mismatches, public API absence, and the
+  current gradient, text/font, shader/filter/effect/path/transform/image/vertex capability fallback gates:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260615-085511/matrix.tsv`.
+- Narrow artifact/benchmark validation refreshed after the post-sweep compatibility matrix. Required artifact matrix
+  `CASE_GROUPS=required EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-artifact-matrix.sh` passed 2/2:
+  `current-all` had no fallback and 419 command frames, while `missing-public-api` took the expected single
+  public-API fallback with zero command frames; both rows reported `background_window=true`. Command benchmark smoke
+  `CASES=commands ./scripts/jbr-skia-benchmark-suite.sh` passed with no fallback, zero picture frames, 3,661 command
+  frames, `app_new_fps=183.0`, and `jbr_command_fps=183.1`. This was intentionally narrow and does not advance the
+  focused command-probe counter. Disk free was about 174Gi:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260615-092542/matrix.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-benchmark-suite/20260615-092659/suite.tsv`.
 - Batched full command-probe validation refreshed after ten focused command-probe hardenings:
   `EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-command-probe-suite.sh` passed 549/549 with
   `fallback_sum=350`, 80 unsupported rows, 77,679 JBR picture frames, and 152,941 JBR command frames. This resets the

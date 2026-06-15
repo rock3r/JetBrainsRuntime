@@ -39,6 +39,27 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel refreshed post-command-sweep compatibility and narrow smoke validation after the 569-row command-probe
+  coverage. Compatibility matrix
+  `EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-compatibility-matrix.sh` passed 57/57 with `fallback_sum=56`,
+  650 JBR command frames from `happy`, and `background_window=true` on all rows. Required artifact matrix
+  `CASE_GROUPS=required EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-artifact-matrix.sh` passed 2/2:
+  `current-all` replayed 419 command frames with no fallback, and `missing-public-api` took the expected single
+  public-API fallback. Command benchmark smoke `CASES=commands ./scripts/jbr-skia-benchmark-suite.sh` passed with no
+  fallback, zero picture frames, 3,661 JBR command frames, and `jbr_command_fps=183.1`. Disk free was about 174Gi:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260615-085511/matrix.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260615-092542/matrix.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-benchmark-suite/20260615-092659/suite.tsv`.
+- Magic Jewel completed the cadence-triggered command-probe coverage after ten focused graphics-layer render-effect
+  lifecycle hardenings. The original full sweep was interrupted after 564/569 rows had passed; the missing five-row
+  tail was rerun after rebuilding the missing `/tmp/jbr-api-shim.jar` and native bridge with
+  `./scripts/rebuild-jbr-skia-local-artifacts.sh`. Combined coverage from
+  `EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-command-probe-suite.sh` plus
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES_FROM=commands-save-layer-raw-table-color-filter-fallback ./scripts/jbr-skia-command-probe-suite.sh`
+  passed 569/569 with `fallback_sum=350`, 79 unsupported rows, 52,125 JBR picture frames, and 113,849 JBR command
+  frames. This resets the focused command-probe counter to zero:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260615-021440/suite.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260615-085024/suite.tsv`.
 - Magic Jewel added resize and forced-context command-probe coverage for graphics-layer near-camera chained
   render-effect plus blend and color-matrix-filter composition:
   `commands-resize-graphics-layer-near-camera-chained-render-effect-blend-color-matrix-filter` and

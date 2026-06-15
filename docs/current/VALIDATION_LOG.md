@@ -5,6 +5,39 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-15 post-command-sweep compatibility and narrow smoke refresh after the recovered 569-row command-probe
+  coverage: `EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-compatibility-matrix.sh` passed 57/57 with
+  `fallback_sum=56`, 650 JBR command frames from `happy`, and `background_window=true` on all 57 rows. The matrix
+  rechecked ABI mismatch, native ABI mismatch, command capability low/high mismatches, public API absence, and the
+  current gradient, text/font, shader/filter/effect/path/transform/image/vertex capability fallback gates:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260615-085511/matrix.tsv`.
+  Required artifact matrix
+  `CASE_GROUPS=required EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-artifact-matrix.sh` passed 2/2:
+  `current-all` reported no fallback, 419 command frames, and `background_window=true`; `missing-public-api` reported
+  the expected `public-api-missing` fallback, one fallback, zero command frames, and `background_window=true`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260615-092542/matrix.tsv`.
+  Command benchmark smoke `CASES=commands ./scripts/jbr-skia-benchmark-suite.sh` passed with no fallback, 17 old/new
+  samples, zero picture frames, 3,661 JBR command frames, `app_new_fps=183.0`, and `jbr_command_fps=183.1`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-benchmark-suite/20260615-092659/suite.tsv`.
+  Disk free was about 174Gi after the smoke checks.
+- 2026-06-15 cadence-triggered command-probe coverage after ten focused graphics-layer render-effect lifecycle
+  hardenings: the full command-probe sweep
+  `EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-command-probe-suite.sh` was interrupted after 564/569 rows had
+  passed. The interrupted suite covered through `commands-save-layer-raw-color-filter-fallback`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260615-021440/suite.tsv`.
+  The first tail recovery attempts failed with `public-api-missing` and no command/picture replay because
+  `/tmp/jbr-api-shim.jar` and `/tmp/jbr-skia-native/libjbrskiainterop.dylib` were missing. After
+  `./scripts/rebuild-jbr-skia-local-artifacts.sh` restored the local JBR API shim, java.desktop patch classes, and
+  native bridge, the scoped tail recovery
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES_FROM=commands-save-layer-raw-table-color-filter-fallback ./scripts/jbr-skia-command-probe-suite.sh`
+  passed 5/5:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260615-085024/suite.tsv`.
+  Combined coverage passed 569/569 with `fallback_sum=350`, 79 unsupported rows, 52,125 JBR picture frames, and 113,849
+  JBR command frames. Tail rows were
+  `commands-save-layer-raw-table-color-filter-fallback`, `commands-opaque-shader-fallback`,
+  `commands-composite-opaque-shader-fallback`, `commands-picture-shader-fallback`, and
+  `commands-invalid-gradient-fallback`. Disk free was about 175Gi after the recovery. This resets the focused
+  command-probe counter to zero.
 - 2026-06-15 focused command-probe lifecycle hardening for graphics-layer near-camera chained render-effect plus
   blend/color-matrix-filter migration rows: Magic Jewel added
   `commands-resize-graphics-layer-near-camera-chained-render-effect-blend-color-matrix-filter` and
