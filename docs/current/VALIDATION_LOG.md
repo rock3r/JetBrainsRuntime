@@ -5,6 +5,16 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-16 exact RuntimeEffect color-filter child resize command-probe smoke: Magic Jewel first confirmed that
+  `parity-resize-runtime-effect-color-filter-child` is not an implemented screenshot-parity case, then ran
+  `EXPECT_SCREENSHOT_ASSERTION=false DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES=commands-resize-runtime-effect-color-filter-child ./scripts/jbr-skia-command-probe-suite.sh`.
+  The exact command-probe row passed with `fallback_new_count=0`, `unsupported=none`, 779 CMP recorder frames, 779
+  Skiko command frames, 779 JBR command frames, zero picture frames, `jbr_command_fps=155.8`, screenshot status passed,
+  one same-context surface-change marker, one command-cache clear, one JBR image-cache clear, one scoped image-cache
+  clear, 1,429 RuntimeEffect source-cache hit frames, one miss, 1,434 effect-handle define frames, and 1,430
+  effect-handle use frames. The output directory was 3.5M, `magic-jewel/out` remained 121G, and disk free was about
+  200Gi. This was not the full command-probe suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260616-011921/suite.tsv`.
 - 2026-06-16 exact RuntimeEffect stable color-filter forced-context screenshot-parity smoke: Magic Jewel ran
   `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES=parity-forced-context-runtime-effect-stable-color-filter ./scripts/jbr-skia-screenshot-parity-suite.sh`.
   The exact row passed with `fallback_new_count=0`, `unsupported=none`, 801 CMP recorder frames, 801 Skiko command
