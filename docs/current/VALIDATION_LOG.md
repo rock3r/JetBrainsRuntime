@@ -5,6 +5,19 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-15 focused command-probe lifecycle hardening for image shader plus color-filter migration rows: Magic Jewel
+  added `commands-resize-image-shader-color-filter` and `commands-forced-context-image-shader-color-filter`. Exact
+  validation
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES="commands-resize-image-shader-color-filter commands-forced-context-image-shader-color-filter" ./scripts/jbr-skia-command-probe-suite.sh`
+  passed 2/2 with `fallback_new_count=0`, `unsupported=none`, and zero picture frames. The resize row reported 1,896
+  JBR command frames, one JBR image-cache clear, one scoped image-cache clear, two effect-handle definitions, two
+  effect-handle uses, four shader-handle definitions, 2,556 shader-handle uses, 2,552 shader-handle cache hits, one
+  surface-change marker, and one command-cache clear marker. The forced-context row reported 1,645 JBR command frames,
+  one JBR image-cache clear, one scoped image-cache clear, two effect-handle definitions, two effect-handle uses, four
+  shader-handle definitions, 2,122 shader-handle uses, 2,118 shader-handle cache hits, one surface-change marker, and
+  one command-cache clear marker. This is focused command-probe lifecycle change 2 after the 2026-06-15 daily broad
+  validation slot, so continue with exact-row/tiny-group validation only:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260615-172520/suite.tsv`.
 - 2026-06-15 focused command-probe lifecycle hardening for sweep-gradient shader plus color-filter migration rows:
   Magic Jewel added `commands-sweep-gradient-shader-color-filter`,
   `commands-resize-sweep-gradient-shader-color-filter`, and
