@@ -5,6 +5,17 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-15 focused command-probe lifecycle hardening for composite-noise-shader migration rows: Magic Jewel added
+  `commands-resize-composite-noise-shader` and `commands-forced-context-composite-noise-shader`. Exact validation
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES="commands-resize-composite-noise-shader commands-forced-context-composite-noise-shader" ./scripts/jbr-skia-command-probe-suite.sh`
+  passed 2/2 with `fallback_new_count=0`, `unsupported=none`, zero picture frames, and six shader-handle defines per
+  row. The resize row reported 1,480 JBR command frames, one JBR image-cache clear, one scoped image-cache clear, one
+  same-context surface-change marker, one command-cache clear marker, and 2,038 shader-handle cache-hit frames. The
+  forced-context row reported 1,571 JBR command frames, one JBR image-cache clear, one scoped image-cache clear, one
+  context-change surface marker, one command-cache clear marker, and 2,097 shader-handle cache-hit frames. This is
+  focused command-probe lifecycle change 35 after the 2026-06-15 daily broad validation slot; broad validation remains
+  deferred until the next local-day broad slot or an explicit override:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260615-205546/suite.tsv`.
 - 2026-06-15 focused command-probe lifecycle hardening for composite-shader migration rows: Magic Jewel added
   `commands-resize-composite-shader` and `commands-forced-context-composite-shader`. Exact validation
   `EXPECT_SCREENSHOT_ASSERTION=false CASES="commands-resize-composite-shader commands-forced-context-composite-shader" ./scripts/jbr-skia-command-probe-suite.sh`
