@@ -5,6 +5,22 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-15 focused command-probe lifecycle hardening for RuntimeEffect color-filter child migration rows: Magic Jewel
+  added `commands-resize-runtime-effect-color-filter-child` and
+  `commands-forced-context-runtime-effect-color-filter-child`. Both rows assert destination migration, command-cache
+  clear, JBR image-cache clear, scoped image-cache clear, RuntimeEffect source-cache reuse, and child effect-handle
+  redefinition/use markers. Focused validation
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES="commands-resize-runtime-effect-color-filter-child commands-forced-context-runtime-effect-color-filter-child" ./scripts/jbr-skia-command-probe-suite.sh`
+  passed 2/2 with `fallback_new_count=0`, `unsupported=none`, and zero picture frames. The resize row reported 946 JBR
+  command frames, one JBR image-cache clear, one scoped image-cache clear, 1,420 effect-handle definitions, 1,416
+  effect-handle uses, 211 effect-handle evictions, 1,415 RuntimeEffect source-cache hits, one source-cache miss, one
+  surface-change marker, and one command-cache clear marker. The forced-context row reported 1,118 JBR command frames,
+  one JBR image-cache clear, one scoped image-cache clear, 1,640 effect-handle definitions, 1,637 effect-handle uses,
+  612 effect-handle evictions, 1,636 RuntimeEffect source-cache hits, one source-cache miss, one surface-change marker,
+  and one command-cache clear marker. This is focused command-probe lifecycle change 5 after the 2026-06-15 post-sweep
+  smoke refresh, so broad command-probe validation remains deferred until roughly five more focused changes or an
+  ABI/capability gate. Disk free was about 173Gi:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260615-095954/suite.tsv`.
 - 2026-06-15 focused command-probe lifecycle hardening for dynamic RuntimeEffect color-filter migration rows: Magic
   Jewel added `commands-resize-runtime-effect-color-filter` and
   `commands-forced-context-runtime-effect-color-filter`. Both rows assert destination migration, command-cache clear,
