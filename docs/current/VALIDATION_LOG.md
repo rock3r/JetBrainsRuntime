@@ -5,6 +5,18 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-16 exact RuntimeEffect color-filter resize/forced-context command-probe refresh: Magic Jewel ran
+  `EXPECT_SCREENSHOT_ASSERTION=false DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="commands-resize-runtime-effect-color-filter commands-forced-context-runtime-effect-color-filter" ./scripts/jbr-skia-command-probe-suite.sh`.
+  Both exact rows passed with `fallback_new_count=0`, `unsupported=none`, zero picture frames, and screenshot status
+  passed. `commands-resize-runtime-effect-color-filter` recorded 810 CMP recorder frames, 810 Skiko command frames, 810
+  JBR command frames, `jbr_command_fps=162.0`, one same-context surface-change marker, one command-cache clear, one JBR
+  image-cache clear, one scoped image-cache clear, 1,493 RuntimeEffect source-cache hit frames, one miss, and 1,494
+  effect-handle define/use frames. `commands-forced-context-runtime-effect-color-filter` recorded 826 CMP recorder
+  frames, 826 Skiko command frames, 826 JBR command frames, `jbr_command_fps=165.2`, one destination context-change
+  marker, one command-cache clear, one JBR image-cache clear, one scoped image-cache clear, 1,421 RuntimeEffect
+  source-cache hit frames, one miss, and 1,423 effect-handle define/use frames. The output directory was 7.3M,
+  `magic-jewel/out` remained 121G, and disk free was about 200Gi. This was not the full command-probe suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260616-012445/suite.tsv`.
 - 2026-06-16 exact RuntimeEffect color-filter child forced-context command-probe smoke: Magic Jewel ran
   `EXPECT_SCREENSHOT_ASSERTION=false DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES=commands-forced-context-runtime-effect-color-filter-child ./scripts/jbr-skia-command-probe-suite.sh`.
   The exact command-probe row passed with `fallback_new_count=0`, `unsupported=none`, 666 CMP recorder frames, 666
