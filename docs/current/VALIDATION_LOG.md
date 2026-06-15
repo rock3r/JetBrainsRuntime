@@ -5,6 +5,25 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-16 exact RuntimeEffect stable color-filter resize paired validation: Magic Jewel first ran
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES=parity-resize-runtime-effect-stable-color-filter ./scripts/jbr-skia-screenshot-parity-suite.sh`.
+  The exact parity row passed with screenshot status passed, `validation_failures=none`, 835 CMP recorder frames, 836
+  Skiko command frames, 836 JBR command frames, zero picture frames, `avg_delta=1.855`,
+  `bad_pixel_ratio=0.04467`, `header_buttons_bad_pixel_ratio=0.02158`, `compose_bad_pixel_ratio=0.06492`, 1,536
+  RuntimeEffect source-cache hit frames, one miss, 42 effect-handle define frames, 1,538 effect-handle use frames, one
+  same-context surface-change marker, one command-cache clear, one JBR image-cache clear, and one scoped image-cache
+  clear. It also recorded `fallback_new_count=1` from an early
+  `[SKIKO] warn: SKIKO_JBR_INTEROP_FALLBACK reason=command-stream-invalid` during resize capture, so Magic Jewel ran
+  the exact command-probe companion
+  `EXPECT_SCREENSHOT_ASSERTION=false DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES=commands-resize-runtime-effect-stable-color-filter ./scripts/jbr-skia-command-probe-suite.sh`.
+  The companion passed with `fallback_new_count=0`, `unsupported=none`, 574 CMP recorder frames, 573 Skiko/JBR command
+  frames, `jbr_command_fps=114.6`, one same-context surface-change marker, one command-cache clear, one JBR
+  image-cache clear, one scoped image-cache clear, 1,201 RuntimeEffect source-cache hit frames, one miss, 2
+  effect-handle define frames, and 1,202 effect-handle use frames. Output directories were 4.1M and 3.3M,
+  `magic-jewel/out` remained 121G, and disk free was about 200Gi. This was not a full screenshot-parity or
+  command-probe suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-011233/suite.tsv`
+  and `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260616-011348/suite.tsv`.
 - 2026-06-16 exact RuntimeEffect forced-context pure-color screenshot-parity smoke: Magic Jewel ran
   `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES=parity-forced-context-runtime-effect-pure-color ./scripts/jbr-skia-screenshot-parity-suite.sh`.
   The exact row passed with `fallback_new_count=0`, `unsupported=none`, 781 CMP recorder frames, 780 Skiko command

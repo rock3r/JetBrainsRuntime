@@ -104,6 +104,20 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   shader-handle define frames, and 1,412 shader-handle use frames. This keeps RuntimeEffect shader descriptor
   redefinition across destination context migration covered under the daily cap:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-010938/suite.tsv`.
+- Magic Jewel extended the resize lifecycle check to the stable RuntimeEffect color-filter descriptor row. The parity
+  row
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES=parity-resize-runtime-effect-stable-color-filter ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  passed with screenshot status passed and steady command replay, but recorded the same single early
+  `command-stream-invalid` fallback during resize capture seen on the pure-color resize parity row. The exact
+  command-probe companion
+  `EXPECT_SCREENSHOT_ASSERTION=false DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES=commands-resize-runtime-effect-stable-color-filter ./scripts/jbr-skia-command-probe-suite.sh`
+  passed with no fallback or unsupported reasons, 573 Skiko/JBR command frames, one same-context surface-change marker,
+  one command-cache clear, one JBR image-cache clear, one scoped image-cache clear, 1,201 RuntimeEffect source-cache
+  hit frames, one miss, 2 effect-handle define frames, and 1,202 effect-handle use frames. This keeps stable
+  RuntimeEffect color-filter resize lifecycle coverage moving while preserving the parity-row recovery artifact for
+  follow-up:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-011233/suite.tsv`
+  and `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260616-011348/suite.tsv`.
 - Magic Jewel continued RuntimeEffect parity with an exact stable color-filter row:
   `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES=parity-runtime-effect-stable-color-filter ./scripts/jbr-skia-screenshot-parity-suite.sh`
   passed 1/1 with no fallback, no unsupported reasons, 546 CMP/Skiko/JBR command frames, zero picture frames,

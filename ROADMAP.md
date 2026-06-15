@@ -44,6 +44,20 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel ran a paired exact RuntimeEffect stable color-filter resize validation under the daily cap. The
+  screenshot-parity row
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES=parity-resize-runtime-effect-stable-color-filter ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  passed 1/1 with screenshot status passed, 835 CMP recorder frames, 836 Skiko/JBR command frames, zero picture
+  frames, `avg_delta=1.855`, `bad_pixel_ratio=0.04467`, `compose_bad_pixel_ratio=0.06492`, 1,536 RuntimeEffect
+  source-cache hit frames, one miss, 42 effect-handle define frames, and 1,538 effect-handle use frames, but surfaced
+  one early `command-stream-invalid` fallback during resize capture. The exact command-probe companion
+  `EXPECT_SCREENSHOT_ASSERTION=false DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES=commands-resize-runtime-effect-stable-color-filter ./scripts/jbr-skia-command-probe-suite.sh`
+  passed 1/1 with `fallback_new_count=0`, `unsupported=none`, 574 CMP recorder frames, 573 Skiko/JBR command frames,
+  `jbr_command_fps=114.6`, one same-context surface-change marker, one command-cache clear, one JBR image-cache clear,
+  one scoped image-cache clear, 1,201 RuntimeEffect source-cache hit frames, one miss, 2 effect-handle define frames,
+  and 1,202 effect-handle use frames. Outputs:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-011233/suite.tsv`
+  and `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260616-011348/suite.tsv`.
 - Magic Jewel ran an exact RuntimeEffect forced-context pure-color screenshot-parity smoke:
   `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES=parity-forced-context-runtime-effect-pure-color ./scripts/jbr-skia-screenshot-parity-suite.sh`
   passed 1/1 with `fallback_new_count=0`, `unsupported=none`, 781 CMP recorder frames, 780 Skiko/JBR command frames,
