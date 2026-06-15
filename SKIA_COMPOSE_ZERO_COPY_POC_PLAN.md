@@ -48,6 +48,17 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   refresh, so broad command-probe validation remains deferred until roughly four more focused changes or an
   ABI/capability gate:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260615-100848/suite.tsv`.
+- Focused command-probe lifecycle hardening continued with RuntimeEffect shader plus color-filter resize and
+  forced-context migration rows. Magic Jewel now includes `commands-resize-runtime-effect-shader-color-filter` and
+  `commands-forced-context-runtime-effect-shader-color-filter`, both asserting destination migration, command-cache
+  clear, JBR image-cache and scoped image-cache clears, RuntimeEffect source-cache reuse, dynamic shader-handle
+  redefinition/use markers, and stable effect-handle redefinition/reuse/cache-hit markers. Exact two-row validation
+  passed with no fallback, no unsupported reasons, zero picture frames, 816 and 1,219 command frames, one surface change
+  and one command-cache clear per row, one JBR image-cache clear per row, one scoped image-cache clear per row, two
+  effect-handle definitions per row, and RuntimeEffect source-cache hits with at most one miss per row. This is focused
+  command-probe lifecycle change 7 after the 2026-06-15 post-sweep smoke refresh, so broad command-probe validation
+  remains deferred until roughly three more focused changes or an ABI/capability gate:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260615-101428/suite.tsv`.
 - Focused command-probe lifecycle hardening resumed after the post-sweep smoke refresh with RuntimeEffect pure-color
   resize and forced-context migration rows. Magic Jewel now includes `commands-resize-runtime-effect-pure-color` and
   `commands-forced-context-runtime-effect-pure-color`, both asserting destination migration, command-cache clear, JBR
