@@ -25,6 +25,15 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `./scripts/jbr-skia-screenshot-parity-suite.sh` exit 3 immediately against the already-consumed 2026-06-15 broad
   slot, while exact-case list probes for `commands-core-primitives` and `parity-rich` still work. No broad validation
   was launched.
+- Focused command-probe lifecycle hardening continued with gradient-stroke migration rows. Magic Jewel now includes
+  `commands-resize-gradient-stroke` and `commands-forced-context-gradient-stroke`, asserting destination migration,
+  command-cache clear, JBR image-cache and scoped image-cache clears while the base gradient-stroke row remains on
+  command replay with screenshot assertions disabled for local capture limits. Exact two-row validation passed with no
+  fallback, no unsupported reasons, zero picture frames, 1,512 and 1,275 JBR command frames, one surface change and one
+  command-cache clear per row, one JBR image-cache clear per row, and one scoped image-cache clear per row. This is
+  focused command-probe lifecycle change 52 after the 2026-06-15 daily broad slot, so broad validation remains
+  daily-capped:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260615-224020/suite.tsv`.
 - Focused command-probe lifecycle hardening continued with image blend-mode migration rows. Magic Jewel now includes
   `commands-resize-image-blend-mode` and `commands-forced-context-image-blend-mode`, asserting image refs,
   destination migration, command-cache clear, JBR image-cache and scoped image-cache clears while the base image
