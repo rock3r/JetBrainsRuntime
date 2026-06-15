@@ -43,6 +43,13 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel ran a narrow compatibility fallback smoke for the native ABI gate:
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES=native-abi-mismatch ./scripts/jbr-skia-compatibility-matrix.sh` passed 1/1
+  with `expect_command_fallback_reason=native-abi-mismatch`, `fallback_new_count=1`, `unsupported=none`, background
+  window shown, 1,047 CMP recorder frames, zero Skiko/JBR command frames, zero picture frames, screenshot status
+  not-run, and `[SKIKO] warn: SKIKO_JBR_INTEROP_FALLBACK reason=native-abi-mismatch` in `new.log`. This was an exact
+  one-row fallback smoke, not the full compatibility matrix:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260615-232258/matrix.tsv`.
 - Magic Jewel ran a narrow compatibility fallback smoke for the public API gate:
   `EXPECT_SCREENSHOT_ASSERTION=false CASES=public-api-missing ./scripts/jbr-skia-compatibility-matrix.sh` passed 1/1
   with `expect_command_fallback_reason=public-api-missing`, `fallback_new_count=1`, `unsupported=none`, background

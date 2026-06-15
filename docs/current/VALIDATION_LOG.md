@@ -5,6 +5,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-15 native-ABI compatibility fallback smoke: Magic Jewel ran
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES=native-abi-mismatch ./scripts/jbr-skia-compatibility-matrix.sh`. The exact
+  row passed with `expect_command_fallback_reason=native-abi-mismatch`, `fallback_new_count=1`, `unsupported=none`,
+  background window shown, 1,047 CMP recorder frames, zero Skiko command frames, zero JBR command frames, zero picture
+  frames, screenshot status not-run, and `[SKIKO] warn: SKIKO_JBR_INTEROP_FALLBACK reason=native-abi-mismatch` in
+  `new.log`. This was not the full compatibility matrix:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260615-232258/matrix.tsv`.
 - 2026-06-15 public-API compatibility fallback smoke: Magic Jewel ran
   `EXPECT_SCREENSHOT_ASSERTION=false CASES=public-api-missing ./scripts/jbr-skia-compatibility-matrix.sh`. The exact
   row passed with `expect_command_fallback_reason=public-api-missing`, `fallback_new_count=1`, `unsupported=none`,

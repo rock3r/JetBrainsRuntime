@@ -66,6 +66,13 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `SKIKO_JBR_INTEROP_FALLBACK reason=public-api-missing` marker in `new.log`. This exact row strengthens fallback
   validation under the daily cap without running the full compatibility matrix:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260615-232037/matrix.tsv`.
+- Magic Jewel ran a narrow native-ABI compatibility fallback smoke:
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES=native-abi-mismatch ./scripts/jbr-skia-compatibility-matrix.sh` passed 1/1
+  with expected `native-abi-mismatch` fallback, one new fallback, no unsupported reasons, background window shown,
+  1,047 CMP recorder frames, zero Skiko/JBR command frames, zero picture frames, screenshot status not-run, and the
+  expected `SKIKO_JBR_INTEROP_FALLBACK reason=native-abi-mismatch` marker in `new.log`. This exact row strengthens ABI
+  fallback validation under the daily cap without running the full compatibility matrix:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260615-232258/matrix.tsv`.
 - Magic Jewel tightened daily broad-validation guard startup for bare command-probe and screenshot-parity default runs.
   Cheap guard validation only: `./scripts/jbr-skia-command-probe-suite.sh` and
   `./scripts/jbr-skia-screenshot-parity-suite.sh` exit 3 immediately against the already-consumed 2026-06-15 broad
