@@ -19,11 +19,15 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   sweeps, screenshot parity suites, benchmark suites, compatibility matrices, and artifact matrices. Today's existing
   2026-06-15 broad command sweep was seeded into the guard stamp, so continue with exact `CASES`/small `CASE_GROUPS`
   only until the next local-day slot.
-- Magic Jewel extended the once-per-local-day broad-validation guard to `scripts/jbr-skia-benchmark-suite.sh` default
-  runs. Cheap guard validation confirmed `LIST_CASE_COUNT=true ./scripts/jbr-skia-benchmark-suite.sh` still lists 5
-  benchmark cases, default `./scripts/jbr-skia-benchmark-suite.sh` exits 3 against the already-consumed 2026-06-15
-  broad slot before launching cases, and `CASES=commands LIST_CASES=true ./scripts/jbr-skia-benchmark-suite.sh`
-  preserves exact-case selection. No broad validation was run for this guardrail-only change.
+- Focused command-probe lifecycle hardening continued with plain fill-rect color-filter resize and forced-context
+  migration rows. Magic Jewel now includes `commands-resize-color-filter` and
+  `commands-forced-context-color-filter`, asserting destination migration, command-cache clear, JBR image-cache and
+  scoped image-cache clears while the non-handle color-filter path remains on command replay. Exact two-row validation
+  passed with no fallback, no unsupported reasons, zero picture frames, zero effect-handle markers, 1,611 and 1,692
+  JBR command frames, one surface change and one command-cache clear per row, one JBR image-cache clear per row, and
+  one scoped image-cache clear per row. This is focused command-probe lifecycle change 42 after the 2026-06-15 daily
+  broad slot, so broad validation remains daily-capped:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260615-213550/suite.tsv`.
 - Focused command-probe lifecycle hardening continued with fill-rect color-filter blend-mode resize and forced-context
   migration rows. Magic Jewel now includes `commands-resize-color-filter-blend-mode` and
   `commands-forced-context-color-filter-blend-mode`, asserting destination migration, command-cache clear, JBR
@@ -33,6 +37,11 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   image-cache clear per row, and one scoped image-cache clear per row. This is focused command-probe lifecycle change
   41 after the 2026-06-15 daily broad slot, so broad validation remains daily-capped:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260615-213054/suite.tsv`.
+- Magic Jewel extended the once-per-local-day broad-validation guard to `scripts/jbr-skia-benchmark-suite.sh` default
+  runs. Cheap guard validation confirmed `LIST_CASE_COUNT=true ./scripts/jbr-skia-benchmark-suite.sh` still lists 5
+  benchmark cases, default `./scripts/jbr-skia-benchmark-suite.sh` exits 3 against the already-consumed 2026-06-15
+  broad slot before launching cases, and `CASES=commands LIST_CASES=true ./scripts/jbr-skia-benchmark-suite.sh`
+  preserves exact-case selection. No broad validation was run for this guardrail-only change.
 - Daily-capped broad command-probe validation refreshed after ten focused shader/RuntimeEffect lifecycle changes:
   `EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-command-probe-suite.sh` passed 589/589 with
   `fallback_sum=350`, 79 unsupported rows, 80,698 JBR picture frames, and 202,105 JBR command frames. This is the

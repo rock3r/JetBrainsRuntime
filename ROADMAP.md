@@ -42,6 +42,15 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel added resize and forced-context command-probe coverage for plain fill-rect color-filter migration:
+  `commands-resize-color-filter` and `commands-forced-context-color-filter` now assert destination migration,
+  command-cache clear, JBR image-cache clear, and scoped image-cache clear markers while the non-handle color-filter
+  path remains on command replay. Exact validation
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES="commands-resize-color-filter commands-forced-context-color-filter" ./scripts/jbr-skia-command-probe-suite.sh`
+  passed 2/2 with no fallback, no unsupported reasons, zero picture frames, zero effect-handle markers, and
+  1,611/1,692 JBR command frames. This is focused command-probe lifecycle change 42 after the 2026-06-15 daily broad
+  validation slot; broad validation remains deferred until the next local-day broad slot or an explicit override:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260615-213550/suite.tsv`.
 - Magic Jewel added resize and forced-context command-probe coverage for fill-rect color-filter blend-mode migration:
   `commands-resize-color-filter-blend-mode` and `commands-forced-context-color-filter-blend-mode` now assert
   destination migration, command-cache clear, JBR image-cache clear, and scoped image-cache clear markers while the
