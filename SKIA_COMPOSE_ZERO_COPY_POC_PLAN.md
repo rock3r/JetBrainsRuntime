@@ -184,6 +184,17 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   frames, one miss, 1,415 shader-handle define frames, and 1,416 shader-handle use frames. This keeps the uniform
   schema RuntimeEffect lifecycle path covered with an exact two-row probe, not a broad suite:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260616-014346/suite.tsv`.
+- Magic Jewel refreshed the RuntimeEffect child-only resize/forced-context command-probe pair:
+  `EXPECT_SCREENSHOT_ASSERTION=false DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="commands-resize-runtime-effect-child-only commands-forced-context-runtime-effect-child-only" ./scripts/jbr-skia-command-probe-suite.sh`
+  passed 2/2 with no fallback or unsupported reasons. Resize reported 819 CMP recorder frames, 820 Skiko/JBR command
+  frames, one same-context surface-change marker, one command-cache clear, one JBR image-cache clear, one scoped
+  image-cache clear, 1,478 RuntimeEffect source-cache hit frames, one miss, 9 shader-handle define frames, and 1,479
+  shader-handle use frames. Forced context reported 536 CMP recorder frames, 535 Skiko command frames, 536 JBR command
+  frames, one destination context-change marker, one command-cache clear, one JBR image-cache clear, one scoped
+  image-cache clear, 1,148 RuntimeEffect source-cache hit frames, one miss, 6 shader-handle define frames, and 1,149
+  shader-handle use frames. This keeps the child shader RuntimeEffect lifecycle path covered with an exact two-row
+  probe, not a broad suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260616-014718/suite.tsv`.
 - Magic Jewel continued RuntimeEffect parity with an exact stable color-filter row:
   `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES=parity-runtime-effect-stable-color-filter ./scripts/jbr-skia-screenshot-parity-suite.sh`
   passed 1/1 with no fallback, no unsupported reasons, 546 CMP/Skiko/JBR command frames, zero picture frames,
