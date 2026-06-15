@@ -39,6 +39,16 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel added resize and forced-context command-probe coverage for linear-gradient shader plus color-filter
+  migration: `commands-resize-linear-gradient-shader-color-filter` and
+  `commands-forced-context-linear-gradient-shader-color-filter` now assert destination migration, command-cache clear,
+  JBR image-cache clear, scoped image-cache clear, stable shader/effect-handle redefinition, and shader-handle reuse
+  markers. Exact command-probe validation
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES="commands-resize-linear-gradient-shader-color-filter commands-forced-context-linear-gradient-shader-color-filter" ./scripts/jbr-skia-command-probe-suite.sh`
+  passed 2/2 with no fallback, no unsupported reasons, zero picture frames, and 1,037/1,262 JBR command frames. This
+  is focused command-probe lifecycle change 8 after the 2026-06-15 post-sweep smoke refresh, so broad command
+  validation remains deferred until roughly two more focused changes or an ABI/capability gate:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260615-102103/suite.tsv`.
 - Magic Jewel added resize and forced-context command-probe coverage for RuntimeEffect shader plus color-filter
   migration: `commands-resize-runtime-effect-shader-color-filter` and
   `commands-forced-context-runtime-effect-shader-color-filter` now assert destination migration, command-cache clear,
