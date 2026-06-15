@@ -5,6 +5,17 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-16 exact RuntimeEffect stable color-filter screenshot-parity smoke: Magic Jewel ran
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES=parity-runtime-effect-stable-color-filter ./scripts/jbr-skia-screenshot-parity-suite.sh`.
+  The exact row passed with `fallback_new_count=0`, `unsupported=none`, 546 CMP recorder frames, 546 Skiko command
+  frames, 546 JBR command frames, zero picture frames, screenshot status passed, `avg_delta=2.122`,
+  `bad_pixel_ratio=0.05042`, `header_buttons_bad_pixel_ratio=0.00381`, `compose_bad_pixel_ratio=0.07522`,
+  `jbr_runtime_effect_cache_hit_frames=1126`, `jbr_runtime_effect_cache_miss_frames=1`,
+  `jbr_effect_handle_define_frames=18`, and `jbr_effect_handle_use_frames=1127`. Diff image:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-003110/parity-runtime-effect-stable-color-filter/report/parity-diff.png`.
+  The output directory was 3.9M, `magic-jewel/out` remained 121G, and disk free was about 174Gi. This was not the full
+  screenshot-parity suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-003110/suite.tsv`.
 - 2026-06-16 full compatibility matrix: Magic Jewel used the local-day broad-validation slot for
   `EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-compatibility-matrix.sh`. The matrix passed 57/57 rows with
   56 expected fallback rows and one happy command row. Aggregate evidence from `matrix.tsv` and `summary.properties`:

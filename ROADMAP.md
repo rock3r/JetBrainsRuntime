@@ -44,6 +44,16 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel ran an exact RuntimeEffect stable color-filter screenshot-parity smoke under the consumed 2026-06-16
+  broad slot:
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES=parity-runtime-effect-stable-color-filter ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  passed 1/1 with `fallback_new_count=0`, `unsupported=none`, 546 CMP/Skiko/JBR command frames, zero picture frames,
+  screenshot status passed, `avg_delta=2.122`, `bad_pixel_ratio=0.05042`, `header_buttons_bad_pixel_ratio=0.00381`,
+  `compose_bad_pixel_ratio=0.07522`, `jbr_runtime_effect_cache_hit_frames=1126`,
+  `jbr_runtime_effect_cache_miss_frames=1`, 18 effect-handle define frames, and 1,127 effect-handle use frames. This
+  was an exact one-row parity smoke, not the full screenshot-parity suite; the output directory was 3.9M and `out`
+  remained 121G:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-003110/suite.tsv`.
 - Magic Jewel used the 2026-06-16 daily broad-validation slot for the full compatibility matrix:
   `EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-compatibility-matrix.sh` passed 57/57 with
   `fallback_sum=56`, `unsupported=none`, `validation_failures=none`, background windows shown for all rows, 45,021 CMP

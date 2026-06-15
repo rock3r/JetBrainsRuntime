@@ -28,6 +28,14 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   Skiko/JBR command frames, zero picture frames, screenshot status passed for 56 rows and not-run for the native-ABI
   row. This completes the intended compatibility-matrix broad checkpoint after the prior full command-probe sweep:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260616-000119/matrix.tsv`.
+- Magic Jewel continued RuntimeEffect parity with an exact stable color-filter row:
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES=parity-runtime-effect-stable-color-filter ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  passed 1/1 with no fallback, no unsupported reasons, 546 CMP/Skiko/JBR command frames, zero picture frames,
+  screenshot status passed, `avg_delta=2.122`, `bad_pixel_ratio=0.05042`, `compose_bad_pixel_ratio=0.07522`,
+  1,126 JBR RuntimeEffect cache-hit frames, one miss, 18 effect-handle define frames, and 1,127 effect-handle use
+  frames. This keeps RuntimeEffect stable descriptor/cache parity moving under the daily cap without running the full
+  screenshot-parity suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-003110/suite.tsv`.
 - Magic Jewel reaffirmed the daily cap with cheap checks only: `LIST_CASE_COUNT=true ./scripts/jbr-skia-command-probe-suite.sh`
   resolved 696 cases, `LIST_CASE_GROUP_COUNTS=true ./scripts/jbr-skia-benchmark-suite.sh` reported `baseline=2` and
   `image-cache=3`, and bare `./scripts/jbr-skia-command-probe-suite.sh` exited 3 before launch against the consumed
