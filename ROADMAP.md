@@ -42,6 +42,15 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel added resize and forced-context command-probe coverage for graphics-layer rotation-Y migration:
+  `commands-resize-graphics-layer-rotationy` and `commands-forced-context-graphics-layer-rotationy` now assert
+  destination migration, command-cache clear, JBR image-cache clear, and scoped image-cache clear markers while the
+  graphics-layer rotation-Y path is enabled. Exact validation
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES="commands-resize-graphics-layer-rotationy commands-forced-context-graphics-layer-rotationy" ./scripts/jbr-skia-command-probe-suite.sh`
+  passed 2/2 with no fallback, no unsupported reasons, zero picture frames, and 977/1,080 JBR command frames. This
+  is focused command-probe lifecycle change 30 after the 2026-06-15 daily broad validation slot; broad validation
+  remains deferred until the next local-day broad slot or an explicit override:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260615-202801/suite.tsv`.
 - Magic Jewel added resize and forced-context command-probe coverage for graphics-layer rotation-X migration:
   `commands-resize-graphics-layer-rotationx` and `commands-forced-context-graphics-layer-rotationx` now assert
   destination migration, command-cache clear, JBR image-cache clear, and scoped image-cache clear markers while the
