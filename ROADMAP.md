@@ -42,6 +42,16 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel added resize and forced-context command-probe coverage for the plain composite shader descriptor tree:
+  `commands-resize-composite-shader-descriptor-redefine` and
+  `commands-forced-context-composite-shader-descriptor-redefine` now assert destination migration, command-cache clear,
+  JBR image-cache clear, scoped image-cache clear, and stable shader-handle redefine/reuse/cache-hit markers for the
+  linear/radial composite shader path. Exact validation
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES="commands-resize-composite-shader-descriptor-redefine commands-forced-context-composite-shader-descriptor-redefine" ./scripts/jbr-skia-command-probe-suite.sh`
+  passed 2/2 with no fallback, no unsupported reasons, zero picture frames, and 386/1,228 JBR command frames. This is
+  focused command-probe lifecycle change 15 after the 2026-06-15 daily broad validation slot; broad validation remains
+  deferred until the next local-day broad slot or an explicit override:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260615-185045/suite.tsv`.
 - Magic Jewel added resize and forced-context command-probe coverage for image draw plus color-matrix filter migration:
   `commands-resize-image-color-matrix-filter` and `commands-forced-context-image-color-matrix-filter` now assert image
   refs, destination migration, command-cache clear, JBR image-cache clear, scoped image-cache clear, and stable

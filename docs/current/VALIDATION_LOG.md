@@ -5,6 +5,22 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-15 focused command-probe lifecycle hardening for plain composite shader descriptor-tree migration rows: Magic
+  Jewel added `commands-resize-composite-shader-descriptor-redefine` and
+  `commands-forced-context-composite-shader-descriptor-redefine`. Exact validation
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES="commands-resize-composite-shader-descriptor-redefine commands-forced-context-composite-shader-descriptor-redefine" ./scripts/jbr-skia-command-probe-suite.sh`
+  passed 2/2 with `fallback_new_count=0`, `unsupported=none`, and zero picture frames. The resize row reported 386
+  JBR command frames, one JBR image-cache clear, one scoped image-cache clear, nine shader-handle definitions, 845
+  shader-handle uses, 842 shader-handle cache hits, one same-context surface-change marker, and one command-cache
+  clear marker. The forced-context row reported 1,228 JBR command frames, one JBR image-cache clear, one scoped
+  image-cache clear, six shader-handle definitions, 1,811 shader-handle uses, 1,809 shader-handle cache hits, one
+  context-change surface marker, and one command-cache clear marker. An initial exact calibration run at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260615-184916/commands-resize-composite-shader-descriptor-redefine/report.md`
+  failed only because the new row's max shader-handle define guard was set to 6 while the resize path reported 9; the
+  passing row keeps the minimum redefine/reuse/cache-hit contract and caps definitions at 9. This is focused
+  command-probe lifecycle change 15 after the 2026-06-15 daily broad validation slot; broad validation remains deferred
+  until the next local-day broad slot or an explicit override:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260615-185045/suite.tsv`.
 - 2026-06-15 focused command-probe lifecycle hardening for image draw plus color-matrix filter migration rows: Magic
   Jewel added `commands-resize-image-color-matrix-filter` and
   `commands-forced-context-image-color-matrix-filter`. Exact validation
