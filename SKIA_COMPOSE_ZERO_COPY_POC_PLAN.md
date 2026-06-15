@@ -84,6 +84,17 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   frames, and 1,367 effect-handle use frames. This keeps the RuntimeEffect child color-filter descriptor path covered
   under the daily cap without running the full screenshot-parity suite:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-010333/suite.tsv`.
+- Magic Jewel started the RuntimeEffect resize lifecycle parity track with paired exact rows. The parity row
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES=parity-resize-runtime-effect-pure-color ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  passed with screenshot status passed and steady command replay, but recorded one early `command-stream-invalid`
+  fallback during resize capture. The exact command-probe companion
+  `EXPECT_SCREENSHOT_ASSERTION=false DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES=commands-resize-runtime-effect-pure-color ./scripts/jbr-skia-command-probe-suite.sh`
+  passed with no fallback or unsupported reasons, 842 CMP/Skiko/JBR command frames, one same-context surface-change
+  marker, one command-cache clear, one JBR image-cache clear, one scoped image-cache clear, 1,497 RuntimeEffect
+  source-cache hit frames, one miss, 2 shader-handle define frames, and 1,498 shader-handle use frames. This proves the
+  focused command lifecycle row is clean while preserving the parity-row resize recovery artifact for follow-up:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-010544/suite.tsv`
+  and `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260616-010721/suite.tsv`.
 - Magic Jewel continued RuntimeEffect parity with an exact stable color-filter row:
   `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES=parity-runtime-effect-stable-color-filter ./scripts/jbr-skia-screenshot-parity-suite.sh`
   passed 1/1 with no fallback, no unsupported reasons, 546 CMP/Skiko/JBR command frames, zero picture frames,
