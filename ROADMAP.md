@@ -44,6 +44,14 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel ran an exact RuntimeEffect shader source-cache eviction screenshot-parity smoke:
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES=parity-runtime-effect-shader-source-cache-eviction ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  passed 1/1 with `fallback_new_count=0`, `unsupported=none`, 725 CMP/Skiko/JBR command frames, zero picture frames,
+  screenshot status passed, `avg_delta=2.084`, `bad_pixel_ratio=0.04931`, `compose_bad_pixel_ratio=0.07335`,
+  `jbr_runtime_effect_cache_hit_frames=1173`, `jbr_runtime_effect_cache_miss_frames=2349`, 20 shader-handle define
+  frames, 3,522 shader-handle use frames, and 20 effect-handle define frames. This was an exact one-row parity smoke,
+  not the full screenshot-parity suite; the output directory was 5.7M and `out` remained 121G:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-003955/suite.tsv`.
 - Magic Jewel ran an exact RuntimeEffect source-cache eviction screenshot-parity smoke:
   `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES=parity-runtime-effect-source-cache-eviction ./scripts/jbr-skia-screenshot-parity-suite.sh`
   passed 1/1 with `fallback_new_count=0`, `unsupported=none`, 788 CMP recorder frames, 789 Skiko/JBR command frames,
