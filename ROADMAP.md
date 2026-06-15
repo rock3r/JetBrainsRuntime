@@ -40,6 +40,15 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel added resize and forced-context command-probe coverage for saveLayer blend-mode migration:
+  `commands-resize-save-layer-blend-mode` and `commands-forced-context-save-layer-blend-mode` now assert destination
+  migration, command-cache clear, JBR image-cache clear, and scoped image-cache clear markers. Exact validation
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES="commands-resize-save-layer-blend-mode commands-forced-context-save-layer-blend-mode" ./scripts/jbr-skia-command-probe-suite.sh`
+  passed 2/2 with no fallback, no unsupported reasons, zero picture frames, and 478/1,187 JBR command frames. This
+  saveLayer blend-mode path reports zero effect-handle markers, so these rows intentionally assert the cache-migration
+  contract only. This is focused command-probe lifecycle change 10 after the 2026-06-15 daily broad validation slot;
+  broad validation is due by count but remains deferred until the next local-day broad slot or an explicit override:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260615-181731/suite.tsv`.
 - Magic Jewel added resize and forced-context command-probe coverage for saveLayer tint color-filter migration:
   `commands-resize-save-layer-filter` and `commands-forced-context-save-layer-filter` now assert destination migration,
   command-cache clear, JBR image-cache clear, and scoped image-cache clear markers. Exact validation
