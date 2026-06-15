@@ -5,6 +5,17 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-15 focused command-probe lifecycle hardening for color-shader migration rows: Magic Jewel added
+  `commands-resize-color-shader` and `commands-forced-context-color-shader`. Exact validation
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES="commands-resize-color-shader commands-forced-context-color-shader" ./scripts/jbr-skia-command-probe-suite.sh`
+  passed 2/2 with `fallback_new_count=0`, `unsupported=none`, zero picture frames, and two shader-handle defines per
+  row. The resize row reported 1,522 JBR command frames, one JBR image-cache clear, one scoped image-cache clear, one
+  same-context surface-change marker, one command-cache clear marker, and 2,098 shader-handle cache-hit frames. The
+  forced-context row reported 1,576 JBR command frames, one JBR image-cache clear, one scoped image-cache clear, one
+  context-change surface marker, one command-cache clear marker, and 2,091 shader-handle cache-hit frames. This is
+  focused command-probe lifecycle change 32 after the 2026-06-15 daily broad validation slot; broad validation remains
+  deferred until the next local-day broad slot or an explicit override:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260615-203927/suite.tsv`.
 - 2026-06-15 focused command-probe lifecycle hardening for base graphics-layer migration rows: Magic Jewel added
   `commands-resize-graphics-layer` and `commands-forced-context-graphics-layer`. Exact validation
   `EXPECT_SCREENSHOT_ASSERTION=false CASES="commands-resize-graphics-layer commands-forced-context-graphics-layer" ./scripts/jbr-skia-command-probe-suite.sh`

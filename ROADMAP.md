@@ -42,6 +42,15 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel added resize and forced-context command-probe coverage for color-shader migration:
+  `commands-resize-color-shader` and `commands-forced-context-color-shader` now assert destination migration,
+  command-cache clear, JBR image-cache clear, scoped image-cache clear, and color-shader handle redefine/cache-hit
+  markers. Exact validation
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES="commands-resize-color-shader commands-forced-context-color-shader" ./scripts/jbr-skia-command-probe-suite.sh`
+  passed 2/2 with no fallback, no unsupported reasons, zero picture frames, two shader-handle defines per row, and
+  1,522/1,576 JBR command frames. This is focused command-probe lifecycle change 32 after the 2026-06-15 daily broad
+  validation slot; broad validation remains deferred until the next local-day broad slot or an explicit override:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260615-203927/suite.tsv`.
 - Magic Jewel added resize and forced-context command-probe coverage for base graphics-layer migration:
   `commands-resize-graphics-layer` and `commands-forced-context-graphics-layer` now assert destination migration,
   command-cache clear, JBR image-cache clear, and scoped image-cache clear markers while the base graphics-layer path
