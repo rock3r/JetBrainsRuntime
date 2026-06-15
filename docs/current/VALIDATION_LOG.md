@@ -5,6 +5,15 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-15 shader-composition command group lifecycle coverage: Magic Jewel expanded
+  `shader-composition-runtime` to include existing resize/forced-context lifecycle rows for composite shader
+  color-filter, transformed shader, RuntimeEffect shader, RuntimeEffect shader color-filter, linear/radial/sweep shader
+  color-filter, RuntimeEffect pure/uniform/child rows, RuntimeEffect color-filter, and RuntimeEffect color-filter
+  child rows. Cheap helper validation only: `bash -n scripts/jbr-skia-command-probe-suite.sh` passed,
+  `CASE_GROUPS=shader-composition-runtime LIST_CASES=true ./scripts/jbr-skia-command-probe-suite.sh` listed 49 rows,
+  `LIST_CASE_GROUP_COUNTS=true ./scripts/jbr-skia-command-probe-suite.sh` reported
+  `shader-composition-runtime	49`, and `LIST_UNGROUPED_CASES=true ./scripts/jbr-skia-command-probe-suite.sh`
+  returned no rows. No broad validation was launched.
 - 2026-06-15 core-handshake compatibility fallback smoke: the first sandboxed exact-row attempt hit only the Gradle
   wrapper lock in `~/.gradle`, then Magic Jewel reran
   `EXPECT_SCREENSHOT_ASSERTION=false CASES="abi-mismatch command-capability-mismatch command-capability-high-mismatch" ./scripts/jbr-skia-compatibility-matrix.sh`

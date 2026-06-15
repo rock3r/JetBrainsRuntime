@@ -43,6 +43,15 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel expanded the `shader-composition-runtime` command-probe group to include existing resize and
+  forced-context lifecycle companions for composite shader color-filter, transformed shader, RuntimeEffect shader,
+  RuntimeEffect shader color-filter, linear/radial shader color-filter, RuntimeEffect pure/uniform/child rows,
+  RuntimeEffect color-filter, and RuntimeEffect color-filter child rows. Cheap helper validation only:
+  `bash -n scripts/jbr-skia-command-probe-suite.sh` passed,
+  `CASE_GROUPS=shader-composition-runtime LIST_CASES=true ./scripts/jbr-skia-command-probe-suite.sh` listed 49 rows,
+  `LIST_CASE_GROUP_COUNTS=true ./scripts/jbr-skia-command-probe-suite.sh` reported
+  `shader-composition-runtime	49`, and `LIST_UNGROUPED_CASES=true ./scripts/jbr-skia-command-probe-suite.sh`
+  returned no rows. No broad validation was launched.
 - Magic Jewel ran a narrow compatibility fallback smoke for the remaining core handshake gates:
   `EXPECT_SCREENSHOT_ASSERTION=false CASES="abi-mismatch command-capability-mismatch command-capability-high-mismatch" ./scripts/jbr-skia-compatibility-matrix.sh`
   passed 3/3 after an initial sandbox-only Gradle wrapper lock failure. The exact rows reported one expected fallback
