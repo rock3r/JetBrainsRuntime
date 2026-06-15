@@ -43,6 +43,14 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel ran the first narrow compatibility-matrix smoke under the daily broad-validation cap:
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES=happy ./scripts/jbr-skia-compatibility-matrix.sh` passed 1/1 with
+  `fallback_new_count=0`, `unsupported=none`, background window shown, 1,245 CMP recorder frames, 1,244 Skiko/JBR
+  command frames, zero picture frames, and screenshot status reported passed. This was an exact one-row compatibility
+  smoke, not the full matrix; the earlier sandboxed attempt failed before app startup on the Gradle wrapper lock and
+  was rerun outside the sandbox. Full compatibility matrix remains deferred to the next local-day broad slot or an
+  explicit override:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260615-225927/matrix.tsv`.
 - Magic Jewel tightened no-launch helper handling and command-probe group coverage: `LIST_CASE_GROUP_COUNTS=true` is
   now exempt from daily broad-validation blocking across command-probe, screenshot-parity, compatibility, artifact, and
   benchmark runners; the shader-composition-runtime command group now includes the sweep-gradient shader color-filter

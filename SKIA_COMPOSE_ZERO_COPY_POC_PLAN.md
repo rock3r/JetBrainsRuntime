@@ -32,6 +32,13 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   helper validation only: all group-count helpers returned counts, command-probe ungrouped output is empty, and bare
   command/screenshot/compatibility launches still exit 3 against today's consumed broad slot. No broad validation was
   launched.
+- Magic Jewel ran a narrow compatibility-matrix smoke for the next validation track:
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES=happy ./scripts/jbr-skia-compatibility-matrix.sh` passed 1/1 with no
+  fallback, no unsupported reasons, background window shown, 1,245 CMP recorder frames, 1,244 Skiko/JBR command frames,
+  zero picture frames, and screenshot status passed. This exact row was rerun outside the sandbox after a sandboxed
+  attempt failed on the Gradle wrapper lock. The full compatibility matrix is still deferred to the next local-day
+  broad slot:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260615-225927/matrix.tsv`.
 - Magic Jewel tightened daily broad-validation guard startup for bare command-probe and screenshot-parity default runs.
   Cheap guard validation only: `./scripts/jbr-skia-command-probe-suite.sh` and
   `./scripts/jbr-skia-screenshot-parity-suite.sh` exit 3 immediately against the already-consumed 2026-06-15 broad

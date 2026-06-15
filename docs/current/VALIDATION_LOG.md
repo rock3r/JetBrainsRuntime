@@ -5,6 +5,14 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-15 narrow compatibility-matrix smoke: after a sandboxed exact-row attempt failed before app startup on the
+  Gradle wrapper lock, the row was rerun outside the sandbox with
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES=happy ./scripts/jbr-skia-compatibility-matrix.sh`. The exact one-row matrix
+  passed with `fallback_new_count=0`, `unsupported=none`, background window shown, 1,245 CMP recorder frames, 1,244
+  Skiko command frames, 1,244 JBR command frames, zero picture frames, and screenshot status passed. This was not the
+  full compatibility matrix; the broad matrix remains daily-capped until the next local-day slot or an explicit
+  override:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260615-225927/matrix.tsv`.
 - 2026-06-15 no-launch helper and command grouping hygiene: Magic Jewel now exempts
   `LIST_CASE_GROUP_COUNTS=true` from daily broad-validation blocking across command-probe, screenshot-parity,
   compatibility, artifact, and benchmark runners; the shader-composition-runtime command group includes
