@@ -42,6 +42,16 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel added resize and forced-context command-probe coverage for vertices and fill-rect blend-mode migration:
+  `commands-resize-vertices`, `commands-forced-context-vertices`, `commands-resize-blend-mode`, and
+  `commands-forced-context-blend-mode` now assert destination migration, command-cache clear, JBR image-cache clear,
+  and scoped image-cache clear markers while the base non-descriptor command rows remain on command replay. Exact
+  validation
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES="commands-resize-vertices commands-forced-context-vertices commands-resize-blend-mode commands-forced-context-blend-mode" ./scripts/jbr-skia-command-probe-suite.sh`
+  passed 4/4 with no fallback, no unsupported reasons, zero picture frames, and 1,582/1,687/898/1,125 JBR command
+  frames. This is focused command-probe lifecycle change 45 after the 2026-06-15 daily broad validation slot; broad
+  validation remains deferred until the next local-day broad slot or an explicit override:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260615-215342/suite.tsv`.
 - Magic Jewel added resize and forced-context command-probe coverage for path-effect migration:
   `commands-resize-path-effect` and `commands-forced-context-path-effect` now assert destination migration,
   command-cache clear, JBR image-cache clear, scoped image-cache clear, and path-effect handle redefinition markers

@@ -5,6 +5,18 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-15 focused command-probe lifecycle hardening for vertices and fill-rect blend-mode migration rows: Magic
+  Jewel added `commands-resize-vertices`, `commands-forced-context-vertices`, `commands-resize-blend-mode`, and
+  `commands-forced-context-blend-mode`. Exact validation
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES="commands-resize-vertices commands-forced-context-vertices commands-resize-blend-mode commands-forced-context-blend-mode" ./scripts/jbr-skia-command-probe-suite.sh`
+  passed 4/4 with `fallback_new_count=0`, `unsupported=none`, and zero picture frames. The vertices resize and
+  forced-context rows reported 1,582 and 1,687 JBR command frames; the blend-mode resize and forced-context rows
+  reported 898 and 1,125 JBR command frames. Every row reported one JBR image-cache clear, one scoped image-cache
+  clear, one surface-change marker, and one command-cache clear marker; resize rows reported same-context surface
+  changes, while forced-context rows reported context-change markers. This is focused command-probe lifecycle change 45
+  after the 2026-06-15 daily broad validation slot; broad validation remains deferred until the next local-day broad
+  slot or an explicit override:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260615-215342/suite.tsv`.
 - 2026-06-15 focused command-probe lifecycle hardening for path-effect migration rows: Magic Jewel added
   `commands-resize-path-effect` and `commands-forced-context-path-effect`. Exact validation
   `EXPECT_SCREENSHOT_ASSERTION=false CASES="commands-resize-path-effect commands-forced-context-path-effect" ./scripts/jbr-skia-command-probe-suite.sh`
