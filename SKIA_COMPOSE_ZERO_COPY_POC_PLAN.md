@@ -18,7 +18,13 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   gate. Magic Jewel now enforces that cap with `scripts/jbr-skia-daily-validation-guard.sh` for default command-probe
   sweeps, screenshot parity suites, benchmark suites, compatibility matrices, and artifact matrices. Today's existing
   2026-06-15 broad command sweep was seeded into the guard stamp, so continue with exact `CASES`/small `CASE_GROUPS`
-  only until the next local-day slot.
+  only until the next local-day slot. The command-probe and screenshot-parity default runners now check the stamp
+  before expanding their large default case lists, so accidental second broad runs on the same day fail fast.
+- Magic Jewel tightened daily broad-validation guard startup for bare command-probe and screenshot-parity default runs.
+  Cheap guard validation only: `./scripts/jbr-skia-command-probe-suite.sh` and
+  `./scripts/jbr-skia-screenshot-parity-suite.sh` exit 3 immediately against the already-consumed 2026-06-15 broad
+  slot, while exact-case list probes for `commands-core-primitives` and `parity-rich` still work. No broad validation
+  was launched.
 - Focused command-probe lifecycle hardening continued with surface gradient blend-mode migration rows. Magic Jewel now
   includes `commands-resize-linear-gradient-blend-mode`, `commands-forced-context-linear-gradient-blend-mode`,
   `commands-resize-radial-gradient-stroke-blend-mode`,

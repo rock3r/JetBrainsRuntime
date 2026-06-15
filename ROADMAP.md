@@ -42,6 +42,13 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel tightened the daily broad-validation guard so bare command-probe and screenshot-parity default runs check
+  the once-per-local-day stamp before expanding their large default case lists. Cheap guard validation only:
+  `./scripts/jbr-skia-command-probe-suite.sh` and `./scripts/jbr-skia-screenshot-parity-suite.sh` now exit 3
+  immediately against the already-consumed 2026-06-15 broad slot, while exact-case list probes
+  `CASES=commands-core-primitives LIST_CASES=true ./scripts/jbr-skia-command-probe-suite.sh` and
+  `CASES=parity-rich LIST_CASES=true ./scripts/jbr-skia-screenshot-parity-suite.sh` still return the selected row.
+  No broad validation was launched.
 - Magic Jewel added resize and forced-context command-probe coverage for surface gradient blend-mode migration:
   `commands-resize-linear-gradient-blend-mode`, `commands-forced-context-linear-gradient-blend-mode`,
   `commands-resize-radial-gradient-stroke-blend-mode`, `commands-forced-context-radial-gradient-stroke-blend-mode`,

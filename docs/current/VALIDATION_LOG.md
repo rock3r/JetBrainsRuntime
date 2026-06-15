@@ -5,6 +5,14 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-15 daily broad-validation cap fast-fail tightening: Magic Jewel moved the command-probe and screenshot-parity
+  default-suite guard checks ahead of their large default case-list expansion, so accidental second broad runs on the
+  same local day fail before suite construction. Cheap guard validation only:
+  `./scripts/jbr-skia-command-probe-suite.sh` exited 3 immediately against the seeded 2026-06-15 broad slot,
+  `./scripts/jbr-skia-screenshot-parity-suite.sh` exited 3 against the same slot, and exact-case list probes
+  `CASES=commands-core-primitives LIST_CASES=true ./scripts/jbr-skia-command-probe-suite.sh` and
+  `CASES=parity-rich LIST_CASES=true ./scripts/jbr-skia-screenshot-parity-suite.sh` returned the selected rows. No
+  broad validation was launched.
 - 2026-06-15 focused command-probe lifecycle hardening for surface gradient blend-mode migration rows: Magic Jewel
   added `commands-resize-linear-gradient-blend-mode`, `commands-forced-context-linear-gradient-blend-mode`,
   `commands-resize-radial-gradient-stroke-blend-mode`,
