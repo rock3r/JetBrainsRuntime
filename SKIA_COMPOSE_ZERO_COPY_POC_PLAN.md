@@ -16,12 +16,18 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   and cap broad command sweeps, screenshot sweeps, benchmark suites, and full matrices at one broad validation slot per
   local calendar day unless the user explicitly asks for another one or an ABI/capability break needs an emergency
   gate. Magic Jewel now enforces that cap with `scripts/jbr-skia-daily-validation-guard.sh` for default command-probe
-  sweeps, screenshot parity suites, benchmark suites, compatibility matrices, and artifact matrices. Today's existing
-  2026-06-15 broad command sweep was seeded into the guard stamp, so continue with exact `CASES`/small `CASE_GROUPS`
-  only until the next local-day slot. The command-probe and screenshot-parity default runners now check the stamp
+  sweeps, screenshot parity suites, benchmark suites, compatibility matrices, and artifact matrices. The 2026-06-16
+  broad slot has now been consumed by the full compatibility matrix, so continue with exact `CASES`/small
+  `CASE_GROUPS` only until the next local-day slot. The command-probe and screenshot-parity default runners now check the stamp
   before expanding their large default case lists, and default-list `CASES_FROM`/`CASES_UNTIL` range launches now count
   as broad validation too, so accidental second broad runs on the same day fail fast. This daily cap replaces the older
   "broad sweep after ten focused changes" checkpoint cadence.
+- Magic Jewel refreshed the full compatibility matrix in the 2026-06-16 daily broad slot:
+  `EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-compatibility-matrix.sh` passed 57/57 with 56 expected fallback
+  rows, one happy command row, no unsupported reasons, no validation failures, 45,021 CMP recorder frames, 909
+  Skiko/JBR command frames, zero picture frames, screenshot status passed for 56 rows and not-run for the native-ABI
+  row. This completes the intended compatibility-matrix broad checkpoint after the prior full command-probe sweep:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260616-000119/matrix.tsv`.
 - Magic Jewel reaffirmed the daily cap with cheap checks only: `LIST_CASE_COUNT=true ./scripts/jbr-skia-command-probe-suite.sh`
   resolved 696 cases, `LIST_CASE_GROUP_COUNTS=true ./scripts/jbr-skia-benchmark-suite.sh` reported `baseline=2` and
   `image-cache=3`, and bare `./scripts/jbr-skia-command-probe-suite.sh` exited 3 before launch against the consumed

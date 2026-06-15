@@ -5,6 +5,17 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-16 full compatibility matrix: Magic Jewel used the local-day broad-validation slot for
+  `EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-compatibility-matrix.sh`. The matrix passed 57/57 rows with
+  56 expected fallback rows and one happy command row. Aggregate evidence from `matrix.tsv` and `summary.properties`:
+  `fallback_sum=56`, `validation_failures=none`, `unsupported=none`, background windows shown for all 57 rows, 45,021
+  CMP recorder frames, 909 Skiko command frames, 909 JBR command frames, zero Skiko/JBR picture frames, screenshot
+  status passed for 56 rows and not-run for the native-ABI row. The daily guard stamp records
+  `validation=compatibility matrix`, `date=2026-06-16`, and
+  `out=/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260616-000119`, so no
+  further broad suite should run on 2026-06-16 without explicit override. The compatibility output directory was 79M,
+  `magic-jewel/out` remained 121G, and disk free remained about 175Gi:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260616-000119/matrix.tsv`.
 - 2026-06-15 RuntimeEffect color-filter compatibility fallback smoke: Magic Jewel ran
   `EXPECT_SCREENSHOT_ASSERTION=false CASES=runtime-color-filter-capability-missing ./scripts/jbr-skia-compatibility-matrix.sh`.
   The exact row passed with expected `command-capability-mismatch` fallback, `fallback_new_count=1`,
