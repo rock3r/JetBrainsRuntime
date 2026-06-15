@@ -5,6 +5,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-15 artifact missing-public-API fallback smoke: Magic Jewel ran
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES=missing-public-api ./scripts/jbr-skia-artifact-matrix.sh`. The exact row
+  passed with expected `public-api-missing` fallback, `fallback_new_count=1`, `unsupported=none`, background window
+  shown, 767 CMP recorder frames, zero Skiko command frames, zero JBR command frames, zero picture frames, screenshot
+  status passed, and `[SKIKO] warn: SKIKO_JBR_INTEROP_FALLBACK reason=public-api-missing` in `new.log`. This was not
+  the full artifact matrix:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260615-233657/matrix.tsv`.
 - 2026-06-15 shader-composition command group lifecycle coverage: Magic Jewel expanded
   `shader-composition-runtime` to include existing resize/forced-context lifecycle rows for composite shader
   color-filter, transformed shader, RuntimeEffect shader, RuntimeEffect shader color-filter, linear/radial/sweep shader

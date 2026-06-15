@@ -43,6 +43,13 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel ran a narrow artifact-matrix fallback smoke for the missing public API shim artifact:
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES=missing-public-api ./scripts/jbr-skia-artifact-matrix.sh` passed 1/1 with
+  expected `public-api-missing` fallback, `fallback_new_count=1`, `unsupported=none`, background window shown, 767 CMP
+  recorder frames, zero Skiko/JBR command frames, zero picture frames, screenshot status passed, and
+  `[SKIKO] warn: SKIKO_JBR_INTEROP_FALLBACK reason=public-api-missing` in `new.log`. This was an exact one-row
+  artifact smoke, not the full artifact matrix:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260615-233657/matrix.tsv`.
 - Magic Jewel expanded the `shader-composition-runtime` command-probe group to include existing resize and
   forced-context lifecycle companions for composite shader color-filter, transformed shader, RuntimeEffect shader,
   RuntimeEffect shader color-filter, linear/radial shader color-filter, RuntimeEffect pure/uniform/child rows,

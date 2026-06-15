@@ -53,6 +53,13 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   CMP output inputs were all present. This exact row keeps artifact validation moving under the daily cap; optional old
   artifact rows and the full artifact matrix remain pending:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260615-231244/matrix.tsv`.
+- Magic Jewel ran a narrow artifact fallback smoke for the missing public API shim:
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES=missing-public-api ./scripts/jbr-skia-artifact-matrix.sh` passed 1/1 with
+  expected `public-api-missing` fallback, one new fallback, no unsupported reasons, background window shown, 767 CMP
+  recorder frames, zero Skiko/JBR command frames, zero picture frames, screenshot status passed, and the expected
+  `SKIKO_JBR_INTEROP_FALLBACK reason=public-api-missing` marker in `new.log`. This exact row keeps artifact fallback
+  validation moving under the daily cap without running the full artifact matrix:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260615-233657/matrix.tsv`.
 - Magic Jewel ran a shortened exact benchmark smoke:
   `EXPECT_SCREENSHOT_ASSERTION=false DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES=commands ./scripts/jbr-skia-benchmark-suite.sh`
   passed 1/1 with no fallback, no unsupported reasons, background window shown, 843 CMP recorder frames, 842 Skiko/JBR
