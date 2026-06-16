@@ -47,6 +47,18 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel added and refreshed the exact blend-mode lifecycle screenshot-parity pair:
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-blend-modes parity-forced-context-blend-modes" ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  passed 2/2 with zero picture frames, command replay, and screenshot status passed. The resize row recorded the known
+  single early `command-stream-invalid` resize parity artifact, then passed with 837 JBR command frames,
+  `avg_delta=1.891`, `bad_pixel_ratio=0.04573`, one same-context surface-change marker, one command-cache clear, one
+  JBR image-cache clear, one scoped image-cache clear, nine image refs, and zero shader/effect handle markers. The
+  forced-context row was fallback-free with 852 JBR command frames, `avg_delta=2.026`,
+  `bad_pixel_ratio=0.04795`, one destination context-change marker, one command-cache clear, one JBR image-cache
+  clear, one scoped image-cache clear, nine image refs, and zero shader/effect handle markers. This was an exact
+  two-row screenshot-parity refresh, not the full suite; `out` remained 121G, disk free was about 176Gi, and the
+  2026-06-16 daily broad-validation stamp remained the compatibility matrix:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-063229/suite.tsv`.
 - Magic Jewel added and refreshed the exact vertices lifecycle screenshot-parity pair:
   `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-vertices parity-forced-context-vertices" ./scripts/jbr-skia-screenshot-parity-suite.sh`
   passed 2/2 with zero picture frames, command replay, and screenshot status passed. The resize row recorded the known

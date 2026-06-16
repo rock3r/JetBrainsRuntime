@@ -30,6 +30,19 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   Skiko/JBR command frames, zero picture frames, screenshot status passed for 56 rows and not-run for the native-ABI
   row. This completes the intended compatibility-matrix broad checkpoint after the prior full command-probe sweep:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260616-000119/matrix.tsv`.
+- Magic Jewel filled the blend-mode lifecycle parity gap by adding `parity-resize-blend-modes` and
+  `parity-forced-context-blend-modes` to the screenshot-parity default list, `core-drawing` group, and case switch.
+  The rows mirror the command-probe lifecycle gates, isolate the blend-mode probe, and keep validation exact under the
+  daily broad cap. The exact two-row validation
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-blend-modes parity-forced-context-blend-modes" ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  passed 2/2. Resize passed with screenshot status passed, 837 JBR command frames, `avg_delta=1.891`,
+  `bad_pixel_ratio=0.04573`, one same-context surface-change marker, one command-cache clear, one JBR image-cache
+  clear, one scoped image-cache clear, nine image refs, zero shader/effect handle markers, and the known single early
+  resize parity `command-stream-invalid` fallback artifact. Forced context passed fallback-free with 852 JBR command
+  frames, `avg_delta=2.026`, `bad_pixel_ratio=0.04795`, one destination context-change marker, one command-cache
+  clear, one JBR image-cache clear, one scoped image-cache clear, nine image refs, and zero shader/effect handle
+  markers:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-063229/suite.tsv`.
 - Magic Jewel filled the vertices lifecycle parity gap by adding `parity-resize-vertices` and
   `parity-forced-context-vertices` to the screenshot-parity default list, `core-drawing` group, and case switch. The
   rows mirror the command-probe lifecycle gates, disable unrelated paragraph probes, and keep validation exact under
