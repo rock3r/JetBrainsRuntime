@@ -5,6 +5,24 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-16 exact RuntimeEffect child color-filter lifecycle screenshot-parity refresh: Magic Jewel added
+  `parity-resize-runtime-effect-color-filter-child` and
+  `parity-forced-context-runtime-effect-color-filter-child` to the screenshot-parity default list, `runtime-effect`
+  group, and case switch, then ran
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-runtime-effect-color-filter-child parity-forced-context-runtime-effect-color-filter-child" ./scripts/jbr-skia-screenshot-parity-suite.sh`.
+  Both exact rows passed with zero picture frames and screenshot status passed. The resize row recorded
+  `fallback_new_count=1` from the same early `command-stream-invalid` resize parity artifact seen on the earlier
+  RuntimeEffect resize parity rows, then completed with 827 JBR command frames, `avg_delta=1.853`,
+  `bad_pixel_ratio=0.04463`, `compose_bad_pixel_ratio=0.06492`, one same-context surface-change marker, one
+  command-cache clear, one JBR image-cache clear, one scoped image-cache clear, zero RuntimeEffect compile/build
+  failures, 1,489 source-cache hit frames, one miss, 64 effect-handle define frames, 1,491 effect-handle use frames,
+  and 1,483 effect-handle cache-hit frames. The forced-context row recorded `fallback_new_count=0`, 794 JBR command
+  frames, `avg_delta=1.981`, `bad_pixel_ratio=0.04667`, `compose_bad_pixel_ratio=0.06944`, one destination
+  context-change marker, one command-cache clear, one JBR image-cache clear, one scoped image-cache clear, zero
+  compile/build failures, 1,485 source-cache hit frames, one miss, 80 effect-handle define frames, 1,486
+  effect-handle use frames, and 1,476 effect-handle cache-hit frames. The output directory was 8.1M,
+  `magic-jewel/out` remained 121G, and disk free was about 203Gi. This was not the full screenshot-parity suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-034035/suite.tsv`.
 - 2026-06-16 exact RuntimeEffect source-cache eviction command-probe refresh: Magic Jewel ran
   `EXPECT_SCREENSHOT_ASSERTION=false DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="commands-runtime-effect-shader-source-cache-eviction commands-runtime-effect-source-cache-eviction" ./scripts/jbr-skia-command-probe-suite.sh`.
   Both exact rows passed on command replay with `fallback_new_count=0`, `unsupported=none`, zero picture frames, and

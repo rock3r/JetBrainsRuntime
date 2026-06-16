@@ -28,6 +28,20 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   Skiko/JBR command frames, zero picture frames, screenshot status passed for 56 rows and not-run for the native-ABI
   row. This completes the intended compatibility-matrix broad checkpoint after the prior full command-probe sweep:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260616-000119/matrix.tsv`.
+- Magic Jewel filled the child RuntimeEffect color-filter lifecycle parity gap by adding
+  `parity-resize-runtime-effect-color-filter-child` and
+  `parity-forced-context-runtime-effect-color-filter-child` to the screenshot-parity suite default list,
+  `runtime-effect` group, and case switch. The exact two-row validation
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-runtime-effect-color-filter-child parity-forced-context-runtime-effect-color-filter-child" ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  passed 2/2 under the daily cap. Resize passed with screenshot status passed, 827 JBR command frames,
+  `avg_delta=1.853`, `bad_pixel_ratio=0.04463`, `compose_bad_pixel_ratio=0.06492`, one same-context surface-change
+  marker, one command-cache clear, one JBR image-cache clear, one scoped image-cache clear, 1,489 RuntimeEffect
+  source-cache hit frames, one miss, 64 effect-handle define frames, and the known single early resize parity
+  `command-stream-invalid` fallback artifact. Forced context passed fallback-free with 794 JBR command frames,
+  `avg_delta=1.981`, `bad_pixel_ratio=0.04667`, `compose_bad_pixel_ratio=0.06944`, one destination context-change
+  marker, one command-cache clear, one JBR image-cache clear, one scoped image-cache clear, 1,485 source-cache hit
+  frames, one miss, and 80 effect-handle define frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-034035/suite.tsv`.
 - Magic Jewel refreshed the exact RuntimeEffect named-child-count schema fallback command-probe pair:
   `EXPECT_SCREENSHOT_ASSERTION=false DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="commands-runtime-effect-shader-named-child-count-fallback commands-runtime-effect-color-filter-named-child-count-fallback" ./scripts/jbr-skia-command-probe-suite.sh`
   passed 2/2 with one expected `command-stream-invalid` fallback per row, no unsupported reasons, zero JBR

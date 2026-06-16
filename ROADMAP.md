@@ -46,6 +46,20 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel added and refreshed the exact RuntimeEffect child color-filter lifecycle screenshot-parity pair:
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-runtime-effect-color-filter-child parity-forced-context-runtime-effect-color-filter-child" ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  passed 2/2 with zero picture frames, command replay, and screenshot status passed. The resize row recorded the same
+  single early `command-stream-invalid` fallback artifact seen on the other RuntimeEffect resize parity rows, then
+  passed with 827 JBR command frames, `avg_delta=1.853`, `bad_pixel_ratio=0.04463`,
+  `compose_bad_pixel_ratio=0.06492`, one same-context surface-change marker, one command-cache clear, one JBR image
+  cache clear, one scoped image-cache clear, 1,489 RuntimeEffect source-cache hit frames, one miss, 64 effect-handle
+  define frames, 1,491 effect-handle use frames, and 1,483 effect-handle cache-hit frames. The forced-context row was
+  fallback-free with 794 JBR command frames, `avg_delta=1.981`, `bad_pixel_ratio=0.04667`,
+  `compose_bad_pixel_ratio=0.06944`, one destination context-change marker, one command-cache clear, one JBR image
+  cache clear, one scoped image-cache clear, 1,485 source-cache hit frames, one miss, 80 effect-handle define frames,
+  1,486 effect-handle use frames, and 1,476 cache-hit frames. This was an exact two-row screenshot-parity refresh, not
+  the full suite; output directory was 8.1M, `out` remained 121G, and disk free was about 203Gi:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-034035/suite.tsv`.
 - Magic Jewel refreshed the exact RuntimeEffect source-cache eviction command-probe pair:
   `EXPECT_SCREENSHOT_ASSERTION=false DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="commands-runtime-effect-shader-source-cache-eviction commands-runtime-effect-source-cache-eviction" ./scripts/jbr-skia-command-probe-suite.sh`
   passed 2/2 on command replay with `fallback_new_count=0`, `unsupported=none`, zero picture frames, and screenshot
