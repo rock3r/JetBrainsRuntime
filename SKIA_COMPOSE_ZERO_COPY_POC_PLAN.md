@@ -102,6 +102,20 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   effect-handle use but not effect-handle cache-hit markers, because the resize calibration row observed zero effect
   cache-hit frames while still replaying through command mode:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-041113/suite.tsv`.
+- Magic Jewel then filled the non-stable RuntimeEffect color-filter lifecycle parity gap by adding
+  `parity-resize-runtime-effect-color-filter` and `parity-forced-context-runtime-effect-color-filter` to the
+  screenshot-parity default list, `runtime-effect` group, and case switch. The exact two-row validation
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-runtime-effect-color-filter parity-forced-context-runtime-effect-color-filter" ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  passed 2/2 under the daily cap. Resize passed with screenshot status passed, 545 JBR command frames,
+  `avg_delta=1.853`, `bad_pixel_ratio=0.04463`, `compose_bad_pixel_ratio=0.06491`, one same-context surface-change
+  marker, one command-cache clear, one JBR image-cache clear, one scoped image-cache clear, 1,198 RuntimeEffect
+  source-cache hit frames, one miss, 42 effect-handle define frames, 1,200 effect-handle use frames, 1,193
+  effect-handle cache-hit frames, and the known single early resize parity `command-stream-invalid` fallback artifact.
+  Forced context passed fallback-free with 810 JBR command frames, `avg_delta=1.979`, `bad_pixel_ratio=0.04663`,
+  `compose_bad_pixel_ratio=0.06934`, one destination context-change marker, one command-cache clear, one JBR
+  image-cache clear, one scoped image-cache clear, 1,385 source-cache hit frames, one miss, 54 effect-handle define
+  frames, 1,386 effect-handle use frames, and 1,377 effect-handle cache-hit frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-041714/suite.tsv`.
 - Magic Jewel refreshed the exact RuntimeEffect named-child-count schema fallback command-probe pair:
   `EXPECT_SCREENSHOT_ASSERTION=false DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="commands-runtime-effect-shader-named-child-count-fallback commands-runtime-effect-color-filter-named-child-count-fallback" ./scripts/jbr-skia-command-probe-suite.sh`
   passed 2/2 with one expected `command-stream-invalid` fallback per row, no unsupported reasons, zero JBR

@@ -46,6 +46,20 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel added and refreshed the exact RuntimeEffect color-filter lifecycle screenshot-parity pair:
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-runtime-effect-color-filter parity-forced-context-runtime-effect-color-filter" ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  passed 2/2 with zero picture frames, command replay, and screenshot status passed. The resize row recorded the known
+  single early `command-stream-invalid` resize parity artifact, then passed with 545 JBR command frames,
+  `avg_delta=1.853`, `bad_pixel_ratio=0.04463`, `compose_bad_pixel_ratio=0.06491`, one same-context surface-change
+  marker, one command-cache clear, one JBR image-cache clear, one scoped image-cache clear, 1,198 RuntimeEffect
+  source-cache hit frames, one miss, 42 effect-handle define frames, 1,200 effect-handle use frames, and 1,193
+  effect-handle cache-hit frames. The forced-context row was fallback-free with 810 JBR command frames,
+  `avg_delta=1.979`, `bad_pixel_ratio=0.04663`, `compose_bad_pixel_ratio=0.06934`, one destination context-change
+  marker, one command-cache clear, one JBR image-cache clear, one scoped image-cache clear, 1,385 source-cache hit
+  frames, one miss, 54 effect-handle define frames, 1,386 effect-handle use frames, and 1,377 effect-handle cache-hit
+  frames. This was an exact two-row screenshot-parity refresh, not the full suite; output directory was 7.8M, `out`
+  remained 121G, and disk free was about 176Gi:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-041714/suite.tsv`.
 - Magic Jewel added and refreshed the exact RuntimeEffect shader-color-filter lifecycle screenshot-parity pair:
   `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-runtime-effect-shader-color-filter parity-forced-context-runtime-effect-shader-color-filter" ./scripts/jbr-skia-screenshot-parity-suite.sh`
   passed 2/2 with zero picture frames, command replay, and screenshot status passed. The resize row recorded the known
