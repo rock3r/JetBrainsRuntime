@@ -30,6 +30,18 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   Skiko/JBR command frames, zero picture frames, screenshot status passed for 56 rows and not-run for the native-ABI
   row. This completes the intended compatibility-matrix broad checkpoint after the prior full command-probe sweep:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260616-000119/matrix.tsv`.
+- Magic Jewel filled the gradient-paths lifecycle parity gap by adding `parity-resize-gradient-paths` and
+  `parity-forced-context-gradient-paths` to the screenshot-parity default list, `core-drawing` group, and case switch.
+  The new rows explicitly disable the surface-gradient probes so the assertion targets only the path probes. The exact
+  two-row validation
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-gradient-paths parity-forced-context-gradient-paths" ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  passed 2/2 under the daily cap. Resize passed with screenshot status passed, 822 JBR command frames,
+  `avg_delta=2.442`, `bad_pixel_ratio=0.06387`, one same-context surface-change marker, one command-cache clear, one
+  JBR image-cache clear, one scoped image-cache clear, two image refs, and the known single early resize parity
+  `command-stream-invalid` fallback artifact. Forced context passed fallback-free with 1,185 JBR command frames,
+  `avg_delta=2.676`, `bad_pixel_ratio=0.06930`, one destination context-change marker, one command-cache clear, one
+  JBR image-cache clear, one scoped image-cache clear, and two image refs:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-054146/suite.tsv`.
 - Magic Jewel filled the gradient-surfaces lifecycle parity gap by adding `parity-resize-gradient-surfaces` and
   `parity-forced-context-gradient-surfaces` to the screenshot-parity default list, `core-drawing` group, and case
   switch. The exact two-row validation

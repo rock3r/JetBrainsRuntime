@@ -5,6 +5,24 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-16 exact gradient-paths lifecycle screenshot-parity refresh: Magic Jewel added
+  `parity-resize-gradient-paths` and `parity-forced-context-gradient-paths` to the screenshot-parity default list,
+  `core-drawing` group, and case switch, then ran
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-gradient-paths parity-forced-context-gradient-paths" ./scripts/jbr-skia-screenshot-parity-suite.sh`.
+  Both exact rows passed with zero picture frames and screenshot status passed. The resize row recorded
+  `fallback_new_count=1` from the known early `command-stream-invalid` resize parity artifact, then completed with 822
+  JBR command frames, `avg_delta=2.442`, `bad_pixel_ratio=0.06387`, two image refs, one same-context surface-change
+  marker, one command-cache clear, one JBR image-cache clear, one scoped image-cache clear, and zero shader/effect
+  handle markers. The forced-context row recorded `fallback_new_count=0`, 1,185 JBR command frames,
+  `avg_delta=2.676`, `bad_pixel_ratio=0.06930`, one destination context-change marker, one command-cache clear, one
+  JBR image-cache clear, one scoped image-cache clear, two image refs, and zero shader/effect handle markers. The final
+  output directory was 7.8M, `magic-jewel/out` remained 121G, disk free was about 203Gi, and a filtered process scan
+  found no `java`, `gradle`, `MagicJewel`, or `jbr-skia` process. One earlier exact calibration attempt in
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-054010/suite.tsv`
+  failed only because the new path row still had surface-gradient probes enabled, causing the default
+  `probeRightPurple` threshold to expect 5,000 surface-gradient pixels while the path-only row produced 4,459. The
+  passing lifecycle rows now disable surface gradients explicitly. This was not the full screenshot-parity suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-054146/suite.tsv`.
 - 2026-06-16 exact gradient-surfaces lifecycle screenshot-parity refresh: Magic Jewel added
   `parity-resize-gradient-surfaces` and `parity-forced-context-gradient-surfaces` to the screenshot-parity default
   list, `core-drawing` group, and case switch, then ran
