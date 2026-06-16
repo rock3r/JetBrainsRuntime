@@ -30,6 +30,19 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   Skiko/JBR command frames, zero picture frames, screenshot status passed for 56 rows and not-run for the native-ABI
   row. This completes the intended compatibility-matrix broad checkpoint after the prior full command-probe sweep:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260616-000119/matrix.tsv`.
+- Magic Jewel filled the base graphics-layer lifecycle parity gap by adding `parity-resize-graphics-layer` and
+  `parity-forced-context-graphics-layer` to the screenshot-parity default list, `graphics-layer-basic` group, and case
+  switch. The rows mirror the command-probe lifecycle gates, isolate the base graphics-layer probe, and keep validation
+  exact under the daily broad cap. The exact two-row validation
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-graphics-layer parity-forced-context-graphics-layer" ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  passed 2/2. Resize passed with screenshot status passed, 1,074 JBR command frames, `avg_delta=1.906`,
+  `bad_pixel_ratio=0.04576`, one same-context surface-change marker, one command-cache clear, one JBR image-cache
+  clear, one scoped image-cache clear, nine image refs, zero shader/effect handle markers, and the known single early
+  resize parity `command-stream-invalid` fallback artifact. Forced context passed fallback-free with 890 JBR command
+  frames, `avg_delta=2.048`, `bad_pixel_ratio=0.04815`, one destination context-change marker, one command-cache
+  clear, one JBR image-cache clear, one scoped image-cache clear, nine image refs, and zero shader/effect handle
+  markers:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-070019/suite.tsv`.
 - Magic Jewel filled the lighting filter lifecycle parity gap by adding `parity-resize-lighting-filter` and
   `parity-forced-context-lighting-filter` to the screenshot-parity default list, `color-filtering` group, and case
   switch. The rows mirror the command-probe lifecycle gates and keep validation exact under the daily broad cap. The
