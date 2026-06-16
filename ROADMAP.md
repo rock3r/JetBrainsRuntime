@@ -46,6 +46,17 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel refreshed the exact RuntimeEffect invalid uniform-schema descriptor fallback command-probe pair:
+  `EXPECT_SCREENSHOT_ASSERTION=false DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="commands-runtime-effect-invalid-uniform-schema-fallback commands-runtime-effect-color-filter-invalid-uniform-schema-fallback" ./scripts/jbr-skia-command-probe-suite.sh`
+  passed 2/2 as descriptor-unsupported picture fallback rows, not command-stream rows. The shader row recorded
+  `unsupported=shaderDescriptor:487,graphicsLayer:childCommands:487,graphicsLayer:487`, 487 CMP recorder frames, 488
+  Skiko/JBR picture frames, zero command frames, zero RuntimeEffect compile/build failures, and screenshot status
+  passed. The color-filter row recorded
+  `unsupported=colorFilterDescriptor:521,graphicsLayer:childCommands:521,graphicsLayer:521`, 521 CMP recorder frames,
+  521 Skiko/JBR picture frames, zero command frames, zero compile/build failures, and screenshot status passed. This
+  was an exact two-row command-probe refresh, not the full suite; output directory was 3.9M, `out` remained 121G, and
+  disk free was about 203Gi:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260616-032209/suite.tsv`.
 - Magic Jewel refreshed the exact RuntimeEffect duplicate-child-index schema fallback command-probe pair:
   `EXPECT_SCREENSHOT_ASSERTION=false DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="commands-runtime-effect-shader-duplicate-child-index-fallback commands-runtime-effect-color-filter-duplicate-child-index-fallback" ./scripts/jbr-skia-command-probe-suite.sh`
   passed 2/2 with one expected `command-stream-invalid` fallback per row, `unsupported=none`, zero JBR command/picture
