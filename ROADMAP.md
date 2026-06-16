@@ -47,6 +47,20 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel added and refreshed the exact sweep-gradient shader color-filter lifecycle screenshot-parity pair:
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-sweep-gradient-shader-color-filter parity-forced-context-sweep-gradient-shader-color-filter" ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  passed 2/2 with zero picture frames, command replay, and screenshot status passed. The resize row recorded the known
+  single early `command-stream-invalid` resize parity artifact, then passed with 717 JBR command frames,
+  `avg_delta=1.841`, `bad_pixel_ratio=0.04428`, `compose_shader_linear_bad_pixel_ratio=0.06647`, one same-context
+  surface-change marker, one command-cache clear, one JBR image-cache clear, one scoped image-cache clear, 18
+  shader-handle define frames, 1,414 shader-handle use frames, 1,396 shader-handle cache-hit frames, 42 effect-handle
+  define frames, and 9 effect-handle use frames. The forced-context row was fallback-free with 654 JBR command frames,
+  `avg_delta=1.970`, `bad_pixel_ratio=0.04634`, `compose_shader_linear_bad_pixel_ratio=0.06844`, one destination
+  context-change marker, one command-cache clear, one JBR image-cache clear, one scoped image-cache clear, 18
+  shader-handle define frames, 1,177 shader-handle use frames, 1,159 shader-handle cache-hit frames, 54 effect-handle
+  define frames, and 9 effect-handle use frames. This was an exact two-row screenshot-parity refresh, not the full
+  suite; output directory was 7.7M, `out` remained 121G, and disk free was about 203Gi:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-044036/suite.tsv`.
 - Magic Jewel added and refreshed the exact radial-gradient shader color-filter lifecycle screenshot-parity pair:
   `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-radial-gradient-shader-color-filter parity-forced-context-radial-gradient-shader-color-filter" ./scripts/jbr-skia-screenshot-parity-suite.sh`
   passed 2/2 with zero picture frames, command replay, and screenshot status passed. The resize row recorded the known
