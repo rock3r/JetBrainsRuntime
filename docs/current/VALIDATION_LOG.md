@@ -5,6 +5,24 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-16 exact RuntimeEffect uniform-only lifecycle screenshot-parity refresh: Magic Jewel added
+  `parity-resize-runtime-effect-uniform-only` and `parity-forced-context-runtime-effect-uniform-only` to the
+  screenshot-parity default list, `runtime-effect` group, and case switch, then ran
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-runtime-effect-uniform-only parity-forced-context-runtime-effect-uniform-only" ./scripts/jbr-skia-screenshot-parity-suite.sh`.
+  Both exact rows passed with zero picture frames and screenshot status passed. The resize row recorded
+  `fallback_new_count=1` from the known early `command-stream-invalid` resize parity artifact, then completed with 787
+  JBR command frames, `avg_delta=1.844`, `bad_pixel_ratio=0.04435`, `compose_bad_pixel_ratio=0.06437`, one
+  same-context surface-change marker, one command-cache clear, one JBR image-cache clear, one scoped image-cache clear,
+  zero RuntimeEffect compile/build failures, 1,420 source-cache hit frames, one miss, 8 shader-handle define frames,
+  1,422 shader-handle use frames, and 1,414 shader-handle cache-hit frames. The forced-context row recorded
+  `fallback_new_count=0`, 791 JBR command frames, `avg_delta=1.966`, `bad_pixel_ratio=0.04623`,
+  `compose_bad_pixel_ratio=0.06867`, one destination context-change marker, one command-cache clear, one JBR
+  image-cache clear, one scoped image-cache clear, zero compile/build failures, 1,483 source-cache hit frames, one
+  miss, 10 shader-handle define frames, 1,484 shader-handle use frames, and 1,474 shader-handle cache-hit frames. The
+  output directory was 8.1M, `magic-jewel/out` remained 121G, and disk free was about 177Gi; a post-run process check
+  found no stray `jbr-skia`, `MagicJewel`, `gradle`, or `java` validation process. This was not the full
+  screenshot-parity suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-034556/suite.tsv`.
 - 2026-06-16 exact RuntimeEffect child color-filter lifecycle screenshot-parity refresh: Magic Jewel added
   `parity-resize-runtime-effect-color-filter-child` and
   `parity-forced-context-runtime-effect-color-filter-child` to the screenshot-parity default list, `runtime-effect`
