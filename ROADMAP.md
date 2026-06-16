@@ -46,6 +46,15 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel refreshed the exact RuntimeEffect uniform-schema-float-offset schema fallback command-probe pair:
+  `EXPECT_SCREENSHOT_ASSERTION=false DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="commands-runtime-effect-shader-uniform-schema-float-offset-fallback commands-runtime-effect-color-filter-uniform-schema-float-offset-fallback" ./scripts/jbr-skia-command-probe-suite.sh`
+  passed 2/2 with one expected `command-stream-invalid` fallback per row, `unsupported=none`, zero JBR command/picture
+  frames, and screenshot status passed. The shader uniform-schema-float-offset row recorded 656 CMP/Skiko command
+  frames, zero RuntimeEffect compile/build failures, 1,043 RuntimeEffect cache-hit frames, and one miss before
+  structural rejection. The color-filter row recorded 766 CMP/Skiko command frames, zero compile/build failures, 1,209
+  cache-hit frames, and one miss before structural rejection. This was an exact two-row command-probe refresh, not the
+  full suite; output directory was 5.6M, `out` remained 121G, and disk free was about 203Gi:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260616-024712/suite.tsv`.
 - Magic Jewel refreshed the exact RuntimeEffect uniform-schema-float-count schema fallback command-probe pair:
   `EXPECT_SCREENSHOT_ASSERTION=false DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="commands-runtime-effect-shader-uniform-schema-float-count-fallback commands-runtime-effect-color-filter-uniform-schema-float-count-fallback" ./scripts/jbr-skia-command-probe-suite.sh`
   passed 2/2 with one expected `command-stream-invalid` fallback per row, `unsupported=none`, zero JBR command/picture
