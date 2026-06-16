@@ -47,6 +47,20 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel added and refreshed the exact graphics-layer render-effect+blend-color-filter lifecycle screenshot-parity
+  pair:
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-graphics-layer-render-effect-blend-color-filter parity-forced-context-graphics-layer-render-effect-blend-color-filter" ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  passed 2/2 with zero picture frames, command replay, and screenshot status passed. The resize row recorded the known
+  single early `command-stream-invalid` resize parity artifact, then passed with 1,300 JBR command frames,
+  `avg_delta=2.373`, `bad_pixel_ratio=0.06020`, one same-context surface-change marker, one command-cache clear, one
+  JBR image-cache clear, one scoped image-cache clear, nine image refs, 8 effect-handle define frames, 2,276
+  effect-handle use frames, and 2,268 effect-handle cache-hit frames. The forced-context row was fallback-free with
+  1,016 JBR command frames, `avg_delta=2.606`, `bad_pixel_ratio=0.06552`, one destination context-change marker, one
+  command-cache clear, one JBR image-cache clear, one scoped image-cache clear, nine image refs, 11 effect-handle
+  define frames, 2,012 effect-handle use frames, and 2,001 effect-handle cache-hit frames. This was an exact two-row
+  screenshot-parity refresh, not the full suite; output directory was 11M, disk free was about 202Gi, and the
+  2026-06-16 daily broad-validation stamp remained the compatibility matrix:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-232522/suite.tsv`.
 - Magic Jewel added and refreshed the exact graphics-layer render-effect+color-matrix-filter lifecycle screenshot-parity
   pair:
   `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-graphics-layer-render-effect-color-matrix-filter parity-forced-context-graphics-layer-render-effect-color-matrix-filter" ./scripts/jbr-skia-screenshot-parity-suite.sh`
