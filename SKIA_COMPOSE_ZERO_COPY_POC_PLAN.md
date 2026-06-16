@@ -30,6 +30,20 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   Skiko/JBR command frames, zero picture frames, screenshot status passed for 56 rows and not-run for the native-ABI
   row. This completes the intended compatibility-matrix broad checkpoint after the prior full command-probe sweep:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260616-000119/matrix.tsv`.
+- Magic Jewel filled the graphics-layer round-shadow lifecycle parity gap by adding
+  `parity-resize-graphics-layer-round-shadow` and `parity-forced-context-graphics-layer-round-shadow` to the
+  screenshot-parity default list, `graphics-layer-clip-shadow-transform` group, and case switch. The rows mirror the
+  command-probe lifecycle gates, isolate the round-clip shadow graphics-layer probe, and keep validation exact under
+  the daily broad cap. The exact two-row validation
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-graphics-layer-round-shadow parity-forced-context-graphics-layer-round-shadow" ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  passed 2/2. Resize passed with screenshot status passed, 801 JBR command frames, `avg_delta=1.912`,
+  `bad_pixel_ratio=0.04592`, one same-context surface-change marker, one command-cache clear, one JBR image-cache
+  clear, one scoped image-cache clear, nine image refs, one shadow command per frame, zero shader/effect handle
+  markers, and the known single early resize parity `command-stream-invalid` fallback artifact. Forced context passed
+  fallback-free with 1,134 JBR command frames, `avg_delta=2.064`, `bad_pixel_ratio=0.04829`, one destination
+  context-change marker, one command-cache clear, one JBR image-cache clear, one scoped image-cache clear, nine image
+  refs, one shadow command per frame, and zero shader/effect handle markers:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-073605/suite.tsv`.
 - Magic Jewel filled the graphics-layer shadow lifecycle parity gap by adding `parity-resize-graphics-layer-shadow`
   and `parity-forced-context-graphics-layer-shadow` to the screenshot-parity default list,
   `graphics-layer-clip-shadow-transform` group, and case switch. The rows mirror the command-probe lifecycle gates,
