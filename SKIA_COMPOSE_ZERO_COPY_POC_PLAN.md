@@ -30,6 +30,20 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   Skiko/JBR command frames, zero picture frames, screenshot status passed for 56 rows and not-run for the native-ABI
   row. This completes the intended compatibility-matrix broad checkpoint after the prior full command-probe sweep:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260616-000119/matrix.tsv`.
+- Magic Jewel filled the plain image-shader lifecycle parity gap by adding `parity-resize-image-shader` and
+  `parity-forced-context-image-shader` to the screenshot-parity default list, `shader-rendering` group, and case
+  switch. The exact two-row validation
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-image-shader parity-forced-context-image-shader" ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  passed 2/2 under the daily cap. Resize passed with screenshot status passed, 844 JBR command frames,
+  `avg_delta=2.447`, `bad_pixel_ratio=0.06268`, `compose_shader_image_bad_pixel_ratio=0.06647`, one same-context
+  surface-change marker, one command-cache clear, one JBR image-cache clear, one scoped image-cache clear, three image
+  refs, 35 effect-handle define frames, and the known single early resize parity `command-stream-invalid` fallback
+  artifact. Forced context passed fallback-free with 835 JBR command frames, `avg_delta=2.678`,
+  `bad_pixel_ratio=0.06777`, `compose_shader_image_bad_pixel_ratio=0.06209`, one destination context-change marker,
+  one command-cache clear, one JBR image-cache clear, one scoped image-cache clear, three image refs, and 60
+  effect-handle define frames. Two earlier exact calibration attempts failed only while widening the new rows'
+  `swingIsland` bad-pixel cap to 0.04 and the forced row's effect-handle define ceiling to 64:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-052105/suite.tsv`.
 - Magic Jewel filled the plain composite-shader lifecycle parity gap by adding `parity-resize-composite-shader` and
   `parity-forced-context-composite-shader` to the screenshot-parity default list, `shader-rendering` group, and case
   switch. The exact two-row validation

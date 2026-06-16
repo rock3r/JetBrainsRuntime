@@ -47,6 +47,18 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel added and refreshed the exact image-shader lifecycle screenshot-parity pair:
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-image-shader parity-forced-context-image-shader" ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  passed 2/2 with zero picture frames, command replay, and screenshot status passed. The resize row recorded the known
+  single early `command-stream-invalid` resize parity artifact, then passed with 844 JBR command frames,
+  `avg_delta=2.447`, `bad_pixel_ratio=0.06268`, `compose_shader_image_bad_pixel_ratio=0.06647`, one same-context
+  surface-change marker, one command-cache clear, one JBR image-cache clear, one scoped image-cache clear, three
+  image refs, and 35 effect-handle define frames. The forced-context row was fallback-free with 835 JBR command
+  frames, `avg_delta=2.678`, `bad_pixel_ratio=0.06777`, `compose_shader_image_bad_pixel_ratio=0.06209`, one
+  destination context-change marker, one command-cache clear, one JBR image-cache clear, one scoped image-cache clear,
+  three image refs, and 60 effect-handle define frames. This was an exact two-row screenshot-parity refresh, not the
+  full suite; output directory was 7.4M, `out` remained 121G, and disk free was about 203Gi:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-052105/suite.tsv`.
 - Magic Jewel added and refreshed the exact plain composite-shader lifecycle screenshot-parity pair:
   `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-composite-shader parity-forced-context-composite-shader" ./scripts/jbr-skia-screenshot-parity-suite.sh`
   passed 2/2 with zero picture frames, command replay, and screenshot status passed. The resize row recorded the known

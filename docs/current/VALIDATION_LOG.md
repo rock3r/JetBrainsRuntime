@@ -5,6 +5,28 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-16 exact plain image-shader lifecycle screenshot-parity refresh: Magic Jewel added
+  `parity-resize-image-shader` and `parity-forced-context-image-shader` to the screenshot-parity default list,
+  `shader-rendering` group, and case switch, then ran
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-image-shader parity-forced-context-image-shader" ./scripts/jbr-skia-screenshot-parity-suite.sh`.
+  Both exact rows passed with zero picture frames and screenshot status passed. The resize row recorded
+  `fallback_new_count=1` from the known early `command-stream-invalid` resize parity artifact, then completed with 844
+  JBR command frames, `avg_delta=2.447`, `bad_pixel_ratio=0.06268`,
+  `compose_shader_image_bad_pixel_ratio=0.06647`, `swingIsland_bad_pixel_ratio=0.03118`, three image refs, one
+  same-context surface-change marker, one command-cache clear, one JBR image-cache clear, one scoped image-cache clear,
+  35 effect-handle define frames, and zero shader-handle markers. The forced-context row recorded
+  `fallback_new_count=0`, 835 JBR command frames, `avg_delta=2.678`, `bad_pixel_ratio=0.06777`,
+  `compose_shader_image_bad_pixel_ratio=0.06209`, one destination context-change marker, one command-cache clear, one
+  JBR image-cache clear, one scoped image-cache clear, three image refs, 60 effect-handle define frames, and zero
+  shader-handle markers. The final output directory was 7.4M, `magic-jewel/out` remained 121G, disk free was about
+  203Gi, and a filtered process scan found no `java`, `gradle`, `MagicJewel`, or `jbr-skia` process. Earlier exact
+  calibration attempts in
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-051829/suite.tsv`
+  and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-051933/suite.tsv`
+  failed only while widening the new rows' `swingIsland` bad-pixel cap to 0.04 and the forced row's effect-handle
+  define ceiling from 56 to 64 after observing 60 define markers. This was not the full screenshot-parity suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-052105/suite.tsv`.
 - 2026-06-16 exact plain composite-shader lifecycle screenshot-parity refresh: Magic Jewel added
   `parity-resize-composite-shader` and `parity-forced-context-composite-shader` to the screenshot-parity default list,
   `shader-rendering` group, and case switch, then ran
