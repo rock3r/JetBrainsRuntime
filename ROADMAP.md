@@ -47,6 +47,24 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel verified the daily broad-validation cap before continuing: default command-probe, screenshot-parity,
+  compatibility-matrix, benchmark-suite, and artifact-matrix launches all exited 3 immediately against the existing
+  2026-06-16 broad stamp consumed by the compatibility matrix, while an exact two-row `CASES=... LIST_CASE_COUNT=true`
+  selection remained allowed. Magic Jewel then added and refreshed the exact transformed-shader lifecycle
+  screenshot-parity pair:
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-transformed-shader parity-forced-context-transformed-shader" ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  passed 2/2 with zero picture frames, command replay, and screenshot status passed. The resize row recorded the known
+  single early `command-stream-invalid` resize parity artifact, then passed with 565 JBR command frames,
+  `avg_delta=1.844`, `bad_pixel_ratio=0.04437`, `compose_bad_pixel_ratio=0.06442`, one same-context surface-change
+  marker, one command-cache clear, one JBR image-cache clear, one scoped image-cache clear, 18 shader-handle define
+  frames, 1,191 shader-handle use frames, 1,182 shader-handle cache-hit frames, and 35 effect-handle define frames.
+  The forced-context row was fallback-free with 764 JBR command frames, `avg_delta=1.969`,
+  `bad_pixel_ratio=0.04633`, `compose_bad_pixel_ratio=0.06885`, one destination context-change marker, one
+  command-cache clear, one JBR image-cache clear, one scoped image-cache clear, 18 shader-handle define frames, 1,327
+  shader-handle use frames, 1,318 shader-handle cache-hit frames, and 45 effect-handle define frames. This was an
+  exact two-row screenshot-parity refresh, not the full suite; output directory was 7.7M, `out` remained 121G, and
+  disk free was about 203Gi:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-044958/suite.tsv`.
 - Magic Jewel added and refreshed the exact sweep-gradient shader color-filter lifecycle screenshot-parity pair:
   `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-sweep-gradient-shader-color-filter parity-forced-context-sweep-gradient-shader-color-filter" ./scripts/jbr-skia-screenshot-parity-suite.sh`
   passed 2/2 with zero picture frames, command replay, and screenshot status passed. The resize row recorded the known

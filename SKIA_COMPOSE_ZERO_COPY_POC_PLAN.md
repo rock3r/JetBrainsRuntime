@@ -72,6 +72,22 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   destination context-change marker, one command-cache clear, one JBR image-cache clear, one scoped image-cache clear,
   18 shader-handle define frames, 1,177 shader-handle use frames, and 54 effect-handle define frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-044036/suite.tsv`.
+- Magic Jewel verified the daily broad-validation cap before the next focused change: the default command-probe,
+  screenshot-parity, compatibility-matrix, benchmark-suite, and artifact-matrix launch paths all exited 3 immediately
+  against the existing 2026-06-16 broad stamp, while exact two-row selection remained allowed. It then filled the
+  transformed-shader lifecycle parity gap by adding `parity-resize-transformed-shader` and
+  `parity-forced-context-transformed-shader` to the screenshot-parity default list, `shader-rendering` group, and case
+  switch. The exact two-row validation
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-transformed-shader parity-forced-context-transformed-shader" ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  passed 2/2 under the daily cap. Resize passed with screenshot status passed, 565 JBR command frames,
+  `avg_delta=1.844`, `bad_pixel_ratio=0.04437`, `compose_bad_pixel_ratio=0.06442`, one same-context surface-change
+  marker, one command-cache clear, one JBR image-cache clear, one scoped image-cache clear, 18 shader-handle define
+  frames, 1,191 shader-handle use frames, 35 effect-handle define frames, and the known single early resize parity
+  `command-stream-invalid` fallback artifact. Forced context passed fallback-free with 764 JBR command frames,
+  `avg_delta=1.969`, `bad_pixel_ratio=0.04633`, `compose_bad_pixel_ratio=0.06885`, one destination context-change
+  marker, one command-cache clear, one JBR image-cache clear, one scoped image-cache clear, 18 shader-handle define
+  frames, 1,327 shader-handle use frames, and 45 effect-handle define frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-044958/suite.tsv`.
 - Magic Jewel filled the child RuntimeEffect color-filter lifecycle parity gap by adding
   `parity-resize-runtime-effect-color-filter-child` and
   `parity-forced-context-runtime-effect-color-filter-child` to the screenshot-parity suite default list,

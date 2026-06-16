@@ -5,6 +5,33 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-16 daily cap verification plus exact transformed-shader lifecycle screenshot-parity refresh: before
+  continuing, Magic Jewel verified the once-per-local-day broad cap by attempting default command-probe,
+  screenshot-parity, compatibility-matrix, benchmark-suite, and artifact-matrix launches. All five exited 3
+  immediately against the existing 2026-06-16 broad stamp consumed by the compatibility matrix, while
+  `CASES="commands-core-primitives commands-color-shader" LIST_CASE_COUNT=true ./scripts/jbr-skia-command-probe-suite.sh`
+  returned 2 and remained allowed. Magic Jewel then added `parity-resize-transformed-shader` and
+  `parity-forced-context-transformed-shader` to the screenshot-parity default list, `shader-rendering` group, and case
+  switch, then ran
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-transformed-shader parity-forced-context-transformed-shader" ./scripts/jbr-skia-screenshot-parity-suite.sh`.
+  Both exact rows passed with zero picture frames and screenshot status passed. The resize row recorded
+  `fallback_new_count=1` from the known early `command-stream-invalid` resize parity artifact, then completed with 565
+  JBR command frames, `avg_delta=1.844`, `bad_pixel_ratio=0.04437`, `compose_bad_pixel_ratio=0.06442`, one
+  same-context surface-change marker, one command-cache clear, one JBR image-cache clear, one scoped image-cache clear,
+  18 shader-handle define frames, 1,191 shader-handle use frames, 1,182 shader-handle cache-hit frames, 35
+  effect-handle define frames, and zero effect-handle use/cache-hit frames. The forced-context row recorded
+  `fallback_new_count=0`, 764 JBR command frames, `avg_delta=1.969`, `bad_pixel_ratio=0.04633`,
+  `compose_bad_pixel_ratio=0.06885`, one destination context-change marker, one command-cache clear, one JBR image
+  cache clear, one scoped image-cache clear, 18 shader-handle define frames, 1,327 shader-handle use frames, 1,318
+  shader-handle cache-hit frames, 45 effect-handle define frames, and zero effect-handle use/cache-hit frames. The
+  final output directory was 7.7M, `magic-jewel/out` remained 121G, disk free was about 203Gi, and a filtered process
+  scan found no `java`, `gradle`, `MagicJewel`, or `jbr-skia` process. Two earlier exact calibration attempts in
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-044733/suite.tsv`
+  and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-044832/suite.tsv`
+  failed only while widening the new transformed-shader lifecycle shader-handle define ceiling from 16 to 32 after
+  observing 18-20 define markers. This was not the full screenshot-parity suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-044958/suite.tsv`.
 - 2026-06-16 exact sweep-gradient shader color-filter lifecycle screenshot-parity refresh: Magic Jewel added
   `parity-resize-sweep-gradient-shader-color-filter` and
   `parity-forced-context-sweep-gradient-shader-color-filter` to the screenshot-parity default list, `shader-rendering`
