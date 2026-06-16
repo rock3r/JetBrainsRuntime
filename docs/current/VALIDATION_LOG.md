@@ -5,6 +5,17 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-16 exact RuntimeEffect uniform-name schema fallback command-probe refresh: Magic Jewel ran
+  `EXPECT_SCREENSHOT_ASSERTION=false DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="commands-runtime-effect-shader-uniform-name-fallback commands-runtime-effect-color-filter-uniform-name-fallback" ./scripts/jbr-skia-command-probe-suite.sh`.
+  Both exact rows passed with one expected `command-stream-invalid` fallback per row, `unsupported=none`, zero JBR
+  command frames, zero JBR picture frames, and screenshot status passed. `commands-runtime-effect-shader-uniform-name-fallback`
+  recorded 680 CMP/Skiko command frames, zero RuntimeEffect compile/build failures, 1,127 RuntimeEffect cache-hit
+  frames, and one miss before structural rejection. `commands-runtime-effect-color-filter-uniform-name-fallback`
+  recorded 608 CMP recorder frames, 609 Skiko command frames, zero RuntimeEffect compile/build failures, 1,020
+  cache-hit frames, and one miss before structural rejection. Both rows emitted the expected
+  `SKIKO_JBR_INTEROP_FALLBACK reason=command-stream-invalid` marker. The output directory was 5.5M,
+  `magic-jewel/out` remained 121G, and disk free was about 203Gi. This was not the full command-probe suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260616-024119/suite.tsv`.
 - 2026-06-16 exact RuntimeEffect negative named-child-count schema fallback command-probe refresh: Magic Jewel ran
   `EXPECT_SCREENSHOT_ASSERTION=false DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="commands-runtime-effect-shader-negative-named-child-count-fallback commands-runtime-effect-color-filter-negative-named-child-count-fallback" ./scripts/jbr-skia-command-probe-suite.sh`.
   Both exact rows passed with one expected `command-stream-invalid` fallback per row, `unsupported=none`, zero JBR
