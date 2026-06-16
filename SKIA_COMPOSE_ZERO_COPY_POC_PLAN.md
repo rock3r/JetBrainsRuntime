@@ -30,6 +30,19 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   Skiko/JBR command frames, zero picture frames, screenshot status passed for 56 rows and not-run for the native-ABI
   row. This completes the intended compatibility-matrix broad checkpoint after the prior full command-probe sweep:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260616-000119/matrix.tsv`.
+- Magic Jewel filled the gradient-shaders lifecycle parity gap by adding `parity-resize-gradient-shaders` and
+  `parity-forced-context-gradient-shaders` to the screenshot-parity default list, `core-drawing` group, and case
+  switch. The exact two-row validation
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-gradient-shaders parity-forced-context-gradient-shaders" ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  passed 2/2 under the daily cap. Resize passed with screenshot status passed, 1,063 JBR command frames,
+  `avg_delta=2.433`, `bad_pixel_ratio=0.06358`, one same-context surface-change marker, one command-cache clear, one
+  JBR image-cache clear, one scoped image-cache clear, two image refs, and the known single early resize parity
+  `command-stream-invalid` fallback artifact. Forced context passed fallback-free with 1,099 JBR command frames,
+  `avg_delta=2.655`, `bad_pixel_ratio=0.06872`, one destination context-change marker, one command-cache clear, one
+  JBR image-cache clear, one scoped image-cache clear, and two image refs. One earlier exact calibration attempt failed
+  only because the new resize row initially kept paragraph probes enabled; the passing lifecycle rows disable text and
+  paragraph probes like the focused shader lifecycle rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-052738/suite.tsv`.
 - Magic Jewel filled the plain image-shader lifecycle parity gap by adding `parity-resize-image-shader` and
   `parity-forced-context-image-shader` to the screenshot-parity default list, `shader-rendering` group, and case
   switch. The exact two-row validation
