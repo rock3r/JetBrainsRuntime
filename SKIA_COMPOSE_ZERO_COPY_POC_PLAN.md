@@ -30,6 +30,20 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   Skiko/JBR command frames, zero picture frames, screenshot status passed for 56 rows and not-run for the native-ABI
   row. This completes the intended compatibility-matrix broad checkpoint after the prior full command-probe sweep:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260616-000119/matrix.tsv`.
+- Magic Jewel filled the gradient-stroke lifecycle parity gap by adding `parity-resize-gradient-stroke` and
+  `parity-forced-context-gradient-stroke` to the screenshot-parity default list, `core-drawing` group, and case
+  switch. The rows isolate the linear-gradient stroke probe, add lifecycle surface/cache gates, and use a
+  row-local orange-probe threshold while preserving the default screenshot assertion threshold for existing rows. The
+  exact two-row validation
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-gradient-stroke parity-forced-context-gradient-stroke" ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  passed 2/2 under the daily cap. Resize passed with screenshot status passed, 890 JBR command frames,
+  `avg_delta=2.455`, `bad_pixel_ratio=0.06423`, one same-context surface-change marker, one command-cache clear, one
+  JBR image-cache clear, one scoped image-cache clear, two image refs, zero shader/effect handle markers, and the known
+  single early resize parity `command-stream-invalid` fallback artifact. Forced context passed fallback-free with 1,113
+  JBR command frames, `avg_delta=2.691`, `bad_pixel_ratio=0.06971`, one destination context-change marker, one
+  command-cache clear, one JBR image-cache clear, one scoped image-cache clear, two image refs, and zero shader/effect
+  handle markers:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-055502/suite.tsv`.
 - Magic Jewel filled the gradient-paths lifecycle parity gap by adding `parity-resize-gradient-paths` and
   `parity-forced-context-gradient-paths` to the screenshot-parity default list, `core-drawing` group, and case switch.
   The new rows explicitly disable the surface-gradient probes so the assertion targets only the path probes. The exact

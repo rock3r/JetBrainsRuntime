@@ -5,6 +5,29 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-16 exact gradient-stroke lifecycle screenshot-parity refresh: Magic Jewel added
+  `parity-resize-gradient-stroke` and `parity-forced-context-gradient-stroke` to the screenshot-parity default list,
+  `core-drawing` group, and case switch, then ran
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-gradient-stroke parity-forced-context-gradient-stroke" ./scripts/jbr-skia-screenshot-parity-suite.sh`.
+  Both exact rows passed with zero picture frames and screenshot status passed. The resize row recorded
+  `fallback_new_count=1` from the known early `command-stream-invalid` resize parity artifact, then completed with 890
+  JBR command frames, `avg_delta=2.455`, `bad_pixel_ratio=0.06423`, two image refs, one same-context surface-change
+  marker, one command-cache clear, one JBR image-cache clear, one scoped image-cache clear, and zero shader/effect
+  handle markers. The forced-context row recorded `fallback_new_count=0`, 1,113 JBR command frames,
+  `avg_delta=2.691`, `bad_pixel_ratio=0.06971`, one destination context-change marker, one command-cache clear, one
+  JBR image-cache clear, one scoped image-cache clear, two image refs, and zero shader/effect handle markers. The final
+  output directory was 7.7M, `magic-jewel/out` remained 121G, disk free was about 176Gi, and a filtered process scan
+  found no `java`, `gradle`, `MagicJewel`, or `jbr-skia` process. Earlier exact calibration attempts in
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-054655/suite.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-054823/suite.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-054928/suite.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-055029/suite.tsv`,
+  and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-055146/suite.tsv`
+  failed only while calibrating the new rows: the stroke path emitted zero effect-handle markers, the resize row's
+  orange stroke probe was below the default 500-pixel threshold, and the lifecycle visual deltas needed row-local
+  compose-canvas/right-probe caps. This was not the full screenshot-parity suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-055502/suite.tsv`.
 - 2026-06-16 exact gradient-paths lifecycle screenshot-parity refresh: Magic Jewel added
   `parity-resize-gradient-paths` and `parity-forced-context-gradient-paths` to the screenshot-parity default list,
   `core-drawing` group, and case switch, then ran
