@@ -165,6 +165,15 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   frames, and screenshot status passed. This keeps invalid uniform schema descriptor rejection covered with an exact
   two-row probe, not a broad suite:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260616-032209/suite.tsv`.
+- Magic Jewel continued with the exact RuntimeEffect invalid child-schema descriptor fallback pair:
+  `EXPECT_SCREENSHOT_ASSERTION=false DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="commands-runtime-effect-invalid-child-schema-fallback commands-runtime-effect-color-filter-invalid-child-schema-fallback" ./scripts/jbr-skia-command-probe-suite.sh`
+  passed 2/2 as descriptor-unsupported picture fallback rows, not command-stream rows. The shader row recorded
+  `shaderDescriptor` plus graphics-layer unsupported markers across 526 CMP recorder frames, 526 Skiko/JBR picture
+  frames, zero command frames, and screenshot status passed; the color-filter row recorded `colorFilterDescriptor`
+  plus graphics-layer unsupported markers across 568 CMP recorder frames, 567 Skiko/JBR picture frames, zero command
+  frames, and screenshot status passed. This keeps invalid child schema descriptor rejection covered with an exact
+  two-row probe, not a broad suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260616-032451/suite.tsv`.
 - Magic Jewel continued RuntimeEffect parity with an exact pure-color row:
   `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES=parity-runtime-effect-pure-color ./scripts/jbr-skia-screenshot-parity-suite.sh`
   passed 1/1 with no fallback, no unsupported reasons, 783 CMP recorder frames, 782 Skiko/JBR command frames, zero

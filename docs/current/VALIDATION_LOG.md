@@ -5,6 +5,18 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-16 exact RuntimeEffect invalid child-schema descriptor fallback command-probe refresh: Magic Jewel ran
+  `EXPECT_SCREENSHOT_ASSERTION=false DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="commands-runtime-effect-invalid-child-schema-fallback commands-runtime-effect-color-filter-invalid-child-schema-fallback" ./scripts/jbr-skia-command-probe-suite.sh`.
+  Both exact rows passed as descriptor-unsupported picture fallback rows with `fallback_new_count=0`, zero command
+  frames, and screenshot status passed. `commands-runtime-effect-invalid-child-schema-fallback` recorded
+  `unsupported=shaderDescriptor:526,graphicsLayer:childCommands:526,graphicsLayer:526`, 526 CMP recorder frames, 526
+  Skiko/JBR picture frames, zero RuntimeEffect compile/build failures, and no RuntimeEffect cache activity.
+  `commands-runtime-effect-color-filter-invalid-child-schema-fallback` recorded
+  `unsupported=colorFilterDescriptor:568,graphicsLayer:childCommands:568,graphicsLayer:568`, 568 CMP recorder frames,
+  567 Skiko/JBR picture frames, zero RuntimeEffect compile/build failures, and no RuntimeEffect cache activity. The
+  output directory was 3.9M, `magic-jewel/out` remained 121G, and disk free was about 203Gi. This was not the full
+  command-probe suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260616-032451/suite.tsv`.
 - 2026-06-16 exact RuntimeEffect invalid uniform-schema descriptor fallback command-probe refresh: Magic Jewel ran
   `EXPECT_SCREENSHOT_ASSERTION=false DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="commands-runtime-effect-invalid-uniform-schema-fallback commands-runtime-effect-color-filter-invalid-uniform-schema-fallback" ./scripts/jbr-skia-command-probe-suite.sh`.
   Both exact rows passed as descriptor-unsupported picture fallback rows with `fallback_new_count=0`, zero command
