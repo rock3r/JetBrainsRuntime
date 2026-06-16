@@ -46,6 +46,15 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel refreshed the exact RuntimeEffect source-code schema fallback command-probe pair:
+  `EXPECT_SCREENSHOT_ASSERTION=false DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="commands-runtime-effect-shader-source-code-fallback commands-runtime-effect-color-filter-source-code-fallback" ./scripts/jbr-skia-command-probe-suite.sh`
+  passed 2/2 with one expected `command-stream-invalid` fallback per row, `unsupported=none`, zero JBR command/picture
+  frames, and screenshot status passed. The shader source-code row recorded 707 CMP frames, 708 Skiko command frames,
+  zero RuntimeEffect compile/build failures, and zero RuntimeEffect cache hit/miss frames before structural rejection.
+  The color-filter source-code row recorded 683 CMP/Skiko command frames, zero compile/build failures, 1,138
+  RuntimeEffect cache-hit frames, and one miss before structural rejection. This was an exact two-row command-probe
+  refresh, not the full suite; output directory was 5.4M, `out` remained 121G, and disk free was about 173Gi:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260616-020843/suite.tsv`.
 - Magic Jewel refreshed the exact RuntimeEffect source-hash schema fallback command-probe pair:
   `EXPECT_SCREENSHOT_ASSERTION=false DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="commands-runtime-effect-shader-source-hash-fallback commands-runtime-effect-color-filter-source-hash-fallback" ./scripts/jbr-skia-command-probe-suite.sh`
   passed 2/2 with one expected `command-stream-invalid` fallback per row, `unsupported=none`, zero JBR command/picture
