@@ -30,6 +30,20 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   Skiko/JBR command frames, zero picture frames, screenshot status passed for 56 rows and not-run for the native-ABI
   row. This completes the intended compatibility-matrix broad checkpoint after the prior full command-probe sweep:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260616-000119/matrix.tsv`.
+- Magic Jewel filled the graphics-layer rotation-x lifecycle parity gap by adding
+  `parity-resize-graphics-layer-rotationx` and `parity-forced-context-graphics-layer-rotationx` to the
+  screenshot-parity default list, `graphics-layer-clip-shadow-transform` group, and case switch. The rows mirror the
+  command-probe lifecycle gates, isolate the rotation-x graphics-layer probe, and keep validation exact under the daily
+  broad cap. The exact two-row validation
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-graphics-layer-rotationx parity-forced-context-graphics-layer-rotationx" ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  passed 2/2. Resize passed with screenshot status passed, 1,247 JBR command frames, `avg_delta=1.909`,
+  `bad_pixel_ratio=0.04586`, one same-context surface-change marker, one command-cache clear, one JBR image-cache
+  clear, one scoped image-cache clear, nine image refs, zero shader/effect handle markers, and the known single early
+  resize parity `command-stream-invalid` fallback artifact. Forced context passed fallback-free with 1,409 JBR command
+  frames, `avg_delta=2.050`, `bad_pixel_ratio=0.04825`, one destination context-change marker, one command-cache
+  clear, one JBR image-cache clear, one scoped image-cache clear, nine image refs, and zero shader/effect handle
+  markers:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-074859/suite.tsv`.
 - Magic Jewel filled the graphics-layer path-shadow lifecycle parity gap by adding
   `parity-resize-graphics-layer-path-shadow` and `parity-forced-context-graphics-layer-path-shadow` to the
   screenshot-parity default list, `graphics-layer-clip-shadow-transform` group, and case switch. The rows mirror the
