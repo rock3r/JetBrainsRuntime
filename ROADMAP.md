@@ -46,6 +46,20 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel added and refreshed the exact plain RuntimeEffect shader lifecycle screenshot-parity pair:
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-runtime-effect-shader parity-forced-context-runtime-effect-shader" ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  passed 2/2 with zero picture frames, command replay, and screenshot status passed. The resize row recorded the known
+  single early `command-stream-invalid` resize parity artifact, then passed with 536 JBR command frames,
+  `avg_delta=1.841`, `bad_pixel_ratio=0.04428`, `compose_bad_pixel_ratio=0.06426`, one same-context surface-change
+  marker, one command-cache clear, one JBR image-cache clear, one scoped image-cache clear, 1,158 RuntimeEffect
+  source-cache hit frames, one miss, 30 shader-handle define frames, 1,160 shader-handle use frames, 1,150
+  shader-handle cache-hit frames, and 40 effect-handle define frames. The forced-context row was fallback-free with
+  550 JBR command frames, `avg_delta=1.970`, `bad_pixel_ratio=0.04634`, `compose_bad_pixel_ratio=0.06886`, one
+  destination context-change marker, one command-cache clear, one JBR image-cache clear, one scoped image-cache clear,
+  1,108 source-cache hit frames, one miss, 27 shader-handle define frames, 1,109 shader-handle use frames, 1,100
+  shader-handle cache-hit frames, and 45 effect-handle define frames. This was an exact two-row screenshot-parity
+  refresh, not the full suite; output directory was 7.6M, `out` remained 121G, and disk free was about 176Gi:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-040432/suite.tsv`.
 - Magic Jewel added and refreshed the exact RuntimeEffect child-only lifecycle screenshot-parity pair:
   `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-runtime-effect-child-only parity-forced-context-runtime-effect-child-only" ./scripts/jbr-skia-screenshot-parity-suite.sh`
   passed 2/2 with zero picture frames, command replay, and screenshot status passed. The resize row recorded the known

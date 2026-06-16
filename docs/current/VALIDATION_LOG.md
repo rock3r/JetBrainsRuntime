@@ -5,6 +5,25 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-16 exact plain RuntimeEffect shader lifecycle screenshot-parity refresh: Magic Jewel added
+  `parity-resize-runtime-effect-shader` and `parity-forced-context-runtime-effect-shader` to the screenshot-parity
+  default list, `runtime-effect` group, and case switch, then ran
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-runtime-effect-shader parity-forced-context-runtime-effect-shader" ./scripts/jbr-skia-screenshot-parity-suite.sh`.
+  Both exact rows passed with zero picture frames and screenshot status passed. The resize row recorded
+  `fallback_new_count=1` from the known early `command-stream-invalid` resize parity artifact, then completed with 536
+  JBR command frames, `avg_delta=1.841`, `bad_pixel_ratio=0.04428`, `compose_bad_pixel_ratio=0.06426`, one
+  same-context surface-change marker, one command-cache clear, one JBR image-cache clear, one scoped image-cache clear,
+  zero RuntimeEffect compile/build failures, 1,158 source-cache hit frames, one miss, 30 shader-handle define frames,
+  1,160 shader-handle use frames, 1,150 shader-handle cache-hit frames, and 40 effect-handle define frames. The
+  forced-context row recorded `fallback_new_count=0`, 550 JBR command frames, `avg_delta=1.970`,
+  `bad_pixel_ratio=0.04634`, `compose_bad_pixel_ratio=0.06886`, one destination context-change marker, one
+  command-cache clear, one JBR image-cache clear, one scoped image-cache clear, zero compile/build failures, 1,108
+  source-cache hit frames, one miss, 27 shader-handle define frames, 1,109 shader-handle use frames, 1,100
+  shader-handle cache-hit frames, and 45 effect-handle define frames. The final output directory was 7.6M,
+  `magic-jewel/out` remained 121G, disk free was about 176Gi, and a post-run process check found no stray validation
+  process. The new parity rows use a 40-frame shader-handle define cap after one earlier exact pass showed the real
+  resize/forced counts were 27-30 frames. This was not the full screenshot-parity suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-040432/suite.tsv`.
 - 2026-06-16 exact RuntimeEffect child-only lifecycle screenshot-parity refresh: Magic Jewel added
   `parity-resize-runtime-effect-child-only` and `parity-forced-context-runtime-effect-child-only` to the
   screenshot-parity default list, `runtime-effect` group, and case switch, then ran
