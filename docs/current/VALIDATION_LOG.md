@@ -5,6 +5,17 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-16 exact RuntimeEffect child-type fallback command-probe refresh: Magic Jewel ran
+  `EXPECT_SCREENSHOT_ASSERTION=false DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="commands-runtime-effect-child-type-fallback commands-runtime-effect-color-filter-child-type-fallback" ./scripts/jbr-skia-command-probe-suite.sh`.
+  Both exact rows passed with one expected `runtime-effect-build-failed` fallback per row, `unsupported=none`, zero JBR
+  command frames, zero JBR picture frames, and screenshot capture not run. `commands-runtime-effect-child-type-fallback`
+  recorded 694 CMP recorder frames, 694 Skiko command frames, one RuntimeEffect build failure, zero compile failures,
+  7,489 RuntimeEffect cache-hit frames, two misses, and the expected `stage=child-type` build-failure marker.
+  `commands-runtime-effect-color-filter-child-type-fallback` recorded 1,195 CMP recorder frames, 1,195 Skiko command
+  frames, one RuntimeEffect build failure, zero compile failures, 7,696 cache-hit frames, two misses, and the expected
+  `stage=positional-child-type` color-filter build-failure marker. The output directory was 20M, `magic-jewel/out`
+  remained 121G, and disk free was about 173Gi. This was not the full command-probe suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260616-020138/suite.tsv`.
 - 2026-06-16 exact RuntimeEffect compile/build fallback command-probe refresh: Magic Jewel ran
   `EXPECT_SCREENSHOT_ASSERTION=false DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="commands-runtime-effect-compile-fallback commands-runtime-effect-build-fallback commands-runtime-effect-color-filter-compile-fallback commands-runtime-effect-color-filter-build-fallback" ./scripts/jbr-skia-command-probe-suite.sh`.
   All four exact rows passed with one expected fallback per row, `unsupported=none`, zero JBR command frames, zero JBR

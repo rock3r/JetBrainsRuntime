@@ -204,6 +204,15 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   at `stage=child-count`. This keeps RuntimeEffect failure fallback contracts covered with an exact four-row probe, not
   a broad suite:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260616-015112/suite.tsv`.
+- Magic Jewel refreshed the exact RuntimeEffect child-type fallback pair:
+  `EXPECT_SCREENSHOT_ASSERTION=false DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="commands-runtime-effect-child-type-fallback commands-runtime-effect-color-filter-child-type-fallback" ./scripts/jbr-skia-command-probe-suite.sh`
+  passed 2/2 with one expected `runtime-effect-build-failed` fallback per row, no unsupported reasons, zero JBR
+  command/picture frames, and screenshot capture not run. The shader row reported one build failure at
+  `stage=child-type`, 694 CMP/Skiko command frames, 7,489 RuntimeEffect cache-hit frames, and two misses. The
+  color-filter row reported one build failure at `stage=positional-child-type`, 1,195 CMP/Skiko command frames, 7,696
+  cache-hit frames, and two misses. This keeps child type mismatch fallback contracts covered with an exact two-row
+  probe, not a broad suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260616-020138/suite.tsv`.
 - Magic Jewel continued RuntimeEffect parity with an exact stable color-filter row:
   `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES=parity-runtime-effect-stable-color-filter ./scripts/jbr-skia-screenshot-parity-suite.sh`
   passed 1/1 with no fallback, no unsupported reasons, 546 CMP/Skiko/JBR command frames, zero picture frames,
