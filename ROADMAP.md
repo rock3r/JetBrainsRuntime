@@ -46,6 +46,15 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel refreshed the exact RuntimeEffect child-index schema fallback command-probe pair:
+  `EXPECT_SCREENSHOT_ASSERTION=false DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="commands-runtime-effect-shader-child-index-fallback commands-runtime-effect-color-filter-child-index-fallback" ./scripts/jbr-skia-command-probe-suite.sh`
+  passed 2/2 with one expected `command-stream-invalid` fallback per row, `unsupported=none`, zero JBR command/picture
+  frames, and screenshot status passed. The shader child-index row recorded 620 CMP/Skiko command frames, zero
+  RuntimeEffect compile/build failures, and zero RuntimeEffect cache hit/miss frames before structural rejection. The
+  color-filter row recorded 567 CMP frames, 566 Skiko command frames, zero compile/build failures, 928 RuntimeEffect
+  cache-hit frames, and one miss before structural rejection. This was an exact two-row command-probe refresh, not the
+  full suite; output directory was 4.1M, `out` remained 121G, and disk free was about 203Gi:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260616-031349/suite.tsv`.
 - Magic Jewel refreshed the exact RuntimeEffect child-schema-name-range schema fallback command-probe pair:
   `EXPECT_SCREENSHOT_ASSERTION=false DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="commands-runtime-effect-shader-child-schema-name-range-fallback commands-runtime-effect-color-filter-child-schema-name-range-fallback" ./scripts/jbr-skia-command-probe-suite.sh`
   passed 2/2 with one expected `command-stream-invalid` fallback per row, `unsupported=none`, zero JBR command/picture
