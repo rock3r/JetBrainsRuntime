@@ -55,6 +55,22 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   destination context-change marker, one command-cache clear, one JBR image-cache clear, one scoped image-cache clear,
   1,483 source-cache hit frames, one miss, 10 shader-handle define frames, and 1,484 shader-handle use frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-034556/suite.tsv`.
+- Magic Jewel then filled the RuntimeEffect child-only lifecycle parity gap by adding
+  `parity-resize-runtime-effect-child-only` and `parity-forced-context-runtime-effect-child-only` to the
+  screenshot-parity default list, `runtime-effect` group, and case switch. The exact two-row validation
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-runtime-effect-child-only parity-forced-context-runtime-effect-child-only" ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  passed 2/2 under the daily cap. Resize passed with screenshot status passed, 815 JBR command frames,
+  `avg_delta=1.847`, `bad_pixel_ratio=0.04446`, `compose_bad_pixel_ratio=0.06456`, one same-context surface-change
+  marker, one command-cache clear, one JBR image-cache clear, one scoped image-cache clear, 1,423 RuntimeEffect
+  source-cache hit frames, one miss, 27 shader-handle define frames, 35 effect-handle define frames, and the known
+  single early resize parity `command-stream-invalid` fallback artifact. Forced context passed fallback-free with 835
+  JBR command frames, `avg_delta=1.977`, `bad_pixel_ratio=0.04655`, `compose_bad_pixel_ratio=0.06921`, one
+  destination context-change marker, one command-cache clear, one JBR image-cache clear, one scoped image-cache clear,
+  1,459 source-cache hit frames, one miss, 27 shader-handle define frames, and 45 effect-handle define frames. Two
+  earlier exact calibration attempts failed the strict gate because the new child-only lifecycle cases initially capped
+  shader-handle define frames at 16 while screenshot parity observed 30, so the final case gate now caps that marker at
+  40:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-035554/suite.tsv`.
 - Magic Jewel refreshed the exact RuntimeEffect named-child-count schema fallback command-probe pair:
   `EXPECT_SCREENSHOT_ASSERTION=false DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="commands-runtime-effect-shader-named-child-count-fallback commands-runtime-effect-color-filter-named-child-count-fallback" ./scripts/jbr-skia-command-probe-suite.sh`
   passed 2/2 with one expected `command-stream-invalid` fallback per row, no unsupported reasons, zero JBR

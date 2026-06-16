@@ -5,6 +5,29 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-16 exact RuntimeEffect child-only lifecycle screenshot-parity refresh: Magic Jewel added
+  `parity-resize-runtime-effect-child-only` and `parity-forced-context-runtime-effect-child-only` to the
+  screenshot-parity default list, `runtime-effect` group, and case switch, then ran
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-runtime-effect-child-only parity-forced-context-runtime-effect-child-only" ./scripts/jbr-skia-screenshot-parity-suite.sh`.
+  Both exact rows passed with zero picture frames and screenshot status passed. The resize row recorded
+  `fallback_new_count=1` from the known early `command-stream-invalid` resize parity artifact, then completed with 815
+  JBR command frames, `avg_delta=1.847`, `bad_pixel_ratio=0.04446`, `compose_bad_pixel_ratio=0.06456`, one
+  same-context surface-change marker, one command-cache clear, one JBR image-cache clear, one scoped image-cache clear,
+  zero RuntimeEffect compile/build failures, 1,423 source-cache hit frames, one miss, 27 shader-handle define frames,
+  1,425 shader-handle use frames, 1,416 shader-handle cache-hit frames, and 35 effect-handle define frames. The
+  forced-context row recorded `fallback_new_count=0`, 835 JBR command frames, `avg_delta=1.977`,
+  `bad_pixel_ratio=0.04655`, `compose_bad_pixel_ratio=0.06921`, one destination context-change marker, one
+  command-cache clear, one JBR image-cache clear, one scoped image-cache clear, zero compile/build failures, 1,459
+  source-cache hit frames, one miss, 27 shader-handle define frames, 1,460 shader-handle use frames, 1,451
+  shader-handle cache-hit frames, and 45 effect-handle define frames. The final output directory was 8.2M,
+  `magic-jewel/out` remained 121G, disk free was about 176Gi, and a post-run process check found no stray
+  validation process. Two earlier exact attempts in
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-035140/suite.tsv`
+  and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-035405/suite.tsv`
+  failed only while calibrating the new strict shader-handle define ceiling from 16 to 40 after observing 30 define
+  markers. This was not the full screenshot-parity suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-035554/suite.tsv`.
 - 2026-06-16 exact RuntimeEffect uniform-only lifecycle screenshot-parity refresh: Magic Jewel added
   `parity-resize-runtime-effect-uniform-only` and `parity-forced-context-runtime-effect-uniform-only` to the
   screenshot-parity default list, `runtime-effect` group, and case switch, then ran
