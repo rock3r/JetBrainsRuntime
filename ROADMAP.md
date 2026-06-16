@@ -47,6 +47,20 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel added and refreshed the exact composite-shader color-filter lifecycle screenshot-parity pair:
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-composite-shader-color-filter parity-forced-context-composite-shader-color-filter" ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  passed 2/2 with zero picture frames, command replay, and screenshot status passed. The resize row recorded the known
+  single early `command-stream-invalid` resize parity artifact, then passed with 792 JBR command frames,
+  `avg_delta=1.841`, `bad_pixel_ratio=0.04428`, `compose_shader_composite_bad_pixel_ratio=0.07857`, one same-context
+  surface-change marker, one command-cache clear, one JBR image-cache clear, one scoped image-cache clear, 36
+  shader-handle define frames, 1,487 shader-handle use frames, 1,469 shader-handle cache-hit frames, 42 effect-handle
+  define frames, and 9 effect-handle use frames. The forced-context row was fallback-free with 452 JBR command frames,
+  `avg_delta=1.962`, `bad_pixel_ratio=0.04616`, `compose_shader_composite_bad_pixel_ratio=0.05382`, one destination
+  context-change marker, one command-cache clear, one JBR image-cache clear, one scoped image-cache clear, 36
+  shader-handle define frames, 1,066 shader-handle use frames, 1,048 shader-handle cache-hit frames, 54 effect-handle
+  define frames, and 9 effect-handle use frames. This was an exact two-row screenshot-parity refresh, not the full
+  suite; output directory was 7.5M, `out` remained 121G, and disk free was about 203Gi:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-045823/suite.tsv`.
 - Magic Jewel verified the daily broad-validation cap before continuing: default command-probe, screenshot-parity,
   compatibility-matrix, benchmark-suite, and artifact-matrix launches all exited 3 immediately against the existing
   2026-06-16 broad stamp consumed by the compatibility matrix, while an exact two-row `CASES=... LIST_CASE_COUNT=true`

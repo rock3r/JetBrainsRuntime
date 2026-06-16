@@ -88,6 +88,20 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   marker, one command-cache clear, one JBR image-cache clear, one scoped image-cache clear, 18 shader-handle define
   frames, 1,327 shader-handle use frames, and 45 effect-handle define frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-044958/suite.tsv`.
+- Magic Jewel then filled the composite-shader color-filter lifecycle parity gap by adding
+  `parity-resize-composite-shader-color-filter` and `parity-forced-context-composite-shader-color-filter` to the
+  screenshot-parity default list, `shader-rendering` group, and case switch. The exact two-row validation
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-composite-shader-color-filter parity-forced-context-composite-shader-color-filter" ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  passed 2/2 under the daily cap. Resize passed with screenshot status passed, 792 JBR command frames,
+  `avg_delta=1.841`, `bad_pixel_ratio=0.04428`, `compose_shader_composite_bad_pixel_ratio=0.07857`, one same-context
+  surface-change marker, one command-cache clear, one JBR image-cache clear, one scoped image-cache clear, 36
+  shader-handle define frames, 1,487 shader-handle use frames, 42 effect-handle define frames, and the known single
+  early resize parity `command-stream-invalid` fallback artifact. Forced context passed fallback-free with 452 JBR
+  command frames, `avg_delta=1.962`, `bad_pixel_ratio=0.04616`,
+  `compose_shader_composite_bad_pixel_ratio=0.05382`, one destination context-change marker, one command-cache clear,
+  one JBR image-cache clear, one scoped image-cache clear, 36 shader-handle define frames, 1,066 shader-handle use
+  frames, and 54 effect-handle define frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-045823/suite.tsv`.
 - Magic Jewel filled the child RuntimeEffect color-filter lifecycle parity gap by adding
   `parity-resize-runtime-effect-color-filter-child` and
   `parity-forced-context-runtime-effect-color-filter-child` to the screenshot-parity suite default list,
