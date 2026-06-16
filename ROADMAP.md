@@ -46,6 +46,15 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel refreshed the exact RuntimeEffect uniform-schema-name-range schema fallback command-probe pair:
+  `EXPECT_SCREENSHOT_ASSERTION=false DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="commands-runtime-effect-shader-uniform-schema-name-range-fallback commands-runtime-effect-color-filter-uniform-schema-name-range-fallback" ./scripts/jbr-skia-command-probe-suite.sh`
+  passed 2/2 with one expected `command-stream-invalid` fallback per row, `unsupported=none`, zero JBR command/picture
+  frames, and screenshot status passed. The shader uniform-schema-name-range row recorded 753 CMP/Skiko command
+  frames, zero RuntimeEffect compile/build failures, 1,166 RuntimeEffect cache-hit frames, and one miss before
+  structural rejection. The color-filter row recorded 705 CMP/Skiko command frames, zero compile/build failures, 1,138
+  cache-hit frames, and one miss before structural rejection. This was an exact two-row command-probe refresh, not the
+  full suite; output directory was 6.6M, `out` remained 121G, and disk free was about 203Gi:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260616-025851/suite.tsv`.
 - Magic Jewel refreshed the exact RuntimeEffect uniform-schema-max-name-length schema fallback command-probe pair:
   `EXPECT_SCREENSHOT_ASSERTION=false DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="commands-runtime-effect-shader-uniform-schema-max-name-length-fallback commands-runtime-effect-color-filter-uniform-schema-max-name-length-fallback" ./scripts/jbr-skia-command-probe-suite.sh`
   passed 2/2 with one expected `command-stream-invalid` fallback per row, `unsupported=none`, zero JBR command/picture
