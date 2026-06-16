@@ -5,6 +5,26 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-16 exact vertices lifecycle screenshot-parity refresh: Magic Jewel added `parity-resize-vertices` and
+  `parity-forced-context-vertices` to the screenshot-parity default list, `core-drawing` group, and case switch, then
+  ran
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-vertices parity-forced-context-vertices" ./scripts/jbr-skia-screenshot-parity-suite.sh`.
+  Both exact rows passed with zero picture frames and screenshot status passed. The resize row recorded
+  `fallback_new_count=1` from the known early `command-stream-invalid` resize parity artifact, then completed with 810
+  JBR command frames, `avg_delta=1.853`, `bad_pixel_ratio=0.04464`, nine image refs, one same-context surface-change
+  marker, one command-cache clear, one JBR image-cache clear, one scoped image-cache clear, and 35 effect-handle
+  define frames. The forced-context row recorded `fallback_new_count=0`, 540 JBR command frames, `avg_delta=1.981`,
+  `bad_pixel_ratio=0.04667`, nine image refs, one destination context-change marker, one command-cache clear, one JBR
+  image-cache clear, one scoped image-cache clear, and 50 effect-handle define frames. `magic-jewel/out` remained
+  121G, disk free was about 176Gi, and the 2026-06-16 broad-validation stamp still pointed at the compatibility
+  matrix. Earlier exact calibration attempts in
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-062326/suite.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-062439/suite.tsv`,
+  and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-062540/suite.tsv`
+  failed only while disabling unrelated paragraph probes, adding the row-local `headerButtons` cap, and widening the
+  forced-context effect-handle define ceiling. This was not the full screenshot-parity suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-062716/suite.tsv`.
 - 2026-06-16 exact path-effect lifecycle screenshot-parity refresh: Magic Jewel added
   `parity-resize-path-effect` and `parity-forced-context-path-effect` to the screenshot-parity default list,
   `core-drawing` group, and case switch, then ran
