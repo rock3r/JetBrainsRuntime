@@ -409,7 +409,7 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 - 2026-06-16 daily broad-validation cap tightening: Magic Jewel changed
   `scripts/jbr-skia-daily-validation-guard.sh` plus the command-probe, screenshot-parity, benchmark, compatibility, and
   artifact runners so the once-per-local-day broad slot now covers default launches, default-order ranges, and any
-  resolved selection above `JBR_SKIA_BROAD_VALIDATION_CASE_LIMIT` rows. The default broad limit is 10 rows, while exact
+  resolved selection above `JBR_SKIA_BROAD_VALIDATION_CASE_LIMIT` rows. The default broad limit is 2 rows, while exact
   one-row/two-row smokes and no-launch list helpers remain allowed. Cheap no-launch/guard validation only:
   `bash -n` passed for the edited shell scripts; `LIST_CASE_COUNT=true ./scripts/jbr-skia-command-probe-suite.sh`
   resolved 696 rows; `LIST_CASE_GROUP_COUNTS=true ./scripts/jbr-skia-screenshot-parity-suite.sh` printed group sizes;

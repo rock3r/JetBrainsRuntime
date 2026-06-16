@@ -37,7 +37,7 @@ This is the small working roadmap for the current PoC. The full historical check
   enforce this with `scripts/jbr-skia-daily-validation-guard.sh`; use exact small `CASES`/`CASE_GROUPS` for normal
   iteration, or `JBR_SKIA_ALLOW_EXTRA_BROAD_VALIDATION=true` only for an explicit override. Default launches,
   default-list `CASES_FROM`/`CASES_UNTIL` range launches, and resolved selections above
-  `JBR_SKIA_BROAD_VALIDATION_CASE_LIMIT` rows count as broad validation; the default limit is 10 rows. List-only range
+  `JBR_SKIA_BROAD_VALIDATION_CASE_LIMIT` rows count as broad validation; the default limit is 2 rows. List-only range
   helpers remain allowed. This daily cap supersedes the earlier "run a broad sweep every ten focused changes"
   checkpoint rhythm.
 - Keep branches committed and pushed to the user's GitHub forks at each major step.
