@@ -5,6 +5,20 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-16 exact graphics-layer off-center pivot lifecycle screenshot-parity refresh: Magic Jewel added
+  `parity-resize-graphics-layer-offcenter-pivot` and `parity-forced-context-graphics-layer-offcenter-pivot` to the
+  screenshot-parity default list, `graphics-layer-clip-shadow-transform` group, and case switch, then ran
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-graphics-layer-offcenter-pivot parity-forced-context-graphics-layer-offcenter-pivot" ./scripts/jbr-skia-screenshot-parity-suite.sh`.
+  Both exact rows passed with zero picture frames and screenshot status passed. The resize row recorded
+  `fallback_new_count=1` from the known early `command-stream-invalid` resize parity artifact, then completed with 828
+  JBR command frames, `avg_delta=1.910`, `bad_pixel_ratio=0.04592`, nine image refs, one same-context surface-change
+  marker, one command-cache clear, one JBR image-cache clear, one scoped image-cache clear, and zero shader/effect
+  handle markers. The forced-context row recorded `fallback_new_count=0`, 871 JBR command frames, `avg_delta=2.050`,
+  `bad_pixel_ratio=0.04826`, nine image refs, one destination context-change marker, one command-cache clear, one JBR
+  image-cache clear, one scoped image-cache clear, and zero shader/effect handle markers. The final output directory
+  was 7.6M, disk free was about 178Gi, and the 2026-06-16 broad-validation stamp still pointed at the compatibility
+  matrix. This was not the full screenshot-parity suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-081753/suite.tsv`.
 - 2026-06-16 exact graphics-layer near-camera lifecycle screenshot-parity refresh: Magic Jewel added
   `parity-resize-graphics-layer-near-camera` and `parity-forced-context-graphics-layer-near-camera` to the
   screenshot-parity default list, `graphics-layer-clip-shadow-transform` group, and case switch, then ran
