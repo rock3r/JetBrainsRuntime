@@ -46,6 +46,21 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel added and refreshed the exact RuntimeEffect shader-color-filter lifecycle screenshot-parity pair:
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-runtime-effect-shader-color-filter parity-forced-context-runtime-effect-shader-color-filter" ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  passed 2/2 with zero picture frames, command replay, and screenshot status passed. The resize row recorded the known
+  single early `command-stream-invalid` resize parity artifact, then passed with 812 JBR command frames,
+  `avg_delta=1.841`, `bad_pixel_ratio=0.04428`, `compose_bad_pixel_ratio=0.06426`, one same-context surface-change
+  marker, one command-cache clear, one JBR image-cache clear, one scoped image-cache clear, 1,412 RuntimeEffect
+  source-cache hit frames, one miss, 14 shader-handle define frames, 1,421 shader-handle use frames, 1,407
+  shader-handle cache-hit frames, 42 effect-handle define frames, and 7 effect-handle use frames. The forced-context
+  row was fallback-free with 806 JBR command frames, `avg_delta=1.969`, `bad_pixel_ratio=0.04632`,
+  `compose_bad_pixel_ratio=0.06882`, one destination context-change marker, one command-cache clear, one JBR image
+  cache clear, one scoped image-cache clear, 1,444 source-cache hit frames, one miss, 18 shader-handle define frames,
+  1,454 shader-handle use frames, 1,436 shader-handle cache-hit frames, 54 effect-handle define frames, and 9
+  effect-handle use frames. This was an exact two-row screenshot-parity refresh, not the full suite; output directory
+  was 8.1M, `out` remained 121G, and disk free was about 176Gi:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-041113/suite.tsv`.
 - Magic Jewel added and refreshed the exact plain RuntimeEffect shader lifecycle screenshot-parity pair:
   `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-runtime-effect-shader parity-forced-context-runtime-effect-shader" ./scripts/jbr-skia-screenshot-parity-suite.sh`
   passed 2/2 with zero picture frames, command replay, and screenshot status passed. The resize row recorded the known

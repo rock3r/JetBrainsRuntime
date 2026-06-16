@@ -85,6 +85,23 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   1,108 source-cache hit frames, one miss, 27 shader-handle define frames, and 45 effect-handle define frames. The new
   shader define cap is 40, matching the final observed parity lifecycle counts with a small buffer:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-040432/suite.tsv`.
+- Magic Jewel then filled the RuntimeEffect shader-color-filter lifecycle parity gap by adding
+  `parity-resize-runtime-effect-shader-color-filter` and
+  `parity-forced-context-runtime-effect-shader-color-filter` to the screenshot-parity default list, `runtime-effect`
+  group, and case switch. The exact two-row validation
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-runtime-effect-shader-color-filter parity-forced-context-runtime-effect-shader-color-filter" ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  passed 2/2 under the daily cap. Resize passed with screenshot status passed, 812 JBR command frames,
+  `avg_delta=1.841`, `bad_pixel_ratio=0.04428`, `compose_bad_pixel_ratio=0.06426`, one same-context surface-change
+  marker, one command-cache clear, one JBR image-cache clear, one scoped image-cache clear, 1,412 RuntimeEffect
+  source-cache hit frames, one miss, 14 shader-handle define frames, 42 effect-handle define frames, 7 effect-handle
+  use frames, and the known single early resize parity `command-stream-invalid` fallback artifact. Forced context
+  passed fallback-free with 806 JBR command frames, `avg_delta=1.969`, `bad_pixel_ratio=0.04632`,
+  `compose_bad_pixel_ratio=0.06882`, one destination context-change marker, one command-cache clear, one JBR
+  image-cache clear, one scoped image-cache clear, 1,444 source-cache hit frames, one miss, 18 shader-handle define
+  frames, 54 effect-handle define frames, and 9 effect-handle use frames. The new lifecycle rows intentionally require
+  effect-handle use but not effect-handle cache-hit markers, because the resize calibration row observed zero effect
+  cache-hit frames while still replaying through command mode:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-041113/suite.tsv`.
 - Magic Jewel refreshed the exact RuntimeEffect named-child-count schema fallback command-probe pair:
   `EXPECT_SCREENSHOT_ASSERTION=false DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="commands-runtime-effect-shader-named-child-count-fallback commands-runtime-effect-color-filter-named-child-count-fallback" ./scripts/jbr-skia-command-probe-suite.sh`
   passed 2/2 with one expected `command-stream-invalid` fallback per row, no unsupported reasons, zero JBR
