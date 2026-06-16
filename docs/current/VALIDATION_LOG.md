@@ -5,6 +5,22 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-16 exact graphics-layer render-effect+color-matrix-filter lifecycle screenshot-parity refresh: Magic Jewel
+  added `parity-resize-graphics-layer-render-effect-color-matrix-filter` and
+  `parity-forced-context-graphics-layer-render-effect-color-matrix-filter` to the screenshot-parity default list,
+  `graphics-layer-effects` group, and case switch, then ran
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-graphics-layer-render-effect-color-matrix-filter parity-forced-context-graphics-layer-render-effect-color-matrix-filter" ./scripts/jbr-skia-screenshot-parity-suite.sh`.
+  Both exact rows passed with zero picture frames and screenshot status passed. The resize row recorded
+  `fallback_new_count=1` from the known early `command-stream-invalid` resize parity artifact, then completed with 617
+  JBR command frames, `avg_delta=1.903`, `bad_pixel_ratio=0.04557`, nine image refs, one same-context surface-change
+  marker, one command-cache clear, one JBR image-cache clear, one scoped image-cache clear, 16 effect-handle define
+  frames, 2,128 effect-handle use frames, and 2,112 effect-handle cache-hit frames. The forced-context row recorded
+  `fallback_new_count=0`, 870 JBR command frames, `avg_delta=2.045`, `bad_pixel_ratio=0.04801`, nine image refs, one
+  destination context-change marker, one command-cache clear, one JBR image-cache clear, one scoped image-cache clear,
+  20 effect-handle define frames, 3,114 effect-handle use frames, and 3,094 effect-handle cache-hit frames. The final
+  output directory was 7.8M, disk free was about 202Gi, and the 2026-06-16 broad-validation stamp still pointed at the
+  compatibility matrix. This was not the full screenshot-parity suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-231819/suite.tsv`.
 - 2026-06-16 exact graphics-layer render-effect+blend-mode lifecycle screenshot-parity refresh: Magic Jewel added
   `parity-resize-graphics-layer-render-effect-blend-mode` and
   `parity-forced-context-graphics-layer-render-effect-blend-mode` to the screenshot-parity default list,
