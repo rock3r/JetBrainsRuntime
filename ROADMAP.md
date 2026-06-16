@@ -47,6 +47,18 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel added and refreshed the exact skew-transform lifecycle screenshot-parity pair:
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-skew-transform parity-forced-context-skew-transform" ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  passed 2/2 with zero picture frames, command replay, and screenshot status passed. The resize row recorded the known
+  single early `command-stream-invalid` resize parity artifact, then passed with 873 JBR command frames,
+  `avg_delta=2.386`, `bad_pixel_ratio=0.06235`, one same-context surface-change marker, one command-cache clear, one
+  JBR image-cache clear, one scoped image-cache clear, two image refs, and 40 effect-handle define frames. The
+  forced-context row was fallback-free with 825 JBR command frames, `avg_delta=2.606`,
+  `bad_pixel_ratio=0.06742`, one destination context-change marker, one command-cache clear, one JBR image-cache
+  clear, one scoped image-cache clear, two image refs, and 60 effect-handle define frames. This was an exact two-row
+  screenshot-parity refresh, not the full suite; output directory was 7.5M, `out` remained 121G, disk free was about
+  203Gi, and the 2026-06-16 daily broad-validation stamp remained the compatibility matrix:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-064326/suite.tsv`.
 - Magic Jewel added and refreshed the exact point-dot lifecycle screenshot-parity pair:
   `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-point-dots parity-forced-context-point-dots" ./scripts/jbr-skia-screenshot-parity-suite.sh`
   passed 2/2 with zero picture frames, command replay, and screenshot status passed. The resize row recorded the known

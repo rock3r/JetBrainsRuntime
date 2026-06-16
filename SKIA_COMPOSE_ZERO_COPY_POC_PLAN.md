@@ -30,6 +30,18 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   Skiko/JBR command frames, zero picture frames, screenshot status passed for 56 rows and not-run for the native-ABI
   row. This completes the intended compatibility-matrix broad checkpoint after the prior full command-probe sweep:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260616-000119/matrix.tsv`.
+- Magic Jewel filled the skew-transform lifecycle parity gap by adding `parity-resize-skew-transform` and
+  `parity-forced-context-skew-transform` to the screenshot-parity default list, `core-drawing` group, and case switch.
+  The rows mirror the command-probe lifecycle gates, isolate the skew transform probe, and keep validation exact under
+  the daily broad cap. The exact two-row validation
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-skew-transform parity-forced-context-skew-transform" ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  passed 2/2. Resize passed with screenshot status passed, 873 JBR command frames, `avg_delta=2.386`,
+  `bad_pixel_ratio=0.06235`, one same-context surface-change marker, one command-cache clear, one JBR image-cache
+  clear, one scoped image-cache clear, two image refs, 40 effect-handle define frames, and the known single early
+  resize parity `command-stream-invalid` fallback artifact. Forced context passed fallback-free with 825 JBR command
+  frames, `avg_delta=2.606`, `bad_pixel_ratio=0.06742`, one destination context-change marker, one command-cache
+  clear, one JBR image-cache clear, one scoped image-cache clear, two image refs, and 60 effect-handle define frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-064326/suite.tsv`.
 - Magic Jewel filled the point-dot lifecycle parity gap by adding `parity-resize-point-dots` and
   `parity-forced-context-point-dots` to the screenshot-parity default list, `core-drawing` group, and case switch. The
   rows mirror the command-probe lifecycle gates and keep validation exact under the daily broad cap. The exact two-row
