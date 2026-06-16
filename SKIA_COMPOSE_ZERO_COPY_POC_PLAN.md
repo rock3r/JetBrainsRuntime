@@ -30,6 +30,20 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   Skiko/JBR command frames, zero picture frames, screenshot status passed for 56 rows and not-run for the native-ABI
   row. This completes the intended compatibility-matrix broad checkpoint after the prior full command-probe sweep:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260616-000119/matrix.tsv`.
+- Magic Jewel filled the linear-gradient shader color-filter lifecycle parity gap by adding
+  `parity-resize-linear-gradient-shader-color-filter` and
+  `parity-forced-context-linear-gradient-shader-color-filter` to the screenshot-parity default list,
+  `shader-rendering` group, and case switch. The exact two-row validation
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-linear-gradient-shader-color-filter parity-forced-context-linear-gradient-shader-color-filter" ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  passed 2/2 under the daily cap. Resize passed with screenshot status passed, 553 JBR command frames,
+  `avg_delta=1.841`, `bad_pixel_ratio=0.04428`, `compose_shader_linear_bad_pixel_ratio=0.05656`, one same-context
+  surface-change marker, one command-cache clear, one JBR image-cache clear, one scoped image-cache clear, 20
+  shader-handle define frames, 1,224 shader-handle use frames, 48 effect-handle define frames, and the known single
+  early resize parity `command-stream-invalid` fallback artifact. Forced context passed fallback-free with 796 JBR
+  command frames, `avg_delta=1.966`, `bad_pixel_ratio=0.04623`, `compose_shader_linear_bad_pixel_ratio=0.03938`, one
+  destination context-change marker, one command-cache clear, one JBR image-cache clear, one scoped image-cache clear,
+  18 shader-handle define frames, 1,500 shader-handle use frames, and 54 effect-handle define frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-043012/suite.tsv`.
 - Magic Jewel filled the child RuntimeEffect color-filter lifecycle parity gap by adding
   `parity-resize-runtime-effect-color-filter-child` and
   `parity-forced-context-runtime-effect-color-filter-child` to the screenshot-parity suite default list,

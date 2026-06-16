@@ -5,6 +5,29 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-16 exact linear-gradient shader color-filter lifecycle screenshot-parity refresh: Magic Jewel added
+  `parity-resize-linear-gradient-shader-color-filter` and
+  `parity-forced-context-linear-gradient-shader-color-filter` to the screenshot-parity default list,
+  `shader-rendering` group, and case switch, then ran
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-linear-gradient-shader-color-filter parity-forced-context-linear-gradient-shader-color-filter" ./scripts/jbr-skia-screenshot-parity-suite.sh`.
+  Both exact rows passed with zero picture frames and screenshot status passed. The resize row recorded
+  `fallback_new_count=1` from the known early `command-stream-invalid` resize parity artifact, then completed with 553
+  JBR command frames, `avg_delta=1.841`, `bad_pixel_ratio=0.04428`,
+  `compose_shader_linear_bad_pixel_ratio=0.05656`, one same-context surface-change marker, one command-cache clear, one
+  JBR image-cache clear, one scoped image-cache clear, 20 shader-handle define frames, 1,224 shader-handle use frames,
+  1,204 shader-handle cache-hit frames, 48 effect-handle define frames, 10 effect-handle use frames, and 2
+  effect-handle cache-hit frames. The forced-context row recorded `fallback_new_count=0`, 796 JBR command frames,
+  `avg_delta=1.966`, `bad_pixel_ratio=0.04623`, `compose_shader_linear_bad_pixel_ratio=0.03938`, one destination
+  context-change marker, one command-cache clear, one JBR image-cache clear, one scoped image-cache clear, 18
+  shader-handle define frames, 1,500 shader-handle use frames, 1,482 shader-handle cache-hit frames, 54 effect-handle
+  define frames, 9 effect-handle use frames, and zero effect-handle cache-hit frames. The output directory was 7.6M,
+  `magic-jewel/out` remained 121G, disk free was about 176Gi, and a post-run process check found no stray validation
+  process. One earlier exact calibration attempt in
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-042856/suite.tsv`
+  failed only because the new resize row initially inherited a `composeShaderLinear` bad-pixel cap of 0.05 while the
+  observed lifecycle resize value was 0.05656; the passing gate now caps the two new lifecycle rows at 0.07. This was
+  not the full screenshot-parity suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-043012/suite.tsv`.
 - 2026-06-16 daily broad-validation cap hardening: Magic Jewel moved default-launch daily guard checks to the top of
   the command-probe suite, screenshot-parity suite, benchmark suite, compatibility matrix, and artifact matrix runners,
   while keeping the later row-count guard for exact, grouped, and ranged selections. This makes accidental default
