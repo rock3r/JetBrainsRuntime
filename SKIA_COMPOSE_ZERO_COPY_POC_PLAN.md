@@ -21,7 +21,9 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   the next local-day slot. Default launches, default-list `CASES_FROM`/`CASES_UNTIL` range launches, and any resolved
   selection above `JBR_SKIA_BROAD_VALIDATION_CASE_LIMIT` rows now count as broad validation; the default broad limit is
   2 rows. The guard runs after row selection and before launching validation, so accidental second broad runs on the
-  same day fail fast. This daily cap replaces the older "broad sweep after ten focused changes" checkpoint cadence.
+  same day fail fast. A follow-up hardening moved default-launch daily checks earlier in the broad shell runners so an
+  accidental default full command-probe/screenshot/benchmark/matrix launch is rejected before slow setup. This daily
+  cap replaces the older "broad sweep after ten focused changes" checkpoint cadence.
 - Magic Jewel refreshed the full compatibility matrix in the 2026-06-16 daily broad slot:
   `EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-compatibility-matrix.sh` passed 57/57 with 56 expected fallback
   rows, one happy command row, no unsupported reasons, no validation failures, 45,021 CMP recorder frames, 909

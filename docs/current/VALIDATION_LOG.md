@@ -5,6 +5,14 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-16 daily broad-validation cap hardening: Magic Jewel moved default-launch daily guard checks to the top of
+  the command-probe suite, screenshot-parity suite, benchmark suite, compatibility matrix, and artifact matrix runners,
+  while keeping the later row-count guard for exact, grouped, and ranged selections. This makes accidental default
+  broad launches fail before slow runner setup. Non-launch verification passed with `bash -n` on all five scripts.
+  Default launches for command-probe, screenshot-parity, compatibility matrix, benchmark suite, and artifact matrix all
+  rejected immediately with exit 3 against the existing 2026-06-16 daily stamp consumed by the compatibility matrix;
+  exact two-row list-count selection remained allowed, and a post-check process scan found no lingering validation
+  process. No broad validation was run for this hardening checkpoint.
 - 2026-06-16 exact RuntimeEffect color-filter lifecycle screenshot-parity refresh: Magic Jewel added
   `parity-resize-runtime-effect-color-filter` and `parity-forced-context-runtime-effect-color-filter` to the
   screenshot-parity default list, `runtime-effect` group, and case switch, then ran
