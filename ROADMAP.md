@@ -46,6 +46,15 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel refreshed the exact RuntimeEffect named-uniform-count schema fallback command-probe pair:
+  `EXPECT_SCREENSHOT_ASSERTION=false DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="commands-runtime-effect-shader-named-uniform-count-fallback commands-runtime-effect-color-filter-named-uniform-count-fallback" ./scripts/jbr-skia-command-probe-suite.sh`
+  passed 2/2 with one expected `command-stream-invalid` fallback per row, `unsupported=none`, zero JBR command/picture
+  frames, and screenshot status passed. The shader named-uniform-count row recorded 664 CMP frames, 663 Skiko command
+  frames, zero RuntimeEffect compile/build failures, 1,073 RuntimeEffect cache-hit frames, and one miss before
+  structural rejection. The color-filter row recorded 749 CMP frames, 750 Skiko command frames, zero compile/build
+  failures, 1,164 cache-hit frames, and one miss before structural rejection. This was an exact two-row command-probe
+  refresh, not the full suite; output directory was 6.6M, `out` remained 121G, and disk free was about 173Gi:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260616-022648/suite.tsv`.
 - Magic Jewel refreshed the exact RuntimeEffect negative child-count schema fallback command-probe pair:
   `EXPECT_SCREENSHOT_ASSERTION=false DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="commands-runtime-effect-shader-negative-child-count-fallback commands-runtime-effect-color-filter-negative-child-count-fallback" ./scripts/jbr-skia-command-probe-suite.sh`
   passed 2/2 with one expected `command-stream-invalid` fallback per row, `unsupported=none`, zero JBR command/picture
