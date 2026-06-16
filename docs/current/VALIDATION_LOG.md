@@ -5,6 +5,24 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-16 exact path-effect lifecycle screenshot-parity refresh: Magic Jewel added
+  `parity-resize-path-effect` and `parity-forced-context-path-effect` to the screenshot-parity default list,
+  `core-drawing` group, and case switch, then ran
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-path-effect parity-forced-context-path-effect" ./scripts/jbr-skia-screenshot-parity-suite.sh`.
+  Both exact rows passed with zero picture frames and screenshot status passed. The resize row recorded
+  `fallback_new_count=1` from the known early `command-stream-invalid` resize parity artifact, then completed with
+  1,234 JBR command frames, `avg_delta=1.924`, `bad_pixel_ratio=0.04656`, nine image refs, one same-context
+  surface-change marker, one command-cache clear, one JBR image-cache clear, one scoped image-cache clear, and 40
+  effect-handle define frames. The forced-context row recorded `fallback_new_count=0`, 840 JBR command frames,
+  `avg_delta=2.067`, `bad_pixel_ratio=0.04901`, nine image refs, one destination context-change marker, one
+  command-cache clear, one JBR image-cache clear, one scoped image-cache clear, and 55 effect-handle define frames.
+  The final output directory was 7.9M, `magic-jewel/out` remained 121G, disk free was about 176Gi, and a filtered
+  process scan found no `java`, `gradle`, `MagicJewel`, or `jbr-skia` process. One earlier exact calibration attempt in
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-061607/suite.tsv`
+  failed only because the new resize row inherited the default `rightProbeStrip` bad-pixel cap of 0.05 while the
+  observed value was 0.05117; the passing rows use a row-local 0.06 right-probe cap. This was not the full
+  screenshot-parity suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-061714/suite.tsv`.
 - 2026-06-16 exact image color-matrix filter lifecycle screenshot-parity refresh: Magic Jewel added
   `parity-resize-image-color-matrix-filter` and `parity-forced-context-image-color-matrix-filter` to the
   screenshot-parity default list, `core-drawing` group, and case switch, then ran

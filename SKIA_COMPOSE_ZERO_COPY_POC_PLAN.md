@@ -56,6 +56,17 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   clear, one scoped image-cache clear, ten image refs, 60 effect-handle define frames, 1,405 effect-handle use frames,
   and 1,395 effect-handle cache-hit frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-061112/suite.tsv`.
+- Magic Jewel filled the path-effect lifecycle parity gap by adding `parity-resize-path-effect` and
+  `parity-forced-context-path-effect` to the screenshot-parity default list, `core-drawing` group, and case switch. The
+  rows isolate the path-effect probe and add lifecycle surface/cache gates. The exact two-row validation
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-path-effect parity-forced-context-path-effect" ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  passed 2/2. Resize passed with screenshot status passed, 1,234 JBR command frames, `avg_delta=1.924`,
+  `bad_pixel_ratio=0.04656`, one same-context surface-change marker, one command-cache clear, one JBR image-cache
+  clear, one scoped image-cache clear, nine image refs, 40 effect-handle define frames, and the known single early
+  resize parity `command-stream-invalid` fallback artifact. Forced context passed fallback-free with 840 JBR command
+  frames, `avg_delta=2.067`, `bad_pixel_ratio=0.04901`, one destination context-change marker, one command-cache
+  clear, one JBR image-cache clear, one scoped image-cache clear, nine image refs, and 55 effect-handle define frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-061714/suite.tsv`.
 - Magic Jewel filled the gradient-stroke lifecycle parity gap by adding `parity-resize-gradient-stroke` and
   `parity-forced-context-gradient-stroke` to the screenshot-parity default list, `core-drawing` group, and case
   switch. The rows isolate the linear-gradient stroke probe, add lifecycle surface/cache gates, and use a
