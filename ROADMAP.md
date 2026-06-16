@@ -47,6 +47,18 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel added and refreshed the exact graphics-layer near-camera lifecycle screenshot-parity pair:
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-graphics-layer-near-camera parity-forced-context-graphics-layer-near-camera" ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  passed 2/2 with zero picture frames, command replay, and screenshot status passed. The resize row recorded the known
+  single early `command-stream-invalid` resize parity artifact, then passed with 847 JBR command frames,
+  `avg_delta=1.913`, `bad_pixel_ratio=0.04603`, one same-context surface-change marker, one command-cache clear, one
+  JBR image-cache clear, one scoped image-cache clear, nine image refs, and zero shader/effect handle markers. The
+  forced-context row was fallback-free with 843 JBR command frames, `avg_delta=2.050`,
+  `bad_pixel_ratio=0.04826`, one destination context-change marker, one command-cache clear, one JBR image-cache
+  clear, one scoped image-cache clear, nine image refs, and zero shader/effect handle markers. This was an exact
+  two-row screenshot-parity refresh, not the full suite; output directory was 7.6M, disk free was about 175Gi, and the
+  2026-06-16 daily broad-validation stamp remained the compatibility matrix:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-081103/suite.tsv`.
 - Magic Jewel added and refreshed the exact graphics-layer scale-translate lifecycle screenshot-parity pair:
   `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-graphics-layer-scale-translate parity-forced-context-graphics-layer-scale-translate" ./scripts/jbr-skia-screenshot-parity-suite.sh`
   passed 2/2 with zero picture frames, command replay, and screenshot status passed. The resize row recorded the known
