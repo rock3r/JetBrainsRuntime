@@ -36,6 +36,14 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   frames, and one miss before structural rejection. This keeps the next RuntimeEffect schema corruption pair covered
   with an exact two-row probe, not a broad suite:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260616-023316/suite.tsv`.
+- Magic Jewel followed with the exact RuntimeEffect negative named-child-count schema fallback pair:
+  `EXPECT_SCREENSHOT_ASSERTION=false DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="commands-runtime-effect-shader-negative-named-child-count-fallback commands-runtime-effect-color-filter-negative-named-child-count-fallback" ./scripts/jbr-skia-command-probe-suite.sh`
+  passed 2/2 with one expected `command-stream-invalid` fallback per row, no unsupported reasons, zero JBR
+  command/picture frames, and screenshot status passed. The shader row recorded 714 CMP/Skiko command frames before
+  structural rejection; the color-filter row recorded 495 CMP frames, 496 Skiko command frames, 949 RuntimeEffect
+  cache-hit frames, and one miss before structural rejection. This keeps the paired negative schema corruption case
+  covered with an exact two-row probe, not a broad suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260616-023821/suite.tsv`.
 - Magic Jewel continued RuntimeEffect parity with an exact pure-color row:
   `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES=parity-runtime-effect-pure-color ./scripts/jbr-skia-screenshot-parity-suite.sh`
   passed 1/1 with no fallback, no unsupported reasons, 783 CMP recorder frames, 782 Skiko/JBR command frames, zero
