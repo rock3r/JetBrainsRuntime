@@ -47,6 +47,20 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel added and refreshed the exact plain composite-shader lifecycle screenshot-parity pair:
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-composite-shader parity-forced-context-composite-shader" ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  passed 2/2 with zero picture frames, command replay, and screenshot status passed. The resize row recorded the known
+  single early `command-stream-invalid` resize parity artifact, then passed with 841 JBR command frames,
+  `avg_delta=2.377`, `bad_pixel_ratio=0.06208`, `compose_shader_composite_bad_pixel_ratio=0.08637`, one same-context
+  surface-change marker, one command-cache clear, one JBR image-cache clear, one scoped image-cache clear, 27
+  shader-handle define frames, 1,499 shader-handle use frames, 1,490 shader-handle cache-hit frames, and 35
+  effect-handle define frames. The forced-context row was fallback-free with 842 JBR command frames,
+  `avg_delta=2.596`, `bad_pixel_ratio=0.06710`, `compose_shader_composite_bad_pixel_ratio=0.08478`, one destination
+  context-change marker, one command-cache clear, one JBR image-cache clear, one scoped image-cache clear, 33
+  shader-handle define frames, 1,331 shader-handle use frames, 1,320 shader-handle cache-hit frames, and 55
+  effect-handle define frames. This was an exact two-row screenshot-parity refresh, not the full suite; output
+  directory was 7.9M, `out` remained 121G, and disk free was about 203Gi:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-051301/suite.tsv`.
 - Magic Jewel added and refreshed the exact image-shader color-filter lifecycle screenshot-parity pair:
   `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-image-shader-color-filter parity-forced-context-image-shader-color-filter" ./scripts/jbr-skia-screenshot-parity-suite.sh`
   passed 2/2 with zero picture frames, command replay, and screenshot status passed. The resize row recorded the known

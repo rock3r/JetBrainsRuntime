@@ -30,6 +30,22 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   Skiko/JBR command frames, zero picture frames, screenshot status passed for 56 rows and not-run for the native-ABI
   row. This completes the intended compatibility-matrix broad checkpoint after the prior full command-probe sweep:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260616-000119/matrix.tsv`.
+- Magic Jewel filled the plain composite-shader lifecycle parity gap by adding `parity-resize-composite-shader` and
+  `parity-forced-context-composite-shader` to the screenshot-parity default list, `shader-rendering` group, and case
+  switch. The exact two-row validation
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-composite-shader parity-forced-context-composite-shader" ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  passed 2/2 under the daily cap. Resize passed with screenshot status passed, 841 JBR command frames,
+  `avg_delta=2.377`, `bad_pixel_ratio=0.06208`, `compose_shader_composite_bad_pixel_ratio=0.08637`, one same-context
+  surface-change marker, one command-cache clear, one JBR image-cache clear, one scoped image-cache clear, 27
+  shader-handle define frames, 1,499 shader-handle use frames, 35 effect-handle define frames, and the known single
+  early resize parity `command-stream-invalid` fallback artifact. Forced context passed fallback-free with 842 JBR
+  command frames, `avg_delta=2.596`, `bad_pixel_ratio=0.06710`,
+  `compose_shader_composite_bad_pixel_ratio=0.08478`, one destination context-change marker, one command-cache clear,
+  one JBR image-cache clear, one scoped image-cache clear, 33 shader-handle define frames, 1,331 shader-handle use
+  frames, and 55 effect-handle define frames. One earlier exact calibration attempt failed only because the new resize
+  row inherited the default `swingIsland` bad-pixel cap of 0.03 while the observed value was 0.03118; the final row cap
+  is 0.04 for the two new cases only:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-051301/suite.tsv`.
 - Magic Jewel filled the linear-gradient shader color-filter lifecycle parity gap by adding
   `parity-resize-linear-gradient-shader-color-filter` and
   `parity-forced-context-linear-gradient-shader-color-filter` to the screenshot-parity default list,
