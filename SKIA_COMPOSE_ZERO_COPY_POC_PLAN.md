@@ -30,6 +30,18 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   Skiko/JBR command frames, zero picture frames, screenshot status passed for 56 rows and not-run for the native-ABI
   row. This completes the intended compatibility-matrix broad checkpoint after the prior full command-probe sweep:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260616-000119/matrix.tsv`.
+- Magic Jewel filled the image-filter lifecycle parity gap by adding `parity-resize-image-filter` and
+  `parity-forced-context-image-filter` to the screenshot-parity default list, `core-drawing` group, and case switch.
+  The rows add image-ref, surface/cache, and effect-handle gates while keeping validation exact under the daily broad
+  cap. The exact two-row validation
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-image-filter parity-forced-context-image-filter" ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  passed 2/2. Resize passed with screenshot status passed, 665 JBR command frames, `avg_delta=1.853`,
+  `bad_pixel_ratio=0.04463`, one same-context surface-change marker, one command-cache clear, one JBR image-cache
+  clear, one scoped image-cache clear, ten image refs, 35 effect-handle define frames, and the known single early
+  resize parity `command-stream-invalid` fallback artifact. Forced context passed fallback-free with 770 JBR command
+  frames, `avg_delta=1.981`, `bad_pixel_ratio=0.04667`, one destination context-change marker, one command-cache
+  clear, one JBR image-cache clear, one scoped image-cache clear, ten image refs, and 50 effect-handle define frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-060436/suite.tsv`.
 - Magic Jewel filled the gradient-stroke lifecycle parity gap by adding `parity-resize-gradient-stroke` and
   `parity-forced-context-gradient-stroke` to the screenshot-parity default list, `core-drawing` group, and case
   switch. The rows isolate the linear-gradient stroke probe, add lifecycle surface/cache gates, and use a
