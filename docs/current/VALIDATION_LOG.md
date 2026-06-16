@@ -5,6 +5,22 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-16 exact lighting filter lifecycle screenshot-parity refresh: Magic Jewel added
+  `parity-resize-lighting-filter` and `parity-forced-context-lighting-filter` to the screenshot-parity default list,
+  `color-filtering` group, and case switch, then ran
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-lighting-filter parity-forced-context-lighting-filter" ./scripts/jbr-skia-screenshot-parity-suite.sh`.
+  Both exact rows passed with zero picture frames and screenshot status passed. The resize row recorded
+  `fallback_new_count=1` from the known early `command-stream-invalid` resize parity artifact, then completed with
+  1,213 JBR command frames, `avg_delta=1.919`, `bad_pixel_ratio=0.04643`, nine image refs, one same-context
+  surface-change marker, one command-cache clear, one JBR image-cache clear, one scoped image-cache clear, eight
+  effect-handle define frames, 2,103 effect-handle use frames, and 2,095 effect-handle cache-hit frames. The
+  forced-context row recorded `fallback_new_count=0`, 1,312 JBR command frames, `avg_delta=2.063`,
+  `bad_pixel_ratio=0.04891`, nine image refs, one destination context-change marker, one command-cache clear, one JBR
+  image-cache clear, one scoped image-cache clear, 11 effect-handle define frames, 2,305 effect-handle use frames, and
+  2,294 effect-handle cache-hit frames. The final output directory was 11M, `magic-jewel/out` remained 121G, disk free
+  was about 202Gi, and the 2026-06-16 broad-validation stamp still pointed at the compatibility matrix. This was not
+  the full screenshot-parity suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-065454/suite.tsv`.
 - 2026-06-16 exact color-matrix filter lifecycle screenshot-parity refresh: Magic Jewel added
   `parity-resize-color-matrix-filter` and `parity-forced-context-color-matrix-filter` to the screenshot-parity default
   list, `color-filtering` group, and case switch, then ran
