@@ -30,6 +30,20 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   Skiko/JBR command frames, zero picture frames, screenshot status passed for 56 rows and not-run for the native-ABI
   row. This completes the intended compatibility-matrix broad checkpoint after the prior full command-probe sweep:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260616-000119/matrix.tsv`.
+- Magic Jewel filled the graphics-layer clip lifecycle parity gap by adding `parity-resize-graphics-layer-clip` and
+  `parity-forced-context-graphics-layer-clip` to the screenshot-parity default list,
+  `graphics-layer-clip-shadow-transform` group, and case switch. The rows mirror the command-probe lifecycle gates,
+  isolate the rectangular clip graphics-layer probe, and keep validation exact under the daily broad cap. The exact
+  two-row validation
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-graphics-layer-clip parity-forced-context-graphics-layer-clip" ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  passed 2/2. Resize passed with screenshot status passed, 1,042 JBR command frames, `avg_delta=1.908`,
+  `bad_pixel_ratio=0.04580`, one same-context surface-change marker, one command-cache clear, one JBR image-cache
+  clear, one scoped image-cache clear, nine image refs, zero shader/effect handle markers, and the known single early
+  resize parity `command-stream-invalid` fallback artifact. Forced context passed fallback-free with 1,205 JBR command
+  frames, `avg_delta=2.049`, `bad_pixel_ratio=0.04815`, one destination context-change marker, one command-cache
+  clear, one JBR image-cache clear, one scoped image-cache clear, nine image refs, and zero shader/effect handle
+  markers:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-071720/suite.tsv`.
 - Magic Jewel filled the graphics-layer offscreen lifecycle parity gap by adding
   `parity-resize-graphics-layer-offscreen` and `parity-forced-context-graphics-layer-offscreen` to the screenshot-parity
   default list, `graphics-layer-clip-shadow-transform` group, and case switch. The rows mirror the command-probe
