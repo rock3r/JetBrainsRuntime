@@ -46,6 +46,15 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel refreshed the exact RuntimeEffect uniform-float-count schema fallback command-probe pair:
+  `EXPECT_SCREENSHOT_ASSERTION=false DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="commands-runtime-effect-shader-uniform-float-count-fallback commands-runtime-effect-color-filter-uniform-float-count-fallback" ./scripts/jbr-skia-command-probe-suite.sh`
+  passed 2/2 with one expected `command-stream-invalid` fallback per row, `unsupported=none`, zero JBR command/picture
+  frames, and screenshot status passed. The shader uniform-float-count row recorded 625 CMP frames, 626 Skiko command
+  frames, zero RuntimeEffect compile/build failures, 1,041 RuntimeEffect cache-hit frames, and one miss before
+  structural rejection. The color-filter row recorded 732 CMP frames, 731 Skiko command frames, zero compile/build
+  failures, 1,150 cache-hit frames, and one miss before structural rejection. This was an exact two-row command-probe
+  refresh, not the full suite; output directory was 5.5M, `out` remained 121G, and disk free was about 173Gi:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260616-021442/suite.tsv`.
 - Magic Jewel refreshed the exact RuntimeEffect SKSL-length schema fallback command-probe pair:
   `EXPECT_SCREENSHOT_ASSERTION=false DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="commands-runtime-effect-shader-sksl-length-fallback commands-runtime-effect-color-filter-sksl-length-fallback" ./scripts/jbr-skia-command-probe-suite.sh`
   passed 2/2 with one expected `command-stream-invalid` fallback per row, `unsupported=none`, zero JBR command/picture
