@@ -47,6 +47,19 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel added and refreshed the exact image color-matrix filter lifecycle screenshot-parity pair:
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-image-color-matrix-filter parity-forced-context-image-color-matrix-filter" ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  passed 2/2 with zero picture frames, command replay, and screenshot status passed. The resize row recorded the known
+  single early `command-stream-invalid` resize parity artifact, then passed with 550 JBR command frames,
+  `avg_delta=1.903`, `bad_pixel_ratio=0.04495`, one same-context surface-change marker, one command-cache clear, one
+  JBR image-cache clear, one scoped image-cache clear, ten image refs, 42 effect-handle define frames, 1,237
+  effect-handle use frames, and 1,230 effect-handle cache-hit frames. The forced-context row was fallback-free with
+  842 JBR command frames, `avg_delta=2.039`, `bad_pixel_ratio=0.04703`, one destination context-change marker, one
+  command-cache clear, one JBR image-cache clear, one scoped image-cache clear, ten image refs, 60 effect-handle
+  define frames, 1,405 effect-handle use frames, and 1,395 effect-handle cache-hit frames. This was an exact two-row
+  screenshot-parity refresh, not the full suite; output directory was 7.7M, `out` remained 121G, and disk free was
+  about 176Gi:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-061112/suite.tsv`.
 - Magic Jewel added and refreshed the exact image-filter lifecycle screenshot-parity pair:
   `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-image-filter parity-forced-context-image-filter" ./scripts/jbr-skia-screenshot-parity-suite.sh`
   passed 2/2 with zero picture frames, command replay, and screenshot status passed. The resize row recorded the known

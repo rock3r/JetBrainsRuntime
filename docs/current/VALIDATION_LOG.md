@@ -5,6 +5,21 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-16 exact image color-matrix filter lifecycle screenshot-parity refresh: Magic Jewel added
+  `parity-resize-image-color-matrix-filter` and `parity-forced-context-image-color-matrix-filter` to the
+  screenshot-parity default list, `core-drawing` group, and case switch, then ran
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-image-color-matrix-filter parity-forced-context-image-color-matrix-filter" ./scripts/jbr-skia-screenshot-parity-suite.sh`.
+  Both exact rows passed with zero picture frames and screenshot status passed. The resize row recorded
+  `fallback_new_count=1` from the known early `command-stream-invalid` resize parity artifact, then completed with 550
+  JBR command frames, `avg_delta=1.903`, `bad_pixel_ratio=0.04495`, ten image refs, one same-context surface-change
+  marker, one command-cache clear, one JBR image-cache clear, one scoped image-cache clear, 42 effect-handle define
+  frames, 1,237 effect-handle use frames, and 1,230 effect-handle cache-hit frames. The forced-context row recorded
+  `fallback_new_count=0`, 842 JBR command frames, `avg_delta=2.039`, `bad_pixel_ratio=0.04703`, ten image refs, one
+  destination context-change marker, one command-cache clear, one JBR image-cache clear, one scoped image-cache clear,
+  60 effect-handle define frames, 1,405 effect-handle use frames, and 1,395 effect-handle cache-hit frames. The final
+  output directory was 7.7M, `magic-jewel/out` remained 121G, disk free was about 176Gi, and a filtered process scan
+  found no `java`, `gradle`, `MagicJewel`, or `jbr-skia` process. This was not the full screenshot-parity suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-061112/suite.tsv`.
 - 2026-06-16 exact image-filter lifecycle screenshot-parity refresh: Magic Jewel added
   `parity-resize-image-filter` and `parity-forced-context-image-filter` to the screenshot-parity default list,
   `core-drawing` group, and case switch, then ran

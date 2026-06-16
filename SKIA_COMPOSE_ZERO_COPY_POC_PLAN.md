@@ -42,6 +42,20 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   frames, `avg_delta=1.981`, `bad_pixel_ratio=0.04667`, one destination context-change marker, one command-cache
   clear, one JBR image-cache clear, one scoped image-cache clear, ten image refs, and 50 effect-handle define frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-060436/suite.tsv`.
+- Magic Jewel filled the image color-matrix filter lifecycle parity gap by adding
+  `parity-resize-image-color-matrix-filter` and `parity-forced-context-image-color-matrix-filter` to the
+  screenshot-parity default list, `core-drawing` group, and case switch. The rows mirror the command-probe lifecycle
+  gates and require effect-handle define/use/cache-hit markers. The exact two-row validation
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-image-color-matrix-filter parity-forced-context-image-color-matrix-filter" ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  passed 2/2. Resize passed with screenshot status passed, 550 JBR command frames, `avg_delta=1.903`,
+  `bad_pixel_ratio=0.04495`, one same-context surface-change marker, one command-cache clear, one JBR image-cache
+  clear, one scoped image-cache clear, ten image refs, 42 effect-handle define frames, 1,237 effect-handle use frames,
+  1,230 effect-handle cache-hit frames, and the known single early resize parity `command-stream-invalid` fallback
+  artifact. Forced context passed fallback-free with 842 JBR command frames, `avg_delta=2.039`,
+  `bad_pixel_ratio=0.04703`, one destination context-change marker, one command-cache clear, one JBR image-cache
+  clear, one scoped image-cache clear, ten image refs, 60 effect-handle define frames, 1,405 effect-handle use frames,
+  and 1,395 effect-handle cache-hit frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260616-061112/suite.tsv`.
 - Magic Jewel filled the gradient-stroke lifecycle parity gap by adding `parity-resize-gradient-stroke` and
   `parity-forced-context-gradient-stroke` to the screenshot-parity default list, `core-drawing` group, and case
   switch. The rows isolate the linear-gradient stroke probe, add lifecycle surface/cache gates, and use a
