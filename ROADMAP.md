@@ -46,6 +46,17 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel refreshed the exact RuntimeEffect source-cache eviction command-probe pair:
+  `EXPECT_SCREENSHOT_ASSERTION=false DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="commands-runtime-effect-shader-source-cache-eviction commands-runtime-effect-source-cache-eviction" ./scripts/jbr-skia-command-probe-suite.sh`
+  passed 2/2 on command replay with `fallback_new_count=0`, `unsupported=none`, zero picture frames, and screenshot
+  status passed. The shader source-cache eviction row recorded 772 CMP/Skiko/JBR command frames, 1,358 RuntimeEffect
+  source-cache hits, 2,719 misses, 2,717 evicts, 1,363 shader-handle definitions, 4,077 shader-handle uses, 339
+  shader-handle evicts, and 2,716 shader-handle cache-hit frames. The color-filter source-cache eviction row recorded
+  784 CMP recorder frames, 785 Skiko/JBR command frames, 1,336 RuntimeEffect source-cache hits, 2,675 misses, 2,673
+  evicts, 2,677 effect-handle definitions, 4,011 effect-handle uses, 1,653 effect-handle evicts, and 1,336
+  effect-handle cache-hit frames. This was an exact two-row command-probe refresh, not the full suite; output directory
+  was 11M, `out` remained 121G, and disk free was about 203Gi:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260616-033121/suite.tsv`.
 - Magic Jewel refreshed the exact RuntimeEffect invalid nested-child descriptor fallback command-probe pair:
   `EXPECT_SCREENSHOT_ASSERTION=false DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="commands-runtime-effect-invalid-nested-child-fallback commands-runtime-effect-color-filter-invalid-nested-child-fallback" ./scripts/jbr-skia-command-probe-suite.sh`
   passed 2/2 as descriptor-unsupported picture fallback rows, not command-stream rows. The shader row recorded

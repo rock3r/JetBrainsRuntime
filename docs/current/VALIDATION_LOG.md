@@ -5,6 +5,18 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-16 exact RuntimeEffect source-cache eviction command-probe refresh: Magic Jewel ran
+  `EXPECT_SCREENSHOT_ASSERTION=false DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="commands-runtime-effect-shader-source-cache-eviction commands-runtime-effect-source-cache-eviction" ./scripts/jbr-skia-command-probe-suite.sh`.
+  Both exact rows passed on command replay with `fallback_new_count=0`, `unsupported=none`, zero picture frames, and
+  screenshot status passed. `commands-runtime-effect-shader-source-cache-eviction` recorded 772 CMP/Skiko/JBR command
+  frames, 1,358 RuntimeEffect source-cache hits, 2,719 misses, 2,717 evicts, zero compile/build failures, 1,363
+  shader-handle definitions, 4,077 shader-handle uses, 339 shader-handle evicts, and 2,716 shader-handle cache-hit
+  frames. `commands-runtime-effect-source-cache-eviction` recorded 784 CMP recorder frames, 785 Skiko/JBR command
+  frames, 1,336 RuntimeEffect source-cache hits, 2,675 misses, 2,673 evicts, zero compile/build failures, 2,677
+  effect-handle definitions, 4,011 effect-handle uses, 1,653 effect-handle evicts, and 1,336 effect-handle cache-hit
+  frames. The output directory was 11M, `magic-jewel/out` remained 121G, and disk free was about 203Gi. This was not
+  the full command-probe suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260616-033121/suite.tsv`.
 - 2026-06-16 exact RuntimeEffect invalid nested-child descriptor fallback command-probe refresh: Magic Jewel ran
   `EXPECT_SCREENSHOT_ASSERTION=false DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="commands-runtime-effect-invalid-nested-child-fallback commands-runtime-effect-color-filter-invalid-nested-child-fallback" ./scripts/jbr-skia-command-probe-suite.sh`.
   Both exact rows passed as descriptor-unsupported picture fallback rows with `fallback_new_count=0`, zero command

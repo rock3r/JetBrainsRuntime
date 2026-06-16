@@ -183,6 +183,15 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   frames, and screenshot status passed. This closes the invalid descriptor schema trio with exact two-row coverage, not
   a broad suite:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260616-032745/suite.tsv`.
+- Magic Jewel refreshed the exact RuntimeEffect source-cache eviction command pair:
+  `EXPECT_SCREENSHOT_ASSERTION=false DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="commands-runtime-effect-shader-source-cache-eviction commands-runtime-effect-source-cache-eviction" ./scripts/jbr-skia-command-probe-suite.sh`
+  passed 2/2 on command replay with no fallback, no unsupported reasons, zero picture frames, and screenshot status
+  passed. The shader row recorded 772 JBR command frames, 1,358 RuntimeEffect source-cache hits, 2,719 misses, 2,717
+  evicts, 4,077 shader-handle uses, and 2,716 shader-handle cache-hit frames; the color-filter row recorded 785 JBR
+  command frames, 1,336 source-cache hits, 2,675 misses, 2,673 evicts, 4,011 effect-handle uses, and 1,336
+  effect-handle cache-hit frames. This keeps source-cache churn covered with exact command validation under the daily
+  broad cap:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260616-033121/suite.tsv`.
 - Magic Jewel continued RuntimeEffect parity with an exact pure-color row:
   `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES=parity-runtime-effect-pure-color ./scripts/jbr-skia-screenshot-parity-suite.sh`
   passed 1/1 with no fallback, no unsupported reasons, 783 CMP recorder frames, 782 Skiko/JBR command frames, zero
