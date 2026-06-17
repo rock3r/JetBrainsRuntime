@@ -47,6 +47,20 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel tightened the exact graphics-layer render-effect+color-filter lifecycle screenshot-parity pair to match
+  current report evidence more closely, reducing the resize ceiling to 7 and the forced-context ceiling to 11, then
+  reran `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-graphics-layer-render-effect-color-filter parity-forced-context-graphics-layer-render-effect-color-filter" ./scripts/jbr-skia-screenshot-parity-suite.sh`.
+  Both exact rows passed with zero picture frames and screenshot status passed. The resize row recorded the known
+  single early `command-stream-invalid` resize parity artifact, then passed with 613 JBR command frames,
+  `avg_delta=1.901`, `bad_pixel_ratio=0.04557`, one same-context surface-change marker, one command-cache clear, one
+  JBR image-cache clear, one scoped image-cache clear, 7 effect-handle define frames, 1,149 effect-handle use frames,
+  and 1,142 effect-handle cache-hit frames. The forced-context row passed fallback-free with 620 JBR command frames,
+  `avg_delta=2.044`, `bad_pixel_ratio=0.04801`, one destination context-change marker, one command-cache clear, one
+  JBR image-cache clear, one scoped image-cache clear, 10 effect-handle define frames, 1,234 effect-handle use
+  frames, and 1,224 effect-handle cache-hit frames. This was an exact two-row screenshot-parity refresh, not the full
+  suite; output directory was 7.3M, disk free was about 192Gi, and the 2026-06-16 daily broad-validation stamp
+  remained the compatibility matrix:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260617-150823/suite.tsv`.
 - Magic Jewel tightened the exact graphics-layer chained-render-effect+blend-color-matrix-filter parity pair to match
   current report evidence more closely, reducing the resize ceiling to 24 and the forced-context ceiling to 33, then
   reran `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-graphics-layer-chained-render-effect-blend-color-matrix-filter parity-forced-context-graphics-layer-chained-render-effect-blend-color-matrix-filter" ./scripts/jbr-skia-screenshot-parity-suite.sh`.
