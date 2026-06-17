@@ -5,6 +5,22 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-17 exact graphics-layer chained-render-effect lifecycle screenshot-parity tightening: Magic Jewel reduced
+  the effect-handle ceilings on
+  `parity-resize-graphics-layer-chained-render-effect` and
+  `parity-forced-context-graphics-layer-chained-render-effect` to match report evidence more closely, then reran
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-graphics-layer-chained-render-effect parity-forced-context-graphics-layer-chained-render-effect" ./scripts/jbr-skia-screenshot-parity-suite.sh`.
+  Both exact rows passed with zero picture frames and screenshot status passed. The resize row recorded
+  `fallback_new_count=1` from the known early `command-stream-invalid` resize parity artifact, then completed with
+  1,209 JBR command frames, `avg_delta=1.902`, `bad_pixel_ratio=0.04557`, one same-context surface-change marker, one
+  command-cache clear, one JBR image-cache clear, one scoped image-cache clear, 16 effect-handle define frames, 2,235
+  effect-handle use frames, and 2,227 effect-handle cache-hit frames. The forced-context row recorded
+  `fallback_new_count=0`, 1,464 JBR command frames, `avg_delta=2.041`, `bad_pixel_ratio=0.04784`, one destination
+  context-change marker, one command-cache clear, one JBR image-cache clear, one scoped image-cache clear, 22
+  effect-handle define frames, 2,545 effect-handle use frames, and 2,534 effect-handle cache-hit frames. The final
+  output directory was 11M, disk free was about 201Gi, and the 2026-06-16 broad-validation stamp still pointed at the
+  compatibility matrix. This was not the full screenshot-parity suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260617-084314/suite.tsv`.
 - 2026-06-17 exact graphics-layer chained-render-effect lifecycle screenshot-parity refresh: Magic Jewel added
   `parity-resize-graphics-layer-chained-render-effect` and
   `parity-forced-context-graphics-layer-chained-render-effect` to the screenshot-parity default list,
