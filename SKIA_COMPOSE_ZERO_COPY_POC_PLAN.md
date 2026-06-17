@@ -12,6 +12,10 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 ## Current Snapshot
 
 - ABI 106 artifacts are current across JBR private API, JBR API mirror, Skiko, CMP, and Magic Jewel.
+- Magic Jewel tightened the exact graphics-layer render-effect+blend-color-filter parity pair to match report
+  evidence more closely, reducing the resize ceiling to 8 and the forced-context ceiling to 11, then reran
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-graphics-layer-render-effect-blend-color-filter parity-forced-context-graphics-layer-render-effect-blend-color-filter" ./scripts/jbr-skia-screenshot-parity-suite.sh`.
+  Both exact rows passed with zero picture frames and screenshot status passed.
 - Magic Jewel tightened the exact graphics-layer near-camera chained-render-effect+blend-color-matrix-filter parity
   pair to match report evidence more closely, reducing the resize ceiling to 24 and the forced-context ceiling to 30,
   then reran `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-graphics-layer-near-camera-chained-render-effect-blend-color-matrix-filter parity-forced-context-graphics-layer-near-camera-chained-render-effect-blend-color-matrix-filter" ./scripts/jbr-skia-screenshot-parity-suite.sh`.
