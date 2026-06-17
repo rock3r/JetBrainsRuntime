@@ -51,16 +51,16 @@ This is the small working roadmap for the current PoC. The full historical check
   earlier exact refresh, reducing the effect-handle ceilings to match report evidence more closely, then reran
   `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-graphics-layer-chained-render-effect parity-forced-context-graphics-layer-chained-render-effect" ./scripts/jbr-skia-screenshot-parity-suite.sh`.
   Both exact rows passed with zero picture frames and screenshot status passed. The resize row recorded the known
-  single early `command-stream-invalid` resize parity artifact, then passed with 728 JBR command frames,
+  single early `command-stream-invalid` resize parity artifact, then passed with 826 JBR command frames,
   `avg_delta=1.902`, `bad_pixel_ratio=0.04557`, one same-context surface-change marker, one command-cache clear, one
-  JBR image-cache clear, one scoped image-cache clear, 16 effect-handle define frames, 1,473 effect-handle use
-  frames, and 1,465 effect-handle cache-hit frames. The forced-context row was fallback-free with 896 JBR command
+  JBR image-cache clear, one scoped image-cache clear, 7 effect-handle define frames, 1,520 effect-handle use
+  frames, and 1,513 effect-handle cache-hit frames. The forced-context row was fallback-free with 528 JBR command
   frames, `avg_delta=2.041`, `bad_pixel_ratio=0.04784`, one destination context-change marker, one command-cache
-  clear, one JBR image-cache clear, one scoped image-cache clear, 20 effect-handle define frames, 1,664 effect-handle
-  use frames, and 1,654 effect-handle cache-hit frames. This was an exact two-row screenshot-parity refresh, not the
-  full suite; output directory was 7.7M, disk free was about 174Gi, and the 2026-06-16 daily broad-validation stamp
+  clear, one JBR image-cache clear, one scoped image-cache clear, 7 effect-handle define frames, 1,158 effect-handle
+  use frames, and 1,151 effect-handle cache-hit frames. This was an exact two-row screenshot-parity refresh, not the
+  full suite; output directory was 7.5M, disk free was about 172Gi, and the 2026-06-16 daily broad-validation stamp
   remained the compatibility matrix:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260617-102008/suite.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260617-102721/suite.tsv`.
 - Magic Jewel added and refreshed the exact graphics-layer chained-render-effect lifecycle screenshot-parity pair:
   `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-graphics-layer-chained-render-effect parity-forced-context-graphics-layer-chained-render-effect" ./scripts/jbr-skia-screenshot-parity-suite.sh`
   passed 2/2 with zero picture frames, command replay, and screenshot status passed. The resize row recorded the known
