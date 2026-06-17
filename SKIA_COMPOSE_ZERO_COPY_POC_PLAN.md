@@ -12,6 +12,10 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 ## Current Snapshot
 
 - ABI 106 artifacts are current across JBR private API, JBR API mirror, Skiko, CMP, and Magic Jewel.
+- Magic Jewel tightened the exact graphics-layer near-camera chained-render-effect+blend-color-matrix-filter parity
+  pair to match report evidence more closely, reducing the resize ceiling to 24 and the forced-context ceiling to 30,
+  then reran `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-graphics-layer-near-camera-chained-render-effect-blend-color-matrix-filter parity-forced-context-graphics-layer-near-camera-chained-render-effect-blend-color-matrix-filter" ./scripts/jbr-skia-screenshot-parity-suite.sh`.
+  Both exact rows passed with zero picture frames and screenshot status passed.
 - Validation should be batched to keep iteration cost under control: use exact cases or tiny focused groups per change,
   and cap broad command sweeps, screenshot sweeps, benchmark suites, and full matrices at one broad validation slot per
   local calendar day unless the user explicitly asks for another one or an ABI/capability break needs an emergency

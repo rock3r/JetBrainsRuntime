@@ -5,6 +5,23 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-17 exact graphics-layer near-camera chained-render-effect+blend-color-matrix-filter lifecycle screenshot-parity
+  tightening: Magic Jewel reduced the effect-handle ceilings on
+  `parity-resize-graphics-layer-near-camera-chained-render-effect-blend-color-matrix-filter` and
+  `parity-forced-context-graphics-layer-near-camera-chained-render-effect-blend-color-matrix-filter` to match report
+  evidence more closely, then reran
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-graphics-layer-near-camera-chained-render-effect-blend-color-matrix-filter parity-forced-context-graphics-layer-near-camera-chained-render-effect-blend-color-matrix-filter" ./scripts/jbr-skia-screenshot-parity-suite.sh`.
+  Both exact rows passed with zero picture frames and screenshot status passed. The resize row recorded the known
+  single early `command-stream-invalid` resize parity artifact, then passed with 528 JBR command frames,
+  `avg_delta=2.248`, `bad_pixel_ratio=0.05651`, one same-context surface-change marker, one command-cache clear, one
+  JBR image-cache clear, one scoped image-cache clear, 24 effect-handle define frames, 2,914 effect-handle use
+  frames, and 2,902 effect-handle cache-hit frames. The forced-context row passed fallback-free with 381 JBR command
+  frames, `avg_delta=2.455`, `bad_pixel_ratio=0.06094`, one destination context-change marker, one command-cache
+  clear, one JBR image-cache clear, one scoped image-cache clear, 30 effect-handle define frames, 3,173 effect-handle
+  use frames, and 3,154 effect-handle cache-hit frames. The final output directory was 5.0M, disk free was about
+  174Gi, and the 2026-06-16 broad-validation stamp still pointed at the compatibility matrix. This was not the full
+  screenshot-parity suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260617-103703/suite.tsv`.
 - 2026-06-17 exact graphics-layer chained-render-effect lifecycle screenshot-parity tightening: Magic Jewel reduced
   the effect-handle ceilings on
   `parity-resize-graphics-layer-chained-render-effect` and
