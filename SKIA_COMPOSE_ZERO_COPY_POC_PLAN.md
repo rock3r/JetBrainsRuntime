@@ -30,6 +30,21 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   Skiko/JBR command frames, zero picture frames, screenshot status passed for 56 rows and not-run for the native-ABI
   row. This completes the intended compatibility-matrix broad checkpoint after the prior full command-probe sweep:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260616-000119/matrix.tsv`.
+- Magic Jewel filled the graphics-layer chained-render-effect lifecycle parity gap by adding
+  `parity-resize-graphics-layer-chained-render-effect` and
+  `parity-forced-context-graphics-layer-chained-render-effect` to the screenshot-parity default list,
+  `graphics-layer-effects` group, and case switch. The rows mirror the command-probe lifecycle gates, isolate the
+  graphics-layer chained render effect probe, and keep validation exact under the daily broad cap. The exact two-row
+  validation
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-graphics-layer-chained-render-effect parity-forced-context-graphics-layer-chained-render-effect" ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  passed 2/2. Resize passed with screenshot status passed, 936 JBR command frames, `avg_delta=1.902`,
+  `bad_pixel_ratio=0.04557`, one same-context surface-change marker, one command-cache clear, one JBR image-cache
+  clear, one scoped image-cache clear, 16 effect-handle define frames, 1,926 effect-handle use frames, and 1,918
+  effect-handle cache-hit frames, and the known single early resize parity `command-stream-invalid` fallback artifact.
+  Forced context passed fallback-free with 1,288 JBR command frames, `avg_delta=2.041`, `bad_pixel_ratio=0.04784`,
+  one destination context-change marker, one command-cache clear, one JBR image-cache clear, one scoped image-cache
+  clear, 22 effect-handle define frames, 2,324 effect-handle use frames, and 2,313 effect-handle cache-hit frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260617-083726/suite.tsv`.
 - Magic Jewel filled the graphics-layer offset-effect lifecycle parity gap by adding
   `parity-resize-graphics-layer-offset-effect` and `parity-forced-context-graphics-layer-offset-effect` to the
   screenshot-parity default list, `graphics-layer-effects` group, and case switch. The rows mirror the command-probe
