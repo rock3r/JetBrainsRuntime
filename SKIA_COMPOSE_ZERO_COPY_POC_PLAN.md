@@ -12,6 +12,11 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 ## Current Snapshot
 
 - ABI 106 artifacts are current across JBR private API, JBR API mirror, Skiko, CMP, and Magic Jewel.
+- Magic Jewel tightened the exact graphics-layer blend-color-matrix-filter lifecycle screenshot-parity pair with
+  explicit zero ceilings for JBR shader-handle defines while preserving the existing nonzero effect-handle lifecycle
+  gates, then reran
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-graphics-layer-blend-color-matrix-filter parity-forced-context-graphics-layer-blend-color-matrix-filter" ./scripts/jbr-skia-screenshot-parity-suite.sh`.
+  Both exact rows passed with zero picture frames and screenshot status passed.
 - Magic Jewel restored the live exact graphics-layer offscreen lifecycle zero ceilings for JBR effect-handle and
   shader-handle defines, matching the previously documented marker contract, then reran
   `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-graphics-layer-offscreen parity-forced-context-graphics-layer-offscreen" ./scripts/jbr-skia-screenshot-parity-suite.sh`.
