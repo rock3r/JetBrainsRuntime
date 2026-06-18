@@ -5,6 +5,14 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-18 focused 2049-wide image shader command-replay batch:
+  CMP aligned its image command recording dimension cap with JBR's existing 4096-pixel validation/replay cap, then
+  Magic Jewel reran only the affected row:
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES="commands-image-shader-invalid-image-fallback" ./scripts/jbr-skia-command-probe-suite.sh`.
+  The focused suite passed `1/1` with `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, and
+  `jbr_command_frames=1589`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-172205/suite.tsv`.
+  The unsupported census is now 73 active rows pending the next capped full/default sweep.
 - 2026-06-18 focused image path-effect command-replay batch:
   CMP now treats path effects on image draws as image-irrelevant for command recording and reuses the existing
   image-ref replay path, then Magic Jewel reran only the affected row:

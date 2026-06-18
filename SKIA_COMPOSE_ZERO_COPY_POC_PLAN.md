@@ -16,7 +16,8 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   [`docs/current/UNSUPPORTED_COMMAND_CENSUS.md`](docs/current/UNSUPPORTED_COMMAND_CENSUS.md). The current full/default
   command-probe evidence passed `549/549`, but recorded 79 unsupported rows with 78,827 picture fallback frames and
   zero command frames across those unsupported rows. Focused validation has since cleared the three linear/radial/sweep
-  gradient path stroke rows, descriptor/image shader stroke rects, and image path-effect draws, leaving 74 active
+  gradient path stroke rows, descriptor/image shader stroke rects, image path-effect draws, and 2049-wide image
+  shaders, leaving 73 active
   unsupported rows pending the next capped full/default sweep.
 - JBR/CMP/Skiko now support stroked arbitrary-path gradients through explicit linear/radial/sweep command records.
   Magic Jewel's exact three-row command probe passed with `fallback_new_count=0`, `unsupported=none`, zero picture
@@ -30,6 +31,9 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   path-effect row passed with `fallback_new_count=0`, `unsupported=none`, zero picture frames, and 1,245 command
   frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-171756/suite.tsv`.
+- CMP now accepts image command dimensions up to JBR's existing 4096-pixel cap. Magic Jewel's exact 2049-wide image
+  shader row passed with `fallback_new_count=0`, `unsupported=none`, zero picture frames, and 1,589 command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-172205/suite.tsv`.
 - A targeted read-only graphics-layer lifecycle closure audit found no remaining `parity*graphics-layer*`
   screenshot-parity rows without effect/shader handle lifecycle assertions, no resize/forced graphics-layer rows
   missing surface/cache lifecycle gates, and no command-probe resize/forced graphics-layer migration rows lacking
