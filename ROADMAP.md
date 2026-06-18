@@ -47,6 +47,14 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel tightened the standalone graphics-layer zero-handle lifecycle screenshot-parity row with explicit zero
+  ceilings for JBR effect-handle and shader-handle defines, matching its resize/forced-context lifecycle siblings, then
+  reran
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-graphics-layer" ./scripts/jbr-skia-screenshot-parity-suite.sh`.
+  The exact row passed fallback-free with zero picture frames, zero effect-handle markers, zero shader-handle markers,
+  and screenshot status passed: 942 JBR command frames, `avg_delta=2.189`, `bad_pixel_ratio=0.05189`, output directory
+  3.9M, and about 197Gi free. This was an exact one-row screenshot-parity refresh, not the full suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260618-125939/suite.tsv`.
 - Magic Jewel tightened the standalone graphics-layer effects lifecycle screenshot-parity row with an explicit zero
   ceiling for JBR shader-handle defines while preserving the existing nonzero effect-handle lifecycle gates, then reran
   `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-graphics-layer-effects" ./scripts/jbr-skia-screenshot-parity-suite.sh`.
