@@ -12,6 +12,10 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 ## Current Snapshot
 
 - ABI 106 artifacts are current across JBR private API, JBR API mirror, Skiko, CMP, and Magic Jewel.
+- A targeted read-only graphics-layer resize/forced-context lifecycle gap audit found no remaining scoped lifecycle
+  rows missing handle ceilings, no missing command-cache/image-cache/scoped-image-cache/surface lifecycle assertions,
+  and no command-probe graphics-layer lifecycle rows without a normalized screenshot-parity counterpart. This audit did
+  not run a broad validation suite.
 - Magic Jewel tightened the exact graphics-layer near-camera chained-render-effect+blend-color-matrix-filter lifecycle
   screenshot-parity pair with explicit zero ceilings for JBR shader-handle defines while preserving the existing
   nonzero effect-handle lifecycle gates, then reran

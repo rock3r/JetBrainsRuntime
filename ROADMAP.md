@@ -47,6 +47,12 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Targeted read-only graphics-layer lifecycle gap audit after the near-camera chained render-effect+blend-color-matrix
+  checkpoint found no remaining `parity-resize-graphics-layer*` / `parity-forced-context-graphics-layer*` rows with
+  scoped lifecycle gates missing handle ceilings, no rows missing command-cache/image-cache/scoped-image-cache/surface
+  lifecycle assertions, and no command-probe resize/forced graphics-layer lifecycle rows lacking a normalized
+  screenshot-parity counterpart. This was not a broad validation run; the latest exact validation evidence remains:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260618-120641/suite.tsv`.
 - Magic Jewel tightened the exact graphics-layer near-camera chained-render-effect+blend-color-matrix-filter lifecycle
   screenshot-parity pair with explicit zero ceilings for JBR shader-handle defines while preserving the existing
   nonzero effect-handle lifecycle gates, then reran

@@ -5,6 +5,16 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-18 targeted graphics-layer resize/forced-context lifecycle gap audit:
+  After the near-camera chained render-effect+blend-color-matrix shader-zero checkpoint, Magic Jewel reran read-only
+  scoped scans over `scripts/jbr-skia-screenshot-parity-suite.sh` and found no remaining
+  `parity-resize-graphics-layer*` / `parity-forced-context-graphics-layer*` rows with scoped image-cache lifecycle
+  gates missing effect/shader handle ceilings, no rows missing command-cache/image-cache/scoped-image-cache/surface
+  lifecycle assertions, and no command-probe resize/forced graphics-layer lifecycle rows without a normalized
+  screenshot-parity counterpart. The command-probe comparison normalized
+  `commands-(resize|forced-context)-graphics-layer*` to `parity-*` and `comm -23` returned no rows. This was a
+  read-only audit, not a broad validation run; the latest exact validation evidence remains:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260618-120641/suite.tsv`.
 - 2026-06-18 exact graphics-layer near-camera chained-render-effect+blend-color-matrix-filter lifecycle screenshot-parity shader-zero tightening:
   Magic Jewel added explicit zero ceilings for JBR shader-handle defines on
   `parity-resize-graphics-layer-near-camera-chained-render-effect-blend-color-matrix-filter` and
