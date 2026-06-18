@@ -5,6 +5,15 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-18 exact standalone graphics-layer offscreen zero-handle lifecycle screenshot-parity tightening:
+  Magic Jewel added explicit zero ceilings for JBR effect-handle and shader-handle defines on
+  `parity-graphics-layer-offscreen`, matching its resize/forced-context lifecycle siblings, then reran
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-graphics-layer-offscreen" ./scripts/jbr-skia-screenshot-parity-suite.sh`.
+  The exact standalone row passed fallback-free with zero picture frames, zero effect-handle markers, zero
+  shader-handle markers, and screenshot status passed: 670 JBR command frames, `avg_delta=2.191`,
+  `bad_pixel_ratio=0.05195`, and zero effect/shader handle define/use/evict/cache-hit frames. The final output
+  directory was 3.7M and disk free was about 196Gi. This was not the full screenshot-parity suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260618-133233/suite.tsv`.
 - 2026-06-18 exact standalone graphics-layer path-shadow zero-handle lifecycle screenshot-parity tightening:
   Magic Jewel added explicit zero ceilings for JBR effect-handle and shader-handle defines on
   `parity-graphics-layer-path-shadow`, matching its resize/forced-context lifecycle siblings, then reran
