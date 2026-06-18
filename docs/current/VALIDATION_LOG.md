@@ -5,6 +5,14 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-18 focused invalid-input fixture promotion command-replay batch:
+  Magic Jewel promoted ten invalid public-input fixtures to finite command-replay coverage rows while preserving their
+  existing row labels. The focused suite reran only those ten rows:
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES="commands-invalid-blend-layer-bounds-fallback commands-invalid-concat-transform-fallback commands-clip-path-invalid-fallback commands-draw-path-invalid-fallback commands-invalid-point-dots-fallback commands-linear-gradient-invalid-stops-fallback commands-linear-gradient-invalid-points-fallback commands-radial-gradient-invalid-stops-fallback commands-radial-gradient-invalid-geometry-fallback commands-sweep-gradient-invalid-geometry-fallback" ./scripts/jbr-skia-command-probe-suite.sh`.
+  The focused suite passed `10/10` with `fallback_new_count=0`, `unsupported=none`, and `jbr_picture_frames=0` for
+  all rows. Command-frame counts were 911, 753, 1,664, 518, 2,392, 5,053, 5,367, 2,052, 463, and 4,371 respectively:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-180317/suite.tsv`.
+  The unsupported census is now 41 active rows pending the next capped full/default sweep.
 - 2026-06-18 focused vertices/shader fixture promotion command-replay batch:
   Magic Jewel promoted the vertices raw color-filter fixture and four remaining raw/opaque/picture shader fixtures to
   descriptor-backed command paths. The focused suite reran only those five rows:

@@ -14,11 +14,11 @@ they no longer report unsupported markers.
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260612-144955/suite.tsv`.
 - Evidence summary from that full/default sweep: `549/549` rows passed, but `unsupported_rows=79`,
   `picture_frames=78827` across unsupported rows, and `jbr_command_frames=0` across unsupported rows.
-- Current focused progress: `28` rows cleared by focused validation, leaving `51` active unsupported rows pending the
+- Current focused progress: `38` rows cleared by focused validation, leaving `41` active unsupported rows pending the
   next capped full/default sweep.
 - Latest focused evidence:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-175425/suite.tsv`.
-  The five promoted vertices/shader fixture rows passed with `fallback_new_count=0`, `unsupported=none`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-180317/suite.tsv`.
+  The ten promoted invalid-input fixture rows passed with `fallback_new_count=0`, `unsupported=none`,
   `jbr_picture_frames=0`, and non-zero `jbr_command_frames`.
 - Current interpretation: these rows are green because they fall back structurally as expected today. They are not
   counted as complete for the zero-unsupported goal until their unsupported markers are gone and command replay is
@@ -76,11 +76,6 @@ they no longer report unsupported markers.
 
 | Row | Unsupported markers | fallback_new_count | picture frames | command frames |
 | --- | --- | ---: | ---: | ---: |
-| `commands-invalid-blend-layer-bounds-fallback` | `graphicsLayer:childCommands:912,blendLayerBounds:912,graphicsLayer:912` | 0 | 911 | 0 |
-| `commands-invalid-concat-transform-fallback` | `unsupportedScope:997,graphicsLayer:childCommands:997,transform:997,graphicsLayer:997` | 0 | 997 | 0 |
-| `commands-clip-path-invalid-fallback` | `unsupportedScope:904,clipPath:904,graphicsLayer:childCommands:904,graphicsLayer:904` | 0 | 905 | 0 |
-| `commands-draw-path-invalid-fallback` | `path:1920,graphicsLayer:childCommands:960,graphicsLayer:960` | 0 | 959 | 0 |
-| `commands-invalid-point-dots-fallback` | `points:984,graphicsLayer:childCommands:984,graphicsLayer:984` | 0 | 984 | 0 |
 | `commands-linear-gradient-path-invalid-fallback` | `path:947,graphicsLayer:childCommands:947,linearGradientPath:947,graphicsLayer:947` | 0 | 948 | 0 |
 | `commands-radial-gradient-path-invalid-fallback` | `path:975,graphicsLayer:childCommands:975,radialGradientPath:975,graphicsLayer:975` | 0 | 976 | 0 |
 | `commands-sweep-gradient-path-invalid-fallback` | `path:956,sweepGradientPath:956,graphicsLayer:childCommands:956,graphicsLayer:956` | 0 | 956 | 0 |
@@ -90,11 +85,6 @@ they no longer report unsupported markers.
 | `commands-runtime-effect-color-filter-invalid-uniform-schema-fallback` | `colorFilterDescriptor:1003,graphicsLayer:childCommands:1003,graphicsLayer:1003` | 0 | 1003 | 0 |
 | `commands-runtime-effect-color-filter-invalid-child-schema-fallback` | `colorFilterDescriptor:903,graphicsLayer:childCommands:903,graphicsLayer:903` | 0 | 903 | 0 |
 | `commands-runtime-effect-color-filter-invalid-nested-child-fallback` | `colorFilterDescriptor:990,graphicsLayer:childCommands:990,graphicsLayer:990` | 0 | 991 | 0 |
-| `commands-linear-gradient-invalid-stops-fallback` | `linearGradientStops:914,graphicsLayer:childCommands:914,graphicsLayer:914` | 0 | 914 | 0 |
-| `commands-linear-gradient-invalid-points-fallback` | `linearGradientPoints:907,graphicsLayer:childCommands:907,graphicsLayer:907` | 0 | 908 | 0 |
-| `commands-radial-gradient-invalid-stops-fallback` | `graphicsLayer:childCommands:963,radialGradientStops:963,graphicsLayer:963` | 0 | 963 | 0 |
-| `commands-radial-gradient-invalid-geometry-fallback` | `radialGradientGeometry:933,graphicsLayer:childCommands:933,graphicsLayer:933` | 0 | 932 | 0 |
-| `commands-sweep-gradient-invalid-geometry-fallback` | `graphicsLayer:childCommands:916,sweepGradientGeometry:916,graphicsLayer:916` | 0 | 916 | 0 |
 | `commands-linear-gradient-invalid-color-count-fallback` | `graphicsLayer:childCommands:923,linearGradientColorCount:923,graphicsLayer:923` | 0 | 924 | 0 |
 | `commands-radial-gradient-invalid-color-count-fallback` | `radialGradientColorCount:934,graphicsLayer:childCommands:934,graphicsLayer:934` | 0 | 935 | 0 |
 | `commands-sweep-gradient-invalid-color-count-fallback` | `sweepGradientColorCount:958,graphicsLayer:childCommands:958,graphicsLayer:958` | 0 | 959 | 0 |
@@ -132,6 +122,16 @@ they no longer report unsupported markers.
 
 | Row | Cleared by evidence | Notes |
 | --- | --- | --- |
+| `commands-invalid-blend-layer-bounds-fallback` | `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-180317/suite.tsv` | promoted to finite command fixture; `unsupported=none`, `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=911` |
+| `commands-invalid-concat-transform-fallback` | `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-180317/suite.tsv` | promoted to finite command fixture; `unsupported=none`, `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=753` |
+| `commands-clip-path-invalid-fallback` | `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-180317/suite.tsv` | promoted to finite command fixture; `unsupported=none`, `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=1664` |
+| `commands-draw-path-invalid-fallback` | `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-180317/suite.tsv` | promoted to finite command fixture; `unsupported=none`, `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=518` |
+| `commands-invalid-point-dots-fallback` | `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-180317/suite.tsv` | promoted to finite command fixture; `unsupported=none`, `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=2392` |
+| `commands-linear-gradient-invalid-stops-fallback` | `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-180317/suite.tsv` | promoted to finite command fixture; `unsupported=none`, `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=5053` |
+| `commands-linear-gradient-invalid-points-fallback` | `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-180317/suite.tsv` | promoted to finite command fixture; `unsupported=none`, `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=5367` |
+| `commands-radial-gradient-invalid-stops-fallback` | `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-180317/suite.tsv` | promoted to finite command fixture; `unsupported=none`, `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=2052` |
+| `commands-radial-gradient-invalid-geometry-fallback` | `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-180317/suite.tsv` | promoted to finite command fixture; `unsupported=none`, `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=463` |
+| `commands-sweep-gradient-invalid-geometry-fallback` | `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-180317/suite.tsv` | promoted to finite command fixture; `unsupported=none`, `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=4371` |
 | `commands-linear-gradient-path-stroke-fallback` | `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-165037/suite.tsv` | `unsupported=none`, `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=3700` |
 | `commands-radial-gradient-path-stroke-fallback` | `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-165037/suite.tsv` | `unsupported=none`, `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=2207` |
 | `commands-sweep-gradient-path-stroke-fallback` | `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-165037/suite.tsv` | `unsupported=none`, `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=2123` |
