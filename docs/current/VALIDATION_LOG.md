@@ -5,6 +5,20 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-18 exact graphics-layer offset-effect lifecycle screenshot-parity restore/tightening: Magic Jewel restored
+  the live effect-handle ceilings on `parity-resize-graphics-layer-offset-effect` and
+  `parity-forced-context-graphics-layer-offset-effect` to the documented tightened caps, then reran
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-graphics-layer-offset-effect parity-forced-context-graphics-layer-offset-effect" ./scripts/jbr-skia-screenshot-parity-suite.sh`.
+  Both exact rows passed with zero picture frames and screenshot status passed. The resize row recorded the known
+  single early `command-stream-invalid` resize parity artifact, then passed with 766 JBR command frames,
+  `avg_delta=1.908`, `bad_pixel_ratio=0.04583`, one same-context surface-change marker, one command-cache clear, one
+  JBR image-cache clear, one scoped image-cache clear, 8 effect-handle define frames, 1,523 effect-handle use frames,
+  and 1,514 effect-handle cache-hit frames. The forced-context row passed fallback-free with 964 JBR command frames,
+  `avg_delta=2.048`, `bad_pixel_ratio=0.04815`, one destination context-change marker, one command-cache clear, one
+  JBR image-cache clear, one scoped image-cache clear, 10 effect-handle define frames, 1,718 effect-handle use frames,
+  and 1,708 effect-handle cache-hit frames. The final output directory was 7.9M and disk free was about 170Gi. This
+  was not the full screenshot-parity suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260618-094649/suite.tsv`.
 - 2026-06-18 exact graphics-layer render-effect lifecycle screenshot-parity tightening: Magic Jewel reduced the
   effect-handle ceilings on `parity-resize-graphics-layer-render-effect` and
   `parity-forced-context-graphics-layer-render-effect` to match current report evidence more closely, then reran

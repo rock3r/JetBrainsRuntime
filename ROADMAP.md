@@ -47,6 +47,19 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel restored the exact graphics-layer offset-effect lifecycle screenshot-parity caps to the documented
+  tightened ceilings, reducing the live resize ceiling to 9 and the forced-context ceiling to 11, then reran
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-graphics-layer-offset-effect parity-forced-context-graphics-layer-offset-effect" ./scripts/jbr-skia-screenshot-parity-suite.sh`.
+  Both exact rows passed with zero picture frames and screenshot status passed. The resize row recorded the known
+  single early `command-stream-invalid` resize parity artifact, then passed with 766 JBR command frames,
+  `avg_delta=1.908`, `bad_pixel_ratio=0.04583`, one same-context surface-change marker, one command-cache clear, one
+  JBR image-cache clear, one scoped image-cache clear, 8 effect-handle define frames, 1,523 effect-handle use frames,
+  and 1,514 effect-handle cache-hit frames. The forced-context row passed fallback-free with 964 JBR command frames,
+  `avg_delta=2.048`, `bad_pixel_ratio=0.04815`, one destination context-change marker, one command-cache clear, one
+  JBR image-cache clear, one scoped image-cache clear, 10 effect-handle define frames, 1,718 effect-handle use frames,
+  and 1,708 effect-handle cache-hit frames. This was an exact two-row screenshot-parity refresh, not the full suite;
+  output directory was 7.9M and disk free was about 170Gi:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260618-094649/suite.tsv`.
 - Magic Jewel tightened the exact graphics-layer render-effect lifecycle screenshot-parity pair to match current
   report evidence more closely, reducing the resize ceiling to 8 and the forced-context ceiling to 11, then reran
   `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-graphics-layer-render-effect parity-forced-context-graphics-layer-render-effect" ./scripts/jbr-skia-screenshot-parity-suite.sh`.

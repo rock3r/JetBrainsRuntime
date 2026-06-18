@@ -12,6 +12,10 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 ## Current Snapshot
 
 - ABI 106 artifacts are current across JBR private API, JBR API mirror, Skiko, CMP, and Magic Jewel.
+- Magic Jewel restored the exact graphics-layer offset-effect lifecycle screenshot-parity caps to the documented
+  tightened ceilings, reducing the live resize ceiling to 9 and the forced-context ceiling to 11, then reran
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-graphics-layer-offset-effect parity-forced-context-graphics-layer-offset-effect" ./scripts/jbr-skia-screenshot-parity-suite.sh`.
+  Both exact rows passed with zero picture frames and screenshot status passed.
 - Magic Jewel tightened the exact graphics-layer render-effect lifecycle screenshot-parity pair to match current
   report evidence more closely, reducing the resize ceiling to 8 and the forced-context ceiling to 11, then reran
   `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-graphics-layer-render-effect parity-forced-context-graphics-layer-render-effect" ./scripts/jbr-skia-screenshot-parity-suite.sh`.
