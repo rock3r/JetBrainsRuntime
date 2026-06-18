@@ -29,7 +29,7 @@ This is the small working roadmap for the current PoC. The full historical check
   ledger. The current full/default evidence passed `549/549`, but recorded 79 unsupported rows that render through
   picture fallback rather than command replay. Focused validation has cleared the three gradient path stroke rows plus
   descriptor/image shader stroke rects, image path-effect draws, 2049-wide image shaders, and six promoted raw shader
-  fixtures plus four promoted raw RuntimeEffect/blend/path-effect fixtures, leaving 63 active
+  fixtures plus 11 promoted raw RuntimeEffect/blend/path-effect/layer fixtures, leaving 56 active
   unsupported rows pending the next capped full/default sweep.
 - Continue remaining shader-family hardening and fallback sentinels.
 - Continue shader/effect lifecycle coverage: create, use, context-scoped cache hit, compile/build failure, descriptor

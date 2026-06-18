@@ -5,6 +5,16 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-18 focused raw/table color-filter and layer fixture promotion command-replay batch:
+  Magic Jewel promoted seven raw/table filter fixtures to descriptor-backed tint, color-matrix, and blur effect paths
+  across image, fill-rect, graphics-layer, and save-layer coverage. The focused suite reran only those seven rows:
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES="commands-image-raw-table-color-filter-fallback commands-raw-table-color-filter-fallback commands-graphics-layer-raw-color-filter-fallback commands-graphics-layer-raw-table-color-filter-fallback commands-graphics-layer-raw-image-filter-effect-fallback commands-save-layer-raw-color-filter-fallback commands-save-layer-raw-table-color-filter-fallback" ./scripts/jbr-skia-command-probe-suite.sh`.
+  The focused suite passed `7/7` with `fallback_new_count=0`, `unsupported=none`, and `jbr_picture_frames=0` for
+  all rows. Command-frame counts were 2,113 for image raw-table, 2,200 for fill raw-table, 2,187 for graphics-layer
+  raw color-filter, 843 for graphics-layer raw-table, 932 for graphics-layer raw image-filter effect, 559 for
+  save-layer raw color-filter, and 1,472 for save-layer raw-table:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-174344/suite.tsv`.
+  The unsupported census is now 56 active rows pending the next capped full/default sweep.
 - 2026-06-18 focused raw discrete path-effect fixture promotion command-replay batch:
   Magic Jewel promoted the raw discrete path-effect fixture to a descriptor-backed Compose corner path effect because
   raw Skia-owned path-effect pointers must not cross the ABI. The focused suite reran only that row:

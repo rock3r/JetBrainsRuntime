@@ -14,12 +14,12 @@ they no longer report unsupported markers.
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260612-144955/suite.tsv`.
 - Evidence summary from that full/default sweep: `549/549` rows passed, but `unsupported_rows=79`,
   `picture_frames=78827` across unsupported rows, and `jbr_command_frames=0` across unsupported rows.
-- Current focused progress: `16` rows cleared by focused validation, leaving `63` active unsupported rows pending the
+- Current focused progress: `23` rows cleared by focused validation, leaving `56` active unsupported rows pending the
   next capped full/default sweep.
 - Latest focused evidence:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-174003/suite.tsv`.
-  The promoted raw discrete path-effect fixture row passed with `fallback_new_count=0`, `unsupported=none`,
-  `jbr_picture_frames=0`, and `jbr_command_frames=314`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-174344/suite.tsv`.
+  The seven promoted raw/table color-filter and graphics-layer/save-layer fixture rows passed with
+  `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, and non-zero `jbr_command_frames`.
 - Current interpretation: these rows are green because they fall back structurally as expected today. They are not
   counted as complete for the zero-unsupported goal until their unsupported markers are gone and command replay is
   validated.
@@ -108,8 +108,6 @@ they no longer report unsupported markers.
 | `commands-linear-gradient-stroke-round-rect-invalid-radius-fallback` | `linearGradientStrokeRoundRectRadius:1213,graphicsLayer:childCommands:1213,graphicsLayer:1213` | 0 | 1213 | 0 |
 | `commands-radial-gradient-stroke-round-rect-invalid-radius-fallback` | `radialGradientStrokeRoundRectRadius:1070,graphicsLayer:childCommands:1070,graphicsLayer:1070` | 0 | 1069 | 0 |
 | `commands-sweep-gradient-stroke-round-rect-invalid-radius-fallback` | `graphicsLayer:childCommands:916,sweepGradientStrokeRoundRectRadius:916,graphicsLayer:916` | 0 | 917 | 0 |
-| `commands-image-raw-table-color-filter-fallback` | `colorFilter:892,graphicsLayer:childCommands:892,image:892,graphicsLayer:892` | 0 | 892 | 0 |
-| `commands-raw-table-color-filter-fallback` | `colorFilter:833,graphicsLayer:childCommands:833,graphicsLayer:833` | 0 | 832 | 0 |
 | `commands-color-matrix-filter-nonfinite-fallback` | `graphicsLayer:childCommands:970,colorMatrixNonfinite:970,graphicsLayer:970` | 0 | 969 | 0 |
 | `commands-path-effect-color-filter-fallback` | `colorFilter:910,graphicsLayer:childCommands:910,graphicsLayer:910` | 0 | 910 | 0 |
 | `commands-vertices-raw-color-filter-fallback` | `colorFilter:860,graphicsLayer:childCommands:860,vertices:860,graphicsLayer:860` | 0 | 859 | 0 |
@@ -126,15 +124,10 @@ they no longer report unsupported markers.
 | `commands-graphics-layer-invalid-rotation-y-fallback` | `graphicsLayer:rotationY:1079,graphicsLayer:childCommands:1079,graphicsLayer:1079` | 0 | 1079 | 0 |
 | `commands-graphics-layer-invalid-blend-mode-fallback` | `graphicsLayer:blendMode:1077,graphicsLayer:childCommands:1077,graphicsLayer:1077` | 0 | 1077 | 0 |
 | `commands-graphics-layer-unrecorded-fallback` | `graphicsLayer:childCommands:1049,graphicsLayer:recording:1049,graphicsLayer:2098` | 0 | 1049 | 0 |
-| `commands-graphics-layer-raw-color-filter-fallback` | `graphicsLayer:childCommands:1440,graphicsLayer:colorFilter:1440,graphicsLayer:1440` | 0 | 1441 | 0 |
-| `commands-graphics-layer-raw-table-color-filter-fallback` | `graphicsLayer:childCommands:1279,graphicsLayer:colorFilter:1279,graphicsLayer:1279` | 0 | 1279 | 0 |
 | `commands-graphics-layer-unsupported-child-fallback` | `graphicsLayer:childCommands:2030,graphicsLayer:2030` | 0 | 1015 | 0 |
-| `commands-graphics-layer-raw-image-filter-effect-fallback` | `graphicsLayer:childCommands:1043,graphicsLayer:renderEffect:1042,graphicsLayer:1043` | 0 | 1043 | 0 |
 | `commands-graphics-layer-invalid-shadow-elevation-fallback` | `graphicsLayer:shadowElevation:1138,graphicsLayer:childCommands:1138,graphicsLayer:1138` | 0 | 1137 | 0 |
 | `commands-graphics-layer-invalid-shadow-path-fallback` | `clipPath:2328,graphicsLayer:childCommands:1164,graphicsLayer:shadowPath:1164,graphicsLayer:1164` | 0 | 1163 | 0 |
 | `commands-graphics-layer-invalid-camera-distance-fallback` | `graphicsLayer:childCommands:1194,graphicsLayer:cameraDistance:1194,graphicsLayer:1194` | 0 | 1195 | 0 |
-| `commands-save-layer-raw-color-filter-fallback` | `unsupportedScope:1059,saveLayer:1059,graphicsLayer:childCommands:1059,graphicsLayer:1059` | 0 | 1058 | 0 |
-| `commands-save-layer-raw-table-color-filter-fallback` | `unsupportedScope:1377,saveLayer:1377,graphicsLayer:childCommands:1377,graphicsLayer:1377` | 0 | 1377 | 0 |
 | `commands-opaque-shader-fallback` | `shader:1140,graphicsLayer:childCommands:1140,graphicsLayer:1140` | 0 | 1139 | 0 |
 | `commands-composite-opaque-shader-fallback` | `shader:972,graphicsLayer:childCommands:972,graphicsLayer:972` | 0 | 973 | 0 |
 | `commands-picture-shader-fallback` | `shader:789,graphicsLayer:childCommands:789,graphicsLayer:789` | 0 | 788 | 0 |
@@ -160,3 +153,10 @@ they no longer report unsupported markers.
 | `commands-raw-runtime-effect-color-filter-fallback` | `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-173458/suite.tsv` | promoted to descriptor-backed fixture; `unsupported=none`, `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=515` |
 | `commands-raw-blend-color-filter-fallback` | `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-173458/suite.tsv` | promoted to descriptor-backed fixture; `unsupported=none`, `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=1121` |
 | `commands-raw-discrete-path-effect-fallback` | `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-174003/suite.tsv` | promoted to descriptor-backed fixture; `unsupported=none`, `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=314` |
+| `commands-image-raw-table-color-filter-fallback` | `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-174344/suite.tsv` | promoted to descriptor-backed fixture; `unsupported=none`, `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=2113` |
+| `commands-raw-table-color-filter-fallback` | `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-174344/suite.tsv` | promoted to descriptor-backed fixture; `unsupported=none`, `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=2200` |
+| `commands-graphics-layer-raw-color-filter-fallback` | `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-174344/suite.tsv` | promoted to descriptor-backed fixture; `unsupported=none`, `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=2187` |
+| `commands-graphics-layer-raw-table-color-filter-fallback` | `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-174344/suite.tsv` | promoted to descriptor-backed fixture; `unsupported=none`, `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=843` |
+| `commands-graphics-layer-raw-image-filter-effect-fallback` | `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-174344/suite.tsv` | promoted to descriptor-backed fixture; `unsupported=none`, `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=932` |
+| `commands-save-layer-raw-color-filter-fallback` | `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-174344/suite.tsv` | promoted to descriptor-backed fixture; `unsupported=none`, `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=559` |
+| `commands-save-layer-raw-table-color-filter-fallback` | `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-174344/suite.tsv` | promoted to descriptor-backed fixture; `unsupported=none`, `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=1472` |
