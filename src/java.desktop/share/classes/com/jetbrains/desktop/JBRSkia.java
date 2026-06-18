@@ -145,6 +145,10 @@ public abstract class JBRSkia {
     public static final long COMMAND_CAP64_HIGH_STROKE_PATH_RADIAL_GRADIENT = Long.parseLong("524288");
     /** Supports stroked arbitrary paths with serialized sweep-gradient paint. */
     public static final long COMMAND_CAP64_HIGH_STROKE_PATH_SWEEP_GRADIENT = Long.parseLong("1048576");
+    /** Supports stroked rectangles with shader descriptor handles. */
+    public static final long COMMAND_CAP64_HIGH_STROKE_RECT_SHADER_REF = Long.parseLong("2097152");
+    /** Supports stroked rectangles with JBR-owned image shaders. */
+    public static final long COMMAND_CAP64_HIGH_STROKE_RECT_IMAGE_SHADER = Long.parseLong("4194304");
     public static final int COMMAND_CLEAR = Integer.parseInt("1");
     public static final int COMMAND_FILL_RECT = Integer.parseInt("2");
     public static final int COMMAND_STROKE_LINE = Integer.parseInt("3");
@@ -217,6 +221,8 @@ public abstract class JBRSkia {
     public static final int COMMAND_STROKE_PATH_LINEAR_GRADIENT = Integer.parseInt("68");
     public static final int COMMAND_STROKE_PATH_RADIAL_GRADIENT = Integer.parseInt("69");
     public static final int COMMAND_STROKE_PATH_SWEEP_GRADIENT = Integer.parseInt("70");
+    public static final int COMMAND_STROKE_RECT_SHADER_REF = Integer.parseInt("71");
+    public static final int COMMAND_STROKE_RECT_IMAGE_SHADER = Integer.parseInt("72");
     public static final int COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER = Integer.parseInt("1");
     public static final int COMMAND_EFFECT_DESCRIPTOR_COLOR_MATRIX_FILTER = Integer.parseInt("2");
     public static final int COMMAND_EFFECT_DESCRIPTOR_LIGHTING_FILTER = Integer.parseInt("3");

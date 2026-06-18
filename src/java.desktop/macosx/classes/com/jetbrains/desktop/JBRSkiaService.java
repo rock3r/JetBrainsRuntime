@@ -166,7 +166,9 @@ public class JBRSkiaService extends JBRSkia {
                     | COMMAND_CAP64_HIGH_DRAW_VERTICES
                     | COMMAND_CAP64_HIGH_STROKE_PATH_LINEAR_GRADIENT
                     | COMMAND_CAP64_HIGH_STROKE_PATH_RADIAL_GRADIENT
-                    | COMMAND_CAP64_HIGH_STROKE_PATH_SWEEP_GRADIENT;
+                    | COMMAND_CAP64_HIGH_STROKE_PATH_SWEEP_GRADIENT
+                    | COMMAND_CAP64_HIGH_STROKE_RECT_SHADER_REF
+                    | COMMAND_CAP64_HIGH_STROKE_RECT_IMAGE_SHADER;
     private static final boolean NATIVE_BRIDGE_AVAILABLE = loadNativeBridge();
     private static final AtomicLong NEXT_SCOPE_ID = new AtomicLong(1);
     private static final int MAX_CACHED_IMAGES = 256;
@@ -389,7 +391,7 @@ public class JBRSkiaService extends JBRSkia {
                     commands[record.argsStart() + 6],
                     commands[record.argsStart() + 7])) {
                 return false;
-            } else if (record.op() == COMMAND_FILL_RECT_SHADER_REF
+            } else if ((record.op() == COMMAND_FILL_RECT_SHADER_REF || record.op() == COMMAND_STROKE_RECT_SHADER_REF)
                     && !shaderHandles.contains(commandHandle(commands[record.argsStart()], commands[record.argsStart() + 1]))) {
                 return false;
             }
@@ -497,6 +499,8 @@ public class JBRSkiaService extends JBRSkia {
         if (op == COMMAND_STROKE_PATH_LINEAR_GRADIENT) return -33;
         if (op == COMMAND_STROKE_PATH_RADIAL_GRADIENT) return -34;
         if (op == COMMAND_STROKE_PATH_SWEEP_GRADIENT) return -35;
+        if (op == COMMAND_STROKE_RECT_SHADER_REF) return 14;
+        if (op == COMMAND_STROKE_RECT_IMAGE_SHADER) return 18;
         if (op == COMMAND_FILL_RECT_IMAGE_SHADER) return 14;
         if (op == COMMAND_CLEAR) return 4;
         if (op == COMMAND_CLEAR_RECT) return 7;
@@ -830,6 +834,24 @@ public class JBRSkiaService extends JBRSkia {
                     && alpha1000 >= 0
                     && alpha1000 <= 1000;
         }
+        if (record.op() == COMMAND_STROKE_RECT_SHADER_REF) {
+            int left1000 = commands[record.argsStart() + 2];
+            int top1000 = commands[record.argsStart() + 3];
+            int right1000 = commands[record.argsStart() + 4];
+            int bottom1000 = commands[record.argsStart() + 5];
+            int strokeWidth1000 = commands[record.argsStart() + 6];
+            int strokeCap = commands[record.argsStart() + 7];
+            int strokeJoin = commands[record.argsStart() + 8];
+            int strokeMiter1000 = commands[record.argsStart() + 9];
+            int alpha1000 = commands[record.argsStart() + 10];
+            return (record.recordFlags() == COMMAND_RECORD_FLAGS_NONE
+                    || record.recordFlags() == COMMAND_RECORD_FLAG_ANTIALIAS)
+                    && right1000 >= left1000
+                    && bottom1000 >= top1000
+                    && isValidStrokeMetadata(strokeWidth1000, strokeCap, strokeJoin, strokeMiter1000)
+                    && alpha1000 >= 0
+                    && alpha1000 <= 1000;
+        }
         if (record.op() == COMMAND_FILL_RECT_COLOR_FILTER_REF) {
             int width = commands[record.argsStart() + 5];
             int height = commands[record.argsStart() + 6];
@@ -1103,6 +1125,38 @@ public class JBRSkiaService extends JBRSkia {
                     && tileModeY <= 3
                     && alpha1000 >= 0
                     && alpha1000 <= 1000;
+        }
+        if (record.op() == COMMAND_STROKE_RECT_IMAGE_SHADER) {
+            if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE
+                    && record.recordFlags() != COMMAND_RECORD_FLAG_ANTIALIAS) {
+                return false;
+            }
+            int left1000 = commands[record.argsStart()];
+            int top1000 = commands[record.argsStart() + 1];
+            int right1000 = commands[record.argsStart() + 2];
+            int bottom1000 = commands[record.argsStart() + 3];
+            int imageWidth = commands[record.argsStart() + 6];
+            int imageHeight = commands[record.argsStart() + 7];
+            int tileModeX = commands[record.argsStart() + 8];
+            int tileModeY = commands[record.argsStart() + 9];
+            int alpha1000 = commands[record.argsStart() + 10];
+            int strokeWidth1000 = commands[record.argsStart() + 11];
+            int strokeCap = commands[record.argsStart() + 12];
+            int strokeJoin = commands[record.argsStart() + 13];
+            int strokeMiter1000 = commands[record.argsStart() + 14];
+            return right1000 >= left1000
+                    && bottom1000 >= top1000
+                    && imageWidth > 0
+                    && imageHeight > 0
+                    && imageWidth <= 4096
+                    && imageHeight <= 4096
+                    && tileModeX >= 0
+                    && tileModeX <= 3
+                    && tileModeY >= 0
+                    && tileModeY <= 3
+                    && alpha1000 >= 0
+                    && alpha1000 <= 1000
+                    && isValidStrokeMetadata(strokeWidth1000, strokeCap, strokeJoin, strokeMiter1000);
         }
         if (record.op() == COMMAND_FILL_RECT_LINEAR_GRADIENT) {
             if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE
@@ -4077,6 +4131,51 @@ public class JBRSkiaService extends JBRSkia {
                         ));
                         current.setComposite(previousComposite);
                         current.setPaint(previousPaint);
+                    } else if (op == COMMAND_STROKE_RECT_IMAGE_SHADER) {
+                        if (offset + 15 != recordEnd) return false;
+                        applyAntialiasing(current, antiAlias);
+                        int left1000 = commands[offset++];
+                        int top1000 = commands[offset++];
+                        int right1000 = commands[offset++];
+                        int bottom1000 = commands[offset++];
+                        long cacheKey = cacheKey(commands[offset++], commands[offset++]);
+                        int imageWidth = commands[offset++];
+                        int imageHeight = commands[offset++];
+                        int tileModeX = commands[offset++];
+                        int tileModeY = commands[offset++];
+                        int alpha1000 = commands[offset++];
+                        int strokeWidth1000 = commands[offset++];
+                        int strokeCap = commands[offset++];
+                        int strokeJoin = commands[offset++];
+                        int strokeMiter1000 = commands[offset++];
+                        BufferedImage image = IMAGE_CACHE.get(new ImageCacheKey(contextPtr, cacheKey));
+                        if (image == null || image.getWidth() != imageWidth || image.getHeight() != imageHeight
+                                || right1000 < left1000 || bottom1000 < top1000
+                                || tileModeX < 0 || tileModeX > 3 || tileModeY < 0 || tileModeY > 3
+                                || alpha1000 < 0 || alpha1000 > 1000
+                                || !isValidStrokeMetadata(strokeWidth1000, strokeCap, strokeJoin, strokeMiter1000)) {
+                            return false;
+                        }
+                        Paint previousPaint = current.getPaint();
+                        Composite previousComposite = current.getComposite();
+                        current.setPaint(new TexturePaint(image, new Rectangle(0, 0, imageWidth, imageHeight)));
+                        current.setStroke(new BasicStroke(
+                                strokeWidth1000 / 1000f,
+                                strokeCap == 1 ? BasicStroke.CAP_ROUND : strokeCap == 2 ? BasicStroke.CAP_SQUARE : BasicStroke.CAP_BUTT,
+                                strokeJoin == 1 ? BasicStroke.JOIN_ROUND : strokeJoin == 2 ? BasicStroke.JOIN_BEVEL : BasicStroke.JOIN_MITER,
+                                Math.max(1f, strokeMiter1000 / 1000f)
+                        ));
+                        if (alpha1000 < 1000) {
+                            current.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha1000 / 1000f));
+                        }
+                        current.draw(new java.awt.geom.Rectangle2D.Float(
+                                left1000 / 1000f,
+                                top1000 / 1000f,
+                                (right1000 - left1000) / 1000f,
+                                (bottom1000 - top1000) / 1000f
+                        ));
+                        current.setComposite(previousComposite);
+                        current.setPaint(previousPaint);
                     } else if (op == COMMAND_DRAW_IMAGE_ARGB) {
                         if (offset + 13 > recordEnd) return false;
                         boolean filtered = (record.recordFlags() & COMMAND_RECORD_FLAG_ANTIALIAS) != 0;
@@ -4528,6 +4627,37 @@ public class JBRSkiaService extends JBRSkia {
                                 (right1000 - left1000) / 1000,
                                 (bottom1000 - top1000) / 1000
                         );
+                    } else if (op == COMMAND_STROKE_RECT_SHADER_REF) {
+                        if (offset + 11 != recordEnd) return false;
+                        applyAntialiasing(current, antiAlias);
+                        long handle = cacheKey(commands[offset++], commands[offset++]);
+                        int left1000 = commands[offset++];
+                        int top1000 = commands[offset++];
+                        int right1000 = commands[offset++];
+                        int bottom1000 = commands[offset++];
+                        int strokeWidth1000 = commands[offset++];
+                        int strokeCap = commands[offset++];
+                        int strokeJoin = commands[offset++];
+                        int strokeMiter1000 = commands[offset++];
+                        int alpha1000 = commands[offset++];
+                        ShaderDescriptor descriptor = SHADER_CACHE.get(new ColorFilterCacheKey(contextPtr, handle));
+                        if (descriptor == null || right1000 < left1000 || bottom1000 < top1000
+                                || !isValidStrokeMetadata(strokeWidth1000, strokeCap, strokeJoin, strokeMiter1000)
+                                || alpha1000 < 0 || alpha1000 > 1000) return false;
+                        logShaderHandleUse("java2d", contextPtr, handle, op);
+                        current.setColor(new Color((alpha1000 * 255 / 1000) << 24 | 0x3388ff, true));
+                        current.setStroke(new BasicStroke(
+                                strokeWidth1000 / 1000f,
+                                strokeCap == 1 ? BasicStroke.CAP_ROUND : strokeCap == 2 ? BasicStroke.CAP_SQUARE : BasicStroke.CAP_BUTT,
+                                strokeJoin == 1 ? BasicStroke.JOIN_ROUND : strokeJoin == 2 ? BasicStroke.JOIN_BEVEL : BasicStroke.JOIN_MITER,
+                                Math.max(1f, strokeMiter1000 / 1000f)
+                        ));
+                        current.draw(new java.awt.geom.Rectangle2D.Float(
+                                left1000 / 1000f,
+                                top1000 / 1000f,
+                                (right1000 - left1000) / 1000f,
+                                (bottom1000 - top1000) / 1000f
+                        ));
                     } else if (op == COMMAND_FILL_RECT_COLOR_FILTER_REF) {
                         if (offset + 7 != recordEnd) return false;
                         applyAntialiasing(current, antiAlias);
@@ -5344,7 +5474,7 @@ public class JBRSkiaService extends JBRSkia {
                 long handle = commandHandle(commands[argsStart], commands[argsStart + 1]);
                 markShaderHandleEvicted(backend, contextPtr, handle);
                 logShaderHandleEvict(backend, contextPtr, handle, true);
-            } else if (record.op() == COMMAND_FILL_RECT_SHADER_REF) {
+            } else if (record.op() == COMMAND_FILL_RECT_SHADER_REF || record.op() == COMMAND_STROKE_RECT_SHADER_REF) {
                 if (!hasRecordArgs(record, 2)) {
                     return;
                 }

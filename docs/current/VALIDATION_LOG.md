@@ -5,6 +5,14 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-18 focused descriptor/image shader stroke command-replay batch:
+  JBR/CMP/Skiko added explicit stroked shader-rect commands for descriptor-backed shaders and image shaders, then
+  Magic Jewel reran only the affected row:
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES="commands-descriptor-stroke-shader-fallback" ./scripts/jbr-skia-command-probe-suite.sh`.
+  The focused suite passed `1/1` with `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, and
+  `jbr_command_frames=1728`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-171051/suite.tsv`.
+  The unsupported census is now 75 active rows pending the next capped full/default sweep.
 - 2026-06-18 focused gradient path stroke command-replay batch:
   JBR/CMP/Skiko added explicit stroked arbitrary-path gradient commands for linear, radial, and sweep gradients, then
   Magic Jewel reran only the three affected rows:

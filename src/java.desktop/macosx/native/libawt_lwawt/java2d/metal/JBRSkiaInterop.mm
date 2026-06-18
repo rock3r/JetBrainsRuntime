@@ -179,6 +179,8 @@ static constexpr jint COMMAND_DRAW_VERTICES = 67;
 static constexpr jint COMMAND_STROKE_PATH_LINEAR_GRADIENT = 68;
 static constexpr jint COMMAND_STROKE_PATH_RADIAL_GRADIENT = 69;
 static constexpr jint COMMAND_STROKE_PATH_SWEEP_GRADIENT = 70;
+static constexpr jint COMMAND_STROKE_RECT_SHADER_REF = 71;
+static constexpr jint COMMAND_STROKE_RECT_IMAGE_SHADER = 72;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER = 1;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_COLOR_MATRIX_FILTER = 2;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_LIGHTING_FILTER = 3;
@@ -3454,6 +3456,65 @@ static bool drawCommandList(SkCanvas* canvas,
                 canvas->drawRect(SkRect::MakeLTRB(left, top, right, bottom), paint);
                 break;
             }
+            case COMMAND_STROKE_RECT_IMAGE_SHADER: {
+                if ((recordFlags & ~COMMAND_RECORD_FLAG_ANTIALIAS) != 0 || offset + 15 != recordEnd) {
+                    return false;
+                }
+                const SkScalar left = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkScalar top = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkScalar right = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkScalar bottom = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const uint64_t key = imageCacheKey(commands[offset], commands[offset + 1]);
+                offset += 2;
+                const jint imageWidth = commands[offset++];
+                const jint imageHeight = commands[offset++];
+                const jint tileModeX = commands[offset++];
+                const jint tileModeY = commands[offset++];
+                const jint alpha1000 = commands[offset++];
+                const SkScalar strokeWidth = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const jint strokeCap = commands[offset++];
+                const jint strokeJoin = commands[offset++];
+                const jint strokeMiter1000 = commands[offset++];
+                if (right < left || bottom < top ||
+                        imageWidth <= 0 || imageHeight <= 0 || imageWidth > 4096 || imageHeight > 4096 ||
+                        tileModeX < 0 || tileModeX > 3 || tileModeY < 0 || tileModeY > 3 ||
+                        alpha1000 < 0 || alpha1000 > 1000 || strokeWidth <= 0.0f ||
+                        strokeCap < 0 || strokeCap > 2 || strokeJoin < 0 || strokeJoin > 2 ||
+                        strokeMiter1000 < 0) {
+                    return false;
+                }
+                sk_sp<SkImage> image;
+                {
+                    std::lock_guard<std::mutex> lock(gImageCacheMutex);
+                    auto found = gImagesByKey.find(ImageCacheScopedKey{imageCacheContextKey, key});
+                    if (found == gImagesByKey.end()) {
+                        return false;
+                    }
+                    image = found->second;
+                }
+                if (image->width() != imageWidth || image->height() != imageHeight) {
+                    return false;
+                }
+                SkPaint paint;
+                paint.setAntiAlias(antiAlias);
+                paint.setStyle(SkPaint::kStroke_Style);
+                paint.setStrokeWidth(strokeWidth);
+                paint.setStrokeCap(static_cast<SkPaint::Cap>(strokeCap));
+                paint.setStrokeJoin(static_cast<SkPaint::Join>(strokeJoin));
+                const SkScalar strokeMiter = static_cast<SkScalar>(strokeMiter1000) / 1000.0f;
+                paint.setStrokeMiter(strokeMiter < 1.0f ? 1.0f : strokeMiter);
+                paint.setAlphaf(static_cast<float>(alpha1000) / 1000.0f);
+                paint.setShader(image->makeShader(
+                        skTileModeFromCommand(tileModeX),
+                        skTileModeFromCommand(tileModeY),
+                        SkSamplingOptions(SkFilterMode::kLinear, SkMipmapMode::kNone),
+                        nullptr));
+                if (paint.getShader() == nullptr) {
+                    return false;
+                }
+                canvas->drawRect(SkRect::MakeLTRB(left, top, right, bottom), paint);
+                break;
+            }
             case COMMAND_DRAW_IMAGE_ARGB: {
                 if ((recordFlags & ~COMMAND_RECORD_FLAG_ANTIALIAS) != 0 || offset + 13 > recordEnd) {
                     return false;
@@ -4176,6 +4237,51 @@ static bool drawCommandList(SkCanvas* canvas,
                 }
                 SkPaint paint;
                 paint.setAntiAlias(antiAlias);
+                paint.setAlphaf(static_cast<float>(alpha1000) / 1000.0f);
+                paint.setShader(makeDescriptorShader(descriptor, imageCacheContextKey, 0));
+                if (!paint.getShader()) {
+                    return false;
+                }
+                canvas->drawRect(SkRect::MakeLTRB(left, top, right, bottom), paint);
+                break;
+            }
+            case COMMAND_STROKE_RECT_SHADER_REF: {
+                if ((recordFlags & ~COMMAND_RECORD_FLAG_ANTIALIAS) != 0 || offset + 11 != recordEnd) {
+                    return false;
+                }
+                const uint64_t handle = imageCacheKey(commands[offset], commands[offset + 1]);
+                offset += 2;
+                const SkScalar left = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkScalar top = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkScalar right = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkScalar bottom = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkScalar strokeWidth = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const jint strokeCap = commands[offset++];
+                const jint strokeJoin = commands[offset++];
+                const jint strokeMiter1000 = commands[offset++];
+                const jint alpha1000 = commands[offset++];
+                if (right < left || bottom < top || strokeWidth <= 0.0f ||
+                        strokeCap < 0 || strokeCap > 2 || strokeJoin < 0 || strokeJoin > 2 ||
+                        strokeMiter1000 < 0 || alpha1000 < 0 || alpha1000 > 1000) {
+                    return false;
+                }
+                ShaderDescriptor descriptor;
+                {
+                    std::lock_guard<std::mutex> lock(gShaderCacheMutex);
+                    auto cached = gShadersByKey.find(ColorFilterScopedKey{imageCacheContextKey, handle});
+                    if (cached == gShadersByKey.end()) {
+                        return false;
+                    }
+                    descriptor = cached->second;
+                }
+                SkPaint paint;
+                paint.setAntiAlias(antiAlias);
+                paint.setStyle(SkPaint::kStroke_Style);
+                paint.setStrokeWidth(strokeWidth);
+                paint.setStrokeCap(static_cast<SkPaint::Cap>(strokeCap));
+                paint.setStrokeJoin(static_cast<SkPaint::Join>(strokeJoin));
+                const SkScalar strokeMiter = static_cast<SkScalar>(strokeMiter1000) / 1000.0f;
+                paint.setStrokeMiter(strokeMiter < 1.0f ? 1.0f : strokeMiter);
                 paint.setAlphaf(static_cast<float>(alpha1000) / 1000.0f);
                 paint.setShader(makeDescriptorShader(descriptor, imageCacheContextKey, 0));
                 if (!paint.getShader()) {

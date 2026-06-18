@@ -11,7 +11,8 @@ This is the small working roadmap for the current PoC. The full historical check
   command stream that Skiko submits to JBR for replay into a JBR-owned Skia surface during Swing painting.
 - Strict ABI/capability/public-API gating is mandatory. Any mismatch must fall back to old SwingGraphics behavior.
 - Raw Skiko-owned pointers must not cross the ABI. Known shader/effect/font/image families use serialized descriptors
-  or JBR-owned handles; unknown/raw families fall back structurally.
+  or JBR-owned handles; unknown/raw families must be promoted to descriptor/handle-backed commands or kept as explicit
+  command-stream invalid sentinels until the zero-unsupported goal is complete.
 
 ## Worktrees
 
@@ -26,8 +27,8 @@ This is the small working roadmap for the current PoC. The full historical check
 - Drive the macOS/Metal command-probe surface to zero unsupported rows using
   [`docs/current/UNSUPPORTED_COMMAND_CENSUS.md`](docs/current/UNSUPPORTED_COMMAND_CENSUS.md) as the authoritative
   ledger. The current full/default evidence passed `549/549`, but recorded 79 unsupported rows that render through
-  picture fallback rather than command replay. Focused validation has cleared the three gradient path stroke rows,
-  leaving 76 active unsupported rows pending the next capped full/default sweep.
+  picture fallback rather than command replay. Focused validation has cleared the three gradient path stroke rows plus
+  descriptor/image shader stroke rects, leaving 75 active unsupported rows pending the next capped full/default sweep.
 - Continue remaining shader-family hardening and fallback sentinels.
 - Continue shader/effect lifecycle coverage: create, use, context-scoped cache hit, compile/build failure, descriptor
   eviction, resize, and forced destination context migration.

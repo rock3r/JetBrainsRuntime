@@ -14,12 +14,12 @@ they no longer report unsupported markers.
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260612-144955/suite.tsv`.
 - Evidence summary from that full/default sweep: `549/549` rows passed, but `unsupported_rows=79`,
   `picture_frames=78827` across unsupported rows, and `jbr_command_frames=0` across unsupported rows.
-- Current focused progress: `3` rows cleared by focused validation, leaving `76` active unsupported rows pending the
+- Current focused progress: `4` rows cleared by focused validation, leaving `75` active unsupported rows pending the
   next capped full/default sweep.
 - Latest focused evidence:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-165037/suite.tsv`.
-  The three gradient path stroke rows passed with `fallback_new_count=0`, `unsupported=none`,
-  `jbr_picture_frames=0`, and non-zero `jbr_command_frames`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-171051/suite.tsv`.
+  The descriptor/image shader stroke row passed with `fallback_new_count=0`, `unsupported=none`,
+  `jbr_picture_frames=0`, and `jbr_command_frames=1728`.
 - Current interpretation: these rows are green because they fall back structurally as expected today. They are not
   counted as complete for the zero-unsupported goal until their unsupported markers are gone and command replay is
   validated.
@@ -87,7 +87,6 @@ they no longer report unsupported markers.
 | `commands-image-path-effect-fallback` | `graphicsLayer:childCommands:1002,image:1002,pathEffect:1002,graphicsLayer:1002` | 0 | 1002 | 0 |
 | `commands-image-shader-invalid-image-fallback` | `imageShaderImage:1230,graphicsLayer:childCommands:1230,graphicsLayer:1230` | 0 | 1230 | 0 |
 | `commands-raw-image-shader-fallback` | `shader:934,graphicsLayer:childCommands:934,graphicsLayer:934` | 0 | 934 | 0 |
-| `commands-descriptor-stroke-shader-fallback` | `graphicsLayer:childCommands:984,paintStyle:1968,graphicsLayer:984` | 0 | 984 | 0 |
 | `commands-raw-linear-gradient-shader-fallback` | `shader:1026,graphicsLayer:childCommands:1026,graphicsLayer:1026` | 0 | 1025 | 0 |
 | `commands-raw-radial-gradient-shader-fallback` | `shader:971,graphicsLayer:childCommands:971,graphicsLayer:971` | 0 | 972 | 0 |
 | `commands-raw-sweep-gradient-shader-fallback` | `shader:1068,graphicsLayer:childCommands:1068,graphicsLayer:1068` | 0 | 1067 | 0 |
@@ -160,3 +159,4 @@ they no longer report unsupported markers.
 | `commands-linear-gradient-path-stroke-fallback` | `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-165037/suite.tsv` | `unsupported=none`, `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=3700` |
 | `commands-radial-gradient-path-stroke-fallback` | `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-165037/suite.tsv` | `unsupported=none`, `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=2207` |
 | `commands-sweep-gradient-path-stroke-fallback` | `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-165037/suite.tsv` | `unsupported=none`, `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=2123` |
+| `commands-descriptor-stroke-shader-fallback` | `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-171051/suite.tsv` | `unsupported=none`, `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=1728` |
