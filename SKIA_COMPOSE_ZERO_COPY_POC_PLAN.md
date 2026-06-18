@@ -16,8 +16,8 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   [`docs/current/UNSUPPORTED_COMMAND_CENSUS.md`](docs/current/UNSUPPORTED_COMMAND_CENSUS.md). The current full/default
   command-probe evidence passed `549/549`, but recorded 79 unsupported rows with 78,827 picture fallback frames and
   zero command frames across those unsupported rows. Focused validation has since cleared the three linear/radial/sweep
-  gradient path stroke rows plus descriptor/image shader stroke rects, leaving 75 active unsupported rows pending the
-  next capped full/default sweep.
+  gradient path stroke rows, descriptor/image shader stroke rects, and image path-effect draws, leaving 74 active
+  unsupported rows pending the next capped full/default sweep.
 - JBR/CMP/Skiko now support stroked arbitrary-path gradients through explicit linear/radial/sweep command records.
   Magic Jewel's exact three-row command probe passed with `fallback_new_count=0`, `unsupported=none`, zero picture
   frames, and non-zero command frames:
@@ -26,6 +26,10 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   descriptor stroke shader row passed with `fallback_new_count=0`, `unsupported=none`, zero picture frames, and 1,728
   command frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-171051/suite.tsv`.
+- CMP now records image draws with path effects through the existing image-ref command path. Magic Jewel's exact image
+  path-effect row passed with `fallback_new_count=0`, `unsupported=none`, zero picture frames, and 1,245 command
+  frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-171756/suite.tsv`.
 - A targeted read-only graphics-layer lifecycle closure audit found no remaining `parity*graphics-layer*`
   screenshot-parity rows without effect/shader handle lifecycle assertions, no resize/forced graphics-layer rows
   missing surface/cache lifecycle gates, and no command-probe resize/forced graphics-layer migration rows lacking

@@ -5,6 +5,14 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-18 focused image path-effect command-replay batch:
+  CMP now treats path effects on image draws as image-irrelevant for command recording and reuses the existing
+  image-ref replay path, then Magic Jewel reran only the affected row:
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES="commands-image-path-effect-fallback" ./scripts/jbr-skia-command-probe-suite.sh`.
+  The focused suite passed `1/1` with `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, and
+  `jbr_command_frames=1245`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-171756/suite.tsv`.
+  The unsupported census is now 74 active rows pending the next capped full/default sweep.
 - 2026-06-18 focused descriptor/image shader stroke command-replay batch:
   JBR/CMP/Skiko added explicit stroked shader-rect commands for descriptor-backed shaders and image shaders, then
   Magic Jewel reran only the affected row:
