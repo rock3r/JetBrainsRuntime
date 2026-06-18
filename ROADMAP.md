@@ -47,6 +47,19 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel tightened the exact graphics-layer render-effect lifecycle screenshot-parity pair to match current
+  report evidence more closely, reducing the resize ceiling to 8 and the forced-context ceiling to 11, then reran
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-graphics-layer-render-effect parity-forced-context-graphics-layer-render-effect" ./scripts/jbr-skia-screenshot-parity-suite.sh`.
+  Both exact rows passed with zero picture frames and screenshot status passed. The resize row recorded the known
+  single early `command-stream-invalid` resize parity artifact, then passed with 1,013 JBR command frames,
+  `avg_delta=1.902`, `bad_pixel_ratio=0.04557`, one same-context surface-change marker, one command-cache clear, one
+  JBR image-cache clear, one scoped image-cache clear, 8 effect-handle define frames, 1,876 effect-handle use frames,
+  and 1,868 effect-handle cache-hit frames. The forced-context row passed fallback-free with 820 JBR command frames,
+  `avg_delta=2.045`, `bad_pixel_ratio=0.04801`, one destination context-change marker, one command-cache clear, one
+  JBR image-cache clear, one scoped image-cache clear, 9 effect-handle define frames, 1,444 effect-handle use frames,
+  and 1,435 effect-handle cache-hit frames. This was an exact two-row screenshot-parity refresh, not the full suite;
+  output directory was 8.0M and disk free was about 197Gi:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260618-094220/suite.tsv`.
 - Magic Jewel tightened the exact graphics-layer color-matrix-filter lifecycle screenshot-parity pair to match current
   report evidence more closely, reducing the resize ceiling to 8 and the forced-context ceiling to 11, then reran
   `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-graphics-layer-color-matrix-filter parity-forced-context-graphics-layer-color-matrix-filter" ./scripts/jbr-skia-screenshot-parity-suite.sh`.
