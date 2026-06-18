@@ -47,6 +47,12 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Targeted read-only graphics-layer lifecycle gap closure audit after the standalone zero-handle sweep found no
+  remaining `parity*graphics-layer*` screenshot-parity rows without JBR effect/shader handle lifecycle assertions. All
+  62 `parity-resize-graphics-layer*` / `parity-forced-context-graphics-layer*` rows retained surface/cache lifecycle
+  and handle assertions, and all 62 command-probe resize/forced graphics-layer migration rows had normalized
+  screenshot-parity counterparts. This was not a broad validation run; the latest exact validation evidence remains:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260618-135751/suite.tsv`.
 - Magic Jewel tightened the standalone graphics-layer offcenter-pivot zero-handle lifecycle screenshot-parity row with
   explicit zero ceilings for JBR effect-handle and shader-handle defines, matching its resize/forced-context lifecycle
   siblings, then reran

@@ -5,6 +5,15 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-18 targeted graphics-layer lifecycle gap closure audit:
+  After the standalone zero-handle sweep, a read-only Magic Jewel script audit found no remaining
+  `parity*graphics-layer*` screenshot-parity rows without JBR effect/shader handle lifecycle assertions. The same
+  audit checked all 62 `parity-resize-graphics-layer*` / `parity-forced-context-graphics-layer*` rows for surface
+  change, surface-context, command-cache-clear, image-cache-clear, scoped-image-cache-clear, and handle assertions,
+  and found no missing gates. The command-probe inventory also had 62 normalized `commands-resize-graphics-layer*` /
+  `commands-forced-context-graphics-layer*` rows, all with matching screenshot-parity counterparts. This was a
+  read-only closure audit, not a broad validation run; the latest exact validation evidence remains:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260618-135751/suite.tsv`.
 - 2026-06-18 exact standalone graphics-layer offcenter-pivot zero-handle lifecycle screenshot-parity tightening:
   Magic Jewel added explicit zero ceilings for JBR effect-handle and shader-handle defines on
   `parity-graphics-layer-offcenter-pivot`, matching its resize/forced-context lifecycle siblings, then reran
