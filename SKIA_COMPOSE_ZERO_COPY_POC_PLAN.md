@@ -12,6 +12,10 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 ## Current Snapshot
 
 - ABI 106 artifacts are current across JBR private API, JBR API mirror, Skiko, CMP, and Magic Jewel.
+- The zero-unsupported macOS/Metal coverage goal is now tracked in
+  [`docs/current/UNSUPPORTED_COMMAND_CENSUS.md`](docs/current/UNSUPPORTED_COMMAND_CENSUS.md). The current full/default
+  command-probe evidence passed `549/549`, but still records 79 unsupported rows with 78,827 picture fallback frames
+  and zero command frames across those unsupported rows.
 - A targeted read-only graphics-layer lifecycle closure audit found no remaining `parity*graphics-layer*`
   screenshot-parity rows without effect/shader handle lifecycle assertions, no resize/forced graphics-layer rows
   missing surface/cache lifecycle gates, and no command-probe resize/forced graphics-layer migration rows lacking

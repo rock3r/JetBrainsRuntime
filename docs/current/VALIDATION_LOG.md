@@ -5,6 +5,14 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-18 unsupported command census and zero-unsupported goal reset:
+  The latest full/default command-probe evidence remains
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260612-144955/suite.tsv`.
+  It passed `549/549` rows, but the unsupported-command census records the actual zero-unsupported gap:
+  79 unsupported rows, 78,827 picture fallback frames across those rows, and zero command frames across those rows.
+  The full row-by-row ledger is now tracked in `docs/current/UNSUPPORTED_COMMAND_CENSUS.md`. The active target is
+  zero unsupported rows on macOS/Metal, clearing rows in narrow batches, validating focused batches of up to 10 rows,
+  and running at most one broad full pass per local calendar day.
 - 2026-06-18 targeted graphics-layer lifecycle gap closure audit:
   After the standalone zero-handle sweep, a read-only Magic Jewel script audit found no remaining
   `parity*graphics-layer*` screenshot-parity rows without JBR effect/shader handle lifecycle assertions. The same

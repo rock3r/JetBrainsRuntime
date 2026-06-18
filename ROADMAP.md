@@ -23,6 +23,10 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Current Priorities
 
+- Drive the macOS/Metal command-probe surface to zero unsupported rows using
+  [`docs/current/UNSUPPORTED_COMMAND_CENSUS.md`](docs/current/UNSUPPORTED_COMMAND_CENSUS.md) as the authoritative
+  ledger. The current full/default evidence passed `549/549`, but still has 79 unsupported rows that render through
+  picture fallback rather than command replay.
 - Continue remaining shader-family hardening and fallback sentinels.
 - Continue shader/effect lifecycle coverage: create, use, context-scoped cache hit, compile/build failure, descriptor
   eviction, resize, and forced destination context migration.
@@ -47,6 +51,12 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Unsupported command census checkpoint: the latest full/default command-probe evidence remains
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260612-144955/suite.tsv`.
+  It passed `549/549`, but `docs/current/UNSUPPORTED_COMMAND_CENSUS.md` now records all 79 unsupported rows, totaling
+  78,827 picture fallback frames and zero command frames across those unsupported rows. The active goal is to clear
+  these rows in narrow batches, validate focused batches of up to 10 rows, and run at most one broad full pass per
+  local calendar day.
 - Targeted read-only graphics-layer lifecycle gap closure audit after the standalone zero-handle sweep found no
   remaining `parity*graphics-layer*` screenshot-parity rows without JBR effect/shader handle lifecycle assertions. All
   62 `parity-resize-graphics-layer*` / `parity-forced-context-graphics-layer*` rows retained surface/cache lifecycle
