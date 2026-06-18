@@ -5,6 +5,15 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-18 focused raw shader fixture promotion command-replay batch:
+  Magic Jewel promoted six raw-pointer shader fixtures to equivalent descriptor-backed Compose shader constructors
+  because raw Skiko-owned shader pointers must not cross the ABI. The focused suite reran only those six rows:
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES="commands-raw-image-shader-fallback commands-raw-linear-gradient-shader-fallback commands-raw-radial-gradient-shader-fallback commands-raw-sweep-gradient-shader-fallback commands-raw-noise-shader-fallback commands-raw-turbulence-shader-fallback" ./scripts/jbr-skia-command-probe-suite.sh`.
+  The focused suite passed `6/6` with `fallback_new_count=0`, `unsupported=none`, and `jbr_picture_frames=0` for
+  all rows. Command-frame counts were 265 for raw-image, 444 for raw-linear, 1,849 for raw-radial, 565 for raw-sweep,
+  652 for raw-noise, and 1,828 for raw-turbulence:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-172711/suite.tsv`.
+  The unsupported census is now 67 active rows pending the next capped full/default sweep.
 - 2026-06-18 focused 2049-wide image shader command-replay batch:
   CMP aligned its image command recording dimension cap with JBR's existing 4096-pixel validation/replay cap, then
   Magic Jewel reran only the affected row:
