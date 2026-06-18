@@ -47,6 +47,19 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel tightened the exact graphics-layer render-effect+color-matrix-filter lifecycle screenshot-parity pair to
+  match current report evidence more closely, reducing the resize ceiling to 16 and the forced-context ceiling to 20,
+  then reran `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-graphics-layer-render-effect-color-matrix-filter parity-forced-context-graphics-layer-render-effect-color-matrix-filter" ./scripts/jbr-skia-screenshot-parity-suite.sh`.
+  Both exact rows passed with zero picture frames and screenshot status passed. The resize row recorded the known
+  single early `command-stream-invalid` resize parity artifact, then passed with 553 JBR command frames,
+  `avg_delta=1.903`, `bad_pixel_ratio=0.04557`, one same-context surface-change marker, one command-cache clear, one
+  JBR image-cache clear, one scoped image-cache clear, 14 effect-handle define frames, 2,484 effect-handle use frames,
+  and 2,470 effect-handle cache-hit frames. The forced-context row passed fallback-free with 1,098 JBR command frames,
+  `avg_delta=2.045`, `bad_pixel_ratio=0.04801`, one destination context-change marker, one command-cache clear, one
+  JBR image-cache clear, one scoped image-cache clear, 20 effect-handle define frames, 3,620 effect-handle use frames,
+  and 3,600 effect-handle cache-hit frames. This was an exact two-row screenshot-parity refresh, not the full suite;
+  output directory was 9.3M and disk free was about 197Gi:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260618-093417/suite.tsv`.
 - Magic Jewel tightened the exact graphics-layer render-effect+blend-mode lifecycle screenshot-parity pair to match
   current report evidence more closely, reducing the resize ceiling to 8 and the forced-context ceiling to 10, then
   reran `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-graphics-layer-render-effect-blend-mode parity-forced-context-graphics-layer-render-effect-blend-mode" ./scripts/jbr-skia-screenshot-parity-suite.sh`.
