@@ -5,6 +5,19 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-18 exact graphics-layer rotation-X lifecycle screenshot-parity zero-handle tightening: Magic Jewel added
+  explicit zero ceilings for JBR effect-handle and shader-handle defines on `parity-resize-graphics-layer-rotationx`
+  and `parity-forced-context-graphics-layer-rotationx`, then reran
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-graphics-layer-rotationx parity-forced-context-graphics-layer-rotationx" ./scripts/jbr-skia-screenshot-parity-suite.sh`.
+  Both exact rows passed with zero picture frames, zero effect-handle markers, zero shader-handle markers, and
+  screenshot status passed. The resize row recorded the known single early `command-stream-invalid` resize parity
+  artifact, then passed with 633 JBR command frames, `avg_delta=1.909`, `bad_pixel_ratio=0.04586`, one same-context
+  surface-change marker, one command-cache clear, one JBR image-cache clear, one scoped image-cache clear, and nine
+  image refs. The forced-context row passed fallback-free with 763 JBR command frames, `avg_delta=2.050`,
+  `bad_pixel_ratio=0.04825`, one destination context-change marker, one command-cache clear, one JBR image-cache
+  clear, one scoped image-cache clear, and nine image refs. The final output directory was 7.4M and disk free was about
+  170Gi. This was not the full screenshot-parity suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260618-104625/suite.tsv`.
 - 2026-06-18 exact graphics-layer path-shadow lifecycle screenshot-parity zero-handle tightening: Magic Jewel added
   explicit zero ceilings for JBR effect-handle and shader-handle defines on
   `parity-resize-graphics-layer-path-shadow` and `parity-forced-context-graphics-layer-path-shadow`, then reran
