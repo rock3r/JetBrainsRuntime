@@ -5,6 +5,23 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-18 exact graphics-layer offset-effect+blend-color-matrix-filter lifecycle screenshot-parity shader-zero tightening:
+  Magic Jewel added explicit zero ceilings for JBR shader-handle defines on
+  `parity-resize-graphics-layer-offset-effect-blend-color-matrix-filter` and
+  `parity-forced-context-graphics-layer-offset-effect-blend-color-matrix-filter`, while preserving the existing nonzero
+  effect-handle lifecycle gates, then reran
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-graphics-layer-offset-effect-blend-color-matrix-filter parity-forced-context-graphics-layer-offset-effect-blend-color-matrix-filter" ./scripts/jbr-skia-screenshot-parity-suite.sh`.
+  Both exact rows passed with zero picture frames, zero shader-handle markers, active bounded effect-handle markers,
+  and screenshot status passed. The resize row recorded the known single early `command-stream-invalid` resize parity
+  artifact, then passed with 825 JBR command frames, 16 effect-handle define frames, 3,428 effect-handle use frames,
+  3,412 effect-handle cache-hit frames, `avg_delta=2.257`, `bad_pixel_ratio=0.05727`, one same-context
+  surface-change marker, one command-cache clear, one JBR image-cache clear, one scoped image-cache clear, and nine
+  image refs. The forced-context row passed fallback-free with 612 JBR command frames, 20 effect-handle define frames,
+  2,572 effect-handle use frames, 2,552 effect-handle cache-hit frames, `avg_delta=2.465`,
+  `bad_pixel_ratio=0.06185`, one destination context-change marker, one command-cache clear, one JBR image-cache
+  clear, one scoped image-cache clear, and nine image refs. The final output directory was 8.8M and disk free was about
+  170Gi. This was not the full screenshot-parity suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260618-115840/suite.tsv`.
 - 2026-06-18 exact graphics-layer render-effect+blend-color-matrix-filter lifecycle screenshot-parity shader-zero tightening:
   Magic Jewel added explicit zero ceilings for JBR shader-handle defines on
   `parity-resize-graphics-layer-render-effect-blend-color-matrix-filter` and
