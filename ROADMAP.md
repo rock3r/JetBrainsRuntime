@@ -47,6 +47,18 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel tightened the exact graphics-layer blend+color-filter lifecycle screenshot-parity pair with explicit
+  zero ceilings for JBR effect-handle and shader-handle defines, then reran
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-graphics-layer-blend-color-filter parity-forced-context-graphics-layer-blend-color-filter" ./scripts/jbr-skia-screenshot-parity-suite.sh`.
+  Both exact rows passed with zero picture frames, zero effect-handle markers, zero shader-handle markers, and
+  screenshot status passed. The resize row recorded the known single early `command-stream-invalid` resize parity
+  artifact, then passed with 679 JBR command frames, `avg_delta=1.915`, `bad_pixel_ratio=0.04659`, one same-context
+  surface-change marker, one command-cache clear, one JBR image-cache clear, and one scoped image-cache clear. The
+  forced-context row passed fallback-free with 789 JBR command frames, `avg_delta=2.056`,
+  `bad_pixel_ratio=0.04906`, one destination context-change marker, one command-cache clear, one JBR image-cache
+  clear, and one scoped image-cache clear. This was an exact two-row screenshot-parity refresh, not the full suite;
+  output directory was 7.4M and disk free was about 170Gi:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260618-100013/suite.tsv`.
 - Magic Jewel rechecked the exact graphics-layer chained-render-effect lifecycle screenshot-parity caps after stale
   compact notes suggested tighter `7/7` ceilings, confirmed the live resize ceiling remains 16 and the forced-context
   ceiling remains 20, then reran
