@@ -5,6 +5,15 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-18 exact standalone graphics-layer rotation-x zero-handle lifecycle screenshot-parity tightening:
+  Magic Jewel added explicit zero ceilings for JBR effect-handle and shader-handle defines on
+  `parity-graphics-layer-rotationx`, matching its resize/forced-context lifecycle siblings, then reran
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-graphics-layer-rotationx" ./scripts/jbr-skia-screenshot-parity-suite.sh`.
+  The exact standalone row passed fallback-free with zero picture frames, zero effect-handle markers, zero
+  shader-handle markers, and screenshot status passed: 537 JBR command frames, `avg_delta=2.191`,
+  `bad_pixel_ratio=0.05199`, and zero effect/shader handle define/use/evict/cache-hit frames. The final output
+  directory was 3.6M and disk free was about 197Gi. This was not the full screenshot-parity suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260618-133945/suite.tsv`.
 - 2026-06-18 exact standalone graphics-layer modulate-alpha zero-handle lifecycle screenshot-parity tightening:
   Magic Jewel added explicit zero ceilings for JBR effect-handle and shader-handle defines on
   `parity-graphics-layer-modulate-alpha`, matching its resize/forced-context lifecycle siblings, then reran
