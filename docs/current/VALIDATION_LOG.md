@@ -5,6 +5,15 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-18 focused gradient/filter/vertices and graphics-layer invalid-input fixture promotion batch:
+  Magic Jewel promoted ten more invalid-input fixtures to finite command-replay coverage rows. The first focused run
+  passed five rows, then exposed a remaining `graphicsLayer:recording` issue in the size-width fixture:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-182900/suite.tsv`.
+  After replacing the size fixtures' manually recorded layers with supported `Modifier.graphicsLayer` boxes, the
+  focused graphics-layer rerun passed the remaining five rows with `fallback_new_count=0`, `unsupported=none`, and
+  `jbr_picture_frames=0` for all rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-183611/suite.tsv`.
+  The unsupported census is now 21 active rows pending the next capped full/default sweep.
 - 2026-06-18 focused gradient invalid-input fixture promotion command-replay batch:
   Magic Jewel promoted ten gradient color-count, stroke-width, and round-rect radius invalid-input fixtures to finite
   command-replay coverage rows. The focused suite reran only those ten rows:
