@@ -5,6 +5,21 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-18 exact graphics-layer render-effect+blend-mode lifecycle screenshot-parity tightening: Magic Jewel
+  reduced the effect-handle ceilings on `parity-resize-graphics-layer-render-effect-blend-mode` and
+  `parity-forced-context-graphics-layer-render-effect-blend-mode` to match current report evidence more closely, then
+  reran
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-graphics-layer-render-effect-blend-mode parity-forced-context-graphics-layer-render-effect-blend-mode" ./scripts/jbr-skia-screenshot-parity-suite.sh`.
+  Both exact rows passed with zero picture frames and screenshot status passed. The resize row recorded the known
+  single early `command-stream-invalid` resize parity artifact, then passed with 862 JBR command frames,
+  `avg_delta=2.376`, `bad_pixel_ratio=0.06017`, one same-context surface-change marker, one command-cache clear, one
+  JBR image-cache clear, one scoped image-cache clear, 8 effect-handle define frames, 1,555 effect-handle use frames,
+  and 1,547 effect-handle cache-hit frames. The forced-context row passed fallback-free with 616 JBR command frames,
+  `avg_delta=2.608`, `bad_pixel_ratio=0.06548`, one destination context-change marker, one command-cache clear, one
+  JBR image-cache clear, one scoped image-cache clear, 9 effect-handle define frames, 1,384 effect-handle use frames,
+  and 1,375 effect-handle cache-hit frames. The final output directory was 7.7M and disk free was about 197Gi. This
+  was not the full screenshot-parity suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260618-092921/suite.tsv`.
 - 2026-06-17 exact graphics-layer render-effect+color-filter lifecycle screenshot-parity tightening: Magic Jewel
   reduced the effect-handle ceilings on `parity-resize-graphics-layer-render-effect-color-filter` and
   `parity-forced-context-graphics-layer-render-effect-color-filter` to match current report evidence more closely,
