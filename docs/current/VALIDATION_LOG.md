@@ -5,6 +5,15 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-18 focused vertices/shader fixture promotion command-replay batch:
+  Magic Jewel promoted the vertices raw color-filter fixture and four remaining raw/opaque/picture shader fixtures to
+  descriptor-backed command paths. The focused suite reran only those five rows:
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES="commands-vertices-raw-color-filter-fallback commands-raw-conical-gradient-shader-fallback commands-opaque-shader-fallback commands-composite-opaque-shader-fallback commands-picture-shader-fallback" ./scripts/jbr-skia-command-probe-suite.sh`.
+  The focused suite passed `5/5` with `fallback_new_count=0`, `unsupported=none`, and `jbr_picture_frames=0` for all
+  rows. Command-frame counts were 1,997 for vertices raw color-filter, 2,234 for raw conical, 2,368 for opaque
+  shader, 720 for composite opaque shader, and 700 for picture shader:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-175425/suite.tsv`.
+  The unsupported census is now 51 active rows pending the next capped full/default sweep.
 - 2026-06-18 focused raw/table color-filter and layer fixture promotion command-replay batch:
   Magic Jewel promoted seven raw/table filter fixtures to descriptor-backed tint, color-matrix, and blur effect paths
   across image, fill-rect, graphics-layer, and save-layer coverage. The focused suite reran only those seven rows:
