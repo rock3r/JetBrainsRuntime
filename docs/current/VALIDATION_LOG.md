@@ -5,6 +5,15 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-18 focused raw RuntimeEffect/blend fixture promotion command-replay batch:
+  Magic Jewel promoted the raw RuntimeEffect shader, raw RuntimeEffect color-filter, and raw blend color-filter
+  fixtures to descriptor-backed Compose APIs. The focused suite reran only those three rows:
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES="commands-raw-runtime-effect-shader-fallback commands-raw-runtime-effect-color-filter-fallback commands-raw-blend-color-filter-fallback" ./scripts/jbr-skia-command-probe-suite.sh`.
+  The focused suite passed `3/3` with `fallback_new_count=0`, `unsupported=none`, and `jbr_picture_frames=0` for
+  all rows. Command-frame counts were 327 for raw RuntimeEffect shader, 515 for raw RuntimeEffect color-filter, and
+  1,121 for raw blend color-filter:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-173458/suite.tsv`.
+  The unsupported census is now 64 active rows pending the next capped full/default sweep.
 - 2026-06-18 focused raw shader fixture promotion command-replay batch:
   Magic Jewel promoted six raw-pointer shader fixtures to equivalent descriptor-backed Compose shader constructors
   because raw Skiko-owned shader pointers must not cross the ABI. The focused suite reran only those six rows:

@@ -14,11 +14,11 @@ they no longer report unsupported markers.
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260612-144955/suite.tsv`.
 - Evidence summary from that full/default sweep: `549/549` rows passed, but `unsupported_rows=79`,
   `picture_frames=78827` across unsupported rows, and `jbr_command_frames=0` across unsupported rows.
-- Current focused progress: `12` rows cleared by focused validation, leaving `67` active unsupported rows pending the
+- Current focused progress: `15` rows cleared by focused validation, leaving `64` active unsupported rows pending the
   next capped full/default sweep.
 - Latest focused evidence:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-172711/suite.tsv`.
-  The six promoted raw shader fixture rows passed with `fallback_new_count=0`, `unsupported=none`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-173458/suite.tsv`.
+  The three promoted raw RuntimeEffect/blend fixture rows passed with `fallback_new_count=0`, `unsupported=none`,
   `jbr_picture_frames=0`, and non-zero `jbr_command_frames`.
 - Current interpretation: these rows are green because they fall back structurally as expected today. They are not
   counted as complete for the zero-unsupported goal until their unsupported markers are gone and command replay is
@@ -85,11 +85,9 @@ they no longer report unsupported markers.
 | `commands-radial-gradient-path-invalid-fallback` | `path:975,graphicsLayer:childCommands:975,radialGradientPath:975,graphicsLayer:975` | 0 | 976 | 0 |
 | `commands-sweep-gradient-path-invalid-fallback` | `path:956,sweepGradientPath:956,graphicsLayer:childCommands:956,graphicsLayer:956` | 0 | 956 | 0 |
 | `commands-raw-conical-gradient-shader-fallback` | `shader:816,graphicsLayer:childCommands:816,graphicsLayer:816` | 0 | 815 | 0 |
-| `commands-raw-runtime-effect-shader-fallback` | `shader:906,graphicsLayer:childCommands:906,graphicsLayer:906` | 0 | 906 | 0 |
 | `commands-runtime-effect-invalid-uniform-schema-fallback` | `shaderDescriptor:956,graphicsLayer:childCommands:956,graphicsLayer:956` | 0 | 956 | 0 |
 | `commands-runtime-effect-invalid-child-schema-fallback` | `shaderDescriptor:924,graphicsLayer:childCommands:924,graphicsLayer:924` | 0 | 924 | 0 |
 | `commands-runtime-effect-invalid-nested-child-fallback` | `shaderDescriptor:1044,graphicsLayer:childCommands:1044,graphicsLayer:1044` | 0 | 1045 | 0 |
-| `commands-raw-runtime-effect-color-filter-fallback` | `colorFilter:1005,graphicsLayer:childCommands:1005,graphicsLayer:1005` | 0 | 1005 | 0 |
 | `commands-runtime-effect-color-filter-invalid-uniform-schema-fallback` | `colorFilterDescriptor:1003,graphicsLayer:childCommands:1003,graphicsLayer:1003` | 0 | 1003 | 0 |
 | `commands-runtime-effect-color-filter-invalid-child-schema-fallback` | `colorFilterDescriptor:903,graphicsLayer:childCommands:903,graphicsLayer:903` | 0 | 903 | 0 |
 | `commands-runtime-effect-color-filter-invalid-nested-child-fallback` | `colorFilterDescriptor:990,graphicsLayer:childCommands:990,graphicsLayer:990` | 0 | 991 | 0 |
@@ -111,7 +109,6 @@ they no longer report unsupported markers.
 | `commands-radial-gradient-stroke-round-rect-invalid-radius-fallback` | `radialGradientStrokeRoundRectRadius:1070,graphicsLayer:childCommands:1070,graphicsLayer:1070` | 0 | 1069 | 0 |
 | `commands-sweep-gradient-stroke-round-rect-invalid-radius-fallback` | `graphicsLayer:childCommands:916,sweepGradientStrokeRoundRectRadius:916,graphicsLayer:916` | 0 | 917 | 0 |
 | `commands-image-raw-table-color-filter-fallback` | `colorFilter:892,graphicsLayer:childCommands:892,image:892,graphicsLayer:892` | 0 | 892 | 0 |
-| `commands-raw-blend-color-filter-fallback` | `colorFilter:1056,graphicsLayer:childCommands:1056,graphicsLayer:1056` | 0 | 1057 | 0 |
 | `commands-raw-table-color-filter-fallback` | `colorFilter:833,graphicsLayer:childCommands:833,graphicsLayer:833` | 0 | 832 | 0 |
 | `commands-color-matrix-filter-nonfinite-fallback` | `graphicsLayer:childCommands:970,colorMatrixNonfinite:970,graphicsLayer:970` | 0 | 969 | 0 |
 | `commands-path-effect-color-filter-fallback` | `colorFilter:910,graphicsLayer:childCommands:910,graphicsLayer:910` | 0 | 910 | 0 |
@@ -160,3 +157,6 @@ they no longer report unsupported markers.
 | `commands-raw-sweep-gradient-shader-fallback` | `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-172711/suite.tsv` | promoted to descriptor-backed fixture; `unsupported=none`, `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=565` |
 | `commands-raw-noise-shader-fallback` | `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-172711/suite.tsv` | promoted to descriptor-backed fixture; `unsupported=none`, `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=652` |
 | `commands-raw-turbulence-shader-fallback` | `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-172711/suite.tsv` | promoted to descriptor-backed fixture; `unsupported=none`, `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=1828` |
+| `commands-raw-runtime-effect-shader-fallback` | `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-173458/suite.tsv` | promoted to descriptor-backed fixture; `unsupported=none`, `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=327` |
+| `commands-raw-runtime-effect-color-filter-fallback` | `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-173458/suite.tsv` | promoted to descriptor-backed fixture; `unsupported=none`, `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=515` |
+| `commands-raw-blend-color-filter-fallback` | `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-173458/suite.tsv` | promoted to descriptor-backed fixture; `unsupported=none`, `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=1121` |

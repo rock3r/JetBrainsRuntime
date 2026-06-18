@@ -17,8 +17,8 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   command-probe evidence passed `549/549`, but recorded 79 unsupported rows with 78,827 picture fallback frames and
   zero command frames across those unsupported rows. Focused validation has since cleared the three linear/radial/sweep
   gradient path stroke rows, descriptor/image shader stroke rects, image path-effect draws, and 2049-wide image
-  shaders, plus six promoted raw shader fixtures, leaving 67 active unsupported rows pending the next capped
-  full/default sweep.
+  shaders, plus nine promoted raw shader/color-filter fixtures, leaving 64 active unsupported rows pending the next
+  capped full/default sweep.
 - JBR/CMP/Skiko now support stroked arbitrary-path gradients through explicit linear/radial/sweep command records.
   Magic Jewel's exact three-row command probe passed with `fallback_new_count=0`, `unsupported=none`, zero picture
   frames, and non-zero command frames:
@@ -38,6 +38,10 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   Skiko-owned shader pointers cross the ABI. The six-row focused command probe passed with `fallback_new_count=0`,
   `unsupported=none`, zero picture frames, and non-zero command frames:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-172711/suite.tsv`.
+- Magic Jewel promoted the raw RuntimeEffect shader, raw RuntimeEffect color-filter, and raw blend color-filter
+  fixtures to descriptor-backed Compose APIs. The three-row focused command probe passed with `fallback_new_count=0`,
+  `unsupported=none`, zero picture frames, and non-zero command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-173458/suite.tsv`.
 - A targeted read-only graphics-layer lifecycle closure audit found no remaining `parity*graphics-layer*`
   screenshot-parity rows without effect/shader handle lifecycle assertions, no resize/forced graphics-layer rows
   missing surface/cache lifecycle gates, and no command-probe resize/forced graphics-layer migration rows lacking
