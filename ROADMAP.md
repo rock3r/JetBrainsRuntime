@@ -47,6 +47,15 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel tightened the standalone graphics-layer chained-render-effect+blend+color-matrix-filter lifecycle
+  screenshot-parity row with an explicit zero ceiling for JBR shader-handle defines while preserving the existing
+  nonzero effect-handle lifecycle gates, then reran
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-graphics-layer-chained-render-effect-blend-color-matrix-filter" ./scripts/jbr-skia-screenshot-parity-suite.sh`.
+  The exact row passed fallback-free with zero picture frames, zero shader-handle markers, active bounded effect-handle
+  markers, and screenshot status passed: 988 JBR command frames, 12 effect-handle define frames, 3,270 effect-handle
+  use frames, 3,262 effect-handle cache-hit frames, `avg_delta=2.716`, `bad_pixel_ratio=0.06906`, output directory
+  5.4M, and about 197Gi free. This was an exact one-row screenshot-parity refresh, not the full suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260618-125045/suite.tsv`.
 - Magic Jewel tightened the standalone graphics-layer offset-effect+blend+color-matrix-filter lifecycle screenshot-parity
   row with an explicit zero ceiling for JBR shader-handle defines while preserving the existing nonzero effect-handle
   lifecycle gates, then reran
