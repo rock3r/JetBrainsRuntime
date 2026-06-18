@@ -47,6 +47,20 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel tightened the exact graphics-layer offset-effect lifecycle screenshot-parity pair with explicit zero
+  ceilings for JBR shader-handle defines while preserving the existing nonzero effect-handle lifecycle gates, then reran
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-graphics-layer-offset-effect parity-forced-context-graphics-layer-offset-effect" ./scripts/jbr-skia-screenshot-parity-suite.sh`.
+  Both exact rows passed with zero picture frames, zero shader-handle markers, active bounded effect-handle markers,
+  and screenshot status passed. The resize row recorded the known single early `command-stream-invalid` resize parity
+  artifact, then passed with 607 JBR command frames, eight effect-handle define frames, 1,218 effect-handle use frames,
+  1,210 effect-handle cache-hit frames, `avg_delta=1.908`, `bad_pixel_ratio=0.04583`, one same-context
+  surface-change marker, one command-cache clear, one JBR image-cache clear, one scoped image-cache clear, and nine
+  image refs. The forced-context row passed fallback-free with 840 JBR command frames, 11 effect-handle define frames,
+  1,522 effect-handle use frames, 1,511 effect-handle cache-hit frames, `avg_delta=2.048`,
+  `bad_pixel_ratio=0.04815`, one destination context-change marker, one command-cache clear, one JBR image-cache
+  clear, one scoped image-cache clear, and nine image refs. This was an exact two-row screenshot-parity refresh, not
+  the full suite; output directory was 7.6M and disk free was about 197Gi:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260618-114236/suite.tsv`.
 - Magic Jewel tightened the exact graphics-layer render-effect lifecycle screenshot-parity pair with explicit zero
   ceilings for JBR shader-handle defines while preserving the existing nonzero effect-handle lifecycle gates, then reran
   `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-graphics-layer-render-effect parity-forced-context-graphics-layer-render-effect" ./scripts/jbr-skia-screenshot-parity-suite.sh`.
