@@ -139,6 +139,12 @@ public abstract class JBRSkia {
     public static final long COMMAND_CAP64_HIGH_SHADER_DESCRIPTOR_PERLIN_NOISE = Long.parseLong("65536");
     /** Supports serialized Canvas.drawVertices payloads with positions, texture coordinates, colors, and indices. */
     public static final long COMMAND_CAP64_HIGH_DRAW_VERTICES = Long.parseLong("131072");
+    /** Supports stroked arbitrary paths with serialized linear-gradient paint. */
+    public static final long COMMAND_CAP64_HIGH_STROKE_PATH_LINEAR_GRADIENT = Long.parseLong("262144");
+    /** Supports stroked arbitrary paths with serialized radial-gradient paint. */
+    public static final long COMMAND_CAP64_HIGH_STROKE_PATH_RADIAL_GRADIENT = Long.parseLong("524288");
+    /** Supports stroked arbitrary paths with serialized sweep-gradient paint. */
+    public static final long COMMAND_CAP64_HIGH_STROKE_PATH_SWEEP_GRADIENT = Long.parseLong("1048576");
     public static final int COMMAND_CLEAR = Integer.parseInt("1");
     public static final int COMMAND_FILL_RECT = Integer.parseInt("2");
     public static final int COMMAND_STROKE_LINE = Integer.parseInt("3");
@@ -208,6 +214,9 @@ public abstract class JBRSkia {
     public static final int COMMAND_DRAW_POINTS = Integer.parseInt("65");
     public static final int COMMAND_DEFINE_FONT_DATA = Integer.parseInt("66");
     public static final int COMMAND_DRAW_VERTICES = Integer.parseInt("67");
+    public static final int COMMAND_STROKE_PATH_LINEAR_GRADIENT = Integer.parseInt("68");
+    public static final int COMMAND_STROKE_PATH_RADIAL_GRADIENT = Integer.parseInt("69");
+    public static final int COMMAND_STROKE_PATH_SWEEP_GRADIENT = Integer.parseInt("70");
     public static final int COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER = Integer.parseInt("1");
     public static final int COMMAND_EFFECT_DESCRIPTOR_COLOR_MATRIX_FILTER = Integer.parseInt("2");
     public static final int COMMAND_EFFECT_DESCRIPTOR_LIGHTING_FILTER = Integer.parseInt("3");

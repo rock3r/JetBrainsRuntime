@@ -5,6 +5,16 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-18 focused gradient path stroke command-replay batch:
+  JBR/CMP/Skiko added explicit stroked arbitrary-path gradient commands for linear, radial, and sweep gradients, then
+  Magic Jewel reran only the three affected rows:
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES="commands-linear-gradient-path-stroke-fallback commands-radial-gradient-path-stroke-fallback commands-sweep-gradient-path-stroke-fallback" ./scripts/jbr-skia-command-probe-suite.sh`.
+  The focused suite passed `3/3` with `fallback_new_count=0`, `unsupported=none`, and `jbr_picture_frames=0` for
+  all rows. Command-frame counts were 3,700 for linear, 2,207 for radial, and 2,123 for sweep:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-165037/suite.tsv`.
+  The unsupported census is now 76 active rows pending the next capped full/default sweep. During this run, the daily
+  broad guard was also corrected so exact focused selections of up to 10 rows no longer consume the once-per-day broad
+  validation slot.
 - 2026-06-18 unsupported command census and zero-unsupported goal reset:
   The latest full/default command-probe evidence remains
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260612-144955/suite.tsv`.

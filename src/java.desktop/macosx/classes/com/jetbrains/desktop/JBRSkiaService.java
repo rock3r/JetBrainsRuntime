@@ -163,7 +163,10 @@ public class JBRSkiaService extends JBRSkia {
                     | COMMAND_CAP64_HIGH_DEFINE_FONT_DATA
                     | COMMAND_CAP64_HIGH_SHADER_DESCRIPTOR_COLOR
                     | COMMAND_CAP64_HIGH_SHADER_DESCRIPTOR_PERLIN_NOISE
-                    | COMMAND_CAP64_HIGH_DRAW_VERTICES;
+                    | COMMAND_CAP64_HIGH_DRAW_VERTICES
+                    | COMMAND_CAP64_HIGH_STROKE_PATH_LINEAR_GRADIENT
+                    | COMMAND_CAP64_HIGH_STROKE_PATH_RADIAL_GRADIENT
+                    | COMMAND_CAP64_HIGH_STROKE_PATH_SWEEP_GRADIENT;
     private static final boolean NATIVE_BRIDGE_AVAILABLE = loadNativeBridge();
     private static final AtomicLong NEXT_SCOPE_ID = new AtomicLong(1);
     private static final int MAX_CACHED_IMAGES = 256;
@@ -491,6 +494,9 @@ public class JBRSkiaService extends JBRSkia {
         if (op == COMMAND_DRAW_POINTS) return -30;
         if (op == COMMAND_DEFINE_FONT_DATA) return -31;
         if (op == COMMAND_DRAW_VERTICES) return -32;
+        if (op == COMMAND_STROKE_PATH_LINEAR_GRADIENT) return -33;
+        if (op == COMMAND_STROKE_PATH_RADIAL_GRADIENT) return -34;
+        if (op == COMMAND_STROKE_PATH_SWEEP_GRADIENT) return -35;
         if (op == COMMAND_FILL_RECT_IMAGE_SHADER) return 14;
         if (op == COMMAND_CLEAR) return 4;
         if (op == COMMAND_CLEAR_RECT) return 7;
@@ -597,6 +603,15 @@ public class JBRSkiaService extends JBRSkia {
         }
         if (expectedLength == -32 && record.op() == COMMAND_DRAW_VERTICES) {
             return record.recordLength() >= 16;
+        }
+        if (expectedLength == -33 && record.op() == COMMAND_STROKE_PATH_LINEAR_GRADIENT) {
+            return record.recordLength() >= 31;
+        }
+        if (expectedLength == -34 && record.op() == COMMAND_STROKE_PATH_RADIAL_GRADIENT) {
+            return record.recordLength() >= 30;
+        }
+        if (expectedLength == -35 && record.op() == COMMAND_STROKE_PATH_SWEEP_GRADIENT) {
+            return record.recordLength() >= 28;
         }
         return expectedLength == record.recordLength();
     }
@@ -1561,6 +1576,15 @@ public class JBRSkiaService extends JBRSkia {
             }
             return true;
         }
+        if (record.op() == COMMAND_STROKE_PATH_LINEAR_GRADIENT) {
+            return validateStrokeGradientPath(commands, record, 6, 4, 5);
+        }
+        if (record.op() == COMMAND_STROKE_PATH_RADIAL_GRADIENT) {
+            return validateStrokeGradientPath(commands, record, 5, 3, 4);
+        }
+        if (record.op() == COMMAND_STROKE_PATH_SWEEP_GRADIENT) {
+            return validateStrokeGradientPath(commands, record, 3, -1, 2);
+        }
         if (record.op() == COMMAND_DRAW_IMAGE_ARGB) {
             if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE
                     && record.recordFlags() != COMMAND_RECORD_FLAG_ANTIALIAS) {
@@ -1780,6 +1804,57 @@ public class JBRSkiaService extends JBRSkia {
             }
         }
         return offset == recordEnd;
+    }
+
+    private static boolean validateStrokeGradientPath(
+            int[] commands,
+            CommandRecord record,
+            int gradientHeaderLength,
+            int tileModeOffset,
+            int colorCountOffset) {
+        if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE
+                && record.recordFlags() != COMMAND_RECORD_FLAG_ANTIALIAS) {
+            return false;
+        }
+        int strokeWidth1000 = commands[record.argsStart()];
+        int strokeCap = commands[record.argsStart() + 1];
+        int strokeJoin = commands[record.argsStart() + 2];
+        int strokeMiter1000 = commands[record.argsStart() + 3];
+        int fillType = commands[record.argsStart() + 4];
+        int pathDataLength = commands[record.argsStart() + 5];
+        int gradientStart = record.argsStart() + 6 + pathDataLength;
+        if (!isValidStrokeMetadata(strokeWidth1000, strokeCap, strokeJoin, strokeMiter1000)
+                || (fillType != COMMAND_PATH_FILL_NON_ZERO && fillType != COMMAND_PATH_FILL_EVEN_ODD)
+                || pathDataLength < 0
+                || pathDataLength > 4096
+                || gradientStart + gradientHeaderLength > record.recordEnd()
+                || !validatePathData(commands, record.argsStart() + 6, gradientStart)) {
+            return false;
+        }
+        if (tileModeOffset >= 0) {
+            int tileMode = commands[gradientStart + tileModeOffset];
+            if (tileMode < 0 || tileMode > 3) {
+                return false;
+            }
+        }
+        if (record.op() == COMMAND_STROKE_PATH_RADIAL_GRADIENT && commands[gradientStart + 2] <= 0) {
+            return false;
+        }
+        int colorCount = commands[gradientStart + colorCountOffset];
+        if (colorCount < 2 || colorCount > 16
+                || gradientStart + gradientHeaderLength + colorCount * 2 != record.recordEnd()) {
+            return false;
+        }
+        int previousStop = -1;
+        int stopOffset = gradientStart + gradientHeaderLength + 1;
+        for (int i = 0; i < colorCount; i++) {
+            int stop1000 = commands[stopOffset + i * 2];
+            if (stop1000 < 0 || stop1000 > 1000 || stop1000 <= previousStop) {
+                return false;
+            }
+            previousStop = stop1000;
+        }
+        return true;
     }
 
     private static boolean isValidStrokeMetadata(int strokeWidth, int strokeCap, int strokeJoin, int strokeMiter1000) {
@@ -2881,6 +2956,162 @@ public class JBRSkiaService extends JBRSkia {
                                 colors
                         ));
                         current.fill(path);
+                    } else if (op == COMMAND_STROKE_PATH_LINEAR_GRADIENT) {
+                        if (offset + 6 > recordEnd) return false;
+                        int strokeWidth1000 = commands[offset++];
+                        int strokeCap = commands[offset++];
+                        int strokeJoin = commands[offset++];
+                        int strokeMiter1000 = commands[offset++];
+                        int fillType = commands[offset++];
+                        int pathDataLength = commands[offset++];
+                        int pathEnd = offset + pathDataLength;
+                        if (!isValidStrokeMetadata(strokeWidth1000, strokeCap, strokeJoin, strokeMiter1000)
+                                || (fillType != COMMAND_PATH_FILL_NON_ZERO && fillType != COMMAND_PATH_FILL_EVEN_ODD)
+                                || pathDataLength < 0
+                                || pathDataLength > 4096
+                                || pathEnd + 10 > recordEnd) {
+                            return false;
+                        }
+                        Path2D path = pathFromCommandData(commands, offset, pathEnd, fillType);
+                        if (path == null) return false;
+                        offset = pathEnd;
+                        int fromX1000 = commands[offset++];
+                        int fromY1000 = commands[offset++];
+                        int toX1000 = commands[offset++];
+                        int toY1000 = commands[offset++];
+                        int tileMode = commands[offset++];
+                        int colorCount = commands[offset++];
+                        if (tileMode < 0 || tileMode > 3 || colorCount < 2 || colorCount > 16
+                                || offset + colorCount * 2 != recordEnd) {
+                            return false;
+                        }
+                        Color[] colors = new Color[colorCount];
+                        float[] fractions = new float[colorCount];
+                        int previousStop = -1;
+                        for (int i = 0; i < colorCount; i++) {
+                            colors[i] = new Color(commands[offset++], true);
+                            int stop1000 = commands[offset++];
+                            if (stop1000 < 0 || stop1000 > 1000 || stop1000 <= previousStop) return false;
+                            previousStop = stop1000;
+                            fractions[i] = stop1000 / 1000f;
+                        }
+                        applyAntialiasing(current, antiAlias);
+                        current.setPaint(new LinearGradientPaint(
+                                new Point2D.Float(fromX1000 / 1000f, fromY1000 / 1000f),
+                                new Point2D.Float(toX1000 / 1000f, toY1000 / 1000f),
+                                fractions,
+                                colors,
+                                gradientCycleMethod(tileMode)
+                        ));
+                        current.setStroke(new BasicStroke(
+                                strokeWidth1000 / 1000f,
+                                strokeCap == 1 ? BasicStroke.CAP_ROUND : strokeCap == 2 ? BasicStroke.CAP_SQUARE : BasicStroke.CAP_BUTT,
+                                strokeJoin == 1 ? BasicStroke.JOIN_ROUND : strokeJoin == 2 ? BasicStroke.JOIN_BEVEL : BasicStroke.JOIN_MITER,
+                                Math.max(1f, strokeMiter1000 / 1000f)
+                        ));
+                        current.draw(path);
+                    } else if (op == COMMAND_STROKE_PATH_RADIAL_GRADIENT) {
+                        if (offset + 6 > recordEnd) return false;
+                        int strokeWidth1000 = commands[offset++];
+                        int strokeCap = commands[offset++];
+                        int strokeJoin = commands[offset++];
+                        int strokeMiter1000 = commands[offset++];
+                        int fillType = commands[offset++];
+                        int pathDataLength = commands[offset++];
+                        int pathEnd = offset + pathDataLength;
+                        if (!isValidStrokeMetadata(strokeWidth1000, strokeCap, strokeJoin, strokeMiter1000)
+                                || (fillType != COMMAND_PATH_FILL_NON_ZERO && fillType != COMMAND_PATH_FILL_EVEN_ODD)
+                                || pathDataLength < 0
+                                || pathDataLength > 4096
+                                || pathEnd + 9 > recordEnd) {
+                            return false;
+                        }
+                        Path2D path = pathFromCommandData(commands, offset, pathEnd, fillType);
+                        if (path == null) return false;
+                        offset = pathEnd;
+                        int centerX1000 = commands[offset++];
+                        int centerY1000 = commands[offset++];
+                        int radius1000 = commands[offset++];
+                        int tileMode = commands[offset++];
+                        int colorCount = commands[offset++];
+                        if (radius1000 <= 0 || tileMode < 0 || tileMode > 3 || colorCount < 2 || colorCount > 16
+                                || offset + colorCount * 2 != recordEnd) {
+                            return false;
+                        }
+                        Color[] colors = new Color[colorCount];
+                        float[] fractions = new float[colorCount];
+                        int previousStop = -1;
+                        for (int i = 0; i < colorCount; i++) {
+                            colors[i] = new Color(commands[offset++], true);
+                            int stop1000 = commands[offset++];
+                            if (stop1000 < 0 || stop1000 > 1000 || stop1000 <= previousStop) return false;
+                            previousStop = stop1000;
+                            fractions[i] = stop1000 / 1000f;
+                        }
+                        applyAntialiasing(current, antiAlias);
+                        current.setPaint(new RadialGradientPaint(
+                                new Point2D.Float(centerX1000 / 1000f, centerY1000 / 1000f),
+                                radius1000 / 1000f,
+                                fractions,
+                                colors,
+                                gradientCycleMethod(tileMode)
+                        ));
+                        current.setStroke(new BasicStroke(
+                                strokeWidth1000 / 1000f,
+                                strokeCap == 1 ? BasicStroke.CAP_ROUND : strokeCap == 2 ? BasicStroke.CAP_SQUARE : BasicStroke.CAP_BUTT,
+                                strokeJoin == 1 ? BasicStroke.JOIN_ROUND : strokeJoin == 2 ? BasicStroke.JOIN_BEVEL : BasicStroke.JOIN_MITER,
+                                Math.max(1f, strokeMiter1000 / 1000f)
+                        ));
+                        current.draw(path);
+                    } else if (op == COMMAND_STROKE_PATH_SWEEP_GRADIENT) {
+                        if (offset + 6 > recordEnd) return false;
+                        int strokeWidth1000 = commands[offset++];
+                        int strokeCap = commands[offset++];
+                        int strokeJoin = commands[offset++];
+                        int strokeMiter1000 = commands[offset++];
+                        int fillType = commands[offset++];
+                        int pathDataLength = commands[offset++];
+                        int pathEnd = offset + pathDataLength;
+                        if (!isValidStrokeMetadata(strokeWidth1000, strokeCap, strokeJoin, strokeMiter1000)
+                                || (fillType != COMMAND_PATH_FILL_NON_ZERO && fillType != COMMAND_PATH_FILL_EVEN_ODD)
+                                || pathDataLength < 0
+                                || pathDataLength > 4096
+                                || pathEnd + 7 > recordEnd) {
+                            return false;
+                        }
+                        Path2D path = pathFromCommandData(commands, offset, pathEnd, fillType);
+                        if (path == null) return false;
+                        offset = pathEnd;
+                        int centerX1000 = commands[offset++];
+                        int centerY1000 = commands[offset++];
+                        int colorCount = commands[offset++];
+                        if (colorCount < 2 || colorCount > 16 || offset + colorCount * 2 != recordEnd) {
+                            return false;
+                        }
+                        Color[] colors = new Color[colorCount];
+                        float[] fractions = new float[colorCount];
+                        int previousStop = -1;
+                        for (int i = 0; i < colorCount; i++) {
+                            colors[i] = new Color(commands[offset++], true);
+                            int stop1000 = commands[offset++];
+                            if (stop1000 < 0 || stop1000 > 1000 || stop1000 <= previousStop) return false;
+                            previousStop = stop1000;
+                            fractions[i] = stop1000 / 1000f;
+                        }
+                        applyAntialiasing(current, antiAlias);
+                        current.setPaint(new SweepGradientPaint(
+                                centerX1000 / 1000f,
+                                centerY1000 / 1000f,
+                                fractions,
+                                colors
+                        ));
+                        current.setStroke(new BasicStroke(
+                                strokeWidth1000 / 1000f,
+                                strokeCap == 1 ? BasicStroke.CAP_ROUND : strokeCap == 2 ? BasicStroke.CAP_SQUARE : BasicStroke.CAP_BUTT,
+                                strokeJoin == 1 ? BasicStroke.JOIN_ROUND : strokeJoin == 2 ? BasicStroke.JOIN_BEVEL : BasicStroke.JOIN_MITER,
+                                Math.max(1f, strokeMiter1000 / 1000f)
+                        ));
+                        current.draw(path);
                     } else if (op == COMMAND_DRAW_ARC) {
                         if (offset + 13 != recordEnd) return false;
                         int paintStyle = commands[offset++];

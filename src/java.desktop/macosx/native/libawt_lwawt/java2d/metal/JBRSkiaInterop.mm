@@ -176,6 +176,9 @@ static constexpr jint COMMAND_DRAW_SHADOW_PATH = 64;
 static constexpr jint COMMAND_DRAW_POINTS = 65;
 static constexpr jint COMMAND_DEFINE_FONT_DATA = 66;
 static constexpr jint COMMAND_DRAW_VERTICES = 67;
+static constexpr jint COMMAND_STROKE_PATH_LINEAR_GRADIENT = 68;
+static constexpr jint COMMAND_STROKE_PATH_RADIAL_GRADIENT = 69;
+static constexpr jint COMMAND_STROKE_PATH_SWEEP_GRADIENT = 70;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER = 1;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_COLOR_MATRIX_FILTER = 2;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_LIGHTING_FILTER = 3;
@@ -2028,6 +2031,212 @@ static bool drawCommandList(SkCanvas* canvas,
                 }
                 SkPaint paint;
                 paint.setAntiAlias(antiAlias);
+                SkGradient gradient(
+                        SkGradient::Colors(
+                                SkSpan<const SkColor4f>(colors, colorCount),
+                                SkSpan<const float>(positions, colorCount),
+                                SkTileMode::kClamp),
+                        SkGradient::Interpolation{SkGradient::Interpolation::InPremul::kYes});
+                paint.setShader(SkShaders::SweepGradient(center, 0.0f, 360.0f, gradient));
+                if (paint.getShader() == nullptr) {
+                    return false;
+                }
+                canvas->drawPath(path, paint);
+                break;
+            }
+            case COMMAND_STROKE_PATH_LINEAR_GRADIENT: {
+                if (offset + 6 > recordEnd) {
+                    return false;
+                }
+                const SkScalar strokeWidth = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const jint strokeCap = commands[offset++];
+                const jint strokeJoin = commands[offset++];
+                const jint strokeMiter1000 = commands[offset++];
+                const jint fillType = commands[offset++];
+                const jint pathDataLength = commands[offset++];
+                const jsize pathEnd = offset + pathDataLength;
+                if (strokeWidth <= 0.0f || strokeCap < 0 || strokeCap > 2 ||
+                        strokeJoin < 0 || strokeJoin > 2 || strokeMiter1000 < 0 ||
+                        (fillType != COMMAND_PATH_FILL_NON_ZERO && fillType != COMMAND_PATH_FILL_EVEN_ODD) ||
+                        pathDataLength < 0 ||
+                        pathDataLength > 4096 ||
+                        pathEnd + 10 > recordEnd) {
+                    return false;
+                }
+                SkPath path;
+                if (!pathFromCommandData(commands, offset, pathEnd, fillType, &path)) {
+                    return false;
+                }
+                offset = pathEnd;
+                SkPoint points[2] = {
+                        {static_cast<SkScalar>(commands[offset++]) / 1000.0f,
+                         static_cast<SkScalar>(commands[offset++]) / 1000.0f},
+                        {static_cast<SkScalar>(commands[offset++]) / 1000.0f,
+                         static_cast<SkScalar>(commands[offset++]) / 1000.0f}
+                };
+                const jint tileMode = commands[offset++];
+                const jint colorCount = commands[offset++];
+                if (tileMode < 0 || tileMode > 3 ||
+                        colorCount < 2 || colorCount > 16 ||
+                        offset + colorCount * 2 != recordEnd) {
+                    return false;
+                }
+                SkColor4f colors[16];
+                float positions[16];
+                jint previousStop = -1;
+                for (jint i = 0; i < colorCount; i++) {
+                    colors[i] = SkColor4f::FromColor(skColorFromArgb(commands[offset++]));
+                    const jint stop1000 = commands[offset++];
+                    if (stop1000 < 0 || stop1000 > 1000 || stop1000 <= previousStop) {
+                        return false;
+                    }
+                    previousStop = stop1000;
+                    positions[i] = static_cast<float>(stop1000) / 1000.0f;
+                }
+                SkPaint paint;
+                paint.setAntiAlias(antiAlias);
+                paint.setStyle(SkPaint::kStroke_Style);
+                paint.setStrokeWidth(strokeWidth);
+                paint.setStrokeCap(static_cast<SkPaint::Cap>(strokeCap));
+                paint.setStrokeJoin(static_cast<SkPaint::Join>(strokeJoin));
+                const SkScalar strokeMiter = static_cast<SkScalar>(strokeMiter1000) / 1000.0f;
+                paint.setStrokeMiter(strokeMiter < 1.0f ? 1.0f : strokeMiter);
+                SkGradient gradient(
+                        SkGradient::Colors(
+                                SkSpan<const SkColor4f>(colors, colorCount),
+                                SkSpan<const float>(positions, colorCount),
+                                skTileModeFromCommand(tileMode)),
+                        SkGradient::Interpolation{SkGradient::Interpolation::InPremul::kYes});
+                paint.setShader(SkShaders::LinearGradient(points, gradient));
+                if (paint.getShader() == nullptr) {
+                    return false;
+                }
+                canvas->drawPath(path, paint);
+                break;
+            }
+            case COMMAND_STROKE_PATH_RADIAL_GRADIENT: {
+                if (offset + 6 > recordEnd) {
+                    return false;
+                }
+                const SkScalar strokeWidth = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const jint strokeCap = commands[offset++];
+                const jint strokeJoin = commands[offset++];
+                const jint strokeMiter1000 = commands[offset++];
+                const jint fillType = commands[offset++];
+                const jint pathDataLength = commands[offset++];
+                const jsize pathEnd = offset + pathDataLength;
+                if (strokeWidth <= 0.0f || strokeCap < 0 || strokeCap > 2 ||
+                        strokeJoin < 0 || strokeJoin > 2 || strokeMiter1000 < 0 ||
+                        (fillType != COMMAND_PATH_FILL_NON_ZERO && fillType != COMMAND_PATH_FILL_EVEN_ODD) ||
+                        pathDataLength < 0 ||
+                        pathDataLength > 4096 ||
+                        pathEnd + 9 > recordEnd) {
+                    return false;
+                }
+                SkPath path;
+                if (!pathFromCommandData(commands, offset, pathEnd, fillType, &path)) {
+                    return false;
+                }
+                offset = pathEnd;
+                const SkPoint center = {
+                        static_cast<SkScalar>(commands[offset++]) / 1000.0f,
+                        static_cast<SkScalar>(commands[offset++]) / 1000.0f
+                };
+                const SkScalar radius = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const jint tileMode = commands[offset++];
+                const jint colorCount = commands[offset++];
+                if (radius <= 0 ||
+                        tileMode < 0 || tileMode > 3 ||
+                        colorCount < 2 || colorCount > 16 ||
+                        offset + colorCount * 2 != recordEnd) {
+                    return false;
+                }
+                SkColor4f colors[16];
+                float positions[16];
+                jint previousStop = -1;
+                for (jint i = 0; i < colorCount; i++) {
+                    colors[i] = SkColor4f::FromColor(skColorFromArgb(commands[offset++]));
+                    const jint stop1000 = commands[offset++];
+                    if (stop1000 < 0 || stop1000 > 1000 || stop1000 <= previousStop) {
+                        return false;
+                    }
+                    previousStop = stop1000;
+                    positions[i] = static_cast<float>(stop1000) / 1000.0f;
+                }
+                SkPaint paint;
+                paint.setAntiAlias(antiAlias);
+                paint.setStyle(SkPaint::kStroke_Style);
+                paint.setStrokeWidth(strokeWidth);
+                paint.setStrokeCap(static_cast<SkPaint::Cap>(strokeCap));
+                paint.setStrokeJoin(static_cast<SkPaint::Join>(strokeJoin));
+                const SkScalar strokeMiter = static_cast<SkScalar>(strokeMiter1000) / 1000.0f;
+                paint.setStrokeMiter(strokeMiter < 1.0f ? 1.0f : strokeMiter);
+                SkGradient gradient(
+                        SkGradient::Colors(
+                                SkSpan<const SkColor4f>(colors, colorCount),
+                                SkSpan<const float>(positions, colorCount),
+                                skTileModeFromCommand(tileMode)),
+                        SkGradient::Interpolation{SkGradient::Interpolation::InPremul::kYes});
+                paint.setShader(SkShaders::RadialGradient(center, radius, gradient));
+                if (paint.getShader() == nullptr) {
+                    return false;
+                }
+                canvas->drawPath(path, paint);
+                break;
+            }
+            case COMMAND_STROKE_PATH_SWEEP_GRADIENT: {
+                if (offset + 6 > recordEnd) {
+                    return false;
+                }
+                const SkScalar strokeWidth = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const jint strokeCap = commands[offset++];
+                const jint strokeJoin = commands[offset++];
+                const jint strokeMiter1000 = commands[offset++];
+                const jint fillType = commands[offset++];
+                const jint pathDataLength = commands[offset++];
+                const jsize pathEnd = offset + pathDataLength;
+                if (strokeWidth <= 0.0f || strokeCap < 0 || strokeCap > 2 ||
+                        strokeJoin < 0 || strokeJoin > 2 || strokeMiter1000 < 0 ||
+                        (fillType != COMMAND_PATH_FILL_NON_ZERO && fillType != COMMAND_PATH_FILL_EVEN_ODD) ||
+                        pathDataLength < 0 ||
+                        pathDataLength > 4096 ||
+                        pathEnd + 7 > recordEnd) {
+                    return false;
+                }
+                SkPath path;
+                if (!pathFromCommandData(commands, offset, pathEnd, fillType, &path)) {
+                    return false;
+                }
+                offset = pathEnd;
+                const SkPoint center = {
+                        static_cast<SkScalar>(commands[offset++]) / 1000.0f,
+                        static_cast<SkScalar>(commands[offset++]) / 1000.0f
+                };
+                const jint colorCount = commands[offset++];
+                if (colorCount < 2 || colorCount > 16 ||
+                        offset + colorCount * 2 != recordEnd) {
+                    return false;
+                }
+                SkColor4f colors[16];
+                float positions[16];
+                jint previousStop = -1;
+                for (jint i = 0; i < colorCount; i++) {
+                    colors[i] = SkColor4f::FromColor(skColorFromArgb(commands[offset++]));
+                    const jint stop1000 = commands[offset++];
+                    if (stop1000 < 0 || stop1000 > 1000 || stop1000 <= previousStop) {
+                        return false;
+                    }
+                    previousStop = stop1000;
+                    positions[i] = static_cast<float>(stop1000) / 1000.0f;
+                }
+                SkPaint paint;
+                paint.setAntiAlias(antiAlias);
+                paint.setStyle(SkPaint::kStroke_Style);
+                paint.setStrokeWidth(strokeWidth);
+                paint.setStrokeCap(static_cast<SkPaint::Cap>(strokeCap));
+                paint.setStrokeJoin(static_cast<SkPaint::Join>(strokeJoin));
+                const SkScalar strokeMiter = static_cast<SkScalar>(strokeMiter1000) / 1000.0f;
+                paint.setStrokeMiter(strokeMiter < 1.0f ? 1.0f : strokeMiter);
                 SkGradient gradient(
                         SkGradient::Colors(
                                 SkSpan<const SkColor4f>(colors, colorCount),

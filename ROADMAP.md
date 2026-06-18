@@ -25,8 +25,9 @@ This is the small working roadmap for the current PoC. The full historical check
 
 - Drive the macOS/Metal command-probe surface to zero unsupported rows using
   [`docs/current/UNSUPPORTED_COMMAND_CENSUS.md`](docs/current/UNSUPPORTED_COMMAND_CENSUS.md) as the authoritative
-  ledger. The current full/default evidence passed `549/549`, but still has 79 unsupported rows that render through
-  picture fallback rather than command replay.
+  ledger. The current full/default evidence passed `549/549`, but recorded 79 unsupported rows that render through
+  picture fallback rather than command replay. Focused validation has cleared the three gradient path stroke rows,
+  leaving 76 active unsupported rows pending the next capped full/default sweep.
 - Continue remaining shader-family hardening and fallback sentinels.
 - Continue shader/effect lifecycle coverage: create, use, context-scoped cache hit, compile/build failure, descriptor
   eviction, resize, and forced destination context migration.
@@ -42,7 +43,7 @@ This is the small working roadmap for the current PoC. The full historical check
   iteration, or `JBR_SKIA_ALLOW_EXTRA_BROAD_VALIDATION=true` only for an explicit override. Default launches are
   guarded before broad runners do slow setup, while default-list `CASES_FROM`/`CASES_UNTIL` range launches and
   resolved selections above
-  `JBR_SKIA_BROAD_VALIDATION_CASE_LIMIT` rows count as broad validation; the default limit is 2 rows. List-only range
+  `JBR_SKIA_BROAD_VALIDATION_CASE_LIMIT` rows count as broad validation; the default limit is 10 rows. List-only range
   helpers remain allowed. This daily cap supersedes the earlier "run a broad sweep every ten focused changes"
   checkpoint rhythm.
 - Keep branches committed and pushed to the user's GitHub forks at each major step.
@@ -51,10 +52,17 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused stroked arbitrary-path gradient command replay batch:
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES="commands-linear-gradient-path-stroke-fallback commands-radial-gradient-path-stroke-fallback commands-sweep-gradient-path-stroke-fallback" ./scripts/jbr-skia-command-probe-suite.sh`
+  passed `3/3` after adding explicit JBR/CMP/Skiko linear, radial, and sweep stroke-path gradient commands. All three
+  rows reported `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, and non-zero command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-165037/suite.tsv`.
+  The daily broad guard now treats exact selections up to 10 rows as focused validation, matching the working cadence.
 - Unsupported command census checkpoint: the latest full/default command-probe evidence remains
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260612-144955/suite.tsv`.
-  It passed `549/549`, but `docs/current/UNSUPPORTED_COMMAND_CENSUS.md` now records all 79 unsupported rows, totaling
-  78,827 picture fallback frames and zero command frames across those unsupported rows. The active goal is to clear
+  It passed `549/549`, but `docs/current/UNSUPPORTED_COMMAND_CENSUS.md` recorded 79 unsupported rows, totaling
+  78,827 picture fallback frames and zero command frames across those unsupported rows. After the focused gradient path
+  stroke batch, the active census is 76 unsupported rows. The active goal is to clear
   these rows in narrow batches, validate focused batches of up to 10 rows, and run at most one broad full pass per
   local calendar day.
 - Targeted read-only graphics-layer lifecycle gap closure audit after the standalone zero-handle sweep found no

@@ -10,15 +10,21 @@ they no longer report unsupported markers.
   and no unexpected fallback.
 - Cadence: clear unsupported rows in narrow batches; validate focused batches of up to 10 affected rows; run at most one
   full broad pass per local calendar day; fix regressions immediately as they appear.
-- Current evidence source:
+- Original full-sweep evidence source:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260612-144955/suite.tsv`.
 - Evidence summary from that full/default sweep: `549/549` rows passed, but `unsupported_rows=79`,
   `picture_frames=78827` across unsupported rows, and `jbr_command_frames=0` across unsupported rows.
+- Current focused progress: `3` rows cleared by focused validation, leaving `76` active unsupported rows pending the
+  next capped full/default sweep.
+- Latest focused evidence:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-165037/suite.tsv`.
+  The three gradient path stroke rows passed with `fallback_new_count=0`, `unsupported=none`,
+  `jbr_picture_frames=0`, and non-zero `jbr_command_frames`.
 - Current interpretation: these rows are green because they fall back structurally as expected today. They are not
   counted as complete for the zero-unsupported goal until their unsupported markers are gone and command replay is
   validated.
 
-## Unsupported Marker Families
+## Original Full-Sweep Unsupported Marker Families
 
 | Row count | Marker family |
 | ---: | --- |
@@ -78,9 +84,6 @@ they no longer report unsupported markers.
 | `commands-linear-gradient-path-invalid-fallback` | `path:947,graphicsLayer:childCommands:947,linearGradientPath:947,graphicsLayer:947` | 0 | 948 | 0 |
 | `commands-radial-gradient-path-invalid-fallback` | `path:975,graphicsLayer:childCommands:975,radialGradientPath:975,graphicsLayer:975` | 0 | 976 | 0 |
 | `commands-sweep-gradient-path-invalid-fallback` | `path:956,sweepGradientPath:956,graphicsLayer:childCommands:956,graphicsLayer:956` | 0 | 956 | 0 |
-| `commands-linear-gradient-path-stroke-fallback` | `linearGradientPathPaint:959,graphicsLayer:childCommands:959,graphicsLayer:959` | 0 | 959 | 0 |
-| `commands-radial-gradient-path-stroke-fallback` | `graphicsLayer:childCommands:940,radialGradientPathPaint:940,graphicsLayer:940` | 0 | 940 | 0 |
-| `commands-sweep-gradient-path-stroke-fallback` | `sweepGradientPathPaint:984,graphicsLayer:childCommands:984,graphicsLayer:984` | 0 | 985 | 0 |
 | `commands-image-path-effect-fallback` | `graphicsLayer:childCommands:1002,image:1002,pathEffect:1002,graphicsLayer:1002` | 0 | 1002 | 0 |
 | `commands-image-shader-invalid-image-fallback` | `imageShaderImage:1230,graphicsLayer:childCommands:1230,graphicsLayer:1230` | 0 | 1230 | 0 |
 | `commands-raw-image-shader-fallback` | `shader:934,graphicsLayer:childCommands:934,graphicsLayer:934` | 0 | 934 | 0 |
@@ -149,3 +152,11 @@ they no longer report unsupported markers.
 | `commands-composite-opaque-shader-fallback` | `shader:972,graphicsLayer:childCommands:972,graphicsLayer:972` | 0 | 973 | 0 |
 | `commands-picture-shader-fallback` | `shader:789,graphicsLayer:childCommands:789,graphicsLayer:789` | 0 | 788 | 0 |
 | `commands-invalid-gradient-fallback` | `sweepGradientStops:909,graphicsLayer:childCommands:909,graphicsLayer:909` | 0 | 908 | 0 |
+
+## Cleared Rows
+
+| Row | Cleared by evidence | Notes |
+| --- | --- | --- |
+| `commands-linear-gradient-path-stroke-fallback` | `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-165037/suite.tsv` | `unsupported=none`, `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=3700` |
+| `commands-radial-gradient-path-stroke-fallback` | `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-165037/suite.tsv` | `unsupported=none`, `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=2207` |
+| `commands-sweep-gradient-path-stroke-fallback` | `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-165037/suite.tsv` | `unsupported=none`, `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=2123` |
