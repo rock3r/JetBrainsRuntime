@@ -5,6 +5,17 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-18 exact standalone graphics-layer chained-render-effect lifecycle screenshot-parity shader-zero tightening:
+  Magic Jewel added an explicit zero ceiling for JBR shader-handle defines on
+  `parity-graphics-layer-chained-render-effect`, while preserving the existing nonzero effect-handle lifecycle gates,
+  then reran
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-graphics-layer-chained-render-effect" ./scripts/jbr-skia-screenshot-parity-suite.sh`.
+  The exact standalone row passed fallback-free with zero picture frames, zero shader-handle markers, active bounded
+  effect-handle markers, and screenshot status passed: 1,081 JBR command frames, eight effect-handle define frames,
+  1,638 effect-handle use frames, 1,634 effect-handle cache-hit frames, `avg_delta=2.182`,
+  `bad_pixel_ratio=0.05159`, and zero shader-handle define/use/evict/cache-hit frames. The final output directory was
+  4.2M and disk free was about 170Gi. This was not the full screenshot-parity suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260618-123457/suite.tsv`.
 - 2026-06-18 exact standalone graphics-layer offset-effect lifecycle screenshot-parity shader-zero tightening:
   Magic Jewel added an explicit zero ceiling for JBR shader-handle defines on
   `parity-graphics-layer-offset-effect`, while preserving the existing nonzero effect-handle lifecycle gates, then
