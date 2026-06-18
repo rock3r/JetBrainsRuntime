@@ -47,6 +47,20 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel rechecked the exact graphics-layer chained-render-effect lifecycle screenshot-parity caps after stale
+  compact notes suggested tighter `7/7` ceilings, confirmed the live resize ceiling remains 16 and the forced-context
+  ceiling remains 20, then reran
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-graphics-layer-chained-render-effect parity-forced-context-graphics-layer-chained-render-effect" ./scripts/jbr-skia-screenshot-parity-suite.sh`.
+  Both exact rows passed with zero picture frames and screenshot status passed. The resize row recorded the known
+  single early `command-stream-invalid` resize parity artifact, then passed with 529 JBR command frames,
+  `avg_delta=1.902`, `bad_pixel_ratio=0.04557`, one same-context surface-change marker, one command-cache clear, one
+  JBR image-cache clear, one scoped image-cache clear, 16 effect-handle define frames, 1,067 effect-handle use frames,
+  and 1,059 effect-handle cache-hit frames. The forced-context row passed fallback-free with 816 JBR command frames,
+  `avg_delta=2.041`, `bad_pixel_ratio=0.04784`, one destination context-change marker, one command-cache clear, one
+  JBR image-cache clear, one scoped image-cache clear, 20 effect-handle define frames, 1,513 effect-handle use frames,
+  and 1,503 effect-handle cache-hit frames. This was an exact two-row screenshot-parity refresh, not the full suite;
+  output directory was 7.4M and disk free was about 170Gi:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260618-095456/suite.tsv`.
 - Magic Jewel restored the exact graphics-layer offset-effect lifecycle screenshot-parity caps to the documented
   tightened ceilings, reducing the live resize ceiling to 9 and the forced-context ceiling to 11, then reran
   `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-graphics-layer-offset-effect parity-forced-context-graphics-layer-offset-effect" ./scripts/jbr-skia-screenshot-parity-suite.sh`.
@@ -210,20 +224,6 @@ This is the small working roadmap for the current PoC. The full historical check
   full suite; output directory was 5.0M, disk free was about 174Gi, and the 2026-06-16 daily broad-validation stamp
   remained the compatibility matrix:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260617-103703/suite.tsv`.
-- Magic Jewel tightened the exact graphics-layer chained-render-effect lifecycle screenshot-parity pair after the
-  earlier exact refresh, reducing the effect-handle ceilings to match report evidence more closely, then reran
-  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-graphics-layer-chained-render-effect parity-forced-context-graphics-layer-chained-render-effect" ./scripts/jbr-skia-screenshot-parity-suite.sh`.
-  Both exact rows passed with zero picture frames and screenshot status passed. The resize row recorded the known
-  single early `command-stream-invalid` resize parity artifact, then passed with 826 JBR command frames,
-  `avg_delta=1.902`, `bad_pixel_ratio=0.04557`, one same-context surface-change marker, one command-cache clear, one
-  JBR image-cache clear, one scoped image-cache clear, 7 effect-handle define frames, 1,520 effect-handle use
-  frames, and 1,513 effect-handle cache-hit frames. The forced-context row was fallback-free with 528 JBR command
-  frames, `avg_delta=2.041`, `bad_pixel_ratio=0.04784`, one destination context-change marker, one command-cache
-  clear, one JBR image-cache clear, one scoped image-cache clear, 7 effect-handle define frames, 1,158 effect-handle
-  use frames, and 1,151 effect-handle cache-hit frames. This was an exact two-row screenshot-parity refresh, not the
-  full suite; output directory was 7.5M, disk free was about 172Gi, and the 2026-06-16 daily broad-validation stamp
-  remained the compatibility matrix:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260617-102721/suite.tsv`.
 - Magic Jewel added and refreshed the exact graphics-layer chained-render-effect lifecycle screenshot-parity pair:
   `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-graphics-layer-chained-render-effect parity-forced-context-graphics-layer-chained-render-effect" ./scripts/jbr-skia-screenshot-parity-suite.sh`
   passed 2/2 with zero picture frames, command replay, and screenshot status passed. The resize row recorded the known

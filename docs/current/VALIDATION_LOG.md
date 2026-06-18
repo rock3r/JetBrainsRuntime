@@ -5,6 +5,22 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-18 exact graphics-layer chained-render-effect lifecycle screenshot-parity cap confirmation: Magic Jewel
+  rechecked the documented `parity-resize-graphics-layer-chained-render-effect` and
+  `parity-forced-context-graphics-layer-chained-render-effect` lifecycle rows after stale compact notes suggested
+  tighter `7/7` ceilings. Exact one-row probes showed the current recorder still needs the live 16 resize and 20
+  forced-context effect-handle ceilings, then the final exact two-row command
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-graphics-layer-chained-render-effect parity-forced-context-graphics-layer-chained-render-effect" ./scripts/jbr-skia-screenshot-parity-suite.sh`
+  passed with zero picture frames and screenshot status passed. The resize row recorded the known single early
+  `command-stream-invalid` resize parity artifact, then passed with 529 JBR command frames, `avg_delta=1.902`,
+  `bad_pixel_ratio=0.04557`, one same-context surface-change marker, one command-cache clear, one JBR image-cache
+  clear, one scoped image-cache clear, 16 effect-handle define frames, 1,067 effect-handle use frames, and 1,059
+  effect-handle cache-hit frames. The forced-context row passed fallback-free with 816 JBR command frames,
+  `avg_delta=2.041`, `bad_pixel_ratio=0.04784`, one destination context-change marker, one command-cache clear, one
+  JBR image-cache clear, one scoped image-cache clear, 20 effect-handle define frames, 1,513 effect-handle use frames,
+  and 1,503 effect-handle cache-hit frames. The final output directory was 7.4M and disk free was about 170Gi. This
+  was not the full screenshot-parity suite:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260618-095456/suite.tsv`.
 - 2026-06-18 exact graphics-layer offset-effect lifecycle screenshot-parity restore/tightening: Magic Jewel restored
   the live effect-handle ceilings on `parity-resize-graphics-layer-offset-effect` and
   `parity-forced-context-graphics-layer-offset-effect` to the documented tightened caps, then reran

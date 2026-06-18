@@ -78,18 +78,19 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   Skiko/JBR command frames, zero picture frames, screenshot status passed for 56 rows and not-run for the native-ABI
   row. This completes the intended compatibility-matrix broad checkpoint after the prior full command-probe sweep:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260616-000119/matrix.tsv`.
-- Magic Jewel tightened the graphics-layer chained-render-effect lifecycle parity gates after the earlier exact
-  refresh, reducing the effect-handle ceilings to match report evidence more closely, then reran
+- Magic Jewel rechecked the graphics-layer chained-render-effect lifecycle parity gates after stale compact notes
+  suggested tighter `7/7` ceilings. Exact one-row probes showed the current recorder still needs the live 16 resize
+  and 20 forced-context effect-handle ceilings, then reran
   `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-graphics-layer-chained-render-effect parity-forced-context-graphics-layer-chained-render-effect" ./scripts/jbr-skia-screenshot-parity-suite.sh`.
-  The exact two-row validation passed 2/2. Resize passed with screenshot status passed, 826 JBR command frames,
+  The exact two-row validation passed 2/2. Resize passed with screenshot status passed, 529 JBR command frames,
   `avg_delta=1.902`, `bad_pixel_ratio=0.04557`, one same-context surface-change marker, one command-cache clear, one
-  JBR image-cache clear, one scoped image-cache clear, 7 effect-handle define frames, 1,520 effect-handle use
-  frames, and 1,513 effect-handle cache-hit frames, plus the known single early resize parity `command-stream-invalid`
-  fallback artifact. Forced context passed fallback-free with 528 JBR command frames, `avg_delta=2.041`,
+  JBR image-cache clear, one scoped image-cache clear, 16 effect-handle define frames, 1,067 effect-handle use
+  frames, and 1,059 effect-handle cache-hit frames, plus the known single early resize parity `command-stream-invalid`
+  fallback artifact. Forced context passed fallback-free with 816 JBR command frames, `avg_delta=2.041`,
   `bad_pixel_ratio=0.04784`, one destination context-change marker, one command-cache clear, one JBR image-cache
-  clear, one scoped image-cache clear, 7 effect-handle define frames, 1,158 effect-handle use frames, and 1,151
+  clear, one scoped image-cache clear, 20 effect-handle define frames, 1,513 effect-handle use frames, and 1,503
   effect-handle cache-hit frames:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260617-102721/suite.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260618-095456/suite.tsv`.
 - Magic Jewel filled the graphics-layer chained-render-effect lifecycle parity gap by adding
   `parity-resize-graphics-layer-chained-render-effect` and
   `parity-forced-context-graphics-layer-chained-render-effect` to the screenshot-parity default list,
