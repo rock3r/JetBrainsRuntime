@@ -5,6 +5,14 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-18 focused graphics-layer transform/blend/child/shadow fixture promotion batch:
+  Magic Jewel promoted ten graphics-layer invalid-input fixtures to finite command-replay coverage rows. The focused
+  suite reran only those ten rows:
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES="commands-graphics-layer-invalid-rotation-z-fallback commands-graphics-layer-invalid-translation-x-fallback commands-graphics-layer-invalid-translation-y-fallback commands-graphics-layer-invalid-rotation-x-fallback commands-graphics-layer-invalid-rotation-y-fallback commands-graphics-layer-invalid-blend-mode-fallback commands-graphics-layer-unrecorded-fallback commands-graphics-layer-unsupported-child-fallback commands-graphics-layer-invalid-shadow-elevation-fallback commands-graphics-layer-invalid-shadow-path-fallback" ./scripts/jbr-skia-command-probe-suite.sh`.
+  The focused suite passed `10/10` with `fallback_new_count=0`, `unsupported=none`, and `jbr_picture_frames=0` for
+  all rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-184312/suite.tsv`.
+  The unsupported census is now 11 active rows pending the next capped full/default sweep.
 - 2026-06-18 focused gradient/filter/vertices and graphics-layer invalid-input fixture promotion batch:
   Magic Jewel promoted ten more invalid-input fixtures to finite command-replay coverage rows. The first focused run
   passed five rows, then exposed a remaining `graphicsLayer:recording` issue in the size-width fixture:
