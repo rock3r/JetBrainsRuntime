@@ -5,6 +5,14 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-18 focused raw discrete path-effect fixture promotion command-replay batch:
+  Magic Jewel promoted the raw discrete path-effect fixture to a descriptor-backed Compose corner path effect because
+  raw Skia-owned path-effect pointers must not cross the ABI. The focused suite reran only that row:
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES="commands-raw-discrete-path-effect-fallback" ./scripts/jbr-skia-command-probe-suite.sh`.
+  The focused suite passed `1/1` with `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, and
+  `jbr_command_frames=314`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-174003/suite.tsv`.
+  The unsupported census is now 63 active rows pending the next capped full/default sweep.
 - 2026-06-18 focused raw RuntimeEffect/blend fixture promotion command-replay batch:
   Magic Jewel promoted the raw RuntimeEffect shader, raw RuntimeEffect color-filter, and raw blend color-filter
   fixtures to descriptor-backed Compose APIs. The focused suite reran only those three rows:

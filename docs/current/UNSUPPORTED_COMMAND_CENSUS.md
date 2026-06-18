@@ -14,12 +14,12 @@ they no longer report unsupported markers.
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260612-144955/suite.tsv`.
 - Evidence summary from that full/default sweep: `549/549` rows passed, but `unsupported_rows=79`,
   `picture_frames=78827` across unsupported rows, and `jbr_command_frames=0` across unsupported rows.
-- Current focused progress: `15` rows cleared by focused validation, leaving `64` active unsupported rows pending the
+- Current focused progress: `16` rows cleared by focused validation, leaving `63` active unsupported rows pending the
   next capped full/default sweep.
 - Latest focused evidence:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-173458/suite.tsv`.
-  The three promoted raw RuntimeEffect/blend fixture rows passed with `fallback_new_count=0`, `unsupported=none`,
-  `jbr_picture_frames=0`, and non-zero `jbr_command_frames`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-174003/suite.tsv`.
+  The promoted raw discrete path-effect fixture row passed with `fallback_new_count=0`, `unsupported=none`,
+  `jbr_picture_frames=0`, and `jbr_command_frames=314`.
 - Current interpretation: these rows are green because they fall back structurally as expected today. They are not
   counted as complete for the zero-unsupported goal until their unsupported markers are gone and command replay is
   validated.
@@ -112,7 +112,6 @@ they no longer report unsupported markers.
 | `commands-raw-table-color-filter-fallback` | `colorFilter:833,graphicsLayer:childCommands:833,graphicsLayer:833` | 0 | 832 | 0 |
 | `commands-color-matrix-filter-nonfinite-fallback` | `graphicsLayer:childCommands:970,colorMatrixNonfinite:970,graphicsLayer:970` | 0 | 969 | 0 |
 | `commands-path-effect-color-filter-fallback` | `colorFilter:910,graphicsLayer:childCommands:910,graphicsLayer:910` | 0 | 910 | 0 |
-| `commands-raw-discrete-path-effect-fallback` | `graphicsLayer:childCommands:842,pathEffect:842,graphicsLayer:842` | 0 | 842 | 0 |
 | `commands-vertices-raw-color-filter-fallback` | `colorFilter:860,graphicsLayer:childCommands:860,vertices:860,graphicsLayer:860` | 0 | 859 | 0 |
 | `commands-vertices-invalid-blend-mode-fallback` | `graphicsLayer:childCommands:1240,vertices:1240,blendMode_Clear:1240,graphicsLayer:1240` | 0 | 1240 | 0 |
 | `commands-graphics-layer-invalid-size-width-fallback` | `graphicsLayer:sizeWidth:1097,graphicsLayer:childCommands:1097,graphicsLayer:1097` | 0 | 1097 | 0 |
@@ -160,3 +159,4 @@ they no longer report unsupported markers.
 | `commands-raw-runtime-effect-shader-fallback` | `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-173458/suite.tsv` | promoted to descriptor-backed fixture; `unsupported=none`, `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=327` |
 | `commands-raw-runtime-effect-color-filter-fallback` | `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-173458/suite.tsv` | promoted to descriptor-backed fixture; `unsupported=none`, `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=515` |
 | `commands-raw-blend-color-filter-fallback` | `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-173458/suite.tsv` | promoted to descriptor-backed fixture; `unsupported=none`, `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=1121` |
+| `commands-raw-discrete-path-effect-fallback` | `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-174003/suite.tsv` | promoted to descriptor-backed fixture; `unsupported=none`, `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=314` |
