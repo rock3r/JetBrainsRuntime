@@ -47,6 +47,21 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel tightened the exact graphics-layer render-effect+blend-mode lifecycle screenshot-parity pair with
+  explicit zero ceilings for JBR shader-handle defines while preserving the existing nonzero effect-handle lifecycle
+  gates, then reran
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-graphics-layer-render-effect-blend-mode parity-forced-context-graphics-layer-render-effect-blend-mode" ./scripts/jbr-skia-screenshot-parity-suite.sh`.
+  Both exact rows passed with zero picture frames, zero shader-handle markers, active bounded effect-handle markers,
+  and screenshot status passed. The resize row recorded the known single early `command-stream-invalid` resize parity
+  artifact, then passed with 1,114 JBR command frames, seven effect-handle define frames, 1,851 effect-handle use
+  frames, 1,844 effect-handle cache-hit frames, `avg_delta=2.376`, `bad_pixel_ratio=0.06017`, one same-context
+  surface-change marker, one command-cache clear, one JBR image-cache clear, one scoped image-cache clear, and nine
+  image refs. The forced-context row passed fallback-free with 1,192 JBR command frames, 10 effect-handle define
+  frames, 1,970 effect-handle use frames, 1,960 effect-handle cache-hit frames, `avg_delta=2.608`,
+  `bad_pixel_ratio=0.06548`, one destination context-change marker, one command-cache clear, one JBR image-cache
+  clear, one scoped image-cache clear, and nine image refs. This was an exact two-row screenshot-parity refresh, not
+  the full suite; output directory was 9.5M and disk free was about 197Gi:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260618-112252/suite.tsv`.
 - Magic Jewel tightened the exact graphics-layer render-effect+color-filter lifecycle screenshot-parity pair with
   explicit zero ceilings for JBR shader-handle defines and refreshed the resize effect-handle define ceiling from 7 to
   8 to match current report evidence, then reran
