@@ -5,6 +5,15 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-18 focused gradient invalid-input fixture promotion command-replay batch:
+  Magic Jewel promoted ten gradient color-count, stroke-width, and round-rect radius invalid-input fixtures to finite
+  command-replay coverage rows. The focused suite reran only those ten rows:
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES="commands-linear-gradient-invalid-color-count-fallback commands-radial-gradient-invalid-color-count-fallback commands-sweep-gradient-invalid-color-count-fallback commands-linear-gradient-invalid-stroke-width-public-fallback commands-radial-gradient-invalid-stroke-width-public-fallback commands-sweep-gradient-invalid-stroke-width-public-fallback commands-linear-gradient-round-rect-invalid-radius-fallback commands-radial-gradient-round-rect-invalid-radius-fallback commands-sweep-gradient-round-rect-invalid-radius-fallback commands-linear-gradient-stroke-round-rect-invalid-radius-fallback" ./scripts/jbr-skia-command-probe-suite.sh`.
+  The focused suite passed `10/10` with `fallback_new_count=0`, `unsupported=none`, and `jbr_picture_frames=0` for
+  all rows. Command-frame counts were 2,390, 316, 6,977, 1,642, 1,841, 859, 2,226, 2,870, 2,062, and 2,249
+  respectively:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-181608/suite.tsv`.
+  The unsupported census is now 31 active rows pending the next capped full/default sweep.
 - 2026-06-18 focused invalid-input fixture promotion command-replay batch:
   Magic Jewel promoted ten invalid public-input fixtures to finite command-replay coverage rows while preserving their
   existing row labels. The focused suite reran only those ten rows:
