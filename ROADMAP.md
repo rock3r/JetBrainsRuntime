@@ -47,6 +47,21 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Magic Jewel tightened the exact graphics-layer near-camera chained-render-effect+blend-color-matrix-filter lifecycle
+  screenshot-parity pair with explicit zero ceilings for JBR shader-handle defines while preserving the existing
+  nonzero effect-handle lifecycle gates, then reran
+  `DURATION_SECONDS=5 WARMUP_SECONDS=1 CASES="parity-resize-graphics-layer-near-camera-chained-render-effect-blend-color-matrix-filter parity-forced-context-graphics-layer-near-camera-chained-render-effect-blend-color-matrix-filter" ./scripts/jbr-skia-screenshot-parity-suite.sh`.
+  Both exact rows passed with zero picture frames, zero shader-handle markers, active bounded effect-handle markers,
+  and screenshot status passed. The resize row recorded the known single early `command-stream-invalid` resize parity
+  artifact, then passed with 717 JBR command frames, 21 effect-handle define frames, 2,830 effect-handle use frames,
+  2,816 effect-handle cache-hit frames, `avg_delta=2.248`, `bad_pixel_ratio=0.05651`, one same-context
+  surface-change marker, one command-cache clear, one JBR image-cache clear, one scoped image-cache clear, and nine
+  image refs. The forced-context row passed fallback-free with 1,121 JBR command frames, 30 effect-handle define
+  frames, 3,694 effect-handle use frames, 3,674 effect-handle cache-hit frames, `avg_delta=2.455`,
+  `bad_pixel_ratio=0.06094`, one destination context-change marker, one command-cache clear, one JBR image-cache
+  clear, one scoped image-cache clear, and nine image refs. This was an exact two-row screenshot-parity refresh, not
+  the full suite; output directory was 9.4M and disk free was about 170Gi:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-screenshot-parity-suite/20260618-120641/suite.tsv`.
 - Magic Jewel tightened the exact graphics-layer chained-render-effect+blend-color-matrix-filter lifecycle
   screenshot-parity pair with explicit zero ceilings for JBR shader-handle defines while preserving the existing
   nonzero effect-handle lifecycle gates, then reran
