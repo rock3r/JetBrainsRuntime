@@ -5,6 +5,17 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-19 focused save-layer/raw replay validation batch:
+  A narrow raw/sentinel-adjacent batch covered saveLayer tint/filter replay plus rows previously promoted away from
+  raw pointer fallbacks:
+  `commands-save-layer-filter`, `commands-save-layer-raw-color-filter-fallback`,
+  `commands-save-layer-raw-table-color-filter-fallback`, `commands-image-raw-table-color-filter-fallback`,
+  `commands-raw-blend-color-filter-fallback`, `commands-raw-table-color-filter-fallback`,
+  `commands-graphics-layer-raw-color-filter-fallback`, `commands-graphics-layer-raw-table-color-filter-fallback`,
+  `commands-graphics-layer-raw-image-filter-effect-fallback`, and `commands-vertices-raw-color-filter-fallback`.
+  The focused suite passed `10/10` with `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, and
+  `jbr_command_frames=97838`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260619-181348/suite.tsv`.
 - 2026-06-19 focused graphics-layer image-filter/3D forced-context parser-regression batch:
   A fourth narrow forced-context batch covered graphics-layer image-filter trees, 3D transforms, pivots, and shadows:
   `commands-forced-context-graphics-layer-offset-effect-blend-color-matrix-filter`,
