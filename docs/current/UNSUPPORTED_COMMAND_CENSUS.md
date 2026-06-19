@@ -18,14 +18,17 @@ they no longer report unsupported markers.
   `LIST_CASE_COUNT=true ./scripts/jbr-skia-command-probe-suite.sh` reports `696` rows. The final proof must cover this
   current default surface, not just the older `549`-row full sweep. See
   [`COMMAND_PROBE_CURRENT_DEFAULT_SURFACE.md`](COMMAND_PROBE_CURRENT_DEFAULT_SURFACE.md) for the list-only delta.
-- Current focused progress: all `79` original unsupported rows have focused validation evidence with
-  `unsupported=none`, `fallback_new_count=0`, `jbr_picture_frames=0`, and non-zero `jbr_command_frames`.
+- Current focused progress: all `79` original unsupported rows and all `151` rows added to the current default surface
+  since the latest completed full/default census have focused validation evidence with `unsupported=none`,
+  `fallback_new_count=0`, `jbr_picture_frames=0`, and non-zero `jbr_command_frames`.
 - Latest focused evidence:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260619-185019/suite.tsv`.
-  This reran the promoted invalid-gradient singleton plus nine adjacent invalid-gradient rows after the parser cleanup.
-  Earlier June 19 focused evidence also clears two parser-artifact rows where glued scope-acquisition metadata
-  (`scopeId`/`abi`) was incorrectly copied into `cmp_unsupported_reasons` despite `unsupported=0`:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260619-165400/suite.tsv`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260620-002036/suite.tsv`.
+  This covered the final skipped current-surface addition, `commands-resize-gradient-surfaces`, after the preceding
+  ten-row tail batch:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260619-235543/suite.tsv`.
+  Earlier June 19 focused evidence also cleared the final original unsupported rows and two parser-artifact rows where
+  glued scope-acquisition metadata (`scopeId`/`abi`) was incorrectly copied into `cmp_unsupported_reasons` despite
+  `unsupported=0`.
 - Current interpretation: there are zero known active unsupported rows by focused evidence. The zero-unsupported goal
   still requires the next capped full/default sweep to complete and prove `unsupported_rows=0` across the whole suite.
 

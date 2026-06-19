@@ -5,6 +5,25 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-20 focused current-default additions resize gradient-surfaces singleton:
+  A singleton narrow pass covered the one current-surface addition that was skipped by the earlier ten-row batches:
+  `commands-resize-gradient-surfaces`. The focused suite passed `1/1` with `fallback_sum=0`, `unsupported_rows=0`,
+  `jbr_picture_frames=0`, and `jbr_command_frames=4883`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260620-002036/suite.tsv`.
+  This means all `151` rows added to the current `696`-row default command-probe surface since the latest completed
+  `549`-row full/default census now have focused zero-unsupported, zero-fallback evidence. Final completion still
+  requires the next capped full/default sweep to prove the whole `696`-row surface in one pass.
+- 2026-06-19 focused current-default additions resize tail batch:
+  A fifteenth narrow batch covered the final ten-row tail from the current `696`-row default command-probe surface
+  additions:
+  `commands-resize-save-layer-blend-mode`, `commands-resize-save-layer-color-matrix-filter`,
+  `commands-resize-save-layer-filter`, `commands-resize-skew-transform`,
+  `commands-resize-sweep-gradient-shader-color-filter`, `commands-resize-transformed-shader`,
+  `commands-resize-turbulence-shader`, `commands-resize-vertices`,
+  `commands-save-layer-color-matrix-filter`, and `commands-sweep-gradient-shader-color-filter`. The focused suite
+  passed `10/10` with `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, and
+  `jbr_command_frames=51156`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260619-235543/suite.tsv`.
 - 2026-06-19 focused current-default additions resize runtime/save-layer batch:
   A fourteenth narrow batch covered ten more rows that are part of the current `696`-row default command-probe surface
   but were not in the latest completed `549`-row full/default census:

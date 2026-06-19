@@ -18,7 +18,8 @@ markers.
     `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/.jbr-skia-daily-validation/broad.2026-06-19.stamp`
     already consumed the daily broad slot.
 
-Interpretation: focused evidence currently shows zero known active unsupported rows, but final completion requires the
+Interpretation: focused evidence currently covers all `151` rows added since the latest completed full/default census,
+and every focused addition row reports zero unsupported markers and zero fallback. Final completion still requires the
 next capped full/default sweep to cover the current `696`-row surface and report `unsupported_rows=0`.
 
 ## Focused Current-Surface Addition Validation
@@ -122,6 +123,10 @@ next capped full/default sweep to cover the current `696`-row surface and report
   `commands-resize-composite-shader-color-filter`,
   `commands-resize-composite-shader-descriptor-redefine`, `commands-resize-concat-transform`,
   `commands-resize-gradient-shaders`, `commands-resize-gradient-stroke`, and `commands-resize-graphics-layer`.
+- 2026-06-20 resize gradient-surfaces singleton:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260620-002036/suite.tsv`
+  passed `1/1` with `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, and
+  `jbr_command_frames=4883`. Row covered: `commands-resize-gradient-surfaces`.
 - 2026-06-19 resize graphics-layer batch:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260619-221239/suite.tsv`
   passed `10/10` with `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, and
@@ -173,6 +178,15 @@ next capped full/default sweep to cover the current `696`-row surface and report
   `commands-resize-runtime-effect-color-filter-child`, `commands-resize-runtime-effect-pure-color`,
   `commands-resize-runtime-effect-shader`, `commands-resize-runtime-effect-shader-color-filter`,
   `commands-resize-runtime-effect-uniform-only`, and `commands-resize-save-layer-blend-color-filter`.
+- 2026-06-19 resize tail batch:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260619-235543/suite.tsv`
+  passed `10/10` with `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, and
+  `jbr_command_frames=51156`. Rows covered:
+  `commands-resize-save-layer-blend-mode`, `commands-resize-save-layer-color-matrix-filter`,
+  `commands-resize-save-layer-filter`, `commands-resize-skew-transform`,
+  `commands-resize-sweep-gradient-shader-color-filter`, `commands-resize-transformed-shader`,
+  `commands-resize-turbulence-shader`, `commands-resize-vertices`,
+  `commands-save-layer-color-matrix-filter`, and `commands-sweep-gradient-shader-color-filter`.
 
 ## Added Rows Since Latest Completed Full Sweep
 
