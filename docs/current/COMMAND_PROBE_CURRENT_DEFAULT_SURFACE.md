@@ -103,6 +103,16 @@ next capped full/default sweep to cover the current `696`-row surface and report
   `commands-forced-context-save-layer-blend-mode`,
   `commands-forced-context-save-layer-color-matrix-filter`,
   `commands-forced-context-save-layer-filter`, and `commands-forced-context-skew-transform`.
+- 2026-06-19 forced-context tail/resize color batch:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260619-213250/suite.tsv`
+  passed `10/10` with `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, and
+  `jbr_command_frames=68391`. Rows covered:
+  `commands-forced-context-sweep-gradient-shader-color-filter`,
+  `commands-forced-context-transformed-shader`, `commands-forced-context-turbulence-shader`,
+  `commands-forced-context-vertices`, `commands-radial-gradient-shader-color-filter`,
+  `commands-resize-blend-mode`, `commands-resize-color-filter`,
+  `commands-resize-color-filter-blend-mode`, `commands-resize-color-filter-handle`, and
+  `commands-resize-color-matrix-filter`.
 
 ## Added Rows Since Latest Completed Full Sweep
 
