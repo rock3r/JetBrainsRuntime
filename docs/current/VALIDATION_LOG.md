@@ -5,6 +5,21 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-19 focused graphics-layer forced-context parser-regression batch:
+  A second narrow forced-context batch covered ten graphics-layer command rows with blend/color-filter/render-effect
+  descriptor combinations:
+  `commands-forced-context-graphics-layer-blend-mode`,
+  `commands-forced-context-graphics-layer-color-matrix-filter`,
+  `commands-forced-context-graphics-layer-render-effect`,
+  `commands-forced-context-graphics-layer-offset-effect`,
+  `commands-forced-context-graphics-layer-chained-render-effect`,
+  `commands-forced-context-graphics-layer-render-effect-color-filter`,
+  `commands-forced-context-graphics-layer-render-effect-blend-mode`,
+  `commands-forced-context-graphics-layer-render-effect-color-matrix-filter`,
+  `commands-forced-context-graphics-layer-render-effect-blend-color-filter`, and
+  `commands-forced-context-graphics-layer-render-effect-blend-color-matrix-filter`. The focused suite passed `10/10`
+  with `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=83333`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260619-171915/suite.tsv`.
 - 2026-06-19 focused forced-context parser-regression batch:
   After the `cmp_unsupported_reasons` parser cleanup, a narrow forced-context shader/runtime batch reran ten rows most
   likely to carry glued `SKIKO_JBR_INTEROP_SCOPE_ACQUIRED` `scopeId`/`abi` metadata:
