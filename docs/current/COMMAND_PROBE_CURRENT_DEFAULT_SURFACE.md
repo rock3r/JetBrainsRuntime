@@ -133,6 +133,18 @@ next capped full/default sweep to cover the current `696`-row surface and report
   `commands-resize-graphics-layer-clip`, `commands-resize-graphics-layer-color-filter`,
   `commands-resize-graphics-layer-modulate-alpha`, `commands-resize-graphics-layer-near-camera`, and
   `commands-resize-graphics-layer-near-camera-chained-render-effect-blend-color-matrix-filter`.
+- 2026-06-19 resize graphics-layer render/offset batch:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260619-223306/suite.tsv`
+  passed `10/10` with `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, and
+  `jbr_command_frames=62535`. Rows covered:
+  `commands-resize-graphics-layer-offcenter-pivot`, `commands-resize-graphics-layer-offscreen`,
+  `commands-resize-graphics-layer-offset-effect`,
+  `commands-resize-graphics-layer-offset-effect-blend-color-matrix-filter`,
+  `commands-resize-graphics-layer-path-clip`, `commands-resize-graphics-layer-path-shadow`,
+  `commands-resize-graphics-layer-render-effect-blend-color-filter`,
+  `commands-resize-graphics-layer-render-effect-blend-color-matrix-filter`,
+  `commands-resize-graphics-layer-render-effect-blend-mode`, and
+  `commands-resize-graphics-layer-render-effect-color-filter`.
 
 ## Added Rows Since Latest Completed Full Sweep
 
