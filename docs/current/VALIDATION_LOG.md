@@ -5,6 +5,21 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-19 focused forced-context parser-regression batch:
+  After the `cmp_unsupported_reasons` parser cleanup, a narrow forced-context shader/runtime batch reran ten rows most
+  likely to carry glued `SKIKO_JBR_INTEROP_SCOPE_ACQUIRED` `scopeId`/`abi` metadata:
+  `commands-forced-context-runtime-effect-shader`,
+  `commands-forced-context-runtime-effect-shader-color-filter`,
+  `commands-forced-context-linear-gradient-shader-color-filter`,
+  `commands-forced-context-radial-gradient-shader-color-filter`,
+  `commands-forced-context-sweep-gradient-shader-color-filter`,
+  `commands-forced-context-runtime-effect-pure-color`,
+  `commands-forced-context-runtime-effect-uniform-only`,
+  `commands-forced-context-runtime-effect-child-only`,
+  `commands-forced-context-runtime-effect-color-filter`, and
+  `commands-forced-context-runtime-effect-color-filter-child`. The focused suite passed `10/10` with
+  `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=86172`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260619-170100/suite.tsv`.
 - 2026-06-19 focused unsupported-reason parser cleanup after interrupted broad sweep:
   The capped June 19 broad sweep started at
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260619-085257/suite.tsv`
