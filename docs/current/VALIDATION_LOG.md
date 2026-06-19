@@ -5,6 +5,16 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-19 focused gradient-invalid post-parser validation batch:
+  A narrow invalid-gradient batch reran the promoted singleton row plus nine adjacent invalid-gradient command rows:
+  `commands-invalid-gradient-fallback`, `commands-linear-gradient-invalid-stops-fallback`,
+  `commands-linear-gradient-invalid-points-fallback`, `commands-radial-gradient-invalid-stops-fallback`,
+  `commands-radial-gradient-invalid-geometry-fallback`, `commands-sweep-gradient-invalid-geometry-fallback`,
+  `commands-linear-gradient-invalid-color-count-fallback`, `commands-radial-gradient-invalid-color-count-fallback`,
+  `commands-sweep-gradient-invalid-color-count-fallback`, and
+  `commands-linear-gradient-invalid-stroke-width-public-fallback`. The focused suite passed `10/10` with
+  `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=156521`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260619-185019/suite.tsv`.
 - 2026-06-19 focused final-census post-parser validation batch:
   The final ten originally unsupported rows were rerun after the `cmp_unsupported_reasons` parser cleanup:
   `commands-linear-gradient-path-invalid-fallback`, `commands-radial-gradient-path-invalid-fallback`,
