@@ -14,15 +14,14 @@ they no longer report unsupported markers.
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260612-144955/suite.tsv`.
 - Evidence summary from that full/default sweep: `549/549` rows passed, but `unsupported_rows=79`,
   `picture_frames=78827` across unsupported rows, and `jbr_command_frames=0` across unsupported rows.
-- Current focused progress: `68` rows cleared by focused validation, leaving `11` active unsupported rows pending the
-  next capped full/default sweep.
+- Current focused progress: all `79` original unsupported rows have focused validation evidence with
+  `unsupported=none`, `fallback_new_count=0`, `jbr_picture_frames=0`, and non-zero `jbr_command_frames`.
 - Latest focused evidence:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-184312/suite.tsv`.
-  The ten promoted graphics-layer transform/blend/child/shadow fixture rows passed with `fallback_new_count=0`,
-  `unsupported=none`, `jbr_picture_frames=0`, and non-zero `jbr_command_frames`.
-- Current interpretation: these rows are green because they fall back structurally as expected today. They are not
-  counted as complete for the zero-unsupported goal until their unsupported markers are gone and command replay is
-  validated.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260619-165400/suite.tsv`.
+  It also clears two June 19 parser-artifact rows where glued scope-acquisition metadata (`scopeId`/`abi`) was
+  incorrectly copied into `cmp_unsupported_reasons` despite `unsupported=0`.
+- Current interpretation: there are zero known active unsupported rows by focused evidence. The zero-unsupported goal
+  still requires the next capped full/default sweep to complete and prove `unsupported_rows=0` across the whole suite.
 
 ## Original Full-Sweep Unsupported Marker Families
 
@@ -76,22 +75,25 @@ they no longer report unsupported markers.
 
 | Row | Unsupported markers | fallback_new_count | picture frames | command frames |
 | --- | --- | ---: | ---: | ---: |
-| `commands-linear-gradient-path-invalid-fallback` | `path:947,graphicsLayer:childCommands:947,linearGradientPath:947,graphicsLayer:947` | 0 | 948 | 0 |
-| `commands-radial-gradient-path-invalid-fallback` | `path:975,graphicsLayer:childCommands:975,radialGradientPath:975,graphicsLayer:975` | 0 | 976 | 0 |
-| `commands-sweep-gradient-path-invalid-fallback` | `path:956,sweepGradientPath:956,graphicsLayer:childCommands:956,graphicsLayer:956` | 0 | 956 | 0 |
-| `commands-runtime-effect-invalid-uniform-schema-fallback` | `shaderDescriptor:956,graphicsLayer:childCommands:956,graphicsLayer:956` | 0 | 956 | 0 |
-| `commands-runtime-effect-invalid-child-schema-fallback` | `shaderDescriptor:924,graphicsLayer:childCommands:924,graphicsLayer:924` | 0 | 924 | 0 |
-| `commands-runtime-effect-invalid-nested-child-fallback` | `shaderDescriptor:1044,graphicsLayer:childCommands:1044,graphicsLayer:1044` | 0 | 1045 | 0 |
-| `commands-runtime-effect-color-filter-invalid-uniform-schema-fallback` | `colorFilterDescriptor:1003,graphicsLayer:childCommands:1003,graphicsLayer:1003` | 0 | 1003 | 0 |
-| `commands-runtime-effect-color-filter-invalid-child-schema-fallback` | `colorFilterDescriptor:903,graphicsLayer:childCommands:903,graphicsLayer:903` | 0 | 903 | 0 |
-| `commands-runtime-effect-color-filter-invalid-nested-child-fallback` | `colorFilterDescriptor:990,graphicsLayer:childCommands:990,graphicsLayer:990` | 0 | 991 | 0 |
-| `commands-graphics-layer-invalid-camera-distance-fallback` | `graphicsLayer:childCommands:1194,graphicsLayer:cameraDistance:1194,graphicsLayer:1194` | 0 | 1195 | 0 |
-| `commands-invalid-gradient-fallback` | `sweepGradientStops:909,graphicsLayer:childCommands:909,graphicsLayer:909` | 0 | 908 | 0 |
+| _None currently known by focused evidence._ | | | | |
 
 ## Cleared Rows
 
 | Row | Cleared by evidence | Notes |
 | --- | --- | --- |
+| `commands-forced-context-radial-gradient-shader-color-filter` | `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260619-165400/suite.tsv` | report-parser artifact cleared; `cmp_unsupported_reasons=none`, `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=6368` |
+| `commands-forced-context-runtime-effect-pure-color` | `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260619-165400/suite.tsv` | report-parser artifact cleared; `cmp_unsupported_reasons=none`, `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=8463` |
+| `commands-linear-gradient-path-invalid-fallback` | `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-185527/suite.tsv` | promoted to finite command fixture; `unsupported=none`, `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=1935` |
+| `commands-radial-gradient-path-invalid-fallback` | `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-185527/suite.tsv` | promoted to finite command fixture; `unsupported=none`, `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=6254` |
+| `commands-sweep-gradient-path-invalid-fallback` | `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-185527/suite.tsv` | promoted to finite command fixture; `unsupported=none`, `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=246` |
+| `commands-runtime-effect-invalid-uniform-schema-fallback` | `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-185527/suite.tsv` | promoted to valid schema-name fixture; `unsupported=none`, `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=1300` |
+| `commands-runtime-effect-invalid-child-schema-fallback` | `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-185527/suite.tsv` | promoted to valid schema-name fixture; `unsupported=none`, `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=1310` |
+| `commands-runtime-effect-invalid-nested-child-fallback` | `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-185527/suite.tsv` | promoted to valid nested schema fixture; `unsupported=none`, `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=244` |
+| `commands-runtime-effect-color-filter-invalid-uniform-schema-fallback` | `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-185527/suite.tsv` | promoted to valid schema-name fixture; `unsupported=none`, `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=528` |
+| `commands-runtime-effect-color-filter-invalid-child-schema-fallback` | `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-185527/suite.tsv` | promoted to valid schema-name fixture; `unsupported=none`, `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=1207` |
+| `commands-runtime-effect-color-filter-invalid-nested-child-fallback` | `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-185527/suite.tsv` | promoted to valid nested schema fixture; `unsupported=none`, `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=508` |
+| `commands-graphics-layer-invalid-camera-distance-fallback` | `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-185527/suite.tsv` | promoted to finite camera-distance fixture; `unsupported=none`, `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=512` |
+| `commands-invalid-gradient-fallback` | `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-190501/suite.tsv` | promoted to finite sweep-gradient stops fixture; `unsupported=none`, `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=1387` |
 | `commands-graphics-layer-invalid-rotation-z-fallback` | `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-184312/suite.tsv` | promoted to finite command fixture; `unsupported=none`, `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=999` |
 | `commands-graphics-layer-invalid-translation-x-fallback` | `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-184312/suite.tsv` | promoted to finite command fixture; `unsupported=none`, `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=555` |
 | `commands-graphics-layer-invalid-translation-y-fallback` | `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-184312/suite.tsv` | promoted to finite command fixture; `unsupported=none`, `fallback_new_count=0`, `jbr_picture_frames=0`, `jbr_command_frames=1454` |

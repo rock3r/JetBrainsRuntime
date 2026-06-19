@@ -5,6 +5,40 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-19 focused unsupported-reason parser cleanup after interrupted broad sweep:
+  The capped June 19 broad sweep started at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260619-085257/suite.tsv`
+  but was interrupted after 294 rows, so it is not completion evidence. The partial census found two rows with
+  non-`none` `cmp_unsupported_reasons` despite `cmp_unsupported_max=0` and full command replay:
+  `commands-forced-context-radial-gradient-shader-color-filter` and
+  `commands-forced-context-runtime-effect-pure-color`. Both were parser artifacts from glued
+  `SKIKO_JBR_INTEROP_SCOPE_ACQUIRED` `scopeId`/`abi` metadata, not command-recorder unsupported counts.
+  Magic Jewel now only aggregates unsupported reason fields from recorder records whose own `unsupported` value is
+  greater than zero, with a regression test for glued suffix scope metadata. Validation:
+  `./scripts/test-jbr-skia-report-validation.sh` passed, and the focused two-row command suite
+  `EXPECT_SCREENSHOT_ASSERTION=false CASES="commands-forced-context-radial-gradient-shader-color-filter commands-forced-context-runtime-effect-pure-color" ./scripts/jbr-skia-command-probe-suite.sh`
+  passed `2/2` with `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, and
+  `jbr_command_frames=14831`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260619-165400/suite.tsv`.
+  There are zero known active unsupported rows by focused evidence, but the zero-unsupported goal remains pending the
+  next capped full/default sweep because no June 19 full sweep completed.
+- 2026-06-18 focused final invalid gradient/runtime/layer fixture promotion:
+  Magic Jewel promoted the final eleven originally unsupported rows to finite command-replay coverage. The first
+  focused suite covered ten rows:
+  `commands-linear-gradient-path-invalid-fallback`, `commands-radial-gradient-path-invalid-fallback`,
+  `commands-sweep-gradient-path-invalid-fallback`, `commands-runtime-effect-invalid-uniform-schema-fallback`,
+  `commands-runtime-effect-invalid-child-schema-fallback`, `commands-runtime-effect-invalid-nested-child-fallback`,
+  `commands-runtime-effect-color-filter-invalid-uniform-schema-fallback`,
+  `commands-runtime-effect-color-filter-invalid-child-schema-fallback`,
+  `commands-runtime-effect-color-filter-invalid-nested-child-fallback`, and
+  `commands-graphics-layer-invalid-camera-distance-fallback`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-185527/suite.tsv`.
+  The singleton `commands-invalid-gradient-fallback` passed separately:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-190501/suite.tsv`.
+  Both focused runs had `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, and non-zero
+  `jbr_command_frames` for every row. The capped June 18 broad sweep started at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-190558/suite.tsv`
+  but was interrupted before completion, so it is partial evidence only.
 - 2026-06-18 focused graphics-layer transform/blend/child/shadow fixture promotion batch:
   Magic Jewel promoted ten graphics-layer invalid-input fixtures to finite command-replay coverage rows. The focused
   suite reran only those ten rows:
