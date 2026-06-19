@@ -14,6 +14,10 @@ they no longer report unsupported markers.
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260612-144955/suite.tsv`.
 - Evidence summary from that full/default sweep: `549/549` rows passed, but `unsupported_rows=79`,
   `picture_frames=78827` across unsupported rows, and `jbr_command_frames=0` across unsupported rows.
+- Current default command-probe surface:
+  `LIST_CASE_COUNT=true ./scripts/jbr-skia-command-probe-suite.sh` reports `696` rows. The final proof must cover this
+  current default surface, not just the older `549`-row full sweep. See
+  [`COMMAND_PROBE_CURRENT_DEFAULT_SURFACE.md`](COMMAND_PROBE_CURRENT_DEFAULT_SURFACE.md) for the list-only delta.
 - Current focused progress: all `79` original unsupported rows have focused validation evidence with
   `unsupported=none`, `fallback_new_count=0`, `jbr_picture_frames=0`, and non-zero `jbr_command_frames`.
 - Latest focused evidence:

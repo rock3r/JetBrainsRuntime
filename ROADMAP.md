@@ -29,8 +29,9 @@ This is the small working roadmap for the current PoC. The full historical check
   ledger. The latest completed full/default evidence passed `549/549`, but recorded 79 unsupported rows that rendered
   through picture fallback rather than command replay. Focused validation has now cleared all 79 original unsupported
   rows, plus two June 19 parser-artifact rows from glued scope metadata. There are zero known active unsupported rows
-  by focused evidence, but the goal remains pending the next capped full/default sweep proving `unsupported_rows=0`
-  across the whole suite.
+  by focused evidence, but `LIST_CASE_COUNT=true ./scripts/jbr-skia-command-probe-suite.sh` now reports a `696`-row
+  default surface. The goal remains pending the next capped full/default sweep proving `unsupported_rows=0` across that
+  current suite.
 - Continue remaining shader-family hardening and fallback sentinels.
 - Continue shader/effect lifecycle coverage: create, use, context-scoped cache hit, compile/build failure, descriptor
   eviction, resize, and forced destination context migration.
@@ -69,8 +70,10 @@ This is the small working roadmap for the current PoC. The full historical check
   passed `10/10` with `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, and
   `jbr_command_frames=156521`:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260619-185019/suite.tsv`.
-  The interrupted June 19 broad run is not completion evidence, so final 100% coverage still requires the next capped
-  full/default sweep to complete with `unsupported_rows=0`.
+  A list-only audit now records the current default command-probe surface at `696` rows in
+  `docs/current/COMMAND_PROBE_CURRENT_DEFAULT_SURFACE.md`. The interrupted June 19 broad run is not completion
+  evidence, so final 100% coverage still requires the next capped full/default sweep to complete with
+  `unsupported_rows=0` across that current surface.
 - Targeted read-only graphics-layer lifecycle gap closure audit after the standalone zero-handle sweep found no
   remaining `parity*graphics-layer*` screenshot-parity rows without JBR effect/shader handle lifecycle assertions. All
   62 `parity-resize-graphics-layer*` / `parity-forced-context-graphics-layer*` rows retained surface/cache lifecycle

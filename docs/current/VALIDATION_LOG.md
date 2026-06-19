@@ -5,6 +5,16 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-19 list-only current default command-probe surface audit:
+  `LIST_CASE_COUNT=true ./scripts/jbr-skia-command-probe-suite.sh` reports a current default command-probe surface of
+  `696` rows. A list-only comparison with the latest completed full/default unsupported census
+  (`/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260612-144955/suite.tsv`,
+  `549` rows) found `151` rows added to the current default surface and `4` rows removed. The row delta is documented
+  in `docs/current/COMMAND_PROBE_CURRENT_DEFAULT_SURFACE.md`. A default command-probe launch on 2026-06-19 exited
+  before validation with code `3` because the daily broad slot was already consumed by the interrupted
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260619-085257/suite.tsv`
+  run. Final zero-unsupported proof must therefore wait for the next capped full/default sweep and cover the current
+  `696`-row surface.
 - 2026-06-19 focused gradient-invalid post-parser validation batch:
   A narrow invalid-gradient batch reran the promoted singleton row plus nine adjacent invalid-gradient command rows:
   `commands-invalid-gradient-fallback`, `commands-linear-gradient-invalid-stops-fallback`,
