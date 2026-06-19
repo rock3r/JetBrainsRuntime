@@ -155,6 +155,15 @@ next capped full/default sweep to cover the current `696`-row surface and report
   `commands-resize-graphics-layer-round-shadow`, `commands-resize-graphics-layer-scale-translate`,
   `commands-resize-graphics-layer-shadow`, `commands-resize-image-blend-mode`, and
   `commands-resize-image-color-matrix-filter`.
+- 2026-06-19 resize image/effect batch:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260619-230949/suite.tsv`
+  passed `10/10` with `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, and
+  `jbr_command_frames=63510`. Rows covered:
+  `commands-resize-image-filter`, `commands-resize-image-shader`,
+  `commands-resize-image-shader-blend-mode`, `commands-resize-image-shader-color-filter`,
+  `commands-resize-lighting-filter`, `commands-resize-linear-gradient-path-blend-mode`,
+  `commands-resize-linear-gradient-shader-color-filter`, `commands-resize-noise-shader`,
+  `commands-resize-path-effect`, and `commands-resize-point-dots`.
 
 ## Added Rows Since Latest Completed Full Sweep
 
