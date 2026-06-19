@@ -164,6 +164,15 @@ next capped full/default sweep to cover the current `696`-row surface and report
   `commands-resize-lighting-filter`, `commands-resize-linear-gradient-path-blend-mode`,
   `commands-resize-linear-gradient-shader-color-filter`, `commands-resize-noise-shader`,
   `commands-resize-path-effect`, and `commands-resize-point-dots`.
+- 2026-06-19 resize runtime/save-layer batch:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260619-232911/suite.tsv`
+  passed `10/10` with `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, and
+  `jbr_command_frames=49168`. Rows covered:
+  `commands-resize-point-lines`, `commands-resize-radial-gradient-shader-color-filter`,
+  `commands-resize-runtime-effect-child-only`, `commands-resize-runtime-effect-color-filter`,
+  `commands-resize-runtime-effect-color-filter-child`, `commands-resize-runtime-effect-pure-color`,
+  `commands-resize-runtime-effect-shader`, `commands-resize-runtime-effect-shader-color-filter`,
+  `commands-resize-runtime-effect-uniform-only`, and `commands-resize-save-layer-blend-color-filter`.
 
 ## Added Rows Since Latest Completed Full Sweep
 

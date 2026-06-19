@@ -5,6 +5,17 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-19 focused current-default additions resize runtime/save-layer batch:
+  A fourteenth narrow batch covered ten more rows that are part of the current `696`-row default command-probe surface
+  but were not in the latest completed `549`-row full/default census:
+  `commands-resize-point-lines`, `commands-resize-radial-gradient-shader-color-filter`,
+  `commands-resize-runtime-effect-child-only`, `commands-resize-runtime-effect-color-filter`,
+  `commands-resize-runtime-effect-color-filter-child`, `commands-resize-runtime-effect-pure-color`,
+  `commands-resize-runtime-effect-shader`, `commands-resize-runtime-effect-shader-color-filter`,
+  `commands-resize-runtime-effect-uniform-only`, and `commands-resize-save-layer-blend-color-filter`. The focused
+  suite passed `10/10` with `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, and
+  `jbr_command_frames=49168`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260619-232911/suite.tsv`.
 - 2026-06-19 focused current-default additions resize image/effect batch:
   A thirteenth narrow batch covered ten more rows that are part of the current `696`-row default command-probe surface
   but were not in the latest completed `549`-row full/default census:
