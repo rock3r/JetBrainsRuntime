@@ -43,6 +43,17 @@ next capped full/default sweep to cover the current `696`-row surface and report
   `commands-forced-context-graphics-layer-blend-color-matrix-filter`,
   `commands-forced-context-graphics-layer-blend-mode`, and
   `commands-forced-context-graphics-layer-chained-render-effect`.
+- 2026-06-19 forced-context graphics-layer batch:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260619-195702/suite.tsv`
+  passed `10/10` with `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, and
+  `jbr_command_frames=115792`. Rows covered:
+  `commands-forced-context-graphics-layer-chained-render-effect-blend-color-matrix-filter`,
+  `commands-forced-context-graphics-layer-clip`, `commands-forced-context-graphics-layer-color-filter`,
+  `commands-forced-context-graphics-layer-modulate-alpha`, `commands-forced-context-graphics-layer-near-camera`,
+  `commands-forced-context-graphics-layer-near-camera-chained-render-effect-blend-color-matrix-filter`,
+  `commands-forced-context-graphics-layer-offcenter-pivot`,
+  `commands-forced-context-graphics-layer-offscreen`, `commands-forced-context-graphics-layer-offset-effect`, and
+  `commands-forced-context-graphics-layer-offset-effect-blend-color-matrix-filter`.
 
 ## Added Rows Since Latest Completed Full Sweep
 
