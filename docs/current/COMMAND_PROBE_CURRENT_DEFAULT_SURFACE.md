@@ -21,6 +21,18 @@ markers.
 Interpretation: focused evidence currently shows zero known active unsupported rows, but final completion requires the
 next capped full/default sweep to cover the current `696`-row surface and report `unsupported_rows=0`.
 
+## Focused Current-Surface Addition Validation
+
+- 2026-06-19 forced-context color/shader batch:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260619-192030/suite.tsv`
+  passed `10/10` with `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, and
+  `jbr_command_frames=122863`. Rows covered:
+  `commands-forced-context-blend-mode`, `commands-forced-context-color-filter`,
+  `commands-forced-context-color-filter-blend-mode`, `commands-forced-context-color-filter-handle`,
+  `commands-forced-context-color-matrix-filter`, `commands-forced-context-color-shader`,
+  `commands-forced-context-color-shader-blend-mode`, `commands-forced-context-composite-noise-shader`,
+  `commands-forced-context-composite-shader`, and `commands-forced-context-composite-shader-color-filter`.
+
 ## Added Rows Since Latest Completed Full Sweep
 
 These rows are part of the current default surface but were not present in the latest completed `549`-row full/default

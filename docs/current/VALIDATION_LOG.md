@@ -5,6 +5,17 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-19 focused current-default additions forced-context color/shader batch:
+  A narrow batch covered ten rows that are part of the current `696`-row default command-probe surface but were not in
+  the latest completed `549`-row full/default census:
+  `commands-forced-context-blend-mode`, `commands-forced-context-color-filter`,
+  `commands-forced-context-color-filter-blend-mode`, `commands-forced-context-color-filter-handle`,
+  `commands-forced-context-color-matrix-filter`, `commands-forced-context-color-shader`,
+  `commands-forced-context-color-shader-blend-mode`, `commands-forced-context-composite-noise-shader`,
+  `commands-forced-context-composite-shader`, and `commands-forced-context-composite-shader-color-filter`. The focused
+  suite passed `10/10` with `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, and
+  `jbr_command_frames=122863`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260619-192030/suite.tsv`.
 - 2026-06-19 list-only current default command-probe surface audit:
   `LIST_CASE_COUNT=true ./scripts/jbr-skia-command-probe-suite.sh` reports a current default command-probe surface of
   `696` rows. A list-only comparison with the latest completed full/default unsupported census
