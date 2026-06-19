@@ -122,6 +122,17 @@ next capped full/default sweep to cover the current `696`-row surface and report
   `commands-resize-composite-shader-color-filter`,
   `commands-resize-composite-shader-descriptor-redefine`, `commands-resize-concat-transform`,
   `commands-resize-gradient-shaders`, `commands-resize-gradient-stroke`, and `commands-resize-graphics-layer`.
+- 2026-06-19 resize graphics-layer batch:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260619-221239/suite.tsv`
+  passed `10/10` with `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, and
+  `jbr_command_frames=65901`. Rows covered:
+  `commands-resize-graphics-layer-blend-color-filter`,
+  `commands-resize-graphics-layer-blend-color-matrix-filter`,
+  `commands-resize-graphics-layer-blend-mode`, `commands-resize-graphics-layer-chained-render-effect`,
+  `commands-resize-graphics-layer-chained-render-effect-blend-color-matrix-filter`,
+  `commands-resize-graphics-layer-clip`, `commands-resize-graphics-layer-color-filter`,
+  `commands-resize-graphics-layer-modulate-alpha`, `commands-resize-graphics-layer-near-camera`, and
+  `commands-resize-graphics-layer-near-camera-chained-render-effect-blend-color-matrix-filter`.
 
 ## Added Rows Since Latest Completed Full Sweep
 
