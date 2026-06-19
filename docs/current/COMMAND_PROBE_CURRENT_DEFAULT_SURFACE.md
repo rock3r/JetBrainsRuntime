@@ -91,6 +91,18 @@ next capped full/default sweep to cover the current `696`-row surface and report
   `commands-forced-context-radial-gradient-shader-color-filter`,
   `commands-forced-context-runtime-effect-child-only`, and
   `commands-forced-context-runtime-effect-color-filter`.
+- 2026-06-19 forced-context runtime/save-layer batch:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260619-211127/suite.tsv`
+  passed `10/10` with `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, and
+  `jbr_command_frames=62511`. Rows covered:
+  `commands-forced-context-runtime-effect-color-filter-child`,
+  `commands-forced-context-runtime-effect-pure-color`, `commands-forced-context-runtime-effect-shader`,
+  `commands-forced-context-runtime-effect-shader-color-filter`,
+  `commands-forced-context-runtime-effect-uniform-only`,
+  `commands-forced-context-save-layer-blend-color-filter`,
+  `commands-forced-context-save-layer-blend-mode`,
+  `commands-forced-context-save-layer-color-matrix-filter`,
+  `commands-forced-context-save-layer-filter`, and `commands-forced-context-skew-transform`.
 
 ## Added Rows Since Latest Completed Full Sweep
 
