@@ -5,6 +5,19 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-19 focused current-default additions forced-context lighting/gradient/runtime batch:
+  A sixth narrow batch covered ten more rows that are part of the current `696`-row default command-probe surface but
+  were not in the latest completed `549`-row full/default census:
+  `commands-forced-context-lighting-filter`,
+  `commands-forced-context-linear-gradient-path-blend-mode`,
+  `commands-forced-context-linear-gradient-shader-color-filter`,
+  `commands-forced-context-noise-shader`, `commands-forced-context-path-effect`,
+  `commands-forced-context-point-dots`, `commands-forced-context-point-lines`,
+  `commands-forced-context-radial-gradient-shader-color-filter`,
+  `commands-forced-context-runtime-effect-child-only`, and
+  `commands-forced-context-runtime-effect-color-filter`. The focused suite passed `10/10` with `fallback_sum=0`,
+  `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=97492`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260619-205155/suite.tsv`.
 - 2026-06-19 focused current-default additions forced-context graphics/image batch:
   A fifth narrow batch covered ten more rows that are part of the current `696`-row default command-probe surface but
   were not in the latest completed `549`-row full/default census:
