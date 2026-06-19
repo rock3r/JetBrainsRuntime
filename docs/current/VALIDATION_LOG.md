@@ -5,6 +5,17 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-19 focused final-census post-parser validation batch:
+  The final ten originally unsupported rows were rerun after the `cmp_unsupported_reasons` parser cleanup:
+  `commands-linear-gradient-path-invalid-fallback`, `commands-radial-gradient-path-invalid-fallback`,
+  `commands-sweep-gradient-path-invalid-fallback`, `commands-runtime-effect-invalid-uniform-schema-fallback`,
+  `commands-runtime-effect-invalid-child-schema-fallback`, `commands-runtime-effect-invalid-nested-child-fallback`,
+  `commands-runtime-effect-color-filter-invalid-uniform-schema-fallback`,
+  `commands-runtime-effect-color-filter-invalid-child-schema-fallback`,
+  `commands-runtime-effect-color-filter-invalid-nested-child-fallback`, and
+  `commands-graphics-layer-invalid-camera-distance-fallback`. The focused suite passed `10/10` with
+  `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=107112`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260619-183132/suite.tsv`.
 - 2026-06-19 focused save-layer/raw replay validation batch:
   A narrow raw/sentinel-adjacent batch covered saveLayer tint/filter replay plus rows previously promoted away from
   raw pointer fallbacks:
