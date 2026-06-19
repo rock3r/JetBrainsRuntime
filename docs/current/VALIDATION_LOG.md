@@ -5,6 +5,17 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-19 focused current-default additions resize graphics-transform/image batch:
+  A twelfth narrow batch covered ten more rows that are part of the current `696`-row default command-probe surface but
+  were not in the latest completed `549`-row full/default census:
+  `commands-resize-graphics-layer-render-effect-color-matrix-filter`,
+  `commands-resize-graphics-layer-rotationx`, `commands-resize-graphics-layer-rotationxy`,
+  `commands-resize-graphics-layer-rotationy`, `commands-resize-graphics-layer-round-clip`,
+  `commands-resize-graphics-layer-round-shadow`, `commands-resize-graphics-layer-scale-translate`,
+  `commands-resize-graphics-layer-shadow`, `commands-resize-image-blend-mode`, and
+  `commands-resize-image-color-matrix-filter`. The focused suite passed `10/10` with `fallback_sum=0`,
+  `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=64964`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260619-225139/suite.tsv`.
 - 2026-06-19 focused current-default additions resize graphics-layer render/offset batch:
   An eleventh narrow batch covered ten more rows that are part of the current `696`-row default command-probe surface
   but were not in the latest completed `549`-row full/default census:
