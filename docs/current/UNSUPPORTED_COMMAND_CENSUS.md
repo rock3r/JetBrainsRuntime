@@ -17,9 +17,11 @@ they no longer report unsupported markers.
 - Current focused progress: all `79` original unsupported rows have focused validation evidence with
   `unsupported=none`, `fallback_new_count=0`, `jbr_picture_frames=0`, and non-zero `jbr_command_frames`.
 - Latest focused evidence:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260619-185019/suite.tsv`.
+  This reran the promoted invalid-gradient singleton plus nine adjacent invalid-gradient rows after the parser cleanup.
+  Earlier June 19 focused evidence also clears two parser-artifact rows where glued scope-acquisition metadata
+  (`scopeId`/`abi`) was incorrectly copied into `cmp_unsupported_reasons` despite `unsupported=0`:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260619-165400/suite.tsv`.
-  It also clears two June 19 parser-artifact rows where glued scope-acquisition metadata (`scopeId`/`abi`) was
-  incorrectly copied into `cmp_unsupported_reasons` despite `unsupported=0`.
 - Current interpretation: there are zero known active unsupported rows by focused evidence. The zero-unsupported goal
   still requires the next capped full/default sweep to complete and prove `unsupported_rows=0` across the whole suite.
 

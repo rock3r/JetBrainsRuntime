@@ -13,12 +13,12 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 
 - ABI 106 artifacts are current across JBR private API, JBR API mirror, Skiko, CMP, and Magic Jewel.
 - The zero-unsupported macOS/Metal coverage goal is now tracked in
-  [`docs/current/UNSUPPORTED_COMMAND_CENSUS.md`](docs/current/UNSUPPORTED_COMMAND_CENSUS.md). The current full/default
-  command-probe evidence passed `549/549`, but recorded 79 unsupported rows with 78,827 picture fallback frames and
-  zero command frames across those unsupported rows. Focused validation has since cleared the three linear/radial/sweep
-  gradient path stroke rows, descriptor/image shader stroke rects, image path-effect draws, and 2049-wide image
-  shaders, plus 22 promoted raw shader/color-filter/path-effect/layer/vertices fixtures, leaving 51 active unsupported
-  rows pending the next capped full/default sweep.
+  [`docs/current/UNSUPPORTED_COMMAND_CENSUS.md`](docs/current/UNSUPPORTED_COMMAND_CENSUS.md). The latest completed
+  full/default command-probe evidence passed `549/549`, but recorded 79 unsupported rows with 78,827 picture fallback
+  frames and zero command frames across those unsupported rows. Focused validation has since cleared all 79 original
+  unsupported rows, plus two June 19 parser-artifact rows from glued scope metadata. There are zero known active
+  unsupported rows by focused evidence, but the zero-unsupported goal remains pending the next capped full/default
+  sweep proving `unsupported_rows=0` across the whole suite.
 - JBR/CMP/Skiko now support stroked arbitrary-path gradients through explicit linear/radial/sweep command records.
   Magic Jewel's exact three-row command probe passed with `fallback_new_count=0`, `unsupported=none`, zero picture
   frames, and non-zero command frames:
