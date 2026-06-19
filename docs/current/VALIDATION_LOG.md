@@ -5,6 +5,18 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-19 focused graphics-layer image-filter/3D forced-context parser-regression batch:
+  A fourth narrow forced-context batch covered graphics-layer image-filter trees, 3D transforms, pivots, and shadows:
+  `commands-forced-context-graphics-layer-offset-effect-blend-color-matrix-filter`,
+  `commands-forced-context-graphics-layer-chained-render-effect-blend-color-matrix-filter`,
+  `commands-forced-context-graphics-layer-near-camera-chained-render-effect-blend-color-matrix-filter`,
+  `commands-forced-context-graphics-layer-rotationxy`,
+  `commands-forced-context-graphics-layer-scale-translate`, `commands-forced-context-graphics-layer-near-camera`,
+  `commands-forced-context-graphics-layer-offcenter-pivot`, `commands-forced-context-graphics-layer-shadow`,
+  `commands-forced-context-graphics-layer-round-shadow`, and
+  `commands-forced-context-graphics-layer-path-shadow`. The focused suite passed `10/10` with `fallback_sum=0`,
+  `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=104842`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260619-175521/suite.tsv`.
 - 2026-06-19 focused descriptor/color forced-context parser-regression batch:
   A third narrow forced-context batch covered descriptor lifecycle and color/filter rows:
   `commands-forced-context-descriptor-redefine`, `commands-forced-context-shader-descriptor-redefine`,
