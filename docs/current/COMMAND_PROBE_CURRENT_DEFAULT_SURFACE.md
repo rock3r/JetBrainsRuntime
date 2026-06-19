@@ -32,6 +32,17 @@ next capped full/default sweep to cover the current `696`-row surface and report
   `commands-forced-context-color-matrix-filter`, `commands-forced-context-color-shader`,
   `commands-forced-context-color-shader-blend-mode`, `commands-forced-context-composite-noise-shader`,
   `commands-forced-context-composite-shader`, and `commands-forced-context-composite-shader-color-filter`.
+- 2026-06-19 forced-context transform/gradient/graphics batch:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260619-193859/suite.tsv`
+  passed `10/10` with `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, and
+  `jbr_command_frames=126723`. Rows covered:
+  `commands-forced-context-composite-shader-descriptor-redefine`,
+  `commands-forced-context-concat-transform`, `commands-forced-context-gradient-shaders`,
+  `commands-forced-context-gradient-stroke`, `commands-forced-context-gradient-surfaces`,
+  `commands-forced-context-graphics-layer`, `commands-forced-context-graphics-layer-blend-color-filter`,
+  `commands-forced-context-graphics-layer-blend-color-matrix-filter`,
+  `commands-forced-context-graphics-layer-blend-mode`, and
+  `commands-forced-context-graphics-layer-chained-render-effect`.
 
 ## Added Rows Since Latest Completed Full Sweep
 
