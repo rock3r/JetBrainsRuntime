@@ -5,6 +5,21 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-19 focused current-default additions forced-context graphics-layer render batch:
+  A fourth narrow batch covered ten more rows that are part of the current `696`-row default command-probe surface but
+  were not in the latest completed `549`-row full/default census:
+  `commands-forced-context-graphics-layer-path-clip`,
+  `commands-forced-context-graphics-layer-path-shadow`,
+  `commands-forced-context-graphics-layer-render-effect-blend-color-filter`,
+  `commands-forced-context-graphics-layer-render-effect-blend-color-matrix-filter`,
+  `commands-forced-context-graphics-layer-render-effect-blend-mode`,
+  `commands-forced-context-graphics-layer-render-effect-color-filter`,
+  `commands-forced-context-graphics-layer-render-effect-color-matrix-filter`,
+  `commands-forced-context-graphics-layer-rotationx`,
+  `commands-forced-context-graphics-layer-rotationxy`, and
+  `commands-forced-context-graphics-layer-round-clip`. The focused suite passed `10/10` with `fallback_sum=0`,
+  `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=113504`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260619-201426/suite.tsv`.
 - 2026-06-19 focused current-default additions forced-context graphics-layer batch:
   A third narrow batch covered ten more rows that are part of the current `696`-row default command-probe surface but
   were not in the latest completed `549`-row full/default census:
