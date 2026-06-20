@@ -5,6 +5,14 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-20 focused compatibility low-word gradient matrix:
+  The `low-word-gradients` compatibility group was split into narrow 10-row and 5-row slices covering all 15 gradient
+  low-word capability-missing rows. Both matrix slices passed, for an aggregate `15/15` with `fallback_sum=15`,
+  `command_frames=0`, and `background_window=true` for all rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260620-163910/matrix.tsv`
+  and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260620-164356/matrix.tsv`.
+  Every row produced the expected structured capability-mismatch fallback with zero command frames.
 - 2026-06-20 focused compatibility handshake matrix:
   A narrow compatibility-matrix slice ran `CASE_GROUPS=handshake`, covering `happy`, `abi-mismatch`,
   `native-abi-mismatch`, `command-capability-mismatch`, `command-capability-high-mismatch`, and
