@@ -5,6 +5,17 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-20 full/default command-probe 100% coverage proof:
+  With explicit user approval for one extra broad pass, ran
+  `JBR_SKIA_ALLOW_EXTRA_BROAD_VALIDATION=true EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-command-probe-suite.sh`.
+  The current default `696`-row command-probe surface completed in one sweep:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260620-175905/suite.tsv`.
+  Aggregate: `696/696` passed, `unsupported_rows=0`, `fallback_sum=348`, `jbr_picture_frames=0`, and
+  `jbr_command_frames=533737`. The `fallback_sum` is expected structured corrupt-parser/mismatch coverage, not active
+  unsupported command fallback; supported command rows replayed without picture fallback. The refreshed evidence audit
+  also selected this sweep as latest evidence and reported `covered_current_rows=696/696`, `missing=0`, `non_pass=0`,
+  `unsupported=0`, `picture_rows=0`, `cmd0_expected_fallback_rows=346`, `fallback_with_command_rows=2`, and
+  `cmd0_without_fallback_rows=0`.
 - 2026-06-20 focused record-flag fallback classification refresh:
   A narrow exact command-probe rerun covered the three corrupt record-flag fixtures that the evidence audit had flagged
   as fallback-with-command rows:

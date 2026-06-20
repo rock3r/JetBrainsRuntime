@@ -19,9 +19,10 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   unsupported rows, plus the rows added to the current default surface. Magic Jewel's read-only
   `./scripts/jbr-skia-command-probe-evidence-audit.sh` now reproduces the latest-evidence audit across the current
   `696` rows: `covered_current_rows=696/696`, `missing=0`, `non_pass=0`, `unsupported=0`, `picture_rows=0`, and
-  `cmd0_without_fallback_rows=0`. There are zero known active unsupported rows by focused evidence, but the
-  zero-unsupported goal remains pending the next capped full/default sweep proving `unsupported_rows=0` across the
-  whole suite in one pass.
+  `cmd0_without_fallback_rows=0`. The zero-unsupported goal is now confirmed by the 2026-06-20 explicit-extra
+  full/default command-probe sweep, which passed the current `696`-row surface in one pass with `unsupported_rows=0`,
+  `fallback_sum=348`, `jbr_picture_frames=0`, and `jbr_command_frames=533737`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260620-175905/suite.tsv`.
 - Compatibility and artifact fallback gates are current: the compatibility matrix was covered in narrow slices and
   passed `57/57`, while the artifact matrix required group passed `2/2` and the optional old-artifact rows skipped
   cleanly because old inputs were not configured.

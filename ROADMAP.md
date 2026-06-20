@@ -27,11 +27,10 @@ This is the small working roadmap for the current PoC. The full historical check
 - Drive the macOS/Metal command-probe surface to zero unsupported rows using
   [`docs/current/UNSUPPORTED_COMMAND_CENSUS.md`](docs/current/UNSUPPORTED_COMMAND_CENSUS.md) as the authoritative
   ledger. The latest completed full/default evidence passed `549/549`, but recorded 79 unsupported rows that rendered
-  through picture fallback rather than command replay. Focused validation has now cleared all 79 original unsupported
-  rows, plus two June 19 parser-artifact rows from glued scope metadata. There are zero known active unsupported rows
-  by focused evidence, but `LIST_CASE_COUNT=true ./scripts/jbr-skia-command-probe-suite.sh` now reports a `696`-row
-  default surface. The goal remains pending the next capped full/default sweep proving `unsupported_rows=0` across that
-  current suite.
+  through picture fallback rather than command replay. Focused validation cleared all original unsupported rows and the
+  current `696`-row surface. The 2026-06-20 explicit-extra full/default command-probe sweep then completed that current
+  surface in one pass with `696/696` passed, `unsupported_rows=0`, `jbr_picture_frames=0`, and
+  `jbr_command_frames=533737`.
 - Continue remaining shader-family hardening and fallback sentinels.
 - Continue shader/effect lifecycle coverage: create, use, context-scoped cache hit, compile/build failure, descriptor
   eviction, resize, and forced destination context migration.
@@ -57,12 +56,15 @@ This is the small working roadmap for the current PoC. The full historical check
 ## Latest Validations
 
 - Current-surface evidence audit checkpoint:
-  Magic Jewel's read-only `./scripts/jbr-skia-command-probe-evidence-audit.sh` now makes the accumulated evidence audit
-  reproducible without launching rendering validation. Its 2026-06-20 run covered the current `696`-row default
-  command-probe surface with `missing=0`, `non_pass=0`, `unsupported=0`, `picture_rows=0`,
-  `cmd0_expected_fallback_rows=346`, and `cmd0_without_fallback_rows=0`. There are zero known active unsupported rows
-  by focused evidence, but the final 100% claim remains pending the next capped full/default pass completing in one
-  sweep with `unsupported_rows=0`.
+- Full/default command-probe 100% coverage proof:
+  With explicit user approval for one extra broad pass,
+  `JBR_SKIA_ALLOW_EXTRA_BROAD_VALIDATION=true EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-command-probe-suite.sh`
+  completed the current `696`-row default surface in one sweep. The suite passed `696/696` with
+  `unsupported_rows=0`, `fallback_sum=348`, `jbr_picture_frames=0`, and `jbr_command_frames=533737`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260620-175905/suite.tsv`.
+  Magic Jewel's read-only `./scripts/jbr-skia-command-probe-evidence-audit.sh` selected that sweep as latest evidence
+  and still reports `missing=0`, `non_pass=0`, `unsupported=0`, `picture_rows=0`, and
+  `cmd0_without_fallback_rows=0`.
 - Compatibility and artifact gates:
   The 57-row compatibility matrix was covered through narrow group/slice runs and passed `57/57`; only the `happy`
   row replayed commands, while all ABI/native/capability/public-API negatives produced expected structured fallback.

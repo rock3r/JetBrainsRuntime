@@ -18,6 +18,12 @@ they no longer report unsupported markers.
   `LIST_CASE_COUNT=true ./scripts/jbr-skia-command-probe-suite.sh` reports `696` rows. The final proof must cover this
   current default surface, not just the older `549`-row full sweep. See
   [`COMMAND_PROBE_CURRENT_DEFAULT_SURFACE.md`](COMMAND_PROBE_CURRENT_DEFAULT_SURFACE.md) for the list-only delta.
+- Completion proof:
+  The 2026-06-20 explicit-extra full/default command-probe pass covered the current `696`-row surface in one sweep:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260620-175905/suite.tsv`.
+  It passed `696/696` with `unsupported_rows=0`, `fallback_sum=348`, `jbr_picture_frames=0`, and
+  `jbr_command_frames=533737`. The nonzero fallback count is expected structured corrupt-parser/mismatch coverage, not
+  active unsupported command fallback.
 - Current focused progress: all `79` original unsupported rows and all `151` rows added to the current default surface
   since the latest completed full/default census have focused validation evidence with `unsupported=none` and
   `jbr_picture_frames=0`. Supported command rows replay with `fallback_new_count=0` and command frames; intentionally
@@ -37,11 +43,8 @@ they no longer report unsupported markers.
   The focused suite passed `6/6` with `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, and command
   replay evidence. A follow-up list-only probe found no default-order rows after `commands-invalid-gradient-fallback`.
 - Current interpretation: there are zero known active unsupported rows by focused evidence. The zero-unsupported goal
-  still requires the next capped full/default sweep to complete and prove `unsupported_rows=0` across the whole suite.
-  The 2026-06-20 daily broad run stopped after `390` of `696` rows with `unsupported_rows=0` and
-  `jbr_picture_frames=0` so far, and the same-day focused continuation has now covered the remaining default-order
-  rows through the tail with `unsupported_rows=0`. This remains accumulated focused evidence rather than a completed
-  full/default proof; the daily broad cap prevents relaunching another full/default sweep on 2026-06-20.
+  is now confirmed by the 2026-06-20 explicit-extra full/default sweep. The earlier 2026-06-20 daily broad run stopped
+  after `390` of `696` rows, but the later approved override completed the whole current surface in one pass.
 - 2026-06-20 narrow continuation after the interrupted broad run found a transient local artifact-state failure
   (`public-api-missing`) rather than an unsupported command. Rebuilding local artifacts restored the bridge, then the
   bridge smoke plus the next ten default-order rows passed focused validation with `unsupported=none` and
@@ -190,7 +193,7 @@ they no longer report unsupported markers.
 
 | Row | Unsupported markers | fallback_new_count | picture frames | command frames |
 | --- | --- | ---: | ---: | ---: |
-| _None currently known by focused evidence._ | | | | |
+| _None. The 2026-06-20 full/default proof reports `unsupported_rows=0` across the current `696`-row surface._ | | | | |
 
 ## Cleared Rows
 
