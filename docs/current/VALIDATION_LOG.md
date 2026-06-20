@@ -5,6 +5,17 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-20 focused graphics-layer clip/blend continuation:
+  A narrow batch covered the next ten default-order rows after the graphics-layer modulate/offscreen continuation:
+  `commands-graphics-layer-clip`, `commands-resize-graphics-layer-clip`,
+  `commands-forced-context-graphics-layer-clip`, `commands-graphics-layer-round-clip`,
+  `commands-resize-graphics-layer-round-clip`, `commands-forced-context-graphics-layer-round-clip`,
+  `commands-graphics-layer-path-clip`, `commands-resize-graphics-layer-path-clip`,
+  `commands-forced-context-graphics-layer-path-clip`, and `commands-graphics-layer-blend-mode`. The focused suite
+  passed `10/10` with `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, and
+  `jbr_command_frames=14878`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260620-142937/suite.tsv`.
+  All ten rows replayed through JBR command frames with `fallback_new_count=0`.
 - 2026-06-20 focused graphics-layer modulate/offscreen continuation:
   A narrow batch covered the next ten default-order rows after the graphics-layer invalid replay continuation:
   `commands-graphics-layer-invalid-translation-x-fallback`,
