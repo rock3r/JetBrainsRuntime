@@ -22,11 +22,10 @@ they no longer report unsupported markers.
   since the latest completed full/default census have focused validation evidence with `unsupported=none`,
   `fallback_new_count=0`, `jbr_picture_frames=0`, and non-zero `jbr_command_frames`.
 - Latest focused evidence:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260620-153105/suite.tsv`.
-  This covered the next ten default-order rows after the graphics-layer transform/near-camera continuation:
-  forced-context near-camera, invalid camera distance, offcenter pivot, blend color-filter, and blend
-  color-matrix-filter rows. All ten passed with `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, and
-  command replay evidence.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260620-153904/suite.tsv`.
+  This covered the next ten default-order rows after the graphics-layer pivot/filter continuation: the forced-context
+  graphics-layer blend color-matrix row plus save-layer filter, color-matrix-filter, and blend-mode rows. All ten
+  passed with `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, and command replay evidence.
 - Current interpretation: there are zero known active unsupported rows by focused evidence. The zero-unsupported goal
   still requires the next capped full/default sweep to complete and prove `unsupported_rows=0` across the whole suite.
   The 2026-06-20 daily broad run stopped after `390` of `696` rows with `unsupported_rows=0` and
@@ -109,6 +108,9 @@ they no longer report unsupported markers.
 - 2026-06-20 graphics-layer pivot/filter continuation covered the next ten default-order rows. The focused suite
   passed `10/10` with `fallback_sum=0`, `unsupported_rows=0`, and `jbr_picture_frames=0`; all ten rows replayed
   through JBR command frames, including the legacy-named invalid camera-distance fixture.
+- 2026-06-20 save-layer filter/blend continuation covered the next ten default-order rows. The focused suite passed
+  `10/10` with `fallback_sum=0`, `unsupported_rows=0`, and `jbr_picture_frames=0`; all ten rows replayed through JBR
+  command frames.
 
 ## Original Full-Sweep Unsupported Marker Families
 

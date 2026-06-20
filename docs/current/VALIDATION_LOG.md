@@ -5,6 +5,17 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-20 focused save-layer filter/blend continuation:
+  A narrow batch covered the next ten default-order rows after the graphics-layer pivot/filter continuation:
+  `commands-forced-context-graphics-layer-blend-color-matrix-filter`, `commands-save-layer-filter`,
+  `commands-resize-save-layer-filter`, `commands-forced-context-save-layer-filter`,
+  `commands-save-layer-color-matrix-filter`, `commands-resize-save-layer-color-matrix-filter`,
+  `commands-forced-context-save-layer-color-matrix-filter`, `commands-save-layer-blend-mode`,
+  `commands-resize-save-layer-blend-mode`, and `commands-forced-context-save-layer-blend-mode`. The focused suite
+  passed `10/10` with `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, and
+  `jbr_command_frames=13251`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260620-153904/suite.tsv`.
+  All ten rows replayed through JBR command frames with `fallback_new_count=0`.
 - 2026-06-20 focused graphics-layer pivot/filter continuation:
   A narrow batch covered the next ten default-order rows after the graphics-layer transform/near-camera continuation:
   `commands-forced-context-graphics-layer-near-camera`,
