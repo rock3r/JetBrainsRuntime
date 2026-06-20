@@ -5,6 +5,16 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-20 focused compatibility matrix completion:
+  The full 57-row compatibility matrix was covered through narrow group/slice runs rather than a broad default launch:
+  handshake (`6` rows), low-word gradients (`15` rows split `10+5`), low-word effects (`18` rows split `10+8`),
+  high-word effects (`9` rows), and high-word shader/UI (`9` rows). The aggregate passed `57/57` with
+  `fallback_sum=56`, `command_frames=570`, and `background_window=true` for all rows. The only command-frame row was
+  the `happy` compatibility case; all ABI/native/capability/public-API negative rows produced the expected structured
+  fallback with zero command frames. High-word evidence:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260620-165556/matrix.tsv`
+  and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260620-170018/matrix.tsv`.
 - 2026-06-20 focused compatibility low-word effects matrix:
   The `low-word-effects` compatibility group was split into narrow 10-row and 8-row slices covering all 18 low-word
   effect/filter/save-layer capability-missing rows. Both matrix slices passed, for an aggregate `18/18` with
