@@ -5,6 +5,20 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-20 focused save-layer invalid-record continuation:
+  A narrow batch covered the next ten default-order rows after the save-layer filter/blend continuation:
+  `commands-save-layer-blend-color-filter`, `commands-resize-save-layer-blend-color-filter`,
+  `commands-forced-context-save-layer-blend-color-filter`, `commands-invalid-save-layer-alpha-fallback`,
+  `commands-invalid-save-layer-record-flags-fallback`,
+  `commands-invalid-save-layer-color-filter-record-flags-fallback`,
+  `commands-invalid-save-layer-blend-mode-record-flags-fallback`,
+  `commands-invalid-save-layer-blend-color-filter-record-flags-fallback`,
+  `commands-invalid-save-layer-record-length-fallback`, and
+  `commands-invalid-save-layer-color-filter-record-length-fallback`. The focused suite passed `10/10` with
+  `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=4194`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260620-154640/suite.tsv`.
+  Its `fallback_sum=7` is expected from the seven corrupt save-layer parser fixtures; the three supported
+  blend-color-filter rows replayed through JBR command frames with `fallback_new_count=0`.
 - 2026-06-20 focused save-layer filter/blend continuation:
   A narrow batch covered the next ten default-order rows after the graphics-layer pivot/filter continuation:
   `commands-forced-context-graphics-layer-blend-color-matrix-filter`, `commands-save-layer-filter`,
