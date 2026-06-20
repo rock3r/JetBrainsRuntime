@@ -5,6 +5,21 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-20 focused radial-gradient/image-filter mixed continuation:
+  A narrow batch covered the next ten default-order rows after the malformed radial-gradient descriptor continuation:
+  `commands-invalid-radial-gradient-round-rect-stroke-color-count-fallback`,
+  `commands-invalid-radial-gradient-stop-order-fallback`,
+  `commands-invalid-radial-gradient-round-rect-stop-order-fallback`,
+  `commands-invalid-radial-gradient-stroke-stop-order-fallback`,
+  `commands-invalid-radial-gradient-round-rect-stroke-stop-order-fallback`,
+  `commands-image-filter`, `commands-resize-image-filter`,
+  `commands-forced-context-image-filter`, `commands-invalid-image-color-filter-use-fallback`, and
+  `commands-invalid-image-color-filter-use-after-evict-fallback`. The focused suite passed `10/10` with
+  `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=4386`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260620-125734/suite.tsv`.
+  Its `fallback_sum=7` is expected: five malformed radial-gradient rows and two invalid image color-filter reference
+  rows asserted structured fallback, while `commands-image-filter`, `commands-resize-image-filter`, and
+  `commands-forced-context-image-filter` replayed through JBR command frames with `fallback_new_count=0`.
 - 2026-06-20 focused malformed radial gradient descriptor continuation:
   A narrow batch covered the next ten default-order rows after the malformed sweep gradient descriptor continuation:
   `commands-invalid-radial-gradient-round-rect-radius-fallback`,

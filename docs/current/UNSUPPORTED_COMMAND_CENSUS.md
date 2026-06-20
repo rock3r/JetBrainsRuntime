@@ -54,6 +54,9 @@ they no longer report unsupported markers.
 - 2026-06-20 malformed radial-gradient descriptor continuation covered the next ten default-order rows. The focused
   suite passed `10/10` with `unsupported_rows=0` and `jbr_picture_frames=0`; all ten rows intentionally emitted
   structured fallback for malformed radial-gradient payloads.
+- 2026-06-20 radial-gradient/image-filter mixed continuation covered the next ten default-order rows. The focused suite
+  passed `10/10` with `unsupported_rows=0` and `jbr_picture_frames=0`; the three supported image-filter rows replayed
+  through JBR command frames and the seven malformed/invalid-reference rows intentionally emitted structured fallback.
 
 ## Original Full-Sweep Unsupported Marker Families
 
