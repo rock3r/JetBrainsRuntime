@@ -5,6 +5,22 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-20 focused malformed radial/sweep gradient path continuation:
+  A narrow batch covered the next ten default-order rows after the malformed gradient path continuation:
+  `commands-invalid-radial-gradient-path-tile-mode-fallback`,
+  `commands-invalid-radial-gradient-path-color-count-fallback`,
+  `commands-invalid-radial-gradient-path-stop-order-fallback`,
+  `commands-invalid-radial-gradient-path-fill-type-fallback`,
+  `commands-invalid-radial-gradient-path-data-length-fallback`,
+  `commands-invalid-radial-gradient-path-verb-fallback`,
+  `commands-invalid-sweep-gradient-path-color-count-fallback`,
+  `commands-invalid-sweep-gradient-path-stop-order-fallback`,
+  `commands-invalid-sweep-gradient-path-fill-type-fallback`, and
+  `commands-invalid-sweep-gradient-path-data-length-fallback`. The focused suite passed `10/10` with
+  `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=0`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260620-123153/suite.tsv`.
+  Its `fallback_sum=10` is expected because all ten rows are malformed radial/sweep gradient path fixtures that assert
+  structured fallback instead of replaying corrupt commands.
 - 2026-06-20 focused malformed gradient path continuation:
   A narrow batch covered the next ten default-order rows after the malformed linear-gradient descriptor continuation:
   `commands-invalid-linear-gradient-round-rect-stop-order-fallback`,
