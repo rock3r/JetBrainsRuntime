@@ -72,6 +72,9 @@ they no longer report unsupported markers.
 - 2026-06-20 shader descriptor redefine continuation covered the next ten default-order rows. The focused suite passed
   `10/10` with `fallback_sum=0`, `unsupported_rows=0`, and `jbr_picture_frames=0`; all ten rows replayed through JBR
   command frames.
+- 2026-06-20 path-effect/vertices replay continuation covered the next ten default-order rows. The focused suite passed
+  `10/10` with `fallback_sum=0`, `unsupported_rows=0`, and `jbr_picture_frames=0`; all ten rows replayed through JBR
+  command frames, including the legacy-named fallback fixtures.
 
 ## Original Full-Sweep Unsupported Marker Families
 

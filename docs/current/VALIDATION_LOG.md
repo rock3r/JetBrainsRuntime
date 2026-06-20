@@ -5,6 +5,17 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-20 focused path-effect/vertices replay continuation:
+  A narrow batch covered the next ten default-order rows after the shader descriptor redefine continuation:
+  `commands-forced-context-composite-noise-shader-descriptor-redefine`, `commands-path-effect`,
+  `commands-resize-path-effect`, `commands-forced-context-path-effect`,
+  `commands-path-effect-color-filter-fallback`, `commands-raw-discrete-path-effect-fallback`,
+  `commands-vertices`, `commands-resize-vertices`, `commands-forced-context-vertices`, and
+  `commands-vertices-raw-color-filter-fallback`. The focused suite passed `10/10` with `fallback_sum=0`,
+  `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=14744`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260620-135444/suite.tsv`.
+  All ten rows replayed through JBR command frames with `fallback_new_count=0`, including the legacy-named
+  path-effect and vertices fallback fixtures.
 - 2026-06-20 focused shader descriptor redefine continuation:
   A narrow batch covered the next ten default-order rows after the color-matrix/lighting/descriptor replay continuation:
   `commands-forced-context-descriptor-redefine`, `commands-resize-shader-descriptor-redefine`,
