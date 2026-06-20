@@ -5,6 +5,16 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-20 focused graphics-layer transform/near-camera continuation:
+  A narrow batch covered the next ten default-order rows after the graphics-layer shadow/rotation continuation:
+  `commands-resize-graphics-layer-rotationy`, `commands-forced-context-graphics-layer-rotationy`,
+  `commands-graphics-layer-rotationxy`, `commands-resize-graphics-layer-rotationxy`,
+  `commands-forced-context-graphics-layer-rotationxy`, `commands-graphics-layer-scale-translate`,
+  `commands-resize-graphics-layer-scale-translate`, `commands-forced-context-graphics-layer-scale-translate`,
+  `commands-graphics-layer-near-camera`, and `commands-resize-graphics-layer-near-camera`. The focused suite passed
+  `10/10` with `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=15971`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260620-152334/suite.tsv`.
+  All ten rows replayed through JBR command frames with `fallback_new_count=0`.
 - 2026-06-20 focused graphics-layer shadow/rotation continuation:
   A narrow batch covered the next ten default-order rows after the graphics-layer near-camera/shadow continuation:
   `commands-graphics-layer-round-shadow`, `commands-resize-graphics-layer-round-shadow`,
