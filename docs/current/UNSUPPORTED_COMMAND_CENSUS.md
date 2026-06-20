@@ -22,10 +22,10 @@ they no longer report unsupported markers.
   since the latest completed full/default census have focused validation evidence with `unsupported=none`,
   `fallback_new_count=0`, `jbr_picture_frames=0`, and non-zero `jbr_command_frames`.
 - Latest focused evidence:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260620-145950/suite.tsv`.
-  This covered the next ten default-order rows after the graphics-layer render-effect filter/blend continuation:
-  graphics-layer render-effect and offset-effect combinations with blend color-filter/color-matrix-filter payloads,
-  plus a chained render-effect blend color-matrix row. All ten passed with `fallback_sum=0`, `unsupported_rows=0`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260620-150728/suite.tsv`.
+  This covered the next ten default-order rows after the graphics-layer render-effect blend/filter continuation:
+  chained and near-camera render-effect blend color-matrix variants, three graphics-layer shadow rows, and two
+  legacy-named invalid shadow rows. All ten passed with `fallback_sum=0`, `unsupported_rows=0`,
   `jbr_picture_frames=0`, and command replay evidence.
 - Current interpretation: there are zero known active unsupported rows by focused evidence. The zero-unsupported goal
   still requires the next capped full/default sweep to complete and prove `unsupported_rows=0` across the whole suite.
@@ -97,6 +97,9 @@ they no longer report unsupported markers.
 - 2026-06-20 graphics-layer render-effect blend/filter continuation covered the next ten default-order rows. The
   focused suite passed `10/10` with `fallback_sum=0`, `unsupported_rows=0`, and `jbr_picture_frames=0`; all ten rows
   replayed through JBR command frames.
+- 2026-06-20 graphics-layer near-camera/shadow continuation covered the next ten default-order rows. The focused suite
+  passed `10/10` with `fallback_sum=0`, `unsupported_rows=0`, and `jbr_picture_frames=0`; all ten rows replayed
+  through JBR command frames, including the legacy-named invalid shadow fixtures.
 
 ## Original Full-Sweep Unsupported Marker Families
 

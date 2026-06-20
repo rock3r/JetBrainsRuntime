@@ -5,6 +5,20 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-20 focused graphics-layer near-camera/shadow continuation:
+  A narrow batch covered the next ten default-order rows after the graphics-layer render-effect blend/filter
+  continuation: `commands-resize-graphics-layer-chained-render-effect-blend-color-matrix-filter`,
+  `commands-forced-context-graphics-layer-chained-render-effect-blend-color-matrix-filter`,
+  `commands-graphics-layer-near-camera-chained-render-effect-blend-color-matrix-filter`,
+  `commands-resize-graphics-layer-near-camera-chained-render-effect-blend-color-matrix-filter`,
+  `commands-forced-context-graphics-layer-near-camera-chained-render-effect-blend-color-matrix-filter`,
+  `commands-graphics-layer-shadow`, `commands-resize-graphics-layer-shadow`,
+  `commands-forced-context-graphics-layer-shadow`, `commands-graphics-layer-invalid-shadow-elevation-fallback`, and
+  `commands-graphics-layer-invalid-shadow-path-fallback`. The focused suite passed `10/10` with `fallback_sum=0`,
+  `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=11674`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260620-150728/suite.tsv`.
+  All ten rows replayed through JBR command frames with `fallback_new_count=0`, including the legacy-named invalid
+  shadow fixtures.
 - 2026-06-20 focused graphics-layer render-effect blend/filter continuation:
   A narrow batch covered the next ten default-order rows after the graphics-layer render-effect filter/blend
   continuation: `commands-graphics-layer-render-effect-blend-color-filter`,
