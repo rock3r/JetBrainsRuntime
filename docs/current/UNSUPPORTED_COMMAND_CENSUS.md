@@ -34,6 +34,11 @@ they no longer report unsupported markers.
   The 2026-06-20 daily broad run stopped after `390` of `696` rows with `unsupported_rows=0` and
   `jbr_picture_frames=0` so far, but it is partial evidence only; the daily broad cap prevents relaunching another
   full/default sweep on 2026-06-20.
+- 2026-06-20 narrow continuation after the interrupted broad run found a transient local artifact-state failure
+  (`public-api-missing`) rather than an unsupported command. Rebuilding local artifacts restored the bridge, then the
+  bridge smoke plus the next ten default-order rows passed focused validation with `unsupported=none` and
+  `jbr_picture_frames=0`. Five corrupt invalid-stroke-width rows intentionally emitted structured command-stream
+  fallback and remain expected-fallback coverage, not active unsupported rows.
 
 ## Original Full-Sweep Unsupported Marker Families
 

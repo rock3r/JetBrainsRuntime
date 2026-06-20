@@ -5,6 +5,32 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-20 post-interruption focused gradient-invalid continuation:
+  After the interrupted broad sweep, the next ten default-order rows were validated narrowly rather than launching a
+  second broad pass. The first attempt exposed a local artifact-state regression: both
+  `commands-radial-gradient-round-rect-invalid-radius-fallback` and the bridge smoke row
+  `commands-native-bridge-load-library` failed strict command validation with
+  `SKIKO_JBR_INTEROP_FALLBACK reason=public-api-missing`, `unsupported=none`, zero picture frames, and zero command
+  frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260620-120132/commands-radial-gradient-round-rect-invalid-radius-fallback/report.md`
+  and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260620-120343/commands-native-bridge-load-library/report.md`.
+  Rebuilding local artifacts with `./scripts/rebuild-jbr-skia-local-artifacts.sh` restored the bridge. The bridge smoke
+  then passed with `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=1674`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260620-120528/suite.tsv`.
+  The formerly failing `commands-radial-gradient-round-rect-invalid-radius-fallback` row then passed with
+  `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=2389`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260620-120615/suite.tsv`.
+  The remaining nine-row continuation batch passed `9/9` with `unsupported_rows=0`, `jbr_picture_frames=0`, and
+  `jbr_command_frames=8492`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260620-120709/suite.tsv`.
+  Its `fallback_sum=5` comes from expected invalid-fixture command-stream fallback rows:
+  `commands-invalid-linear-gradient-stroke-width-fallback`,
+  `commands-invalid-linear-gradient-round-rect-stroke-width-fallback`,
+  `commands-invalid-radial-gradient-stroke-width-fallback`,
+  `commands-invalid-radial-gradient-round-rect-stroke-width-fallback`, and
+  `commands-invalid-sweep-gradient-stroke-width-fallback`; the four invalid-radius rows replayed through JBR command
+  frames with `fallback_new_count=0`.
 - 2026-06-20 interrupted full/default command-probe sweep:
   The daily capped full/default broad slot was consumed by
   `EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-command-probe-suite.sh`, which wrote:
