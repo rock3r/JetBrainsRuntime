@@ -5,6 +5,15 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-20 focused artifact matrix:
+  The artifact matrix `required` group passed `2/2`: `current-all` replayed with `actual_fallbacks=0` and
+  `command_frames=450`, while `missing-public-api` produced the expected `public-api-missing` fallback with zero
+  command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260620-170525/matrix.tsv`.
+  The `optional-old` group was also invoked and exited cleanly, but all five rows were skipped because the corresponding
+  `OLD_JBR_API_SHIM`, `OLD_JBR_SKIA_LIB`, `OLD_DESKTOP_PATCH`, `OLD_SKIKO_VERSION`, and `OLD_CMP_OUT` inputs were not
+  configured:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-artifact-matrix/20260620-170629/matrix.tsv`.
 - 2026-06-20 focused compatibility matrix completion:
   The full 57-row compatibility matrix was covered through narrow group/slice runs rather than a broad default launch:
   handshake (`6` rows), low-word gradients (`15` rows split `10+5`), low-word effects (`18` rows split `10+8`),
