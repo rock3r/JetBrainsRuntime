@@ -5,6 +5,16 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-20 reproducible current-surface evidence audit:
+  Added and ran Magic Jewel's read-only evidence audit helper:
+  `./scripts/jbr-skia-command-probe-evidence-audit.sh`. The helper loads the current default case list through
+  `LIST_CASES=true ./scripts/jbr-skia-command-probe-suite.sh`, scans existing command-probe `suite.tsv` artifacts, and
+  selects the newest evidence for each current row without launching rendering validation. It matched the prior hand
+  audit: `current_rows=696`, `covered_current_rows=696/696`, `missing=0`, `non_pass=0`, `unsupported=0`,
+  `picture_rows=0`, `fallback_rows=348`, `cmd0_expected_fallback_rows=345`, `fallback_with_command_rows=3`, and
+  `cmd0_without_fallback_rows=0`. The three fallback-with-command rows are corrupt record-flag fixtures from the
+  interrupted 2026-06-20 broad sweep and remain informational, not active unsupported coverage. This is still
+  accumulated evidence only; the final completion proof remains the next capped full/default pass.
 - 2026-06-20 focused artifact matrix:
   The artifact matrix `required` group passed `2/2`: `current-all` replayed with `actual_fallbacks=0` and
   `command_frames=450`, while `missing-public-api` produced the expected `public-api-missing` fallback with zero

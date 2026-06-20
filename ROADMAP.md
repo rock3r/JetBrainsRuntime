@@ -56,24 +56,19 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
-- Focused stroked arbitrary-path gradient command replay batch:
-  `EXPECT_SCREENSHOT_ASSERTION=false CASES="commands-linear-gradient-path-stroke-fallback commands-radial-gradient-path-stroke-fallback commands-sweep-gradient-path-stroke-fallback" ./scripts/jbr-skia-command-probe-suite.sh`
-  passed `3/3` after adding explicit JBR/CMP/Skiko linear, radial, and sweep stroke-path gradient commands. All three
-  rows reported `fallback_new_count=0`, `unsupported=none`, `jbr_picture_frames=0`, and non-zero command frames:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260618-165037/suite.tsv`.
-  The daily broad guard now treats exact selections up to 10 rows as focused validation, matching the working cadence.
-- Unsupported command census checkpoint: the latest full/default command-probe evidence remains
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260612-144955/suite.tsv`.
-  It passed `549/549`, but `docs/current/UNSUPPORTED_COMMAND_CENSUS.md` recorded 79 unsupported rows, totaling
-  78,827 picture fallback frames and zero command frames across those unsupported rows. Focused validation has cleared
-  all 79 original unsupported rows, plus two June 19 parser-artifact rows. The newest focused invalid-gradient batch
-  passed `10/10` with `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, and
-  `jbr_command_frames=156521`:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260619-185019/suite.tsv`.
-  A list-only audit now records the current default command-probe surface at `696` rows in
-  `docs/current/COMMAND_PROBE_CURRENT_DEFAULT_SURFACE.md`. The interrupted June 19 broad run is not completion
-  evidence, so final 100% coverage still requires the next capped full/default sweep to complete with
-  `unsupported_rows=0` across that current surface.
+- Current-surface evidence audit checkpoint:
+  Magic Jewel's read-only `./scripts/jbr-skia-command-probe-evidence-audit.sh` now makes the accumulated evidence audit
+  reproducible without launching rendering validation. Its 2026-06-20 run covered the current `696`-row default
+  command-probe surface with `missing=0`, `non_pass=0`, `unsupported=0`, `picture_rows=0`,
+  `cmd0_expected_fallback_rows=345`, and `cmd0_without_fallback_rows=0`. There are zero known active unsupported rows
+  by focused evidence, but the final 100% claim remains pending the next capped full/default pass completing in one
+  sweep with `unsupported_rows=0`.
+- Compatibility and artifact gates:
+  The 57-row compatibility matrix was covered through narrow group/slice runs and passed `57/57`; only the `happy`
+  row replayed commands, while all ABI/native/capability/public-API negatives produced expected structured fallback.
+  The artifact matrix required group passed `2/2` (`current-all` command replay, `missing-public-api` structured
+  fallback), and the optional old-artifact group skipped cleanly because old inputs were not configured. Details live in
+  [`docs/current/VALIDATION_LOG.md`](docs/current/VALIDATION_LOG.md).
 - Targeted read-only graphics-layer lifecycle gap closure audit after the standalone zero-handle sweep found no
   remaining `parity*graphics-layer*` screenshot-parity rows without JBR effect/shader handle lifecycle assertions. All
   62 `parity-resize-graphics-layer*` / `parity-forced-context-graphics-layer*` rows retained surface/cache lifecycle

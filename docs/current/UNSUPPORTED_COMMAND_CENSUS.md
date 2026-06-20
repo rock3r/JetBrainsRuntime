@@ -25,9 +25,11 @@ they no longer report unsupported markers.
   rows.
 - Latest current-surface evidence audit:
   A 2026-06-20 non-broad audit loaded the current default case list (`696` rows), scanned all command-probe
-  `suite.tsv` artifacts, and selected the newest evidence per current row. It found `covered_current_rows=696/696`,
-  `missing=0`, `non_pass=0`, `unsupported=0`, `picture_rows=0`, `fallback_rows=348`,
-  `cmd0_expected_fallback_rows=345`, and `cmd0_without_fallback_rows=0`.
+  `suite.tsv` artifacts, and selected the newest evidence per current row. The audit is now reproducible with
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/scripts/jbr-skia-command-probe-evidence-audit.sh`. Its latest run
+  found `covered_current_rows=696/696`, `missing=0`, `non_pass=0`, `unsupported=0`, `picture_rows=0`,
+  `fallback_rows=348`, `cmd0_expected_fallback_rows=345`, `fallback_with_command_rows=3`, and
+  `cmd0_without_fallback_rows=0`.
 - Latest focused evidence:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260620-161753/suite.tsv`.
   This covered the final six default-order rows after the save-layer invalid-filter-reference continuation:

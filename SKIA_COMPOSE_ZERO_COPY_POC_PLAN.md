@@ -16,9 +16,15 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   [`docs/current/UNSUPPORTED_COMMAND_CENSUS.md`](docs/current/UNSUPPORTED_COMMAND_CENSUS.md). The latest completed
   full/default command-probe evidence passed `549/549`, but recorded 79 unsupported rows with 78,827 picture fallback
   frames and zero command frames across those unsupported rows. Focused validation has since cleared all 79 original
-  unsupported rows, plus two June 19 parser-artifact rows from glued scope metadata. There are zero known active
-  unsupported rows by focused evidence, but the zero-unsupported goal remains pending the next capped full/default
-  sweep proving `unsupported_rows=0` across the whole suite.
+  unsupported rows, plus the rows added to the current default surface. Magic Jewel's read-only
+  `./scripts/jbr-skia-command-probe-evidence-audit.sh` now reproduces the latest-evidence audit across the current
+  `696` rows: `covered_current_rows=696/696`, `missing=0`, `non_pass=0`, `unsupported=0`, `picture_rows=0`, and
+  `cmd0_without_fallback_rows=0`. There are zero known active unsupported rows by focused evidence, but the
+  zero-unsupported goal remains pending the next capped full/default sweep proving `unsupported_rows=0` across the
+  whole suite in one pass.
+- Compatibility and artifact fallback gates are current: the compatibility matrix was covered in narrow slices and
+  passed `57/57`, while the artifact matrix required group passed `2/2` and the optional old-artifact rows skipped
+  cleanly because old inputs were not configured.
 - JBR/CMP/Skiko now support stroked arbitrary-path gradients through explicit linear/radial/sweep command records.
   Magic Jewel's exact three-row command probe passed with `fallback_new_count=0`, `unsupported=none`, zero picture
   frames, and non-zero command frames:
