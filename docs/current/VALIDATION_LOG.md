@@ -5,6 +5,14 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-20 focused compatibility handshake matrix:
+  A narrow compatibility-matrix slice ran `CASE_GROUPS=handshake`, covering `happy`, `abi-mismatch`,
+  `native-abi-mismatch`, `command-capability-mismatch`, `command-capability-high-mismatch`, and
+  `public-api-missing`. The matrix passed `6/6` with `fallback_sum=5`, `command_frames=570`, and
+  `background_window=true` for all rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-compatibility-matrix/20260620-163445/matrix.tsv`.
+  The happy path replayed through command frames, while ABI/native/capability/public-API mismatch rows produced the
+  expected structured fallback with zero command frames.
 - 2026-06-20 current-surface latest-evidence audit:
   A non-broad audit loaded the current default case list with
   `LIST_CASES=true ./scripts/jbr-skia-command-probe-suite.sh`, then scanned all command-probe `suite.tsv` artifacts
