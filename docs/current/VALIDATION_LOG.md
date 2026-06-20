@@ -5,6 +5,21 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-20 focused save-layer invalid-reference continuation:
+  A narrow batch covered the next ten default-order rows after the save-layer invalid-record continuation:
+  `commands-invalid-save-layer-blend-mode-record-length-fallback`,
+  `commands-invalid-save-layer-blend-color-filter-record-length-fallback`,
+  `commands-invalid-save-layer-color-filter-ref-record-flags-fallback`,
+  `commands-invalid-save-layer-blend-color-filter-ref-record-flags-fallback`,
+  `commands-invalid-save-layer-image-filter-ref-record-flags-fallback`,
+  `commands-invalid-save-layer-color-filter-ref-record-length-fallback`,
+  `commands-invalid-save-layer-blend-color-filter-ref-record-length-fallback`,
+  `commands-invalid-save-layer-image-filter-ref-record-length-fallback`,
+  `commands-invalid-save-layer-color-filter-width-fallback`, and
+  `commands-invalid-save-layer-color-filter-height-fallback`. The focused suite passed `10/10` with
+  `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=0`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260620-155418/suite.tsv`.
+  Its `fallback_sum=10` is expected because all ten rows are corrupt save-layer reference/record fixtures.
 - 2026-06-20 focused save-layer invalid-record continuation:
   A narrow batch covered the next ten default-order rows after the save-layer filter/blend continuation:
   `commands-save-layer-blend-color-filter`, `commands-resize-save-layer-blend-color-filter`,
