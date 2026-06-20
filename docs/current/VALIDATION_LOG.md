@@ -5,6 +5,18 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-20 focused graphics-layer render-effect continuation:
+  A narrow batch covered the next ten default-order rows after the graphics-layer blend/color-filter continuation:
+  `commands-graphics-layer-unsupported-child-fallback`, `commands-graphics-layer-render-effect`,
+  `commands-resize-graphics-layer-render-effect`, `commands-forced-context-graphics-layer-render-effect`,
+  `commands-graphics-layer-raw-image-filter-effect-fallback`, `commands-graphics-layer-offset-effect`,
+  `commands-resize-graphics-layer-offset-effect`, `commands-forced-context-graphics-layer-offset-effect`,
+  `commands-graphics-layer-chained-render-effect`, and
+  `commands-resize-graphics-layer-chained-render-effect`. The focused suite passed `10/10` with `fallback_sum=0`,
+  `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=15376`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260620-144437/suite.tsv`.
+  All ten rows replayed through JBR command frames with `fallback_new_count=0`, including the legacy-named
+  unsupported-child and raw image-filter-effect fixtures.
 - 2026-06-20 focused graphics-layer blend/color-filter continuation:
   A narrow batch covered the next ten default-order rows after the graphics-layer clip/blend continuation:
   `commands-resize-graphics-layer-blend-mode`, `commands-forced-context-graphics-layer-blend-mode`,
