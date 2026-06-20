@@ -5,6 +5,20 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-20 focused shader descriptor redefine continuation:
+  A narrow batch covered the next ten default-order rows after the color-matrix/lighting/descriptor replay continuation:
+  `commands-forced-context-descriptor-redefine`, `commands-resize-shader-descriptor-redefine`,
+  `commands-forced-context-shader-descriptor-redefine`,
+  `commands-resize-color-shader-descriptor-redefine`,
+  `commands-forced-context-color-shader-descriptor-redefine`,
+  `commands-resize-noise-shader-descriptor-redefine`,
+  `commands-forced-context-noise-shader-descriptor-redefine`,
+  `commands-resize-turbulence-shader-descriptor-redefine`,
+  `commands-forced-context-turbulence-shader-descriptor-redefine`, and
+  `commands-resize-composite-noise-shader-descriptor-redefine`. The focused suite passed `10/10` with
+  `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=14682`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260620-134545/suite.tsv`.
+  All ten rows replayed through JBR command frames with `fallback_new_count=0`.
 - 2026-06-20 focused color-matrix/lighting/descriptor replay continuation:
   A narrow batch covered the next ten default-order rows after the color-filter replay continuation:
   `commands-forced-context-color-filter-handle`, `commands-color-matrix-filter`,

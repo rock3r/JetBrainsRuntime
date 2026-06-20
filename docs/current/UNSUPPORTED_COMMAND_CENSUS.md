@@ -69,6 +69,9 @@ they no longer report unsupported markers.
 - 2026-06-20 color-matrix/lighting/descriptor replay continuation covered the next ten default-order rows. The focused
   suite passed `10/10` with `fallback_sum=0`, `unsupported_rows=0`, and `jbr_picture_frames=0`; all ten rows replayed
   through JBR command frames, including the former nonfinite color-matrix fallback fixture.
+- 2026-06-20 shader descriptor redefine continuation covered the next ten default-order rows. The focused suite passed
+  `10/10` with `fallback_sum=0`, `unsupported_rows=0`, and `jbr_picture_frames=0`; all ten rows replayed through JBR
+  command frames.
 
 ## Original Full-Sweep Unsupported Marker Families
 
