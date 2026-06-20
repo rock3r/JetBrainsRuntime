@@ -22,10 +22,10 @@ they no longer report unsupported markers.
   since the latest completed full/default census have focused validation evidence with `unsupported=none`,
   `fallback_new_count=0`, `jbr_picture_frames=0`, and non-zero `jbr_command_frames`.
 - Latest focused evidence:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260620-142937/suite.tsv`.
-  This covered the next ten default-order rows after the graphics-layer modulate/offscreen continuation: the three
-  graphics-layer rect-clip rows, three round-clip rows, three path-clip rows, and
-  `commands-graphics-layer-blend-mode`. All ten passed with `fallback_sum=0`, `unsupported_rows=0`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260620-143709/suite.tsv`.
+  This covered the next ten default-order rows after the graphics-layer clip/blend continuation: two graphics-layer
+  blend-mode rows, three graphics-layer color-filter rows, three graphics-layer color-matrix-filter rows, and two
+  legacy-named raw color-filter rows. All ten passed with `fallback_sum=0`, `unsupported_rows=0`,
   `jbr_picture_frames=0`, and command replay evidence.
 - Current interpretation: there are zero known active unsupported rows by focused evidence. The zero-unsupported goal
   still requires the next capped full/default sweep to complete and prove `unsupported_rows=0` across the whole suite.
@@ -85,6 +85,9 @@ they no longer report unsupported markers.
 - 2026-06-20 graphics-layer clip/blend continuation covered the next ten default-order rows. The focused suite passed
   `10/10` with `fallback_sum=0`, `unsupported_rows=0`, and `jbr_picture_frames=0`; all ten rows replayed through JBR
   command frames.
+- 2026-06-20 graphics-layer blend/color-filter continuation covered the next ten default-order rows. The focused suite
+  passed `10/10` with `fallback_sum=0`, `unsupported_rows=0`, and `jbr_picture_frames=0`; all ten rows replayed
+  through JBR command frames, including the legacy-named raw color-filter fixtures.
 
 ## Original Full-Sweep Unsupported Marker Families
 
