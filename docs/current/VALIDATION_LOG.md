@@ -5,6 +5,18 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-20 interrupted full/default command-probe sweep:
+  The daily capped full/default broad slot was consumed by
+  `EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jbr-skia-command-probe-suite.sh`, which wrote:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260620-002449/suite.tsv`.
+  The runner is no longer alive and the artifact stopped at `390` completed rows out of the current `696`-row default
+  surface. The partial aggregate is `390/390` passed with `unsupported_rows=0`, `fallback_sum=226`,
+  `jbr_picture_frames=0`, and `jbr_command_frames=937116`. The last completed row is
+  `commands-linear-gradient-round-rect-invalid-radius-fallback`, which passed with `fallback_new_count=0`,
+  `unsupported=none`, `jbr_picture_frames=0`, and `jbr_command_frames=9989`. This is useful partial broad evidence,
+  including broad confirmation for many promoted rows, but it is not final proof for the full current surface. No second
+  broad sweep should be launched on 2026-06-20 because the daily broad slot is already recorded at:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/.jbr-skia-daily-validation/broad.2026-06-20.stamp`.
 - 2026-06-20 focused current-default additions resize gradient-surfaces singleton:
   A singleton narrow pass covered the one current-surface addition that was skipped by the earlier ten-row batches:
   `commands-resize-gradient-surfaces`. The focused suite passed `1/1` with `fallback_sum=0`, `unsupported_rows=0`,

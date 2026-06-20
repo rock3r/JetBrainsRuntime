@@ -31,6 +31,9 @@ they no longer report unsupported markers.
   `unsupported=0`.
 - Current interpretation: there are zero known active unsupported rows by focused evidence. The zero-unsupported goal
   still requires the next capped full/default sweep to complete and prove `unsupported_rows=0` across the whole suite.
+  The 2026-06-20 daily broad run stopped after `390` of `696` rows with `unsupported_rows=0` and
+  `jbr_picture_frames=0` so far, but it is partial evidence only; the daily broad cap prevents relaunching another
+  full/default sweep on 2026-06-20.
 
 ## Original Full-Sweep Unsupported Marker Families
 
