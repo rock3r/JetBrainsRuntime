@@ -60,7 +60,7 @@ This is the small working roadmap for the current PoC. The full historical check
   Magic Jewel's read-only `./scripts/jbr-skia-command-probe-evidence-audit.sh` now makes the accumulated evidence audit
   reproducible without launching rendering validation. Its 2026-06-20 run covered the current `696`-row default
   command-probe surface with `missing=0`, `non_pass=0`, `unsupported=0`, `picture_rows=0`,
-  `cmd0_expected_fallback_rows=345`, and `cmd0_without_fallback_rows=0`. There are zero known active unsupported rows
+  `cmd0_expected_fallback_rows=346`, and `cmd0_without_fallback_rows=0`. There are zero known active unsupported rows
   by focused evidence, but the final 100% claim remains pending the next capped full/default pass completing in one
   sweep with `unsupported_rows=0`.
 - Compatibility and artifact gates:

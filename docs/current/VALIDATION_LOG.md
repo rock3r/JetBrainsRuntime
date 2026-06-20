@@ -5,6 +5,22 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-20 focused record-flag fallback classification refresh:
+  A narrow exact command-probe rerun covered the three corrupt record-flag fixtures that the evidence audit had flagged
+  as fallback-with-command rows:
+  `commands-invalid-image-cache-clear-record-flags-fallback`,
+  `commands-invalid-image-evict-record-flags-fallback`, and
+  `commands-invalid-font-data-record-flags-fallback`. The focused suite passed `3/3` with `unsupported_rows=0`,
+  `jbr_picture_frames=0`, and `fallback_sum=3`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260620-173305/suite.tsv`.
+  The image-evict row is pure structured fallback with zero command frames; the image-cache-clear and font-data rows
+  each intentionally report one structured fallback while later frames still replay commands.
+- 2026-06-20 refreshed reproducible current-surface evidence audit:
+  Reran Magic Jewel's read-only `./scripts/jbr-skia-command-probe-evidence-audit.sh` after the exact record-flag
+  refresh. The latest-evidence audit now reports `current_rows=696`, `covered_current_rows=696/696`, `missing=0`,
+  `non_pass=0`, `unsupported=0`, `picture_rows=0`, `fallback_rows=348`, `cmd0_expected_fallback_rows=346`,
+  `fallback_with_command_rows=2`, and `cmd0_without_fallback_rows=0`. This remains accumulated evidence only; final
+  completion still requires the next capped full/default pass to complete in one sweep.
 - 2026-06-20 reproducible current-surface evidence audit:
   Added and ran Magic Jewel's read-only evidence audit helper:
   `./scripts/jbr-skia-command-probe-evidence-audit.sh`. The helper loads the current default case list through
