@@ -48,6 +48,9 @@ they no longer report unsupported markers.
 - 2026-06-20 malformed radial/sweep gradient path continuation covered the next ten default-order rows. The focused
   suite passed `10/10` with `unsupported_rows=0` and `jbr_picture_frames=0`; all ten rows intentionally emitted
   structured fallback for malformed radial/sweep gradient path payloads.
+- 2026-06-20 malformed sweep/radial gradient descriptor continuation covered the next ten default-order rows. The
+  focused suite passed `10/10` with `unsupported_rows=0` and `jbr_picture_frames=0`; all ten rows intentionally emitted
+  structured fallback for malformed sweep/radial gradient payloads.
 
 ## Original Full-Sweep Unsupported Marker Families
 
