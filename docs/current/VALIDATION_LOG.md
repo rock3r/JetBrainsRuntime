@@ -5,6 +5,17 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-20 focused color-matrix/lighting/descriptor replay continuation:
+  A narrow batch covered the next ten default-order rows after the color-filter replay continuation:
+  `commands-forced-context-color-filter-handle`, `commands-color-matrix-filter`,
+  `commands-resize-color-matrix-filter`, `commands-forced-context-color-matrix-filter`,
+  `commands-color-matrix-filter-nonfinite-fallback`, `commands-lighting-filter`,
+  `commands-resize-lighting-filter`, `commands-forced-context-lighting-filter`,
+  `commands-descriptor-eviction`, and `commands-resize-descriptor-redefine`. The focused suite passed `10/10` with
+  `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=13438`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260620-133510/suite.tsv`.
+  All ten rows replayed through JBR command frames with `fallback_new_count=0`, including the former
+  `commands-color-matrix-filter-nonfinite-fallback` fixture and the descriptor lifecycle rows.
 - 2026-06-20 focused color-filter replay continuation:
   A narrow batch covered the next ten default-order rows after the image color-matrix/raw color-filter continuation:
   `commands-invalid-fill-rect-color-filter-ref-width-fallback`,

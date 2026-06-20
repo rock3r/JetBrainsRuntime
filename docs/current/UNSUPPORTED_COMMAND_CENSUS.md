@@ -66,6 +66,9 @@ they no longer report unsupported markers.
 - 2026-06-20 color-filter replay continuation covered the next ten default-order rows. The focused suite passed `10/10`
   with `unsupported_rows=0` and `jbr_picture_frames=0`; eight supported color-filter rows replayed through JBR command
   frames and two invalid fill-rect color-filter reference rows intentionally emitted structured fallback.
+- 2026-06-20 color-matrix/lighting/descriptor replay continuation covered the next ten default-order rows. The focused
+  suite passed `10/10` with `fallback_sum=0`, `unsupported_rows=0`, and `jbr_picture_frames=0`; all ten rows replayed
+  through JBR command frames, including the former nonfinite color-matrix fallback fixture.
 
 ## Original Full-Sweep Unsupported Marker Families
 
