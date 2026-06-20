@@ -5,6 +5,19 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-20 focused graphics-layer pivot/filter continuation:
+  A narrow batch covered the next ten default-order rows after the graphics-layer transform/near-camera continuation:
+  `commands-forced-context-graphics-layer-near-camera`,
+  `commands-graphics-layer-invalid-camera-distance-fallback`, `commands-graphics-layer-offcenter-pivot`,
+  `commands-resize-graphics-layer-offcenter-pivot`, `commands-forced-context-graphics-layer-offcenter-pivot`,
+  `commands-graphics-layer-blend-color-filter`, `commands-resize-graphics-layer-blend-color-filter`,
+  `commands-forced-context-graphics-layer-blend-color-filter`,
+  `commands-graphics-layer-blend-color-matrix-filter`, and
+  `commands-resize-graphics-layer-blend-color-matrix-filter`. The focused suite passed `10/10` with
+  `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=14428`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260620-153105/suite.tsv`.
+  All ten rows replayed through JBR command frames with `fallback_new_count=0`, including the legacy-named invalid
+  camera-distance fixture.
 - 2026-06-20 focused graphics-layer transform/near-camera continuation:
   A narrow batch covered the next ten default-order rows after the graphics-layer shadow/rotation continuation:
   `commands-resize-graphics-layer-rotationy`, `commands-forced-context-graphics-layer-rotationy`,
