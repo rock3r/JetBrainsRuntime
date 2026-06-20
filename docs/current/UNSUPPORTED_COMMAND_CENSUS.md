@@ -60,6 +60,9 @@ they no longer report unsupported markers.
 - 2026-06-20 invalid image color-filter reference continuation covered the next ten default-order rows. The focused
   suite passed `10/10` with `unsupported_rows=0` and `jbr_picture_frames=0`; all ten rows intentionally emitted
   structured fallback for invalid image color-filter reference/descriptor payloads.
+- 2026-06-20 image color-matrix/raw color-filter continuation covered the next ten default-order rows. The focused
+  suite passed `10/10` with `unsupported_rows=0` and `jbr_picture_frames=0`; six supported color-filter rows replayed
+  through JBR command frames and four invalid descriptor/filter scalar rows intentionally emitted structured fallback.
 
 ## Original Full-Sweep Unsupported Marker Families
 

@@ -5,6 +5,20 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-20 focused image color-matrix/raw color-filter continuation:
+  A narrow batch covered the next ten default-order rows after the invalid image color-filter reference continuation:
+  `commands-invalid-image-color-filter-descriptor-ref-filter-quality-fallback`,
+  `commands-image-color-matrix-filter`, `commands-resize-image-color-matrix-filter`,
+  `commands-forced-context-image-color-matrix-filter`,
+  `commands-image-raw-table-color-filter-fallback`, `commands-raw-blend-color-filter-fallback`,
+  `commands-raw-table-color-filter-fallback`, `commands-invalid-fill-rect-color-filter-blend-mode-fallback`,
+  `commands-invalid-fill-rect-color-filter-width-fallback`, and
+  `commands-invalid-fill-rect-color-filter-height-fallback`. The focused suite passed `10/10` with
+  `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=8793`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260620-131646/suite.tsv`.
+  Its `fallback_sum=4` is expected: the invalid descriptor/filter scalar rows asserted structured fallback, while the
+  three image color-matrix rows and the three raw color-filter rows replayed through JBR command frames with
+  `fallback_new_count=0`.
 - 2026-06-20 focused invalid image color-filter reference continuation:
   A narrow batch covered the next ten default-order rows after the radial-gradient/image-filter mixed continuation:
   `commands-invalid-image-color-filter-ref-width-fallback`,
