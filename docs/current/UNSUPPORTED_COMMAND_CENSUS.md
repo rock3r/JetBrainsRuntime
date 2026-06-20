@@ -22,13 +22,14 @@ they no longer report unsupported markers.
   since the latest completed full/default census have focused validation evidence with `unsupported=none`,
   `fallback_new_count=0`, `jbr_picture_frames=0`, and non-zero `jbr_command_frames`.
 - Latest focused evidence:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260620-002036/suite.tsv`.
-  This covered the final skipped current-surface addition, `commands-resize-gradient-surfaces`, after the preceding
-  ten-row tail batch:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260619-235543/suite.tsv`.
-  Earlier June 19 focused evidence also cleared the final original unsupported rows and two parser-artifact rows where
-  glued scope-acquisition metadata (`scopeId`/`abi`) was incorrectly copied into `cmp_unsupported_reasons` despite
-  `unsupported=0`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260620-142204/suite.tsv`.
+  This covered the next ten default-order rows after the graphics-layer invalid replay continuation:
+  `commands-graphics-layer-invalid-translation-x-fallback`,
+  `commands-graphics-layer-invalid-translation-y-fallback`,
+  `commands-graphics-layer-invalid-rotation-x-fallback`,
+  `commands-graphics-layer-invalid-rotation-y-fallback`, the three graphics-layer modulate-alpha rows, and the three
+  graphics-layer offscreen rows. All ten passed with `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`,
+  and command replay evidence.
 - Current interpretation: there are zero known active unsupported rows by focused evidence. The zero-unsupported goal
   still requires the next capped full/default sweep to complete and prove `unsupported_rows=0` across the whole suite.
   The 2026-06-20 daily broad run stopped after `390` of `696` rows with `unsupported_rows=0` and
@@ -81,6 +82,9 @@ they no longer report unsupported markers.
 - 2026-06-20 graphics-layer invalid replay continuation covered the next ten default-order rows. The focused suite
   passed `10/10` with `fallback_sum=0`, `unsupported_rows=0`, and `jbr_picture_frames=0`; all ten rows replayed
   through JBR command frames, including the legacy-named invalid graphics-layer fixtures.
+- 2026-06-20 graphics-layer modulate/offscreen continuation covered the next ten default-order rows. The focused suite
+  passed `10/10` with `fallback_sum=0`, `unsupported_rows=0`, and `jbr_picture_frames=0`; all ten rows replayed
+  through JBR command frames, including the remaining legacy-named invalid graphics-layer transform fixtures.
 
 ## Original Full-Sweep Unsupported Marker Families
 
