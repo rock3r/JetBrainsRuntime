@@ -75,6 +75,9 @@ they no longer report unsupported markers.
 - 2026-06-20 path-effect/vertices replay continuation covered the next ten default-order rows. The focused suite passed
   `10/10` with `fallback_sum=0`, `unsupported_rows=0`, and `jbr_picture_frames=0`; all ten rows replayed through JBR
   command frames, including the legacy-named fallback fixtures.
+- 2026-06-20 vertices-invalid/blend-mode continuation covered the next ten default-order rows. The focused suite passed
+  `10/10` with `unsupported_rows=0` and `jbr_picture_frames=0`; three rows replayed through JBR command frames and
+  seven malformed draw-vertices parser fixtures intentionally emitted structured fallback.
 
 ## Original Full-Sweep Unsupported Marker Families
 

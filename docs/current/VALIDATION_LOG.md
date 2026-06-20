@@ -5,6 +5,22 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-20 focused vertices-invalid/blend-mode continuation:
+  A narrow batch covered the next ten default-order rows after the path-effect/vertices replay continuation:
+  `commands-vertices-invalid-blend-mode-fallback`,
+  `commands-invalid-draw-vertices-vertex-count-fallback`,
+  `commands-invalid-draw-vertices-max-vertex-count-fallback`,
+  `commands-invalid-draw-vertices-record-length-fallback`,
+  `commands-invalid-draw-vertices-vertex-mode-fallback`,
+  `commands-invalid-draw-vertices-blend-mode-fallback`,
+  `commands-invalid-draw-vertices-index-count-fallback`,
+  `commands-invalid-draw-vertices-max-index-count-fallback`, `commands-blend-mode`, and
+  `commands-resize-blend-mode`. The focused suite passed `10/10` with `unsupported_rows=0`,
+  `jbr_picture_frames=0`, and `jbr_command_frames=4040`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260620-140319/suite.tsv`.
+  Its `fallback_sum=7` is expected from the malformed draw-vertices parser fixtures. The legacy-named
+  `commands-vertices-invalid-blend-mode-fallback` row plus the two blend-mode rows replayed through JBR command frames
+  with `fallback_new_count=0`.
 - 2026-06-20 focused path-effect/vertices replay continuation:
   A narrow batch covered the next ten default-order rows after the shader descriptor redefine continuation:
   `commands-forced-context-composite-noise-shader-descriptor-redefine`, `commands-path-effect`,
