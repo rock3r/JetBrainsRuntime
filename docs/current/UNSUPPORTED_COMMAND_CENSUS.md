@@ -19,8 +19,15 @@ they no longer report unsupported markers.
   current default surface, not just the older `549`-row full sweep. See
   [`COMMAND_PROBE_CURRENT_DEFAULT_SURFACE.md`](COMMAND_PROBE_CURRENT_DEFAULT_SURFACE.md) for the list-only delta.
 - Current focused progress: all `79` original unsupported rows and all `151` rows added to the current default surface
-  since the latest completed full/default census have focused validation evidence with `unsupported=none`,
-  `fallback_new_count=0`, `jbr_picture_frames=0`, and non-zero `jbr_command_frames`.
+  since the latest completed full/default census have focused validation evidence with `unsupported=none` and
+  `jbr_picture_frames=0`. Supported command rows replay with `fallback_new_count=0` and command frames; intentionally
+  corrupt parser fixtures emit structured fallback and remain expected-fallback coverage rather than active unsupported
+  rows.
+- Latest current-surface evidence audit:
+  A 2026-06-20 non-broad audit loaded the current default case list (`696` rows), scanned all command-probe
+  `suite.tsv` artifacts, and selected the newest evidence per current row. It found `covered_current_rows=696/696`,
+  `missing=0`, `non_pass=0`, `unsupported=0`, `picture_rows=0`, `fallback_rows=348`,
+  `cmd0_expected_fallback_rows=345`, and `cmd0_without_fallback_rows=0`.
 - Latest focused evidence:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260620-161753/suite.tsv`.
   This covered the final six default-order rows after the save-layer invalid-filter-reference continuation:

@@ -5,6 +5,15 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-20 current-surface latest-evidence audit:
+  A non-broad audit loaded the current default case list with
+  `LIST_CASES=true ./scripts/jbr-skia-command-probe-suite.sh`, then scanned all command-probe `suite.tsv` artifacts
+  and selected the newest evidence per current row. The audit found `current_rows=696`,
+  `covered_current_rows=696/696`, `missing=0`, `non_pass=0`, `unsupported=0`, `picture_rows=0`,
+  `fallback_rows=348`, `cmd0_expected_fallback_rows=345`, and `cmd0_without_fallback_rows=0`. Interpretation: every
+  current row has passing latest evidence, no current row's latest evidence reports unsupported markers or picture
+  frames, and every zero-command-frame row is an expected structured parser fallback. This is an accumulated evidence
+  audit only; final completion still requires the next capped full/default pass to complete in one sweep.
 - 2026-06-20 focused final tail continuation:
   A narrow tail batch covered the final six default-order rows after the save-layer invalid-filter-reference
   continuation: `commands-save-layer-raw-color-filter-fallback`,
