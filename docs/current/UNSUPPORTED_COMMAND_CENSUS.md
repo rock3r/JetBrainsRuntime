@@ -22,15 +22,17 @@ they no longer report unsupported markers.
   since the latest completed full/default census have focused validation evidence with `unsupported=none`,
   `fallback_new_count=0`, `jbr_picture_frames=0`, and non-zero `jbr_command_frames`.
 - Latest focused evidence:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260620-161003/suite.tsv`.
-  This covered the next ten default-order rows after the save-layer invalid-scalar continuation: corrupt save-layer
-  image/color-filter reference fixtures. The focused suite passed `10/10` with `unsupported_rows=0` and
-  `jbr_picture_frames=0`; its `fallback_sum=10` is expected parser fallback, not active unsupported command coverage.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260620-161753/suite.tsv`.
+  This covered the final six default-order rows after the save-layer invalid-filter-reference continuation:
+  save-layer raw color-filter rows, opaque/composite/picture shader rows, and `commands-invalid-gradient-fallback`.
+  The focused suite passed `6/6` with `fallback_sum=0`, `unsupported_rows=0`, `jbr_picture_frames=0`, and command
+  replay evidence. A follow-up list-only probe found no default-order rows after `commands-invalid-gradient-fallback`.
 - Current interpretation: there are zero known active unsupported rows by focused evidence. The zero-unsupported goal
   still requires the next capped full/default sweep to complete and prove `unsupported_rows=0` across the whole suite.
   The 2026-06-20 daily broad run stopped after `390` of `696` rows with `unsupported_rows=0` and
-  `jbr_picture_frames=0` so far, but it is partial evidence only; the daily broad cap prevents relaunching another
-  full/default sweep on 2026-06-20.
+  `jbr_picture_frames=0` so far, and the same-day focused continuation has now covered the remaining default-order
+  rows through the tail with `unsupported_rows=0`. This remains accumulated focused evidence rather than a completed
+  full/default proof; the daily broad cap prevents relaunching another full/default sweep on 2026-06-20.
 - 2026-06-20 narrow continuation after the interrupted broad run found a transient local artifact-state failure
   (`public-api-missing`) rather than an unsupported command. Rebuilding local artifacts restored the bridge, then the
   bridge smoke plus the next ten default-order rows passed focused validation with `unsupported=none` and
@@ -121,8 +123,11 @@ they no longer report unsupported markers.
   `10/10` with `unsupported_rows=0` and `jbr_picture_frames=0`; all ten corrupt save-layer scalar/blend-mode fixtures
   intentionally emitted structured fallback.
 - 2026-06-20 save-layer invalid-filter-reference continuation covered the next ten default-order rows. The focused
-  suite passed `10/10` with `unsupported_rows=0` and `jbr_picture_frames=0`; all ten corrupt save-layer image/color-
-  filter reference fixtures intentionally emitted structured fallback.
+  suite passed `10/10` with `unsupported_rows=0` and `jbr_picture_frames=0`; all ten corrupt save-layer image and
+  color-filter reference fixtures intentionally emitted structured fallback.
+- 2026-06-20 final tail continuation covered the final six default-order rows. The focused suite passed `6/6` with
+  `fallback_sum=0`, `unsupported_rows=0`, and `jbr_picture_frames=0`; all six legacy fallback-named rows replayed
+  through JBR command frames, and a follow-up list-only probe found no rows after `commands-invalid-gradient-fallback`.
 
 ## Original Full-Sweep Unsupported Marker Families
 

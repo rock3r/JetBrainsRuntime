@@ -5,6 +5,16 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-20 focused final tail continuation:
+  A narrow tail batch covered the final six default-order rows after the save-layer invalid-filter-reference
+  continuation: `commands-save-layer-raw-color-filter-fallback`,
+  `commands-save-layer-raw-table-color-filter-fallback`, `commands-opaque-shader-fallback`,
+  `commands-composite-opaque-shader-fallback`, `commands-picture-shader-fallback`, and
+  `commands-invalid-gradient-fallback`. The focused suite passed `6/6` with `fallback_sum=0`, `unsupported_rows=0`,
+  `jbr_picture_frames=0`, and `jbr_command_frames=9592`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260620-161753/suite.tsv`.
+  All six legacy fallback-named rows replayed through JBR command frames with `fallback_new_count=0`. A follow-up
+  list-only probe found no default-order rows after `commands-invalid-gradient-fallback`.
 - 2026-06-20 focused save-layer invalid-filter-reference continuation:
   A narrow batch covered the next ten default-order rows after the save-layer invalid-scalar continuation:
   `commands-invalid-save-layer-image-filter-alpha-fallback`,
