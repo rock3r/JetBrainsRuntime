@@ -5,6 +5,22 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Broad Sweeps
 
+- 2026-06-20 focused malformed linear-gradient descriptor continuation:
+  A narrow batch covered the next ten default-order rows after the post-interruption gradient-invalid continuation:
+  `commands-invalid-sweep-gradient-round-rect-stroke-width-fallback`,
+  `commands-invalid-linear-gradient-tile-mode-fallback`,
+  `commands-invalid-linear-gradient-round-rect-tile-mode-fallback`,
+  `commands-invalid-linear-gradient-stroke-tile-mode-fallback`,
+  `commands-invalid-linear-gradient-round-rect-stroke-tile-mode-fallback`,
+  `commands-invalid-linear-gradient-color-count-fallback`,
+  `commands-invalid-linear-gradient-round-rect-color-count-fallback`,
+  `commands-invalid-linear-gradient-stroke-color-count-fallback`,
+  `commands-invalid-linear-gradient-round-rect-stroke-color-count-fallback`, and
+  `commands-invalid-linear-gradient-stop-order-fallback`. The focused suite passed `10/10` with
+  `unsupported_rows=0`, `jbr_picture_frames=0`, and `jbr_command_frames=0`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260620-121503/suite.tsv`.
+  Its `fallback_sum=10` is expected because all ten rows are malformed-gradient command-stream/descriptor fixtures
+  that assert structured fallback instead of replaying corrupt commands.
 - 2026-06-20 post-interruption focused gradient-invalid continuation:
   After the interrupted broad sweep, the next ten default-order rows were validated narrowly rather than launching a
   second broad pass. The first attempt exposed a local artifact-state regression: both

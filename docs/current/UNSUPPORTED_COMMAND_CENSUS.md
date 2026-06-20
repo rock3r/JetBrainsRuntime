@@ -39,6 +39,9 @@ they no longer report unsupported markers.
   bridge smoke plus the next ten default-order rows passed focused validation with `unsupported=none` and
   `jbr_picture_frames=0`. Five corrupt invalid-stroke-width rows intentionally emitted structured command-stream
   fallback and remain expected-fallback coverage, not active unsupported rows.
+- 2026-06-20 malformed linear-gradient descriptor continuation covered the next ten default-order rows. The focused
+  suite passed `10/10` with `unsupported_rows=0` and `jbr_picture_frames=0`; all ten rows intentionally emitted
+  structured fallback for malformed gradient stream/descriptor payloads.
 
 ## Original Full-Sweep Unsupported Marker Families
 
