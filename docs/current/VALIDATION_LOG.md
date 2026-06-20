@@ -3,6 +3,24 @@
 This file keeps the rolling validation ledger out of the top-level roadmap and plan. Keep the newest high-signal
 entries here, and move older narrative detail to `docs/history/` only when this file starts getting noisy.
 
+## Latest Standalone Demo Benchmarks
+
+- 2026-06-21 copied Jewel standalone Hypnotoad benchmark harness:
+  Added a Magic Jewel-hosted copy of IntelliJ's Jewel standalone/showcase sample with a top-level `Hypnotoad`
+  always-redrawing page and a Swing `JFrame`/`ComposePanel` launch path so Swing compositing is exercised. The new
+  `./scripts/jewel-standalone-benchmark-suite.sh` wrapper reuses the old/new interop report machinery with
+  `runJewelStandalone` as baseline and `runJewelStandaloneJbrSkiaInterop` as the JBR Skia command path. A 5-second
+  smoke passed strict command validation with `fallbacks=0`, `jbr_command_frames=900`, `old_fps=130.0`, and
+  `new_fps=180.0`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-benchmark-suite/20260621-014635/suite.tsv`.
+  A longer 30-second run also passed with `fallbacks=0`, `jbr_command_frames=5184`, `old_avg_cpu=86.86`,
+  `new_avg_cpu=65.61`, `old_avg_rss_kb=1077257`, `new_avg_rss_kb=559588`, `old_fps=319.6`, and `new_fps=172.8`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-benchmark-suite/20260621-014843/suite.tsv`.
+  Treat the 30-second FPS result as non-publishable loaded-machine data: host load was `4.73 6.69 5.78`, with
+  Logitech updater, Codex, Chrome, and WindowServer active. `spectre.dev` public endpoints were not reachable during
+  setup; the harness records `spectre_cmd=unavailable` and exposes `SPECTRE_CMD`/`SPECTRE_ARGS` for a verified local
+  Spectre runner.
+
 ## Latest Broad Sweeps
 
 - 2026-06-20 full/default command-probe 100% coverage proof:
