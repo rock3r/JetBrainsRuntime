@@ -22,9 +22,9 @@ they no longer report unsupported markers.
   since the latest completed full/default census have focused validation evidence with `unsupported=none`,
   `fallback_new_count=0`, `jbr_picture_frames=0`, and non-zero `jbr_command_frames`.
 - Latest focused evidence:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260620-155418/suite.tsv`.
-  This covered the next ten default-order rows after the save-layer invalid-record continuation: corrupt save-layer
-  reference/record fixtures. The focused suite passed `10/10` with `unsupported_rows=0` and `jbr_picture_frames=0`;
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260620-160156/suite.tsv`.
+  This covered the next ten default-order rows after the save-layer invalid-reference continuation: corrupt save-layer
+  scalar/blend-mode fixtures. The focused suite passed `10/10` with `unsupported_rows=0` and `jbr_picture_frames=0`;
   its `fallback_sum=10` is expected parser fallback, not active unsupported command coverage.
 - Current interpretation: there are zero known active unsupported rows by focused evidence. The zero-unsupported goal
   still requires the next capped full/default sweep to complete and prove `unsupported_rows=0` across the whole suite.
@@ -117,6 +117,9 @@ they no longer report unsupported markers.
 - 2026-06-20 save-layer invalid-reference continuation covered the next ten default-order rows. The focused suite
   passed `10/10` with `unsupported_rows=0` and `jbr_picture_frames=0`; all ten corrupt save-layer reference/record
   fixtures intentionally emitted structured fallback.
+- 2026-06-20 save-layer invalid-scalar continuation covered the next ten default-order rows. The focused suite passed
+  `10/10` with `unsupported_rows=0` and `jbr_picture_frames=0`; all ten corrupt save-layer scalar/blend-mode fixtures
+  intentionally emitted structured fallback.
 
 ## Original Full-Sweep Unsupported Marker Families
 
