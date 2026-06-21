@@ -5,6 +5,23 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-22 focused saveTranslate image-ref fold across trailing restore groups:
+  CMP now also folds `saveTranslate; [image definitions]; drawImageRefFull; restore/restoreN` when the matching
+  restore has already been compacted before the next restore is emitted. The fold adjusts the compact full-image-ref
+  destination coordinates and decrements/removes only the restore belonging to the folded saveTranslate scope.
+  Narrow validation passed:
+  `./gradlew :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest --console=plain`;
+  local CMP publish; focused decorated Jewel Icons; and focused Markdown wheel scrolling. Icons stayed strict-clean
+  with `fallback_new_count=0`, `cmp_unsupported_max=0`, `jbr_picture_frames=0`, and `jbr_command_frames=3`;
+  command replay improved from the prior Icons checkpoint `avg_commands=1820` to the steady `1687` command frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-save-translate-image-restoreN-fold-icons/suite.tsv`.
+  Markdown stayed strict-clean with `fallback_new_count=0`, `cmp_unsupported_max=0`, `jbr_picture_frames=0`, and
+  `jbr_command_frames=572`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-save-translate-image-restoreN-fold-markdown/suite.tsv`.
+  A short old/new screenshot probe did not capture the baseline window, but the new decorated Icons capture still
+  shows the copied Jewel logo sample as a filled square under the multiply color-filter variant. Command coverage is
+  unaffected (`unsupported=0`, no fallbacks), but this remains a visual follow-up for the copied demo asset/raster
+  path rather than a 100% coverage claim.
 - 2026-06-22 focused saveTranslate image-ref fold:
   CMP now folds an exact `saveTranslate; [image definitions]; drawImageRefFull; restore` scope into the compact
   full-image-ref destination coordinates and drops the matching scoped restore. The fold is intentionally limited to
