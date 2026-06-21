@@ -5,6 +5,23 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-21 focused adjacent translate command coalescing:
+  CMP now merges adjacent `COMMAND_TRANSLATE` records in the command stream and drops the prior translate when a merge
+  sums back to zero. The nested layer replay test now asserts the intentionally coalesced draw-site plus pivot
+  translation. Narrow validation passed:
+  `./gradlew :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest --console=plain`;
+  `./gradlew :compose:ui:ui-graphics:publishDesktopPublicationToMavenLocal -PartifactRedirection.targetNames= --console=plain`;
+  focused Markdown wheel; and focused decorated Jewel Icons. Markdown wheel stayed strict-clean with `fallbacks=0`,
+  `unsupported_max=0`, `avg_commands=1403`, and `translate:avg=59.1`, improving the identity-elision baseline
+  (`avg_commands=1660`, `translate:avg=110.1`):
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260621-markdown-wheel-translate-coalesce-rerun/suite.tsv`.
+  Icons stayed strict-clean with `fallbacks=0`, `unsupported_max=0`, `avg_commands=2827`, and `translate:avg=95.0`,
+  improving the identity-elision Icons baseline (`avg_commands=3402`, `translate:avg=210.0`):
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260621-showcase-icons-translate-coalesce/suite.tsv`.
+  The Icons screenshot was also rechecked after a user-visible concern about solid icon backgrounds. The remaining
+  black squares in the Jewel logo samples come from `icons/jewel-logo.svg`'s literal black background rectangle; normal
+  16px toolbar/component icons remained transparent, so this probe did not show a recurrence of the earlier native
+  bitmap alpha bug.
 - 2026-06-21 focused identity transform command elision:
   CMP now skips `COMMAND_TRANSLATE` for `(0, 0)` and `COMMAND_SCALE` for `(1, 1)`, matching the existing zero
   rotation/skew guards and trimming transform-stack noise without changing replay semantics. The nested layer replay
