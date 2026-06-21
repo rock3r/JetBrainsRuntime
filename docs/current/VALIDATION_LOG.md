@@ -17,9 +17,19 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   `new_avg_cpu=65.61`, `old_avg_rss_kb=1077257`, `new_avg_rss_kb=559588`, `old_fps=319.6`, and `new_fps=172.8`:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-benchmark-suite/20260621-014843/suite.tsv`.
   Treat the 30-second FPS result as non-publishable loaded-machine data: host load was `4.73 6.69 5.78`, with
-  Logitech updater, Codex, Chrome, and WindowServer active. `spectre.dev` public endpoints were not reachable during
-  setup; the harness records `spectre_cmd=unavailable` and exposes `SPECTRE_CMD`/`SPECTRE_ARGS` for a verified local
-  Spectre runner.
+  Logitech updater, Codex, Chrome, and WindowServer active.
+- 2026-06-21 corrected the Jewel standalone Spectre integration:
+  The benchmark now consumes Spectre `0.2.1` as a library (`spectre-core`) rather than treating Spectre as an
+  external runner. The copied Hypnotoad page exposes tagged Jewel controls, and `SpectreStressController` uses
+  `ComposeAutomator` with `RobotDriver.synthetic(frame)` plus semantics clicks to drive the live Swing-hosted Compose
+  UI during both baseline and JBR-Skia runs. Narrow validation only: `./gradlew assemble` passed, then
+  `DURATION_SECONDS=5 WARMUP_SECONDS=2 SAMPLE_INTERVAL_SECONDS=1 EXPECT_SCREENSHOT_ASSERTION=false
+  ./scripts/jewel-standalone-benchmark-suite.sh` passed with Spectre phase markers in old/new logs,
+  `fallbacks=0`, `cmp_unsupported_max=0`, `jbr_picture_frames=0`, `jbr_command_frames=1389`, `old_avg_cpu=95.28`,
+  `new_avg_cpu=85.40`, `old_fps=302.4`, and `new_fps=278.0`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-benchmark-suite/20260621-092116/suite.tsv`.
+  Treat these numbers as smoke evidence, not publishable before/after data: host load was `9.01 7.83 6.20`, with
+  Logitech updater and WindowServer active.
 
 ## Latest Broad Sweeps
 
