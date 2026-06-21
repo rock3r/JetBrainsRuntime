@@ -5,6 +5,17 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-21 focused Skiko command-frame cache allocation trim:
+  Skiko's command-frame cache no longer copies each meaningful full-scene `IntArray` solely to retain a fallback replay
+  frame; command recordings are immutable after publication and the testing corruption hooks copy before mutation, so
+  the cache now keeps the original array reference. Narrow validation passed:
+  `./gradlew :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest --console=plain` in
+  `/Users/rock3r/src/jbr-skia-zero-copy/skiko`; `./gradlew :skiko:publishAwtPublicationToMavenLocal
+  :skiko:publishAwtRuntimeElementsPublicationToMavenLocal --console=plain`; and the 8-second focused IdleRedraw
+  command probe passed strict validation with unchanged command/cache behavior (`avg_commands=1106`,
+  `avg_image_defines=1.0`, `max_image_defines=1`, `jbr_image_cache_clear_frames=1`,
+  `skiko_command_cache_clear_markers=1`, no fallback, unsupported markers, picture frames, or command-render retries):
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-interop-report/20260621-idle-redraw-frame-cache-no-copy/report.md`.
 - 2026-06-21 focused IdleRedraw native-bitmap delta-cache fix:
   The first small-native-bitmap content-key experiment proved Skiko could confirm `COMMAND_DEFINE_IMAGE_BITMAP` keys,
   but also exposed two cache-contract bugs: Skiko's confirmation scanner treated the command-stream payload length as
