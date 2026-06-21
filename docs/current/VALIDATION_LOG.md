@@ -5,6 +5,22 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-22 focused trailing translate elision:
+  CMP now removes a plain `translate` record when it is immediately discarded by a following `restore`; the existing
+  round-rect translate fold still runs first so drawable trailing shape translations are preserved and folded instead.
+  Narrow validation passed:
+  `./gradlew :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest --console=plain`;
+  local CMP publish; focused decorated Jewel Icons; and focused Markdown wheel scrolling. Icons stayed strict-clean
+  with `fallback_new_count=0`, `cmp_unsupported_max=0`, `jbr_picture_frames=0`, and `jbr_command_frames=3`.
+  Command replay improved from the round-rect translate-fold Icons checkpoint `avg_commands=1911` to
+  `avg_commands=1820`; `translate` dropped from `avg=50.0` to `avg=42.0`, `save` from `avg=43.0` to `avg=35.0`,
+  and `restoreN` from `avg=33.0` to `avg=27.0`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-trailing-translate-elision-icons/suite.tsv`.
+  Markdown stayed strict-clean with `fallback_new_count=0`, `cmp_unsupported_max=0`, `jbr_picture_frames=0`, and
+  `jbr_command_frames=418`. Command replay improved from the current Markdown checkpoint `avg_commands=1043` to
+  `avg_commands=763`; `translate` dropped from `avg=40.0` to `avg=11.9`, `save` from `avg=46.7` to `avg=21.6`,
+  and `restoreN` from `avg=27.4` to `avg=13.8`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-trailing-translate-elision-markdown/suite.tsv`.
 - 2026-06-22 focused redundant save/clear/restore elision:
   CMP now elides an immediately redundant `save; clearRect; restore` wrapper in the command writer, preserving the
   clear record while dropping the no-op save-state pair. This targets the repeated Jewel icon/image pattern observed
