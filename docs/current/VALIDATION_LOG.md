@@ -5,6 +5,22 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-21 focused Jewel Markdown native-bitmap lifetime fix:
+  The later Markdown wheel-scroll investigation found a second RSS path after compacting image command payloads:
+  transient Skia-backed layer `ImageBitmap`s were being retained by the recorder's process-wide image identity cache,
+  while native bitmap command records only needed those bitmaps alive until the matching command replay. CMP now keeps
+  native bitmap references on the `JbrSkiaCommandRecording` lifetime, bypasses the process-wide identity cache for
+  native bitmap definitions, and JBR treats native-bitmap `SkImage` wrappers as frame-scoped. Skiko only confirms full
+  ARGB image definitions as persistent native-cache entries. Narrow validations:
+  `./gradlew :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest --console=plain`
+  passed in `/Users/rock3r/src/jbr-skia-zero-copy/cmp`; the corrected 12-second focused Markdown wheel run passed
+  with `fallbacks=0`, `unsupported_max=0`, `jbr_image_cache_clear_frames=0`,
+  `skiko_command_cache_clear_markers=0`, `new_avg_rss_kb=1604016`, and `new_max_rss_kb=1653008`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260621-native-image-lifetime-corrected/suite.tsv`.
+  The best comparable 24-second fixed run before the final ARGB-cache cleanup correction passed with
+  `new_avg_rss_kb=1638939`, `new_max_rss_kb=1705552`, `new_avg_cpu=79.95`, `new_fps=9.0`, no fallback,
+  no unsupported commands, and no cache-clear/retry markers:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260621-native-image-lifetime/suite.tsv`.
 - 2026-06-21 focused Jewel Markdown benchmark analysis and image-cache working-set fix:
   Added focused Markdown benchmark cases plus CMP command-recorder op/image-payload counters to separate logical
   command count from embedded image payload size. The initial focused Markdown preview showed the pathology was not

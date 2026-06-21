@@ -25,6 +25,7 @@
 
 #import <Metal/Metal.h>
 #include <jni.h>
+#include <malloc/malloc.h>
 #include <algorithm>
 #include <array>
 #include <chrono>
@@ -40,6 +41,7 @@
 #include <vector>
 
 #include "SkBlendMode.h"
+#include "SkBitmap.h"
 #include "SkCanvas.h"
 #include "SkColor.h"
 #include "SkColorFilter.h"
@@ -181,6 +183,7 @@ static constexpr jint COMMAND_STROKE_PATH_RADIAL_GRADIENT = 69;
 static constexpr jint COMMAND_STROKE_PATH_SWEEP_GRADIENT = 70;
 static constexpr jint COMMAND_STROKE_RECT_SHADER_REF = 71;
 static constexpr jint COMMAND_STROKE_RECT_IMAGE_SHADER = 72;
+static constexpr jint COMMAND_DEFINE_IMAGE_BITMAP = 73;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER = 1;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_COLOR_MATRIX_FILTER = 2;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_LIGHTING_FILTER = 3;
@@ -404,6 +407,63 @@ static sk_sp<SkUnicode> paragraphUnicode() {
 static long long monotonicNanos() {
     return std::chrono::duration_cast<std::chrono::nanoseconds>(
             std::chrono::steady_clock::now().time_since_epoch()).count();
+}
+
+static bool mallocDiagnosticEnabled() {
+    const char* value = std::getenv("JBR_SKIA_MALLOC_DIAGNOSTIC");
+    return value != nullptr && std::strcmp(value, "0") != 0 && std::strcmp(value, "false") != 0;
+}
+
+static bool directDiagnosticModeIs(const char* expected) {
+    const char* value = std::getenv("JBR_SKIA_DIRECT_DIAGNOSTIC_MODE");
+    return value != nullptr && std::strcmp(value, expected) == 0;
+}
+
+static size_t defaultMallocBytesInUse() {
+    malloc_statistics_t stats = {};
+    malloc_zone_statistics(malloc_default_zone(), &stats);
+    return stats.size_in_use;
+}
+
+static void logMallocPhase(const char* phase, size_t baseBytes, int commandCount) {
+    if (!mallocDiagnosticEnabled()) {
+        return;
+    }
+    const size_t bytes = defaultMallocBytesInUse();
+    std::fprintf(stderr,
+                 "JBR_SKIA_INTEROP_MALLOC phase=%s commandCount=%d defaultBytes=%zu deltaBytes=%lld\n",
+                 phase,
+                 commandCount,
+                 bytes,
+                 static_cast<long long>(bytes) - static_cast<long long>(baseBytes));
+}
+
+static void purgeUnlockedResourcesAfterFrame(GrDirectContext* directContext) {
+    const char* value = std::getenv("JBR_SKIA_PURGE_UNLOCKED");
+    if (directContext == nullptr || value == nullptr || std::strcmp(value, "0") == 0 ||
+            std::strcmp(value, "false") == 0) {
+        return;
+    }
+    int beforeCount = 0;
+    size_t beforeBytes = 0;
+    directContext->getResourceCacheUsage(&beforeCount, &beforeBytes);
+    if (std::strcmp(value, "all") == 0) {
+        directContext->purgeUnlockedResources(GrPurgeResourceOptions::kAllResources);
+    } else {
+        directContext->purgeUnlockedResources(GrPurgeResourceOptions::kScratchResourcesOnly);
+    }
+    int afterCount = 0;
+    size_t afterBytes = 0;
+    directContext->getResourceCacheUsage(&afterCount, &afterBytes);
+    if (mallocDiagnosticEnabled()) {
+        std::fprintf(stderr,
+                     "JBR_SKIA_INTEROP_RESOURCE_PURGE mode=%s beforeCount=%d beforeBytes=%zu afterCount=%d afterBytes=%zu\n",
+                     value,
+                     beforeCount,
+                     beforeBytes,
+                     afterCount,
+                     afterBytes);
+    }
 }
 
 typedef struct _JBRSkiaMTLSDOps {
@@ -1666,6 +1726,23 @@ static bool drawCommandList(SkCanvas* canvas,
     if (payloadLength < 0 || payloadLength != commandCount - COMMAND_STREAM_HEADER_SIZE) {
         return false;
     }
+
+    struct FrameScopedImageCleanup {
+        std::vector<ImageCacheScopedKey>& keys;
+
+        ~FrameScopedImageCleanup() {
+            if (keys.empty()) {
+                return;
+            }
+            std::lock_guard<std::mutex> lock(gImageCacheMutex);
+            for (const ImageCacheScopedKey& key : keys) {
+                gImagesByKey.erase(key);
+            }
+        }
+    };
+
+    std::vector<ImageCacheScopedKey> frameScopedImageKeys;
+    FrameScopedImageCleanup frameScopedImageCleanup{frameScopedImageKeys};
 
     jsize offset = COMMAND_STREAM_HEADER_SIZE;
     jsize commandEnd = COMMAND_STREAM_HEADER_SIZE + payloadLength;
@@ -3272,7 +3349,22 @@ static bool drawCommandList(SkCanvas* canvas,
                 const jint imageHeight = commands[offset++];
                 const jint pixelCount = commands[offset++];
                 if (imageWidth <= 0 || imageHeight <= 0 || imageWidth > 4096 || imageHeight > 4096 ||
-                        pixelCount != imageWidth * imageHeight || offset + pixelCount != recordEnd) {
+                        (pixelCount != 0 && pixelCount != imageWidth * imageHeight) ||
+                        offset + pixelCount != recordEnd) {
+                    return false;
+                }
+                {
+                    std::lock_guard<std::mutex> lock(gImageCacheMutex);
+                    auto found = gImagesByKey.find(ImageCacheScopedKey{imageCacheContextKey, key});
+                    if (found != gImagesByKey.end() &&
+                            found->second != nullptr &&
+                            found->second->width() == imageWidth &&
+                            found->second->height() == imageHeight) {
+                        offset += pixelCount;
+                        break;
+                    }
+                }
+                if (pixelCount == 0) {
                     return false;
                 }
                 sk_sp<SkImage> image = makeRasterImage(commands, offset, imageWidth, imageHeight, pixelCount);
@@ -3283,6 +3375,48 @@ static bool drawCommandList(SkCanvas* canvas,
                 {
                     std::lock_guard<std::mutex> lock(gImageCacheMutex);
                     gImagesByKey[ImageCacheScopedKey{imageCacheContextKey, key}] = image;
+                }
+                break;
+            }
+            case COMMAND_DEFINE_IMAGE_BITMAP: {
+                if (recordFlags != COMMAND_RECORD_FLAGS_NONE || offset + 7 != recordEnd) {
+                    return false;
+                }
+                const uint64_t key = imageCacheKey(commands[offset], commands[offset + 1]);
+                offset += 2;
+                const jint imageWidth = commands[offset++];
+                const jint imageHeight = commands[offset++];
+                const uint64_t bitmapPtrValue = imageCacheKey(commands[offset], commands[offset + 1]);
+                offset += 2;
+                const jint generationId = commands[offset++];
+                if (imageWidth <= 0 || imageHeight <= 0 || imageWidth > 4096 || imageHeight > 4096 ||
+                        bitmapPtrValue == 0 || generationId == 0) {
+                    return false;
+                }
+                {
+                    std::lock_guard<std::mutex> lock(gImageCacheMutex);
+                    auto found = gImagesByKey.find(ImageCacheScopedKey{imageCacheContextKey, key});
+                    if (found != gImagesByKey.end() &&
+                            found->second != nullptr &&
+                            found->second->width() == imageWidth &&
+                            found->second->height() == imageHeight) {
+                        break;
+                    }
+                }
+                SkBitmap* bitmap = reinterpret_cast<SkBitmap*>(static_cast<uintptr_t>(bitmapPtrValue));
+                SkPixmap pixmap;
+                if (!bitmap->peekPixels(&pixmap)) {
+                    return false;
+                }
+                sk_sp<SkImage> image = SkImages::RasterFromPixmap(pixmap, nullptr, nullptr);
+                if (image == nullptr || image->width() != imageWidth || image->height() != imageHeight) {
+                    return false;
+                }
+                {
+                    std::lock_guard<std::mutex> lock(gImageCacheMutex);
+                    ImageCacheScopedKey scopedKey{imageCacheContextKey, key};
+                    gImagesByKey[scopedKey] = image;
+                    frameScopedImageKeys.push_back(scopedKey);
                 }
                 break;
             }
@@ -4919,7 +5053,6 @@ Java_com_jetbrains_desktop_JBRSkiaService_nativeRenderPictureFrame
         if (directContext == nullptr) {
             return JNI_FALSE;
         }
-
         sk_sp<SkSurface> surface = wrapTextureSurface(
                 directContext.get(),
                 texture,
@@ -4979,7 +5112,6 @@ Java_com_jetbrains_desktop_JBRSkiaService_nativeRenderCommandFrame
         if (directContext == nullptr) {
             return JNI_FALSE;
         }
-
         sk_sp<SkSurface> surface = wrapTextureSurface(
                 directContext.get(),
                 texture,
@@ -5151,10 +5283,28 @@ Java_com_jetbrains_desktop_JBRSkiaService_nativeRenderCommandDirectFrame
 
         jsize commandCount = commandByteCount / static_cast<jint>(sizeof(jint));
         const long long frameStartNanos = monotonicNanos();
+        const size_t mallocBaseBytes = defaultMallocBytesInUse();
+        logMallocPhase("direct-start", mallocBaseBytes, commandCount);
 
         sk_sp<GrDirectContext> directContext = makeDirectContextForSurface(nativeOpsPtr, texture);
         if (directContext == nullptr) {
             return JNI_FALSE;
+        }
+        if (directDiagnosticModeIs("context")) {
+            logMallocPhase("direct-context-return", mallocBaseBytes, commandCount);
+            std::fprintf(stderr,
+                         "JBR_SKIA_INTEROP_COMMAND_FRAME destinationX=%d destinationY=%d destinationWidth=%d destinationHeight=%d width=%d height=%d commands=%d rendered=true\n",
+                         destinationX,
+                         destinationY,
+                         destinationWidth,
+                         destinationHeight,
+                         width,
+                         height,
+                         commandCount);
+            std::fprintf(stderr,
+                         "JBR_SKIA_INTEROP_COMMAND_TIMING totalNanos=%lld drawNanos=0 flushNanos=0 paragraphCommands=0 paragraphNanos=0 shadowCommands=0\n",
+                         monotonicNanos() - frameStartNanos);
+            return JNI_TRUE;
         }
 
         sk_sp<SkSurface> surface = wrapTextureSurface(
@@ -5164,6 +5314,22 @@ Java_com_jetbrains_desktop_JBRSkiaService_nativeRenderCommandDirectFrame
                 static_cast<int>(texture.height));
         if (surface == nullptr) {
             return JNI_FALSE;
+        }
+        logMallocPhase("direct-surface", mallocBaseBytes, commandCount);
+        if (directDiagnosticModeIs("surface")) {
+            std::fprintf(stderr,
+                         "JBR_SKIA_INTEROP_COMMAND_FRAME destinationX=%d destinationY=%d destinationWidth=%d destinationHeight=%d width=%d height=%d commands=%d rendered=true\n",
+                         destinationX,
+                         destinationY,
+                         destinationWidth,
+                         destinationHeight,
+                         width,
+                         height,
+                         commandCount);
+            std::fprintf(stderr,
+                         "JBR_SKIA_INTEROP_COMMAND_TIMING totalNanos=%lld drawNanos=0 flushNanos=0 paragraphCommands=0 paragraphNanos=0 shadowCommands=0\n",
+                         monotonicNanos() - frameStartNanos);
+            return JNI_TRUE;
         }
 
         SkCanvas* canvas = surface->getCanvas();
@@ -5180,13 +5346,35 @@ Java_com_jetbrains_desktop_JBRSkiaService_nativeRenderCommandDirectFrame
                                         width, height, (__bridge void*) getContextFromNativeOps(nativeOpsPtr), &metrics);
         canvas->restore();
         const long long drawNanos = monotonicNanos() - drawStartNanos;
+        logMallocPhase("direct-draw", mallocBaseBytes, commandCount);
         if (!rendered) {
             return JNI_FALSE;
+        }
+        if (directDiagnosticModeIs("draw")) {
+            std::fprintf(stderr,
+                         "JBR_SKIA_INTEROP_COMMAND_FRAME destinationX=%d destinationY=%d destinationWidth=%d destinationHeight=%d width=%d height=%d commands=%d rendered=true\n",
+                         destinationX,
+                         destinationY,
+                         destinationWidth,
+                         destinationHeight,
+                         width,
+                         height,
+                         commandCount);
+            std::fprintf(stderr,
+                         "JBR_SKIA_INTEROP_COMMAND_TIMING totalNanos=%lld drawNanos=%lld flushNanos=0 paragraphCommands=%d paragraphNanos=%lld shadowCommands=%d\n",
+                         monotonicNanos() - frameStartNanos,
+                         drawNanos,
+                         metrics.paragraphCommands,
+                         metrics.paragraphNanos,
+                         metrics.shadowCommands);
+            return JNI_TRUE;
         }
 
         const long long flushStartNanos = monotonicNanos();
         directContext->flushAndSubmit(surface.get(), GrSyncCpu::kYes);
         const long long flushNanos = monotonicNanos() - flushStartNanos;
+        purgeUnlockedResourcesAfterFrame(directContext.get());
+        logMallocPhase("direct-flush", mallocBaseBytes, commandCount);
         std::fprintf(stderr,
                      "JBR_SKIA_INTEROP_COMMAND_FRAME destinationX=%d destinationY=%d destinationWidth=%d destinationHeight=%d width=%d height=%d commands=%d rendered=true\n",
                      destinationX,
