@@ -5,6 +5,35 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-21 focused Jewel Icons alpha and descriptor-handle retry fix:
+  The Jewel Icons showcase exposed two correctness gaps in the optimized path. First, copied native-bitmap cache
+  entries could preserve transparent pixels while keeping an opaque `SkImageInfo`, which made icons look as if they had
+  a solid background. JBR now copies native bitmap pixmaps with a premultiplied alpha type when the source metadata says
+  opaque. Second, the Icons transition used a tint/effect handle that CMP considered already defined while JBR's scoped
+  cache had no matching entry; the old path recovered by clearing caches and retrying, but strict validation rejected the
+  `SKIKO_JBR_INTEROP_COMMAND_RETRY reason=render-false` marker. CMP now emits the tiny color/effect descriptor records
+  whenever those handles are referenced, keeping scoped JBR caches synchronized without retry. Narrow validation passed:
+  `./gradlew :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest --console=plain`;
+  `./gradlew :compose:ui:ui-graphics:publishDesktopPublicationToMavenLocal -PartifactRedirection.targetNames= --console=plain`;
+  `./scripts/rebuild-jbr-skia-local-artifacts.sh`; and the decorated Jewel standalone Icons slice passed strict command
+  validation with `validation_status=passed`, `fallback_new_count=0`, `cmp_unsupported_max=0`,
+  `cmp_unsupported_reasons=none`, `cmp_recorder_frames=4858`, `skiko_command_frames=4858`,
+  `jbr_command_frames=4858`, no retry/render-false markers, `jbr_effect_handle_define_frames=2`,
+  `jbr_effect_handle_use_frames=2`, `jbr_image_cache_clear_frames=1`, and
+  `skiko_command_cache_clear_markers=1`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-interop-report/20260621-icons-alpha-descriptor-redefine/report.md`.
+- 2026-06-21 focused solid stroke-rect command compaction:
+  CMP now records solid stroked rectangles as one existing `COMMAND_DRAW_ROUND_RECT` with zero radii instead of four
+  `COMMAND_STROKE_LINE` edges. This keeps the current ABI while reducing command-stream size for common rectangular
+  borders. Narrow validation passed:
+  `./gradlew :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest --console=plain`
+  in `/Users/rock3r/src/jbr-skia-zero-copy/cmp`; `./gradlew
+  :compose:ui:ui-graphics:publishDesktopPublicationToMavenLocal -PartifactRedirection.targetNames= --console=plain`;
+  and the 8-second focused IdleRedraw command probe passed strict validation with no fallback, unsupported markers,
+  picture frames, or command-render retries. The probe confirmed the intended compaction: `avg_commands` dropped from
+  `1106` to `1073`, `strokeLine:avg=4.0` disappeared, `drawRoundRect:avg` rose from `4.0` to `5.0`,
+  `avg_image_defines=1.0`, `jbr_image_cache_clear_frames=1`, and `skiko_command_cache_clear_markers=1`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-interop-report/20260621-idle-redraw-stroke-rect-roundrect/report.md`.
 - 2026-06-21 focused Skiko command-frame cache allocation trim:
   Skiko's command-frame cache no longer copies each meaningful full-scene `IntArray` solely to retain a fallback replay
   frame; command recordings are immutable after publication and the testing corruption hooks copy before mutation, so

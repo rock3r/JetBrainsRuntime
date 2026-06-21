@@ -3391,7 +3391,12 @@ static bool drawCommandList(SkCanvas* canvas,
                 if (!bitmap->peekPixels(&pixmap)) {
                     return false;
                 }
-                sk_sp<SkImage> image = SkImages::RasterFromPixmapCopy(pixmap);
+                SkImageInfo imageInfo = pixmap.info();
+                if (imageInfo.alphaType() == kOpaque_SkAlphaType) {
+                    imageInfo = imageInfo.makeAlphaType(kPremul_SkAlphaType);
+                }
+                SkPixmap cachedPixmap(imageInfo, pixmap.addr(), pixmap.rowBytes());
+                sk_sp<SkImage> image = SkImages::RasterFromPixmapCopy(cachedPixmap);
                 if (image == nullptr || image->width() != imageWidth || image->height() != imageHeight) {
                     return false;
                 }
