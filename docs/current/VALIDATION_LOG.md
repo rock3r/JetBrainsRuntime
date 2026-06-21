@@ -5,6 +5,21 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-21 focused Jewel Icons effect-handle confirmation optimisation:
+  Followed up the conservative Icons retry fix by making descriptor reuse scoped and explicit: Skiko now reports
+  `COMMAND_DEFINE_EFFECT_DESCRIPTOR` handles after a successful command render, and CMP skips redefining color/effect
+  descriptors only after that confirmation. Handles still redefine until the first successful render and after
+  surface/cache clears, preserving the strict no-retry behavior while trimming steady-state descriptor traffic. Narrow
+  validation passed: `./gradlew :compose:ui:ui-graphics:desktopTest --tests
+  androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest --console=plain`; `./gradlew :skiko:awtTest --tests
+  org.jetbrains.skiko.jbr.JbrSkiaInteropTest --console=plain`; local CMP/Skiko publishes; and the decorated Jewel
+  standalone Icons slice passed strict command validation with `validation_status=passed`, `fallback_new_count=0`,
+  `cmp_unsupported_max=0`, `cmp_unsupported_reasons=none`, `skiko_picture_frames=0`, `jbr_picture_frames=0`,
+  `jbr_command_frames=5223`, no retry/render-false markers, `jbr_effect_handle_define_frames=1`,
+  `jbr_effect_handle_use_frames=2`, `jbr_effect_handle_cache_hit_frames=1`, `jbr_image_cache_clear_frames=1`, and
+  `skiko_command_cache_clear_markers=1`. Compared with the preceding Icons slice, effect-handle define frames dropped
+  from `2` to `1` while use frames stayed at `2`, and average command words moved from `5994` to `5991`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-interop-report/20260621-icons-effect-confirm/report.md`.
 - 2026-06-21 focused Jewel Icons alpha and descriptor-handle retry fix:
   The Jewel Icons showcase exposed two correctness gaps in the optimized path. First, copied native-bitmap cache
   entries could preserve transparent pixels while keeping an opaque `SkImageInfo`, which made icons look as if they had
