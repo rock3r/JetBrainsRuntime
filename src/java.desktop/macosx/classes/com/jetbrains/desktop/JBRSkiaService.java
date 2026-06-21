@@ -172,7 +172,8 @@ public class JBRSkiaService extends JBRSkia {
                     | COMMAND_CAP64_HIGH_SAVE_TRANSLATE
                     | COMMAND_CAP64_HIGH_RESTORE_N
                     | COMMAND_CAP64_HIGH_SAVE_TRANSLATE_LAYER
-                    | COMMAND_CAP64_HIGH_DRAW_IMAGE_REF_FULL;
+                    | COMMAND_CAP64_HIGH_DRAW_IMAGE_REF_FULL
+                    | COMMAND_CAP64_HIGH_FILL_ROUND_RECT;
     private static final boolean NATIVE_BRIDGE_AVAILABLE = loadNativeBridge();
     private static final AtomicLong NEXT_SCOPE_ID = new AtomicLong(1);
     private static final int MAX_CACHED_IMAGES = 256;
@@ -475,6 +476,7 @@ public class JBRSkiaService extends JBRSkia {
         if (op == COMMAND_DRAW_IMAGE_REF_COLOR_FILTER_REF) return 19;
         if (op == COMMAND_DRAW_ARC) return 16;
         if (op == COMMAND_DRAW_ROUND_RECT) return 15;
+        if (op == COMMAND_FILL_ROUND_RECT) return 10;
         if (op == COMMAND_FILL_RECT_LINEAR_GRADIENT) return -8;
         if (op == COMMAND_FILL_ROUND_RECT_LINEAR_GRADIENT) return -9;
         if (op == COMMAND_FILL_RECT_RADIAL_GRADIENT) return -10;
@@ -1122,6 +1124,22 @@ public class JBRSkiaService extends JBRSkia {
                     && radiusX1000 >= 0
                     && radiusY1000 >= 0
                     && (paintStyle == COMMAND_PAINT_STYLE_FILL || isValidStrokeMetadata(strokeWidth, strokeCap, strokeJoin, strokeMiter));
+        }
+        if (record.op() == COMMAND_FILL_ROUND_RECT) {
+            if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE
+                    && record.recordFlags() != COMMAND_RECORD_FLAG_ANTIALIAS) {
+                return false;
+            }
+            int left1000 = commands[record.argsStart() + 1];
+            int top1000 = commands[record.argsStart() + 2];
+            int right1000 = commands[record.argsStart() + 3];
+            int bottom1000 = commands[record.argsStart() + 4];
+            int radiusX1000 = commands[record.argsStart() + 5];
+            int radiusY1000 = commands[record.argsStart() + 6];
+            return right1000 >= left1000
+                    && bottom1000 >= top1000
+                    && radiusX1000 >= 0
+                    && radiusY1000 >= 0;
         }
         if (record.op() == COMMAND_FILL_RECT_IMAGE_SHADER) {
             if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE
@@ -3296,6 +3314,29 @@ public class JBRSkiaService extends JBRSkia {
                             ));
                             current.draw(roundRect);
                         }
+                    } else if (op == COMMAND_FILL_ROUND_RECT) {
+                        if (offset + 7 != recordEnd) return false;
+                        int argb = commands[offset++];
+                        int left1000 = commands[offset++];
+                        int top1000 = commands[offset++];
+                        int right1000 = commands[offset++];
+                        int bottom1000 = commands[offset++];
+                        int radiusX1000 = commands[offset++];
+                        int radiusY1000 = commands[offset++];
+                        if (right1000 < left1000 || bottom1000 < top1000 || radiusX1000 < 0 || radiusY1000 < 0) {
+                            return false;
+                        }
+                        RoundRectangle2D.Float roundRect = new RoundRectangle2D.Float(
+                                left1000 / 1000f,
+                                top1000 / 1000f,
+                                (right1000 - left1000) / 1000f,
+                                (bottom1000 - top1000) / 1000f,
+                                radiusX1000 / 1000f,
+                                radiusY1000 / 1000f
+                        );
+                        applyAntialiasing(current, antiAlias);
+                        current.setColor(new Color(argb, true));
+                        current.fill(roundRect);
                     } else if (op == COMMAND_FILL_RECT_LINEAR_GRADIENT) {
                         if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE
                                 && record.recordFlags() != COMMAND_RECORD_FLAG_ANTIALIAS) {

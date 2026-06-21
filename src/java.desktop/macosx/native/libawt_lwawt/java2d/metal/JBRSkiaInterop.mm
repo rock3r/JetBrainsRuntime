@@ -90,9 +90,9 @@
 
 #include "MTLSurfaceDataBase.h"
 
-static constexpr jint ABI_ID = 110;
+static constexpr jint ABI_ID = 111;
 static constexpr jint NATIVE_ABI_VERSION = 3;
-static constexpr const char* BUILD_ID = "skia=m147-64a2414108;flags=macos-release-metal-poc:1;abi=110;native=3";
+static constexpr const char* BUILD_ID = "skia=m147-64a2414108;flags=macos-release-metal-poc:1;abi=111;native=3";
 static constexpr size_t MAX_CACHED_RUNTIME_EFFECTS = 1024;
 static constexpr jint COMMAND_STREAM_MAGIC = 1246972723;
 static constexpr jint COMMAND_STREAM_HEADER_SIZE = 6;
@@ -188,6 +188,7 @@ static constexpr jint COMMAND_SAVE_TRANSLATE = 74;
 static constexpr jint COMMAND_RESTORE_N = 75;
 static constexpr jint COMMAND_SAVE_TRANSLATE_LAYER = 76;
 static constexpr jint COMMAND_DRAW_IMAGE_REF_FULL = 77;
+static constexpr jint COMMAND_FILL_ROUND_RECT = 78;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER = 1;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_COLOR_MATRIX_FILTER = 2;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_LIGHTING_FILTER = 3;
@@ -2415,6 +2416,29 @@ static bool drawCommandList(SkCanvas* canvas,
                     paint.setStrokeJoin(static_cast<SkPaint::Join>(strokeJoin));
                     paint.setStrokeMiter(static_cast<SkScalar>(strokeMiter1000) / 1000.0f);
                 }
+                canvas->drawRRect(SkRRect::MakeRectXY(SkRect::MakeLTRB(left, top, right, bottom),
+                                                      radiusX,
+                                                      radiusY),
+                                  paint);
+                break;
+            }
+            case COMMAND_FILL_ROUND_RECT: {
+                if (offset + 7 != recordEnd) {
+                    return false;
+                }
+                const jint argb = commands[offset++];
+                const SkScalar left = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkScalar top = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkScalar right = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkScalar bottom = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkScalar radiusX = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkScalar radiusY = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                if (right < left || bottom < top || radiusX < 0 || radiusY < 0) {
+                    return false;
+                }
+                SkPaint paint;
+                paint.setAntiAlias(antiAlias);
+                paint.setColor(skColorFromArgb(argb));
                 canvas->drawRRect(SkRRect::MakeRectXY(SkRect::MakeLTRB(left, top, right, bottom),
                                                       radiusX,
                                                       radiusY),

@@ -5,7 +5,7 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Current State
 
-- Current negotiated stream ABI: 110.
+- Current negotiated stream ABI: 111.
 - Current native ABI: 3.
 - The fast path is macOS-first: `ComposePanel(RenderSettings.SwingGraphics)` records Compose drawing into a strict
   command stream that Skiko submits to JBR for replay into a JBR-owned Skia surface during Swing painting.
@@ -55,6 +55,15 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused ABI 111 command-stream compaction checkpoint:
+  Added `COMMAND_FILL_ROUND_RECT` (`op=78`) plus
+  `COMMAND_CAP64_HIGH_FILL_ROUND_RECT=134217728` for solid filled round rects. Narrow gates passed: CMP focused
+  recorder test, Skiko focused interop test, local CMP/Skiko publishes, `./scripts/rebuild-jbr-skia-local-artifacts.sh`,
+  and decorated Jewel `showcase-icons` focused validation. The focused Icons slice stayed strict-clean with
+  `fallback_new_count=0`, `cmp_unsupported_max=0`, `jbr_picture_frames=0`, `jbr_command_frames=3`, and
+  `avg_commands=2447`, improving the ABI 110 Icons baseline (`avg_commands=2476`) by replacing the compactible fill
+  subset with `fillRoundRect:avg=5.7`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-fill-round-rect-icons/suite.tsv`.
 - Current-surface evidence audit checkpoint:
 - Full/default command-probe 100% coverage proof:
   With explicit user approval for one extra broad pass,

@@ -5,6 +5,24 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-22 focused compact filled round-rect command:
+  Added ABI 111 `COMMAND_FILL_ROUND_RECT` (`op=78`) plus high capability bit
+  `COMMAND_CAP64_HIGH_FILL_ROUND_RECT=134217728`. The record compacts solid filled round rects by omitting paint
+  style plus stroke-width, miter, cap, and join words; stroked and shader-backed round rects stay on the existing
+  `COMMAND_DRAW_ROUND_RECT` path. Narrow validation passed:
+  `./gradlew :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest --console=plain`;
+  Skiko focused `JbrSkiaInteropTest`; local CMP/Skiko publish; `./scripts/rebuild-jbr-skia-local-artifacts.sh`; and
+  focused decorated Jewel Icons. Icons stayed strict-clean with `fallback_new_count=0`, `cmp_unsupported_max=0`,
+  `cmp_unsupported_reasons=none`, `jbr_picture_frames=0`, `jbr_command_frames=3`, and `avg_commands=2447`, improving
+  the ABI 110 Icons baseline (`avg_commands=2476`) while splitting the previous `drawRoundRect:avg=27.7` into
+  `drawRoundRect:avg=22.0` and `fillRoundRect:avg=5.7`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-fill-round-rect-icons/suite.tsv`.
+- 2026-06-22 focused transparent showcase sample icons:
+  The remaining solid icon backgrounds seen in the Icons showcase were authored backgrounds in Magic Jewel's copied
+  sample SVGs, not generic bitmap alpha loss. Removed the explicit black background from `icons/jewel-logo.svg` and
+  `icons/components/hypnotoad.svg`. Focused decorated Jewel `showcase-icons` validation passed with `fallbacks=0` and
+  `unsupported_max=0`, and the screenshot confirmed the sample tiles no longer render as solid black backgrounds:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-transparent-icon-assets/suite.tsv`.
 - 2026-06-22 focused compact full-image-reference draw command:
   Added ABI 110 `COMMAND_DRAW_IMAGE_REF_FULL` (`op=77`) plus high capability bit
   `COMMAND_CAP64_HIGH_DRAW_IMAGE_REF_FULL=67108864`. The record compacts unfiltered, full-source image-reference

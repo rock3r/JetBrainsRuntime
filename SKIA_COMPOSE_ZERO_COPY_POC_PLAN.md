@@ -11,7 +11,7 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 
 ## Current Snapshot
 
-- ABI 110 artifacts are current across JBR private API, JBR API mirror, Skiko, CMP, and Magic Jewel.
+- ABI 111 artifacts are current across JBR private API, JBR API mirror, Skiko, CMP, and Magic Jewel.
 - The zero-unsupported macOS/Metal coverage goal is now tracked in
   [`docs/current/UNSUPPORTED_COMMAND_CENSUS.md`](docs/current/UNSUPPORTED_COMMAND_CENSUS.md). The latest completed
   full/default command-probe evidence passed `549/549`, but recorded 79 unsupported rows with 78,827 picture fallback
@@ -26,6 +26,10 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 - Compatibility and artifact fallback gates are current: the compatibility matrix was covered in narrow slices and
   passed `57/57`, while the artifact matrix required group passed `2/2` and the optional old-artifact rows skipped
   cleanly because old inputs were not configured.
+- JBR/CMP/Skiko now support compact solid filled round-rect records through ABI 111 `COMMAND_FILL_ROUND_RECT`
+  (`op=78`). Focused decorated Jewel `showcase-icons` validation stayed strict-clean with zero unsupported rows,
+  zero picture frames, and `avg_commands=2447`, improving the ABI 110 Icons baseline (`avg_commands=2476`):
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-fill-round-rect-icons/suite.tsv`.
 - JBR/CMP/Skiko now support stroked arbitrary-path gradients through explicit linear/radial/sweep command records.
   Magic Jewel's exact three-row command probe passed with `fallback_new_count=0`, `unsupported=none`, zero picture
   frames, and non-zero command frames:

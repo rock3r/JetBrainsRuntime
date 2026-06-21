@@ -36,7 +36,7 @@ import java.nio.ByteBuffer;
  * so downstream compile-only clients cannot accidentally inline stale values.
  */
 public abstract class JBRSkia {
-    public static final int ABI_ID = Integer.parseInt("110");
+    public static final int ABI_ID = Integer.parseInt("111");
     public static final int NATIVE_ABI_VERSION = Integer.parseInt("3");
     public static final String SKIA_REVISION = "m147-" + "64a2414108";
     public static final String SKIA_FLAGS_HASH = "macos-release-metal-poc:" + Integer.parseInt("1");
@@ -157,6 +157,8 @@ public abstract class JBRSkia {
     public static final long COMMAND_CAP64_HIGH_SAVE_TRANSLATE_LAYER = Long.parseLong("33554432");
     /** Supports compact full-source image reference draw records with default alpha. */
     public static final long COMMAND_CAP64_HIGH_DRAW_IMAGE_REF_FULL = Long.parseLong("67108864");
+    /** Supports compact filled round-rectangle records. */
+    public static final long COMMAND_CAP64_HIGH_FILL_ROUND_RECT = Long.parseLong("134217728");
     public static final int COMMAND_CLEAR = Integer.parseInt("1");
     public static final int COMMAND_FILL_RECT = Integer.parseInt("2");
     public static final int COMMAND_STROKE_LINE = Integer.parseInt("3");
@@ -236,6 +238,7 @@ public abstract class JBRSkia {
     public static final int COMMAND_RESTORE_N = Integer.parseInt("75");
     public static final int COMMAND_SAVE_TRANSLATE_LAYER = Integer.parseInt("76");
     public static final int COMMAND_DRAW_IMAGE_REF_FULL = Integer.parseInt("77");
+    public static final int COMMAND_FILL_ROUND_RECT = Integer.parseInt("78");
     public static final int COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER = Integer.parseInt("1");
     public static final int COMMAND_EFFECT_DESCRIPTOR_COLOR_MATRIX_FILTER = Integer.parseInt("2");
     public static final int COMMAND_EFFECT_DESCRIPTOR_LIGHTING_FILTER = Integer.parseInt("3");
