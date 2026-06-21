@@ -5,6 +5,24 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-21 focused compact save+translate command:
+  Added ABI 107 `COMMAND_SAVE_TRANSLATE` (`op=74`) plus high capability bit
+  `COMMAND_CAP64_HIGH_SAVE_TRANSLATE=8388608`. JBR native replay maps the compact record to
+  `canvas->save(); canvas->translate(dx, dy)`, Java2D fallback mirrors the same semantics, Skiko discovery requires
+  the new capability, and CMP opportunistically compacts `save(); translate(...)` plus adjacent translates in the
+  command writer. Narrow validation passed:
+  `./gradlew :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest --console=plain`;
+  `./gradlew :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest --console=plain`;
+  local CMP/Skiko publish; `./scripts/rebuild-jbr-skia-local-artifacts.sh`; focused Markdown wheel; and focused
+  decorated Jewel Icons. Markdown wheel stayed strict-clean with `fallbacks=0`, `unsupported_max=0`,
+  `jbr_command_frames=732`, and `avg_commands=1347`, improving the adjacent-translate baseline
+  (`avg_commands=1403`) while introducing `saveTranslate:avg=19.2`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260621-save-translate-icons-markdown/suite.tsv`.
+  Icons stayed strict-clean with `fallbacks=0`, `unsupported_max=0`, and `jbr_command_frames=3`; the first
+  image-definition frame was `commands=3153`, then steady frames were `commands=2758`, improving the
+  adjacent-translate Icons baseline (`avg_commands=2827`) while introducing `saveTranslate:avg=23.0`.
+  The captured Icons screenshot again showed transparent normal toolbar/component icons; visible black squares are the
+  intentional `icons/jewel-logo.svg` background rectangle in the logo/image samples.
 - 2026-06-21 focused adjacent translate command coalescing:
   CMP now merges adjacent `COMMAND_TRANSLATE` records in the command stream and drops the prior translate when a merge
   sums back to zero. The nested layer replay test now asserts the intentionally coalesced draw-site plus pivot
