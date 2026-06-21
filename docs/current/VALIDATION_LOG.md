@@ -5,6 +5,18 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-22 focused redundant save/clear/restore elision:
+  CMP now elides an immediately redundant `save; clearRect; restore` wrapper in the command writer, preserving the
+  clear record while dropping the no-op save-state pair. This targets the repeated Jewel icon/image pattern observed
+  with a temporary ordered-op probe (`save,save,clearRect,restore,drawImageRefFull,restore,...`). The prior
+  append-record boundary compaction trial was rejected because focused Icons stayed unchanged at `avg_commands=2447`.
+  Narrow validation passed:
+  `./gradlew :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest --console=plain`;
+  local CMP publish; and focused decorated Jewel Icons. Icons stayed strict-clean with `fallback_new_count=0`,
+  `cmp_unsupported_max=0`, `cmp_unsupported_reasons=none`, `jbr_picture_frames=0`, and `jbr_command_frames=3`.
+  Command replay improved from the ABI 111 Icons baseline `avg_commands=2447` to `avg_commands=2231`; `save` dropped
+  from `avg=117.0` to `avg=81.0`, and `restore` dropped from `avg=70.0` to `avg=34.0`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-clear-wrapper-elision-icons/suite.tsv`.
 - 2026-06-22 focused compact filled round-rect command:
   Added ABI 111 `COMMAND_FILL_ROUND_RECT` (`op=78`) plus high capability bit
   `COMMAND_CAP64_HIGH_FILL_ROUND_RECT=134217728`. The record compacts solid filled round rects by omitting paint
