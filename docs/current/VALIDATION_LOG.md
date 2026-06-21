@@ -28,6 +28,17 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   `avg_commands=2021`; `save` dropped from `avg=81.0` to `avg=43.0`, while `restore` remained covered by existing
   `restoreN` compaction:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-state-neutral-save-elision-icons-rerun/suite.tsv`.
+- 2026-06-22 focused trailing translate round-rect fold:
+  CMP now folds a trailing `translate; fillRoundRect/drawRoundRect; restore` shape into the round-rect coordinates
+  before emitting the restore. This targets the repeated Jewel Icons sequence where image content is followed by a
+  translated decoration round rect inside a soon-restored graphics-layer scope, and keeps the optimisation narrow to
+  solid filled/stroked round-rect records. Narrow validation passed:
+  `./gradlew :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest --console=plain`;
+  local CMP publish; and focused decorated Jewel Icons. Icons stayed strict-clean with `fallback_new_count=0`,
+  `cmp_unsupported_max=0`, `cmp_unsupported_reasons=none`, `jbr_picture_frames=0`, and `jbr_command_frames=3`.
+  Command replay improved from the state-neutral save-pair checkpoint `avg_commands=2021` to `avg_commands=1911`;
+  `translate` dropped from `avg=72.0` to `avg=50.0`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-roundrect-translate-fold-icons/suite.tsv`.
 - 2026-06-22 focused compact filled round-rect command:
   Added ABI 111 `COMMAND_FILL_ROUND_RECT` (`op=78`) plus high capability bit
   `COMMAND_CAP64_HIGH_FILL_ROUND_RECT=134217728`. The record compacts solid filled round rects by omitting paint
