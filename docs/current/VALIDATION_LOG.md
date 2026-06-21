@@ -5,6 +5,20 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-22 focused trailing translate fill-rect fold:
+  CMP now folds a trailing whole-pixel `translate; fillRect; restore` sequence into the integer fill-rect coordinates
+  before emitting the restore. Fractional trailing translates are intentionally left as explicit transform records
+  because `COMMAND_FILL_RECT` stores pixel integer geometry while `COMMAND_TRANSLATE` stores fixed-1000 offsets.
+  Narrow validation passed:
+  `./gradlew :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest --console=plain`;
+  local CMP publish; focused Markdown wheel scrolling; and focused decorated Jewel Icons. Markdown stayed strict-clean
+  with `fallback_new_count=0`, `cmp_unsupported_max=0`, `jbr_picture_frames=0`, and `jbr_command_frames=577`.
+  Command replay improved slightly from the trailing-translate elision checkpoint `avg_commands=763` to
+  `avg_commands=761`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-fillrect-translate-fold-markdown/suite.tsv`.
+  Icons stayed strict-clean and unchanged at `avg_commands=1820`, with `fallback_new_count=0`,
+  `cmp_unsupported_max=0`, `jbr_picture_frames=0`, and `jbr_command_frames=3`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-fillrect-translate-fold-icons/suite.tsv`.
 - 2026-06-22 focused trailing translate elision:
   CMP now removes a plain `translate` record when it is immediately discarded by a following `restore`; the existing
   round-rect translate fold still runs first so drawable trailing shape translations are preserved and folded instead.
