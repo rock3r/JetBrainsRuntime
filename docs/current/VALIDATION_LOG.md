@@ -5,6 +5,27 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-21 focused Jewel Markdown benchmark analysis and image-cache working-set fix:
+  Added focused Markdown benchmark cases plus CMP command-recorder op/image-payload counters to separate logical
+  command count from embedded image payload size. The initial focused Markdown preview showed the pathology was not
+  millions of draw ops, but repeated full ARGB image definitions: `avg_commands=2101248`,
+  `avg_image_defines=6.0`, `avg_image_define_words=2099838.0`, `avg_image_define_pixels=2099796.0`, and
+  `avg_draw_ms=22.109`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260621-175443/markdown-preview-readme20-auto/report.md`.
+  After changing nested image-resource publication and then making image refs a per-frame working set, the focused
+  Markdown runs passed strict command validation with no fallback, unsupported rows, picture frames, command-render
+  retries, or `rendered=false` markers. Evidence:
+  preview readme20 auto-scroll passed with `avg_commands=1404`, `avg_image_defines=0.0`, `avg_image_define_words=0.0`,
+  `avg_image_refs=6.0`, and `avg_draw_ms=0.118`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260621-180407/markdown-preview-readme20-auto/report.md`;
+  editor+preview readme80 auto-scroll passed with `avg_commands=77993`, `avg_image_defines=0.4`,
+  `avg_image_define_words=74792.5`, `avg_image_refs=15.7`, `avg_draw_ms=0.940`, `fallback_new_count=0`,
+  `cmp_unsupported_max=0`, and `validation_failures=none`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260621-180956/suite.tsv`;
+  preview readme80 auto-scroll and wheel-scroll both passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260621-181117/suite.tsv`.
+  The loaded-machine CPU/RSS numbers remain diagnostic rather than publishable, but the command stream now stays in
+  command mode with image payloads emitted mainly when images enter the visible frame.
 - 2026-06-21 decorated-window Jewel showcase Spectre tour reached full-tour coverage:
   After adding dedicated decorated-window launcher tasks for the copied Jewel standalone sample, ran
   `./gradlew runJewelStandaloneDecoratedJbrSkiaInterop -PjewelStandaloneInitialView=Hypnotoad
