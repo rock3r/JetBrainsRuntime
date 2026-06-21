@@ -5,7 +5,7 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Current State
 
-- Current negotiated stream ABI: 106.
+- Current negotiated stream ABI: 109.
 - Current native ABI: 3.
 - The fast path is macOS-first: `ComposePanel(RenderSettings.SwingGraphics)` records Compose drawing into a strict
   command stream that Skiko submits to JBR for replay into a JBR-owned Skia surface during Swing painting.

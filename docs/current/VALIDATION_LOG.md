@@ -5,6 +5,21 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-22 focused compact save+translate+layer command:
+  Added ABI 109 `COMMAND_SAVE_TRANSLATE_LAYER` (`op=76`) plus high capability bit
+  `COMMAND_CAP64_HIGH_SAVE_TRANSLATE_LAYER=33554432`. The record compacts the exact adjacent
+  `saveTranslate(dx, dy); saveLayer(x, y, width, height, alpha)` pair while preserving the original two-save replay
+  semantics (`save(); translate(); saveLayer(...)`). Narrow validation passed:
+  `./gradlew :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest --console=plain`;
+  `./gradlew :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest --console=plain`;
+  local CMP/Skiko publish; `./scripts/rebuild-jbr-skia-local-artifacts.sh`; focused Markdown wheel; and focused
+  decorated Jewel Icons. Markdown wheel stayed strict-clean with `fallbacks=0`, `unsupported_max=0`,
+  `jbr_command_frames=726`, and `avg_commands=1185`, improving the restoreN baseline (`avg_commands=1215`) while
+  introducing `saveTranslateLayer:avg=9.1` and reducing plain `saveLayer` to `avg=7.5`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-save-translate-layer-icons-markdown/suite.tsv`.
+  Icons stayed strict-clean with `fallbacks=0`, `unsupported_max=0`, and `jbr_command_frames=3`; command counts were
+  unchanged from the restoreN Icons baseline (`avg_commands=2788`) because that slice did not emit compactible
+  adjacent saveTranslate/saveLayer pairs.
 - 2026-06-22 focused compact repeated-restore command:
   Added ABI 108 `COMMAND_RESTORE_N` (`op=75`) plus high capability bit
   `COMMAND_CAP64_HIGH_RESTORE_N=16777216`. JBR native replay validates positive restore counts and preserves the

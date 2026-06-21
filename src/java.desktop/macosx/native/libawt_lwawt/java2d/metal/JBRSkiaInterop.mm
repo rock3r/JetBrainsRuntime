@@ -90,9 +90,9 @@
 
 #include "MTLSurfaceDataBase.h"
 
-static constexpr jint ABI_ID = 108;
+static constexpr jint ABI_ID = 109;
 static constexpr jint NATIVE_ABI_VERSION = 3;
-static constexpr const char* BUILD_ID = "skia=m147-64a2414108;flags=macos-release-metal-poc:1;abi=108;native=3";
+static constexpr const char* BUILD_ID = "skia=m147-64a2414108;flags=macos-release-metal-poc:1;abi=109;native=3";
 static constexpr size_t MAX_CACHED_RUNTIME_EFFECTS = 1024;
 static constexpr jint COMMAND_STREAM_MAGIC = 1246972723;
 static constexpr jint COMMAND_STREAM_HEADER_SIZE = 6;
@@ -186,6 +186,7 @@ static constexpr jint COMMAND_STROKE_RECT_IMAGE_SHADER = 72;
 static constexpr jint COMMAND_DEFINE_IMAGE_BITMAP = 73;
 static constexpr jint COMMAND_SAVE_TRANSLATE = 74;
 static constexpr jint COMMAND_RESTORE_N = 75;
+static constexpr jint COMMAND_SAVE_TRANSLATE_LAYER = 76;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER = 1;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_COLOR_MATRIX_FILTER = 2;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_LIGHTING_FILTER = 3;
@@ -3102,6 +3103,29 @@ static bool drawCommandList(SkCanvas* canvas,
                 SkScalar dy = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
                 canvas->save();
                 canvas->translate(dx, dy);
+                break;
+            }
+            case COMMAND_SAVE_TRANSLATE_LAYER: {
+                if (recordFlags != COMMAND_RECORD_FLAGS_NONE || offset + 7 != recordEnd) {
+                    return false;
+                }
+                SkScalar dx = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                SkScalar dy = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                jint x = commands[offset++];
+                jint y = commands[offset++];
+                jint layerWidth = commands[offset++];
+                jint layerHeight = commands[offset++];
+                jint alpha1000 = commands[offset++];
+                if (layerWidth < 0 || layerHeight < 0 || alpha1000 < 0 || alpha1000 > 1000) {
+                    return false;
+                }
+                canvas->save();
+                canvas->translate(dx, dy);
+                SkRect bounds = SkRect::MakeXYWH(static_cast<SkScalar>(x),
+                                                 static_cast<SkScalar>(y),
+                                                 static_cast<SkScalar>(layerWidth),
+                                                 static_cast<SkScalar>(layerHeight));
+                canvas->saveLayerAlphaf(&bounds, static_cast<float>(alpha1000) / 1000.0f);
                 break;
             }
             case COMMAND_SCALE: {

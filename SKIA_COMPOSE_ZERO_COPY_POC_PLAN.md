@@ -11,7 +11,7 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 
 ## Current Snapshot
 
-- ABI 106 artifacts are current across JBR private API, JBR API mirror, Skiko, CMP, and Magic Jewel.
+- ABI 109 artifacts are current across JBR private API, JBR API mirror, Skiko, CMP, and Magic Jewel.
 - The zero-unsupported macOS/Metal coverage goal is now tracked in
   [`docs/current/UNSUPPORTED_COMMAND_CENSUS.md`](docs/current/UNSUPPORTED_COMMAND_CENSUS.md). The latest completed
   full/default command-probe evidence passed `549/549`, but recorded 79 unsupported rows with 78,827 picture fallback
