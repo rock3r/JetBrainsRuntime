@@ -90,9 +90,9 @@
 
 #include "MTLSurfaceDataBase.h"
 
-static constexpr jint ABI_ID = 109;
+static constexpr jint ABI_ID = 110;
 static constexpr jint NATIVE_ABI_VERSION = 3;
-static constexpr const char* BUILD_ID = "skia=m147-64a2414108;flags=macos-release-metal-poc:1;abi=109;native=3";
+static constexpr const char* BUILD_ID = "skia=m147-64a2414108;flags=macos-release-metal-poc:1;abi=110;native=3";
 static constexpr size_t MAX_CACHED_RUNTIME_EFFECTS = 1024;
 static constexpr jint COMMAND_STREAM_MAGIC = 1246972723;
 static constexpr jint COMMAND_STREAM_HEADER_SIZE = 6;
@@ -187,6 +187,7 @@ static constexpr jint COMMAND_DEFINE_IMAGE_BITMAP = 73;
 static constexpr jint COMMAND_SAVE_TRANSLATE = 74;
 static constexpr jint COMMAND_RESTORE_N = 75;
 static constexpr jint COMMAND_SAVE_TRANSLATE_LAYER = 76;
+static constexpr jint COMMAND_DRAW_IMAGE_REF_FULL = 77;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER = 1;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_COLOR_MATRIX_FILTER = 2;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_LIGHTING_FILTER = 3;
@@ -3491,6 +3492,32 @@ static bool drawCommandList(SkCanvas* canvas,
                 }
                 if (!drawImage(canvas, image, recordFlags, srcLeft, srcTop, srcRight, srcBottom,
                                dstLeft, dstTop, dstRight, dstBottom, alpha1000)) {
+                    return false;
+                }
+                break;
+            }
+            case COMMAND_DRAW_IMAGE_REF_FULL: {
+                if ((recordFlags & ~COMMAND_RECORD_FLAG_ANTIALIAS) != 0 || offset + 6 != recordEnd) {
+                    return false;
+                }
+                const SkScalar dstLeft = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkScalar dstTop = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkScalar dstRight = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkScalar dstBottom = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const uint64_t key = imageCacheKey(commands[offset], commands[offset + 1]);
+                offset += 2;
+                sk_sp<SkImage> image;
+                {
+                    std::lock_guard<std::mutex> lock(gImageCacheMutex);
+                    auto found = gImagesByKey.find(ImageCacheScopedKey{imageCacheContextKey, key});
+                    if (found == gImagesByKey.end()) {
+                        return false;
+                    }
+                    image = found->second;
+                }
+                if (!drawImage(canvas, image, recordFlags, 0.0f, 0.0f,
+                               static_cast<SkScalar>(image->width()), static_cast<SkScalar>(image->height()),
+                               dstLeft, dstTop, dstRight, dstBottom, 1000)) {
                     return false;
                 }
                 break;

@@ -171,7 +171,8 @@ public class JBRSkiaService extends JBRSkia {
                     | COMMAND_CAP64_HIGH_STROKE_RECT_IMAGE_SHADER
                     | COMMAND_CAP64_HIGH_SAVE_TRANSLATE
                     | COMMAND_CAP64_HIGH_RESTORE_N
-                    | COMMAND_CAP64_HIGH_SAVE_TRANSLATE_LAYER;
+                    | COMMAND_CAP64_HIGH_SAVE_TRANSLATE_LAYER
+                    | COMMAND_CAP64_HIGH_DRAW_IMAGE_REF_FULL;
     private static final boolean NATIVE_BRIDGE_AVAILABLE = loadNativeBridge();
     private static final AtomicLong NEXT_SCOPE_ID = new AtomicLong(1);
     private static final int MAX_CACHED_IMAGES = 256;
@@ -319,6 +320,11 @@ public class JBRSkiaService extends JBRSkia {
                 imageDimensions.put(cacheKey, imageDimensions(commands[record.argsStart() + 2], commands[record.argsStart() + 3]));
             } else if (record.op() == COMMAND_EVICT_IMAGE_CACHE_KEY) {
                 imageDimensions.remove(commandHandle(commands[record.argsStart()], commands[record.argsStart() + 1]));
+            } else if (record.op() == COMMAND_DRAW_IMAGE_REF_FULL
+                    && !imageDimensions.containsKey(commandHandle(
+                    commands[record.argsStart() + 4],
+                    commands[record.argsStart() + 5]))) {
+                return false;
             } else if ((record.op() == COMMAND_DRAW_IMAGE_REF
                     || record.op() == COMMAND_DRAW_IMAGE_REF_COLOR_FILTER
                     || record.op() == COMMAND_DRAW_IMAGE_REF_COLOR_FILTER_REF)
@@ -463,6 +469,7 @@ public class JBRSkiaService extends JBRSkia {
         if (op == COMMAND_DRAW_PARAGRAPH_UTF16) return -5;
         if (op == COMMAND_CLIP_PATH) return -6;
         if (op == COMMAND_DRAW_PATH) return -7;
+        if (op == COMMAND_DRAW_IMAGE_REF_FULL) return 9;
         if (op == COMMAND_DRAW_IMAGE_REF) return 17;
         if (op == COMMAND_DRAW_IMAGE_REF_COLOR_FILTER) return 19;
         if (op == COMMAND_DRAW_IMAGE_REF_COLOR_FILTER_REF) return 19;
@@ -1708,6 +1715,13 @@ public class JBRSkiaService extends JBRSkia {
                     && alpha1000 <= 1000
                     && filterQuality >= 0
                     && filterQuality <= 3;
+        }
+        if (record.op() == COMMAND_DRAW_IMAGE_REF_FULL) {
+            if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE
+                    && record.recordFlags() != COMMAND_RECORD_FLAG_ANTIALIAS) {
+                return false;
+            }
+            return true;
         }
         if (record.op() == COMMAND_DRAW_IMAGE_REF_COLOR_FILTER) {
             if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE
@@ -4091,6 +4105,20 @@ public class JBRSkiaService extends JBRSkia {
                         }
                         drawImage(current, image, filtered, srcLeft1000, srcTop1000, srcRight1000, srcBottom1000,
                                 dstLeft1000, dstTop1000, dstRight1000, dstBottom1000, alpha1000);
+                    } else if (op == COMMAND_DRAW_IMAGE_REF_FULL) {
+                        if (offset + 6 != recordEnd) return false;
+                        boolean filtered = (record.recordFlags() & COMMAND_RECORD_FLAG_ANTIALIAS) != 0;
+                        int dstLeft1000 = commands[offset++];
+                        int dstTop1000 = commands[offset++];
+                        int dstRight1000 = commands[offset++];
+                        int dstBottom1000 = commands[offset++];
+                        long cacheKey = cacheKey(commands[offset++], commands[offset++]);
+                        BufferedImage image = IMAGE_CACHE.get(new ImageCacheKey(contextPtr, cacheKey));
+                        if (image == null) {
+                            return false;
+                        }
+                        drawImage(current, image, filtered, 0, 0, image.getWidth() * 1000, image.getHeight() * 1000,
+                                dstLeft1000, dstTop1000, dstRight1000, dstBottom1000, 1000);
                     } else if (op == COMMAND_DRAW_IMAGE_REF_COLOR_FILTER) {
                         if (offset + 16 != recordEnd) return false;
                         boolean filtered = (record.recordFlags() & COMMAND_RECORD_FLAG_ANTIALIAS) != 0;

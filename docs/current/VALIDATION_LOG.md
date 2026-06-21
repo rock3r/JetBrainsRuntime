@@ -5,6 +5,23 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-22 focused compact full-image-reference draw command:
+  Added ABI 110 `COMMAND_DRAW_IMAGE_REF_FULL` (`op=77`) plus high capability bit
+  `COMMAND_CAP64_HIGH_DRAW_IMAGE_REF_FULL=67108864`. The record compacts unfiltered, full-source image-reference
+  draws with default alpha by omitting explicit source bounds, image dimensions, alpha, and filter-quality fields; JBR
+  validates the image handle through its scoped image cache and replays the cached image's full bounds at alpha 1.0.
+  Narrow validation passed:
+  `./gradlew :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest --console=plain`;
+  `./gradlew :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest --console=plain`;
+  local CMP/Skiko publish; `./scripts/rebuild-jbr-skia-local-artifacts.sh`; focused Markdown wheel; and focused
+  decorated Jewel Icons. Markdown wheel stayed strict-clean with `fallbacks=0`, `unsupported_max=0`,
+  `jbr_picture_frames=0`, `jbr_command_frames=723`, and `avg_commands=1081`, improving the ABI 109 baseline
+  (`avg_commands=1185`) while replacing `drawImageRef:avg=13.3` with `drawImageRefFull:avg=13.3`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-draw-image-ref-full-icons-markdown/suite.tsv`.
+  Icons stayed strict-clean with `fallbacks=0`, `unsupported_max=0`, `jbr_picture_frames=0`, and
+  `jbr_command_frames=3`; `avg_commands=2476` improved the ABI 109 Icons baseline (`avg_commands=2788`) while
+  replacing `drawImageRef:avg=39.0` with `drawImageRefFull:avg=39.0`. CPU/RSS samples from this loaded-machine
+  benchmark remain diagnostic only; the keep/revert decision used strict markers and command-stream reduction.
 - 2026-06-22 focused compact save+translate+layer command:
   Added ABI 109 `COMMAND_SAVE_TRANSLATE_LAYER` (`op=76`) plus high capability bit
   `COMMAND_CAP64_HIGH_SAVE_TRANSLATE_LAYER=33554432`. The record compacts the exact adjacent
