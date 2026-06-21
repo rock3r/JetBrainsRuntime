@@ -5,6 +5,18 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-21 decorated-window Jewel showcase Spectre tour reached full-tour coverage:
+  After adding dedicated decorated-window launcher tasks for the copied Jewel standalone sample, ran
+  `./gradlew runJewelStandaloneDecoratedJbrSkiaInterop -PjewelStandaloneInitialView=Hypnotoad
+  -PjewelStandaloneSpectreStress=true -PjewelStandaloneSpectreStressMode=fullShowcaseThenHypnotoad`
+  with output captured at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/decorated-showcase-validation/20260621-full-tour/decorated-full-tour.log`.
+  The Spectre tour visited Welcome, every registered showcase component stop, Markdown, and Hypnotoad, then emitted
+  `JEWEL_STANDALONE_SPECTRE status=tour-complete` and continued through Hypnotoad stress cycles. Covered component
+  stops were Buttons, Radio Buttons, Checkboxes, Combo Boxes, Hypnotoad, Menus, Chips and trees, Progressbar, Icons,
+  Links, Borders, Segmented Controls, Sliders, Tabs, Tooltips, TextAreas, TextFields, Scrollbars, SplitLayout, Banners,
+  Typography, and Brushes. A strict marker scan found no fallback, unsupported, `rendered=false`, Spectre error,
+  JVM exception, `NoSuch*`, `StackOverflow`, ABI, crash, or failed markers in the captured decorated-window log.
 - 2026-06-21 full Jewel showcase Spectre tour reached strict 100% command coverage:
   After making nested graphics-layer command recordings self-contained for image/resource definitions and tightening
   strict command validation to reject raw fallback, `rendered=false`, and command-render retry markers, ran
