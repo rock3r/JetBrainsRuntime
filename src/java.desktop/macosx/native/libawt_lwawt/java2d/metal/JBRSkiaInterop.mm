@@ -90,9 +90,9 @@
 
 #include "MTLSurfaceDataBase.h"
 
-static constexpr jint ABI_ID = 107;
+static constexpr jint ABI_ID = 108;
 static constexpr jint NATIVE_ABI_VERSION = 3;
-static constexpr const char* BUILD_ID = "skia=m147-64a2414108;flags=macos-release-metal-poc:1;abi=107;native=3";
+static constexpr const char* BUILD_ID = "skia=m147-64a2414108;flags=macos-release-metal-poc:1;abi=108;native=3";
 static constexpr size_t MAX_CACHED_RUNTIME_EFFECTS = 1024;
 static constexpr jint COMMAND_STREAM_MAGIC = 1246972723;
 static constexpr jint COMMAND_STREAM_HEADER_SIZE = 6;
@@ -185,6 +185,7 @@ static constexpr jint COMMAND_STROKE_RECT_SHADER_REF = 71;
 static constexpr jint COMMAND_STROKE_RECT_IMAGE_SHADER = 72;
 static constexpr jint COMMAND_DEFINE_IMAGE_BITMAP = 73;
 static constexpr jint COMMAND_SAVE_TRANSLATE = 74;
+static constexpr jint COMMAND_RESTORE_N = 75;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER = 1;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_COLOR_MATRIX_FILTER = 2;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_LIGHTING_FILTER = 3;
@@ -1763,6 +1764,19 @@ static bool drawCommandList(SkCanvas* canvas,
                     return false;
                 }
                 canvas->restore();
+                break;
+            }
+            case COMMAND_RESTORE_N: {
+                if (recordFlags != COMMAND_RECORD_FLAGS_NONE || offset + 1 != recordEnd) {
+                    return false;
+                }
+                const jint count = commands[offset++];
+                if (count <= 0 || canvas->getSaveCount() <= count) {
+                    return false;
+                }
+                for (jint restoreIndex = 0; restoreIndex < count; restoreIndex++) {
+                    canvas->restore();
+                }
                 break;
             }
             case COMMAND_CLEAR_IMAGE_CACHE: {

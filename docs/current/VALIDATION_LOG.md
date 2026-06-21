@@ -5,6 +5,24 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-22 focused compact repeated-restore command:
+  Added ABI 108 `COMMAND_RESTORE_N` (`op=75`) plus high capability bit
+  `COMMAND_CAP64_HIGH_RESTORE_N=16777216`. JBR native replay validates positive restore counts and preserves the
+  base SkCanvas save frame, Java2D fallback restores the requested number of saved `Graphics2D` states, Skiko
+  discovery now requires the capability, and CMP compacts adjacent `restore()` records into `restoreN(count)`.
+  This checkpoint also corrected Java2D fallback semantics for ABI 107 `saveTranslate` by pushing the pre-save
+  graphics context before creating/translating the child context. Narrow validation passed:
+  `./gradlew :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest --console=plain`;
+  `./gradlew :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest --console=plain`;
+  local CMP/Skiko publish; `./scripts/rebuild-jbr-skia-local-artifacts.sh`; focused Markdown wheel; and focused
+  decorated Jewel Icons. Markdown wheel stayed strict-clean with `fallbacks=0`, `unsupported_max=0`,
+  `jbr_command_frames=732`, and `avg_commands=1215`, improving the saveTranslate baseline (`avg_commands=1347`)
+  while introducing `restoreN:avg=27.4` and reducing plain `restore` to `avg=8.1`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-restore-n-icons-markdown/suite.tsv`.
+  Icons stayed strict-clean with `fallbacks=0`, `unsupported_max=0`, and `jbr_command_frames=3`;
+  `avg_commands=2788` improved the saveTranslate Icons baseline (`avg_commands=2890`) while introducing
+  `restoreN:avg=33.0`. The captured Icons screenshot confirmed normal toolbar/component icons remain transparent;
+  the visible solid black backgrounds belong to the authored Jewel logo/image sample SVG assets.
 - 2026-06-21 focused compact save+translate command:
   Added ABI 107 `COMMAND_SAVE_TRANSLATE` (`op=74`) plus high capability bit
   `COMMAND_CAP64_HIGH_SAVE_TRANSLATE=8388608`. JBR native replay maps the compact record to
