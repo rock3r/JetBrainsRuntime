@@ -402,6 +402,7 @@ public class JBRSkiaApiTest {
         assertInvalidCommandStream(invalidDrawPathPathEffectRefVerbStream(), "invalid draw path path-effect-ref verb");
         assertValidCommandStream(validSaveLayerTintColorFilterStream(), "valid saveLayer tint color-filter stream");
         assertValidCommandStream(validImageRefTintColorFilterStream(), "valid image-ref tint color-filter stream");
+        assertValidCommandStream(validImageRefMultiplyFilterHandleStream(), "valid image-ref multiply filter handle stream");
         assertValidCommandStream(validImageRefColorMatrixFilterHandleStream(), "valid image-ref color-matrix filter handle stream");
         assertInvalidCommandStream(invalidImageRefColorFilterPathEffectHandleStream(), "path-effect image-ref color-filter handle");
         assertValidCommandStream(validCompositeShaderDescriptorStream(), "valid composite shader descriptor stream");
@@ -659,6 +660,7 @@ public class JBRSkiaApiTest {
                 JBRSkia.COMMAND_EFFECT_DESCRIPTOR_VERSION_1,
                 2, 0xff00ffff, JBRSkia.COMMAND_BLEND_MODE_SRC_IN
         }, "effect descriptor record length mismatch");
+        assertValidCommandStream(validTintEffectDescriptorMultiplyRecordOnlyStream(), "effect descriptor multiply blend mode");
         assertInvalidCommandStream(invalidTintEffectDescriptorRecordFlagsStream(), "effect descriptor record flags");
         assertInvalidCommandStream(invalidLightingFilterDescriptorPayloadCountStream(), "lighting descriptor payload count");
         assertInvalidCommandStream(new int[] {
@@ -1914,6 +1916,12 @@ public class JBRSkiaApiTest {
                 JBRSkia.COMMAND_EFFECT_DESCRIPTOR_VERSION_1,
                 2, 0xff00ffff, JBRSkia.COMMAND_BLEND_MODE_SRC_IN
         };
+    }
+
+    private static int[] validTintEffectDescriptorMultiplyRecordOnlyStream() {
+        int[] commands = validTintEffectDescriptorRecordOnlyStream();
+        commands[JBRSkia.COMMAND_STREAM_HEADER_SIZE + 9] = JBRSkia.COMMAND_BLEND_MODE_MULTIPLY;
+        return commands;
     }
 
     private static int[] invalidTintEffectDescriptorRecordFlagsStream() {
@@ -4188,6 +4196,23 @@ public class JBRSkiaApiTest {
                 JBRSkia.COMMAND_DRAW_IMAGE_REF_COLOR_FILTER, 76, JBRSkia.COMMAND_RECORD_FLAG_ANTIALIAS,
                 0, 0, 1000, 1000, 10, 20, 30, 40, 1, 2, 1, 1, 600, 1,
                 0xff00ffff, JBRSkia.COMMAND_BLEND_MODE_SRC_IN
+        };
+    }
+
+    private static int[] validImageRefMultiplyFilterHandleStream() {
+        return new int[] {
+                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 38,
+                JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
+                JBRSkia.COMMAND_DEFINE_EFFECT_DESCRIPTOR, 40, JBRSkia.COMMAND_RECORD_FLAGS_NONE,
+                0x00000007, 0x00000008,
+                JBRSkia.COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER,
+                JBRSkia.COMMAND_EFFECT_DESCRIPTOR_VERSION_1,
+                2, 0xffff00ff, JBRSkia.COMMAND_BLEND_MODE_MULTIPLY,
+                JBRSkia.COMMAND_DEFINE_IMAGE_ARGB, 36, JBRSkia.COMMAND_RECORD_FLAGS_NONE,
+                1, 2, 1, 1, 1, 0xffffffff,
+                JBRSkia.COMMAND_DRAW_IMAGE_REF_COLOR_FILTER_REF, 76, JBRSkia.COMMAND_RECORD_FLAG_ANTIALIAS,
+                0, 0, 1000, 1000, 10, 20, 30, 40, 1, 2, 1, 1, 600, 1,
+                0x00000007, 0x00000008
         };
     }
 

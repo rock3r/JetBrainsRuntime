@@ -5,6 +5,18 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-21 full Jewel showcase Spectre tour reached strict 100% command coverage:
+  After making nested graphics-layer command recordings self-contained for image/resource definitions and tightening
+  strict command validation to reject raw fallback, `rendered=false`, and command-render retry markers, ran
+  `DURATION_SECONDS=120 WARMUP_SECONDS=5 SAMPLE_INTERVAL_SECONDS=5 EXPECT_SCREENSHOT_ASSERTION=false
+  JEWEL_STANDALONE_SPECTRE_STRESS_MODE=fullShowcaseThenHypnotoad ./scripts/jewel-standalone-benchmark-suite.sh`.
+  The full tour visited Welcome, all showcase component stops, Markdown, Hypnotoad, and emitted
+  `JEWEL_STANDALONE_SPECTRE status=tour-complete`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-benchmark-suite/20260621-123503/suite.tsv`.
+  Strict counters: `validation_status=passed`, `validation_failures=none`, `fallback_new_count=0`,
+  `cmp_unsupported_max=0`, `cmp_unsupported_reasons=none`, `skiko_picture_frames=0`, `jbr_picture_frames=0`,
+  `skiko_command_frames=19344`, `jbr_command_frames=19344`, and `jbr_command_fps=161.2`. Loaded-machine before/after
+  data from the same run: `old_avg_cpu=83.44`, `new_avg_cpu=90.71`, `old_fps=284.4`, `new_fps=321.9`.
 - 2026-06-21 copied Jewel standalone Hypnotoad benchmark harness:
   Added a Magic Jewel-hosted copy of IntelliJ's Jewel standalone/showcase sample with a top-level `Hypnotoad`
   always-redrawing page and a Swing `JFrame`/`ComposePanel` launch path so Swing compositing is exercised. The new

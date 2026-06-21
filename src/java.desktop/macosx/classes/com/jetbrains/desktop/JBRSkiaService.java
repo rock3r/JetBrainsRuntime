@@ -735,7 +735,7 @@ public class JBRSkiaService extends JBRSkia {
             if (descriptorType == COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER) {
                 if (payloadIntCount != 2) return false;
                 int colorFilterBlendMode = commands[record.argsStart() + 6];
-                return colorFilterBlendMode == COMMAND_BLEND_MODE_SRC_IN;
+                return isSupportedColorFilterBlendMode(colorFilterBlendMode);
             }
             if (descriptorType == COMMAND_EFFECT_DESCRIPTOR_COLOR_MATRIX_FILTER) {
                 if (payloadIntCount != 20) return false;
@@ -1710,7 +1710,7 @@ public class JBRSkiaService extends JBRSkia {
                     && alpha1000 <= 1000
                     && filterQuality >= 0
                     && filterQuality <= 3
-                    && colorFilterBlendMode == COMMAND_BLEND_MODE_SRC_IN;
+                    && isSupportedColorFilterBlendMode(colorFilterBlendMode);
         }
         if (record.op() == COMMAND_DRAW_IMAGE_REF_COLOR_FILTER_REF) {
             if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE
@@ -1941,6 +1941,10 @@ public class JBRSkiaService extends JBRSkia {
 
     private static boolean isSupportedBlendMode(int blendMode) {
         return blendMode == COMMAND_BLEND_MODE_SRC_OVER || isSupportedFillBlendMode(blendMode);
+    }
+
+    private static boolean isSupportedColorFilterBlendMode(int blendMode) {
+        return blendMode == COMMAND_BLEND_MODE_SRC_IN || isSupportedBlendMode(blendMode);
     }
 
     private static CommandRecord readCommandRecord(int[] commands, int offset, int commandEnd) {
@@ -4062,10 +4066,12 @@ public class JBRSkiaService extends JBRSkia {
                         BufferedImage image = IMAGE_CACHE.get(new ImageCacheKey(contextPtr, cacheKey));
                         if (image == null || image.getWidth() != imageWidth || image.getHeight() != imageHeight
                                 || alpha1000 < 0 || alpha1000 > 1000 || filterQuality < 0 || filterQuality > 3
-                                || colorFilterBlendMode != COMMAND_BLEND_MODE_SRC_IN) {
+                                || !isSupportedColorFilterBlendMode(colorFilterBlendMode)) {
                             return false;
                         }
-                        drawImage(current, tintImageSrcIn(image, filterColor), filtered,
+                        BufferedImage filteredImage = applyBlendColorFilter(image, filterColor, colorFilterBlendMode);
+                        if (filteredImage == null) return false;
+                        drawImage(current, filteredImage, filtered,
                                 srcLeft1000, srcTop1000, srcRight1000, srcBottom1000,
                                 dstLeft1000, dstTop1000, dstRight1000, dstBottom1000, alpha1000);
                     } else if (op == COMMAND_DRAW_IMAGE_REF_COLOR_FILTER_REF) {
@@ -4403,7 +4409,7 @@ public class JBRSkiaService extends JBRSkia {
                             if (payloadIntCount != 2) return false;
                             int filterArgb = commands[offset++];
                             int filterBlendMode = commands[offset++];
-                            if (filterBlendMode != COMMAND_BLEND_MODE_SRC_IN) return false;
+                            if (!isSupportedColorFilterBlendMode(filterBlendMode)) return false;
                             COLOR_FILTER_CACHE.put(
                                     new ColorFilterCacheKey(contextPtr, handle),
                                     ColorFilterDescriptor.tint(filterArgb, filterBlendMode)
@@ -4671,11 +4677,9 @@ public class JBRSkiaService extends JBRSkia {
                         if (descriptor == null || !isColorFilterDescriptor(descriptor) || width < 0 || height < 0) return false;
                         logEffectHandleUse("java2d", contextPtr, handle, op);
                         if (descriptor.type() == COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER) {
-                            if (descriptor.blendMode() != COMMAND_BLEND_MODE_SRC_IN) return false;
-                            int sourceAlpha = (argb >>> 24) & 0xff;
-                            int filterAlpha = (descriptor.argb() >>> 24) & 0xff;
-                            int combinedAlpha = (sourceAlpha * filterAlpha + 127) / 255;
-                            current.setColor(new Color((combinedAlpha << 24) | (descriptor.argb() & 0x00ffffff), true));
+                            Integer filteredColor = applyBlendColorFilter(argb, descriptor.argb(), descriptor.blendMode());
+                            if (filteredColor == null) return false;
+                            current.setColor(new Color(filteredColor, true));
                         } else if (descriptor.type() == COMMAND_EFFECT_DESCRIPTOR_COLOR_MATRIX_FILTER) {
                             current.setColor(new Color(applyColorMatrix(argb, descriptor.matrixBits()), true));
                         } else if (descriptor.type() == COMMAND_EFFECT_DESCRIPTOR_LIGHTING_FILTER) {
@@ -5154,10 +5158,41 @@ public class JBRSkiaService extends JBRSkia {
             return tinted;
         }
 
+        private static Integer applyBlendColorFilter(int argb, int filterColor, int blendMode) {
+            if (blendMode == COMMAND_BLEND_MODE_SRC_IN) {
+                int sourceAlpha = (argb >>> 24) & 0xff;
+                int filterAlpha = (filterColor >>> 24) & 0xff;
+                int alpha = (sourceAlpha * filterAlpha + 127) / 255;
+                return (alpha << 24) | (filterColor & 0x00ffffff);
+            }
+            if (blendMode == COMMAND_BLEND_MODE_MULTIPLY) {
+                int alpha = ((argb >>> 24) & 0xff) * ((filterColor >>> 24) & 0xff) / 255;
+                int red = ((argb >>> 16) & 0xff) * ((filterColor >>> 16) & 0xff) / 255;
+                int green = ((argb >>> 8) & 0xff) * ((filterColor >>> 8) & 0xff) / 255;
+                int blue = (argb & 0xff) * (filterColor & 0xff) / 255;
+                return (alpha << 24) | (red << 16) | (green << 8) | blue;
+            }
+            return null;
+        }
+
+        private static BufferedImage applyBlendColorFilter(BufferedImage image, int filterColor, int blendMode) {
+            if (blendMode == COMMAND_BLEND_MODE_SRC_IN) {
+                return tintImageSrcIn(image, filterColor);
+            }
+            BufferedImage filtered = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
+            for (int y = 0; y < image.getHeight(); y++) {
+                for (int x = 0; x < image.getWidth(); x++) {
+                    Integer color = applyBlendColorFilter(image.getRGB(x, y), filterColor, blendMode);
+                    if (color == null) return null;
+                    filtered.setRGB(x, y, color);
+                }
+            }
+            return filtered;
+        }
+
         private static BufferedImage applyColorFilter(BufferedImage image, ColorFilterDescriptor descriptor) {
             if (descriptor.type() == COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER) {
-                if (descriptor.blendMode() != COMMAND_BLEND_MODE_SRC_IN) return null;
-                return tintImageSrcIn(image, descriptor.argb());
+                return applyBlendColorFilter(image, descriptor.argb(), descriptor.blendMode());
             }
             BufferedImage filtered = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
             for (int y = 0; y < image.getHeight(); y++) {

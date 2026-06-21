@@ -476,14 +476,16 @@ static SkScalar skScalarFromRawBits(jint bits) {
 template <typename CommandWords>
 static bool pathFromCommandData(CommandWords commands, jsize offset, jsize recordEnd, jint fillType, SkPath* path);
 
+static bool skBlendModeForColorFilter(jint commandBlendMode, SkBlendMode* blendMode);
 static sk_sp<SkColorFilter> makeDescriptorRuntimeColorFilter(const ColorFilterDescriptor& descriptor);
 
 static sk_sp<SkColorFilter> makeDescriptorColorFilter(const ColorFilterDescriptor& descriptor) {
     if (descriptor.type == COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER) {
-        if (descriptor.blendMode != COMMAND_BLEND_MODE_SRC_IN) {
+        SkBlendMode blendMode;
+        if (!skBlendModeForColorFilter(descriptor.blendMode, &blendMode)) {
             return nullptr;
         }
-        return SkColorFilters::Blend(descriptor.argb, SkBlendMode::kSrcIn);
+        return SkColorFilters::Blend(descriptor.argb, blendMode);
     }
     if (descriptor.type == COMMAND_EFFECT_DESCRIPTOR_COLOR_MATRIX_FILTER) {
         return SkColorFilters::Matrix(descriptor.matrix.data());
@@ -1559,6 +1561,14 @@ static bool skBlendMode(jint commandBlendMode, SkBlendMode* blendMode) {
     return skBlendModeForFill(commandBlendMode, blendMode);
 }
 
+static bool skBlendModeForColorFilter(jint commandBlendMode, SkBlendMode* blendMode) {
+    if (commandBlendMode == COMMAND_BLEND_MODE_SRC_IN) {
+        *blendMode = SkBlendMode::kSrcIn;
+        return true;
+    }
+    return skBlendMode(commandBlendMode, blendMode);
+}
+
 static bool drawImage(SkCanvas* canvas,
                       const sk_sp<SkImage>& image,
                       jint recordFlags,
@@ -1579,10 +1589,11 @@ static bool drawImage(SkCanvas* canvas,
     SkPaint imagePaint;
     imagePaint.setAlphaf(static_cast<float>(alpha1000) / 1000.0f);
     if (colorFilterBlendMode != 0) {
-        if (colorFilterBlendMode != COMMAND_BLEND_MODE_SRC_IN) {
+        SkBlendMode blendMode;
+        if (!skBlendModeForColorFilter(colorFilterBlendMode, &blendMode)) {
             return false;
         }
-        imagePaint.setColorFilter(SkColorFilters::Blend(colorFilter, SkBlendMode::kSrcIn));
+        imagePaint.setColorFilter(SkColorFilters::Blend(colorFilter, blendMode));
     }
     SkSamplingOptions sampling = (recordFlags & COMMAND_RECORD_FLAG_ANTIALIAS) != 0
             ? SkSamplingOptions(SkFilterMode::kLinear, SkMipmapMode::kNone)
@@ -3335,9 +3346,10 @@ static bool drawCommandList(SkCanvas* canvas,
                 const jint filterQuality = commands[offset++];
                 SkColor filterColor = skColorFromArgb(commands[offset++]);
                 const jint colorFilterBlendMode = commands[offset++];
+                SkBlendMode colorFilterSkBlendMode;
                 if (imageWidth <= 0 || imageHeight <= 0 || imageWidth > 4096 || imageHeight > 4096 ||
                         alpha1000 < 0 || alpha1000 > 1000 || filterQuality < 0 || filterQuality > 3 ||
-                        colorFilterBlendMode != COMMAND_BLEND_MODE_SRC_IN) {
+                        !skBlendModeForColorFilter(colorFilterBlendMode, &colorFilterSkBlendMode)) {
                     return false;
                 }
                 sk_sp<SkImage> image;
@@ -3862,7 +3874,8 @@ static bool drawCommandList(SkCanvas* canvas,
                     }
                     descriptor.argb = skColorFromArgb(commands[offset++]);
                     descriptor.blendMode = commands[offset++];
-                    if (descriptor.blendMode != COMMAND_BLEND_MODE_SRC_IN) {
+                    SkBlendMode colorFilterSkBlendMode;
+                    if (!skBlendModeForColorFilter(descriptor.blendMode, &colorFilterSkBlendMode)) {
                         return false;
                     }
                 } else if (descriptorType == COMMAND_EFFECT_DESCRIPTOR_COLOR_MATRIX_FILTER) {
