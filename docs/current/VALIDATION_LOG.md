@@ -5,6 +5,18 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-21 focused identity transform command elision:
+  CMP now skips `COMMAND_TRANSLATE` for `(0, 0)` and `COMMAND_SCALE` for `(1, 1)`, matching the existing zero
+  rotation/skew guards and trimming transform-stack noise without changing replay semantics. The nested layer replay
+  test now asserts semantic records instead of fixed positions around the elided identity scale. Narrow validation
+  passed: `./gradlew :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest --console=plain`;
+  local CMP publish; focused Markdown wheel; and focused decorated Jewel Icons. Markdown wheel stayed strict-clean with
+  `fallbacks=0`, `unsupported_max=0`, `avg_commands=1660`, and `translate:avg=110.1`, improving the preceding 256K
+  content-key baseline (`avg_commands=2241`, `translate:avg=209.8`) while keeping `avg_image_defines=1.8`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260621-markdown-wheel-identity-transform-elision/suite.tsv`.
+  Icons stayed strict-clean with `fallbacks=0`, `unsupported_max=0`, `avg_commands=3402`, and `translate:avg=210.0`,
+  improving the preceding Icons baseline (`avg_commands=5712`, `translate:avg=666.0`):
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260621-showcase-icons-identity-transform-elision/suite.tsv`.
 - 2026-06-21 focused native-bitmap content-key threshold optimisation:
   CMP now content-keys native bitmap definitions up to `262_144` pixels instead of `8192`, covering the larger
   rasterized Jewel logo/icon variants and most Markdown layer bitmaps that were pointer/generation-keyed and redefined
