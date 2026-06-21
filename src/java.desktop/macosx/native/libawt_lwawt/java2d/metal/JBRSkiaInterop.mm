@@ -1727,23 +1727,6 @@ static bool drawCommandList(SkCanvas* canvas,
         return false;
     }
 
-    struct FrameScopedImageCleanup {
-        std::vector<ImageCacheScopedKey>& keys;
-
-        ~FrameScopedImageCleanup() {
-            if (keys.empty()) {
-                return;
-            }
-            std::lock_guard<std::mutex> lock(gImageCacheMutex);
-            for (const ImageCacheScopedKey& key : keys) {
-                gImagesByKey.erase(key);
-            }
-        }
-    };
-
-    std::vector<ImageCacheScopedKey> frameScopedImageKeys;
-    FrameScopedImageCleanup frameScopedImageCleanup{frameScopedImageKeys};
-
     jsize offset = COMMAND_STREAM_HEADER_SIZE;
     jsize commandEnd = COMMAND_STREAM_HEADER_SIZE + payloadLength;
     while (offset < commandEnd) {
@@ -3408,15 +3391,13 @@ static bool drawCommandList(SkCanvas* canvas,
                 if (!bitmap->peekPixels(&pixmap)) {
                     return false;
                 }
-                sk_sp<SkImage> image = SkImages::RasterFromPixmap(pixmap, nullptr, nullptr);
+                sk_sp<SkImage> image = SkImages::RasterFromPixmapCopy(pixmap);
                 if (image == nullptr || image->width() != imageWidth || image->height() != imageHeight) {
                     return false;
                 }
                 {
                     std::lock_guard<std::mutex> lock(gImageCacheMutex);
-                    ImageCacheScopedKey scopedKey{imageCacheContextKey, key};
-                    gImagesByKey[scopedKey] = image;
-                    frameScopedImageKeys.push_back(scopedKey);
+                    gImagesByKey[ImageCacheScopedKey{imageCacheContextKey, key}] = image;
                 }
                 break;
             }

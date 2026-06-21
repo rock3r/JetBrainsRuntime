@@ -5,6 +5,23 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-21 focused IdleRedraw native-bitmap delta-cache fix:
+  The first small-native-bitmap content-key experiment proved Skiko could confirm `COMMAND_DEFINE_IMAGE_BITMAP` keys,
+  but also exposed two cache-contract bugs: Skiko's confirmation scanner treated the command-stream payload length as
+  bytes instead of words and only confirmed the first quarter of the stream, then JBR erased native-bitmap cache entries
+  at frame end because they wrapped external `SkBitmap` memory. JBR now copies native bitmap definitions into persistent
+  scoped image-cache entries, Skiko confirms both ARGB and native bitmap definitions over the full command stream, and
+  CMP uses content-stable keys for small native bitmaps while redefining native images until JBR confirms them. Narrow
+  validations passed:
+  `./gradlew :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest --console=plain`
+  in `/Users/rock3r/src/jbr-skia-zero-copy/cmp`;
+  `./gradlew :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest --console=plain`
+  in `/Users/rock3r/src/jbr-skia-zero-copy/skiko`;
+  `./scripts/rebuild-jbr-skia-local-artifacts.sh` in `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel`; and the
+  8-second focused IdleRedraw command probe passed strict validation with no fallback, no unsupported markers,
+  `avg_commands=1106`, `avg_image_defines=1.0`, `max_image_defines=1`, `jbr_image_cache_clear_frames=1`,
+  `skiko_command_cache_clear_markers=1`, and no command-render retry markers:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-interop-report/20260621-idle-redraw-native-bitmap-persistent-copy/report.md`.
 - 2026-06-21 focused Jewel Markdown native-bitmap lifetime fix:
   The later Markdown wheel-scroll investigation found a second RSS path after compacting image command payloads:
   transient Skia-backed layer `ImageBitmap`s were being retained by the recorder's process-wide image identity cache,
