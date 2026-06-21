@@ -17,10 +17,10 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   with `fallbacks=0`, `unsupported_max=0`, `jbr_image_cache_clear_frames=0`,
   `skiko_command_cache_clear_markers=0`, `new_avg_rss_kb=1604016`, and `new_max_rss_kb=1653008`:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260621-native-image-lifetime-corrected/suite.tsv`.
-  The best comparable 24-second fixed run before the final ARGB-cache cleanup correction passed with
-  `new_avg_rss_kb=1638939`, `new_max_rss_kb=1705552`, `new_avg_cpu=79.95`, `new_fps=9.0`, no fallback,
-  no unsupported commands, and no cache-clear/retry markers:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260621-native-image-lifetime/suite.tsv`.
+  A current-state 24-second rerun after the final cleanup passed with `fallbacks=0`, `unsupported_max=0`,
+  `jbr_image_cache_clear_frames=0`, `skiko_command_cache_clear_markers=0`, `new_avg_cpu=79.23`,
+  `new_avg_rss_kb=1608944`, `new_max_rss_kb=1650416`, and `new_fps=9.0`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260621-native-image-lifetime-current-24s/suite.tsv`.
 - 2026-06-21 focused Jewel Markdown benchmark analysis and image-cache working-set fix:
   Added focused Markdown benchmark cases plus CMP command-recorder op/image-payload counters to separate logical
   command count from embedded image payload size. The initial focused Markdown preview showed the pathology was not
