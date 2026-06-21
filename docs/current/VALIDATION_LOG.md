@@ -5,6 +5,24 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-21 focused native-bitmap content-key threshold optimisation:
+  CMP now content-keys native bitmap definitions up to `65_536` pixels instead of `8192`, covering the larger
+  rasterized Jewel logo/icon variants that were pointer/generation-keyed and redefined every frame. The smaller
+  `16_384` and `32_768` trials were rejected because the Icons slice still emitted `5` steady-state
+  `defineImageBitmap` records. The retained `65_536` trial passed focused CMP recorder tests and local CMP publish.
+  Focused decorated Jewel `showcase-icons` command validation passed with `fallbacks=0`, `unsupported_max=0`,
+  `jbr_command_frames=2`; command logs showed the first frame defining `40` bitmaps and steady-state frames dropping
+  to `imageDefines=0`, `imageDefineWords=0`, and `commands=5712`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260621-showcase-icons-content-key-64k-v3/suite.tsv`.
+  Focused Markdown wheel validation also passed with `fallbacks=0`, `unsupported_max=0`,
+  `jbr_command_frames=798`, `avg_commands=2283`, and `avg_image_defines=6.8`, improving the prior same-session
+  baseline (`avg_commands=2335`, `avg_image_defines=11.4`) while leaving coarse CPU/RSS as noisy rather than
+  conclusively improved:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260621-markdown-wheel-content-key-64k/suite.tsv`.
+  The Icons screenshot also confirmed that the visible black Jewel-logo squares come from
+  `icons/jewel-logo.svg`'s literal black background rectangle, not from generic icon alpha loss.
+  Magic Jewel's focused standalone suite gained a `showcase-icons` idle component case, and report analysis now falls
+  back to full logs when startup-only command frames are absent from the sampled log.
 - 2026-06-21 focused Jewel Icons effect-handle confirmation optimisation:
   Followed up the conservative Icons retry fix by making descriptor reuse scoped and explicit: Skiko now reports
   `COMMAND_DEFINE_EFFECT_DESCRIPTOR` handles after a successful command render, and CMP skips redefining color/effect
