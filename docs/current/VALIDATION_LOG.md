@@ -5,6 +5,20 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-22 focused saveTranslate fill-rect fold across trailing restore groups:
+  CMP now folds a nested `saveTranslate; fillRect; restore/restoreN` scope only after the matching restore has already
+  been materialized, preserving the existing direct `saveTranslate; fillRect; restore` invariant. The fold is guarded
+  to whole-pixel offsets because `COMMAND_FILL_RECT` stores integer geometry, and it decrements/removes only the
+  restore associated with the folded saveTranslate scope. Narrow validation passed:
+  `./gradlew :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest --console=plain`;
+  local CMP publish; focused Markdown wheel scrolling; and focused decorated Jewel Icons. Markdown stayed strict-clean
+  with `fallback_new_count=0`, `cmp_unsupported_max=0`, `jbr_picture_frames=0`, and `jbr_command_frames=426`;
+  command replay improved from the restoreN image-ref checkpoint `avg_commands=738` to `avg_commands=728`, with
+  `saveTranslate:avg` dropping from `5.7` to `5.0`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-save-translate-fillrect-restoreN-fold-markdown/suite.tsv`.
+  Icons stayed strict-clean and neutral at `avg_commands=1820`, with `fallback_new_count=0`, `cmp_unsupported_max=0`,
+  `jbr_picture_frames=0`, and `jbr_command_frames=3`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-save-translate-fillrect-restoreN-fold-icons/suite.tsv`.
 - 2026-06-22 focused saveTranslate image-ref fold across trailing restore groups:
   CMP now also folds `saveTranslate; [image definitions]; drawImageRefFull; restore/restoreN` when the matching
   restore has already been compacted before the next restore is emitted. The fold adjusts the compact full-image-ref
