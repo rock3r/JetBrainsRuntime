@@ -5,6 +5,21 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-22 focused trailing translated round-rect suffix fold:
+  CMP now folds a stream-end translated round-rect suffix by baking the final `translate` into the
+  `fillRoundRect`/`drawRoundRect` coordinates when the translated draw is the final command-list content. The fold is
+  intentionally end-only because JBR wraps command-list replay in a native `save`/`restore`; it does not cross clips
+  or other scoped state. Narrow validation passed:
+  `./gradlew --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.foldsTrailingTranslateSaveFilledRoundRectScopeAtStreamEnd --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.keepsTranslateSaveRoundRectScopeWithAdditionalScopedState --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.foldsTrailingTranslateIntoFilledRoundRectBeforeRestore --console=plain`;
+  local CMP publish; focused Markdown wheel scrolling; and focused decorated Jewel Icons. Markdown stayed strict-clean
+  with `fallbacks=0`, `unsupported_max=0`, and `jbr_command_frames=1566`; command replay improved from the translated
+  full-image-ref suffix checkpoint `avg_commands=451` to `avg_commands=443`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-trailing-translate-roundrect-suffix-markdown/suite.tsv`.
+  Icons stayed strict-clean with `fallbacks=0`, `unsupported_max=0`, and `jbr_command_frames=3`; the captured
+  screenshot shows transparent surrounds on the nav and IntelliJ folder icons, while the loud magenta square is the
+  showcase's explicit `ColorFilter.tint(Color.Magenta, BlendMode.Multiply)` sample rather than a command-path alpha
+  regression:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-trailing-translate-roundrect-suffix-icons/suite.tsv`.
 - 2026-06-22 focused translated full-image-ref suffix fold:
   CMP now folds a soon-restored suffix of
   `translate; [image definitions/cache records]; drawImageRefFull; ...; restore/restoreN` by accumulating the
