@@ -5,6 +5,21 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-22 focused full-image-ref+restoreN compact command:
+  JBR now advertises and replays `COMMAND_DRAW_IMAGE_REF_FULL_RESTORE_N` (`op=87`) as an ABI-111 compact record that
+  draws a cached full-source image ref and then restores multiple canvas saves. CMP emits it in the final stream
+  compaction pass for `drawImageRefFull; restoreN(count>1)` and already-compacted `drawImageRefFullRestore; restoreN`
+  shapes, and Skiko requires the matching high capability bit. Narrow validation passed:
+  `./gradlew --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesCompactFullImageRefRestoreNRecord --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.keepsSeparatedFullImageRefRestoreNRecords --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesCompactFullImageRefRestoreRecord --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.keepsSeparatedFullImageRefRestoreRecords --console=plain`;
+  `./gradlew awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest --console=plain`;
+  Skiko/CMP local publishes; `./scripts/rebuild-jbr-skia-local-artifacts.sh`; and focused Markdown wheel plus Jewel
+  Icons runs:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-image-restore-n-compact/suite.tsv`.
+  Markdown stayed strict-clean with `fallbacks=0`, `unsupported_max=0`, `jbr_command_frames=39`, `avg_commands=392`,
+  and `drawImageRefFullRestoreN:avg=3.8,max=6,total=147` in the op mix. Icons stayed strict-clean with
+  `fallbacks=0`, `unsupported_max=0`, `jbr_command_frames=3`, `avg_commands=1356`, and
+  `drawImageRefFullRestoreN=1` in each captured frame; the captured icon page continues to show transparent surrounds
+  for sidebar/hint/check/sun icons, while the pale gray and magenta boxes are explicit demo backgrounds.
 - 2026-06-22 focused full-image-ref+restore compact command:
   JBR now advertises and replays `COMMAND_DRAW_IMAGE_REF_FULL_RESTORE` (`op=86`) as an ABI-111 compact record that
   draws a cached full-source image ref and then restores one canvas save. CMP emits it only for an immediate

@@ -181,7 +181,8 @@ public class JBRSkiaService extends JBRSkia {
                     | COMMAND_CAP64_HIGH_DRAW_IMAGE_REF_FULL_FILL_RECT
                     | COMMAND_CAP64_HIGH_STROKE_LINE_DRAW_IMAGE_REF_FULL_RUN
                     | COMMAND_CAP64_HIGH_SAVE_TRANSLATE_LAYER_SAVE_TRANSLATE
-                    | COMMAND_CAP64_HIGH_DRAW_IMAGE_REF_FULL_RESTORE;
+                    | COMMAND_CAP64_HIGH_DRAW_IMAGE_REF_FULL_RESTORE
+                    | COMMAND_CAP64_HIGH_DRAW_IMAGE_REF_FULL_RESTORE_N;
     private static final boolean NATIVE_BRIDGE_AVAILABLE = loadNativeBridge();
     private static final AtomicLong NEXT_SCOPE_ID = new AtomicLong(1);
     private static final int MAX_CACHED_IMAGES = 256;
@@ -330,7 +331,8 @@ public class JBRSkiaService extends JBRSkia {
             } else if (record.op() == COMMAND_EVICT_IMAGE_CACHE_KEY) {
                 imageDimensions.remove(commandHandle(commands[record.argsStart()], commands[record.argsStart() + 1]));
             } else if ((record.op() == COMMAND_DRAW_IMAGE_REF_FULL
-                    || record.op() == COMMAND_DRAW_IMAGE_REF_FULL_RESTORE)
+                    || record.op() == COMMAND_DRAW_IMAGE_REF_FULL_RESTORE
+                    || record.op() == COMMAND_DRAW_IMAGE_REF_FULL_RESTORE_N)
                     && !imageDimensions.containsKey(commandHandle(
                     commands[record.argsStart() + 4],
                     commands[record.argsStart() + 5]))) {
@@ -509,6 +511,7 @@ public class JBRSkiaService extends JBRSkia {
         if (op == COMMAND_STROKE_LINE_DRAW_IMAGE_REF_FULL_RUN) return -37;
         if (op == COMMAND_SAVE_TRANSLATE_LAYER_SAVE_TRANSLATE) return 12;
         if (op == COMMAND_DRAW_IMAGE_REF_FULL_RESTORE) return 9;
+        if (op == COMMAND_DRAW_IMAGE_REF_FULL_RESTORE_N) return 10;
         if (op == COMMAND_DRAW_IMAGE_REF) return 17;
         if (op == COMMAND_DRAW_IMAGE_REF_COLOR_FILTER) return 19;
         if (op == COMMAND_DRAW_IMAGE_REF_COLOR_FILTER_REF) return 19;
@@ -686,6 +689,10 @@ public class JBRSkiaService extends JBRSkia {
         }
         if (record.op() == COMMAND_RESTORE_N
                 && (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE || commands[record.argsStart()] <= 0)) {
+            return false;
+        }
+        if (record.op() == COMMAND_DRAW_IMAGE_REF_FULL_RESTORE_N
+                && commands[record.recordEnd() - 1] <= 0) {
             return false;
         }
         if (record.op() == COMMAND_DRAW_IMAGE_REF_FULL_RUN) {
@@ -1817,7 +1824,8 @@ public class JBRSkiaService extends JBRSkia {
         }
         if (record.op() == COMMAND_DRAW_IMAGE_REF_FULL
                 || record.op() == COMMAND_CLEAR_DRAW_IMAGE_REF_FULL
-                || record.op() == COMMAND_DRAW_IMAGE_REF_FULL_RESTORE) {
+                || record.op() == COMMAND_DRAW_IMAGE_REF_FULL_RESTORE
+                || record.op() == COMMAND_DRAW_IMAGE_REF_FULL_RESTORE_N) {
             if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE
                     && record.recordFlags() != COMMAND_RECORD_FLAG_ANTIALIAS) {
                 return false;
@@ -4319,26 +4327,32 @@ public class JBRSkiaService extends JBRSkia {
                         }
                         drawImage(current, image, filtered, srcLeft1000, srcTop1000, srcRight1000, srcBottom1000,
                                 dstLeft1000, dstTop1000, dstRight1000, dstBottom1000, alpha1000);
-                    } else if (op == COMMAND_DRAW_IMAGE_REF_FULL || op == COMMAND_DRAW_IMAGE_REF_FULL_RESTORE) {
-                        if (offset + 6 != recordEnd) return false;
+                    } else if (op == COMMAND_DRAW_IMAGE_REF_FULL
+                            || op == COMMAND_DRAW_IMAGE_REF_FULL_RESTORE
+                            || op == COMMAND_DRAW_IMAGE_REF_FULL_RESTORE_N) {
+                        if (offset + (op == COMMAND_DRAW_IMAGE_REF_FULL_RESTORE_N ? 7 : 6) != recordEnd) return false;
                         boolean filtered = (record.recordFlags() & COMMAND_RECORD_FLAG_ANTIALIAS) != 0;
                         int dstLeft1000 = commands[offset++];
                         int dstTop1000 = commands[offset++];
                         int dstRight1000 = commands[offset++];
                         int dstBottom1000 = commands[offset++];
                         long cacheKey = cacheKey(commands[offset++], commands[offset++]);
+                        int extraRestoreCount = op == COMMAND_DRAW_IMAGE_REF_FULL_RESTORE_N ? commands[offset++] : 0;
                         BufferedImage image = IMAGE_CACHE.get(new ImageCacheKey(contextPtr, cacheKey));
                         if (image == null) {
                             return false;
                         }
                         drawImage(current, image, filtered, 0, 0, image.getWidth() * 1000, image.getHeight() * 1000,
                                 dstLeft1000, dstTop1000, dstRight1000, dstBottom1000, 1000);
-                        if (op == COMMAND_DRAW_IMAGE_REF_FULL_RESTORE) {
-                            if (stack.isEmpty()) {
+                        if (op == COMMAND_DRAW_IMAGE_REF_FULL_RESTORE || op == COMMAND_DRAW_IMAGE_REF_FULL_RESTORE_N) {
+                            int restoreCount = 1 + extraRestoreCount;
+                            if (extraRestoreCount < 0 || stack.size() < restoreCount) {
                                 return false;
                             }
-                            current.dispose();
-                            current = stack.removeLast();
+                            for (int restoreIndex = 0; restoreIndex < restoreCount; restoreIndex++) {
+                                current.dispose();
+                                current = stack.removeLast();
+                            }
                         }
                     } else if (op == COMMAND_DRAW_IMAGE_REF_FULL_RUN) {
                         boolean filtered = (record.recordFlags() & COMMAND_RECORD_FLAG_ANTIALIAS) != 0;

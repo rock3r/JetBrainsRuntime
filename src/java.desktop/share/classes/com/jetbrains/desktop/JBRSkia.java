@@ -174,6 +174,7 @@ public abstract class JBRSkia {
     /** Supports compact translated-layer plus nested translated-save records. */
     public static final long COMMAND_CAP64_HIGH_SAVE_TRANSLATE_LAYER_SAVE_TRANSLATE = Long.parseLong("17179869184");
     public static final long COMMAND_CAP64_HIGH_DRAW_IMAGE_REF_FULL_RESTORE = Long.parseLong("34359738368");
+    public static final long COMMAND_CAP64_HIGH_DRAW_IMAGE_REF_FULL_RESTORE_N = Long.parseLong("68719476736");
     public static final int COMMAND_CLEAR = Integer.parseInt("1");
     public static final int COMMAND_FILL_RECT = Integer.parseInt("2");
     public static final int COMMAND_STROKE_LINE = Integer.parseInt("3");
@@ -262,6 +263,7 @@ public abstract class JBRSkia {
     public static final int COMMAND_STROKE_LINE_DRAW_IMAGE_REF_FULL_RUN = Integer.parseInt("84");
     public static final int COMMAND_SAVE_TRANSLATE_LAYER_SAVE_TRANSLATE = Integer.parseInt("85");
     public static final int COMMAND_DRAW_IMAGE_REF_FULL_RESTORE = Integer.parseInt("86");
+    public static final int COMMAND_DRAW_IMAGE_REF_FULL_RESTORE_N = Integer.parseInt("87");
     public static final int COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER = Integer.parseInt("1");
     public static final int COMMAND_EFFECT_DESCRIPTOR_COLOR_MATRIX_FILTER = Integer.parseInt("2");
     public static final int COMMAND_EFFECT_DESCRIPTOR_LIGHTING_FILTER = Integer.parseInt("3");

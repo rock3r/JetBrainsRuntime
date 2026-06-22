@@ -197,6 +197,7 @@ static constexpr jint COMMAND_DRAW_IMAGE_REF_FULL_FILL_RECT = 83;
 static constexpr jint COMMAND_STROKE_LINE_DRAW_IMAGE_REF_FULL_RUN = 84;
 static constexpr jint COMMAND_SAVE_TRANSLATE_LAYER_SAVE_TRANSLATE = 85;
 static constexpr jint COMMAND_DRAW_IMAGE_REF_FULL_RESTORE = 86;
+static constexpr jint COMMAND_DRAW_IMAGE_REF_FULL_RESTORE_N = 87;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER = 1;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_COLOR_MATRIX_FILTER = 2;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_LIGHTING_FILTER = 3;
@@ -3587,8 +3588,10 @@ static bool drawCommandList(SkCanvas* canvas,
                 break;
             }
             case COMMAND_DRAW_IMAGE_REF_FULL:
-            case COMMAND_DRAW_IMAGE_REF_FULL_RESTORE: {
-                if ((recordFlags & ~COMMAND_RECORD_FLAG_ANTIALIAS) != 0 || offset + 6 != recordEnd) {
+            case COMMAND_DRAW_IMAGE_REF_FULL_RESTORE:
+            case COMMAND_DRAW_IMAGE_REF_FULL_RESTORE_N: {
+                if ((recordFlags & ~COMMAND_RECORD_FLAG_ANTIALIAS) != 0 ||
+                    offset + (op == COMMAND_DRAW_IMAGE_REF_FULL_RESTORE_N ? 7 : 6) != recordEnd) {
                     return false;
                 }
                 const SkScalar dstLeft = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
@@ -3597,6 +3600,7 @@ static bool drawCommandList(SkCanvas* canvas,
                 const SkScalar dstBottom = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
                 const uint64_t key = imageCacheKey(commands[offset], commands[offset + 1]);
                 offset += 2;
+                const jint extraRestoreCount = op == COMMAND_DRAW_IMAGE_REF_FULL_RESTORE_N ? commands[offset++] : 0;
                 sk_sp<SkImage> image;
                 {
                     std::lock_guard<std::mutex> lock(gImageCacheMutex);
@@ -3611,8 +3615,14 @@ static bool drawCommandList(SkCanvas* canvas,
                                dstLeft, dstTop, dstRight, dstBottom, 1000)) {
                     return false;
                 }
-                if (op == COMMAND_DRAW_IMAGE_REF_FULL_RESTORE) {
-                    canvas->restore();
+                if (op == COMMAND_DRAW_IMAGE_REF_FULL_RESTORE || op == COMMAND_DRAW_IMAGE_REF_FULL_RESTORE_N) {
+                    const jint restoreCount = 1 + extraRestoreCount;
+                    if (extraRestoreCount < 0 || canvas->getSaveCount() <= restoreCount) {
+                        return false;
+                    }
+                    for (jint restoreIndex = 0; restoreIndex < restoreCount; restoreIndex++) {
+                        canvas->restore();
+                    }
                 }
                 break;
             }
