@@ -47,6 +47,10 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   without changing the ABI. Focused Markdown wheel validation stayed strict-clean with zero unsupported rows, zero
   picture frames, `jbr_command_frames=259`, and `avg_commands=379`, down from the op95 checkpoint's `392`:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-fold-image-restore-single-restore/suite.tsv`.
+- CMP now folds trailing `COMMAND_RESTORE_N` into existing `COMMAND_DRAW_ROUND_RECT_RESTORE_N` records without
+  changing the ABI. Focused Markdown wheel validation stayed strict-clean with zero unsupported rows, zero picture
+  frames, `jbr_command_frames=252`, and `avg_commands=376`, down from the previous CMP-only checkpoint's `379`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-fold-round-rect-restore-n/suite.tsv`.
 - CMP now preserves the effective alpha classification discovered while defining native bitmap images when emitting
   full-image draw records. This addresses the Jewel showcase icon transparency edge where small rasterized icons could
   contain transparent pixels while reporting stale opaque metadata. Focused `showcase-icons` validation stayed

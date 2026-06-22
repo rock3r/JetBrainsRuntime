@@ -5,6 +5,15 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-22 focused CMP-only round-rect restore-count compaction:
+  CMP now also folds a following `COMMAND_RESTORE_N` into an existing `COMMAND_DRAW_ROUND_RECT_RESTORE_N` restore
+  count. This reuses the existing JBR op and requires no ABI/capability change. Narrow validation passed:
+  `./gradlew :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.foldsTrailingRestoreNIntoCompactRoundRectRestoreNRecord --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.foldsTrailingRestoreNIntoCompactFullImageRefRestoreNRecord --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.compactsFullImageRefRestoreNBeforeSaveTranslateLayerSaveTranslate --console=plain`;
+  desktop-only CMP publish; and a short focused Markdown wheel run:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-fold-round-rect-restore-n/suite.tsv`.
+  Markdown stayed strict-clean with `fallbacks=0`, `unsupported_max=0`, `jbr_picture_frames=0`,
+  `jbr_command_frames=252`, and the focused average command count dropped from the previous CMP-only checkpoint's
+  `379` to `376`.
 - 2026-06-22 focused CMP-only image restore compaction:
   A temporary post-op95 pair diagnostic on the focused Markdown wheel path showed
   `drawImageRefFullRestoreN > restore` as a hot adjacent pair (`448` aggregated observations in

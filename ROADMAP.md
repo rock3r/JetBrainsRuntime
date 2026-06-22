@@ -56,6 +56,13 @@ This is the small working roadmap for the current PoC. The full historical check
 ## Latest Validations
 
 - Focused CMP-only command-stream compaction checkpoint:
+  CMP now folds a following `COMMAND_RESTORE_N` into the existing `COMMAND_DRAW_ROUND_RECT_RESTORE_N` restore count.
+  This reuses the existing JBR op and requires no ABI or capability change. Narrow gates passed: CMP focused recorder
+  tests, desktop-only CMP publish, and focused Markdown wheel validation. The focused Markdown slice stayed
+  strict-clean with `fallbacks=0`, `unsupported_max=0`, `jbr_picture_frames=0`, `jbr_command_frames=252`, and
+  `avg_commands=376`, down from the previous CMP-only checkpoint's `379`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-fold-round-rect-restore-n/suite.tsv`.
+- Focused CMP-only command-stream compaction checkpoint:
   CMP now folds a following single `COMMAND_RESTORE` into the existing
   `COMMAND_DRAW_IMAGE_REF_FULL_RESTORE_N` extra-restore count. This reuses the existing JBR op and requires no ABI or
   capability change. Narrow gates passed: CMP focused recorder tests, desktop-only CMP publish, and focused Markdown
