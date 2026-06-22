@@ -177,7 +177,8 @@ public class JBRSkiaService extends JBRSkia {
                     | COMMAND_CAP64_HIGH_CLEAR_DRAW_IMAGE_REF_FULL
                     | COMMAND_CAP64_HIGH_DRAW_IMAGE_REF_FULL_DRAW_ROUND_RECT
                     | COMMAND_CAP64_HIGH_DRAW_IMAGE_REF_FULL_RUN
-                    | COMMAND_CAP64_HIGH_SAVE_LAYER_CLIP_RECT;
+                    | COMMAND_CAP64_HIGH_SAVE_LAYER_CLIP_RECT
+                    | COMMAND_CAP64_HIGH_DRAW_IMAGE_REF_FULL_FILL_RECT;
     private static final boolean NATIVE_BRIDGE_AVAILABLE = loadNativeBridge();
     private static final AtomicLong NEXT_SCOPE_ID = new AtomicLong(1);
     private static final int MAX_CACHED_IMAGES = 256;
@@ -341,6 +342,11 @@ public class JBRSkiaService extends JBRSkia {
                     commands[record.argsStart() + 5],
                     commands[record.argsStart() + 6]))) {
                 return false;
+            } else if (record.op() == COMMAND_DRAW_IMAGE_REF_FULL_FILL_RECT
+                    && !imageDimensions.containsKey(commandHandle(
+                    commands[record.argsStart() + 5],
+                    commands[record.argsStart() + 6]))) {
+                return false;
             } else if (record.op() == COMMAND_CLEAR_DRAW_IMAGE_REF_FULL
                     && !imageDimensions.containsKey(commandHandle(
                     commands[record.argsStart() + 8],
@@ -495,6 +501,7 @@ public class JBRSkiaService extends JBRSkia {
         if (op == COMMAND_DRAW_IMAGE_REF_FULL_DRAW_ROUND_RECT) return 22;
         if (op == COMMAND_DRAW_IMAGE_REF_FULL_RUN) return -36;
         if (op == COMMAND_SAVE_LAYER_CLIP_RECT) return 13;
+        if (op == COMMAND_DRAW_IMAGE_REF_FULL_FILL_RECT) return 16;
         if (op == COMMAND_DRAW_IMAGE_REF) return 17;
         if (op == COMMAND_DRAW_IMAGE_REF_COLOR_FILTER) return 19;
         if (op == COMMAND_DRAW_IMAGE_REF_COLOR_FILTER_REF) return 19;
@@ -1811,6 +1818,20 @@ public class JBRSkiaService extends JBRSkia {
                     && radiusX1000 >= 0
                     && radiusY1000 >= 0
                     && (paintStyle == COMMAND_PAINT_STYLE_FILL || isValidStrokeMetadata(strokeWidth, strokeCap, strokeJoin, strokeMiter));
+        }
+        if (record.op() == COMMAND_DRAW_IMAGE_REF_FULL_FILL_RECT) {
+            if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE
+                    && record.recordFlags() != COMMAND_RECORD_FLAG_ANTIALIAS) {
+                return false;
+            }
+            int imageFlags = commands[record.argsStart()];
+            if (imageFlags != COMMAND_RECORD_FLAGS_NONE && imageFlags != COMMAND_RECORD_FLAG_ANTIALIAS) {
+                return false;
+            }
+            int width = commands[record.argsStart() + 10];
+            int height = commands[record.argsStart() + 11];
+            int radius = commands[record.argsStart() + 12];
+            return width >= 0 && height >= 0 && radius >= 0;
         }
         if (record.op() == COMMAND_DRAW_IMAGE_REF_COLOR_FILTER) {
             if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE
@@ -4332,6 +4353,34 @@ public class JBRSkiaService extends JBRSkia {
                                     Math.max(1f, strokeMiter / 1000f)
                             ));
                             current.draw(roundRect);
+                        }
+                    } else if (op == COMMAND_DRAW_IMAGE_REF_FULL_FILL_RECT) {
+                        if (offset + 13 != recordEnd) return false;
+                        int imageFlags = commands[offset++];
+                        boolean filtered = (imageFlags & COMMAND_RECORD_FLAG_ANTIALIAS) != 0;
+                        int dstLeft1000 = commands[offset++];
+                        int dstTop1000 = commands[offset++];
+                        int dstRight1000 = commands[offset++];
+                        int dstBottom1000 = commands[offset++];
+                        long cacheKey = cacheKey(commands[offset++], commands[offset++]);
+                        BufferedImage image = IMAGE_CACHE.get(new ImageCacheKey(contextPtr, cacheKey));
+                        if (image == null) {
+                            return false;
+                        }
+                        drawImage(current, image, filtered, 0, 0, image.getWidth() * 1000, image.getHeight() * 1000,
+                                dstLeft1000, dstTop1000, dstRight1000, dstBottom1000, 1000);
+                        applyAntialiasing(current, antiAlias);
+                        current.setColor(new Color(commands[offset++], true));
+                        int x = commands[offset++];
+                        int y = commands[offset++];
+                        int rectWidth = commands[offset++];
+                        int rectHeight = commands[offset++];
+                        int radius = commands[offset++];
+                        if (rectWidth < 0 || rectHeight < 0 || radius < 0) return false;
+                        if (radius > 0) {
+                            current.fillRoundRect(x, y, rectWidth, rectHeight, radius, radius);
+                        } else {
+                            current.fillRect(x, y, rectWidth, rectHeight);
                         }
                     } else if (op == COMMAND_CLEAR_DRAW_IMAGE_REF_FULL) {
                         if (offset + 10 != recordEnd) return false;
