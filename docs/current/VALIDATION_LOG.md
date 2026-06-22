@@ -5,6 +5,21 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-22 focused image-run translated-layer fold:
+  CMP now treats `drawImageRefFullRun` as transformable inside the existing conservative `saveTranslateLayer`
+  fold when the layer has `alpha=1`, every image destination in the run is inside the layer bounds, and the existing
+  whole-pixel translation guard passes. This targets the hot Markdown shape
+  `saveTranslateLayer; strokeLine; drawImageRefFullRun; restoreN` without enabling the broader state-neutral save
+  elision path that previously regressed runtime behavior. Narrow validation passed:
+  `./gradlew --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.foldsTranslatedLayerAroundStrokeLineAndImageRunBeforeRestoreN --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.foldsNestedSaveTranslateIntoStrokeLineAndImageRunBeforeRestoreN --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.keepsMatchedClearBeforeAlphaFullImageRefRecord --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesCompactFullImageRefRunRecord --console=plain`;
+  desktop-only CMP publish; focused Markdown wheel scrolling; and focused decorated Jewel Icons. Markdown stayed
+  strict-clean with `fallbacks=0`, `unsupported_max=0`, and `jbr_command_frames=1080`; average command mix improved
+  against the image-run translate-fold checkpoint with `saveTranslateLayer:avg` down from `5.5` to `3.8`,
+  `restoreN:avg` down from `7.0` to `5.3`, and `save:avg` down from `5.1` to `3.5`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-image-run-layer-fold-markdown/suite.tsv`.
+  Icons stayed strict-clean with `fallbacks=0`, `unsupported_max=0`, `jbr_command_frames=3`, and a captured window
+  preserving transparent icon surrounds:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-image-run-layer-fold-icons/suite.tsv`.
 - 2026-06-22 focused transparent-image clear preservation:
   CMP now preserves a matching `clearRect` before full-source cached image draws when the `ImageBitmap` reports alpha,
   instead of applying the opaque-image clear-drop optimization. This fixes the decorated Jewel Icons/showcase symptom
