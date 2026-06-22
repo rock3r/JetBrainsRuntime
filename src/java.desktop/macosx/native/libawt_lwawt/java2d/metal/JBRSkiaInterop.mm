@@ -199,6 +199,7 @@ static constexpr jint COMMAND_SAVE_TRANSLATE_LAYER_SAVE_TRANSLATE = 85;
 static constexpr jint COMMAND_DRAW_IMAGE_REF_FULL_RESTORE = 86;
 static constexpr jint COMMAND_DRAW_IMAGE_REF_FULL_RESTORE_N = 87;
 static constexpr jint COMMAND_DRAW_ROUND_RECT_RESTORE_N = 88;
+static constexpr jint COMMAND_STROKE_LINE_DRAW_IMAGE_REF_FULL_RUN_RESTORE_N = 89;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER = 1;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_COLOR_MATRIX_FILTER = 2;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_LIGHTING_FILTER = 3;
@@ -4887,7 +4888,8 @@ static bool drawCommandList(SkCanvas* canvas,
                                  paint);
                 break;
             }
-            case COMMAND_STROKE_LINE_DRAW_IMAGE_REF_FULL_RUN: {
+            case COMMAND_STROKE_LINE_DRAW_IMAGE_REF_FULL_RUN:
+            case COMMAND_STROKE_LINE_DRAW_IMAGE_REF_FULL_RUN_RESTORE_N: {
                 if ((recordFlags & ~COMMAND_RECORD_FLAG_ANTIALIAS) != 0 || offset + 23 > recordEnd) {
                     return false;
                 }
@@ -4920,7 +4922,9 @@ static bool drawCommandList(SkCanvas* canvas,
                                  static_cast<SkScalar>(y2),
                                  paint);
                 const jint count = commands[offset++];
-                if (count <= 1 || offset + count * 6 != recordEnd) {
+                if (count <= 1 ||
+                    offset + count * 6 +
+                        (op == COMMAND_STROKE_LINE_DRAW_IMAGE_REF_FULL_RUN_RESTORE_N ? 1 : 0) != recordEnd) {
                     return false;
                 }
                 for (jint i = 0; i < count; i++) {
@@ -4943,6 +4947,15 @@ static bool drawCommandList(SkCanvas* canvas,
                                    static_cast<SkScalar>(image->width()), static_cast<SkScalar>(image->height()),
                                    dstLeft, dstTop, dstRight, dstBottom, 1000)) {
                         return false;
+                    }
+                }
+                if (op == COMMAND_STROKE_LINE_DRAW_IMAGE_REF_FULL_RUN_RESTORE_N) {
+                    const jint restoreCount = commands[offset++];
+                    if (restoreCount <= 0 || canvas->getSaveCount() <= restoreCount) {
+                        return false;
+                    }
+                    for (jint i = 0; i < restoreCount; i++) {
+                        canvas->restore();
                     }
                 }
                 break;

@@ -5,6 +5,18 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-22 focused op89 stroke-line+image-run+restoreN compact command:
+  JBR now advertises and replays `COMMAND_STROKE_LINE_DRAW_IMAGE_REF_FULL_RUN_RESTORE_N` (`op=89`) as an ABI-111
+  compact record for an already-folded `strokeLineDrawImageRefFullRun` followed by `restoreN(count>0)`. CMP folds the
+  adjacent pair during final stream compaction, including accumulation when op89 is followed by another `restoreN`, and
+  Skiko requires the matching high capability bit. Narrow validation passed:
+  `./gradlew :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesCompactStrokeLineAndFullImageRefRunRecord --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesCompactStrokeLineAndFullImageRefRunRecordAcrossBitmapDefinitions --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesCompactStrokeLineAndFullImageRefRunRestoreNRecord --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.keepsStrokeLineBeforeSingleFullImageRefRecord --console=plain`;
+  `./gradlew awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest --console=plain`;
+  Skiko/CMP local publishes; `./scripts/rebuild-jbr-skia-local-artifacts.sh`; and a short focused Markdown wheel run:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-op89-strokeline-run-restore/suite.tsv`.
+  Markdown stayed strict-clean with `fallbacks=0`, `unsupported_max=0`, `jbr_command_frames=262`, and
+  `strokeLineDrawImageRefFullRunRestoreN:total=512`, proving the new compact record is exercised in the animated
+  Markdown path without introducing fallback.
 - 2026-06-22 focused op84 bitmap-definition skip repair:
   After `COMMAND_DEFINE_IMAGE_BITMAP` grew to carry `imageHasAlpha`, CMP's
   `strokeLineDrawImageRefFullRun` compaction still skipped only the old 10-word bitmap-definition record shape. CMP now
