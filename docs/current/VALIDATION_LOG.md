@@ -5,6 +5,22 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-22 focused inner-translate transformable saveTranslate-scope fold:
+  CMP now extends the nested transformable `saveTranslate ... restore/restoreN` fold to scopes that contain whole-pixel
+  inner `translate` records. Inner translates are not left in the compacted stream; the recorder accumulates their
+  offsets into subsequent transformable drawing records, removes the inner translate records together with the folded
+  `saveTranslate`, and then decrements only the matching trailing restore. This avoids leaking transform state outside
+  the collapsed scope. Narrow validation passed:
+  `./gradlew :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest --console=plain`;
+  local CMP publish; focused Markdown wheel scrolling; and focused decorated Jewel Icons. Markdown stayed strict-clean
+  with `fallbacks=0`, `unsupported_max=0`, `jbr_command_frames=569`, and command replay improved from the previous
+  transformable-scope rerun around `avg_commands=735-736` to `avg_commands=721`; `saveTranslate:avg` dropped from
+  `5.0` to `3.4`, and `translate:avg` dropped from `11.9` to `10.4`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-transformable-scope-inner-translate-markdown/suite.tsv`.
+  Icons stayed strict-clean with `fallbacks=0`, `unsupported_max=0`, `jbr_command_frames=3`, and command replay
+  improved from the previous retained `avg_commands=1560` to `avg_commands=1450`; `translate:avg` dropped from
+  `42.0` to `21.0`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-transformable-scope-inner-translate-icons/suite.tsv`.
 - 2026-06-22 focused transformable saveTranslate-scope fold:
   CMP now folds a nested `saveTranslate; [image definitions]; clearRect/drawImageRefFull/drawRoundRect/fillRoundRect/fillRect; restore/restoreN`
   scope when every scoped drawing record can be translated directly and the matching restore has already been
