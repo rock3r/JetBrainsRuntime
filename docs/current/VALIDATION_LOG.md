@@ -5,6 +5,22 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-22 focused translated full-image-ref suffix fold:
+  CMP now folds a soon-restored suffix of
+  `translate; [image definitions/cache records]; drawImageRefFull; ...; restore/restoreN` by accumulating the
+  suffix-local translations into each compact full-image-ref destination and removing only those suffix translate
+  records. The fold deliberately stops at any non-image drawing/state record, so earlier transforms that affected
+  stroke/fill/clip/layer content remain explicit. Narrow validation passed:
+  `./gradlew --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.foldsTrailingTranslatedCompactFullImageRefSuffixBeforeRestore --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.keepsTrailingTranslateSuffixBeforeNonImageDraw --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.foldsTrailingTranslateIntoCompactFullImageRefBeforeRestore --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.foldsSaveTranslateIntoCompactFullImageRefBeforeRestore --console=plain`;
+  local CMP publish; focused Markdown wheel scrolling; and focused decorated Jewel Icons. Markdown stayed strict-clean
+  with `fallbacks=0`, `unsupported_max=0`, and `jbr_command_frames=1555`; command replay improved from the translated
+  image-layer checkpoint `avg_commands=481` to `avg_commands=451`, and hot frames now show `translate:avg=1.0`
+  while keeping `drawImageRefFull:avg=13.3`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-translated-image-suffix-markdown/suite.tsv`.
+  Icons stayed strict-clean with `fallbacks=0`, `unsupported_max=0`, and `jbr_command_frames=3`; the screenshot kept
+  the transparent icon surrounds, and steady-state command frames improved from `995` to `984` after the first
+  image-definition frame:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-translated-image-suffix-icons/suite.tsv`.
 - 2026-06-22 focused translated full-image layer fold:
   CMP now folds a plain `saveTranslateLayer; [image definitions/cache records]; drawImageRefFull; restoreN` island
   when the layer has `alpha=1`, the image destination is fully inside the layer bounds, and the matching `restoreN`
