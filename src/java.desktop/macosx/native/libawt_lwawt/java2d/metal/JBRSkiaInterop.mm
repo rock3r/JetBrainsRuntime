@@ -198,6 +198,7 @@ static constexpr jint COMMAND_STROKE_LINE_DRAW_IMAGE_REF_FULL_RUN = 84;
 static constexpr jint COMMAND_SAVE_TRANSLATE_LAYER_SAVE_TRANSLATE = 85;
 static constexpr jint COMMAND_DRAW_IMAGE_REF_FULL_RESTORE = 86;
 static constexpr jint COMMAND_DRAW_IMAGE_REF_FULL_RESTORE_N = 87;
+static constexpr jint COMMAND_DRAW_ROUND_RECT_RESTORE_N = 88;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER = 1;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_COLOR_MATRIX_FILTER = 2;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_LIGHTING_FILTER = 3;
@@ -2391,8 +2392,9 @@ static bool drawCommandList(SkCanvas* canvas,
                                 paint);
                 break;
             }
-            case COMMAND_DRAW_ROUND_RECT: {
-                if (offset + 12 != recordEnd) {
+            case COMMAND_DRAW_ROUND_RECT:
+            case COMMAND_DRAW_ROUND_RECT_RESTORE_N: {
+                if (offset + (op == COMMAND_DRAW_ROUND_RECT_RESTORE_N ? 13 : 12) != recordEnd) {
                     return false;
                 }
                 const jint paintStyle = commands[offset++];
@@ -2407,12 +2409,15 @@ static bool drawCommandList(SkCanvas* canvas,
                 const jint strokeCap = commands[offset++];
                 const jint strokeJoin = commands[offset++];
                 const jint strokeMiter1000 = commands[offset++];
+                const jint restoreCount = op == COMMAND_DRAW_ROUND_RECT_RESTORE_N ? commands[offset++] : 0;
                 if ((paintStyle != COMMAND_PAINT_STYLE_FILL && paintStyle != COMMAND_PAINT_STYLE_STROKE) ||
                         right < left ||
                         bottom < top ||
                         radiusX < 0 ||
                         radiusY < 0 ||
-                        (paintStyle == COMMAND_PAINT_STYLE_STROKE && !isValidStrokeMetadata(strokeWidth, strokeCap, strokeJoin, strokeMiter1000))) {
+                        (paintStyle == COMMAND_PAINT_STYLE_STROKE && !isValidStrokeMetadata(strokeWidth, strokeCap, strokeJoin, strokeMiter1000)) ||
+                        restoreCount < 0 ||
+                        (op == COMMAND_DRAW_ROUND_RECT_RESTORE_N && restoreCount == 0)) {
                     return false;
                 }
                 SkPaint paint;
@@ -2429,6 +2434,14 @@ static bool drawCommandList(SkCanvas* canvas,
                                                       radiusX,
                                                       radiusY),
                                   paint);
+                if (restoreCount > 0) {
+                    if (canvas->getSaveCount() <= restoreCount) {
+                        return false;
+                    }
+                    for (jint restoreIndex = 0; restoreIndex < restoreCount; restoreIndex++) {
+                        canvas->restore();
+                    }
+                }
                 break;
             }
             case COMMAND_FILL_ROUND_RECT: {
@@ -3503,7 +3516,7 @@ static bool drawCommandList(SkCanvas* canvas,
                 break;
             }
             case COMMAND_DEFINE_IMAGE_BITMAP: {
-                if (recordFlags != COMMAND_RECORD_FLAGS_NONE || offset + 7 != recordEnd) {
+                if (recordFlags != COMMAND_RECORD_FLAGS_NONE || offset + 8 != recordEnd) {
                     return false;
                 }
                 const uint64_t key = imageCacheKey(commands[offset], commands[offset + 1]);
@@ -3513,8 +3526,9 @@ static bool drawCommandList(SkCanvas* canvas,
                 const uint64_t bitmapPtrValue = imageCacheKey(commands[offset], commands[offset + 1]);
                 offset += 2;
                 const jint generationId = commands[offset++];
+                const jint imageHasAlpha = commands[offset++];
                 if (imageWidth <= 0 || imageHeight <= 0 || imageWidth > 4096 || imageHeight > 4096 ||
-                        bitmapPtrValue == 0 || generationId == 0) {
+                        bitmapPtrValue == 0 || generationId == 0 || imageHasAlpha < 0 || imageHasAlpha > 1) {
                     return false;
                 }
                 {
@@ -3533,7 +3547,7 @@ static bool drawCommandList(SkCanvas* canvas,
                     return false;
                 }
                 SkImageInfo imageInfo = pixmap.info();
-                if (imageInfo.alphaType() == kOpaque_SkAlphaType) {
+                if (imageHasAlpha == 1 && imageInfo.alphaType() == kOpaque_SkAlphaType) {
                     imageInfo = imageInfo.makeAlphaType(kPremul_SkAlphaType);
                 }
                 SkPixmap cachedPixmap(imageInfo, pixmap.addr(), pixmap.rowBytes());

@@ -182,7 +182,8 @@ public class JBRSkiaService extends JBRSkia {
                     | COMMAND_CAP64_HIGH_STROKE_LINE_DRAW_IMAGE_REF_FULL_RUN
                     | COMMAND_CAP64_HIGH_SAVE_TRANSLATE_LAYER_SAVE_TRANSLATE
                     | COMMAND_CAP64_HIGH_DRAW_IMAGE_REF_FULL_RESTORE
-                    | COMMAND_CAP64_HIGH_DRAW_IMAGE_REF_FULL_RESTORE_N;
+                    | COMMAND_CAP64_HIGH_DRAW_IMAGE_REF_FULL_RESTORE_N
+                    | COMMAND_CAP64_HIGH_DRAW_ROUND_RECT_RESTORE_N;
     private static final boolean NATIVE_BRIDGE_AVAILABLE = loadNativeBridge();
     private static final AtomicLong NEXT_SCOPE_ID = new AtomicLong(1);
     private static final int MAX_CACHED_IMAGES = 256;
@@ -502,6 +503,7 @@ public class JBRSkiaService extends JBRSkia {
         if (op == COMMAND_DRAW_PARAGRAPH_UTF16) return -5;
         if (op == COMMAND_CLIP_PATH) return -6;
         if (op == COMMAND_DRAW_PATH) return -7;
+        if (op == COMMAND_DEFINE_IMAGE_BITMAP) return 11;
         if (op == COMMAND_DRAW_IMAGE_REF_FULL) return 9;
         if (op == COMMAND_CLEAR_DRAW_IMAGE_REF_FULL) return 13;
         if (op == COMMAND_DRAW_IMAGE_REF_FULL_DRAW_ROUND_RECT) return 22;
@@ -512,6 +514,7 @@ public class JBRSkiaService extends JBRSkia {
         if (op == COMMAND_SAVE_TRANSLATE_LAYER_SAVE_TRANSLATE) return 12;
         if (op == COMMAND_DRAW_IMAGE_REF_FULL_RESTORE) return 9;
         if (op == COMMAND_DRAW_IMAGE_REF_FULL_RESTORE_N) return 10;
+        if (op == COMMAND_DRAW_ROUND_RECT_RESTORE_N) return 16;
         if (op == COMMAND_DRAW_IMAGE_REF) return 17;
         if (op == COMMAND_DRAW_IMAGE_REF_COLOR_FILTER) return 19;
         if (op == COMMAND_DRAW_IMAGE_REF_COLOR_FILTER_REF) return 19;
@@ -1190,7 +1193,7 @@ public class JBRSkiaService extends JBRSkia {
                     && (useCenter == 0 || useCenter == 1)
                     && (paintStyle == COMMAND_PAINT_STYLE_FILL || isValidStrokeMetadata(strokeWidth, strokeCap, strokeJoin, strokeMiter));
         }
-        if (record.op() == COMMAND_DRAW_ROUND_RECT) {
+        if (record.op() == COMMAND_DRAW_ROUND_RECT || record.op() == COMMAND_DRAW_ROUND_RECT_RESTORE_N) {
             if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE
                     && record.recordFlags() != COMMAND_RECORD_FLAG_ANTIALIAS) {
                 return false;
@@ -1211,7 +1214,8 @@ public class JBRSkiaService extends JBRSkia {
                     && bottom1000 >= top1000
                     && radiusX1000 >= 0
                     && radiusY1000 >= 0
-                    && (paintStyle == COMMAND_PAINT_STYLE_FILL || isValidStrokeMetadata(strokeWidth, strokeCap, strokeJoin, strokeMiter));
+                    && (paintStyle == COMMAND_PAINT_STYLE_FILL || isValidStrokeMetadata(strokeWidth, strokeCap, strokeJoin, strokeMiter))
+                    && (record.op() == COMMAND_DRAW_ROUND_RECT || commands[record.argsStart() + 12] > 0);
         }
         if (record.op() == COMMAND_FILL_ROUND_RECT) {
             if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE
@@ -1803,6 +1807,24 @@ public class JBRSkiaService extends JBRSkia {
                     && imageHeight <= 4096
                     && pixelCount == imageWidth * imageHeight
                     && record.recordLength() == 8 + pixelCount;
+        }
+        if (record.op() == COMMAND_DEFINE_IMAGE_BITMAP) {
+            if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE) {
+                return false;
+            }
+            int imageWidth = commands[record.argsStart() + 2];
+            int imageHeight = commands[record.argsStart() + 3];
+            long bitmapPtr = commandHandle(commands[record.argsStart() + 4], commands[record.argsStart() + 5]);
+            int generationId = commands[record.argsStart() + 6];
+            int imageHasAlpha = commands[record.argsStart() + 7];
+            return imageWidth > 0
+                    && imageHeight > 0
+                    && imageWidth <= 4096
+                    && imageHeight <= 4096
+                    && bitmapPtr != 0
+                    && generationId != 0
+                    && imageHasAlpha >= 0
+                    && imageHasAlpha <= 1;
         }
         if (record.op() == COMMAND_DRAW_IMAGE_REF) {
             if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE
@@ -3404,8 +3426,8 @@ public class JBRSkiaService extends JBRSkia {
                             ));
                             current.draw(arc);
                         }
-                    } else if (op == COMMAND_DRAW_ROUND_RECT) {
-                        if (offset + 12 != recordEnd) return false;
+                    } else if (op == COMMAND_DRAW_ROUND_RECT || op == COMMAND_DRAW_ROUND_RECT_RESTORE_N) {
+                        if (offset + (op == COMMAND_DRAW_ROUND_RECT_RESTORE_N ? 13 : 12) != recordEnd) return false;
                         int paintStyle = commands[offset++];
                         int argb = commands[offset++];
                         int left1000 = commands[offset++];
@@ -3418,12 +3440,15 @@ public class JBRSkiaService extends JBRSkia {
                         int strokeCap = commands[offset++];
                         int strokeJoin = commands[offset++];
                         int strokeMiter = commands[offset++];
+                        int restoreCount = op == COMMAND_DRAW_ROUND_RECT_RESTORE_N ? commands[offset++] : 0;
                         if ((paintStyle != COMMAND_PAINT_STYLE_FILL && paintStyle != COMMAND_PAINT_STYLE_STROKE)
                                 || right1000 < left1000
                                 || bottom1000 < top1000
                                 || radiusX1000 < 0
                                 || radiusY1000 < 0
-                                || (paintStyle == COMMAND_PAINT_STYLE_STROKE && !isValidStrokeMetadata(strokeWidth, strokeCap, strokeJoin, strokeMiter))) {
+                                || (paintStyle == COMMAND_PAINT_STYLE_STROKE && !isValidStrokeMetadata(strokeWidth, strokeCap, strokeJoin, strokeMiter))
+                                || restoreCount < 0
+                                || (op == COMMAND_DRAW_ROUND_RECT_RESTORE_N && restoreCount == 0)) {
                             return false;
                         }
                         RoundRectangle2D.Float roundRect = new RoundRectangle2D.Float(
@@ -3446,6 +3471,15 @@ public class JBRSkiaService extends JBRSkia {
                                     Math.max(1f, strokeMiter / 1000f)
                             ));
                             current.draw(roundRect);
+                        }
+                        if (restoreCount > 0) {
+                            if (stack.size() < restoreCount) {
+                                return false;
+                            }
+                            for (int restoreIndex = 0; restoreIndex < restoreCount; restoreIndex++) {
+                                current.dispose();
+                                current = stack.removeLast();
+                            }
                         }
                     } else if (op == COMMAND_FILL_ROUND_RECT) {
                         if (offset + 7 != recordEnd) return false;
@@ -4304,6 +4338,18 @@ public class JBRSkiaService extends JBRSkia {
                         image.setRGB(0, 0, imageWidth, imageHeight, commands, offset, imageWidth);
                         offset += pixelCount;
                         IMAGE_CACHE.put(new ImageCacheKey(contextPtr, cacheKey), image);
+                    } else if (op == COMMAND_DEFINE_IMAGE_BITMAP) {
+                        if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE || offset + 8 != recordEnd) return false;
+                        long cacheKey = cacheKey(commands[offset++], commands[offset++]);
+                        int imageWidth = commands[offset++];
+                        int imageHeight = commands[offset++];
+                        long bitmapPtr = cacheKey(commands[offset++], commands[offset++]);
+                        int generationId = commands[offset++];
+                        int imageHasAlpha = commands[offset++];
+                        if (imageWidth <= 0 || imageHeight <= 0 || bitmapPtr == 0 || generationId == 0
+                                || imageHasAlpha < 0 || imageHasAlpha > 1) {
+                            return false;
+                        }
                     } else if (op == COMMAND_DRAW_IMAGE_REF) {
                         if (offset + 14 != recordEnd) return false;
                         boolean filtered = (record.recordFlags() & COMMAND_RECORD_FLAG_ANTIALIAS) != 0;

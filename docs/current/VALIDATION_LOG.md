@@ -5,6 +5,23 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-22 focused op88 round-rect+restoreN compact command plus native-bitmap alpha flag:
+  JBR now advertises and replays `COMMAND_DRAW_ROUND_RECT_RESTORE_N` (`op=88`) as an ABI-111 compact record for a
+  `drawRoundRect; restoreN(count>0)` pair, CMP folds the adjacent pair during final stream compaction, and Skiko
+  requires the matching high capability bit. `COMMAND_DEFINE_IMAGE_BITMAP` also carries an explicit
+  `imageHasAlpha` word now; CMP includes it in the native-bitmap cache key and JBR uses it when copying SkBitmap pixels
+  into the Metal image cache, avoiding alpha-type inference for SVG/icon-backed bitmaps. Narrow validation passed:
+  `./gradlew :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesImageArgbRecord --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesImageTintColorFilterRecord --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesCompactDrawRoundRectRestoreNRecord --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.keepsSeparatedDrawRoundRectRestoreNRecords --console=plain`;
+  `./gradlew awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest --console=plain`;
+  Skiko/CMP local publishes; `./scripts/rebuild-jbr-skia-local-artifacts.sh`; a focused Jewel Icons smoke run:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-icon-alpha-native-bitmap/suite.tsv`;
+  and a focused Markdown wheel run:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-op88-roundrect-restore-alpha/suite.tsv`.
+  Icons stayed strict-clean with `fallbacks=0`, `unsupported_max=0`, `jbr_command_frames=3`, and
+  `defineImageBitmap:total=40`; captured pixel sampling showed the Jewel-logo transparent surrounds matched the page
+  background (`247,248,250`) rather than an opaque tile. Markdown stayed strict-clean with `fallbacks=0`,
+  `unsupported_max=0`, and `jbr_command_frames=39`. Warmed frames emitted `drawRoundRectRestoreN=1..2`, while aggregate
+  `restoreN` fell to `total=136` over 39 frames versus the preceding sequence probe's `total=150` over 39 frames.
 - 2026-06-22 focused op87 trailing-restoreN fold:
   CMP now folds an already compact `COMMAND_DRAW_IMAGE_REF_FULL_RESTORE_N` (`op=87`) followed by `restoreN` into the
   same op87 record by increasing its extra-restore count, so no JBR/Skiko/API protocol change is required. Narrow
