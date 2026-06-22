@@ -5,6 +5,21 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-22 focused mixed image translated-layer fold:
+  CMP now treats `drawImageRefFull` and `drawImageRefFullDrawRoundRect` as transformable inside the existing
+  conservative `saveTranslateLayer` fold when the layer has `alpha=1`, all image/round-rect/fill destinations remain
+  inside the layer bounds, and any whole-pixel translation requirements are satisfied. This targets the measured
+  Markdown hot shape `saveTranslateLayer; drawImageRefFull; fillRect; restoreN` while keeping clear/image compact
+  records out of the fold to avoid changing destination transparency. Narrow validation passed:
+  `./gradlew --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.foldsTranslatedLayerAroundImageAndFillScope --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.foldsTranslatedLayerAroundImageRoundRectPair --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.foldsTranslatedLayerAroundStrokeLineAndImageRunBeforeRestoreN --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.keepsMatchedClearBeforeAlphaFullImageRefRecord --console=plain`;
+  desktop-only CMP publish; focused Markdown wheel scrolling; and focused decorated Jewel Icons. Markdown stayed
+  strict-clean with `fallbacks=0`, `unsupported_max=0`, and `jbr_command_frames=1089`; command replay improved to
+  `avg_commands=352` with `saveTranslateLayer:avg=2.3`,
+  `restoreN:avg=4.0`, and `save:avg=1.8`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-image-fill-layer-fold-markdown/suite.tsv`.
+  Icons stayed strict-clean with `fallbacks=0`, `unsupported_max=0`, `jbr_command_frames=3`, and a captured window
+  preserving transparent icon surrounds:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-image-fill-layer-fold-icons/suite.tsv`.
 - 2026-06-22 focused image-run translated-layer fold:
   CMP now treats `drawImageRefFullRun` as transformable inside the existing conservative `saveTranslateLayer`
   fold when the layer has `alpha=1`, every image destination in the run is inside the layer bounds, and the existing
