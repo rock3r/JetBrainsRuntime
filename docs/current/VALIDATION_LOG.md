@@ -5,6 +5,21 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-22 focused op92 save + fill-rect + save compact command:
+  A post-op91 temporary pair diagnostic on the focused Markdown wheel path showed the stale `save > fillRect`
+  candidate no longer appeared in the real stream after op91, while `save > fillRectSave` remained hot
+  (`save>fillRectSave=4623` in
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-post-op91-pair-diagnostic/suite.tsv`).
+  The rejected `save > fillRect` trial passed mechanically but produced no `saveFillRect` records in
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-op92-save-fillrect/suite.tsv`,
+  so that ABI change was removed. The retained op92 now advertises and replays
+  `COMMAND_SAVE_FILL_RECT_SAVE` (`op=92`) as a compact record for `save; fillRect; save`, with CMP folding a plain
+  `save` immediately followed by `fillRectSave`, and Skiko requiring the matching high capability bit. Narrow
+  validation passed: CMP focused op91 recorder regression, Skiko focused interop test, Skiko/CMP local publishes,
+  `./scripts/rebuild-jbr-skia-local-artifacts.sh`, and a short focused Markdown wheel run:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-op92-save-fillrect-save/suite.tsv`.
+  Markdown stayed strict-clean with `fallbacks=0`, `unsupported_max=0`, `jbr_command_frames=264`, and
+  `saveFillRectSave:total=554`, proving the retained compact record is exercised in the animated Markdown path.
 - 2026-06-22 focused op91 fill-rect + save compact command:
   JBR now advertises and replays `COMMAND_FILL_RECT_SAVE` (`op=91`) as an ABI-111 compact record for a plain
   `fillRect` immediately followed by a plain `save`. CMP folds the adjacent pair during final stream compaction, and

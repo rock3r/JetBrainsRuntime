@@ -186,7 +186,8 @@ public class JBRSkiaService extends JBRSkia {
                     | COMMAND_CAP64_HIGH_DRAW_ROUND_RECT_RESTORE_N
                     | COMMAND_CAP64_HIGH_STROKE_LINE_DRAW_IMAGE_REF_FULL_RUN_RESTORE_N
                     | COMMAND_CAP64_HIGH_DRAW_IMAGE_REF_FULL_RESTORE_N_SAVE_TRANSLATE_LAYER_SAVE_TRANSLATE
-                    | COMMAND_CAP64_HIGH_FILL_RECT_SAVE;
+                    | COMMAND_CAP64_HIGH_FILL_RECT_SAVE
+                    | COMMAND_CAP64_HIGH_SAVE_FILL_RECT_SAVE;
     private static final boolean NATIVE_BRIDGE_AVAILABLE = loadNativeBridge();
     private static final AtomicLong NEXT_SCOPE_ID = new AtomicLong(1);
     private static final int MAX_CACHED_IMAGES = 256;
@@ -570,7 +571,7 @@ public class JBRSkiaService extends JBRSkia {
         if (op == COMMAND_CLEAR_RECT) return 7;
         if (op == COMMAND_CLIP_RECT) return 8;
         if (op == COMMAND_FILL_OVAL) return 8;
-        if (op == COMMAND_FILL_RECT || op == COMMAND_FILL_RECT_SAVE) return 9;
+        if (op == COMMAND_FILL_RECT || op == COMMAND_FILL_RECT_SAVE || op == COMMAND_SAVE_FILL_RECT_SAVE) return 9;
         if (op == COMMAND_STROKE_LINE || op == COMMAND_STROKE_OVAL) return 12;
         return -1;
     }
@@ -4904,6 +4905,24 @@ public class JBRSkiaService extends JBRSkia {
                         }
                     } else if (op == COMMAND_FILL_RECT_SAVE) {
                         if (offset + 6 != recordEnd) return false;
+                        applyAntialiasing(current, antiAlias);
+                        current.setColor(new Color(commands[offset++], true));
+                        int x = commands[offset++];
+                        int y = commands[offset++];
+                        int width = commands[offset++];
+                        int height = commands[offset++];
+                        int radius = commands[offset++];
+                        if (radius > 0) {
+                            current.fillRoundRect(x, y, width, height, radius, radius);
+                        } else {
+                            current.fillRect(x, y, width, height);
+                        }
+                        stack.addLast(current);
+                        current = (Graphics2D) current.create();
+                    } else if (op == COMMAND_SAVE_FILL_RECT_SAVE) {
+                        if (offset + 6 != recordEnd) return false;
+                        stack.addLast(current);
+                        current = (Graphics2D) current.create();
                         applyAntialiasing(current, antiAlias);
                         current.setColor(new Color(commands[offset++], true));
                         int x = commands[offset++];

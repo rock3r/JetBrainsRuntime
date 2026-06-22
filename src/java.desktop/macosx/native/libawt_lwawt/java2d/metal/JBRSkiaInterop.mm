@@ -202,6 +202,7 @@ static constexpr jint COMMAND_DRAW_ROUND_RECT_RESTORE_N = 88;
 static constexpr jint COMMAND_STROKE_LINE_DRAW_IMAGE_REF_FULL_RUN_RESTORE_N = 89;
 static constexpr jint COMMAND_DRAW_IMAGE_REF_FULL_RESTORE_N_SAVE_TRANSLATE_LAYER_SAVE_TRANSLATE = 90;
 static constexpr jint COMMAND_FILL_RECT_SAVE = 91;
+static constexpr jint COMMAND_SAVE_FILL_RECT_SAVE = 92;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER = 1;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_COLOR_MATRIX_FILTER = 2;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_LIGHTING_FILTER = 3;
@@ -4345,6 +4346,34 @@ static bool drawCommandList(SkCanvas* canvas,
                 if (offset + 6 != recordEnd) {
                     return false;
                 }
+                SkPaint paint;
+                paint.setAntiAlias(antiAlias);
+                paint.setColor(skColorFromArgb(commands[offset++]));
+                jint x = commands[offset++];
+                jint y = commands[offset++];
+                jint rectWidth = commands[offset++];
+                jint rectHeight = commands[offset++];
+                jint radius = commands[offset++];
+                SkRect rect = SkRect::MakeXYWH(static_cast<SkScalar>(x),
+                                              static_cast<SkScalar>(y),
+                                              static_cast<SkScalar>(rectWidth),
+                                              static_cast<SkScalar>(rectHeight));
+                if (radius > 0) {
+                    canvas->drawRRect(SkRRect::MakeRectXY(rect,
+                                                          static_cast<SkScalar>(radius),
+                                                          static_cast<SkScalar>(radius)),
+                                      paint);
+                } else {
+                    canvas->drawRect(rect, paint);
+                }
+                canvas->save();
+                break;
+            }
+            case COMMAND_SAVE_FILL_RECT_SAVE: {
+                if (offset + 6 != recordEnd) {
+                    return false;
+                }
+                canvas->save();
                 SkPaint paint;
                 paint.setAntiAlias(antiAlias);
                 paint.setColor(skColorFromArgb(commands[offset++]));
