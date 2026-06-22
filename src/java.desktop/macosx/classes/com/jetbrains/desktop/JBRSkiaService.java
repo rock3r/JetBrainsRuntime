@@ -180,7 +180,8 @@ public class JBRSkiaService extends JBRSkia {
                     | COMMAND_CAP64_HIGH_SAVE_LAYER_CLIP_RECT
                     | COMMAND_CAP64_HIGH_DRAW_IMAGE_REF_FULL_FILL_RECT
                     | COMMAND_CAP64_HIGH_STROKE_LINE_DRAW_IMAGE_REF_FULL_RUN
-                    | COMMAND_CAP64_HIGH_SAVE_TRANSLATE_LAYER_SAVE_TRANSLATE;
+                    | COMMAND_CAP64_HIGH_SAVE_TRANSLATE_LAYER_SAVE_TRANSLATE
+                    | COMMAND_CAP64_HIGH_DRAW_IMAGE_REF_FULL_RESTORE;
     private static final boolean NATIVE_BRIDGE_AVAILABLE = loadNativeBridge();
     private static final AtomicLong NEXT_SCOPE_ID = new AtomicLong(1);
     private static final int MAX_CACHED_IMAGES = 256;
@@ -328,7 +329,8 @@ public class JBRSkiaService extends JBRSkia {
                 imageDimensions.put(cacheKey, imageDimensions(commands[record.argsStart() + 2], commands[record.argsStart() + 3]));
             } else if (record.op() == COMMAND_EVICT_IMAGE_CACHE_KEY) {
                 imageDimensions.remove(commandHandle(commands[record.argsStart()], commands[record.argsStart() + 1]));
-            } else if (record.op() == COMMAND_DRAW_IMAGE_REF_FULL
+            } else if ((record.op() == COMMAND_DRAW_IMAGE_REF_FULL
+                    || record.op() == COMMAND_DRAW_IMAGE_REF_FULL_RESTORE)
                     && !imageDimensions.containsKey(commandHandle(
                     commands[record.argsStart() + 4],
                     commands[record.argsStart() + 5]))) {
@@ -506,6 +508,7 @@ public class JBRSkiaService extends JBRSkia {
         if (op == COMMAND_DRAW_IMAGE_REF_FULL_FILL_RECT) return 16;
         if (op == COMMAND_STROKE_LINE_DRAW_IMAGE_REF_FULL_RUN) return -37;
         if (op == COMMAND_SAVE_TRANSLATE_LAYER_SAVE_TRANSLATE) return 12;
+        if (op == COMMAND_DRAW_IMAGE_REF_FULL_RESTORE) return 9;
         if (op == COMMAND_DRAW_IMAGE_REF) return 17;
         if (op == COMMAND_DRAW_IMAGE_REF_COLOR_FILTER) return 19;
         if (op == COMMAND_DRAW_IMAGE_REF_COLOR_FILTER_REF) return 19;
@@ -1812,7 +1815,9 @@ public class JBRSkiaService extends JBRSkia {
                     && filterQuality >= 0
                     && filterQuality <= 3;
         }
-        if (record.op() == COMMAND_DRAW_IMAGE_REF_FULL || record.op() == COMMAND_CLEAR_DRAW_IMAGE_REF_FULL) {
+        if (record.op() == COMMAND_DRAW_IMAGE_REF_FULL
+                || record.op() == COMMAND_CLEAR_DRAW_IMAGE_REF_FULL
+                || record.op() == COMMAND_DRAW_IMAGE_REF_FULL_RESTORE) {
             if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE
                     && record.recordFlags() != COMMAND_RECORD_FLAG_ANTIALIAS) {
                 return false;
@@ -4314,7 +4319,7 @@ public class JBRSkiaService extends JBRSkia {
                         }
                         drawImage(current, image, filtered, srcLeft1000, srcTop1000, srcRight1000, srcBottom1000,
                                 dstLeft1000, dstTop1000, dstRight1000, dstBottom1000, alpha1000);
-                    } else if (op == COMMAND_DRAW_IMAGE_REF_FULL) {
+                    } else if (op == COMMAND_DRAW_IMAGE_REF_FULL || op == COMMAND_DRAW_IMAGE_REF_FULL_RESTORE) {
                         if (offset + 6 != recordEnd) return false;
                         boolean filtered = (record.recordFlags() & COMMAND_RECORD_FLAG_ANTIALIAS) != 0;
                         int dstLeft1000 = commands[offset++];
@@ -4328,6 +4333,13 @@ public class JBRSkiaService extends JBRSkia {
                         }
                         drawImage(current, image, filtered, 0, 0, image.getWidth() * 1000, image.getHeight() * 1000,
                                 dstLeft1000, dstTop1000, dstRight1000, dstBottom1000, 1000);
+                        if (op == COMMAND_DRAW_IMAGE_REF_FULL_RESTORE) {
+                            if (stack.isEmpty()) {
+                                return false;
+                            }
+                            current.dispose();
+                            current = stack.removeLast();
+                        }
                     } else if (op == COMMAND_DRAW_IMAGE_REF_FULL_RUN) {
                         boolean filtered = (record.recordFlags() & COMMAND_RECORD_FLAG_ANTIALIAS) != 0;
                         int count = commands[offset++];

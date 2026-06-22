@@ -196,6 +196,7 @@ static constexpr jint COMMAND_SAVE_LAYER_CLIP_RECT = 82;
 static constexpr jint COMMAND_DRAW_IMAGE_REF_FULL_FILL_RECT = 83;
 static constexpr jint COMMAND_STROKE_LINE_DRAW_IMAGE_REF_FULL_RUN = 84;
 static constexpr jint COMMAND_SAVE_TRANSLATE_LAYER_SAVE_TRANSLATE = 85;
+static constexpr jint COMMAND_DRAW_IMAGE_REF_FULL_RESTORE = 86;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER = 1;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_COLOR_MATRIX_FILTER = 2;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_LIGHTING_FILTER = 3;
@@ -3585,7 +3586,8 @@ static bool drawCommandList(SkCanvas* canvas,
                 }
                 break;
             }
-            case COMMAND_DRAW_IMAGE_REF_FULL: {
+            case COMMAND_DRAW_IMAGE_REF_FULL:
+            case COMMAND_DRAW_IMAGE_REF_FULL_RESTORE: {
                 if ((recordFlags & ~COMMAND_RECORD_FLAG_ANTIALIAS) != 0 || offset + 6 != recordEnd) {
                     return false;
                 }
@@ -3608,6 +3610,9 @@ static bool drawCommandList(SkCanvas* canvas,
                                static_cast<SkScalar>(image->width()), static_cast<SkScalar>(image->height()),
                                dstLeft, dstTop, dstRight, dstBottom, 1000)) {
                     return false;
+                }
+                if (op == COMMAND_DRAW_IMAGE_REF_FULL_RESTORE) {
+                    canvas->restore();
                 }
                 break;
             }

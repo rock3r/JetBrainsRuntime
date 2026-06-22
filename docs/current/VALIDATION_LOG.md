@@ -5,6 +5,21 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-22 focused full-image-ref+restore compact command:
+  JBR now advertises and replays `COMMAND_DRAW_IMAGE_REF_FULL_RESTORE` (`op=86`) as an ABI-111 compact record that
+  draws a cached full-source image ref and then restores one canvas save. CMP emits it only for an immediate
+  `drawImageRefFull; restore` pair in the final stream compaction pass, after richer image/layer compactions have
+  already run, and Skiko requires the matching high capability bit. Narrow validation passed:
+  `./gradlew --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesCompactFullImageRefRestoreRecord --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.keepsSeparatedFullImageRefRestoreRecords --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesCompactFullImageRefRecord --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesCompactFullImageRefRunRecord --console=plain`;
+  `./gradlew awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest --console=plain`;
+  Skiko/CMP local publishes; `./scripts/rebuild-jbr-skia-local-artifacts.sh`; and focused Markdown wheel plus Jewel
+  Icons runs. Markdown stayed strict-clean with `fallbacks=0`, `unsupported_max=0`, `jbr_command_frames=26`, and
+  `drawImageRefFullRestore:avg=3.9,total=101` in the op mix:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-image-restore-compact/suite.tsv`.
+  That measured op86 total saves 303 command ints across the captured Markdown command frames versus the two-record
+  form, about 12 commands/frame in this run; overall Markdown frame cadence and average-command comparisons remain
+  noisy across short runs. Icons stayed strict-clean with `fallbacks=0`, `unsupported_max=0`, `jbr_command_frames=3`,
+  `drawImageRefFullRestore:avg=3.0,total=9`, and `avg_commands=1352` versus the prior op85 icons checkpoint's 1364.
 - 2026-06-22 focused saveTranslateLayer+saveTranslate compact command:
   JBR now advertises and replays `COMMAND_SAVE_TRANSLATE_LAYER_SAVE_TRANSLATE` (`op=85`) as an ABI-111 compact record
   that performs the same translated `saveLayer` followed immediately by nested `save/translate` sequence as the
