@@ -204,6 +204,7 @@ static constexpr jint COMMAND_DRAW_IMAGE_REF_FULL_RESTORE_N_SAVE_TRANSLATE_LAYER
 static constexpr jint COMMAND_FILL_RECT_SAVE = 91;
 static constexpr jint COMMAND_SAVE_FILL_RECT_SAVE = 92;
 static constexpr jint COMMAND_SAVE_LAYER_SAVE_TRANSLATE = 93;
+static constexpr jint COMMAND_SAVE_SAVE_LAYER_SAVE_TRANSLATE = 94;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER = 1;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_COLOR_MATRIX_FILTER = 2;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_LIGHTING_FILTER = 3;
@@ -3262,7 +3263,8 @@ static bool drawCommandList(SkCanvas* canvas,
                 canvas->saveLayerAlphaf(&bounds, static_cast<float>(alpha1000) / 1000.0f);
                 break;
             }
-            case COMMAND_SAVE_LAYER_SAVE_TRANSLATE: {
+            case COMMAND_SAVE_LAYER_SAVE_TRANSLATE:
+            case COMMAND_SAVE_SAVE_LAYER_SAVE_TRANSLATE: {
                 if (recordFlags != COMMAND_RECORD_FLAGS_NONE || offset + 7 != recordEnd) {
                     return false;
                 }
@@ -3280,6 +3282,9 @@ static bool drawCommandList(SkCanvas* canvas,
                                                  static_cast<SkScalar>(y),
                                                  static_cast<SkScalar>(layerWidth),
                                                  static_cast<SkScalar>(layerHeight));
+                if (op == COMMAND_SAVE_SAVE_LAYER_SAVE_TRANSLATE) {
+                    canvas->save();
+                }
                 canvas->saveLayerAlphaf(&bounds, static_cast<float>(alpha1000) / 1000.0f);
                 canvas->save();
                 canvas->translate(dx, dy);

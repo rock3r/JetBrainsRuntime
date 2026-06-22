@@ -55,6 +55,14 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused ABI 111 command-stream compaction checkpoint:
+  Added `COMMAND_SAVE_SAVE_LAYER_SAVE_TRANSLATE` (`op=94`) plus
+  `COMMAND_CAP64_HIGH_SAVE_SAVE_LAYER_SAVE_TRANSLATE=8796093022208` for compact
+  `save; saveLayer; save; translate` records. Narrow gates passed: CMP focused recorder tests, Skiko focused interop
+  test, local CMP/Skiko publishes, `./scripts/rebuild-jbr-skia-local-artifacts.sh`, and focused Markdown wheel
+  validation. The focused Markdown slice stayed strict-clean with `fallbacks=0`, `unsupported_max=0`,
+  `jbr_picture_frames=0`, `jbr_command_frames=258`, and `saveSaveLayerSaveTranslate:total=308`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-op94-save-save-layer-save-translate/suite.tsv`.
 - Focused Jewel icon alpha checkpoint:
   CMP now carries the effective alpha classification discovered during native bitmap definition into full-image draw
   compaction, so stale `ImageBitmap.hasAlpha=false` metadata cannot make transparent rasterized icons eligible for the

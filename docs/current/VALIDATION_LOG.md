@@ -5,6 +5,21 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-22 focused op94 save + saveLayer + saveTranslate compact command:
+  A temporary post-op93 pair diagnostic on the focused Markdown wheel path showed `save > saveLayerSaveTranslate` as a
+  hot command-only adjacent pair (`3962` aggregated observations in
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-post-op93-pair-diagnostic/suite.tsv`).
+  The retained op94 now advertises and replays `COMMAND_SAVE_SAVE_LAYER_SAVE_TRANSLATE` (`op=94`) as a compact record
+  for `save; saveLayer; save; translate`, with CMP folding both the direct three-record shape and the post-op93
+  `save; saveLayerSaveTranslate` shape. Narrow validation passed:
+  `./gradlew :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.compactsSaveBeforeSaveLayerSaveTranslate --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.compactsAdjacentSaveLayerSaveTranslate --console=plain`;
+  `./gradlew awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest --console=plain`;
+  Skiko/CMP local publishes; `./scripts/rebuild-jbr-skia-local-artifacts.sh`; and a short focused Markdown wheel run:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-op94-save-save-layer-save-translate/suite.tsv`.
+  Markdown stayed strict-clean with `fallbacks=0`, `unsupported_max=0`, `jbr_picture_frames=0`,
+  `jbr_command_frames=258`, and `saveSaveLayerSaveTranslate:total=308`. The focused 5-second command average is noisy
+  across wheel positions (`avg_commands=387` in this run), so the retention signal is the strict-clean replay plus the
+  exercised local fold, which removes one 3-word `save` record for each op94 occurrence.
 - 2026-06-22 focused native bitmap effective-alpha draw classification:
   CMP now carries the effective alpha classification returned by `defineImageIfNeeded()` into full-image draw
   compaction. This fixes the showcase icon edge where small native bitmap definition could discover transparent pixels

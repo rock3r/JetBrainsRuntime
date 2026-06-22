@@ -188,7 +188,8 @@ public class JBRSkiaService extends JBRSkia {
                     | COMMAND_CAP64_HIGH_DRAW_IMAGE_REF_FULL_RESTORE_N_SAVE_TRANSLATE_LAYER_SAVE_TRANSLATE
                     | COMMAND_CAP64_HIGH_FILL_RECT_SAVE
                     | COMMAND_CAP64_HIGH_SAVE_FILL_RECT_SAVE
-                    | COMMAND_CAP64_HIGH_SAVE_LAYER_SAVE_TRANSLATE;
+                    | COMMAND_CAP64_HIGH_SAVE_LAYER_SAVE_TRANSLATE
+                    | COMMAND_CAP64_HIGH_SAVE_SAVE_LAYER_SAVE_TRANSLATE;
     private static final boolean NATIVE_BRIDGE_AVAILABLE = loadNativeBridge();
     private static final AtomicLong NEXT_SCOPE_ID = new AtomicLong(1);
     private static final int MAX_CACHED_IMAGES = 256;
@@ -497,7 +498,7 @@ public class JBRSkiaService extends JBRSkia {
         if (op == COMMAND_TRANSLATE || op == COMMAND_SCALE || op == COMMAND_SAVE_TRANSLATE) return 5;
         if (op == COMMAND_SAVE_TRANSLATE_LAYER) return 10;
         if (op == COMMAND_SAVE_LAYER) return 8;
-        if (op == COMMAND_SAVE_LAYER_SAVE_TRANSLATE) return 10;
+        if (op == COMMAND_SAVE_LAYER_SAVE_TRANSLATE || op == COMMAND_SAVE_SAVE_LAYER_SAVE_TRANSLATE) return 10;
         if (op == COMMAND_SAVE_LAYER_COLOR_FILTER) return 10;
         if (op == COMMAND_SAVE_LAYER_BLEND_MODE) return 9;
         if (op == COMMAND_SAVE_LAYER_BLEND_COLOR_FILTER) return 11;
@@ -751,7 +752,7 @@ public class JBRSkiaService extends JBRSkia {
                     && commands[record.recordEnd() - 1] >= 0
                     && commands[record.recordEnd() - 1] <= 1000;
         }
-        if (record.op() == COMMAND_SAVE_LAYER_SAVE_TRANSLATE) {
+        if (record.op() == COMMAND_SAVE_LAYER_SAVE_TRANSLATE || record.op() == COMMAND_SAVE_SAVE_LAYER_SAVE_TRANSLATE) {
             return record.recordFlags() == COMMAND_RECORD_FLAGS_NONE
                     && commands[record.argsStart() + 2] >= 0
                     && commands[record.argsStart() + 3] >= 0
@@ -4219,7 +4220,7 @@ public class JBRSkiaService extends JBRSkia {
                         stack.addLast(current);
                         current = (Graphics2D) current.create();
                         current.clipRect(x, y, width, height);
-                    } else if (op == COMMAND_SAVE_LAYER_SAVE_TRANSLATE) {
+                    } else if (op == COMMAND_SAVE_LAYER_SAVE_TRANSLATE || op == COMMAND_SAVE_SAVE_LAYER_SAVE_TRANSLATE) {
                         if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE || offset + 7 != recordEnd) return false;
                         int x = commands[offset++];
                         int y = commands[offset++];
@@ -4229,6 +4230,10 @@ public class JBRSkiaService extends JBRSkia {
                         int dx1000 = commands[offset++];
                         int dy1000 = commands[offset++];
                         if (width < 0 || height < 0 || alpha1000 < 0 || alpha1000 > 1000) return false;
+                        if (op == COMMAND_SAVE_SAVE_LAYER_SAVE_TRANSLATE) {
+                            stack.addLast(current);
+                            current = (Graphics2D) current.create();
+                        }
                         stack.addLast(current);
                         current = (Graphics2D) current.create();
                         current.clipRect(x, y, width, height);
