@@ -5,6 +5,20 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-22 focused empty layer-clip fold:
+  CMP now removes an exact empty `saveLayer/saveTranslateLayer; clipRect/clipPath; restore` scope when the restore is
+  emitted. The fold is intentionally limited to a layer save followed only by a clip record, with no drawing between
+  them, so the empty offscreen layer composites nothing and can be dropped together with the clip. Narrow validation
+  passed:
+  `./gradlew :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest --console=plain`;
+  local CMP publish; focused Markdown wheel scrolling; and focused decorated Jewel Icons. Markdown stayed strict-clean
+  with `fallbacks=0`, `unsupported_max=0`, `jbr_command_frames=567`, and command replay improved from the redundant
+  save-before-layer checkpoint `avg_commands=688` to `avg_commands=533`; `saveLayer:avg` dropped from `7.5` to `4.6`,
+  `translate:avg` from `7.5` to `4.9`, and `restoreN:avg` from `12.2` to `10.8`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-empty-layer-clip-fold-markdown/suite.tsv`.
+  Icons stayed strict-clean and neutral at `avg_commands=1426`, with `fallbacks=0`, `unsupported_max=0`, and
+  `jbr_command_frames=3`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-empty-layer-clip-fold-icons/suite.tsv`.
 - 2026-06-22 focused redundant save-before-layer fold:
   CMP now removes a plain `save` immediately followed by a layer-save record when the current restore is about to
   close only that redundant outer save. The fold parses the open save stack before the existing trailing restore,
