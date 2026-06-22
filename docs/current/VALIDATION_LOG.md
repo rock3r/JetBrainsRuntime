@@ -5,6 +5,19 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-22 focused plain-save/layer joint-restore fold:
+  CMP now performs a final stream compaction for plain `save; saveLayer; ...; restoreN` islands where the same
+  `restoreN` closes both the wrapper save and the immediately nested plain layer. The pass removes only the redundant
+  plain save and decrements the joint restore count, leaving translated layers and layer replay semantics to the
+  existing specialized folds. Narrow validation passed:
+  `./gradlew --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.removesRedundantSaveBeforeLayerBeforeOuterRestore --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.removesRedundantSaveBeforeLayerClosedWithNestedRestoreN --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.keepsTranslatedLayerAroundImageAndFillScope --console=plain`;
+  local CMP publish; focused Markdown wheel scrolling; and focused decorated Jewel Icons. Markdown stayed strict-clean
+  with `fallbacks=0`, `unsupported_max=0`, and `jbr_command_frames=1566`; command replay improved from the translated
+  shape-layer checkpoint `avg_commands=421` to `avg_commands=420`, with `save:avg` down from `5.5` to `5.1`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-plain-save-layer-joint-restore-markdown/suite.tsv`.
+  Icons stayed strict-clean and visually matched the retained checkpoint with `fallbacks=0`, `unsupported_max=0`,
+  `jbr_command_frames=3`, and `avg_commands=1117`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-plain-save-layer-joint-restore-icons/suite.tsv`.
 - 2026-06-22 focused translated shape-layer fold:
   CMP now folds plain `saveTranslateLayer; shape records; restoreN` islands when the layer has `alpha=1`, every
   folded shape is fully inside the layer bounds, and whole-pixel-only records receive integer translations. The fold
