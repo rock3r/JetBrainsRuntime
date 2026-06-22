@@ -5,6 +5,22 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-22 focused strokeLine+image-run compact command:
+  JBR now advertises and replays `COMMAND_STROKE_LINE_DRAW_IMAGE_REF_FULL_RUN` (`op=84`) as an ABI-111 compact record
+  that strokes a line and then draws the adjacent full-source cached image-ref run, preserving separate line and image
+  antialias flags. CMP emits it in the final stream compaction pass, moving any intervening image definitions ahead of
+  the compact record so replay still sees the referenced cache keys. Skiko now requires the high capability bit to avoid
+  mixed-artifact command-stream mismatches. Narrow validation passed:
+  `./gradlew --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesCompactStrokeLineAndFullImageRefRunRecord --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.keepsStrokeLineBeforeSingleFullImageRefRecord --console=plain`;
+  `./gradlew awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest --console=plain`;
+  Skiko/CMP local publishes; `./scripts/rebuild-jbr-skia-local-artifacts.sh`; and focused Markdown wheel plus Jewel
+  Icons runs. Markdown stayed strict-clean with `fallbacks=0`, `unsupported_max=0`, `jbr_command_frames=516`, and
+  `strokeLineDrawImageRefFullRun:avg=2.0` in the op mix:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-stroke-line-image-run-icons/suite.tsv`.
+  Icons stayed strict-clean with `fallbacks=0`, `unsupported_max=0`, `jbr_command_frames=3`, and a captured window at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-stroke-line-image-run-icons/showcase-icons/new-window.png`.
+  The visible pale blocks behind the large Jewel-logo samples are source SVG content (`icons/jewel-logo.svg` has a
+  filled white diamond); side/hint/platform icons and the sunny SVG retain transparent surrounds.
 - 2026-06-22 focused image+fillRect compact command:
   JBR now advertises and replays `COMMAND_DRAW_IMAGE_REF_FULL_FILL_RECT` (`op=83`) as an ABI-111 compact record that
   draws a cached full-source image ref and then replays the adjacent solid `fillRect` payload, preserving independent

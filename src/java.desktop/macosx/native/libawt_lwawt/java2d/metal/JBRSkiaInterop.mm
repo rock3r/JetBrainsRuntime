@@ -194,6 +194,7 @@ static constexpr jint COMMAND_DRAW_IMAGE_REF_FULL_DRAW_ROUND_RECT = 80;
 static constexpr jint COMMAND_DRAW_IMAGE_REF_FULL_RUN = 81;
 static constexpr jint COMMAND_SAVE_LAYER_CLIP_RECT = 82;
 static constexpr jint COMMAND_DRAW_IMAGE_REF_FULL_FILL_RECT = 83;
+static constexpr jint COMMAND_STROKE_LINE_DRAW_IMAGE_REF_FULL_RUN = 84;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER = 1;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_COLOR_MATRIX_FILTER = 2;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_LIGHTING_FILTER = 3;
@@ -4827,6 +4828,66 @@ static bool drawCommandList(SkCanvas* canvas,
                                  static_cast<SkScalar>(x2),
                                  static_cast<SkScalar>(y2),
                                  paint);
+                break;
+            }
+            case COMMAND_STROKE_LINE_DRAW_IMAGE_REF_FULL_RUN: {
+                if ((recordFlags & ~COMMAND_RECORD_FLAG_ANTIALIAS) != 0 || offset + 23 > recordEnd) {
+                    return false;
+                }
+                const jint imageFlags = commands[offset++];
+                if ((imageFlags & ~COMMAND_RECORD_FLAG_ANTIALIAS) != 0) {
+                    return false;
+                }
+                SkPaint paint;
+                paint.setAntiAlias(antiAlias);
+                paint.setStyle(SkPaint::kStroke_Style);
+                paint.setColor(skColorFromArgb(commands[offset++]));
+                jint x1 = commands[offset++];
+                jint y1 = commands[offset++];
+                jint x2 = commands[offset++];
+                jint y2 = commands[offset++];
+                jint strokeWidth = commands[offset++];
+                jint strokeCap = commands[offset++];
+                jint strokeJoin = commands[offset++];
+                jint strokeMiter1000 = commands[offset++];
+                if (!isValidStrokeMetadata(strokeWidth, strokeCap, strokeJoin, strokeMiter1000)) {
+                    return false;
+                }
+                paint.setStrokeWidth(static_cast<SkScalar>(strokeWidth));
+                paint.setStrokeCap(static_cast<SkPaint::Cap>(strokeCap));
+                paint.setStrokeJoin(static_cast<SkPaint::Join>(strokeJoin));
+                paint.setStrokeMiter(static_cast<SkScalar>(strokeMiter1000) / 1000.0f);
+                canvas->drawLine(static_cast<SkScalar>(x1),
+                                 static_cast<SkScalar>(y1),
+                                 static_cast<SkScalar>(x2),
+                                 static_cast<SkScalar>(y2),
+                                 paint);
+                const jint count = commands[offset++];
+                if (count <= 1 || offset + count * 6 != recordEnd) {
+                    return false;
+                }
+                for (jint i = 0; i < count; i++) {
+                    const SkScalar dstLeft = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                    const SkScalar dstTop = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                    const SkScalar dstRight = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                    const SkScalar dstBottom = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                    const uint64_t key = imageCacheKey(commands[offset], commands[offset + 1]);
+                    offset += 2;
+                    sk_sp<SkImage> image;
+                    {
+                        std::lock_guard<std::mutex> lock(gImageCacheMutex);
+                        auto found = gImagesByKey.find(ImageCacheScopedKey{imageCacheContextKey, key});
+                        if (found == gImagesByKey.end()) {
+                            return false;
+                        }
+                        image = found->second;
+                    }
+                    if (!drawImage(canvas, image, imageFlags, 0.0f, 0.0f,
+                                   static_cast<SkScalar>(image->width()), static_cast<SkScalar>(image->height()),
+                                   dstLeft, dstTop, dstRight, dstBottom, 1000)) {
+                        return false;
+                    }
+                }
                 break;
             }
             case COMMAND_STROKE_LINE_DASH_PATH_EFFECT: {

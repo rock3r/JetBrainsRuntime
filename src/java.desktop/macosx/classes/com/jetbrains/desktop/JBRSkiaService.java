@@ -178,7 +178,8 @@ public class JBRSkiaService extends JBRSkia {
                     | COMMAND_CAP64_HIGH_DRAW_IMAGE_REF_FULL_DRAW_ROUND_RECT
                     | COMMAND_CAP64_HIGH_DRAW_IMAGE_REF_FULL_RUN
                     | COMMAND_CAP64_HIGH_SAVE_LAYER_CLIP_RECT
-                    | COMMAND_CAP64_HIGH_DRAW_IMAGE_REF_FULL_FILL_RECT;
+                    | COMMAND_CAP64_HIGH_DRAW_IMAGE_REF_FULL_FILL_RECT
+                    | COMMAND_CAP64_HIGH_STROKE_LINE_DRAW_IMAGE_REF_FULL_RUN;
     private static final boolean NATIVE_BRIDGE_AVAILABLE = loadNativeBridge();
     private static final AtomicLong NEXT_SCOPE_ID = new AtomicLong(1);
     private static final int MAX_CACHED_IMAGES = 256;
@@ -502,6 +503,7 @@ public class JBRSkiaService extends JBRSkia {
         if (op == COMMAND_DRAW_IMAGE_REF_FULL_RUN) return -36;
         if (op == COMMAND_SAVE_LAYER_CLIP_RECT) return 13;
         if (op == COMMAND_DRAW_IMAGE_REF_FULL_FILL_RECT) return 16;
+        if (op == COMMAND_STROKE_LINE_DRAW_IMAGE_REF_FULL_RUN) return -37;
         if (op == COMMAND_DRAW_IMAGE_REF) return 17;
         if (op == COMMAND_DRAW_IMAGE_REF_COLOR_FILTER) return 19;
         if (op == COMMAND_DRAW_IMAGE_REF_COLOR_FILTER_REF) return 19;
@@ -665,6 +667,9 @@ public class JBRSkiaService extends JBRSkia {
         if (expectedLength == -36 && record.op() == COMMAND_DRAW_IMAGE_REF_FULL_RUN) {
             return record.recordLength() >= 16;
         }
+        if (expectedLength == -37 && record.op() == COMMAND_STROKE_LINE_DRAW_IMAGE_REF_FULL_RUN) {
+            return record.recordLength() >= 26;
+        }
         return expectedLength == record.recordLength();
     }
 
@@ -684,6 +689,20 @@ public class JBRSkiaService extends JBRSkia {
                     || record.recordFlags() == COMMAND_RECORD_FLAG_ANTIALIAS)
                     && count > 1
                     && record.recordLength() == 4 + count * 6;
+        }
+        if (record.op() == COMMAND_STROKE_LINE_DRAW_IMAGE_REF_FULL_RUN) {
+            int imageFlags = commands[record.argsStart()];
+            int strokeWidth = commands[record.argsStart() + 6];
+            int strokeCap = commands[record.argsStart() + 7];
+            int strokeJoin = commands[record.argsStart() + 8];
+            int strokeMiter = commands[record.argsStart() + 9];
+            int count = commands[record.argsStart() + 10];
+            return (record.recordFlags() == COMMAND_RECORD_FLAGS_NONE
+                    || record.recordFlags() == COMMAND_RECORD_FLAG_ANTIALIAS)
+                    && (imageFlags == COMMAND_RECORD_FLAGS_NONE || imageFlags == COMMAND_RECORD_FLAG_ANTIALIAS)
+                    && isValidStrokeMetadata(strokeWidth, strokeCap, strokeJoin, strokeMiter)
+                    && count > 1
+                    && record.recordLength() == 14 + count * 6;
         }
         if (record.op() == COMMAND_CLEAR_IMAGE_CACHE
                 || record.op() == COMMAND_EVICT_IMAGE_CACHE_KEY
@@ -5067,6 +5086,44 @@ public class JBRSkiaService extends JBRSkia {
                             current.drawLine(x1, y1, x2, y2);
                         } finally {
                             current.setStroke(previous);
+                        }
+                    } else if (op == COMMAND_STROKE_LINE_DRAW_IMAGE_REF_FULL_RUN) {
+                        boolean imageFiltered = (commands[offset++] & COMMAND_RECORD_FLAG_ANTIALIAS) != 0;
+                        applyAntialiasing(current, antiAlias);
+                        current.setColor(new Color(commands[offset++], true));
+                        int x1 = commands[offset++];
+                        int y1 = commands[offset++];
+                        int x2 = commands[offset++];
+                        int y2 = commands[offset++];
+                        int strokeWidth = Math.max(1, commands[offset++]);
+                        int strokeCap = commands[offset++];
+                        int strokeJoin = commands[offset++];
+                        float strokeMiter = commands[offset++] / 1000f;
+                        int count = commands[offset++];
+                        if (count <= 1 || offset + count * 6 != recordEnd) {
+                            return false;
+                        }
+                        java.awt.Stroke previous = current.getStroke();
+                        java.awt.BasicStroke stroke = basicStroke(strokeWidth, strokeCap, strokeJoin, strokeMiter);
+                        if (stroke == null) return false;
+                        try {
+                            current.setStroke(stroke);
+                            current.drawLine(x1, y1, x2, y2);
+                        } finally {
+                            current.setStroke(previous);
+                        }
+                        for (int i = 0; i < count; i++) {
+                            int dstLeft1000 = commands[offset++];
+                            int dstTop1000 = commands[offset++];
+                            int dstRight1000 = commands[offset++];
+                            int dstBottom1000 = commands[offset++];
+                            long cacheKey = cacheKey(commands[offset++], commands[offset++]);
+                            BufferedImage image = IMAGE_CACHE.get(new ImageCacheKey(contextPtr, cacheKey));
+                            if (image == null) {
+                                return false;
+                            }
+                            drawImage(current, image, imageFiltered, 0, 0, image.getWidth() * 1000, image.getHeight() * 1000,
+                                    dstLeft1000, dstTop1000, dstRight1000, dstBottom1000, 1000);
                         }
                     } else if (op == COMMAND_STROKE_LINE_DASH_PATH_EFFECT) {
                         if (offset + 13 > recordEnd) return false;
