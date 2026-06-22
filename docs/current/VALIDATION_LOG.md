@@ -5,6 +5,20 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-22 focused saveLayer+clipRect compact command:
+  JBR now advertises and replays `COMMAND_SAVE_LAYER_CLIP_RECT` (`op=82`) as an ABI-111 compact record that performs
+  the same native `saveLayer` followed immediately by `clipRect` sequence as the two-record form. CMP emits it only in
+  the final stream compaction pass for adjacent `saveLayer; clipRect` pairs, after recorder balance/fold passes have
+  already run. Narrow validation passed:
+  `./gradlew --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.compactsAdjacentSaveLayerClipRect --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.keepsSeparatedSaveLayerClipRectRecords --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.foldsTranslatedLayerAroundImageAndFillScope --console=plain`;
+  `./scripts/rebuild-jbr-skia-local-artifacts.sh`; desktop-only CMP publish; focused Markdown wheel scrolling; and
+  focused decorated Jewel Icons. Markdown stayed strict-clean with `fallbacks=0`, `unsupported_max=0`, and
+  `jbr_command_frames=1254`; command replay improved from the mixed image translated-layer checkpoint's
+  `avg_commands=352` to `avg_commands=349`, with `saveLayerClipRect:avg=2.3`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-save-layer-clip-compact-markdown/suite.tsv`.
+  Icons stayed strict-clean with `fallbacks=0`, `unsupported_max=0`, `jbr_command_frames=3`, and improved from
+  `avg_commands=1373` to `avg_commands=1364` while preserving transparent icon surrounds:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-save-layer-clip-compact-icons/suite.tsv`.
 - 2026-06-22 focused mixed image translated-layer fold:
   CMP now treats `drawImageRefFull` and `drawImageRefFullDrawRoundRect` as transformable inside the existing
   conservative `saveTranslateLayer` fold when the layer has `alpha=1`, all image/round-rect/fill destinations remain

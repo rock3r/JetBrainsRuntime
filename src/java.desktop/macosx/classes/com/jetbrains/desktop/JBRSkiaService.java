@@ -176,7 +176,8 @@ public class JBRSkiaService extends JBRSkia {
                     | COMMAND_CAP64_HIGH_FILL_ROUND_RECT
                     | COMMAND_CAP64_HIGH_CLEAR_DRAW_IMAGE_REF_FULL
                     | COMMAND_CAP64_HIGH_DRAW_IMAGE_REF_FULL_DRAW_ROUND_RECT
-                    | COMMAND_CAP64_HIGH_DRAW_IMAGE_REF_FULL_RUN;
+                    | COMMAND_CAP64_HIGH_DRAW_IMAGE_REF_FULL_RUN
+                    | COMMAND_CAP64_HIGH_SAVE_LAYER_CLIP_RECT;
     private static final boolean NATIVE_BRIDGE_AVAILABLE = loadNativeBridge();
     private static final AtomicLong NEXT_SCOPE_ID = new AtomicLong(1);
     private static final int MAX_CACHED_IMAGES = 256;
@@ -493,6 +494,7 @@ public class JBRSkiaService extends JBRSkia {
         if (op == COMMAND_CLEAR_DRAW_IMAGE_REF_FULL) return 13;
         if (op == COMMAND_DRAW_IMAGE_REF_FULL_DRAW_ROUND_RECT) return 22;
         if (op == COMMAND_DRAW_IMAGE_REF_FULL_RUN) return -36;
+        if (op == COMMAND_SAVE_LAYER_CLIP_RECT) return 13;
         if (op == COMMAND_DRAW_IMAGE_REF) return 17;
         if (op == COMMAND_DRAW_IMAGE_REF_COLOR_FILTER) return 19;
         if (op == COMMAND_DRAW_IMAGE_REF_COLOR_FILTER_REF) return 19;
@@ -686,6 +688,15 @@ public class JBRSkiaService extends JBRSkia {
             return record.recordFlags() == COMMAND_RECORD_FLAGS_NONE
                     && commands[record.recordEnd() - 1] >= 0
                     && commands[record.recordEnd() - 1] <= 1000;
+        }
+        if (record.op() == COMMAND_SAVE_LAYER_CLIP_RECT) {
+            int alpha1000 = commands[record.argsStart() + 4];
+            int clipOp = commands[record.recordEnd() - 1];
+            return (record.recordFlags() == COMMAND_RECORD_FLAGS_NONE
+                    || record.recordFlags() == COMMAND_RECORD_FLAG_ANTIALIAS)
+                    && alpha1000 >= 0
+                    && alpha1000 <= 1000
+                    && (clipOp == COMMAND_CLIP_OP_INTERSECT || clipOp == COMMAND_CLIP_OP_DIFFERENCE);
         }
         if (record.op() == COMMAND_SAVE_TRANSLATE_LAYER) {
             return record.recordFlags() == COMMAND_RECORD_FLAGS_NONE
@@ -4062,6 +4073,33 @@ public class JBRSkiaService extends JBRSkia {
                         stack.addLast(current);
                         current = (Graphics2D) current.create();
                         current.clipRect(x, y, width, height);
+                    } else if (op == COMMAND_SAVE_LAYER_CLIP_RECT) {
+                        if (offset + 10 != recordEnd) return false;
+                        int x = commands[offset++];
+                        int y = commands[offset++];
+                        int width = commands[offset++];
+                        int height = commands[offset++];
+                        int alpha1000 = commands[offset++];
+                        int clipX = commands[offset++];
+                        int clipY = commands[offset++];
+                        int clipWidth = commands[offset++];
+                        int clipHeight = commands[offset++];
+                        int clipOp = commands[offset++];
+                        if (alpha1000 < 0 || alpha1000 > 1000) return false;
+                        stack.addLast(current);
+                        current = (Graphics2D) current.create();
+                        current.clipRect(x, y, width, height);
+                        if (clipOp == COMMAND_CLIP_OP_INTERSECT) {
+                            current.clipRect(clipX, clipY, clipWidth, clipHeight);
+                        } else if (clipOp == COMMAND_CLIP_OP_DIFFERENCE) {
+                            Shape previousClip = current.getClip();
+                            if (previousClip == null) return false;
+                            Area clip = new Area(previousClip);
+                            clip.subtract(new Area(new Rectangle(clipX, clipY, clipWidth, clipHeight)));
+                            current.setClip(clip);
+                        } else {
+                            return false;
+                        }
                     } else if (op == COMMAND_SAVE_LAYER_COLOR_FILTER) {
                         if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE || offset + 7 != recordEnd) return false;
                         int x = commands[offset++];

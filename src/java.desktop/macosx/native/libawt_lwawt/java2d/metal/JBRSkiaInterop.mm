@@ -192,6 +192,7 @@ static constexpr jint COMMAND_FILL_ROUND_RECT = 78;
 static constexpr jint COMMAND_CLEAR_DRAW_IMAGE_REF_FULL = 79;
 static constexpr jint COMMAND_DRAW_IMAGE_REF_FULL_DRAW_ROUND_RECT = 80;
 static constexpr jint COMMAND_DRAW_IMAGE_REF_FULL_RUN = 81;
+static constexpr jint COMMAND_SAVE_LAYER_CLIP_RECT = 82;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER = 1;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_COLOR_MATRIX_FILTER = 2;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_LIGHTING_FILTER = 3;
@@ -3209,6 +3210,37 @@ static bool drawCommandList(SkCanvas* canvas,
                                                  static_cast<SkScalar>(layerWidth),
                                                  static_cast<SkScalar>(layerHeight));
                 canvas->saveLayerAlphaf(&bounds, static_cast<float>(alpha1000) / 1000.0f);
+                break;
+            }
+            case COMMAND_SAVE_LAYER_CLIP_RECT: {
+                if (offset + 10 != recordEnd) {
+                    return false;
+                }
+                jint x = commands[offset++];
+                jint y = commands[offset++];
+                jint layerWidth = commands[offset++];
+                jint layerHeight = commands[offset++];
+                jint alpha1000 = commands[offset++];
+                jint clipX = commands[offset++];
+                jint clipY = commands[offset++];
+                jint clipWidth = commands[offset++];
+                jint clipHeight = commands[offset++];
+                jint clipOp = commands[offset++];
+                if (alpha1000 < 0 || alpha1000 > 1000 ||
+                        (clipOp != COMMAND_CLIP_OP_INTERSECT && clipOp != COMMAND_CLIP_OP_DIFFERENCE)) {
+                    return false;
+                }
+                SkRect bounds = SkRect::MakeXYWH(static_cast<SkScalar>(x),
+                                                 static_cast<SkScalar>(y),
+                                                 static_cast<SkScalar>(layerWidth),
+                                                 static_cast<SkScalar>(layerHeight));
+                canvas->saveLayerAlphaf(&bounds, static_cast<float>(alpha1000) / 1000.0f);
+                canvas->clipRect(SkRect::MakeXYWH(static_cast<SkScalar>(clipX),
+                                                  static_cast<SkScalar>(clipY),
+                                                  static_cast<SkScalar>(clipWidth),
+                                                  static_cast<SkScalar>(clipHeight)),
+                                 clipOp == COMMAND_CLIP_OP_DIFFERENCE ? SkClipOp::kDifference : SkClipOp::kIntersect,
+                                 antiAlias);
                 break;
             }
             case COMMAND_SAVE_LAYER_COLOR_FILTER: {
