@@ -5,6 +5,25 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-22 focused compact clear/full-image-ref command:
+  JBR now advertises and replays `COMMAND_CLEAR_DRAW_IMAGE_REF_FULL` (`op=79`) as a single ABI-111 command record that
+  preserves the existing `clearRect; drawImageRefFull` semantics while reducing command-stream words and record count.
+  The rejected precursor, deleting the clear before a transparent image draw, was not retained because recorder tests
+  showed it could leave stale layer contents visible. The retained command still performs the clear first, then draws
+  the cached full-source image. CMP emits it only for an exact matching clear immediately before a compact full-image
+  ref, allowing image definition/cache records between the clear and draw. Narrow validation passed:
+  `./gradlew :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest --console=plain`;
+  local JBR Skia artifact rebuild; local CMP publish; focused decorated Jewel Icons; and focused Markdown wheel
+  scrolling. Icons stayed strict-clean with `fallbacks=0`, `unsupported_max=0`, and `jbr_command_frames=5`;
+  command replay improved from the empty layer-clip checkpoint `avg_commands=1426` to `avg_commands=1319`, with
+  `clearDrawImageRefFull:avg=35`, remaining `clearRect:avg=3`, and remaining `drawImageRefFull:avg=4.4`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-clear-draw-image-ref-full-icons/suite.tsv`.
+  Markdown stayed strict-clean with `fallbacks=0`, `unsupported_max=0`, `jbr_command_frames=567`, and neutral replay at
+  `avg_commands=534`, `max_commands=632`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-clear-draw-image-ref-full-markdown/suite.tsv`.
+  The focused Icons screenshot is byte-identical to the pre-change alpha check. The apparent solid top-row Jewel-logo
+  blocks are pre-existing `Icon(ShowcaseIcons.jewelLogo)` behavior for that multi-color logo sample; the same asset
+  drawn through `Image` below remains transparent, and the copied AllIcons samples retain transparent surrounds.
 - 2026-06-22 focused empty layer-clip fold:
   CMP now removes an exact empty `saveLayer/saveTranslateLayer; clipRect/clipPath; restore` scope when the restore is
   emitted. The fold is intentionally limited to a layer save followed only by a clip record, with no drawing between

@@ -159,6 +159,8 @@ public abstract class JBRSkia {
     public static final long COMMAND_CAP64_HIGH_DRAW_IMAGE_REF_FULL = Long.parseLong("67108864");
     /** Supports compact filled round-rectangle records. */
     public static final long COMMAND_CAP64_HIGH_FILL_ROUND_RECT = Long.parseLong("134217728");
+    /** Supports compact clear-rectangle plus full-source image reference draw records. */
+    public static final long COMMAND_CAP64_HIGH_CLEAR_DRAW_IMAGE_REF_FULL = Long.parseLong("268435456");
     public static final int COMMAND_CLEAR = Integer.parseInt("1");
     public static final int COMMAND_FILL_RECT = Integer.parseInt("2");
     public static final int COMMAND_STROKE_LINE = Integer.parseInt("3");
@@ -239,6 +241,7 @@ public abstract class JBRSkia {
     public static final int COMMAND_SAVE_TRANSLATE_LAYER = Integer.parseInt("76");
     public static final int COMMAND_DRAW_IMAGE_REF_FULL = Integer.parseInt("77");
     public static final int COMMAND_FILL_ROUND_RECT = Integer.parseInt("78");
+    public static final int COMMAND_CLEAR_DRAW_IMAGE_REF_FULL = Integer.parseInt("79");
     public static final int COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER = Integer.parseInt("1");
     public static final int COMMAND_EFFECT_DESCRIPTOR_COLOR_MATRIX_FILTER = Integer.parseInt("2");
     public static final int COMMAND_EFFECT_DESCRIPTOR_LIGHTING_FILTER = Integer.parseInt("3");

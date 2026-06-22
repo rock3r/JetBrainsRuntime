@@ -189,6 +189,7 @@ static constexpr jint COMMAND_RESTORE_N = 75;
 static constexpr jint COMMAND_SAVE_TRANSLATE_LAYER = 76;
 static constexpr jint COMMAND_DRAW_IMAGE_REF_FULL = 77;
 static constexpr jint COMMAND_FILL_ROUND_RECT = 78;
+static constexpr jint COMMAND_CLEAR_DRAW_IMAGE_REF_FULL = 79;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER = 1;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_COLOR_MATRIX_FILTER = 2;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_LIGHTING_FILTER = 3;
@@ -3539,6 +3540,44 @@ static bool drawCommandList(SkCanvas* canvas,
                     }
                     image = found->second;
                 }
+                if (!drawImage(canvas, image, recordFlags, 0.0f, 0.0f,
+                               static_cast<SkScalar>(image->width()), static_cast<SkScalar>(image->height()),
+                               dstLeft, dstTop, dstRight, dstBottom, 1000)) {
+                    return false;
+                }
+                break;
+            }
+            case COMMAND_CLEAR_DRAW_IMAGE_REF_FULL: {
+                if ((recordFlags & ~COMMAND_RECORD_FLAG_ANTIALIAS) != 0 || offset + 10 != recordEnd) {
+                    return false;
+                }
+                const jint clearX = commands[offset++];
+                const jint clearY = commands[offset++];
+                const jint clearWidth = commands[offset++];
+                const jint clearHeight = commands[offset++];
+                const SkScalar dstLeft = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkScalar dstTop = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkScalar dstRight = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkScalar dstBottom = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const uint64_t key = imageCacheKey(commands[offset], commands[offset + 1]);
+                offset += 2;
+                sk_sp<SkImage> image;
+                {
+                    std::lock_guard<std::mutex> lock(gImageCacheMutex);
+                    auto found = gImagesByKey.find(ImageCacheScopedKey{imageCacheContextKey, key});
+                    if (found == gImagesByKey.end()) {
+                        return false;
+                    }
+                    image = found->second;
+                }
+                SkPaint clearPaint;
+                clearPaint.setAntiAlias((recordFlags & COMMAND_RECORD_FLAG_ANTIALIAS) != 0);
+                clearPaint.setBlendMode(SkBlendMode::kClear);
+                canvas->drawRect(SkRect::MakeXYWH(static_cast<SkScalar>(clearX),
+                                                  static_cast<SkScalar>(clearY),
+                                                  static_cast<SkScalar>(clearWidth),
+                                                  static_cast<SkScalar>(clearHeight)),
+                                 clearPaint);
                 if (!drawImage(canvas, image, recordFlags, 0.0f, 0.0f,
                                static_cast<SkScalar>(image->width()), static_cast<SkScalar>(image->height()),
                                dstLeft, dstTop, dstRight, dstBottom, 1000)) {

@@ -173,7 +173,8 @@ public class JBRSkiaService extends JBRSkia {
                     | COMMAND_CAP64_HIGH_RESTORE_N
                     | COMMAND_CAP64_HIGH_SAVE_TRANSLATE_LAYER
                     | COMMAND_CAP64_HIGH_DRAW_IMAGE_REF_FULL
-                    | COMMAND_CAP64_HIGH_FILL_ROUND_RECT;
+                    | COMMAND_CAP64_HIGH_FILL_ROUND_RECT
+                    | COMMAND_CAP64_HIGH_CLEAR_DRAW_IMAGE_REF_FULL;
     private static final boolean NATIVE_BRIDGE_AVAILABLE = loadNativeBridge();
     private static final AtomicLong NEXT_SCOPE_ID = new AtomicLong(1);
     private static final int MAX_CACHED_IMAGES = 256;
@@ -326,6 +327,11 @@ public class JBRSkiaService extends JBRSkia {
                     commands[record.argsStart() + 4],
                     commands[record.argsStart() + 5]))) {
                 return false;
+            } else if (record.op() == COMMAND_CLEAR_DRAW_IMAGE_REF_FULL
+                    && !imageDimensions.containsKey(commandHandle(
+                    commands[record.argsStart() + 8],
+                    commands[record.argsStart() + 9]))) {
+                return false;
             } else if ((record.op() == COMMAND_DRAW_IMAGE_REF
                     || record.op() == COMMAND_DRAW_IMAGE_REF_COLOR_FILTER
                     || record.op() == COMMAND_DRAW_IMAGE_REF_COLOR_FILTER_REF)
@@ -471,6 +477,7 @@ public class JBRSkiaService extends JBRSkia {
         if (op == COMMAND_CLIP_PATH) return -6;
         if (op == COMMAND_DRAW_PATH) return -7;
         if (op == COMMAND_DRAW_IMAGE_REF_FULL) return 9;
+        if (op == COMMAND_CLEAR_DRAW_IMAGE_REF_FULL) return 13;
         if (op == COMMAND_DRAW_IMAGE_REF) return 17;
         if (op == COMMAND_DRAW_IMAGE_REF_COLOR_FILTER) return 19;
         if (op == COMMAND_DRAW_IMAGE_REF_COLOR_FILTER_REF) return 19;
@@ -1734,7 +1741,7 @@ public class JBRSkiaService extends JBRSkia {
                     && filterQuality >= 0
                     && filterQuality <= 3;
         }
-        if (record.op() == COMMAND_DRAW_IMAGE_REF_FULL) {
+        if (record.op() == COMMAND_DRAW_IMAGE_REF_FULL || record.op() == COMMAND_CLEAR_DRAW_IMAGE_REF_FULL) {
             if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE
                     && record.recordFlags() != COMMAND_RECORD_FLAG_ANTIALIAS) {
                 return false;
@@ -4158,6 +4165,28 @@ public class JBRSkiaService extends JBRSkia {
                         if (image == null) {
                             return false;
                         }
+                        drawImage(current, image, filtered, 0, 0, image.getWidth() * 1000, image.getHeight() * 1000,
+                                dstLeft1000, dstTop1000, dstRight1000, dstBottom1000, 1000);
+                    } else if (op == COMMAND_CLEAR_DRAW_IMAGE_REF_FULL) {
+                        if (offset + 10 != recordEnd) return false;
+                        boolean filtered = (record.recordFlags() & COMMAND_RECORD_FLAG_ANTIALIAS) != 0;
+                        int clearX = commands[offset++];
+                        int clearY = commands[offset++];
+                        int clearWidth = commands[offset++];
+                        int clearHeight = commands[offset++];
+                        int dstLeft1000 = commands[offset++];
+                        int dstTop1000 = commands[offset++];
+                        int dstRight1000 = commands[offset++];
+                        int dstBottom1000 = commands[offset++];
+                        long cacheKey = cacheKey(commands[offset++], commands[offset++]);
+                        BufferedImage image = IMAGE_CACHE.get(new ImageCacheKey(contextPtr, cacheKey));
+                        if (image == null) {
+                            return false;
+                        }
+                        Composite previousComposite = current.getComposite();
+                        current.setComposite(AlphaComposite.Clear);
+                        current.fillRect(clearX, clearY, clearWidth, clearHeight);
+                        current.setComposite(previousComposite);
                         drawImage(current, image, filtered, 0, 0, image.getWidth() * 1000, image.getHeight() * 1000,
                                 dstLeft1000, dstTop1000, dstRight1000, dstBottom1000, 1000);
                     } else if (op == COMMAND_DRAW_IMAGE_REF_COLOR_FILTER) {
