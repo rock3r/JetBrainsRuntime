@@ -5,6 +5,19 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-22 focused op84 bitmap-definition skip repair:
+  After `COMMAND_DEFINE_IMAGE_BITMAP` grew to carry `imageHasAlpha`, CMP's
+  `strokeLineDrawImageRefFullRun` compaction still skipped only the old 10-word bitmap-definition record shape. CMP now
+  skips the current 11-word definition shape, restoring the existing op84 fold when fresh native bitmap definitions sit
+  between a stroke line and a full-image-ref run. Narrow validation passed:
+  `./gradlew :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesCompactStrokeLineAndFullImageRefRunRecord --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesCompactStrokeLineAndFullImageRefRunRecordAcrossBitmapDefinitions --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.keepsStrokeLineBeforeSingleFullImageRefRecord --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesImageArgbRecord --console=plain`;
+  desktop-only CMP publish via
+  `./gradlew --no-configuration-cache --no-configure-on-demand -PartifactRedirection.targetNames= :compose:ui:ui-graphics:publishDesktopPublicationToMavenLocal --console=plain`;
+  and a short focused Markdown wheel run:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-op84-bitmap-definition-skip/suite.tsv`.
+  Markdown stayed strict-clean with `fallbacks=0`, `unsupported_max=0`, `jbr_command_frames=41`, and
+  `strokeLineDrawImageRefFullRun:total=78`; the new targeted regression is the retention proof for the repaired
+  definition-gap case.
 - 2026-06-22 focused op88 round-rect+restoreN compact command plus native-bitmap alpha flag:
   JBR now advertises and replays `COMMAND_DRAW_ROUND_RECT_RESTORE_N` (`op=88`) as an ABI-111 compact record for a
   `drawRoundRect; restoreN(count>0)` pair, CMP folds the adjacent pair during final stream compaction, and Skiko
