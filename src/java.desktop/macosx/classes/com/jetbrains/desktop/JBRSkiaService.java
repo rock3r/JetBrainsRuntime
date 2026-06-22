@@ -175,7 +175,8 @@ public class JBRSkiaService extends JBRSkia {
                     | COMMAND_CAP64_HIGH_DRAW_IMAGE_REF_FULL
                     | COMMAND_CAP64_HIGH_FILL_ROUND_RECT
                     | COMMAND_CAP64_HIGH_CLEAR_DRAW_IMAGE_REF_FULL
-                    | COMMAND_CAP64_HIGH_DRAW_IMAGE_REF_FULL_DRAW_ROUND_RECT;
+                    | COMMAND_CAP64_HIGH_DRAW_IMAGE_REF_FULL_DRAW_ROUND_RECT
+                    | COMMAND_CAP64_HIGH_DRAW_IMAGE_REF_FULL_RUN;
     private static final boolean NATIVE_BRIDGE_AVAILABLE = loadNativeBridge();
     private static final AtomicLong NEXT_SCOPE_ID = new AtomicLong(1);
     private static final int MAX_CACHED_IMAGES = 256;
@@ -328,6 +329,12 @@ public class JBRSkiaService extends JBRSkia {
                     commands[record.argsStart() + 4],
                     commands[record.argsStart() + 5]))) {
                 return false;
+            } else if (record.op() == COMMAND_DRAW_IMAGE_REF_FULL_RUN) {
+                for (int keyOffset = record.argsStart() + 5; keyOffset + 1 < record.recordEnd(); keyOffset += 6) {
+                    if (!imageDimensions.containsKey(commandHandle(commands[keyOffset], commands[keyOffset + 1]))) {
+                        return false;
+                    }
+                }
             } else if (record.op() == COMMAND_DRAW_IMAGE_REF_FULL_DRAW_ROUND_RECT
                     && !imageDimensions.containsKey(commandHandle(
                     commands[record.argsStart() + 5],
@@ -485,6 +492,7 @@ public class JBRSkiaService extends JBRSkia {
         if (op == COMMAND_DRAW_IMAGE_REF_FULL) return 9;
         if (op == COMMAND_CLEAR_DRAW_IMAGE_REF_FULL) return 13;
         if (op == COMMAND_DRAW_IMAGE_REF_FULL_DRAW_ROUND_RECT) return 22;
+        if (op == COMMAND_DRAW_IMAGE_REF_FULL_RUN) return -36;
         if (op == COMMAND_DRAW_IMAGE_REF) return 17;
         if (op == COMMAND_DRAW_IMAGE_REF_COLOR_FILTER) return 19;
         if (op == COMMAND_DRAW_IMAGE_REF_COLOR_FILTER_REF) return 19;
@@ -645,6 +653,9 @@ public class JBRSkiaService extends JBRSkia {
         if (expectedLength == -35 && record.op() == COMMAND_STROKE_PATH_SWEEP_GRADIENT) {
             return record.recordLength() >= 28;
         }
+        if (expectedLength == -36 && record.op() == COMMAND_DRAW_IMAGE_REF_FULL_RUN) {
+            return record.recordLength() >= 16;
+        }
         return expectedLength == record.recordLength();
     }
 
@@ -657,6 +668,13 @@ public class JBRSkiaService extends JBRSkia {
         if (record.op() == COMMAND_RESTORE_N
                 && (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE || commands[record.argsStart()] <= 0)) {
             return false;
+        }
+        if (record.op() == COMMAND_DRAW_IMAGE_REF_FULL_RUN) {
+            int count = commands[record.argsStart()];
+            return (record.recordFlags() == COMMAND_RECORD_FLAGS_NONE
+                    || record.recordFlags() == COMMAND_RECORD_FLAG_ANTIALIAS)
+                    && count > 1
+                    && record.recordLength() == 4 + count * 6;
         }
         if (record.op() == COMMAND_CLEAR_IMAGE_CACHE
                 || record.op() == COMMAND_EVICT_IMAGE_CACHE_KEY
@@ -4202,6 +4220,25 @@ public class JBRSkiaService extends JBRSkia {
                         }
                         drawImage(current, image, filtered, 0, 0, image.getWidth() * 1000, image.getHeight() * 1000,
                                 dstLeft1000, dstTop1000, dstRight1000, dstBottom1000, 1000);
+                    } else if (op == COMMAND_DRAW_IMAGE_REF_FULL_RUN) {
+                        boolean filtered = (record.recordFlags() & COMMAND_RECORD_FLAG_ANTIALIAS) != 0;
+                        int count = commands[offset++];
+                        if (count <= 1 || offset + count * 6 != recordEnd) {
+                            return false;
+                        }
+                        for (int i = 0; i < count; i++) {
+                            int dstLeft1000 = commands[offset++];
+                            int dstTop1000 = commands[offset++];
+                            int dstRight1000 = commands[offset++];
+                            int dstBottom1000 = commands[offset++];
+                            long cacheKey = cacheKey(commands[offset++], commands[offset++]);
+                            BufferedImage image = IMAGE_CACHE.get(new ImageCacheKey(contextPtr, cacheKey));
+                            if (image == null) {
+                                return false;
+                            }
+                            drawImage(current, image, filtered, 0, 0, image.getWidth() * 1000, image.getHeight() * 1000,
+                                    dstLeft1000, dstTop1000, dstRight1000, dstBottom1000, 1000);
+                        }
                     } else if (op == COMMAND_DRAW_IMAGE_REF_FULL_DRAW_ROUND_RECT) {
                         if (offset + 19 != recordEnd) return false;
                         int imageFlags = commands[offset++];

@@ -5,6 +5,25 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-22 focused full-image-ref run command:
+  Added command ABI opcode 81, `drawImageRefFullRun`, for compact runs of full-source cached image draws with shared
+  record flags. CMP performs the final compaction after existing save/translate/layer folds, moving only image
+  definition records ahead of the run and stopping at evictions or drawing/state records. JBR validates each cache key
+  and replays the run as the same ordered sequence of `drawImage` calls, preserving source alpha and sampling. Narrow
+  validation passed:
+  `./gradlew --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesCompactFullImageRefRunRecord --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesCompactFullImageRefRecord --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.foldsTrailingTranslatedCompactFullImageRefSuffixBeforeRestore --console=plain`;
+  `./gradlew :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest --console=plain`;
+  `./scripts/rebuild-jbr-skia-local-artifacts.sh`;
+  local Skiko/CMP publishes; focused decorated Jewel Icons; and focused Markdown wheel scrolling. Icons stayed
+  strict-clean with `fallbacks=0`, `unsupported_max=0`, and `jbr_command_frames=3`; the captured counts match the
+  retained icon checkpoint, including transparent icon surrounds, while the large magenta tile remains the showcase's
+  explicit multiply-tinted Jewel-logo sample:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-image-ref-run-icons-rerun/suite.tsv`.
+  Markdown stayed strict-clean with `fallbacks=0`, `unsupported_max=0`, `jbr_command_frames=431`,
+  `drawImageRefFullRun:avg=2.0,total=841`, and `drawImageRefFull:avg=6.6,total=2825`. The focused command-word
+  comparison against the plain-save/layer checkpoint moved from `avg_commands=418.78` to `avg_commands=415.31`, a
+  modest but measurable command-density improvement:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-image-ref-run-markdown/suite.tsv`.
 - 2026-06-22 focused plain-save/layer joint-restore fold:
   CMP now performs a final stream compaction for plain `save; saveLayer; ...; restoreN` islands where the same
   `restoreN` closes both the wrapper save and the immediately nested plain layer. The pass removes only the redundant
