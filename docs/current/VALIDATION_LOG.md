@@ -5,6 +5,19 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-22 focused trailing-restore round-rect translate fold:
+  CMP now also folds `translate; fillRoundRect/drawRoundRect; restore/restoreN` when the restore was already
+  materialized before the next restore is emitted. The fold moves the translate into the round-rect coordinates,
+  removes only the translate record, and leaves the existing restore intact so the surrounding save/layer state still
+  unwinds normally. Narrow validation passed:
+  `./gradlew :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest --console=plain`;
+  local CMP publish; focused Markdown wheel scrolling; and focused decorated Jewel Icons. Markdown stayed strict-clean
+  with `fallbacks=0`, `unsupported_max=0`, `jbr_command_frames=410`, and command replay improved from the inner
+  translate fold checkpoint `avg_commands=721` to `avg_commands=713`; `translate:avg` dropped from `10.4` to `9.3`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-roundrect-before-trailing-restore-markdown/suite.tsv`.
+  Icons stayed strict-clean and neutral at `avg_commands=1450`, with `fallbacks=0`, `unsupported_max=0`, and
+  `jbr_command_frames=3`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-roundrect-before-trailing-restore-icons/suite.tsv`.
 - 2026-06-22 focused inner-translate transformable saveTranslate-scope fold:
   CMP now extends the nested transformable `saveTranslate ... restore/restoreN` fold to scopes that contain whole-pixel
   inner `translate` records. Inner translates are not left in the compacted stream; the recorder accumulates their
