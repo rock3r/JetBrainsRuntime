@@ -5,6 +5,19 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-22 focused image-run translated-scope fold:
+  CMP now runs the existing conservative transformable-scope fold once more after adjacent full-image refs have been
+  compacted into `drawImageRefFullRun`, and treats the run record as transformable by translating each destination
+  rectangle in-place. This removes the hot `saveTranslateLayer; saveTranslate; strokeLine; drawImageRefFullRun;
+  restoreN` shape without changing replay order or image alpha behavior. Narrow validation passed:
+  `./gradlew --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.foldsNestedSaveTranslateIntoStrokeLineAndImageRunBeforeRestoreN --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.foldsNestedSaveTranslateIntoStrokeLineAndImageBeforeRestoreN --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesCompactFullImageRefRunRecord --console=plain`;
+  local CMP publish; focused Markdown wheel scrolling; and focused decorated Jewel Icons. Markdown stayed strict-clean
+  with `fallbacks=0`, `unsupported_max=0`, `jbr_command_frames=426`, and `saveTranslate:avg=1.3`; command replay
+  improved from the full-image-ref run checkpoint `avg_commands=415.31` to `avg_commands=404.64`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-image-run-translate-fold-markdown/suite.tsv`.
+  Icons stayed strict-clean with `fallbacks=0`, `unsupported_max=0`, `jbr_command_frames=3`, and screenshot counts
+  matching the retained icon checkpoint, including transparent icon surrounds:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-image-run-translate-fold-icons/suite.tsv`.
 - 2026-06-22 focused full-image-ref run command:
   Added command ABI opcode 81, `drawImageRefFullRun`, for compact runs of full-source cached image draws with shared
   record flags. CMP performs the final compaction after existing save/translate/layer folds, moving only image
