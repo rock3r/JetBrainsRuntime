@@ -56,6 +56,14 @@ This is the small working roadmap for the current PoC. The full historical check
 ## Latest Validations
 
 - Focused ABI 111 command-stream compaction checkpoint:
+  Added `COMMAND_FILL_RECT_SAVE_LAYER_CLIP_RECT` (`op=95`) plus
+  `COMMAND_CAP64_HIGH_FILL_RECT_SAVE_LAYER_CLIP_RECT=17592186044416` for compact
+  `fillRect; saveLayer; clipRect` records. Narrow gates passed: CMP focused recorder tests, Skiko focused interop
+  test, `./scripts/rebuild-jbr-skia-local-artifacts.sh`, and focused Markdown wheel validation. The focused Markdown
+  slice stayed strict-clean with `fallbacks=0`, `unsupported_max=0`, `jbr_picture_frames=0`,
+  `jbr_command_frames=264`, and `fillRectSaveLayerClipRect:total=455`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-op95-fillrect-save-layer-clip-rect/suite.tsv`.
+- Focused ABI 111 command-stream compaction checkpoint:
   Added `COMMAND_SAVE_SAVE_LAYER_SAVE_TRANSLATE` (`op=94`) plus
   `COMMAND_CAP64_HIGH_SAVE_SAVE_LAYER_SAVE_TRANSLATE=8796093022208` for compact
   `save; saveLayer; save; translate` records. Narrow gates passed: CMP focused recorder tests, Skiko focused interop

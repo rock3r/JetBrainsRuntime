@@ -39,6 +39,10 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `COMMAND_SAVE_SAVE_LAYER_SAVE_TRANSLATE` (`op=94`). Focused Markdown wheel validation stayed strict-clean with zero
   unsupported rows, zero picture frames, `jbr_command_frames=258`, and `saveSaveLayerSaveTranslate:total=308`:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-op94-save-save-layer-save-translate/suite.tsv`.
+- JBR/CMP/Skiko now support compact `fillRect; saveLayer; clipRect` records through ABI 111
+  `COMMAND_FILL_RECT_SAVE_LAYER_CLIP_RECT` (`op=95`). Focused Markdown wheel validation stayed strict-clean with zero
+  unsupported rows, zero picture frames, `jbr_command_frames=264`, and `fillRectSaveLayerClipRect:total=455`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-op95-fillrect-save-layer-clip-rect/suite.tsv`.
 - CMP now preserves the effective alpha classification discovered while defining native bitmap images when emitting
   full-image draw records. This addresses the Jewel showcase icon transparency edge where small rasterized icons could
   contain transparent pixels while reporting stale opaque metadata. Focused `showcase-icons` validation stayed

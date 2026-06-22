@@ -5,6 +5,16 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-22 focused op95 fillRect + saveLayerClipRect compact command:
+  The retained op95 advertises and replays `COMMAND_FILL_RECT_SAVE_LAYER_CLIP_RECT` (`op=95`) as a compact record for
+  `fillRect; saveLayer; clipRect`, with CMP folding adjacent `COMMAND_FILL_RECT` and
+  `COMMAND_SAVE_LAYER_CLIP_RECT` records while preserving the save-layer restore contract. Narrow validation passed:
+  `./gradlew :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.compactsFillRectBeforeSaveLayerClipRect --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.compactsAdjacentSaveLayerClipRect --console=plain`;
+  `./gradlew awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest --console=plain`;
+  `./scripts/rebuild-jbr-skia-local-artifacts.sh`; and a short focused Markdown wheel run:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-op95-fillrect-save-layer-clip-rect/suite.tsv`.
+  Markdown stayed strict-clean with `fallbacks=0`, `unsupported_max=0`, `jbr_picture_frames=0`,
+  `jbr_command_frames=264`, and `fillRectSaveLayerClipRect:total=455` across 263 CMP command frames.
 - 2026-06-22 focused op94 save + saveLayer + saveTranslate compact command:
   A temporary post-op93 pair diagnostic on the focused Markdown wheel path showed `save > saveLayerSaveTranslate` as a
   hot command-only adjacent pair (`3962` aggregated observations in

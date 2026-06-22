@@ -189,7 +189,8 @@ public class JBRSkiaService extends JBRSkia {
                     | COMMAND_CAP64_HIGH_FILL_RECT_SAVE
                     | COMMAND_CAP64_HIGH_SAVE_FILL_RECT_SAVE
                     | COMMAND_CAP64_HIGH_SAVE_LAYER_SAVE_TRANSLATE
-                    | COMMAND_CAP64_HIGH_SAVE_SAVE_LAYER_SAVE_TRANSLATE;
+                    | COMMAND_CAP64_HIGH_SAVE_SAVE_LAYER_SAVE_TRANSLATE
+                    | COMMAND_CAP64_HIGH_FILL_RECT_SAVE_LAYER_CLIP_RECT;
     private static final boolean NATIVE_BRIDGE_AVAILABLE = loadNativeBridge();
     private static final AtomicLong NEXT_SCOPE_ID = new AtomicLong(1);
     private static final int MAX_CACHED_IMAGES = 256;
@@ -517,6 +518,7 @@ public class JBRSkiaService extends JBRSkia {
         if (op == COMMAND_DRAW_IMAGE_REF_FULL_DRAW_ROUND_RECT) return 22;
         if (op == COMMAND_DRAW_IMAGE_REF_FULL_RUN) return -36;
         if (op == COMMAND_SAVE_LAYER_CLIP_RECT) return 13;
+        if (op == COMMAND_FILL_RECT_SAVE_LAYER_CLIP_RECT) return 20;
         if (op == COMMAND_DRAW_IMAGE_REF_FULL_FILL_RECT) return 16;
         if (op == COMMAND_STROKE_LINE_DRAW_IMAGE_REF_FULL_RUN) return -37;
         if (op == COMMAND_STROKE_LINE_DRAW_IMAGE_REF_FULL_RUN_RESTORE_N) return -38;
@@ -1925,6 +1927,33 @@ public class JBRSkiaService extends JBRSkia {
             int height = commands[record.argsStart() + 11];
             int radius = commands[record.argsStart() + 12];
             return width >= 0 && height >= 0 && radius >= 0;
+        }
+        if (record.op() == COMMAND_FILL_RECT_SAVE_LAYER_CLIP_RECT) {
+            if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE
+                    && record.recordFlags() != COMMAND_RECORD_FLAG_ANTIALIAS) {
+                return false;
+            }
+            int fillWidth = commands[record.argsStart() + 3];
+            int fillHeight = commands[record.argsStart() + 4];
+            int radius = commands[record.argsStart() + 5];
+            int clipFlags = commands[record.argsStart() + 6];
+            int layerWidth = commands[record.argsStart() + 9];
+            int layerHeight = commands[record.argsStart() + 10];
+            int alpha1000 = commands[record.argsStart() + 11];
+            int clipWidth = commands[record.argsStart() + 14];
+            int clipHeight = commands[record.argsStart() + 15];
+            int clipOp = commands[record.argsStart() + 16];
+            return fillWidth >= 0
+                    && fillHeight >= 0
+                    && radius >= 0
+                    && (clipFlags == COMMAND_RECORD_FLAGS_NONE || clipFlags == COMMAND_RECORD_FLAG_ANTIALIAS)
+                    && layerWidth >= 0
+                    && layerHeight >= 0
+                    && alpha1000 >= 0
+                    && alpha1000 <= 1000
+                    && clipWidth >= 0
+                    && clipHeight >= 0
+                    && (clipOp == COMMAND_CLIP_OP_INTERSECT || clipOp == COMMAND_CLIP_OP_DIFFERENCE);
         }
         if (record.op() == COMMAND_DRAW_IMAGE_REF_COLOR_FILTER) {
             if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE
@@ -4932,6 +4961,52 @@ public class JBRSkiaService extends JBRSkia {
                             current.fillRoundRect(x, y, width, height, radius, radius);
                         } else {
                             current.fillRect(x, y, width, height);
+                        }
+                    } else if (op == COMMAND_FILL_RECT_SAVE_LAYER_CLIP_RECT) {
+                        if (offset + 17 != recordEnd) return false;
+                        applyAntialiasing(current, antiAlias);
+                        current.setColor(new Color(commands[offset++], true));
+                        int fillX = commands[offset++];
+                        int fillY = commands[offset++];
+                        int fillWidth = commands[offset++];
+                        int fillHeight = commands[offset++];
+                        int radius = commands[offset++];
+                        if (fillWidth < 0 || fillHeight < 0 || radius < 0) {
+                            return false;
+                        }
+                        if (radius > 0) {
+                            current.fillRoundRect(fillX, fillY, fillWidth, fillHeight, radius, radius);
+                        } else {
+                            current.fillRect(fillX, fillY, fillWidth, fillHeight);
+                        }
+                        boolean clipAntialias = (commands[offset++] & COMMAND_RECORD_FLAG_ANTIALIAS) != 0;
+                        int layerX = commands[offset++];
+                        int layerY = commands[offset++];
+                        int layerWidth = commands[offset++];
+                        int layerHeight = commands[offset++];
+                        int alpha1000 = commands[offset++];
+                        int clipX = commands[offset++];
+                        int clipY = commands[offset++];
+                        int clipWidth = commands[offset++];
+                        int clipHeight = commands[offset++];
+                        int clipOp = commands[offset++];
+                        if (layerWidth < 0 || layerHeight < 0 || alpha1000 < 0 || alpha1000 > 1000
+                                || clipWidth < 0 || clipHeight < 0
+                                || (clipOp != COMMAND_CLIP_OP_INTERSECT && clipOp != COMMAND_CLIP_OP_DIFFERENCE)) {
+                            return false;
+                        }
+                        stack.addLast(current);
+                        current = (Graphics2D) current.create();
+                        current.clipRect(layerX, layerY, layerWidth, layerHeight);
+                        applyAntialiasing(current, clipAntialias);
+                        if (clipOp == COMMAND_CLIP_OP_INTERSECT) {
+                            current.clipRect(clipX, clipY, clipWidth, clipHeight);
+                        } else {
+                            Shape previousClip = current.getClip();
+                            if (previousClip == null) return false;
+                            Area area = new Area(previousClip);
+                            area.subtract(new Area(new Rectangle(clipX, clipY, clipWidth, clipHeight)));
+                            current.setClip(area);
                         }
                     } else if (op == COMMAND_FILL_RECT_SAVE) {
                         if (offset + 6 != recordEnd) return false;
