@@ -5,6 +5,23 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-22 focused transparent icon clear-elision fix:
+  The decorated Jewel Icons showcase exposed a visual correctness bug in the retained compact clear/full-image path:
+  top-row `Icon(ShowcaseIcons.jewelLogo)` samples showed solid pale square backgrounds, while the same asset drawn
+  through the lower `Image(...)` samples remained transparent. The cause was the recorder preserving an exact
+  `clearRect; drawImageRefFull` pair for transparent icon draws; replaying the `BlendMode.Clear` on the JBR/Swing
+  target punched through transparent image pixels to the host/background color. CMP now removes that matched clear and
+  emits only `drawImageRefFull`, preserving zero-copy image refs without punching transparent regions. Narrow
+  validation passed:
+  `./gradlew :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.dropsMatchedClearBeforeFullImageRefRecord --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.keepsRoundRectSeparateAfterDroppingMatchedClearBeforeFullImageRef --console=plain`;
+  local CMP publish; focused decorated Jewel Icons; and focused Markdown wheel scrolling. Icons stayed strict-clean
+  with `fallbacks=0`, `unsupported_max=0`, `jbr_command_frames=3`; the screenshot now shows transparent surrounds on
+  the first-row Jewel-logo icons; and steady-state command words improved from the prior alpha-check/compact-clear
+  run's `commands=1293` to `commands=1039`, with `clearDrawImageRefFull` gone, `clearRect:avg=3`, and
+  `drawImageRefFull:avg=39`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-drop-clear-before-image-icons/suite.tsv`.
+  Markdown stayed strict-clean with `fallbacks=0`, `unsupported_max=0`, and `jbr_command_frames=256`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-drop-clear-before-image-markdown/suite.tsv`.
 - 2026-06-22 focused balanced redundant-save scope fold:
   CMP now removes a top-level plain `save` when the scope it is about to close contains only drawing/state-neutral
   records plus balanced nested save/layer scopes. This generalizes the prior flat drawing-only redundant-save cleanup
@@ -36,9 +53,9 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   Markdown stayed strict-clean with `fallbacks=0`, `unsupported_max=0`, `jbr_command_frames=567`, and neutral replay at
   `avg_commands=534`, `max_commands=632`:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-clear-draw-image-ref-full-markdown/suite.tsv`.
-  The focused Icons screenshot is byte-identical to the pre-change alpha check. The apparent solid top-row Jewel-logo
-  blocks are pre-existing `Icon(ShowcaseIcons.jewelLogo)` behavior for that multi-color logo sample; the same asset
-  drawn through `Image` below remains transparent, and the copied AllIcons samples retain transparent surrounds.
+  A later visual pass showed that the focused Icons screenshot was not acceptable: top-row transparent Jewel-logo
+  pixels were punching through to a solid host/background color. The 2026-06-22 transparent icon clear-elision fix
+  above supersedes CMP emission of this compact clear/full-image record for matched transparent full-image draws.
 - 2026-06-22 focused empty layer-clip fold:
   CMP now removes an exact empty `saveLayer/saveTranslateLayer; clipRect/clipPath; restore` scope when the restore is
   emitted. The fold is intentionally limited to a layer save followed only by a clip record, with no drawing between
