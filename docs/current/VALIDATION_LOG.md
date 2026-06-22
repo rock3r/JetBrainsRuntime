@@ -5,6 +5,19 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-22 focused compact image-ref translate fold:
+  CMP now folds `translate; [image definitions/cache records]; drawImageRefFull` both before an about-to-be-emitted
+  restore and before an already-materialized trailing `restore/restoreN`. The fold keeps image definition/cache records
+  in place, moves the translate into the compact full-image-ref destination coordinates, removes only the translate
+  record, and leaves any existing restore intact. Narrow validation passed:
+  `./gradlew :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest --console=plain`;
+  local CMP publish; focused Markdown wheel scrolling; and focused decorated Jewel Icons. Markdown stayed strict-clean
+  with `fallbacks=0`, `unsupported_max=0`, `jbr_command_frames=412`, and command replay improved from the restored
+  round-rect fold checkpoint `avg_commands=713` to `avg_commands=706`; `translate:avg` dropped from `9.3` to `7.5`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-image-ref-translate-fold-markdown/suite.tsv`.
+  Icons stayed strict-clean and neutral at `avg_commands=1450`, with `fallbacks=0`, `unsupported_max=0`, and
+  `jbr_command_frames=3`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-image-ref-translate-fold-icons/suite.tsv`.
 - 2026-06-22 focused trailing-restore round-rect translate fold:
   CMP now also folds `translate; fillRoundRect/drawRoundRect; restore/restoreN` when the restore was already
   materialized before the next restore is emitted. The fold moves the translate into the round-rect coordinates,
