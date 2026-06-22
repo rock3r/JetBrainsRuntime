@@ -5,6 +5,21 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-22 focused translated full-image layer fold:
+  CMP now folds a plain `saveTranslateLayer; [image definitions/cache records]; drawImageRefFull; restoreN` island
+  when the layer has `alpha=1`, the image destination is fully inside the layer bounds, and the matching `restoreN`
+  unwinds the two native saves introduced by the translated layer. The fold keeps image definition/cache pass-through
+  records, bakes the layer translation into the full-image-ref destination coordinates, and deliberately leaves alpha
+  layers and clipped/out-of-bounds images intact. Narrow validation passed:
+  `./gradlew :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.nestedRecordingFoldsPlainTranslatedImageLayer --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.nestedRecordingKeepsAlphaTranslatedImageLayer --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesCompactFullImageRefAndRoundRectRecord --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.preservesImageFlagsInCompactFullImageRefRoundRectRecord --console=plain`;
+  local CMP publish; focused Markdown wheel scrolling; and focused decorated Jewel Icons. Markdown stayed strict-clean
+  with `fallbacks=0`, `unsupported_max=0`, and `jbr_command_frames=257`; command replay improved from the compact
+  image/round-rect checkpoint `avg_commands=526` to `avg_commands=481`; `saveTranslateLayer:avg` dropped from `9.2`
+  to `6.2`, and `restoreN:avg` from `10.7` to `7.9`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-fold-image-layer-markdown/suite.tsv`.
+  Icons stayed strict-clean and neutral at steady `commands=995`, with `fallbacks=0`, `unsupported_max=0`,
+  `jbr_command_frames=3`, and the screenshot still showing transparent icon surrounds:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-fold-image-layer-icons/suite.tsv`.
 - 2026-06-22 focused compact full-image-ref plus round-rect command:
   JBR now advertises and replays `COMMAND_DRAW_IMAGE_REF_FULL_DRAW_ROUND_RECT` (`op=80`) as an ABI-111 command
   record that draws a cached full-source image ref followed by the adjacent round-rectangle draw. The record preserves
