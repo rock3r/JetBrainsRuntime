@@ -5,6 +5,27 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-22 focused op96 translated-layer + image-restore compact command:
+  The retained op96 advertises and replays
+  `COMMAND_SAVE_TRANSLATE_LAYER_SAVE_TRANSLATE_DRAW_IMAGE_REF_FULL_RESTORE_N` (`op=96`) as a compact record for
+  `save; translate; saveLayer; save; translate; drawImageRefFull; restoreN`, with CMP folding adjacent
+  `COMMAND_SAVE_TRANSLATE_LAYER_SAVE_TRANSLATE` and `COMMAND_DRAW_IMAGE_REF_FULL_RESTORE_N` records when the layer
+  setup has no flags. Narrow validation passed:
+  `./gradlew :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.compactsFullImageRefRestoreNBeforeSaveTranslateLayerSaveTranslate --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.compactsAdjacentSaveTranslateLayerSaveTranslate --console=plain`;
+  `./gradlew :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest.rejectsEachMissingHighCommandCapability --console=plain`;
+  `./scripts/rebuild-jbr-skia-local-artifacts.sh`; local Skiko/CMP publishes; and a short focused Markdown wheel run:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-op96-leading-layer-image/suite.tsv`.
+  Markdown stayed strict-clean with `fallbacks=0`, `unsupported_max=0`, `jbr_picture_frames=0`,
+  `jbr_command_frames=253`, and `avg_commands=370`, down from the previous retained checkpoint's `376`.
+  The new compact op fired with `saveTranslateLayerSaveTranslateDrawImageRefFullRestoreN:total=751` across 253 CMP
+  command frames.
+- 2026-06-22 Jewel icon-background asset check:
+  The retained native-bitmap effective-alpha bridge still has focused strict-clean evidence in
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-icon-alpha-effective/suite.tsv`,
+  but a source scan found several copied showcase SVGs with literal full-size white rectangles, including
+  `src/main/resources/icons/meetNewUi*.svg`, `src/main/resources/icons/lightTheme*.svg`, and the Jewel logo SVGs.
+  If those icons should appear transparent in the showcase, fix the asset content separately from the alpha/cache
+  command path.
 - 2026-06-22 focused CMP-only round-rect restore-count compaction:
   CMP now also folds a following `COMMAND_RESTORE_N` into an existing `COMMAND_DRAW_ROUND_RECT_RESTORE_N` restore
   count. This reuses the existing JBR op and requires no ABI/capability change. Narrow validation passed:

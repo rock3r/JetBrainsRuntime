@@ -51,11 +51,20 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   changing the ABI. Focused Markdown wheel validation stayed strict-clean with zero unsupported rows, zero picture
   frames, `jbr_command_frames=252`, and `avg_commands=376`, down from the previous CMP-only checkpoint's `379`:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-fold-round-rect-restore-n/suite.tsv`.
+- JBR/CMP/Skiko now support compact translated-layer/nested translated-save plus full-image restoreN records through
+  `COMMAND_SAVE_TRANSLATE_LAYER_SAVE_TRANSLATE_DRAW_IMAGE_REF_FULL_RESTORE_N` (`op=96`). Focused Markdown wheel
+  validation stayed strict-clean with zero unsupported rows, zero picture frames, `jbr_command_frames=253`,
+  `saveTranslateLayerSaveTranslateDrawImageRefFullRestoreN:total=751`, and `avg_commands=370`, down from the previous
+  retained checkpoint's `376`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-op96-leading-layer-image/suite.tsv`.
 - CMP now preserves the effective alpha classification discovered while defining native bitmap images when emitting
   full-image draw records. This addresses the Jewel showcase icon transparency edge where small rasterized icons could
   contain transparent pixels while reporting stale opaque metadata. Focused `showcase-icons` validation stayed
   strict-clean with zero unsupported rows, zero picture frames, and 40 bitmap icon refs exercised:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-icon-alpha-effective/suite.tsv`.
+  Separately, several copied showcase SVGs intentionally contain full-size white `rect` backgrounds (`meetNewUi*`,
+  `lightTheme*`, and Jewel logo variants), so any remaining solid icon background in those assets should be fixed at
+  the asset layer rather than treated as alpha-command fallback.
 - JBR/CMP/Skiko now support stroked arbitrary-path gradients through explicit linear/radial/sweep command records.
   Magic Jewel's exact three-row command probe passed with `fallback_new_count=0`, `unsupported=none`, zero picture
   frames, and non-zero command frames:

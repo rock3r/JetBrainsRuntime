@@ -55,6 +55,20 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused ABI 111 command-stream compaction checkpoint:
+  Added `COMMAND_SAVE_TRANSLATE_LAYER_SAVE_TRANSLATE_DRAW_IMAGE_REF_FULL_RESTORE_N` (`op=96`) plus
+  `COMMAND_CAP64_HIGH_SAVE_TRANSLATE_LAYER_SAVE_TRANSLATE_DRAW_IMAGE_REF_FULL_RESTORE_N=35184372088832` for compact
+  translated-layer/nested translated-save plus full-image restoreN records. Narrow gates passed: CMP focused recorder
+  tests, Skiko focused high-capability test, local CMP/Skiko publishes, `./scripts/rebuild-jbr-skia-local-artifacts.sh`,
+  and focused Markdown wheel validation. The focused Markdown slice stayed strict-clean with `fallbacks=0`,
+  `unsupported_max=0`, `jbr_picture_frames=0`, `jbr_command_frames=253`,
+  `saveTranslateLayerSaveTranslateDrawImageRefFullRestoreN:total=751`, and `avg_commands=370`, down from the previous
+  retained checkpoint's `376`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-op96-leading-layer-image/suite.tsv`.
+- Jewel icon background note:
+  The effective-alpha command-path fix remains validated, but several copied showcase SVGs contain literal full-size
+  white rectangles (`meetNewUi*`, `lightTheme*`, and Jewel logo variants). Remaining solid backgrounds for those icons
+  should be handled as asset cleanup, not command replay fallback.
 - Focused CMP-only command-stream compaction checkpoint:
   CMP now folds a following `COMMAND_RESTORE_N` into the existing `COMMAND_DRAW_ROUND_RECT_RESTORE_N` restore count.
   This reuses the existing JBR op and requires no ABI or capability change. Narrow gates passed: CMP focused recorder

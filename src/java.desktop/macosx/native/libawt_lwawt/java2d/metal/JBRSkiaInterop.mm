@@ -206,6 +206,7 @@ static constexpr jint COMMAND_SAVE_FILL_RECT_SAVE = 92;
 static constexpr jint COMMAND_SAVE_LAYER_SAVE_TRANSLATE = 93;
 static constexpr jint COMMAND_SAVE_SAVE_LAYER_SAVE_TRANSLATE = 94;
 static constexpr jint COMMAND_FILL_RECT_SAVE_LAYER_CLIP_RECT = 95;
+static constexpr jint COMMAND_SAVE_TRANSLATE_LAYER_SAVE_TRANSLATE_DRAW_IMAGE_REF_FULL_RESTORE_N = 96;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER = 1;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_COLOR_MATRIX_FILTER = 2;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_LIGHTING_FILTER = 3;
@@ -3727,6 +3728,61 @@ static bool drawCommandList(SkCanvas* canvas,
                 canvas->saveLayerAlphaf(&bounds, static_cast<float>(alpha1000) / 1000.0f);
                 canvas->save();
                 canvas->translate(nestedDx, nestedDy);
+                break;
+            }
+            case COMMAND_SAVE_TRANSLATE_LAYER_SAVE_TRANSLATE_DRAW_IMAGE_REF_FULL_RESTORE_N: {
+                if ((recordFlags & ~COMMAND_RECORD_FLAG_ANTIALIAS) != 0 || offset + 16 != recordEnd) {
+                    return false;
+                }
+                const SkScalar layerDx = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkScalar layerDy = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const jint x = commands[offset++];
+                const jint y = commands[offset++];
+                const jint layerWidth = commands[offset++];
+                const jint layerHeight = commands[offset++];
+                const jint alpha1000 = commands[offset++];
+                const SkScalar nestedDx = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkScalar nestedDy = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                if (layerWidth < 0 || layerHeight < 0 || alpha1000 < 0 || alpha1000 > 1000) {
+                    return false;
+                }
+                canvas->save();
+                canvas->translate(layerDx, layerDy);
+                SkRect bounds = SkRect::MakeXYWH(static_cast<SkScalar>(x),
+                                                 static_cast<SkScalar>(y),
+                                                 static_cast<SkScalar>(layerWidth),
+                                                 static_cast<SkScalar>(layerHeight));
+                canvas->saveLayerAlphaf(&bounds, static_cast<float>(alpha1000) / 1000.0f);
+                canvas->save();
+                canvas->translate(nestedDx, nestedDy);
+                const SkScalar dstLeft = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkScalar dstTop = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkScalar dstRight = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkScalar dstBottom = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const uint64_t key = imageCacheKey(commands[offset], commands[offset + 1]);
+                offset += 2;
+                const jint extraRestoreCount = commands[offset++];
+                sk_sp<SkImage> image;
+                {
+                    std::lock_guard<std::mutex> lock(gImageCacheMutex);
+                    auto found = gImagesByKey.find(ImageCacheScopedKey{imageCacheContextKey, key});
+                    if (found == gImagesByKey.end()) {
+                        return false;
+                    }
+                    image = found->second;
+                }
+                if (!drawImage(canvas, image, recordFlags, 0.0f, 0.0f,
+                               static_cast<SkScalar>(image->width()), static_cast<SkScalar>(image->height()),
+                               dstLeft, dstTop, dstRight, dstBottom, 1000)) {
+                    return false;
+                }
+                const jint restoreCount = 1 + extraRestoreCount;
+                if (extraRestoreCount < 0 || canvas->getSaveCount() <= restoreCount) {
+                    return false;
+                }
+                for (jint restoreIndex = 0; restoreIndex < restoreCount; restoreIndex++) {
+                    canvas->restore();
+                }
                 break;
             }
             case COMMAND_DRAW_IMAGE_REF_FULL_RUN: {
