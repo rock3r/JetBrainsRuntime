@@ -5,6 +5,21 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-22 focused op87 trailing-restoreN fold:
+  CMP now folds an already compact `COMMAND_DRAW_IMAGE_REF_FULL_RESTORE_N` (`op=87`) followed by `restoreN` into the
+  same op87 record by increasing its extra-restore count, so no JBR/Skiko/API protocol change is required. Narrow
+  validation passed:
+  `./gradlew :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesCompactFullImageRefRestoreNRecord --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.foldsTrailingRestoreNIntoCompactFullImageRefRestoreNRecord --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.keepsSeparatedFullImageRefRestoreNRecords --console=plain`;
+  desktop-only CMP publish via
+  `./gradlew --no-configuration-cache --no-configure-on-demand -PartifactRedirection.targetNames= :compose:ui:ui-graphics:publishDesktopPublicationToMavenLocal --console=plain`;
+  and a short focused Markdown wheel run:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-op87-restore-n-fold/suite.tsv`.
+  Markdown stayed strict-clean with `fallbacks=0`, `unsupported_max=0`, and `jbr_command_frames=40`. Compared with
+  the post-op87 sequence probe (`restoreN:total=191` over 39 command frames), this run reduced Markdown restoreN
+  records to `restoreN:total=148` over 40 command frames while preserving `drawImageRefFullRestoreN` traffic
+  (`total=144`) and zero fallback/unsupported behavior. The intentionally broad recorder class run was not used as
+  retention validation because older assertions still expect pre-existing, less-compacted intermediate records from
+  prior image-restore optimisations; the touched restoreN tests passed.
 - 2026-06-22 focused full-image-ref+restoreN compact command:
   JBR now advertises and replays `COMMAND_DRAW_IMAGE_REF_FULL_RESTORE_N` (`op=87`) as an ABI-111 compact record that
   draws a cached full-source image ref and then restores multiple canvas saves. CMP emits it in the final stream
