@@ -5,6 +5,21 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-22 focused balanced redundant-save scope fold:
+  CMP now removes a top-level plain `save` when the scope it is about to close contains only drawing/state-neutral
+  records plus balanced nested save/layer scopes. This generalizes the prior flat drawing-only redundant-save cleanup
+  without crossing outer-level transform/clip mutations; nested save/layer scopes remain balanced and keep their own
+  replay semantics. A temporary ordered-op probe showed repeated Markdown sequences such as
+  `save; fillRect; save; saveLayer; clipRect; ...; restoreN`, where the outer plain saves protect no state visible
+  outside the balanced nested scopes. Narrow validation passed:
+  `./gradlew :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest --console=plain`;
+  local CMP publish; focused Markdown wheel scrolling; and focused decorated Jewel Icons. Markdown stayed strict-clean
+  with `fallbacks=0`, `unsupported_max=0`, `jbr_command_frames=570`, and command replay improved from the compact
+  clear/full-image checkpoint `avg_commands=534` to `avg_commands=528`; `save:avg` dropped from `13.4` to `10.1`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-balanced-save-scope-markdown/suite.tsv`.
+  Icons stayed strict-clean with `fallbacks=0`, `unsupported_max=0`, `jbr_command_frames=3`, and command replay
+  improved from `avg_commands=1319` to `avg_commands=1312`; `save:avg` dropped from `7.2` to `3.0`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-balanced-save-scope-icons/suite.tsv`.
 - 2026-06-22 focused compact clear/full-image-ref command:
   JBR now advertises and replays `COMMAND_CLEAR_DRAW_IMAGE_REF_FULL` (`op=79`) as a single ABI-111 command record that
   preserves the existing `clearRect; drawImageRefFull` semantics while reducing command-stream words and record count.
