@@ -5,6 +5,21 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-22 focused transformable saveTranslate-scope fold:
+  CMP now folds a nested `saveTranslate; [image definitions]; clearRect/drawImageRefFull/drawRoundRect/fillRoundRect/fillRect; restore/restoreN`
+  scope when every scoped drawing record can be translated directly and the matching restore has already been
+  materialized. The fold is guarded to whole-pixel offsets because `clearRect` and `fillRect` store integer geometry,
+  leaves image definition/cache records as pass-through records, and decrements only the restore associated with the
+  folded saveTranslate scope. Narrow validation passed:
+  `./gradlew :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest --console=plain`;
+  local CMP publish; focused decorated Jewel Icons; and focused Markdown wheel scrolling. Icons stayed strict-clean
+  with `fallbacks=0`, `unsupported_max=0`, `jbr_command_frames=3`, and command replay improved from `avg_commands=1820`
+  to `avg_commands=1560`, with `save:avg` dropping from `35.0` to `13.0`, `restoreN:avg` from `27.0` to `6.0`, and
+  `saveTranslate:avg` from `23.0` to `0`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-transformable-scope-fold-icons-final/suite.tsv`.
+  Markdown stayed strict-clean with `fallbacks=0`, `unsupported_max=0`, and `jbr_command_frames=558`; this fold does
+  not materially target the Markdown hot path, and repeated narrow runs landed around `avg_commands=735-736`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-transformable-scope-fold-markdown-rerun/suite.tsv`.
 - 2026-06-22 focused Jewel showcase icon resource cleanup:
   Magic Jewel now makes the copied Jewel showcase component SVGs explicit about transparent stroke-only shapes
   (`fill="none"` on the visible button, combo box, menu, tabs, and tooltip outline rects) so the standalone coverage
