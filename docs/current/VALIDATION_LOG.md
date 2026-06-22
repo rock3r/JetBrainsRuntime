@@ -5,6 +5,22 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-22 focused small native bitmap alpha classification:
+  CMP now derives the `COMMAND_DEFINE_IMAGE_BITMAP` alpha flag from pixel data for small native bitmaps when it already
+  reads those pixels for stable content keys. This covers rasterized resources whose `ImageBitmap.hasAlpha` metadata can
+  be false even though transparent pixels are present. Narrow validation passed:
+  `./gradlew :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.definesSmallNativeBitmapAlphaFromPixels --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesCompactFullImageRefRecord --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.keepsMatchedClearBeforeAlphaFullImageRefRecord --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.dropsMatchedClearBeforeFullImageRefRecord --console=plain`;
+  desktop-only CMP publish via
+  `./gradlew --no-configuration-cache --no-configure-on-demand -PartifactRedirection.targetNames= :compose:ui:ui-graphics:publishDesktopPublicationToMavenLocal --console=plain`;
+  `./scripts/rebuild-jbr-skia-local-artifacts.sh`; and a short focused Jewel showcase Icons command run:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-small-native-alpha-icons/suite.tsv`.
+  The Icons run stayed strict-clean with `fallbacks=0`, `unsupported_max=0`, and `jbr_command_frames=3`.
+  Pixel sampling of the saved command capture showed that the apparent solid backing around the large Jewel-logo `Icon`
+  samples is not an opaque command-replay background: icon-bound corners match the page background
+  `srgba(247,248,250,1)`, while pixels inside the SVG diamond/tinted sample show the expected white/gray/magenta
+  content. A picture-mode control for the same page is not a useful visual baseline because several icons do not render
+  in that path:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-icons-picture-control/suite.tsv`.
 - 2026-06-22 focused op89 stroke-line+image-run+restoreN compact command:
   JBR now advertises and replays `COMMAND_STROKE_LINE_DRAW_IMAGE_REF_FULL_RUN_RESTORE_N` (`op=89`) as an ABI-111
   compact record for an already-folded `strokeLineDrawImageRefFullRun` followed by `restoreN(count>0)`. CMP folds the
