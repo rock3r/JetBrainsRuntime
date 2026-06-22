@@ -5,6 +5,21 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-22 focused translated shape-layer fold:
+  CMP now folds plain `saveTranslateLayer; shape records; restoreN` islands when the layer has `alpha=1`, every
+  folded shape is fully inside the layer bounds, and whole-pixel-only records receive integer translations. The fold
+  is deliberately conservative around icons/images: mixed image-plus-fill scopes keep the translated layer boundary,
+  so transparent image compositing remains on the previously validated path. Narrow validation passed:
+  `./gradlew --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.keepsTranslatedLayerAroundImageAndFillScope --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.foldsNestedSaveTranslateIntoFillRectBeforeRestoreN --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.foldsNestedSaveTranslateIntoStrokeLineAndImageBeforeRestoreN --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.foldsNestedSaveTranslateAroundInnerTranslateScopeBeforeRestoreN --console=plain`;
+  local CMP publish; focused Markdown wheel scrolling; and focused decorated Jewel Icons. Markdown stayed strict-clean
+  with `fallbacks=0`, `unsupported_max=0`, and `jbr_command_frames=1561`; command replay improved from the translated
+  stroke-line checkpoint `avg_commands=432` to `avg_commands=421`, with `saveTranslateLayer:avg` down from `6.1` to
+  `5.5` and `restoreN:avg` down from `7.6` to `7.0`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-shape-layer-fold-markdown/suite.tsv`.
+  Icons stayed strict-clean with `fallbacks=0`, `unsupported_max=0`, and `jbr_command_frames=3`; the captured window
+  visually matched the retained icons checkpoint, including transparent icon surrounds, while the magenta block
+  remains the showcase's explicit blend/reference tile:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-shape-layer-fold-icons/suite.tsv`.
 - 2026-06-22 focused translated stroke-line scope fold:
   CMP now treats `strokeLine` as a whole-pixel transformable record inside translated transformable scopes, baking
   integer `saveTranslate` offsets into line endpoints alongside the existing image/rect/round-rect coordinate folds.
