@@ -5,6 +5,16 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-22 focused op91 fill-rect + save compact command:
+  JBR now advertises and replays `COMMAND_FILL_RECT_SAVE` (`op=91`) as an ABI-111 compact record for a plain
+  `fillRect` immediately followed by a plain `save`. CMP folds the adjacent pair during final stream compaction, and
+  Skiko requires the matching high capability bit. Narrow validation passed:
+  `./gradlew :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.compactsFillRectBeforeSave --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.foldsTrailingTranslateIntoFillRectBeforeRestore --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.compactsFullImageRefRestoreNBeforeSaveTranslateLayerSaveTranslate --console=plain`;
+  `./gradlew awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest --console=plain`;
+  Skiko/CMP local publishes; `./scripts/rebuild-jbr-skia-local-artifacts.sh`; and a short focused Markdown wheel run:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-op91-fillrect-save/suite.tsv`.
+  Markdown stayed strict-clean with `fallbacks=0`, `unsupported_max=0`, `jbr_command_frames=261`, and
+  `fillRectSave:total=967`, proving the new compact record is exercised in the animated Markdown path.
 - 2026-06-22 focused op90 image-restoreN + translated-layer compact command:
   JBR now advertises and replays
   `COMMAND_DRAW_IMAGE_REF_FULL_RESTORE_N_SAVE_TRANSLATE_LAYER_SAVE_TRANSLATE` (`op=90`) as an ABI-111 compact
