@@ -5,6 +5,19 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-22 focused translated stroke-line scope fold:
+  CMP now treats `strokeLine` as a whole-pixel transformable record inside translated transformable scopes, baking
+  integer `saveTranslate` offsets into line endpoints alongside the existing image/rect/round-rect coordinate folds.
+  Fractional translations remain explicit, matching the existing whole-pixel guard for `fillRect`-style records.
+  Narrow validation passed:
+  `./gradlew --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.foldsNestedSaveTranslateIntoStrokeLineAndImageBeforeRestoreN --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.keepsFractionalSaveTranslateBeforeStrokeLineRestore --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.foldsNestedSaveTranslateAroundInnerTranslateScopeBeforeRestoreN --console=plain`;
+  local CMP publish; focused Markdown wheel scrolling; and focused decorated Jewel Icons. Markdown stayed strict-clean
+  with `fallbacks=0`, `unsupported_max=0`, and `jbr_command_frames=1560`; command replay improved from the trailing
+  translated round-rect suffix checkpoint `avg_commands=443` to `avg_commands=432`, and `saveTranslate:avg` dropped
+  from `3.4` to `1.3`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-strokeline-transformable-scope-markdown/suite.tsv`.
+  Icons stayed strict-clean and visually unchanged with `fallbacks=0`, `unsupported_max=0`, and `jbr_command_frames=3`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-strokeline-transformable-scope-icons/suite.tsv`.
 - 2026-06-22 focused trailing translated round-rect suffix fold:
   CMP now folds a stream-end translated round-rect suffix by baking the final `translate` into the
   `fillRoundRect`/`drawRoundRect` coordinates when the translated draw is the final command-list content. The fold is
