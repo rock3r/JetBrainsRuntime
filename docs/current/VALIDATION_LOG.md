@@ -19,6 +19,14 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   `jbr_command_frames=253`, and `avg_commands=370`, down from the previous retained checkpoint's `376`.
   The new compact op fired with `saveTranslateLayerSaveTranslateDrawImageRefFullRestoreN:total=751` across 253 CMP
   command frames.
+- 2026-06-22 rejected post-op96 `fillRoundRect > restoreN` fold:
+  A temporary adjacent-pair diagnostic on the focused Markdown wheel path passed strict-clean and showed
+  `fillRoundRect > restoreN` as a hot pair (`385` aggregated observations in
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-post-op96-pair-diagnostic/suite.tsv`).
+  The candidate was rejected before retention because folding `COMMAND_FILL_ROUND_RECT` (`10` words) plus
+  `COMMAND_RESTORE_N` (`4` words) into existing `COMMAND_DRAW_ROUND_RECT_RESTORE_N` (`16` words) would reduce record
+  count but increase the command stream by two words per occurrence. The temporary diagnostic and candidate code were
+  removed, and the retained CMP desktop artifact was republished to Maven local.
 - 2026-06-22 Jewel icon-background asset check:
   The retained native-bitmap effective-alpha bridge still has focused strict-clean evidence in
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-icon-alpha-effective/suite.tsv`,
