@@ -5,6 +5,21 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-22 focused image+fillRect compact command:
+  JBR now advertises and replays `COMMAND_DRAW_IMAGE_REF_FULL_FILL_RECT` (`op=83`) as an ABI-111 compact record that
+  draws a cached full-source image ref and then replays the adjacent solid `fillRect` payload, preserving independent
+  image and fill antialias flags. CMP emits the record in the final stream compaction pass for adjacent
+  `drawImageRefFull; fillRect` pairs after earlier layer/translate folds expose the hot Markdown shape. Narrow
+  validation passed:
+  `./gradlew --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesCompactFullImageRefAndFillRectRecord --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.preservesFillFlagsInCompactFullImageRefFillRectRecord --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesCompactFullImageRefAndRoundRectRecord --console=plain`;
+  `./scripts/rebuild-jbr-skia-local-artifacts.sh`; desktop-only CMP publish; focused Markdown wheel scrolling; and
+  focused decorated Jewel Icons. Markdown stayed strict-clean with `fallbacks=0`, `unsupported_max=0`, and
+  `jbr_command_frames=1254`; command replay improved from the saveLayer+clipRect compact checkpoint's
+  `avg_commands=349` to `avg_commands=344`, with `drawImageRefFullFillRect:avg=2.2`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-image-fill-compact-markdown/suite.tsv`.
+  Icons stayed strict-clean with `fallbacks=0`, `unsupported_max=0`, `jbr_command_frames=3`, and neutral
+  `avg_commands=1364` while preserving transparent icon surrounds:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-image-fill-compact-icons/suite.tsv`.
 - 2026-06-22 focused saveLayer+clipRect compact command:
   JBR now advertises and replays `COMMAND_SAVE_LAYER_CLIP_RECT` (`op=82`) as an ABI-111 compact record that performs
   the same native `saveLayer` followed immediately by `clipRect` sequence as the two-record form. CMP emits it only in
