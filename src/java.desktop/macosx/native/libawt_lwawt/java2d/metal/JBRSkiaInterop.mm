@@ -195,6 +195,7 @@ static constexpr jint COMMAND_DRAW_IMAGE_REF_FULL_RUN = 81;
 static constexpr jint COMMAND_SAVE_LAYER_CLIP_RECT = 82;
 static constexpr jint COMMAND_DRAW_IMAGE_REF_FULL_FILL_RECT = 83;
 static constexpr jint COMMAND_STROKE_LINE_DRAW_IMAGE_REF_FULL_RUN = 84;
+static constexpr jint COMMAND_SAVE_TRANSLATE_LAYER_SAVE_TRANSLATE = 85;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER = 1;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_COLOR_MATRIX_FILTER = 2;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_LIGHTING_FILTER = 3;
@@ -3157,6 +3158,33 @@ static bool drawCommandList(SkCanvas* canvas,
                                                  static_cast<SkScalar>(layerWidth),
                                                  static_cast<SkScalar>(layerHeight));
                 canvas->saveLayerAlphaf(&bounds, static_cast<float>(alpha1000) / 1000.0f);
+                break;
+            }
+            case COMMAND_SAVE_TRANSLATE_LAYER_SAVE_TRANSLATE: {
+                if (recordFlags != COMMAND_RECORD_FLAGS_NONE || offset + 9 != recordEnd) {
+                    return false;
+                }
+                SkScalar layerDx = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                SkScalar layerDy = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                jint x = commands[offset++];
+                jint y = commands[offset++];
+                jint layerWidth = commands[offset++];
+                jint layerHeight = commands[offset++];
+                jint alpha1000 = commands[offset++];
+                SkScalar nestedDx = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                SkScalar nestedDy = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                if (layerWidth < 0 || layerHeight < 0 || alpha1000 < 0 || alpha1000 > 1000) {
+                    return false;
+                }
+                canvas->save();
+                canvas->translate(layerDx, layerDy);
+                SkRect bounds = SkRect::MakeXYWH(static_cast<SkScalar>(x),
+                                                 static_cast<SkScalar>(y),
+                                                 static_cast<SkScalar>(layerWidth),
+                                                 static_cast<SkScalar>(layerHeight));
+                canvas->saveLayerAlphaf(&bounds, static_cast<float>(alpha1000) / 1000.0f);
+                canvas->save();
+                canvas->translate(nestedDx, nestedDy);
                 break;
             }
             case COMMAND_SCALE: {

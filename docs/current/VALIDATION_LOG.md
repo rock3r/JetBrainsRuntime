@@ -5,6 +5,22 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-22 focused saveTranslateLayer+saveTranslate compact command:
+  JBR now advertises and replays `COMMAND_SAVE_TRANSLATE_LAYER_SAVE_TRANSLATE` (`op=85`) as an ABI-111 compact record
+  that performs the same translated `saveLayer` followed immediately by nested `save/translate` sequence as the
+  two-record form. CMP emits it in the final stream compaction pass after earlier image/translate/layer folds expose
+  the measured Markdown hot pair, and Skiko now requires the matching high capability bit to prevent mixed-artifact
+  replay. Narrow validation passed:
+  `./gradlew --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.compactsAdjacentSaveTranslateLayerSaveTranslate --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.keepsSeparatedSaveTranslateLayerSaveTranslateRecords --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.compactsAdjacentSaveLayerClipRect --console=plain`;
+  `./gradlew awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest --console=plain`;
+  Skiko/CMP local publishes; `./scripts/rebuild-jbr-skia-local-artifacts.sh`; and focused Markdown wheel plus Jewel
+  Icons runs. Markdown stayed strict-clean with `fallbacks=0`, `unsupported_max=0`, `jbr_command_frames=39`,
+  `avg_commands=345`, and `saveTranslateLayerSaveTranslate:avg=2.8,total=109` in the op mix:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-save-translate-layer-save-translate/suite.tsv`.
+  The previous focused op84 checkpoint had `avg_commands=378` on the same Markdown case, so this pass reduces command
+  stream volume while preserving zero fallback/unsupported behavior; the frame cadence in this run was noisy and is not
+  used as the retention signal. Icons stayed strict-clean with `fallbacks=0`, `unsupported_max=0`,
+  `jbr_command_frames=3`, and captured output under the same suite directory.
 - 2026-06-22 focused strokeLine+image-run compact command:
   JBR now advertises and replays `COMMAND_STROKE_LINE_DRAW_IMAGE_REF_FULL_RUN` (`op=84`) as an ABI-111 compact record
   that strokes a line and then draws the adjacent full-source cached image-ref run, preserving separate line and image
