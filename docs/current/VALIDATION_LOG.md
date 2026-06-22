@@ -5,6 +5,32 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-22 focused native bitmap effective-alpha draw classification:
+  CMP now carries the effective alpha classification returned by `defineImageIfNeeded()` into full-image draw
+  compaction. This fixes the showcase icon edge where small native bitmap definition could discover transparent pixels
+  while the later draw path still consulted stale `ImageBitmap.hasAlpha` metadata for the clear/drop optimisation.
+  Narrow validation passed:
+  `./gradlew :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.definesSmallNativeBitmapAlphaFromMixedTransparentPixels --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.keepsClearBeforeFullNativeBitmapWithDiscoveredAlpha --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.compactsAdjacentSaveLayerSaveTranslate --console=plain`;
+  desktop-only CMP publish via
+  `./gradlew --no-configuration-cache --no-configure-on-demand -PartifactRedirection.targetNames= :compose:ui:ui-graphics:publishDesktopPublicationToMavenLocal --console=plain`;
+  `./scripts/rebuild-jbr-skia-local-artifacts.sh`; and a short focused Jewel showcase Icons command run:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-icon-alpha-effective/suite.tsv`.
+  The Icons run stayed strict-clean with `fallbacks=0`, `unsupported_max=0`, `jbr_picture_frames=0`,
+  `jbr_command_frames=3`, and 40 bitmap icon refs exercised in the first command frame.
+- 2026-06-22 focused op93 saveLayer + saveTranslate compact command:
+  A post-op92 temporary pair diagnostic on the focused Markdown wheel path showed `saveLayer > saveTranslate` as the
+  hottest simple remaining pair (`4603` observations in
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-post-op92-pair-diagnostic/suite.tsv`).
+  The retained op93 now advertises and replays `COMMAND_SAVE_LAYER_SAVE_TRANSLATE` (`op=93`) as a compact record for
+  `saveLayer; save; translate`, with CMP folding adjacent `COMMAND_SAVE_LAYER` plus `COMMAND_SAVE_TRANSLATE` records
+  and Skiko requiring the matching high capability bit. Narrow validation passed:
+  `./gradlew :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.compactsAdjacentSaveLayerSaveTranslate --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.definesSmallNativeBitmapAlphaFromMixedTransparentPixels --console=plain`;
+  `./gradlew awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest --console=plain`;
+  Skiko/CMP local publishes; `./scripts/rebuild-jbr-skia-local-artifacts.sh`; and a short focused Markdown wheel run:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-op93-save-layer-save-translate-rerun/suite.tsv`.
+  Markdown stayed strict-clean with `fallbacks=0`, `unsupported_max=0`, `jbr_picture_frames=0`,
+  `jbr_command_frames=253`, and `saveLayerSaveTranslate:total=298`. The focused command average improved from the
+  op92 checkpoint's `avg_commands=395` to `avg_commands=384` on the same Markdown wheel case.
 - 2026-06-22 focused op92 save + fill-rect + save compact command:
   A post-op91 temporary pair diagnostic on the focused Markdown wheel path showed the stale `save > fillRect`
   candidate no longer appeared in the real stream after op91, while `save > fillRectSave` remained hot

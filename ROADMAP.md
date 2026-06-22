@@ -55,6 +55,22 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused Jewel icon alpha checkpoint:
+  CMP now carries the effective alpha classification discovered during native bitmap definition into full-image draw
+  compaction, so stale `ImageBitmap.hasAlpha=false` metadata cannot make transparent rasterized icons eligible for the
+  opaque clear/drop optimisation. Narrow gates passed: CMP focused recorder tests, local CMP publish,
+  `./scripts/rebuild-jbr-skia-local-artifacts.sh`, and focused decorated Jewel `showcase-icons` validation. The Icons
+  slice stayed strict-clean with `fallbacks=0`, `unsupported_max=0`, `jbr_picture_frames=0`, `jbr_command_frames=3`,
+  and 40 bitmap icon refs exercised:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-icon-alpha-effective/suite.tsv`.
+- Focused ABI 111 command-stream compaction checkpoint:
+  Added `COMMAND_SAVE_LAYER_SAVE_TRANSLATE` (`op=93`) plus
+  `COMMAND_CAP64_HIGH_SAVE_LAYER_SAVE_TRANSLATE=4398046511104` for compact `saveLayer; save; translate` records.
+  Narrow gates passed: CMP focused recorder tests, Skiko focused interop test, local CMP/Skiko publishes,
+  `./scripts/rebuild-jbr-skia-local-artifacts.sh`, and focused Markdown wheel validation. The focused Markdown slice
+  stayed strict-clean with `fallbacks=0`, `unsupported_max=0`, `jbr_picture_frames=0`, `jbr_command_frames=253`, and
+  `saveLayerSaveTranslate:total=298`, improving `avg_commands` from the op92 checkpoint's `395` to `384`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-op93-save-layer-save-translate-rerun/suite.tsv`.
 - Focused ABI 111 command-stream compaction checkpoint:
   Added `COMMAND_FILL_ROUND_RECT` (`op=78`) plus
   `COMMAND_CAP64_HIGH_FILL_ROUND_RECT=134217728` for solid filled round rects. Narrow gates passed: CMP focused

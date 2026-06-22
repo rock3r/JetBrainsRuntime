@@ -203,6 +203,7 @@ static constexpr jint COMMAND_STROKE_LINE_DRAW_IMAGE_REF_FULL_RUN_RESTORE_N = 89
 static constexpr jint COMMAND_DRAW_IMAGE_REF_FULL_RESTORE_N_SAVE_TRANSLATE_LAYER_SAVE_TRANSLATE = 90;
 static constexpr jint COMMAND_FILL_RECT_SAVE = 91;
 static constexpr jint COMMAND_SAVE_FILL_RECT_SAVE = 92;
+static constexpr jint COMMAND_SAVE_LAYER_SAVE_TRANSLATE = 93;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER = 1;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_COLOR_MATRIX_FILTER = 2;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_LIGHTING_FILTER = 3;
@@ -3259,6 +3260,29 @@ static bool drawCommandList(SkCanvas* canvas,
                                                  static_cast<SkScalar>(layerWidth),
                                                  static_cast<SkScalar>(layerHeight));
                 canvas->saveLayerAlphaf(&bounds, static_cast<float>(alpha1000) / 1000.0f);
+                break;
+            }
+            case COMMAND_SAVE_LAYER_SAVE_TRANSLATE: {
+                if (recordFlags != COMMAND_RECORD_FLAGS_NONE || offset + 7 != recordEnd) {
+                    return false;
+                }
+                jint x = commands[offset++];
+                jint y = commands[offset++];
+                jint layerWidth = commands[offset++];
+                jint layerHeight = commands[offset++];
+                jint alpha1000 = commands[offset++];
+                SkScalar dx = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                SkScalar dy = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                if (layerWidth < 0 || layerHeight < 0 || alpha1000 < 0 || alpha1000 > 1000) {
+                    return false;
+                }
+                SkRect bounds = SkRect::MakeXYWH(static_cast<SkScalar>(x),
+                                                 static_cast<SkScalar>(y),
+                                                 static_cast<SkScalar>(layerWidth),
+                                                 static_cast<SkScalar>(layerHeight));
+                canvas->saveLayerAlphaf(&bounds, static_cast<float>(alpha1000) / 1000.0f);
+                canvas->save();
+                canvas->translate(dx, dy);
                 break;
             }
             case COMMAND_SAVE_LAYER_CLIP_RECT: {
