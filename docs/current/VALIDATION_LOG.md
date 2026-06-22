@@ -5,6 +5,18 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-22 focused CMP-only image restore compaction:
+  A temporary post-op95 pair diagnostic on the focused Markdown wheel path showed
+  `drawImageRefFullRestoreN > restore` as a hot adjacent pair (`448` aggregated observations in
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-post-op95-pair-diagnostic/suite.tsv`).
+  CMP now folds a following single `COMMAND_RESTORE` into the existing `COMMAND_DRAW_IMAGE_REF_FULL_RESTORE_N`
+  extra-restore count, so this checkpoint does not add a JBR command, ABI bit, or Skiko capability. Narrow validation
+  passed:
+  `./gradlew :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesCompactFullImageRefRestoreNRecord --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.foldsTrailingRestoreNIntoCompactFullImageRefRestoreNRecord --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.compactsFullImageRefRestoreNBeforeSaveTranslateLayerSaveTranslate --console=plain`;
+  desktop-only CMP publish; and a short focused Markdown wheel run:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-fold-image-restore-single-restore/suite.tsv`.
+  Markdown stayed strict-clean with `fallbacks=0`, `unsupported_max=0`, `jbr_picture_frames=0`,
+  `jbr_command_frames=259`, and the focused average command count dropped from the op95 checkpoint's `392` to `379`.
 - 2026-06-22 focused op95 fillRect + saveLayerClipRect compact command:
   The retained op95 advertises and replays `COMMAND_FILL_RECT_SAVE_LAYER_CLIP_RECT` (`op=95`) as a compact record for
   `fillRect; saveLayer; clipRect`, with CMP folding adjacent `COMMAND_FILL_RECT` and
