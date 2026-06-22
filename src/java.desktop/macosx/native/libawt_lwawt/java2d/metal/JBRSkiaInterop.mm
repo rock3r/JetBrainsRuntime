@@ -193,7 +193,6 @@ static constexpr jint COMMAND_CLEAR_DRAW_IMAGE_REF_FULL = 79;
 static constexpr jint COMMAND_DRAW_IMAGE_REF_FULL_DRAW_ROUND_RECT = 80;
 static constexpr jint COMMAND_DRAW_IMAGE_REF_FULL_RUN = 81;
 static constexpr jint COMMAND_SAVE_LAYER_CLIP_RECT = 82;
-static constexpr jint COMMAND_DRAW_IMAGE_REF_FULL_FILL_RECT = 83;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER = 1;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_COLOR_MATRIX_FILTER = 2;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_LIGHTING_FILTER = 3;
@@ -3676,59 +3675,6 @@ static bool drawCommandList(SkCanvas* canvas,
                                                       radiusX,
                                                       radiusY),
                                   paint);
-                break;
-            }
-            case COMMAND_DRAW_IMAGE_REF_FULL_FILL_RECT: {
-                if ((recordFlags & ~COMMAND_RECORD_FLAG_ANTIALIAS) != 0 || offset + 13 != recordEnd) {
-                    return false;
-                }
-                const jint imageFlags = commands[offset++];
-                if ((imageFlags & ~COMMAND_RECORD_FLAG_ANTIALIAS) != 0) {
-                    return false;
-                }
-                const SkScalar dstLeft = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
-                const SkScalar dstTop = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
-                const SkScalar dstRight = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
-                const SkScalar dstBottom = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
-                const uint64_t key = imageCacheKey(commands[offset], commands[offset + 1]);
-                offset += 2;
-                sk_sp<SkImage> image;
-                {
-                    std::lock_guard<std::mutex> lock(gImageCacheMutex);
-                    auto found = gImagesByKey.find(ImageCacheScopedKey{imageCacheContextKey, key});
-                    if (found == gImagesByKey.end()) {
-                        return false;
-                    }
-                    image = found->second;
-                }
-                if (!drawImage(canvas, image, imageFlags, 0.0f, 0.0f,
-                               static_cast<SkScalar>(image->width()), static_cast<SkScalar>(image->height()),
-                               dstLeft, dstTop, dstRight, dstBottom, 1000)) {
-                    return false;
-                }
-                SkPaint paint;
-                paint.setAntiAlias((recordFlags & COMMAND_RECORD_FLAG_ANTIALIAS) != 0);
-                paint.setColor(skColorFromArgb(commands[offset++]));
-                const jint x = commands[offset++];
-                const jint y = commands[offset++];
-                const jint rectWidth = commands[offset++];
-                const jint rectHeight = commands[offset++];
-                const jint radius = commands[offset++];
-                if (rectWidth < 0 || rectHeight < 0 || radius < 0) {
-                    return false;
-                }
-                SkRect rect = SkRect::MakeXYWH(static_cast<SkScalar>(x),
-                                              static_cast<SkScalar>(y),
-                                              static_cast<SkScalar>(rectWidth),
-                                              static_cast<SkScalar>(rectHeight));
-                if (radius > 0) {
-                    canvas->drawRRect(SkRRect::MakeRectXY(rect,
-                                                          static_cast<SkScalar>(radius),
-                                                          static_cast<SkScalar>(radius)),
-                                      paint);
-                } else {
-                    canvas->drawRect(rect, paint);
-                }
                 break;
             }
             case COMMAND_CLEAR_DRAW_IMAGE_REF_FULL: {
