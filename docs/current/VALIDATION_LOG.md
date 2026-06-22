@@ -5,6 +5,21 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-22 focused transparent-image clear preservation:
+  CMP now preserves a matching `clearRect` before full-source cached image draws when the `ImageBitmap` reports alpha,
+  instead of applying the opaque-image clear-drop optimization. This fixes the decorated Jewel Icons/showcase symptom
+  where transparent SVG/icon surrounds could reveal stale solid backing content. Opaque images still use the clear-drop
+  path and can still compact with the following round-rect draw. JBR validation bookkeeping now also treats
+  `DEFINE_IMAGE_BITMAP` as establishing image dimensions for full-image-ref key checks, matching the native replay
+  path. Narrow validation passed:
+  `./gradlew --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.dropsMatchedClearBeforeFullImageRefRecord --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.keepsMatchedClearBeforeAlphaFullImageRefRecord --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.keepsRoundRectFusedAfterDroppingMatchedClearBeforeFullImageRef --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesCompactFullImageRefRunRecord --console=plain`;
+  `./scripts/rebuild-jbr-skia-local-artifacts.sh` from `magic-jewel`; and
+  `./gradlew --no-configuration-cache --no-configure-on-demand -PartifactRedirection.targetNames= :compose:ui:ui-graphics:publishDesktopPublicationToMavenLocal --console=plain`.
+  The broader CMP metadata publish remains blocked on local Xcode/Apple cinterop configuration, so this checkpoint
+  used the desktop-only publication required by Magic Jewel. Focused decorated Jewel Icons stayed strict-clean with
+  `fallbacks=0`, `unsupported_max=0`, `jbr_command_frames=3`, and the captured window shows transparent icon surrounds
+  for side/hint/component icons; the pale Jewel-logo diamond is source SVG content:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-alpha-clear-icons/suite.tsv`.
 - 2026-06-22 focused image-run translated-scope fold:
   CMP now runs the existing conservative transformable-scope fold once more after adjacent full-image refs have been
   compacted into `drawImageRefFullRun`, and treats the run record as transformable by translating each destination

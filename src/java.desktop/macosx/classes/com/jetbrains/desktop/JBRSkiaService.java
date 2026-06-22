@@ -319,7 +319,7 @@ public class JBRSkiaService extends JBRSkia {
             }
             if (record.op() == COMMAND_CLEAR_IMAGE_CACHE) {
                 imageDimensions.clear();
-            } else if (record.op() == COMMAND_DEFINE_IMAGE_ARGB) {
+            } else if (record.op() == COMMAND_DEFINE_IMAGE_ARGB || record.op() == COMMAND_DEFINE_IMAGE_BITMAP) {
                 long cacheKey = commandHandle(commands[record.argsStart()], commands[record.argsStart() + 1]);
                 imageDimensions.put(cacheKey, imageDimensions(commands[record.argsStart() + 2], commands[record.argsStart() + 3]));
             } else if (record.op() == COMMAND_EVICT_IMAGE_CACHE_KEY) {
