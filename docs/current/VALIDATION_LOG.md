@@ -5,6 +5,14 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-22 focused Jewel showcase icon resource cleanup:
+  Magic Jewel now makes the copied Jewel showcase component SVGs explicit about transparent stroke-only shapes
+  (`fill="none"` on the visible button, combo box, menu, tabs, and tooltip outline rects) so the standalone coverage
+  target does not depend on inherited SVG fill semantics when visually checking icon transparency. Narrow validation
+  passed with `./gradlew processResources --console=plain` and focused decorated Jewel Icons. The case stayed
+  strict-clean with `fallbacks=0`, `unsupported_max=0`, `jbr_command_frames=3`, and neutral command replay at
+  `avg_commands=1820`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-explicit-icon-fill-icons/suite.tsv`.
 - 2026-06-22 focused saveTranslate fill-rect fold across trailing restore groups:
   CMP now folds a nested `saveTranslate; fillRect; restore/restoreN` scope only after the matching restore has already
   been materialized, preserving the existing direct `saveTranslate; fillRect; restore` invariant. The fold is guarded
