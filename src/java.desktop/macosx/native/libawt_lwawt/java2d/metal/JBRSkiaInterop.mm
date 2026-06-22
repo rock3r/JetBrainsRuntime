@@ -190,6 +190,7 @@ static constexpr jint COMMAND_SAVE_TRANSLATE_LAYER = 76;
 static constexpr jint COMMAND_DRAW_IMAGE_REF_FULL = 77;
 static constexpr jint COMMAND_FILL_ROUND_RECT = 78;
 static constexpr jint COMMAND_CLEAR_DRAW_IMAGE_REF_FULL = 79;
+static constexpr jint COMMAND_DRAW_IMAGE_REF_FULL_DRAW_ROUND_RECT = 80;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER = 1;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_COLOR_MATRIX_FILTER = 2;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_LIGHTING_FILTER = 3;
@@ -3545,6 +3546,70 @@ static bool drawCommandList(SkCanvas* canvas,
                                dstLeft, dstTop, dstRight, dstBottom, 1000)) {
                     return false;
                 }
+                break;
+            }
+            case COMMAND_DRAW_IMAGE_REF_FULL_DRAW_ROUND_RECT: {
+                if ((recordFlags & ~COMMAND_RECORD_FLAG_ANTIALIAS) != 0 || offset + 19 != recordEnd) {
+                    return false;
+                }
+                const jint imageFlags = commands[offset++];
+                if ((imageFlags & ~COMMAND_RECORD_FLAG_ANTIALIAS) != 0) {
+                    return false;
+                }
+                const SkScalar dstLeft = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkScalar dstTop = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkScalar dstRight = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkScalar dstBottom = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const uint64_t key = imageCacheKey(commands[offset], commands[offset + 1]);
+                offset += 2;
+                sk_sp<SkImage> image;
+                {
+                    std::lock_guard<std::mutex> lock(gImageCacheMutex);
+                    auto found = gImagesByKey.find(ImageCacheScopedKey{imageCacheContextKey, key});
+                    if (found == gImagesByKey.end()) {
+                        return false;
+                    }
+                    image = found->second;
+                }
+                if (!drawImage(canvas, image, imageFlags, 0.0f, 0.0f,
+                               static_cast<SkScalar>(image->width()), static_cast<SkScalar>(image->height()),
+                               dstLeft, dstTop, dstRight, dstBottom, 1000)) {
+                    return false;
+                }
+                const jint paintStyle = commands[offset++];
+                const jint argb = commands[offset++];
+                const SkScalar left = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkScalar top = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkScalar right = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkScalar bottom = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkScalar radiusX = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkScalar radiusY = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const jint strokeWidth = commands[offset++];
+                const jint strokeCap = commands[offset++];
+                const jint strokeJoin = commands[offset++];
+                const jint strokeMiter1000 = commands[offset++];
+                if ((paintStyle != COMMAND_PAINT_STYLE_FILL && paintStyle != COMMAND_PAINT_STYLE_STROKE) ||
+                        right < left ||
+                        bottom < top ||
+                        radiusX < 0 ||
+                        radiusY < 0 ||
+                        (paintStyle == COMMAND_PAINT_STYLE_STROKE && !isValidStrokeMetadata(strokeWidth, strokeCap, strokeJoin, strokeMiter1000))) {
+                    return false;
+                }
+                SkPaint paint;
+                paint.setAntiAlias((recordFlags & COMMAND_RECORD_FLAG_ANTIALIAS) != 0);
+                paint.setColor(skColorFromArgb(argb));
+                if (paintStyle == COMMAND_PAINT_STYLE_STROKE) {
+                    paint.setStyle(SkPaint::kStroke_Style);
+                    paint.setStrokeWidth(static_cast<SkScalar>(strokeWidth));
+                    paint.setStrokeCap(static_cast<SkPaint::Cap>(strokeCap));
+                    paint.setStrokeJoin(static_cast<SkPaint::Join>(strokeJoin));
+                    paint.setStrokeMiter(static_cast<SkScalar>(strokeMiter1000) / 1000.0f);
+                }
+                canvas->drawRRect(SkRRect::MakeRectXY(SkRect::MakeLTRB(left, top, right, bottom),
+                                                      radiusX,
+                                                      radiusY),
+                                  paint);
                 break;
             }
             case COMMAND_CLEAR_DRAW_IMAGE_REF_FULL: {

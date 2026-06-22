@@ -5,6 +5,22 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-22 focused compact full-image-ref plus round-rect command:
+  JBR now advertises and replays `COMMAND_DRAW_IMAGE_REF_FULL_DRAW_ROUND_RECT` (`op=80`) as an ABI-111 command
+  record that draws a cached full-source image ref followed by the adjacent round-rectangle draw. The record preserves
+  independent antialias flags for the image draw and the round-rect draw, and CMP emits it both when the pair is
+  adjacent at draw-recording time and in a final post-fold compaction pass, because Jewel Icons pairs become adjacent
+  only after save/translate/restore stream folding. Narrow validation passed:
+  `./gradlew :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesCompactFullImageRefAndRoundRectRecord --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.preservesImageFlagsInCompactFullImageRefRoundRectRecord --console=plain`;
+  local JBR Skia artifact rebuild; local CMP publish; focused decorated Jewel Icons; and focused Markdown wheel
+  scrolling. Icons stayed strict-clean with `fallbacks=0`, `unsupported_max=0`, and `jbr_command_frames=3`; the
+  screenshot retained transparent icon surrounds; `drawImageRefFullDrawRoundRect:avg=22`; and steady-state command
+  words improved from the transparent clear-elision checkpoint's `commands=1039` to `commands=995`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-image-roundrect-finalpass-icons/suite.tsv`.
+  Markdown stayed strict-clean with `fallbacks=0`, `unsupported_max=0`, and `jbr_command_frames=250`; it did not emit
+  the new compact op in this scenario, so it served as a guardrail for image-heavy scrolling rather than as a command
+  count improvement case:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-image-roundrect-finalpass-markdown/suite.tsv`.
 - 2026-06-22 focused transparent icon clear-elision fix:
   The decorated Jewel Icons showcase exposed a visual correctness bug in the retained compact clear/full-image path:
   top-row `Icon(ShowcaseIcons.jewelLogo)` samples showed solid pale square backgrounds, while the same asset drawn
