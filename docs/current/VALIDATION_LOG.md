@@ -5,6 +5,20 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-22 focused redundant save-before-layer fold:
+  CMP now removes a plain `save` immediately followed by a layer-save record when the current restore is about to
+  close only that redundant outer save. The fold parses the open save stack before the existing trailing restore,
+  requires the top open scopes to be an adjacent `save` plus layer save, removes only the outer save record, and leaves
+  the layer restore in place. Narrow validation passed:
+  `./gradlew :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest --console=plain`;
+  local CMP publish; focused Markdown wheel scrolling; and focused decorated Jewel Icons. Markdown stayed strict-clean
+  with `fallbacks=0`, `unsupported_max=0`, `jbr_command_frames=406`, and command replay improved from the compact
+  image-ref translate fold checkpoint `avg_commands=706` to `avg_commands=688`; `save:avg` dropped from `21.4` to
+  `15.7`, and `restoreN:avg` dropped from `13.8` to `12.2`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-save-before-layer-fold-markdown/suite.tsv`.
+  Icons stayed strict-clean and improved from `avg_commands=1450` to `avg_commands=1426`, with `fallbacks=0`,
+  `unsupported_max=0`, and `jbr_command_frames=3`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-save-before-layer-fold-icons/suite.tsv`.
 - 2026-06-22 focused compact image-ref translate fold:
   CMP now folds `translate; [image definitions/cache records]; drawImageRefFull` both before an about-to-be-emitted
   restore and before an already-materialized trailing `restore/restoreN`. The fold keeps image definition/cache records
