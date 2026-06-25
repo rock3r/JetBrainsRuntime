@@ -5,6 +5,20 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-26 retained op-word diagnostics for command-stream candidate selection:
+  CMP now supports optional `-Dcompose.jbr.skia.command.logOpWords=true`, emitting
+  `CMP_JBR_COMMAND_RECORDER_OP_WORDS` from the final compacted command payload. Magic Jewel's report parser summarizes
+  that marker as `cmp_recorder_top_op_words` and includes it in the Markdown report, so future optimisation candidates
+  can be ranked by command words instead of raw record counts. Narrow validation passed with
+  `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:compileKotlinDesktop --console=plain`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/scripts/test-jbr-skia-report-validation.sh`, local CMP publish,
+  and a focused `hypnotoad-animation` diagnostic:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-op-word-diagnostic-hypnotoad/hypnotoad-animation/report.md`.
+  The diagnostic stayed strict-clean with `fallbacks=0`, `unsupported_max=0`, and `jbr_command_frames=975`.
+  The new word summary shows current Hypnotoad hotness is dominated by existing compact records:
+  `saveTranslateRotateTranslateStrokeClosedPolylineDeltaRestore:avg=980.0`,
+  `saveTranslateRotateTranslateFillOvalRestoreRun:avg=505.6`, and `strokeOvalRun:avg=85.0`; small plain shapes remain
+  below meaningful ABI-candidate size.
 - 2026-06-26 rejected current small-candidate sweep after op109:
   Two narrow current-stack diagnostics were run to find the next command-stream optimisation target without spending a
   full validation pass. `markdown-preview-readme20-auto` stayed strict-clean with
