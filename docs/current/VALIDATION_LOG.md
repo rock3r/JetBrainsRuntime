@@ -17,6 +17,15 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   Hypnotoad stayed strict-clean with `fallbacks=0`, `unsupported_max=0`, `jbr_picture_frames=0`,
   `jbr_command_frames=896`, and `strokeClosedPolylineDelta:total=4475`. The logged average command stream size dropped
   from `2854.9` words/frame in the retained-op101 run to `1957.7` words/frame with op102.
+- 2026-06-25 rejected transformed delta-packed closed-polyline stroke fold:
+  A temporary op103 candidate attempted to fold `COMMAND_SAVE_TRANSLATE_ROTATE` plus
+  `COMMAND_STROKE_CLOSED_POLYLINE_DELTA` plus `COMMAND_RESTORE` into one record. Narrow unit validation passed while
+  the candidate was present, but focused Hypnotoad validation showed the candidate did not match the retained stream:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260625-op103-save-translate-rotate-stroke-closed-polyline-delta-restore-hypnotoad/suite.tsv`.
+  The run stayed strict-clean with `fallbacks=0`, `unsupported_max=0`, `jbr_picture_frames=0`, and
+  `jbr_command_frames=941`, but the op summary still reported separate `saveTranslateRotate:total=4700`,
+  `strokeClosedPolylineDelta:total=4700`, and `restore:total=4700` with no op103 entry. The provisional ABI,
+  capability, CMP compaction, tests, Java2D replay, and native replay code were removed.
 - 2026-06-25 focused op101 closed-polyline stroke compact command:
   The retained op101 advertises and replays `COMMAND_STROKE_CLOSED_POLYLINE` for solid-color stroked paths whose
   serialized path data is exactly `move; line...; close`. CMP emits the compact record as fixed1000 point pairs and
