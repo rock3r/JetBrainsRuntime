@@ -5,7 +5,27 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
-- 2026-06-25 rejected adaptive medium command-buffer cache:
+- 2026-06-25 retained adaptive medium command-buffer cache:
+  Skiko now extends the encoded command-buffer cache to medium command streams up to 2,048 words only after a cheap
+  stream fingerprint repeats. Small streams still use the existing immediate cache path, stable medium streams get a
+  single deferred frame before caching, and changing larger animation streams are deferred instead of copied/encoded.
+  Magic Jewel's copied Jewel standalone `IdleRedraw` page gained an opt-in
+  `jewel.standalone.idleRedraw.extraShapes` harness knob so medium stable redraws can be measured without changing
+  default visuals. Focused validation passed with
+  `./gradlew :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest --console=plain`,
+  `./gradlew :skiko:publishToMavenLocal --console=plain`, and `./gradlew compileKotlin --console=plain` in
+  Magic Jewel. Clean baseline with the retained 512-word cache skipped the 1,147-word medium redraw stream:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260625-medium-idle-redraw-clean-baseline/idle-redraw/report.md`
+  (`fallbacks=0`, `unsupported_max=0`, `jbr_command_frames=2291`, cache markers reaching
+  `hits=0 misses=0 skipped=2880`). The adaptive prototype retained strict replay and converted that same stream to
+  cache hits:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260625-medium-idle-redraw-adaptive-cache/idle-redraw/report.md`
+  (`fallbacks=0`, `unsupported_max=0`, `jbr_command_frames=1718`, cache markers reaching
+  `hits=2278 misses=1 skipped=0 deferred=1`). The Hypnotoad guard also passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260625-adaptive-medium-cache-hypnotoad-guard/suite.tsv`
+  (`fallbacks=0`, `unsupported_max=0`, `jbr_command_frames=999`, cache markers reaching
+  `hits=0 misses=0 skipped=0 deferred=1320`), confirming changing animation streams do not pay cache-copy costs.
+- 2026-06-25 superseded rejection of adaptive medium command-buffer cache:
   A temporary Skiko prototype raised the encoded command-buffer cache ceiling to 2,048 words only after a cheap
   command-stream fingerprint repeated, aiming to cache stable medium UI streams while deferring changing animation
   streams. Focused Skiko tests passed, and narrow Jewel validation stayed strict-clean, but the benefit side was not
