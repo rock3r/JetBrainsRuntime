@@ -5,6 +5,24 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-25 rejected post-op107 payload-compression candidates:
+  Temporary CMP diagnostics ranked final command words by op after retained op107. Focused Hypnotoad validation stayed
+  strict-clean while collecting the data:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260625-op107-word-diagnostic-hypnotoad/suite.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260625-op107-delta-range-diagnostic-hypnotoad/suite.tsv`,
+  and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260625-op106-shape-diagnostic-hypnotoad/suite.tsv`.
+  The hot frame is still dominated by op107 (`saveTranslateRotateTranslateStrokeClosedPolylineDeltaRestore=980`
+  words/frame) and op106 (`saveTranslateRotateTranslateFillOvalRestoreRun=424` words/frame), but the viable-looking
+  follow-up encodings were rejected before ABI work: op107 has five 181-point records with distinct transforms,
+  strokes, and point payloads, and its packed short deltas reach roughly `maxAbsDeltaX=20792` and
+  `maxAbsDeltaY=20702`, so a byte-delta variant is not valid; op106 has one 42-entry run with 42 distinct transforms
+  and oval bounds, so only color repeats and a palette would not reduce 32-bit command words. A markdown readme20
+  diagnostic also stayed strict-clean:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260625-markdown-word-diagnostic-readme20/suite.tsv`,
+  but exposed only small already-folded image/layer records. The temporary diagnostics were removed, and the retained
+  op107 cleanup gate passed:
+  `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.compactsAdjacentSaveTranslateRotateTranslateStrokeClosedPolylineDeltaRestore --console=plain`.
 - 2026-06-25 focused debug-overlay state isolation fix:
   The Jewel standalone markdown preview showed a yellow debug-badge-only visual overlap in the fallback/debug-overlay
   path while the no-badge path looked correct. Skiko's `JbrSkiaDebugOverlay` now paints through a disposable
