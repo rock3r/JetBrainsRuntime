@@ -5,6 +5,19 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-26 rejected current small-candidate sweep after op109:
+  Two narrow current-stack diagnostics were run to find the next command-stream optimisation target without spending a
+  full validation pass. `markdown-preview-readme20-auto` stayed strict-clean with
+  `fallbacks=0`, `unsupported_max=0`, `jbr_command_frames=168`, and stable warm frames around `240` command words:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-current-markdown-readme20-diagnostic/markdown-preview-readme20-auto/report.md`.
+  The encoded command-buffer cache is already effective on that surface (`hits=116 misses=4 skipped=0`), so another
+  ABI compaction for the remaining small structural records is not justified. `hypnotoad-animation` also stayed
+  strict-clean with `fallbacks=0`, `unsupported_max=0`, and `jbr_command_frames=898`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-current-hypnotoad-diagnostic/hypnotoad-animation/report.md`.
+  Current warm frames are about `1797-1837` command words and are still dominated by already-retained compact records:
+  `saveTranslateRotateTranslateStrokeClosedPolylineDeltaRestore=5`, `drawImageRefFullDrawRoundRect=3`, plus three
+  simple `fillOval` records. A hypothetical plain `fillOvalRun` would save only one record header per extra oval,
+  roughly `6` words/frame in this case, so it was rejected before ABI work.
 - 2026-06-25 retained clear-image-roundrect command compaction:
   The retained op109 advertises and replays `COMMAND_CLEAR_DRAW_IMAGE_REF_FULL_DRAW_ROUND_RECT`, folding the hot
   `clearRect > drawImageRefFullDrawRoundRect` shape emitted by the Jewel standalone icon showcase. The first prototype
