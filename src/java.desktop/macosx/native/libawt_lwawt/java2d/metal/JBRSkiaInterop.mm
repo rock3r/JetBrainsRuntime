@@ -216,6 +216,7 @@ static constexpr jint COMMAND_STROKE_CLOSED_POLYLINE_DELTA = 102;
 static constexpr jint COMMAND_STROKE_OVAL_RUN = 103;
 static constexpr jint COMMAND_SAVE_TRANSLATE_ROTATE_TRANSLATE_FILL_OVAL_RESTORE_RUN = 106;
 static constexpr jint COMMAND_SAVE_TRANSLATE_ROTATE_TRANSLATE_STROKE_CLOSED_POLYLINE_DELTA_RESTORE = 107;
+static constexpr jint COMMAND_FILL_RECT_RUN = 108;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER = 1;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_COLOR_MATRIX_FILTER = 2;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_LIGHTING_FILTER = 3;
@@ -4711,6 +4712,44 @@ static bool drawCommandList(SkCanvas* canvas,
                                       paint);
                 } else {
                     canvas->drawRect(rect, paint);
+                }
+                break;
+            }
+            case COMMAND_FILL_RECT_RUN: {
+                if (offset + 1 > recordEnd ||
+                        (recordFlags & ~COMMAND_RECORD_FLAG_ANTIALIAS) != 0) {
+                    return false;
+                }
+                const jint rectCount = commands[offset++];
+                if (rectCount < 2 ||
+                        rectCount > 4096 ||
+                        offset + rectCount * 6 != recordEnd) {
+                    return false;
+                }
+                SkPaint paint;
+                paint.setAntiAlias(antiAlias);
+                for (jint i = 0; i < rectCount; ++i) {
+                    paint.setColor(skColorFromArgb(commands[offset++]));
+                    const jint x = commands[offset++];
+                    const jint y = commands[offset++];
+                    const jint rectWidth = commands[offset++];
+                    const jint rectHeight = commands[offset++];
+                    const jint radius = commands[offset++];
+                    if (rectWidth < 0 || rectHeight < 0 || radius < 0) {
+                        return false;
+                    }
+                    const SkRect rect = SkRect::MakeXYWH(static_cast<SkScalar>(x),
+                                                         static_cast<SkScalar>(y),
+                                                         static_cast<SkScalar>(rectWidth),
+                                                         static_cast<SkScalar>(rectHeight));
+                    if (radius > 0) {
+                        canvas->drawRRect(SkRRect::MakeRectXY(rect,
+                                                              static_cast<SkScalar>(radius),
+                                                              static_cast<SkScalar>(radius)),
+                                          paint);
+                    } else {
+                        canvas->drawRect(rect, paint);
+                    }
                 }
                 break;
             }

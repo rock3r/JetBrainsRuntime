@@ -5,6 +5,23 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-25 focused fill-rect run command and static badge guard:
+  The retained op108 advertises and replays `COMMAND_FILL_RECT_RUN` for adjacent solid fill-rectangle records sharing
+  record flags. This targets the medium `IdleRedraw` harness shape where many plain rect fills were dominating command
+  words without changing between frames. Narrow validation passed:
+  `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.compactsAdjacentFillRectsIntoRun --console=plain`;
+  `./gradlew :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest --console=plain`;
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/scripts/test-jbr-skia-api.sh`; local CMP/Skiko publishes; local
+  patched artifact rebuild; and focused `IdleRedraw` validation:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260625-fill-rect-run-idle-redraw/idle-redraw/report.md`.
+  The run stayed strict-clean with `fallbacks=0`, `unsupported_max=0`, `jbr_picture_frames=0`,
+  `jbr_command_frames=2953`, and raw op markers showing `fillRectRun=2` per frame. The logged command stream dropped
+  from the clean baseline's `1147` words/frame to `786` words/frame. A follow-up static top-of-README markdown
+  preview with the yellow JBR-scope badge active also stayed strict-clean and visually confirmed the shields badge row
+  is rendered as short text links, not raw `![...](...)` source:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260625-yellow-badge-static-top/markdown-preview-readme80-static/report.md`.
+  The moving wheel case can scroll away from the badge row before capture, so the focused suite now includes
+  `markdown-preview-readme80-static` for this visual guard.
 - 2026-06-25 retained adaptive medium command-buffer cache:
   Skiko now extends the encoded command-buffer cache to medium command streams up to 2,048 words only after a cheap
   stream fingerprint repeats. Small streams still use the existing immediate cache path, stable medium streams get a

@@ -200,7 +200,8 @@ public class JBRSkiaService extends JBRSkia {
                     | COMMAND_CAP64_HIGH_STROKE_CLOSED_POLYLINE_DELTA
                     | COMMAND_CAP64_HIGH_STROKE_OVAL_RUN
                     | COMMAND_CAP64_HIGH_SAVE_TRANSLATE_ROTATE_TRANSLATE_FILL_OVAL_RESTORE_RUN
-                    | COMMAND_CAP64_HIGH_SAVE_TRANSLATE_ROTATE_TRANSLATE_STROKE_CLOSED_POLYLINE_DELTA_RESTORE;
+                    | COMMAND_CAP64_HIGH_SAVE_TRANSLATE_ROTATE_TRANSLATE_STROKE_CLOSED_POLYLINE_DELTA_RESTORE
+                    | COMMAND_CAP64_HIGH_FILL_RECT_RUN;
     private static final boolean NATIVE_BRIDGE_AVAILABLE = loadNativeBridge();
     private static final AtomicLong NEXT_SCOPE_ID = new AtomicLong(1);
     private static final int MAX_CACHED_IMAGES = 256;
@@ -516,6 +517,7 @@ public class JBRSkiaService extends JBRSkia {
         if (op == COMMAND_SAVE_TRANSLATE_ROTATE_TRANSLATE_FILL_OVAL_RESTORE) return 13;
         if (op == COMMAND_SAVE_TRANSLATE_ROTATE_TRANSLATE_FILL_OVAL_RESTORE_RUN) return -42;
         if (op == COMMAND_SAVE_TRANSLATE_ROTATE_TRANSLATE_STROKE_CLOSED_POLYLINE_DELTA_RESTORE) return -43;
+        if (op == COMMAND_FILL_RECT_RUN) return -44;
         if (op == COMMAND_SAVE_TRANSLATE_LAYER) return 10;
         if (op == COMMAND_SAVE_LAYER) return 8;
         if (op == COMMAND_SAVE_LAYER_SAVE_TRANSLATE || op == COMMAND_SAVE_SAVE_LAYER_SAVE_TRANSLATE) return 10;
@@ -734,6 +736,9 @@ public class JBRSkiaService extends JBRSkia {
         if (expectedLength == -43 &&
                 record.op() == COMMAND_SAVE_TRANSLATE_ROTATE_TRANSLATE_STROKE_CLOSED_POLYLINE_DELTA_RESTORE) {
             return record.recordLength() >= 17;
+        }
+        if (expectedLength == -44 && record.op() == COMMAND_FILL_RECT_RUN) {
+            return record.recordLength() >= 16;
         }
         return expectedLength == record.recordLength();
     }
@@ -1304,6 +1309,29 @@ public class JBRSkiaService extends JBRSkia {
                     return false;
                 }
                 offset += 9;
+            }
+            return true;
+        }
+        if (record.op() == COMMAND_FILL_RECT_RUN) {
+            if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE
+                    && record.recordFlags() != COMMAND_RECORD_FLAG_ANTIALIAS) {
+                return false;
+            }
+            int rectCount = commands[record.argsStart()];
+            if (rectCount < 2
+                    || rectCount > 4096
+                    || record.argsStart() + 1 + rectCount * 6 != record.recordEnd()) {
+                return false;
+            }
+            int offset = record.argsStart() + 1;
+            for (int i = 0; i < rectCount; i++) {
+                int width = commands[offset + 3];
+                int height = commands[offset + 4];
+                int radius = commands[offset + 5];
+                if (width < 0 || height < 0 || radius < 0) {
+                    return false;
+                }
+                offset += 6;
             }
             return true;
         }
@@ -5295,6 +5323,29 @@ public class JBRSkiaService extends JBRSkia {
                             current.fillRoundRect(x, y, width, height, radius, radius);
                         } else {
                             current.fillRect(x, y, width, height);
+                        }
+                    } else if (op == COMMAND_FILL_RECT_RUN) {
+                        if (offset + 1 > recordEnd) return false;
+                        applyAntialiasing(current, antiAlias);
+                        int rectCount = commands[offset++];
+                        if (rectCount < 2 || rectCount > 4096 || offset + rectCount * 6 != recordEnd) {
+                            return false;
+                        }
+                        for (int i = 0; i < rectCount; i++) {
+                            current.setColor(new Color(commands[offset++], true));
+                            int x = commands[offset++];
+                            int y = commands[offset++];
+                            int width = commands[offset++];
+                            int height = commands[offset++];
+                            int radius = commands[offset++];
+                            if (width < 0 || height < 0 || radius < 0) {
+                                return false;
+                            }
+                            if (radius > 0) {
+                                current.fillRoundRect(x, y, width, height, radius, radius);
+                            } else {
+                                current.fillRect(x, y, width, height);
+                            }
                         }
                     } else if (op == COMMAND_FILL_RECT_SAVE_LAYER_CLIP_RECT) {
                         if (offset + 17 != recordEnd) return false;

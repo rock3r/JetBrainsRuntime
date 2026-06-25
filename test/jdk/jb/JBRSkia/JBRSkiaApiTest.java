@@ -238,7 +238,10 @@ public class JBRSkiaApiTest {
                 | JBRSkia.COMMAND_CAP64_HIGH_SAVE_TRANSLATE_ROTATE_TRANSLATE_FILL_OVAL_RESTORE
                 | JBRSkia.COMMAND_CAP64_HIGH_STROKE_CLOSED_POLYLINE
                 | JBRSkia.COMMAND_CAP64_HIGH_STROKE_CLOSED_POLYLINE_DELTA
-                | JBRSkia.COMMAND_CAP64_HIGH_STROKE_OVAL_RUN;
+                | JBRSkia.COMMAND_CAP64_HIGH_STROKE_OVAL_RUN
+                | JBRSkia.COMMAND_CAP64_HIGH_SAVE_TRANSLATE_ROTATE_TRANSLATE_FILL_OVAL_RESTORE_RUN
+                | JBRSkia.COMMAND_CAP64_HIGH_SAVE_TRANSLATE_ROTATE_TRANSLATE_STROKE_CLOSED_POLYLINE_DELTA_RESTORE
+                | JBRSkia.COMMAND_CAP64_HIGH_FILL_RECT_RUN;
     }
 
     private static void assertCommandStreamValidation() {
@@ -706,7 +709,7 @@ public class JBRSkiaApiTest {
         assertValidCommandStream(validTintEffectDescriptorMultiplyRecordOnlyStream(), "effect descriptor multiply blend mode");
         assertInvalidCommandStream(invalidTintEffectDescriptorRecordFlagsStream(), "effect descriptor record flags");
         assertInvalidCommandStream(invalidLightingFilterDescriptorPayloadCountStream(), "lighting descriptor payload count");
-        assertInvalidCommandStream(new int[] {
+        assertValidCommandStream(new int[] {
                 JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 10,
                 JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
                 JBRSkia.COMMAND_DEFINE_EFFECT_DESCRIPTOR, 40, JBRSkia.COMMAND_RECORD_FLAGS_NONE,
@@ -714,7 +717,7 @@ public class JBRSkiaApiTest {
                 JBRSkia.COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER,
                 JBRSkia.COMMAND_EFFECT_DESCRIPTOR_VERSION_1,
                 2, 0xff00ffff, JBRSkia.COMMAND_BLEND_MODE_PLUS
-        }, "unsupported effect descriptor blend mode");
+        }, "effect descriptor plus blend mode");
         assertInvalidCommandStream(invalidColorMatrixFilterDescriptorStream(), "color-matrix descriptor rejects nonfinite values");
         assertInvalidCommandStream(invalidBlurImageFilterDescriptorSigmaStream(), "blur image-filter descriptor sigma");
         assertInvalidCommandStream(invalidBlurImageFilterDescriptorNegativeSigmaStream(), "blur image-filter descriptor negative sigma");
