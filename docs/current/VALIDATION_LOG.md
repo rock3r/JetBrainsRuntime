@@ -5,6 +5,17 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-25 Skiko debug-overlay placement fix:
+  Manual standalone showcase inspection showed the opt-in yellow `JBR Skia scope` debug badge overlapping the Jewel
+  title area, while the same run without the badge rendered cleanly. This was an overlay/harness artifact rather than a
+  command-replay fallback: Skiko's `JbrSkiaDebugOverlay` hard-coded `x=8, y=8`. The overlay now receives the layer
+  bounds and anchors at the bottom-right with bounds clamping. Narrow validation passed:
+  `./gradlew awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaDebugOverlayTest --console=plain`; local Skiko publish; and
+  a focused `showcase-icons` run with `-Dskiko.jbr.interop.debugOverlay=true`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260625-overlay-bottom-right-icons/suite.tsv`.
+  The focused run stayed strict-clean with `fallbacks=0`, `unsupported_max=0`, `jbr_picture_frames=0`, and
+  `jbr_command_frames=3`; the captured `new-window.png` shows the yellow scope marker in the bottom-right, no longer
+  covering the `Icons` title.
 - 2026-06-22 focused op96 translated-layer + image-restore compact command:
   The retained op96 advertises and replays
   `COMMAND_SAVE_TRANSLATE_LAYER_SAVE_TRANSLATE_DRAW_IMAGE_REF_FULL_RESTORE_N` (`op=96`) as a compact record for

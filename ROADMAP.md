@@ -102,14 +102,17 @@ This is the small working roadmap for the current PoC. The full historical check
   `fillRoundRect > restoreN` are already rejected, and the hot op97+op98 pair would create an oversized mega-record
   for only a one-header saving. No new ABI candidate was retained from this census:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260625-pair-diagnostic-retained-op98/suite.tsv`.
+- Skiko debug-overlay placement fix:
+  The opt-in yellow `JBR Skia scope` badge no longer uses a hard-coded top-left origin that can cover standalone
+  showcase titles. Skiko now anchors it bottom-right inside the layer bounds. Narrow validation passed with the overlay
+  enabled on `showcase-icons`, staying strict-clean with `fallbacks=0`, `unsupported_max=0`, `jbr_picture_frames=0`,
+  and `jbr_command_frames=3`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260625-overlay-bottom-right-icons/suite.tsv`.
 - Jewel icon background note:
   The effective-alpha command-path fix remains validated. A follow-up source/rasterization check showed most small
   showcase icon white rectangles are clip-path scaffolding rather than painted opaque backgrounds; rasterized samples
   had transparent corners. `jewel-logo.svg` still paints a white diamond. Remaining live solid-background symptoms
   should be isolated in the Jewel painter/live rendering path.
-- Fallback-path visual caveat:
-  Manual fallback/yellow-badge inspection showed image replacement text overlapping the `Jewel` title in the standalone
-  showcase. Track this as a fallback placeholder/layout issue separately from command-path coverage.
 - Focused CMP-only command-stream compaction checkpoint:
   CMP now folds a following `COMMAND_RESTORE_N` into the existing `COMMAND_DRAW_ROUND_RECT_RESTORE_N` restore count.
   This reuses the existing JBR op and requires no ABI or capability change. Narrow gates passed: CMP focused recorder
