@@ -5,6 +5,17 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-25 focused debug-overlay state isolation fix:
+  The Jewel standalone markdown preview showed a yellow debug-badge-only visual overlap in the fallback/debug-overlay
+  path while the no-badge path looked correct. Skiko's `JbrSkiaDebugOverlay` now paints through a disposable
+  `Graphics2D` child created with `g.create()`, so the badge cannot leak or depend on caller graphics state beyond the
+  intentionally supplied layer bounds. Narrow validation passed with `./gradlew :skiko:compileKotlinAwt`;
+  `./gradlew :skiko:publishToMavenLocal`; local patched JBR artifacts rebuilt with
+  `./scripts/rebuild-jbr-skia-local-artifacts.sh`; and a focused Jewel standalone markdown preview run:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260625-debug-overlay-state-isolation-markdown/suite.tsv`.
+  The focused run passed with `fallbacks=0`, `unsupported_max=0`, `jbr_picture_frames=0`,
+  `jbr_command_frames=4709`, and `jbr_command_fps=52.3`. Local screenshot assertion remains unavailable, so this is
+  structurally and marker-validated; the user-side visual check is still the authority for the overlap.
 - 2026-06-25 rejected transformed delta-packed closed-polyline stroke run command:
   A temporary op108 candidate compacted adjacent retained-op107 transformed delta-packed closed-polyline stroke records
   into one run record. Narrow CMP and Skiko gates passed, local patched artifacts rebuilt, and focused Hypnotoad
