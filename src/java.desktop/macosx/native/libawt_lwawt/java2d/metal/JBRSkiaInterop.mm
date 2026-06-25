@@ -210,6 +210,7 @@ static constexpr jint COMMAND_SAVE_TRANSLATE_LAYER_SAVE_TRANSLATE_DRAW_IMAGE_REF
 static constexpr jint COMMAND_SAVE_TRANSLATE_LAYER_SAVE_TRANSLATE_DRAW_IMAGE_REF_FULL_RESTORE_N_SAVE_TRANSLATE_LAYER_SAVE_TRANSLATE = 97;
 static constexpr jint COMMAND_FILL_RECT_SAVE_LAYER_CLIP_RECT_SAVE_SAVE_LAYER_SAVE_TRANSLATE = 98;
 static constexpr jint COMMAND_SAVE_TRANSLATE_ROTATE = 99;
+static constexpr jint COMMAND_SAVE_TRANSLATE_ROTATE_TRANSLATE_FILL_OVAL_RESTORE = 100;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER = 1;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_COLOR_MATRIX_FILTER = 2;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_LIGHTING_FILTER = 3;
@@ -3173,6 +3174,34 @@ static bool drawCommandList(SkCanvas* canvas,
                 canvas->save();
                 canvas->translate(dx, dy);
                 canvas->rotate(degrees);
+                break;
+            }
+            case COMMAND_SAVE_TRANSLATE_ROTATE_TRANSLATE_FILL_OVAL_RESTORE: {
+                if (offset + 10 != recordEnd) {
+                    return false;
+                }
+                SkScalar dx = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                SkScalar dy = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                SkScalar degrees = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                SkScalar nestedDx = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                SkScalar nestedDy = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                SkPaint paint;
+                paint.setAntiAlias(antiAlias);
+                paint.setColor(skColorFromArgb(commands[offset++]));
+                jint x = commands[offset++];
+                jint y = commands[offset++];
+                jint ovalWidth = commands[offset++];
+                jint ovalHeight = commands[offset++];
+                SkRect rect = SkRect::MakeXYWH(static_cast<SkScalar>(x),
+                                              static_cast<SkScalar>(y),
+                                              static_cast<SkScalar>(ovalWidth),
+                                              static_cast<SkScalar>(ovalHeight));
+                canvas->save();
+                canvas->translate(dx, dy);
+                canvas->rotate(degrees);
+                canvas->translate(nestedDx, nestedDy);
+                canvas->drawOval(rect, paint);
+                canvas->restore();
                 break;
             }
             case COMMAND_SAVE_TRANSLATE_LAYER: {

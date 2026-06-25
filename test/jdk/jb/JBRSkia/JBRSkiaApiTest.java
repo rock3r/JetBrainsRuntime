@@ -226,6 +226,9 @@ public class JBRSkiaApiTest {
         assertValidCommandStream(validStrokeLineStream(), "valid stroke metadata stream");
         assertValidCommandStream(validTransformStream(), "valid transform stream");
         assertValidCommandStream(validSaveTranslateRotateStream(), "valid save translate rotate stream");
+        assertValidCommandStream(
+                validSaveTranslateRotateTranslateFillOvalRestoreStream(),
+                "valid save translate rotate translate fill oval restore stream");
         assertValidCommandStream(validClipOpStream(), "valid clip operation stream");
         assertValidCommandStream(validSaveLayerStream(), "valid saveLayer stream");
         assertValidCommandStream(validSaveLayerBlendModeStream(), "valid saveLayer blend-mode stream");
@@ -818,6 +821,16 @@ public class JBRSkiaApiTest {
                 JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
                 JBRSkia.COMMAND_SAVE_TRANSLATE_ROTATE, 24, JBRSkia.COMMAND_RECORD_FLAGS_NONE, 1250, 2500, 18000,
                 JBRSkia.COMMAND_RESTORE, 12, JBRSkia.COMMAND_RECORD_FLAGS_NONE
+        };
+    }
+
+    private static int[] validSaveTranslateRotateTranslateFillOvalRestoreStream() {
+        return new int[] {
+                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 13,
+                JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
+                JBRSkia.COMMAND_SAVE_TRANSLATE_ROTATE_TRANSLATE_FILL_OVAL_RESTORE,
+                52, JBRSkia.COMMAND_RECORD_FLAG_ANTIALIAS,
+                1250, 2500, 18000, 5000, 6000, 0xffff0000, 3, 4, 10, 20
         };
     }
 

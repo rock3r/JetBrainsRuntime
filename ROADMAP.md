@@ -56,6 +56,15 @@ This is the small working roadmap for the current PoC. The full historical check
 ## Latest Validations
 
 - Focused ABI 111 command-stream compaction checkpoint:
+  Added `COMMAND_SAVE_TRANSLATE_ROTATE_TRANSLATE_FILL_OVAL_RESTORE` (`op=100`) plus matching high capability bit
+  `562949953421312` for compact `save; translate; rotate; translate; fillOval; restore` records. Narrow gates passed:
+  CMP focused recorder tests, Skiko interop test, local CMP/Skiko publishes, `./scripts/rebuild-jbr-skia-local-artifacts.sh`,
+  and focused Hypnotoad validation. The focused Hypnotoad slice stayed strict-clean with `fallbacks=0`,
+  `unsupported_max=0`, `jbr_picture_frames=0`, `jbr_command_frames=966`,
+  `saveTranslateRotateTranslateFillOvalRestore:total=48736`, and logged average command stream size dropped from
+  `4246.2` words/frame in the retained-op99 run to `3791.4` words/frame:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260625-op100-save-translate-rotate-translate-fill-oval-restore-hypnotoad/suite.tsv`.
+- Focused ABI 111 command-stream compaction checkpoint:
   Added `COMMAND_SAVE_TRANSLATE_ROTATE` (`op=99`) plus matching high capability bit `281474976710656` for compact
   `save; translate; rotate` records. A focused Hypnotoad pair diagnostic identified `saveTranslate > rotate` as one of
   the hottest remaining command-only pairs, and narrow gates passed: CMP focused recorder test, Skiko focused interop

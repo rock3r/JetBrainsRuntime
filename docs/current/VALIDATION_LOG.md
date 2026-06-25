@@ -5,6 +5,21 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-25 focused op100 transformed fill-oval compact command:
+  The first attempted op100 shape (`saveTranslateRotate; fillOval; restore`) passed strict-clean Hypnotoad validation
+  but did not fire, so it was rejected/retargeted:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260625-op100-save-translate-rotate-fill-oval-restore-hypnotoad/suite.tsv`.
+  The retained op100 now advertises and replays
+  `COMMAND_SAVE_TRANSLATE_ROTATE_TRANSLATE_FILL_OVAL_RESTORE` for
+  `save; translate; rotate; translate; fillOval; restore`, with matching JBR API/JBR/Skiko capability gates and CMP
+  compaction. Narrow validation passed:
+  `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.compactsAdjacentSaveTranslateRotate --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.compactsAdjacentSaveTranslateRotateTranslateFillOvalRestore --console=plain`;
+  `./gradlew awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest --console=plain`; local Skiko/CMP publishes;
+  `./scripts/rebuild-jbr-skia-local-artifacts.sh`; and focused Hypnotoad validation:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260625-op100-save-translate-rotate-translate-fill-oval-restore-hypnotoad/suite.tsv`.
+  Hypnotoad stayed strict-clean with `fallbacks=0`, `unsupported_max=0`, `jbr_picture_frames=0`,
+  `jbr_command_frames=966`, and `saveTranslateRotateTranslateFillOvalRestore:total=48736`. The logged average command
+  stream size dropped from `4246.2` words/frame in the retained-op99 Hypnotoad run to `3791.4` words/frame with op100.
 - 2026-06-25 focused Jewel markdown image-renderer parity fix:
   Manual comparison showed the no-overlay standalone Markdown README path rendered cleanly, while the yellow-overlay
   run exposed the badge row as raw image fallback text overlapping the `Jewel` title. The copied Magic Jewel standalone

@@ -194,7 +194,8 @@ public class JBRSkiaService extends JBRSkia {
                     | COMMAND_CAP64_HIGH_SAVE_TRANSLATE_LAYER_SAVE_TRANSLATE_DRAW_IMAGE_REF_FULL_RESTORE_N
                     | COMMAND_CAP64_HIGH_SAVE_TRANSLATE_LAYER_SAVE_TRANSLATE_DRAW_IMAGE_REF_FULL_RESTORE_N_SAVE_TRANSLATE_LAYER_SAVE_TRANSLATE
                     | COMMAND_CAP64_HIGH_FILL_RECT_SAVE_LAYER_CLIP_RECT_SAVE_SAVE_LAYER_SAVE_TRANSLATE
-                    | COMMAND_CAP64_HIGH_SAVE_TRANSLATE_ROTATE;
+                    | COMMAND_CAP64_HIGH_SAVE_TRANSLATE_ROTATE
+                    | COMMAND_CAP64_HIGH_SAVE_TRANSLATE_ROTATE_TRANSLATE_FILL_OVAL_RESTORE;
     private static final boolean NATIVE_BRIDGE_AVAILABLE = loadNativeBridge();
     private static final AtomicLong NEXT_SCOPE_ID = new AtomicLong(1);
     private static final int MAX_CACHED_IMAGES = 256;
@@ -507,6 +508,7 @@ public class JBRSkiaService extends JBRSkia {
         if (op == COMMAND_RESTORE_N) return 4;
         if (op == COMMAND_TRANSLATE || op == COMMAND_SCALE || op == COMMAND_SAVE_TRANSLATE) return 5;
         if (op == COMMAND_SAVE_TRANSLATE_ROTATE) return 6;
+        if (op == COMMAND_SAVE_TRANSLATE_ROTATE_TRANSLATE_FILL_OVAL_RESTORE) return 13;
         if (op == COMMAND_SAVE_TRANSLATE_LAYER) return 10;
         if (op == COMMAND_SAVE_LAYER) return 8;
         if (op == COMMAND_SAVE_LAYER_SAVE_TRANSLATE || op == COMMAND_SAVE_SAVE_LAYER_SAVE_TRANSLATE) return 10;
@@ -4217,6 +4219,25 @@ public class JBRSkiaService extends JBRSkia {
                         current = (Graphics2D) current.create();
                         current.translate(commands[offset++] / 1000.0, commands[offset++] / 1000.0);
                         current.rotate(Math.toRadians(commands[offset++] / 1000.0));
+                    } else if (op == COMMAND_SAVE_TRANSLATE_ROTATE_TRANSLATE_FILL_OVAL_RESTORE) {
+                        if (offset + 10 != recordEnd) return false;
+                        Graphics2D saved = current;
+                        Graphics2D transformed = (Graphics2D) current.create();
+                        try {
+                            transformed.translate(commands[offset++] / 1000.0, commands[offset++] / 1000.0);
+                            transformed.rotate(Math.toRadians(commands[offset++] / 1000.0));
+                            transformed.translate(commands[offset++] / 1000.0, commands[offset++] / 1000.0);
+                            applyAntialiasing(transformed, antiAlias);
+                            transformed.setColor(new Color(commands[offset++], true));
+                            int x = commands[offset++];
+                            int y = commands[offset++];
+                            int width = commands[offset++];
+                            int height = commands[offset++];
+                            transformed.fillOval(x, y, width, height);
+                        } finally {
+                            transformed.dispose();
+                        }
+                        current = saved;
                     } else if (op == COMMAND_SAVE_TRANSLATE_LAYER) {
                         if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE || offset + 7 != recordEnd) return false;
                         int dx1000 = commands[offset++];
