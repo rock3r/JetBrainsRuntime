@@ -5,6 +5,23 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-25 focused markdown badge-row visual cleanup:
+  A yellow debug-badge markdown preview capture still showed the README shields badge row as raw `![...](...)` text,
+  with the long embedded `logo=data:image...` query string overlapping the `Jewel` title, even though command markers
+  were strict-clean. The copied Jewel standalone demo now normalizes only `img.shields.io` badge image markup into
+  ordinary text links before processing markdown, leaving the block Jewel logo image and the rest of the README content
+  intact. Skiko also now performs JBR frame rendering through a disposable child `Graphics2D`, keeping direct JBR
+  rendering and the debug badge on separate Java2D state copies. Narrow validation passed with
+  `./gradlew :skiko:compileKotlinAwt`, `./gradlew :skiko:publishToMavenLocal`, local patched JBR artifact rebuild via
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/scripts/rebuild-jbr-skia-local-artifacts.sh`, and focused Jewel
+  standalone markdown preview runs:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260625-debug-overlay-graphics-isolation-yellow-badge/suite.tsv`,
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260625-markdown-badge-data-url-normalization/suite.tsv`,
+  and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260625-markdown-shields-as-links/suite.tsv`.
+  The retained run passed with `fallbacks=0`, `unsupported_max=0`, `jbr_picture_frames=0`, `jbr_command_frames=208`,
+  and `jbr_command_fps=26.0`; the captured `new-window.png` no longer contains the raw shields URL wall or title
+  overlap.
 - 2026-06-25 rejected post-op107 payload-compression candidates:
   Temporary CMP diagnostics ranked final command words by op after retained op107. Focused Hypnotoad validation stayed
   strict-clean while collecting the data:
