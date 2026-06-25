@@ -5,6 +5,15 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-25 rejected transformed delta-packed closed-polyline stroke run command:
+  A temporary op108 candidate compacted adjacent retained-op107 transformed delta-packed closed-polyline stroke records
+  into one run record. Narrow CMP and Skiko gates passed, local patched artifacts rebuilt, and focused Hypnotoad
+  validation stayed strict-clean:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260625-op108-transformed-polyline-delta-run-hypnotoad/suite.tsv`.
+  The candidate fired (`saveTranslateRotateTranslateStrokeClosedPolylineDeltaRestoreRun=1` in raw op markers) and kept
+  `fallbacks=0`, `unsupported_max=0`, and zero picture frames, but it regressed the retained op107 command stream from
+  `1739` words/frame to `1749` words/frame. The provisional ABI, capability, CMP run compaction/test, Java2D replay,
+  and native replay code were removed.
 - 2026-06-25 focused op107 transformed delta-packed closed-polyline stroke command:
   A temporary pair diagnostic on the retained op106 Hypnotoad path showed the exact remaining transformed path shape:
   `saveTranslateRotate > translate > strokeClosedPolylineDelta > restore` five times per hot frame. The retained op107
