@@ -5,6 +5,21 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-26 rejected large adaptive encoded-command-buffer cache:
+  A Skiko prototype raised `MAX_ADAPTIVE_CACHED_ENCODED_COMMAND_WORDS` from 2,048 to 8,192 while keeping the immediate
+  cache ceiling at 512 words, aiming to catch repeated larger Jewel UI frames such as the Scrollbars slice. The focused
+  Skiko test class passed with
+  `./gradlew --no-daemon --no-configuration-cache awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest --console=plain`
+  from `/Users/rock3r/src/jbr-skia-zero-copy/skiko/skiko`, and the prototype was published locally for a narrow
+  controls-slice probe:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-large-adaptive-cache-controls-slice/controls-slice/report.md`.
+  The Magic Jewel probe stayed strict-clean with `fallback_new_count=0`, `cmp_unsupported_max=0`, and
+  `cmp_unsupported_reasons=none`, but it did not improve measured cache behavior: the earlier controls diagnostic ended
+  at `hits=0 misses=0 skipped=10 deferred=950`, while the prototype ended at
+  `hits=0 misses=0 skipped=1 deferred=719`. The candidate only moved large non-repeating frames from skipped to
+  deferred fingerprint checks, producing no cache hits or misses. The Skiko source change and test were removed, and
+  the reverted Skiko snapshot was republished to Maven local so later Magic Jewel probes do not accidentally use the
+  rejected artifact.
 - 2026-06-26 fixed the copied Jewel README badge row in the editor path:
   User-side inspection confirmed the no-badge run was visually clean while the yellow debug-badge JBR path still showed
   the long shields.io README badge markup overlapping the Jewel title area. The previous Magic Jewel fixture cleanup
