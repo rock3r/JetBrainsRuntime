@@ -5,6 +5,24 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-26 rejected markdown-wheel command-stream micro-candidates and fixed the local badge fixture:
+  A narrow current-stack markdown wheel diagnostic with op-word logging passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-op-word-diagnostic-markdown-wheel/markdown-preview-readme80-wheel/report.md`.
+  The run used `DURATION_SECONDS=6`, `WARMUP_SECONDS=1`,
+  `-Dcompose.jbr.skia.command.logOpWords=true`, and stayed strict-clean with `fallbacks=0`,
+  `unsupported_max=0`, and `jbr_command_frames=300`. Current markdown wheel frames average `474` command words with
+  `avg_total_ms=2.049`, `avg_draw_ms=0.224`, and `avg_flush_ms=1.519`. The largest word contributors are already
+  compact layer/image records:
+  `saveTranslateLayerSaveTranslateDrawImageRefFullRestoreNSaveTranslateLayerSaveTranslate:avg=68.5`,
+  `drawImageRefFullRun:avg=50.7`, `drawImageRefColorFilter:avg=39.8`, and
+  `fillRectSaveLayerClipRectSaveSaveLayerSaveTranslate:avg=39.1`. A possible switch from inline
+  `drawImageRefColorFilter` tint payloads to the existing color-filter-ref path was rejected before code work because
+  both forms carry two per-draw ints; the ref form would add definitions without shrinking the hot draw records.
+  Earlier local yellow-badge visual overlap was traced to Magic Jewel's README sanitizer turning the remote shields row
+  into a long synthetic text paragraph. Magic Jewel commit `eee01f0` now removes that synthetic row instead; a focused
+  static capture at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-badge-row-removed-static/markdown-preview-readme80-static/new-window.png`
+  showed the `Jewel: a Compose for Desktop theme` heading cleanly with `unsupported_max=0` over the captured frames.
 - 2026-06-26 rejected Hypnotoad micro-compaction candidates:
   The new op-word diagnostics were used to evaluate follow-up ABI candidates on
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-op-word-diagnostic-hypnotoad/hypnotoad-animation/report.md`.
