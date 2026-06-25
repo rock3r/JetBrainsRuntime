@@ -96,6 +96,12 @@ This is the small working roadmap for the current PoC. The full historical check
   `fillRectSaveLayerClipRectSaveSaveLayerSaveTranslate:total=310`, and `avg_commands=365`, slightly down from the
   op97 baseline's `366`:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260625-op98-fillrect-layerclip-savesavelayer/suite.tsv`.
+- Retained-op98 pair census:
+  A focused pair diagnostic found the next hottest simple pairs after op98. `defineImageBitmap > drawImageRef...`
+  crosses image-cache definition semantics, `drawImageRefFullRestoreN > drawRoundRectRestoreN` and
+  `fillRoundRect > restoreN` are already rejected, and the hot op97+op98 pair would create an oversized mega-record
+  for only a one-header saving. No new ABI candidate was retained from this census:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260625-pair-diagnostic-retained-op98/suite.tsv`.
 - Jewel icon background note:
   The effective-alpha command-path fix remains validated. A follow-up source/rasterization check showed most small
   showcase icon white rectangles are clip-path scaffolding rather than painted opaque backgrounds; rasterized samples

@@ -72,6 +72,16 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   `jbr_command_frames=253`, and the new compact op fired with
   `fillRectSaveLayerClipRectSaveSaveLayerSaveTranslate:total=310`. The focused command average dropped to
   `avg_commands=365`, slightly below the retained op97 baseline's `366`.
+- 2026-06-25 retained-op98 pair census:
+  A temporary pair diagnostic on the retained op98 focused Markdown wheel path passed strict-clean and produced the
+  next hot-pair census:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260625-pair-diagnostic-retained-op98/suite.tsv`.
+  The hottest remaining pairs were `defineImageBitmap > drawImageRefFullRestoreN` (`535`), the already-rejected
+  `drawImageRefFullRestoreN > drawRoundRectRestoreN` (`530`), `fillRoundRect > restoreN` (`415`), and
+  `saveTranslateLayerSaveTranslateDrawImageRefFullRestoreNSaveTranslateLayerSaveTranslate >
+  fillRectSaveLayerClipRectSaveSaveLayerSaveTranslate` (`410`). The last pair would require a very large op97+op98
+  mega-record for only one removed record header, so it was rejected on design/risk before adding another ABI surface.
+  After the diagnostic, the temporary pair logger was removed and the retained CMP artifact was republished.
 - 2026-06-22 rejected post-op96 `fillRoundRect > restoreN` fold:
   A temporary adjacent-pair diagnostic on the focused Markdown wheel path passed strict-clean and showed
   `fillRoundRect > restoreN` as a hot pair (`385` aggregated observations in
