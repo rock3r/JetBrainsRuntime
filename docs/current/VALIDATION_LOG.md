@@ -20,6 +20,14 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   The parser/API helper was also attempted with `REBUILD_LOCAL_ARTIFACTS=false ./scripts/test-jbr-skia-api.sh` after
   updating the stale high-capability aggregate, but it is currently blocked by an unrelated pre-existing descriptor
   invalid-case mismatch: `unsupported effect descriptor blend mode should be invalid`.
+- 2026-06-25 rejected filled oval run command:
+  A temporary op104 candidate compacted adjacent `COMMAND_FILL_OVAL` records into one filled-oval run and passed narrow
+  CMP/Skiko unit gates plus local artifact rebuild. Focused Hypnotoad validation stayed strict-clean and proved the
+  candidate fired (`fillOvalRun:total=843`), but it regressed the retained op103 command stream:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260625-op104-fill-oval-run-hypnotoad/suite.tsv`.
+  Average command stream size rose from `1933` words/frame in the retained-op103 run to `1952`, and the op mix showed
+  disturbed existing compactions (`restore:avg=6.0`, `drawRoundRect:avg=1.0`, `saveTranslate:avg=1.0`). The candidate
+  ABI, capability, CMP compaction, tests, Java2D replay, and native replay code were removed.
 - 2026-06-25 focused op102 delta-packed closed-polyline stroke command:
   The retained op102 advertises and replays `COMMAND_STROKE_CLOSED_POLYLINE_DELTA` for closed-polyline strokes whose
   adjacent fixed1000 point deltas fit in signed 16-bit values. CMP keeps op101 as the general absolute-point fallback,
