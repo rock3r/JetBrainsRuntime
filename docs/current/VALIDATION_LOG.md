@@ -28,6 +28,16 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   Average command stream size rose from `1933` words/frame in the retained-op103 run to `1952`, and the op mix showed
   disturbed existing compactions (`restore:avg=6.0`, `drawRoundRect:avg=1.0`, `saveTranslate:avg=1.0`). The candidate
   ABI, capability, CMP compaction, tests, Java2D replay, and native replay code were removed.
+- 2026-06-25 rejected image-reference plus round-rectangle run command:
+  A temporary op105 candidate compacted adjacent `COMMAND_DRAW_IMAGE_REF_FULL_DRAW_ROUND_RECT` records, including the
+  cold-frame `defineImageBitmap`/op80 interleaving shape. Narrow CMP and Skiko gates passed and
+  `./scripts/rebuild-jbr-skia-local-artifacts.sh` rebuilt the patched Java/native bridge, but focused Hypnotoad
+  validation proved the candidate did not match the retained hot stream:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260625-op105-image-roundrect-run-hypnotoad/suite.tsv`.
+  The run stayed strict-clean (`fallbacks=0`, `unsupported_max=0`) but op summaries still reported
+  `drawImageRefFullDrawRoundRect=3` per frame and never reported `drawImageRefFullDrawRoundRectRun`; command samples
+  also regressed to `2003`/`2055` words. The provisional ABI, capability, CMP compaction, tests, Java2D replay, and
+  native replay code were removed.
 - 2026-06-25 focused op102 delta-packed closed-polyline stroke command:
   The retained op102 advertises and replays `COMMAND_STROKE_CLOSED_POLYLINE_DELTA` for closed-polyline strokes whose
   adjacent fixed1000 point deltas fit in signed 16-bit values. CMP keeps op101 as the general absolute-point fallback,
