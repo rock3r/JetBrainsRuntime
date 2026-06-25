@@ -5,6 +5,20 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-25 retained encoded command-buffer cache:
+  Skiko now caches the encoded direct `ByteBuffer` for small stable command streams before calling
+  `renderCommandDirectFrame`, returning duplicate little-endian views on repeated frames and skipping streams above
+  512 command words so animation-heavy frames stay on the existing reusable-buffer path. Focused Skiko validation
+  passed with
+  `./gradlew :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest --console=plain` and
+  `./gradlew :skiko:publishToMavenLocal --console=plain`. Focused Jewel standalone validation passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260625-encoded-buffer-cache-markdown-marker/suite.tsv`
+  with `fallbacks=0`, `unsupported_max=0`, `jbr_command_frames=165`, and cache markers reaching
+  `hits=116 misses=4 skipped=0`; and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260625-encoded-buffer-cache-hypnotoad-guard/suite.tsv`
+  with `fallbacks=0`, `unsupported_max=0`, `jbr_command_frames=1031`, `jbr_command_fps=128.9`, and cache markers
+  reaching `hits=0 misses=0 skipped=1320`. This keeps the optimisation targeted at normal stable UI frames while
+  avoiding extra content comparisons on large Hypnotoad animation streams.
 - 2026-06-25 focused markdown badge-row visual cleanup:
   A yellow debug-badge markdown preview capture still showed the README shields badge row as raw `![...](...)` text,
   with the long embedded `logo=data:image...` query string overlapping the `Jewel` title, even though command markers
