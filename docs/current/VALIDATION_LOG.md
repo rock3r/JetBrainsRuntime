@@ -5,6 +5,21 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-25 focused op106 transformed fill-oval run command:
+  The retained op106 advertises and replays
+  `COMMAND_SAVE_TRANSLATE_ROTATE_TRANSLATE_FILL_OVAL_RESTORE_RUN` for adjacent op100 transformed filled-oval records
+  that share record flags. CMP emits one run header plus the repeated op100 body fields, removing repeated record
+  headers for Hypnotoad's transformed-eye loop while preserving each entry's transform, color, and oval bounds. Narrow
+  validation passed:
+  `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.compactsAdjacentSaveTranslateRotateTranslateFillOvalRestoreRun --console=plain`;
+  `./gradlew awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest --console=plain`; local Skiko/CMP publishes;
+  `./scripts/rebuild-jbr-skia-local-artifacts.sh`; and focused Hypnotoad validation:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260625-op106-transformed-fill-oval-run-hypnotoad/suite.tsv`.
+  Hypnotoad stayed strict-clean with `fallbacks=0`, `unsupported_max=0`, `jbr_picture_frames=0`,
+  `jbr_command_frames=876`, and raw logs show `saveTranslateRotateTranslateFillOvalRestoreRun=1` per frame. The
+  logged average command stream size dropped from `1933` words/frame in the retained-op103 run to `1812` words/frame
+  with op106. The compact run appears once per hot frame, so it is lower in the limited top-op report than the
+  remaining per-frame singles even though the raw markers confirm it is active.
 - 2026-06-25 focused op103 stroked oval run command:
   The retained op103 advertises and replays `COMMAND_STROKE_OVAL_RUN` for adjacent stroked oval records with shared
   record flags. The first shared-paint attempt did not fire because Hypnotoad's nine stroked rings use different
