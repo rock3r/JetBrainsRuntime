@@ -5,6 +5,19 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-26 retained CMP adjacent op-pair diagnostics for command-stream candidate discovery:
+  CMP now optionally logs `CMP_JBR_COMMAND_RECORDER_OP_PAIRS` behind
+  `-Dcompose.jbr.skia.command.logOpPairs=true`, and the Magic Jewel report parser records it as
+  `cmp_recorder_top_op_pairs` in `summary.properties` plus a `CMP command recorder op pairs` report row. The
+  validate-only report test covers pair keys such as `fillRect>save`. Narrow validation passed with
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-op-pair-report-summary-controls-slice/controls-slice/report.md`
+  using Combo Boxes, TextFields, Scrollbars, then Hypnotoad. The run stayed strict-clean with
+  `fallback_new_count=0`, `cmp_unsupported_max=0`, `cmp_unsupported_reasons=none`, and `jbr_command_frames=942`.
+  The top aggregate pairs were dominated by existing Hypnotoad compact records
+  (`saveTranslateRotateTranslateStrokeClosedPolylineDeltaRestore>...=1,477,056` total words), while the early
+  controls frames exposed first-use image-definition and translated image/rect adjacency. That does not justify a
+  small local fold; it points at a larger translated-run/image-run ABI candidate if future measurements say the
+  command creation/sending overhead is still worth attacking.
 - 2026-06-26 fixed the remaining yellow-badge README visual artifact:
   The no-badge run was clean, but the yellow debug-badge path still exposed fixture-specific image artifacts. The
   copied Magic Jewel README fixture now uses the same stable badge/link sanitizer for `SanitizedJewelReadme` that the
