@@ -196,7 +196,8 @@ public class JBRSkiaService extends JBRSkia {
                     | COMMAND_CAP64_HIGH_FILL_RECT_SAVE_LAYER_CLIP_RECT_SAVE_SAVE_LAYER_SAVE_TRANSLATE
                     | COMMAND_CAP64_HIGH_SAVE_TRANSLATE_ROTATE
                     | COMMAND_CAP64_HIGH_SAVE_TRANSLATE_ROTATE_TRANSLATE_FILL_OVAL_RESTORE
-                    | COMMAND_CAP64_HIGH_STROKE_CLOSED_POLYLINE;
+                    | COMMAND_CAP64_HIGH_STROKE_CLOSED_POLYLINE
+                    | COMMAND_CAP64_HIGH_STROKE_CLOSED_POLYLINE_DELTA;
     private static final boolean NATIVE_BRIDGE_AVAILABLE = loadNativeBridge();
     private static final AtomicLong NEXT_SCOPE_ID = new AtomicLong(1);
     private static final int MAX_CACHED_IMAGES = 256;
@@ -584,6 +585,7 @@ public class JBRSkiaService extends JBRSkia {
         if (op == COMMAND_STROKE_PATH_RADIAL_GRADIENT) return -34;
         if (op == COMMAND_STROKE_PATH_SWEEP_GRADIENT) return -35;
         if (op == COMMAND_STROKE_CLOSED_POLYLINE) return -39;
+        if (op == COMMAND_STROKE_CLOSED_POLYLINE_DELTA) return -40;
         if (op == COMMAND_STROKE_RECT_SHADER_REF) return 14;
         if (op == COMMAND_STROKE_RECT_IMAGE_SHADER) return 18;
         if (op == COMMAND_FILL_RECT_IMAGE_SHADER) return 14;
@@ -713,6 +715,9 @@ public class JBRSkiaService extends JBRSkia {
         }
         if (expectedLength == -39 && record.op() == COMMAND_STROKE_CLOSED_POLYLINE) {
             return record.recordLength() >= 13;
+        }
+        if (expectedLength == -40 && record.op() == COMMAND_STROKE_CLOSED_POLYLINE_DELTA) {
+            return record.recordLength() >= 12;
         }
         return expectedLength == record.recordLength();
     }
@@ -1209,6 +1214,21 @@ public class JBRSkiaService extends JBRSkia {
                     && pointCount >= 2
                     && pointCount <= 4096
                     && record.argsStart() + 6 + pointCount * 2 == record.recordEnd();
+        }
+        if (record.op() == COMMAND_STROKE_CLOSED_POLYLINE_DELTA) {
+            if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE
+                    && record.recordFlags() != COMMAND_RECORD_FLAG_ANTIALIAS) {
+                return false;
+            }
+            int strokeWidth = commands[record.argsStart() + 1];
+            int strokeCap = commands[record.argsStart() + 2];
+            int strokeJoin = commands[record.argsStart() + 3];
+            int strokeMiter = commands[record.argsStart() + 4];
+            int pointCount = commands[record.argsStart() + 5];
+            return isValidStrokeMetadata(strokeWidth, strokeCap, strokeJoin, strokeMiter)
+                    && pointCount >= 2
+                    && pointCount <= 4096
+                    && record.argsStart() + 8 + pointCount - 1 == record.recordEnd();
         }
         if (record.op() == COMMAND_DRAW_SHADOW_PATH) {
             if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE
@@ -3176,6 +3196,40 @@ public class JBRSkiaService extends JBRSkia {
                         path.moveTo(commands[offset++] / 1000f, commands[offset++] / 1000f);
                         for (int i = 1; i < pointCount; i++) {
                             path.lineTo(commands[offset++] / 1000f, commands[offset++] / 1000f);
+                        }
+                        path.closePath();
+                        applyAntialiasing(current, antiAlias);
+                        current.setColor(new Color(argb, true));
+                        current.setStroke(new BasicStroke(
+                                strokeWidth,
+                                strokeCap == 1 ? BasicStroke.CAP_ROUND : strokeCap == 2 ? BasicStroke.CAP_SQUARE : BasicStroke.CAP_BUTT,
+                                strokeJoin == 1 ? BasicStroke.JOIN_ROUND : strokeJoin == 2 ? BasicStroke.JOIN_BEVEL : BasicStroke.JOIN_MITER,
+                                Math.max(1f, strokeMiter / 1000f)
+                        ));
+                        current.draw(path);
+                    } else if (op == COMMAND_STROKE_CLOSED_POLYLINE_DELTA) {
+                        if (offset + 8 > recordEnd) return false;
+                        int argb = commands[offset++];
+                        int strokeWidth = commands[offset++];
+                        int strokeCap = commands[offset++];
+                        int strokeJoin = commands[offset++];
+                        int strokeMiter = commands[offset++];
+                        int pointCount = commands[offset++];
+                        int x = commands[offset++];
+                        int y = commands[offset++];
+                        if (!isValidStrokeMetadata(strokeWidth, strokeCap, strokeJoin, strokeMiter)
+                                || pointCount < 2
+                                || pointCount > 4096
+                                || offset + pointCount - 1 != recordEnd) {
+                            return false;
+                        }
+                        Path2D path = new Path2D.Float(Path2D.WIND_NON_ZERO, pointCount);
+                        path.moveTo(x / 1000f, y / 1000f);
+                        for (int i = 1; i < pointCount; i++) {
+                            int packedDelta = commands[offset++];
+                            x += (short) (packedDelta >>> 16);
+                            y += (short) packedDelta;
+                            path.lineTo(x / 1000f, y / 1000f);
                         }
                         path.closePath();
                         applyAntialiasing(current, antiAlias);

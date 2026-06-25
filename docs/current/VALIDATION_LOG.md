@@ -5,6 +5,18 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-25 focused op102 delta-packed closed-polyline stroke command:
+  The retained op102 advertises and replays `COMMAND_STROKE_CLOSED_POLYLINE_DELTA` for closed-polyline strokes whose
+  adjacent fixed1000 point deltas fit in signed 16-bit values. CMP keeps op101 as the general absolute-point fallback,
+  but emits op102 as `[argb, stroke metadata, pointCount, startX, startY, packedDxDy...]`, halving the point payload for
+  smooth animated paths such as Hypnotoad's wave rings. Narrow validation passed:
+  `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesDeltaPackedClosedPolylineStrokePathRecord --console=plain`;
+  `./gradlew awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest --console=plain`; local Skiko/CMP publishes;
+  `./scripts/rebuild-jbr-skia-local-artifacts.sh`; and focused Hypnotoad validation:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260625-op102-stroke-closed-polyline-delta-hypnotoad/suite.tsv`.
+  Hypnotoad stayed strict-clean with `fallbacks=0`, `unsupported_max=0`, `jbr_picture_frames=0`,
+  `jbr_command_frames=896`, and `strokeClosedPolylineDelta:total=4475`. The logged average command stream size dropped
+  from `2854.9` words/frame in the retained-op101 run to `1957.7` words/frame with op102.
 - 2026-06-25 focused op101 closed-polyline stroke compact command:
   The retained op101 advertises and replays `COMMAND_STROKE_CLOSED_POLYLINE` for solid-color stroked paths whose
   serialized path data is exactly `move; line...; close`. CMP emits the compact record as fixed1000 point pairs and
