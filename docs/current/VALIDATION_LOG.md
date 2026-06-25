@@ -5,6 +5,18 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-26 fixed the remaining yellow-badge README visual artifact:
+  The no-badge run was clean, but the yellow debug-badge path still exposed fixture-specific image artifacts. The
+  copied Magic Jewel README fixture now uses the same stable badge/link sanitizer for `SanitizedJewelReadme` that the
+  preview renderer applies, so the editor state, combo reload, and preview path no longer diverge. The copied
+  `readme/jewel-logo.svg` also no longer carries the accidental black background rect; the `icons/jewel-logo.svg`
+  copy was already transparent. Narrow validation passed with `./gradlew processResources compileKotlin`, refreshed
+  CMP desktop jar output after reverting an ineffective alpha-probe experiment, and a direct yellow-badge static
+  preview report:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-yellow-badge-transparent-readme-logo/markdown-preview-readme80-static/report.md`.
+  The report passed with `fallback_new_count=0`, `cmp_unsupported_max=0`, `cmp_unsupported_reasons=none`,
+  `jbr_command_frames=7`, and the captured `new-window.png` shows a clean title, transparent Jewel logo, and the
+  yellow `JBR Skia scope` marker isolated in the bottom-right.
 - 2026-06-26 rejected large adaptive encoded-command-buffer cache:
   A Skiko prototype raised `MAX_ADAPTIVE_CACHED_ENCODED_COMMAND_WORDS` from 2,048 to 8,192 while keeping the immediate
   cache ceiling at 512 words, aiming to catch repeated larger Jewel UI frames such as the Scrollbars slice. The focused
