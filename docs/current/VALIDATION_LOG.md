@@ -5,6 +5,29 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-25 focused op101 closed-polyline stroke compact command:
+  The retained op101 advertises and replays `COMMAND_STROKE_CLOSED_POLYLINE` for solid-color stroked paths whose
+  serialized path data is exactly `move; line...; close`. CMP emits the compact record as fixed1000 point pairs and
+  drops a duplicate final point when it matches the first point before `close`. This targets Hypnotoad's five animated
+  wave rings, which were the dominant remaining command-word cost after op100. Narrow validation passed:
+  `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesCompactClosedPolylineStrokePathRecord --console=plain`;
+  `./gradlew awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest --console=plain`; local Skiko/CMP publishes;
+  `./scripts/rebuild-jbr-skia-local-artifacts.sh`; and focused Hypnotoad validation:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260625-op101-stroke-closed-polyline-hypnotoad/suite.tsv`.
+  Hypnotoad stayed strict-clean with `fallbacks=0`, `unsupported_max=0`, `jbr_picture_frames=0`,
+  `jbr_command_frames=826`, and `strokeClosedPolyline:total=4135`. The logged average command stream size dropped from
+  `3791.4` words/frame in the retained-op100 Hypnotoad run to `2854.9` words/frame with op101.
+- 2026-06-25 rejected transformed stroke-oval compact command:
+  A temporary candidate mirrored op100 for `save; translate; rotate; translate; strokeOval; restore`. The narrow
+  gates passed while the candidate was present (CMP focused recorder tests, Skiko interop test, local CMP/Skiko
+  publishes, and `./scripts/rebuild-jbr-skia-local-artifacts.sh`), but focused Hypnotoad validation proved it was the
+  wrong shape for the retained run:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260625-op101-save-translate-rotate-translate-stroke-oval-restore-hypnotoad-rerun/suite.tsv`.
+  The run stayed strict-clean with `fallbacks=0`, `unsupported_max=0`, `jbr_picture_frames=0`, and
+  `jbr_command_frames=967`, but `saveTranslateRotateTranslateStrokeOvalRestore` never appeared in the op summary and
+  command words stayed at the retained-op100 shape (`3838`/`3890` frame samples). The remaining `strokeOval=9` records
+  are the untransformed ring strokes, not a nested translated stroke-oval sequence. The provisional ABI/capability/CMP
+  and native candidate was removed.
 - 2026-06-25 focused op100 transformed fill-oval compact command:
   The first attempted op100 shape (`saveTranslateRotate; fillOval; restore`) passed strict-clean Hypnotoad validation
   but did not fire, so it was rejected/retargeted:

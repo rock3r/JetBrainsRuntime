@@ -211,6 +211,7 @@ static constexpr jint COMMAND_SAVE_TRANSLATE_LAYER_SAVE_TRANSLATE_DRAW_IMAGE_REF
 static constexpr jint COMMAND_FILL_RECT_SAVE_LAYER_CLIP_RECT_SAVE_SAVE_LAYER_SAVE_TRANSLATE = 98;
 static constexpr jint COMMAND_SAVE_TRANSLATE_ROTATE = 99;
 static constexpr jint COMMAND_SAVE_TRANSLATE_ROTATE_TRANSLATE_FILL_OVAL_RESTORE = 100;
+static constexpr jint COMMAND_STROKE_CLOSED_POLYLINE = 101;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER = 1;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_COLOR_MATRIX_FILTER = 2;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_LIGHTING_FILTER = 3;
@@ -1932,6 +1933,43 @@ static bool drawCommandList(SkCanvas* canvas,
                     paint.setStrokeMiter(static_cast<SkScalar>(strokeMiter1000) / 1000.0f);
                 }
                 canvas->drawPath(path, paint);
+                break;
+            }
+            case COMMAND_STROKE_CLOSED_POLYLINE: {
+                if (offset + 6 > recordEnd) {
+                    return false;
+                }
+                const jint argb = commands[offset++];
+                const jint strokeWidth = commands[offset++];
+                const jint strokeCap = commands[offset++];
+                const jint strokeJoin = commands[offset++];
+                const jint strokeMiter1000 = commands[offset++];
+                const jint pointCount = commands[offset++];
+                if (!isValidStrokeMetadata(strokeWidth, strokeCap, strokeJoin, strokeMiter1000) ||
+                        pointCount < 2 ||
+                        pointCount > 4096 ||
+                        offset + pointCount * 2 != recordEnd) {
+                    return false;
+                }
+                SkPathBuilder builder(SkPathFillType::kWinding);
+                SkScalar x = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                SkScalar y = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                builder.moveTo(x, y);
+                for (jint i = 1; i < pointCount; ++i) {
+                    x = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                    y = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                    builder.lineTo(x, y);
+                }
+                builder.close();
+                SkPaint paint;
+                paint.setAntiAlias(antiAlias);
+                paint.setStyle(SkPaint::kStroke_Style);
+                paint.setColor(skColorFromArgb(argb));
+                paint.setStrokeWidth(static_cast<SkScalar>(strokeWidth));
+                paint.setStrokeCap(static_cast<SkPaint::Cap>(strokeCap));
+                paint.setStrokeJoin(static_cast<SkPaint::Join>(strokeJoin));
+                paint.setStrokeMiter(static_cast<SkScalar>(strokeMiter1000) / 1000.0f);
+                canvas->drawPath(builder.detach(), paint);
                 break;
             }
             case COMMAND_DRAW_PATH_PATH_EFFECT_REF: {
