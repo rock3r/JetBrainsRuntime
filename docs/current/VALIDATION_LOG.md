@@ -48,6 +48,15 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   `jbr_command_frames=260`, and the new compact op fired with
   `saveTranslateLayerSaveTranslateDrawImageRefFullRestoreNSaveTranslateLayerSaveTranslate:total=570`. The focused
   command average dropped to `avg_commands=366`, beating the retained op96 baseline's `370`.
+- 2026-06-25 rejected post-op97 image-restoreN + round-rect-restoreN fold:
+  A retained-op97 pair diagnostic showed `drawImageRefFullRestoreN > drawRoundRectRestoreN` as a hot pair
+  (`521` aggregated observations) in
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260625-pair-diagnostic-retained-op97/suite.tsv`.
+  A temporary op98 candidate for this pair passed the harness' fallback/unsupported checks but was rejected because it
+  was not exercised in the op mix and the focused run crawled (`app_new_fps=1.0`, `jbr_command_frames=17`,
+  `avg_commands=253` over too few frames) instead of proving an improved steady command stream:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260625-op98-image-restore-roundrect/suite.tsv`.
+  The op98 ABI, capability, CMP fold, and native replay code were removed; retained op97 remains the local baseline.
 - 2026-06-22 rejected post-op96 `fillRoundRect > restoreN` fold:
   A temporary adjacent-pair diagnostic on the focused Markdown wheel path passed strict-clean and showed
   `fillRoundRect > restoreN` as a hot pair (`385` aggregated observations in

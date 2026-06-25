@@ -82,6 +82,11 @@ This is the small working roadmap for the current PoC. The full historical check
   `saveTranslateLayerSaveTranslateDrawImageRefFullRestoreNSaveTranslateLayerSaveTranslate:total=570`, and
   `avg_commands=366`, down from the op96 baseline's `370`:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260625-op97-op96-followed-by-layer/suite.tsv`.
+- Rejected command-stream compaction candidate:
+  A temporary op98 fold for `drawImageRefFullRestoreN > drawRoundRectRestoreN` was removed. The focused run did not
+  prove the new op was exercised and crawled at `app_new_fps=1.0` / `jbr_command_frames=17`, so retained op97 remains
+  the baseline:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260625-op98-image-restore-roundrect/suite.tsv`.
 - Jewel icon background note:
   The effective-alpha command-path fix remains validated. A follow-up source/rasterization check showed most small
   showcase icon white rectangles are clip-path scaffolding rather than painted opaque backgrounds; rasterized samples
