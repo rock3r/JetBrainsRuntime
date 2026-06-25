@@ -5,6 +5,17 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-25 focused Jewel markdown image-renderer parity fix:
+  Manual comparison showed the no-overlay standalone Markdown README path rendered cleanly, while the yellow-overlay
+  run exposed the badge row as raw image fallback text overlapping the `Jewel` title. The copied Magic Jewel standalone
+  demo had drifted from upstream Jewel: its `MarkdownPreview` registered only autolinks and tables, so README badge
+  images fell through to the core inline image fallback (`![...](...)`) instead of using Jewel's Coil-backed image
+  renderer. Magic Jewel now registers the upstream image, GitHub alert, and strikethrough extensions while retaining the
+  local Spectre/auto-scroll stress hooks. Narrow validation passed with the yellow `JBR Skia scope` overlay enabled:
+  `CASES=markdown-preview-readme20-auto OUT_ROOT=/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260625-markdown-image-extension-yellow-badge EXPECT_SCREENSHOT_ASSERTION=false JBR_SKIA_INTEROP_JVM_ARGS='-Dcompose.jbr.skia.command.logOpCounts=true -Dskiko.jbr.interop.debugOverlay=true' DURATION_SECONDS=8 WARMUP_SECONDS=1 SAMPLE_INTERVAL_SECONDS=1 ./scripts/jewel-standalone-focused-benchmark-suite.sh`.
+  The focused run stayed strict-clean with `fallbacks=0`, `unsupported_max=0`, `jbr_picture_frames=0`,
+  `jbr_command_frames=237`, `avg_image_defines=1.0`, and `avg_image_refs=8.0`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260625-markdown-image-extension-yellow-badge/suite.tsv`.
 - 2026-06-25 focused op99 save-translate + rotate compact command:
   A temporary pair diagnostic on the retained op98 `hypnotoad-animation` path showed a transform-heavy loop rather
   than another image-cache opportunity. The hottest adjacent pairs were `saveTranslate > rotate` and
