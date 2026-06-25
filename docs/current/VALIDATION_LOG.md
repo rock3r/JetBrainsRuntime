@@ -5,6 +5,24 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-25 retained clear-image-roundrect command compaction:
+  The retained op109 advertises and replays `COMMAND_CLEAR_DRAW_IMAGE_REF_FULL_DRAW_ROUND_RECT`, folding the hot
+  `clearRect > drawImageRefFullDrawRoundRect` shape emitted by the Jewel standalone icon showcase. The first prototype
+  functionally passed but was rejected until op109 was also marked foldable out of plain translated layers; without that
+  eligibility the command stream regressed by keeping extra `translate` records. Narrow validation passed after the
+  fix: CMP focused recorder test
+  `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesCompactClearFullImageRefAndRoundRectRecord --console=plain`;
+  Skiko capability tests
+  `./gradlew --no-daemon --no-configuration-cache :skiko:awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest --console=plain`;
+  JBR API/native smoke
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/scripts/test-jbr-skia-api.sh`; local CMP/Skiko publishes; and
+  focused `showcase-icons` validation:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260625-op109-clear-image-roundrect-icons-foldable/showcase-icons/report.md`.
+  The retained run stayed strict-clean with `fallbacks=0`, `unsupported_max=0`, and `jbr_command_frames=3`.
+  Warm icon frames now emit `clearDrawImageRefFullDrawRoundRect=22`, keep `translate=21`, and drop from the prior clean
+  `1217` command words/frame to `1151`.
+  Separate visual note: the no-badge showcase path was manually reported clean, while the yellow-badge fallback path
+  still has an image replacement/title overlap bug and remains a fallback correctness issue outside this op109 change.
 - 2026-06-25 focused fill-rect run command and static badge guard:
   The retained op108 advertises and replays `COMMAND_FILL_RECT_RUN` for adjacent solid fill-rectangle records sharing
   record flags. This targets the medium `IdleRedraw` harness shape where many plain rect fills were dominating command
