@@ -209,6 +209,7 @@ static constexpr jint COMMAND_FILL_RECT_SAVE_LAYER_CLIP_RECT = 95;
 static constexpr jint COMMAND_SAVE_TRANSLATE_LAYER_SAVE_TRANSLATE_DRAW_IMAGE_REF_FULL_RESTORE_N = 96;
 static constexpr jint COMMAND_SAVE_TRANSLATE_LAYER_SAVE_TRANSLATE_DRAW_IMAGE_REF_FULL_RESTORE_N_SAVE_TRANSLATE_LAYER_SAVE_TRANSLATE = 97;
 static constexpr jint COMMAND_FILL_RECT_SAVE_LAYER_CLIP_RECT_SAVE_SAVE_LAYER_SAVE_TRANSLATE = 98;
+static constexpr jint COMMAND_SAVE_TRANSLATE_ROTATE = 99;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER = 1;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_COLOR_MATRIX_FILTER = 2;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_LIGHTING_FILTER = 3;
@@ -3160,6 +3161,18 @@ static bool drawCommandList(SkCanvas* canvas,
                 SkScalar dy = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
                 canvas->save();
                 canvas->translate(dx, dy);
+                break;
+            }
+            case COMMAND_SAVE_TRANSLATE_ROTATE: {
+                if (recordFlags != COMMAND_RECORD_FLAGS_NONE || offset + 3 != recordEnd) {
+                    return false;
+                }
+                SkScalar dx = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                SkScalar dy = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                SkScalar degrees = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                canvas->save();
+                canvas->translate(dx, dy);
+                canvas->rotate(degrees);
                 break;
             }
             case COMMAND_SAVE_TRANSLATE_LAYER: {

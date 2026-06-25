@@ -5,6 +5,21 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-25 focused op99 save-translate + rotate compact command:
+  A temporary pair diagnostic on the retained op98 `hypnotoad-animation` path showed a transform-heavy loop rather
+  than another image-cache opportunity. The hottest adjacent pairs were `saveTranslate > rotate` and
+  `rotate > translate` (`67286` aggregated observations each), with strict-clean command replay:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260625-pair-diagnostic-hypnotoad-retained-op98/suite.tsv`.
+  The retained op99 now advertises and replays `COMMAND_SAVE_TRANSLATE_ROTATE` as a compact record for
+  `save; translate; rotate`, with matching JBR API/JBR/Skiko capability gates and CMP compaction. Narrow validation
+  passed:
+  `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.compactsAdjacentSaveTranslateRotate --console=plain`;
+  `./gradlew awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest --console=plain`;
+  local Skiko/CMP publishes; `./scripts/rebuild-jbr-skia-local-artifacts.sh`; and a focused Hypnotoad run:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260625-op99-save-translate-rotate-hypnotoad/suite.tsv`.
+  Hypnotoad stayed strict-clean with `fallbacks=0`, `unsupported_max=0`, `jbr_picture_frames=0`,
+  `jbr_command_frames=1144`, and `saveTranslateRotate:total=63579`. The logged average command-op count dropped from
+  `305.6` per frame in the retained-op98 pair diagnostic to `247.8` per frame with op99.
 - 2026-06-25 Skiko debug-overlay placement fix:
   Manual standalone showcase inspection showed the opt-in yellow `JBR Skia scope` debug badge overlapping the Jewel
   title area, while the same run without the badge rendered cleanly. This was an overlay/harness artifact rather than a

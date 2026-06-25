@@ -56,6 +56,15 @@ This is the small working roadmap for the current PoC. The full historical check
 ## Latest Validations
 
 - Focused ABI 111 command-stream compaction checkpoint:
+  Added `COMMAND_SAVE_TRANSLATE_ROTATE` (`op=99`) plus matching high capability bit `281474976710656` for compact
+  `save; translate; rotate` records. A focused Hypnotoad pair diagnostic identified `saveTranslate > rotate` as one of
+  the hottest remaining command-only pairs, and narrow gates passed: CMP focused recorder test, Skiko focused interop
+  test, local CMP/Skiko publishes, `./scripts/rebuild-jbr-skia-local-artifacts.sh`, and focused Hypnotoad validation.
+  The focused Hypnotoad slice stayed strict-clean with `fallbacks=0`, `unsupported_max=0`, `jbr_picture_frames=0`,
+  `jbr_command_frames=1144`, `saveTranslateRotate:total=63579`, and logged average command-op count dropped from
+  `305.6` per frame in the retained-op98 pair diagnostic to `247.8` per frame:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260625-op99-save-translate-rotate-hypnotoad/suite.tsv`.
+- Focused ABI 111 command-stream compaction checkpoint:
   Added `COMMAND_SAVE_TRANSLATE_LAYER_SAVE_TRANSLATE_DRAW_IMAGE_REF_FULL_RESTORE_N` (`op=96`) plus
   `COMMAND_CAP64_HIGH_SAVE_TRANSLATE_LAYER_SAVE_TRANSLATE_DRAW_IMAGE_REF_FULL_RESTORE_N=35184372088832` for compact
   translated-layer/nested translated-save plus full-image restoreN records. Narrow gates passed: CMP focused recorder
