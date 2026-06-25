@@ -32,6 +32,22 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   The only retained code change from this pass is Skiko test maintenance: its high-capability aggregate now includes
   the already-retained op96 bit, and `./gradlew awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest --console=plain`
   passes in `/Users/rock3r/src/jbr-skia-zero-copy/skiko/skiko`.
+- 2026-06-25 focused op97 translated-layer/image-restoreN + translated-layer compact command:
+  A temporary adjacent-pair diagnostic on the retained op96 focused Markdown wheel path showed
+  `saveTranslateLayerSaveTranslateDrawImageRefFullRestoreN > saveTranslateLayerSaveTranslate` as the hottest remaining
+  command-only pair (`932` aggregated observations):
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260625-pair-diagnostic-retained-op96/suite.tsv`.
+  The retained op97 now advertises and replays
+  `COMMAND_SAVE_TRANSLATE_LAYER_SAVE_TRANSLATE_DRAW_IMAGE_REF_FULL_RESTORE_N_SAVE_TRANSLATE_LAYER_SAVE_TRANSLATE`
+  (`op=97`) as a compact record for a translated-layer/nested translated-save image restoreN sequence followed by
+  another translated-layer/nested translated-save. Narrow validation passed:
+  `./gradlew awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest --console=plain`;
+  `./scripts/rebuild-jbr-skia-local-artifacts.sh`; local Skiko/CMP publishes; and a short focused Markdown wheel run:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260625-op97-op96-followed-by-layer/suite.tsv`.
+  Markdown stayed strict-clean with `fallbacks=0`, `unsupported_max=0`, `jbr_picture_frames=0`,
+  `jbr_command_frames=260`, and the new compact op fired with
+  `saveTranslateLayerSaveTranslateDrawImageRefFullRestoreNSaveTranslateLayerSaveTranslate:total=570`. The focused
+  command average dropped to `avg_commands=366`, beating the retained op96 baseline's `370`.
 - 2026-06-22 rejected post-op96 `fillRoundRect > restoreN` fold:
   A temporary adjacent-pair diagnostic on the focused Markdown wheel path passed strict-clean and showed
   `fillRoundRect > restoreN` as a hot pair (`385` aggregated observations in
@@ -105,6 +121,11 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-icon-alpha-effective/suite.tsv`.
   The Icons run stayed strict-clean with `fallbacks=0`, `unsupported_max=0`, `jbr_picture_frames=0`,
   `jbr_command_frames=3`, and 40 bitmap icon refs exercised in the first command frame.
+- 2026-06-25 fallback-path visual caveat:
+  Manual inspection of the fallback/yellow-badge path showed image replacement text overlapping the `Jewel` title in
+  the standalone showcase. Treat this as a fallback placeholder/layout rendering issue, not evidence of command-path
+  unsupported coverage; isolate it with a tiny fallback-mode visual run before making fallback screenshots part of a
+  parity claim.
 - 2026-06-22 focused op93 saveLayer + saveTranslate compact command:
   A post-op92 temporary pair diagnostic on the focused Markdown wheel path showed `saveLayer > saveTranslate` as the
   hottest simple remaining pair (`4603` observations in

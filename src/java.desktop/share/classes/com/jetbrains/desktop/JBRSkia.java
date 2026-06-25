@@ -186,6 +186,8 @@ public abstract class JBRSkia {
     public static final long COMMAND_CAP64_HIGH_FILL_RECT_SAVE_LAYER_CLIP_RECT = Long.parseLong("17592186044416");
     public static final long COMMAND_CAP64_HIGH_SAVE_TRANSLATE_LAYER_SAVE_TRANSLATE_DRAW_IMAGE_REF_FULL_RESTORE_N =
             Long.parseLong("35184372088832");
+    public static final long COMMAND_CAP64_HIGH_SAVE_TRANSLATE_LAYER_SAVE_TRANSLATE_DRAW_IMAGE_REF_FULL_RESTORE_N_SAVE_TRANSLATE_LAYER_SAVE_TRANSLATE =
+            Long.parseLong("70368744177664");
     public static final int COMMAND_CLEAR = Integer.parseInt("1");
     public static final int COMMAND_FILL_RECT = Integer.parseInt("2");
     public static final int COMMAND_STROKE_LINE = Integer.parseInt("3");
@@ -286,6 +288,8 @@ public abstract class JBRSkia {
     public static final int COMMAND_FILL_RECT_SAVE_LAYER_CLIP_RECT = Integer.parseInt("95");
     public static final int COMMAND_SAVE_TRANSLATE_LAYER_SAVE_TRANSLATE_DRAW_IMAGE_REF_FULL_RESTORE_N =
             Integer.parseInt("96");
+    public static final int COMMAND_SAVE_TRANSLATE_LAYER_SAVE_TRANSLATE_DRAW_IMAGE_REF_FULL_RESTORE_N_SAVE_TRANSLATE_LAYER_SAVE_TRANSLATE =
+            Integer.parseInt("97");
     public static final int COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER = Integer.parseInt("1");
     public static final int COMMAND_EFFECT_DESCRIPTOR_COLOR_MATRIX_FILTER = Integer.parseInt("2");
     public static final int COMMAND_EFFECT_DESCRIPTOR_LIGHTING_FILTER = Integer.parseInt("3");

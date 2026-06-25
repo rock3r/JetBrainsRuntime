@@ -71,11 +71,25 @@ This is the small working roadmap for the current PoC. The full historical check
   to `375`, so the ABI/capability/native/CMP candidate was removed and local artifacts were republished. Skiko's
   capability aggregate test was kept corrected for the already-retained op96 bit:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260625-op97-layer-stroke-image-run/suite.tsv`.
+- Focused ABI 111 command-stream compaction checkpoint:
+  Added
+  `COMMAND_SAVE_TRANSLATE_LAYER_SAVE_TRANSLATE_DRAW_IMAGE_REF_FULL_RESTORE_N_SAVE_TRANSLATE_LAYER_SAVE_TRANSLATE`
+  (`op=97`) plus matching high capability bit `70368744177664` for compact op96-plus-translated-layer records. A
+  retained-state pair diagnostic showed this as the hottest remaining command-only pair, and narrow gates passed:
+  Skiko focused interop test, local CMP/Skiko publishes, `./scripts/rebuild-jbr-skia-local-artifacts.sh`, and focused
+  Markdown wheel validation. The focused Markdown slice stayed strict-clean with `fallbacks=0`, `unsupported_max=0`,
+  `jbr_picture_frames=0`, `jbr_command_frames=260`,
+  `saveTranslateLayerSaveTranslateDrawImageRefFullRestoreNSaveTranslateLayerSaveTranslate:total=570`, and
+  `avg_commands=366`, down from the op96 baseline's `370`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260625-op97-op96-followed-by-layer/suite.tsv`.
 - Jewel icon background note:
   The effective-alpha command-path fix remains validated. A follow-up source/rasterization check showed most small
   showcase icon white rectangles are clip-path scaffolding rather than painted opaque backgrounds; rasterized samples
   had transparent corners. `jewel-logo.svg` still paints a white diamond. Remaining live solid-background symptoms
   should be isolated in the Jewel painter/live rendering path.
+- Fallback-path visual caveat:
+  Manual fallback/yellow-badge inspection showed image replacement text overlapping the `Jewel` title in the standalone
+  showcase. Track this as a fallback placeholder/layout issue separately from command-path coverage.
 - Focused CMP-only command-stream compaction checkpoint:
   CMP now folds a following `COMMAND_RESTORE_N` into the existing `COMMAND_DRAW_ROUND_RECT_RESTORE_N` restore count.
   This reuses the existing JBR op and requires no ABI or capability change. Narrow gates passed: CMP focused recorder
