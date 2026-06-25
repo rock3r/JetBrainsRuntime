@@ -199,7 +199,8 @@ public class JBRSkiaService extends JBRSkia {
                     | COMMAND_CAP64_HIGH_STROKE_CLOSED_POLYLINE
                     | COMMAND_CAP64_HIGH_STROKE_CLOSED_POLYLINE_DELTA
                     | COMMAND_CAP64_HIGH_STROKE_OVAL_RUN
-                    | COMMAND_CAP64_HIGH_SAVE_TRANSLATE_ROTATE_TRANSLATE_FILL_OVAL_RESTORE_RUN;
+                    | COMMAND_CAP64_HIGH_SAVE_TRANSLATE_ROTATE_TRANSLATE_FILL_OVAL_RESTORE_RUN
+                    | COMMAND_CAP64_HIGH_SAVE_TRANSLATE_ROTATE_TRANSLATE_STROKE_CLOSED_POLYLINE_DELTA_RESTORE;
     private static final boolean NATIVE_BRIDGE_AVAILABLE = loadNativeBridge();
     private static final AtomicLong NEXT_SCOPE_ID = new AtomicLong(1);
     private static final int MAX_CACHED_IMAGES = 256;
@@ -514,6 +515,7 @@ public class JBRSkiaService extends JBRSkia {
         if (op == COMMAND_SAVE_TRANSLATE_ROTATE) return 6;
         if (op == COMMAND_SAVE_TRANSLATE_ROTATE_TRANSLATE_FILL_OVAL_RESTORE) return 13;
         if (op == COMMAND_SAVE_TRANSLATE_ROTATE_TRANSLATE_FILL_OVAL_RESTORE_RUN) return -42;
+        if (op == COMMAND_SAVE_TRANSLATE_ROTATE_TRANSLATE_STROKE_CLOSED_POLYLINE_DELTA_RESTORE) return -43;
         if (op == COMMAND_SAVE_TRANSLATE_LAYER) return 10;
         if (op == COMMAND_SAVE_LAYER) return 8;
         if (op == COMMAND_SAVE_LAYER_SAVE_TRANSLATE || op == COMMAND_SAVE_SAVE_LAYER_SAVE_TRANSLATE) return 10;
@@ -728,6 +730,10 @@ public class JBRSkiaService extends JBRSkia {
         }
         if (expectedLength == -42 && record.op() == COMMAND_SAVE_TRANSLATE_ROTATE_TRANSLATE_FILL_OVAL_RESTORE_RUN) {
             return record.recordLength() >= 24;
+        }
+        if (expectedLength == -43 &&
+                record.op() == COMMAND_SAVE_TRANSLATE_ROTATE_TRANSLATE_STROKE_CLOSED_POLYLINE_DELTA_RESTORE) {
+            return record.recordLength() >= 17;
         }
         return expectedLength == record.recordLength();
     }
@@ -1239,6 +1245,21 @@ public class JBRSkiaService extends JBRSkia {
                     && pointCount >= 2
                     && pointCount <= 4096
                     && record.argsStart() + 8 + pointCount - 1 == record.recordEnd();
+        }
+        if (record.op() == COMMAND_SAVE_TRANSLATE_ROTATE_TRANSLATE_STROKE_CLOSED_POLYLINE_DELTA_RESTORE) {
+            if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE
+                    && record.recordFlags() != COMMAND_RECORD_FLAG_ANTIALIAS) {
+                return false;
+            }
+            int strokeWidth = commands[record.argsStart() + 6];
+            int strokeCap = commands[record.argsStart() + 7];
+            int strokeJoin = commands[record.argsStart() + 8];
+            int strokeMiter = commands[record.argsStart() + 9];
+            int pointCount = commands[record.argsStart() + 10];
+            return isValidStrokeMetadata(strokeWidth, strokeCap, strokeJoin, strokeMiter)
+                    && pointCount >= 2
+                    && pointCount <= 4096
+                    && record.argsStart() + 13 + pointCount - 1 == record.recordEnd();
         }
         if (record.op() == COMMAND_SAVE_TRANSLATE_ROTATE_TRANSLATE_FILL_OVAL_RESTORE_RUN) {
             if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE
@@ -3297,6 +3318,50 @@ public class JBRSkiaService extends JBRSkia {
                                 Math.max(1f, strokeMiter / 1000f)
                         ));
                         current.draw(path);
+                    } else if (op == COMMAND_SAVE_TRANSLATE_ROTATE_TRANSLATE_STROKE_CLOSED_POLYLINE_DELTA_RESTORE) {
+                        if (offset + 13 > recordEnd) return false;
+                        Graphics2D saved = current;
+                        Graphics2D transformed = (Graphics2D) current.create();
+                        try {
+                            transformed.translate(commands[offset++] / 1000.0, commands[offset++] / 1000.0);
+                            transformed.rotate(Math.toRadians(commands[offset++] / 1000.0));
+                            transformed.translate(commands[offset++] / 1000.0, commands[offset++] / 1000.0);
+                            int argb = commands[offset++];
+                            int strokeWidth = commands[offset++];
+                            int strokeCap = commands[offset++];
+                            int strokeJoin = commands[offset++];
+                            int strokeMiter = commands[offset++];
+                            int pointCount = commands[offset++];
+                            int x = commands[offset++];
+                            int y = commands[offset++];
+                            if (!isValidStrokeMetadata(strokeWidth, strokeCap, strokeJoin, strokeMiter)
+                                    || pointCount < 2
+                                    || pointCount > 4096
+                                    || offset + pointCount - 1 != recordEnd) {
+                                return false;
+                            }
+                            Path2D path = new Path2D.Float(Path2D.WIND_NON_ZERO, pointCount);
+                            path.moveTo(x / 1000f, y / 1000f);
+                            for (int i = 1; i < pointCount; i++) {
+                                int packedDelta = commands[offset++];
+                                x += (short) (packedDelta >>> 16);
+                                y += (short) packedDelta;
+                                path.lineTo(x / 1000f, y / 1000f);
+                            }
+                            path.closePath();
+                            applyAntialiasing(transformed, antiAlias);
+                            transformed.setColor(new Color(argb, true));
+                            transformed.setStroke(new BasicStroke(
+                                    strokeWidth,
+                                    strokeCap == 1 ? BasicStroke.CAP_ROUND : strokeCap == 2 ? BasicStroke.CAP_SQUARE : BasicStroke.CAP_BUTT,
+                                    strokeJoin == 1 ? BasicStroke.JOIN_ROUND : strokeJoin == 2 ? BasicStroke.JOIN_BEVEL : BasicStroke.JOIN_MITER,
+                                    Math.max(1f, strokeMiter / 1000f)
+                            ));
+                            transformed.draw(path);
+                        } finally {
+                            transformed.dispose();
+                        }
+                        current = saved;
                     } else if (op == COMMAND_DRAW_PATH_PATH_EFFECT_REF) {
                         if (offset + 10 > recordEnd) return false;
                         int paintStyle = commands[offset++];

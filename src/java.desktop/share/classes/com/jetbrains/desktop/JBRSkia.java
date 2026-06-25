@@ -198,6 +198,8 @@ public abstract class JBRSkia {
     public static final long COMMAND_CAP64_HIGH_STROKE_OVAL_RUN = Long.parseLong("4503599627370496");
     public static final long COMMAND_CAP64_HIGH_SAVE_TRANSLATE_ROTATE_TRANSLATE_FILL_OVAL_RESTORE_RUN =
             Long.parseLong("18014398509481984");
+    public static final long COMMAND_CAP64_HIGH_SAVE_TRANSLATE_ROTATE_TRANSLATE_STROKE_CLOSED_POLYLINE_DELTA_RESTORE =
+            Long.parseLong("36028797018963968");
     public static final int COMMAND_CLEAR = Integer.parseInt("1");
     public static final int COMMAND_FILL_RECT = Integer.parseInt("2");
     public static final int COMMAND_STROKE_LINE = Integer.parseInt("3");
@@ -308,6 +310,8 @@ public abstract class JBRSkia {
     public static final int COMMAND_STROKE_CLOSED_POLYLINE_DELTA = Integer.parseInt("102");
     public static final int COMMAND_STROKE_OVAL_RUN = Integer.parseInt("103");
     public static final int COMMAND_SAVE_TRANSLATE_ROTATE_TRANSLATE_FILL_OVAL_RESTORE_RUN = Integer.parseInt("106");
+    public static final int COMMAND_SAVE_TRANSLATE_ROTATE_TRANSLATE_STROKE_CLOSED_POLYLINE_DELTA_RESTORE =
+            Integer.parseInt("107");
     public static final int COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER = Integer.parseInt("1");
     public static final int COMMAND_EFFECT_DESCRIPTOR_COLOR_MATRIX_FILTER = Integer.parseInt("2");
     public static final int COMMAND_EFFECT_DESCRIPTOR_LIGHTING_FILTER = Integer.parseInt("3");

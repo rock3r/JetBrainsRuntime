@@ -5,6 +5,22 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-25 focused op107 transformed delta-packed closed-polyline stroke command:
+  A temporary pair diagnostic on the retained op106 Hypnotoad path showed the exact remaining transformed path shape:
+  `saveTranslateRotate > translate > strokeClosedPolylineDelta > restore` five times per hot frame. The retained op107
+  now advertises and replays
+  `COMMAND_SAVE_TRANSLATE_ROTATE_TRANSLATE_STROKE_CLOSED_POLYLINE_DELTA_RESTORE` for that sequence, preserving the
+  op99 transform, nested translate, op102 delta-packed stroke body, record flags, and implied restore. Narrow
+  validation passed:
+  `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.compactsAdjacentSaveTranslateRotateTranslateStrokeClosedPolylineDeltaRestore --console=plain`;
+  `./gradlew awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest --console=plain`; local patched artifact
+  rebuild; and focused Hypnotoad validation:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260625-op107-transformed-polyline-delta-hypnotoad/suite.tsv`.
+  Hypnotoad stayed strict-clean with `fallbacks=0`, `unsupported_max=0`, `jbr_picture_frames=0`,
+  `jbr_command_frames=847`, and `saveTranslateRotateTranslateStrokeClosedPolylineDeltaRestore:avg=5.0,total=4240`.
+  The logged average command stream size dropped from `1812` words/frame in the retained-op106 run to `1739`
+  words/frame with op107. After the diagnostic run, the temporary adjacent-pair logger was removed and the local
+  patched artifacts were rebuilt again.
 - 2026-06-25 focused op106 transformed fill-oval run command:
   The retained op106 advertises and replays
   `COMMAND_SAVE_TRANSLATE_ROTATE_TRANSLATE_FILL_OVAL_RESTORE_RUN` for adjacent op100 transformed filled-oval records

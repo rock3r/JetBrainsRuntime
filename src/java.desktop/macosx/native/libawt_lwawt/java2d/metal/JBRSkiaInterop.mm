@@ -215,6 +215,7 @@ static constexpr jint COMMAND_STROKE_CLOSED_POLYLINE = 101;
 static constexpr jint COMMAND_STROKE_CLOSED_POLYLINE_DELTA = 102;
 static constexpr jint COMMAND_STROKE_OVAL_RUN = 103;
 static constexpr jint COMMAND_SAVE_TRANSLATE_ROTATE_TRANSLATE_FILL_OVAL_RESTORE_RUN = 106;
+static constexpr jint COMMAND_SAVE_TRANSLATE_ROTATE_TRANSLATE_STROKE_CLOSED_POLYLINE_DELTA_RESTORE = 107;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER = 1;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_COLOR_MATRIX_FILTER = 2;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_LIGHTING_FILTER = 3;
@@ -2013,6 +2014,56 @@ static bool drawCommandList(SkCanvas* canvas,
                 paint.setStrokeJoin(static_cast<SkPaint::Join>(strokeJoin));
                 paint.setStrokeMiter(static_cast<SkScalar>(strokeMiter1000) / 1000.0f);
                 canvas->drawPath(builder.detach(), paint);
+                break;
+            }
+            case COMMAND_SAVE_TRANSLATE_ROTATE_TRANSLATE_STROKE_CLOSED_POLYLINE_DELTA_RESTORE: {
+                if (offset + 13 > recordEnd) {
+                    return false;
+                }
+                const SkScalar dx = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkScalar dy = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkScalar degrees = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkScalar nestedDx = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const SkScalar nestedDy = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                const jint argb = commands[offset++];
+                const jint strokeWidth = commands[offset++];
+                const jint strokeCap = commands[offset++];
+                const jint strokeJoin = commands[offset++];
+                const jint strokeMiter1000 = commands[offset++];
+                const jint pointCount = commands[offset++];
+                jint x1000 = commands[offset++];
+                jint y1000 = commands[offset++];
+                if (!isValidStrokeMetadata(strokeWidth, strokeCap, strokeJoin, strokeMiter1000) ||
+                        pointCount < 2 ||
+                        pointCount > 4096 ||
+                        offset + pointCount - 1 != recordEnd) {
+                    return false;
+                }
+                SkPathBuilder builder(SkPathFillType::kWinding);
+                builder.moveTo(static_cast<SkScalar>(x1000) / 1000.0f,
+                               static_cast<SkScalar>(y1000) / 1000.0f);
+                for (jint i = 1; i < pointCount; ++i) {
+                    const jint packedDelta = commands[offset++];
+                    x1000 += static_cast<int16_t>((packedDelta >> 16) & 0xffff);
+                    y1000 += static_cast<int16_t>(packedDelta & 0xffff);
+                    builder.lineTo(static_cast<SkScalar>(x1000) / 1000.0f,
+                                   static_cast<SkScalar>(y1000) / 1000.0f);
+                }
+                builder.close();
+                SkPaint paint;
+                paint.setAntiAlias(antiAlias);
+                paint.setStyle(SkPaint::kStroke_Style);
+                paint.setColor(skColorFromArgb(argb));
+                paint.setStrokeWidth(static_cast<SkScalar>(strokeWidth));
+                paint.setStrokeCap(static_cast<SkPaint::Cap>(strokeCap));
+                paint.setStrokeJoin(static_cast<SkPaint::Join>(strokeJoin));
+                paint.setStrokeMiter(static_cast<SkScalar>(strokeMiter1000) / 1000.0f);
+                canvas->save();
+                canvas->translate(dx, dy);
+                canvas->rotate(degrees);
+                canvas->translate(nestedDx, nestedDy);
+                canvas->drawPath(builder.detach(), paint);
+                canvas->restore();
                 break;
             }
             case COMMAND_DRAW_PATH_PATH_EFFECT_REF: {
