@@ -5,6 +5,17 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-26 fixed the copied Jewel README badge row in the editor path:
+  User-side inspection confirmed the no-badge run was visually clean while the yellow debug-badge JBR path still showed
+  the long shields.io README badge markup overlapping the Jewel title area. The previous Magic Jewel fixture cleanup
+  only sanitized `MarkdownPreview`; the editor state and the `Jewel readme` combo reload still used raw `JewelReadme`.
+  Magic Jewel now exposes `SanitizedJewelReadme` and uses it for the copied README initial content and combo reload,
+  while arbitrary loaded markdown files remain untouched. Narrow validation passed with `./gradlew compileKotlin` and
+  a direct static yellow-badge editor/preview report:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-yellow-badge-editor-sanitized-direct/markdown-editor-preview-readme80-static/report.md`.
+  The direct report passed with `fallback_new_count=0`, `cmp_unsupported_max=0`,
+  `cmp_unsupported_reasons=none`, and `jbr_command_frames=1`; the captured
+  `new-window.png` starts at `# Jewel: a Compose for Desktop theme` instead of the raw shields badge row.
 - 2026-06-26 rejected markdown-wheel command-stream micro-candidates and fixed the local badge fixture:
   A narrow current-stack markdown wheel diagnostic with op-word logging passed:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-op-word-diagnostic-markdown-wheel/markdown-preview-readme80-wheel/report.md`.
