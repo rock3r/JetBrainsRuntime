@@ -5,6 +5,19 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-26 rejected Hypnotoad micro-compaction candidates:
+  The new op-word diagnostics were used to evaluate follow-up ABI candidates on
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-op-word-diagnostic-hypnotoad/hypnotoad-animation/report.md`.
+  The run was strict-clean with `fallbacks=0`, `unsupported_max=0`, and `jbr_command_frames=975`. Current Hypnotoad
+  frames average `1759` command words with `avg_total_ms=3.557`, `avg_draw_ms=1.591`, and `avg_flush_ms=1.712`.
+  The word hot spots are already compact records:
+  `saveTranslateRotateTranslateStrokeClosedPolylineDeltaRestore:avg=980.0`,
+  `saveTranslateRotateTranslateFillOvalRestoreRun:avg=505.6`, and `strokeOvalRun:avg=85.0`. Plain-shape opportunities
+  such as `fillOval` are only `24` words/frame, so a new `fillOvalRun`-style ABI would save roughly one record header
+  per extra oval and would not materially change the measured cost. A specialized constant-size transformed-oval run
+  was also rejected before ABI work because it would mostly encode Hypnotoad's synthetic fixed `160x48` oval detail
+  rather than a general Compose pattern. The next worthwhile candidate needs to reduce the large transformed
+  polyline/oval payloads substantially or improve draw/flush behavior directly.
 - 2026-06-26 retained op-word diagnostics for command-stream candidate selection:
   CMP now supports optional `-Dcompose.jbr.skia.command.logOpWords=true`, emitting
   `CMP_JBR_COMMAND_RECORDER_OP_WORDS` from the final compacted command payload. Magic Jewel's report parser summarizes
