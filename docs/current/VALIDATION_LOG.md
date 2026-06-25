@@ -5,6 +5,23 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-25 rejected adaptive medium command-buffer cache:
+  A temporary Skiko prototype raised the encoded command-buffer cache ceiling to 2,048 words only after a cheap
+  command-stream fingerprint repeated, aiming to cache stable medium UI streams while deferring changing animation
+  streams. Focused Skiko tests passed, and narrow Jewel validation stayed strict-clean, but the benefit side was not
+  strong enough to retain: `showcase-icons` exposed repeated 1,217-word frames, yet the idle case produced only three
+  command frames, not enough to prove actual cache hits:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260625-adaptive-command-buffer-cache-showcase-icons/suite.tsv`.
+  Hypnotoad guarded the no-copy rule successfully with `fallbacks=0`, `unsupported_max=0`, `jbr_command_frames=768`,
+  and cache markers reaching `hits=0 misses=0 skipped=0 deferred=960`, so changing animation frames did not pay
+  copy/encode costs:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260625-adaptive-command-buffer-cache-hypnotoad-guard/suite.tsv`.
+  A one-off IdleRedraw run confirmed the already-retained small-stream cache remains hot with `hits=3239 misses=1`,
+  `fallbacks=0`, `unsupported_max=0`, and `jbr_command_frames=2025`, but its 67-word stream is below the existing
+  512-word ceiling and therefore does not justify the adaptive branch:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260625-adaptive-command-buffer-cache-idle-redraw/idle-redraw/report.md`.
+  The prototype was removed; keep the simpler 512-word cache until a focused medium redraw harness can prove repeated
+  hits and better measurements.
 - 2026-06-25 retained encoded command-buffer cache:
   Skiko now caches the encoded direct `ByteBuffer` for small stable command streams before calling
   `renderCommandDirectFrame`, returning duplicate little-endian views on repeated frames and skipping streams above
