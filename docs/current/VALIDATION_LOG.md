@@ -19,6 +19,19 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   `jbr_command_frames=253`, and `avg_commands=370`, down from the previous retained checkpoint's `376`.
   The new compact op fired with `saveTranslateLayerSaveTranslateDrawImageRefFullRestoreN:total=751` across 253 CMP
   command frames.
+- 2026-06-25 rejected post-op96 translated-layer + stroke-line/image-run fold:
+  A temporary op97 candidate folded adjacent `COMMAND_SAVE_TRANSLATE_LAYER_SAVE_TRANSLATE` plus
+  `COMMAND_STROKE_LINE_DRAW_IMAGE_REF_FULL_RUN_RESTORE_N` records and advertised a matching high capability bit.
+  The narrow focused Markdown wheel validation stayed strict-clean and proved the candidate fired
+  (`saveTranslateLayerSaveTranslateStrokeLineDrawImageRefFullRunRestoreN:total=499`, `fallbacks=0`,
+  `unsupported_max=0`, `jbr_picture_frames=0`, `jbr_command_frames=258`):
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260625-op97-layer-stroke-image-run/suite.tsv`.
+  It was rejected because the same focused case regressed from the retained op96 baseline's `avg_commands=370` to
+  `avg_commands=375` and had worse short-run CPU/RSS smoke signals. The op97 ABI, capability, CMP fold, and native
+  replay code were removed; local JBR, Skiko, and CMP artifacts were republished back to the retained op96 state.
+  The only retained code change from this pass is Skiko test maintenance: its high-capability aggregate now includes
+  the already-retained op96 bit, and `./gradlew awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest --console=plain`
+  passes in `/Users/rock3r/src/jbr-skia-zero-copy/skiko/skiko`.
 - 2026-06-22 rejected post-op96 `fillRoundRect > restoreN` fold:
   A temporary adjacent-pair diagnostic on the focused Markdown wheel path passed strict-clean and showed
   `fillRoundRect > restoreN` as a hot pair (`385` aggregated observations in
@@ -30,10 +43,10 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 - 2026-06-22 Jewel icon-background asset check:
   The retained native-bitmap effective-alpha bridge still has focused strict-clean evidence in
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-icon-alpha-effective/suite.tsv`,
-  but a source scan found several copied showcase SVGs with literal full-size white rectangles, including
-  `src/main/resources/icons/meetNewUi*.svg`, `src/main/resources/icons/lightTheme*.svg`, and the Jewel logo SVGs.
-  If those icons should appear transparent in the showcase, fix the asset content separately from the alpha/cache
-  command path.
+  and a follow-up source/rasterization check showed the small showcase icons' white rectangles are generally clip-path
+  scaffolding rather than painted opaque backgrounds. Rasterized samples had transparent corners; `jewel-logo.svg`
+  still intentionally paints a white diamond. If the live showcase still shows solid icon tiles, isolate the Jewel
+  painter/live rendering path rather than treating the copied small SVG assets as inherently opaque.
 - 2026-06-22 focused CMP-only round-rect restore-count compaction:
   CMP now also folds a following `COMMAND_RESTORE_N` into an existing `COMMAND_DRAW_ROUND_RECT_RESTORE_N` restore
   count. This reuses the existing JBR op and requires no ABI/capability change. Narrow validation passed:

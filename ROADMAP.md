@@ -65,10 +65,17 @@ This is the small working roadmap for the current PoC. The full historical check
   `saveTranslateLayerSaveTranslateDrawImageRefFullRestoreN:total=751`, and `avg_commands=370`, down from the previous
   retained checkpoint's `376`:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260622-op96-leading-layer-image/suite.tsv`.
+- Rejected command-stream compaction candidate:
+  A temporary op97 fold for `saveTranslateLayerSaveTranslate > strokeLineDrawImageRefFullRunRestoreN` passed strict
+  focused Markdown validation and fired 499 times, but regressed the retained op96 Markdown command average from `370`
+  to `375`, so the ABI/capability/native/CMP candidate was removed and local artifacts were republished. Skiko's
+  capability aggregate test was kept corrected for the already-retained op96 bit:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260625-op97-layer-stroke-image-run/suite.tsv`.
 - Jewel icon background note:
-  The effective-alpha command-path fix remains validated, but several copied showcase SVGs contain literal full-size
-  white rectangles (`meetNewUi*`, `lightTheme*`, and Jewel logo variants). Remaining solid backgrounds for those icons
-  should be handled as asset cleanup, not command replay fallback.
+  The effective-alpha command-path fix remains validated. A follow-up source/rasterization check showed most small
+  showcase icon white rectangles are clip-path scaffolding rather than painted opaque backgrounds; rasterized samples
+  had transparent corners. `jewel-logo.svg` still paints a white diamond. Remaining live solid-background symptoms
+  should be isolated in the Jewel painter/live rendering path.
 - Focused CMP-only command-stream compaction checkpoint:
   CMP now folds a following `COMMAND_RESTORE_N` into the existing `COMMAND_DRAW_ROUND_RECT_RESTORE_N` restore count.
   This reuses the existing JBR op and requires no ABI or capability change. Narrow gates passed: CMP focused recorder
