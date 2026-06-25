@@ -213,6 +213,7 @@ static constexpr jint COMMAND_SAVE_TRANSLATE_ROTATE = 99;
 static constexpr jint COMMAND_SAVE_TRANSLATE_ROTATE_TRANSLATE_FILL_OVAL_RESTORE = 100;
 static constexpr jint COMMAND_STROKE_CLOSED_POLYLINE = 101;
 static constexpr jint COMMAND_STROKE_CLOSED_POLYLINE_DELTA = 102;
+static constexpr jint COMMAND_STROKE_OVAL_RUN = 103;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER = 1;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_COLOR_MATRIX_FILTER = 2;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_LIGHTING_FILTER = 3;
@@ -5862,6 +5863,44 @@ static bool drawCommandList(SkCanvas* canvas,
                                               static_cast<SkScalar>(ovalWidth),
                                               static_cast<SkScalar>(ovalHeight));
                 canvas->drawOval(rect, paint);
+                break;
+            }
+            case COMMAND_STROKE_OVAL_RUN: {
+                if (offset + 1 > recordEnd) {
+                    return false;
+                }
+                const jint ovalCount = commands[offset++];
+                if (ovalCount < 2 ||
+                        ovalCount > 4096 ||
+                        offset + ovalCount * 9 != recordEnd) {
+                    return false;
+                }
+                for (jint i = 0; i < ovalCount; ++i) {
+                    SkPaint paint;
+                    paint.setAntiAlias(antiAlias);
+                    paint.setStyle(SkPaint::kStroke_Style);
+                    paint.setColor(skColorFromArgb(commands[offset++]));
+                    const jint x = commands[offset++];
+                    const jint y = commands[offset++];
+                    const jint ovalWidth = commands[offset++];
+                    const jint ovalHeight = commands[offset++];
+                    const jint strokeWidth = commands[offset++];
+                    const jint strokeCap = commands[offset++];
+                    const jint strokeJoin = commands[offset++];
+                    const jint strokeMiter1000 = commands[offset++];
+                    if (!isValidStrokeMetadata(strokeWidth, strokeCap, strokeJoin, strokeMiter1000)) {
+                        return false;
+                    }
+                    paint.setStrokeWidth(static_cast<SkScalar>(strokeWidth));
+                    paint.setStrokeCap(static_cast<SkPaint::Cap>(strokeCap));
+                    paint.setStrokeJoin(static_cast<SkPaint::Join>(strokeJoin));
+                    paint.setStrokeMiter(static_cast<SkScalar>(strokeMiter1000) / 1000.0f);
+                    const SkRect rect = SkRect::MakeXYWH(static_cast<SkScalar>(x),
+                                                         static_cast<SkScalar>(y),
+                                                         static_cast<SkScalar>(ovalWidth),
+                                                         static_cast<SkScalar>(ovalHeight));
+                    canvas->drawOval(rect, paint);
+                }
                 break;
             }
             default:

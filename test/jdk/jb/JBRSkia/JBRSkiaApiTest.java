@@ -213,7 +213,32 @@ public class JBRSkiaApiTest {
                 | JBRSkia.COMMAND_CAP64_HIGH_RESTORE_N
                 | JBRSkia.COMMAND_CAP64_HIGH_SAVE_TRANSLATE_LAYER
                 | JBRSkia.COMMAND_CAP64_HIGH_DRAW_IMAGE_REF_FULL
-                | JBRSkia.COMMAND_CAP64_HIGH_FILL_ROUND_RECT;
+                | JBRSkia.COMMAND_CAP64_HIGH_FILL_ROUND_RECT
+                | JBRSkia.COMMAND_CAP64_HIGH_CLEAR_DRAW_IMAGE_REF_FULL
+                | JBRSkia.COMMAND_CAP64_HIGH_DRAW_IMAGE_REF_FULL_DRAW_ROUND_RECT
+                | JBRSkia.COMMAND_CAP64_HIGH_DRAW_IMAGE_REF_FULL_RUN
+                | JBRSkia.COMMAND_CAP64_HIGH_SAVE_LAYER_CLIP_RECT
+                | JBRSkia.COMMAND_CAP64_HIGH_DRAW_IMAGE_REF_FULL_FILL_RECT
+                | JBRSkia.COMMAND_CAP64_HIGH_STROKE_LINE_DRAW_IMAGE_REF_FULL_RUN
+                | JBRSkia.COMMAND_CAP64_HIGH_SAVE_TRANSLATE_LAYER_SAVE_TRANSLATE
+                | JBRSkia.COMMAND_CAP64_HIGH_DRAW_IMAGE_REF_FULL_RESTORE
+                | JBRSkia.COMMAND_CAP64_HIGH_DRAW_IMAGE_REF_FULL_RESTORE_N
+                | JBRSkia.COMMAND_CAP64_HIGH_DRAW_ROUND_RECT_RESTORE_N
+                | JBRSkia.COMMAND_CAP64_HIGH_STROKE_LINE_DRAW_IMAGE_REF_FULL_RUN_RESTORE_N
+                | JBRSkia.COMMAND_CAP64_HIGH_DRAW_IMAGE_REF_FULL_RESTORE_N_SAVE_TRANSLATE_LAYER_SAVE_TRANSLATE
+                | JBRSkia.COMMAND_CAP64_HIGH_FILL_RECT_SAVE
+                | JBRSkia.COMMAND_CAP64_HIGH_SAVE_FILL_RECT_SAVE
+                | JBRSkia.COMMAND_CAP64_HIGH_SAVE_LAYER_SAVE_TRANSLATE
+                | JBRSkia.COMMAND_CAP64_HIGH_SAVE_SAVE_LAYER_SAVE_TRANSLATE
+                | JBRSkia.COMMAND_CAP64_HIGH_FILL_RECT_SAVE_LAYER_CLIP_RECT
+                | JBRSkia.COMMAND_CAP64_HIGH_SAVE_TRANSLATE_LAYER_SAVE_TRANSLATE_DRAW_IMAGE_REF_FULL_RESTORE_N
+                | JBRSkia.COMMAND_CAP64_HIGH_SAVE_TRANSLATE_LAYER_SAVE_TRANSLATE_DRAW_IMAGE_REF_FULL_RESTORE_N_SAVE_TRANSLATE_LAYER_SAVE_TRANSLATE
+                | JBRSkia.COMMAND_CAP64_HIGH_FILL_RECT_SAVE_LAYER_CLIP_RECT_SAVE_SAVE_LAYER_SAVE_TRANSLATE
+                | JBRSkia.COMMAND_CAP64_HIGH_SAVE_TRANSLATE_ROTATE
+                | JBRSkia.COMMAND_CAP64_HIGH_SAVE_TRANSLATE_ROTATE_TRANSLATE_FILL_OVAL_RESTORE
+                | JBRSkia.COMMAND_CAP64_HIGH_STROKE_CLOSED_POLYLINE
+                | JBRSkia.COMMAND_CAP64_HIGH_STROKE_CLOSED_POLYLINE_DELTA
+                | JBRSkia.COMMAND_CAP64_HIGH_STROKE_OVAL_RUN;
     }
 
     private static void assertCommandStreamValidation() {
@@ -231,6 +256,7 @@ public class JBRSkiaApiTest {
                 "valid save translate rotate translate fill oval restore stream");
         assertValidCommandStream(validStrokeClosedPolylineStream(), "valid stroke closed polyline stream");
         assertValidCommandStream(validStrokeClosedPolylineDeltaStream(), "valid stroke closed polyline delta stream");
+        assertValidCommandStream(validStrokeOvalRunStream(), "valid stroke oval run stream");
         assertValidCommandStream(validClipOpStream(), "valid clip operation stream");
         assertValidCommandStream(validSaveLayerStream(), "valid saveLayer stream");
         assertValidCommandStream(validSaveLayerBlendModeStream(), "valid saveLayer blend-mode stream");
@@ -855,6 +881,17 @@ public class JBRSkiaApiTest {
                 52, JBRSkia.COMMAND_RECORD_FLAG_ANTIALIAS,
                 0xffff0000, 4, 1, 2, 6000, 3,
                 1000, 2000, (10000 << 16) | 10000, (10000 << 16) | (-10000 & 0xffff)
+        };
+    }
+
+    private static int[] validStrokeOvalRunStream() {
+        return new int[] {
+                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 22,
+                JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
+                JBRSkia.COMMAND_STROKE_OVAL_RUN,
+                88, JBRSkia.COMMAND_RECORD_FLAG_ANTIALIAS, 2,
+                0xffff0000, 1, 2, 10, 10, 4, 1, 2, 6000,
+                0xff00ff00, 3, 4, 10, 10, 5, 1, 2, 6000
         };
     }
 

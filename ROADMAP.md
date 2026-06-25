@@ -56,6 +56,15 @@ This is the small working roadmap for the current PoC. The full historical check
 ## Latest Validations
 
 - Focused ABI 111 command-stream compaction checkpoint:
+  Added `COMMAND_STROKE_OVAL_RUN` (`op=103`) plus matching high capability bit `4503599627370496` for adjacent
+  stroked oval records with shared record flags and per-entry color/bounds/stroke metadata. Narrow gates passed: CMP
+  focused recorder test, Skiko interop test, local CMP/Skiko publishes, `./scripts/rebuild-jbr-skia-local-artifacts.sh`,
+  and focused Hypnotoad validation. The focused Hypnotoad slice stayed strict-clean with `fallbacks=0`,
+  `unsupported_max=0`, `jbr_picture_frames=0`, `jbr_command_frames=1012`, raw logs showing `strokeOvalRun=1` per
+  frame, and logged average command stream size dropped from `1956` words/frame in the retained-op102 run to `1933`
+  words/frame:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260625-op103-stroke-oval-run-per-entry-hypnotoad/suite.tsv`.
+- Focused ABI 111 command-stream compaction checkpoint:
   Added `COMMAND_STROKE_CLOSED_POLYLINE_DELTA` (`op=102`) plus matching high capability bit `2251799813685248` for
   compact closed-polyline stroke records with signed-short packed fixed1000 deltas. Narrow gates passed: CMP focused
   recorder test, Skiko interop test, local CMP/Skiko publishes, `./scripts/rebuild-jbr-skia-local-artifacts.sh`, and

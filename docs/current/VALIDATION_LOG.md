@@ -5,6 +5,21 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-25 focused op103 stroked oval run command:
+  The retained op103 advertises and replays `COMMAND_STROKE_OVAL_RUN` for adjacent stroked oval records with shared
+  record flags. The first shared-paint attempt did not fire because Hypnotoad's nine stroked rings use different
+  colors/stroke widths; the retained per-entry layout stores each oval's color, bounds, and stroke metadata while
+  removing repeated command headers. Narrow validation passed:
+  `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.compactsAdjacentStrokeOvalRun --console=plain`;
+  `./gradlew awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest --console=plain`; local Skiko/CMP publishes;
+  `./scripts/rebuild-jbr-skia-local-artifacts.sh`; and focused Hypnotoad validation:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260625-op103-stroke-oval-run-per-entry-hypnotoad/suite.tsv`.
+  Hypnotoad stayed strict-clean with `fallbacks=0`, `unsupported_max=0`, `jbr_picture_frames=0`,
+  `jbr_command_frames=1012`, and raw logs show `strokeOvalRun=1` per frame. The logged average command stream size
+  dropped from `1956` words/frame in the retained-op102 run to `1933` words/frame with op103.
+  The parser/API helper was also attempted with `REBUILD_LOCAL_ARTIFACTS=false ./scripts/test-jbr-skia-api.sh` after
+  updating the stale high-capability aggregate, but it is currently blocked by an unrelated pre-existing descriptor
+  invalid-case mismatch: `unsupported effect descriptor blend mode should be invalid`.
 - 2026-06-25 focused op102 delta-packed closed-polyline stroke command:
   The retained op102 advertises and replays `COMMAND_STROKE_CLOSED_POLYLINE_DELTA` for closed-polyline strokes whose
   adjacent fixed1000 point deltas fit in signed 16-bit values. CMP keeps op101 as the general absolute-point fallback,

@@ -197,7 +197,8 @@ public class JBRSkiaService extends JBRSkia {
                     | COMMAND_CAP64_HIGH_SAVE_TRANSLATE_ROTATE
                     | COMMAND_CAP64_HIGH_SAVE_TRANSLATE_ROTATE_TRANSLATE_FILL_OVAL_RESTORE
                     | COMMAND_CAP64_HIGH_STROKE_CLOSED_POLYLINE
-                    | COMMAND_CAP64_HIGH_STROKE_CLOSED_POLYLINE_DELTA;
+                    | COMMAND_CAP64_HIGH_STROKE_CLOSED_POLYLINE_DELTA
+                    | COMMAND_CAP64_HIGH_STROKE_OVAL_RUN;
     private static final boolean NATIVE_BRIDGE_AVAILABLE = loadNativeBridge();
     private static final AtomicLong NEXT_SCOPE_ID = new AtomicLong(1);
     private static final int MAX_CACHED_IMAGES = 256;
@@ -586,6 +587,7 @@ public class JBRSkiaService extends JBRSkia {
         if (op == COMMAND_STROKE_PATH_SWEEP_GRADIENT) return -35;
         if (op == COMMAND_STROKE_CLOSED_POLYLINE) return -39;
         if (op == COMMAND_STROKE_CLOSED_POLYLINE_DELTA) return -40;
+        if (op == COMMAND_STROKE_OVAL_RUN) return -41;
         if (op == COMMAND_STROKE_RECT_SHADER_REF) return 14;
         if (op == COMMAND_STROKE_RECT_IMAGE_SHADER) return 18;
         if (op == COMMAND_FILL_RECT_IMAGE_SHADER) return 14;
@@ -718,6 +720,9 @@ public class JBRSkiaService extends JBRSkia {
         }
         if (expectedLength == -40 && record.op() == COMMAND_STROKE_CLOSED_POLYLINE_DELTA) {
             return record.recordLength() >= 12;
+        }
+        if (expectedLength == -41 && record.op() == COMMAND_STROKE_OVAL_RUN) {
+            return record.recordLength() >= 22;
         }
         return expectedLength == record.recordLength();
     }
@@ -1229,6 +1234,30 @@ public class JBRSkiaService extends JBRSkia {
                     && pointCount >= 2
                     && pointCount <= 4096
                     && record.argsStart() + 8 + pointCount - 1 == record.recordEnd();
+        }
+        if (record.op() == COMMAND_STROKE_OVAL_RUN) {
+            if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE
+                    && record.recordFlags() != COMMAND_RECORD_FLAG_ANTIALIAS) {
+                return false;
+            }
+            int ovalCount = commands[record.argsStart()];
+            if (ovalCount < 2
+                    || ovalCount > 4096
+                    || record.argsStart() + 1 + ovalCount * 9 != record.recordEnd()) {
+                return false;
+            }
+            int offset = record.argsStart() + 1;
+            for (int i = 0; i < ovalCount; i++) {
+                int strokeWidth = commands[offset + 5];
+                int strokeCap = commands[offset + 6];
+                int strokeJoin = commands[offset + 7];
+                int strokeMiter = commands[offset + 8];
+                if (!isValidStrokeMetadata(strokeWidth, strokeCap, strokeJoin, strokeMiter)) {
+                    return false;
+                }
+                offset += 9;
+            }
+            return true;
         }
         if (record.op() == COMMAND_DRAW_SHADOW_PATH) {
             if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE
@@ -5921,6 +5950,37 @@ public class JBRSkiaService extends JBRSkia {
                         try {
                             current.setStroke(stroke);
                             current.drawOval(x, y, width, height);
+                        } finally {
+                            current.setStroke(previous);
+                        }
+                    } else if (op == COMMAND_STROKE_OVAL_RUN) {
+                        if (offset + 1 > recordEnd) return false;
+                        applyAntialiasing(current, antiAlias);
+                        int ovalCount = commands[offset++];
+                        if (ovalCount < 2 || ovalCount > 4096 || offset + ovalCount * 9 != recordEnd) {
+                            return false;
+                        }
+                        java.awt.Stroke previous = current.getStroke();
+                        try {
+                            for (int i = 0; i < ovalCount; i++) {
+                                current.setColor(new Color(commands[offset++], true));
+                                int x = commands[offset++];
+                                int y = commands[offset++];
+                                int width = commands[offset++];
+                                int height = commands[offset++];
+                                int strokeWidth = Math.max(1, commands[offset++]);
+                                int strokeCap = commands[offset++];
+                                int strokeJoin = commands[offset++];
+                                float strokeMiter = commands[offset++] / 1000f;
+                                java.awt.BasicStroke stroke = basicStroke(strokeWidth, strokeCap, strokeJoin, strokeMiter);
+                                if (stroke == null) return false;
+                                current.setStroke(stroke);
+                                current.drawOval(
+                                        x,
+                                        y,
+                                        width,
+                                        height);
+                            }
                         } finally {
                             current.setStroke(previous);
                         }
