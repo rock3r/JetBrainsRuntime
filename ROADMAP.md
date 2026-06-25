@@ -87,6 +87,15 @@ This is the small working roadmap for the current PoC. The full historical check
   prove the new op was exercised and crawled at `app_new_fps=1.0` / `jbr_command_frames=17`, so retained op97 remains
   the baseline:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260625-op98-image-restore-roundrect/suite.tsv`.
+- Focused ABI 111 command-stream compaction checkpoint:
+  Added `COMMAND_FILL_RECT_SAVE_LAYER_CLIP_RECT_SAVE_SAVE_LAYER_SAVE_TRANSLATE` (`op=98`) plus matching high
+  capability bit `140737488355328` for compact op95-plus-op94 records. Narrow gates passed: Skiko focused interop
+  test, local CMP/Skiko publishes, `./scripts/rebuild-jbr-skia-local-artifacts.sh`, and focused Markdown wheel
+  validation. The focused Markdown slice stayed strict-clean with `fallbacks=0`, `unsupported_max=0`,
+  `jbr_picture_frames=0`, `jbr_command_frames=253`,
+  `fillRectSaveLayerClipRectSaveSaveLayerSaveTranslate:total=310`, and `avg_commands=365`, slightly down from the
+  op97 baseline's `366`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260625-op98-fillrect-layerclip-savesavelayer/suite.tsv`.
 - Jewel icon background note:
   The effective-alpha command-path fix remains validated. A follow-up source/rasterization check showed most small
   showcase icon white rectangles are clip-path scaffolding rather than painted opaque backgrounds; rasterized samples

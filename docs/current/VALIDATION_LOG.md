@@ -57,6 +57,21 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   `avg_commands=253` over too few frames) instead of proving an improved steady command stream:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260625-op98-image-restore-roundrect/suite.tsv`.
   The op98 ABI, capability, CMP fold, and native replay code were removed; retained op97 remains the local baseline.
+- 2026-06-25 focused op98 fill-rect/layer-clip + save/saveLayer/translate compact command:
+  The retained-op97 pair diagnostic showed `fillRectSaveLayerClipRect > saveSaveLayerSaveTranslate` as a hot
+  command-only pair (`404` aggregated observations):
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260625-pair-diagnostic-retained-op97/suite.tsv`.
+  The retained op98 now advertises and replays
+  `COMMAND_FILL_RECT_SAVE_LAYER_CLIP_RECT_SAVE_SAVE_LAYER_SAVE_TRANSLATE` as a compact record for an existing op95
+  fill/saveLayer/clip sequence immediately followed by an op94 save/saveLayer/save/translate sequence. Narrow
+  validation passed:
+  `./gradlew awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest --console=plain`;
+  `./scripts/rebuild-jbr-skia-local-artifacts.sh`; local Skiko/CMP publishes; and a short focused Markdown wheel run:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260625-op98-fillrect-layerclip-savesavelayer/suite.tsv`.
+  Markdown stayed strict-clean with `fallbacks=0`, `unsupported_max=0`, `jbr_picture_frames=0`,
+  `jbr_command_frames=253`, and the new compact op fired with
+  `fillRectSaveLayerClipRectSaveSaveLayerSaveTranslate:total=310`. The focused command average dropped to
+  `avg_commands=365`, slightly below the retained op97 baseline's `366`.
 - 2026-06-22 rejected post-op96 `fillRoundRect > restoreN` fold:
   A temporary adjacent-pair diagnostic on the focused Markdown wheel path passed strict-clean and showed
   `fillRoundRect > restoreN` as a hot pair (`385` aggregated observations in

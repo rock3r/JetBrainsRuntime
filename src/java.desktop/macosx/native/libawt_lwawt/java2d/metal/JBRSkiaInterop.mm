@@ -208,6 +208,7 @@ static constexpr jint COMMAND_SAVE_SAVE_LAYER_SAVE_TRANSLATE = 94;
 static constexpr jint COMMAND_FILL_RECT_SAVE_LAYER_CLIP_RECT = 95;
 static constexpr jint COMMAND_SAVE_TRANSLATE_LAYER_SAVE_TRANSLATE_DRAW_IMAGE_REF_FULL_RESTORE_N = 96;
 static constexpr jint COMMAND_SAVE_TRANSLATE_LAYER_SAVE_TRANSLATE_DRAW_IMAGE_REF_FULL_RESTORE_N_SAVE_TRANSLATE_LAYER_SAVE_TRANSLATE = 97;
+static constexpr jint COMMAND_FILL_RECT_SAVE_LAYER_CLIP_RECT_SAVE_SAVE_LAYER_SAVE_TRANSLATE = 98;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER = 1;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_COLOR_MATRIX_FILTER = 2;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_LIGHTING_FILTER = 3;
@@ -4558,6 +4559,77 @@ static bool drawCommandList(SkCanvas* canvas,
                                                   static_cast<SkScalar>(clipHeight)),
                                  clipOp == COMMAND_CLIP_OP_DIFFERENCE ? SkClipOp::kDifference : SkClipOp::kIntersect,
                                  (clipFlags & COMMAND_RECORD_FLAG_ANTIALIAS) != 0);
+                break;
+            }
+            case COMMAND_FILL_RECT_SAVE_LAYER_CLIP_RECT_SAVE_SAVE_LAYER_SAVE_TRANSLATE: {
+                if ((recordFlags & ~COMMAND_RECORD_FLAG_ANTIALIAS) != 0 || offset + 24 != recordEnd) {
+                    return false;
+                }
+                SkPaint paint;
+                paint.setAntiAlias(antiAlias);
+                paint.setColor(skColorFromArgb(commands[offset++]));
+                jint fillX = commands[offset++];
+                jint fillY = commands[offset++];
+                jint fillWidth = commands[offset++];
+                jint fillHeight = commands[offset++];
+                jint radius = commands[offset++];
+                jint clipFlags = commands[offset++];
+                jint layerX = commands[offset++];
+                jint layerY = commands[offset++];
+                jint layerWidth = commands[offset++];
+                jint layerHeight = commands[offset++];
+                jint alpha1000 = commands[offset++];
+                jint clipX = commands[offset++];
+                jint clipY = commands[offset++];
+                jint clipWidth = commands[offset++];
+                jint clipHeight = commands[offset++];
+                jint clipOp = commands[offset++];
+                jint nextLayerX = commands[offset++];
+                jint nextLayerY = commands[offset++];
+                jint nextLayerWidth = commands[offset++];
+                jint nextLayerHeight = commands[offset++];
+                jint nextAlpha1000 = commands[offset++];
+                SkScalar dx = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                SkScalar dy = static_cast<SkScalar>(commands[offset++]) / 1000.0f;
+                if ((clipFlags & ~COMMAND_RECORD_FLAG_ANTIALIAS) != 0 ||
+                        fillWidth < 0 || fillHeight < 0 || radius < 0 ||
+                        layerWidth < 0 || layerHeight < 0 || alpha1000 < 0 || alpha1000 > 1000 ||
+                        clipWidth < 0 || clipHeight < 0 ||
+                        (clipOp != COMMAND_CLIP_OP_INTERSECT && clipOp != COMMAND_CLIP_OP_DIFFERENCE) ||
+                        nextLayerWidth < 0 || nextLayerHeight < 0 || nextAlpha1000 < 0 || nextAlpha1000 > 1000) {
+                    return false;
+                }
+                SkRect fillRect = SkRect::MakeXYWH(static_cast<SkScalar>(fillX),
+                                                   static_cast<SkScalar>(fillY),
+                                                   static_cast<SkScalar>(fillWidth),
+                                                   static_cast<SkScalar>(fillHeight));
+                if (radius > 0) {
+                    canvas->drawRRect(SkRRect::MakeRectXY(fillRect,
+                                                          static_cast<SkScalar>(radius),
+                                                          static_cast<SkScalar>(radius)),
+                                      paint);
+                } else {
+                    canvas->drawRect(fillRect, paint);
+                }
+                SkRect bounds = SkRect::MakeXYWH(static_cast<SkScalar>(layerX),
+                                                 static_cast<SkScalar>(layerY),
+                                                 static_cast<SkScalar>(layerWidth),
+                                                 static_cast<SkScalar>(layerHeight));
+                canvas->saveLayerAlphaf(&bounds, static_cast<float>(alpha1000) / 1000.0f);
+                canvas->clipRect(SkRect::MakeXYWH(static_cast<SkScalar>(clipX),
+                                                  static_cast<SkScalar>(clipY),
+                                                  static_cast<SkScalar>(clipWidth),
+                                                  static_cast<SkScalar>(clipHeight)),
+                                 clipOp == COMMAND_CLIP_OP_DIFFERENCE ? SkClipOp::kDifference : SkClipOp::kIntersect,
+                                 (clipFlags & COMMAND_RECORD_FLAG_ANTIALIAS) != 0);
+                canvas->save();
+                SkRect nextBounds = SkRect::MakeXYWH(static_cast<SkScalar>(nextLayerX),
+                                                     static_cast<SkScalar>(nextLayerY),
+                                                     static_cast<SkScalar>(nextLayerWidth),
+                                                     static_cast<SkScalar>(nextLayerHeight));
+                canvas->saveLayerAlphaf(&nextBounds, static_cast<float>(nextAlpha1000) / 1000.0f);
+                canvas->save();
+                canvas->translate(dx, dy);
                 break;
             }
             case COMMAND_FILL_RECT_SAVE: {
