@@ -5,6 +5,18 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-26 current optimisation closure audit:
+  Current clean heads are JBR `332013e6051`, CMP `0a8bef58b7f`, Skiko `a31f9c67b`, and Magic Jewel `6ab3511`.
+  The current retained command-stream optimisation surface is the ABI-111 compact-command family through the latest
+  documented `COMMAND_STROKE_LINE_RUN` Sliders checkpoint:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-showcase-sliders-static-stroke-line-run/report.md`.
+  Post-retention mining has now closed the obvious follow-up buckets without retaining code: command-buffer cache policy
+  candidates, same-op controls run/RLE ideas, CMP oval-run allocation-copy, adjacent `drawImageRefFullRun` merge,
+  Markdown catalog/head post-op90/op96/op97/op98 micro-candidates, Banners/Progressbar image/clip candidates, and the
+  Brushes native-flush outlier. The remaining report corpus has no known fresh command-stream or image-cache candidate
+  that both has narrow validation coverage and a measured improvement hypothesis. New optimisation work should start
+  from new workload evidence, a lower-level profiler trace, or a deliberately new command-family design rather than
+  re-mining the current focused-report corpus.
 - 2026-06-26 rejected remaining focused-report command-family follow-ups:
   A follow-up aggregate pass over passed 2026-06-26 focused reports with at least 20 command frames ranked total command
   words by operation family. The largest remaining totals are not fresh command-stream candidates: Hypnotoad/controls are
