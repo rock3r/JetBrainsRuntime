@@ -5,6 +5,21 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-26 retained CMP group-2 compaction prerequisite gates:
+  CMP extends the per-op prerequisite gates to the group-2 command-compaction passes. These gates skip full-stream
+  scans when a pass's source op families are absent, while the old ungated sequence remains available through
+  `-Dcompose.jbr.skia.command.disableCompactionOpPrerequisiteGates=true` for A/B controls. Gates passed: CMP full
+  recorder class
+  `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest --console=plain`,
+  focused Hypnotoad with group-2+3 gates enabled, and focused Hypnotoad with the gates disabled:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-group2-group3-op-gates-hypnotoad/suite.tsv`
+  and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-group2-group3-op-gates-disabled-control-hypnotoad/suite.tsv`.
+  Both rows stayed strict-clean (`fallback_new_count=0`, `cmp_unsupported_max=0`, `jbr_picture_frames=0`) with the
+  same top op shape. The gated row improved throughput (`app_new_fps=412.4`, `jbr_command_fps=206.2`) versus the
+  disabled-control row (`app_new_fps=387.1`, `jbr_command_fps=193.6`) at similar host load. CPU remains a noisy
+  secondary metric (`new_avg_cpu=84.40` gated vs `83.40` disabled), so treat this as a modest scan-avoidance
+  throughput cleanup rather than a CPU headline.
 - 2026-06-26 retained CMP group-3 compaction prerequisite gates:
   CMP now uses the writer's existing per-op counters to skip group-3 command-compaction passes whose source record
   families are absent or too sparse to form a run, and caches the `disableRecordStartIndex` debug toggle beside the
