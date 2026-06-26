@@ -5,6 +5,19 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-26 rejected Checkboxes image/roundrect candidate:
+  A direct `Components` / `Checkboxes` focused diagnostic was run with op counts, op words, op pairs, and Skiko
+  command-buffer cache logging:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-showcase-checkboxes-static-words-pairs-cache/report.md`.
+  The run stayed strict-clean with `fallback_new_count=0`, `cmp_unsupported_max=0`, `jbr_command_frames=3`, and a clean
+  captured `new-window.png` on the intended Checkboxes page. The profile matched the Radio Buttons lead almost exactly:
+  `drawImageRefFullDrawRoundRect:avg_words=484.0`, `clearRect:avg_words=182.0`, first-frame
+  `defineImageBitmap:avg_words=113.7`, `drawImageRefFull:avg_words=63.0`, and `translate:avg_words=55.0`. The top
+  pairs were again `drawImageRefFullDrawRoundRect>clearRect:avg=580.0`,
+  `clearRect>drawImageRefFullDrawRoundRect:avg=425.3`, and
+  `defineImageBitmap>drawImageRefFullDrawRoundRect:avg=242.0`. The existing `drawImageRefFullRun:avg=1.0` already
+  fired, while the remaining clear/image/roundrect sequence is the alpha-sensitive pattern guarded after the icon
+  background regression. No code candidate was retained.
 - 2026-06-26 rejected Radio Buttons image/roundrect candidate:
   A direct `Components` / `Radio Buttons` focused diagnostic was run with op counts, op words, op pairs, and Skiko
   command-buffer cache logging:
