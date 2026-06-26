@@ -5,6 +5,22 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-26 retained Skiko adaptive command-buffer deferral bypass:
+  Skiko now extends `EncodedCommandBufferCache`'s cold-cache bypass to adaptive-cache deferrals. After repeated adaptive
+  fingerprint misses with no cache hit, it temporarily skips fingerprinting larger command streams and periodically
+  probes again. This keeps the useful repeated-frame cache path while avoiding per-frame fingerprints on animated streams
+  that never repeat exactly. Gates passed: Skiko
+  `./gradlew --no-daemon --no-configuration-cache compileKotlinAwt publishAwtPublicationToMavenLocal --console=plain`,
+  a two-row focused Magic Jewel command-cache diagnostic, and a clean Hypnotoad command row:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-command-cache-adaptive-global-bypass/suite.tsv`
+  and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-command-cache-adaptive-global-bypass-hypnotoad-clean/suite.tsv`.
+  The logged Hypnotoad row stayed strict-clean (`fallback_new_count=0`, `cmp_unsupported_max=0`,
+  `jbr_picture_frames=0`) and shifted the cache stats from the pre-change pure-deferral baseline
+  (`deferred=1800`, `bypassed=0`) to `deferred=208`, `bypassed=1472`. The Markdown auto-scroll row preserved the
+  useful command-buffer cache behavior (`hits=259`, `misses=217`, `bypassed=0`). The clean Hypnotoad row, without
+  command-buffer cache logging, also stayed strict-clean with `app_new_fps=337.4`, `new_avg_cpu=90.00`, and
+  `jbr_command_frames=1349`.
 - 2026-06-26 retained CMP native-bitmap content-key threshold increase:
   CMP now uses content-derived cache keys for native bitmap images up to `1,048,576` pixels by default
   (`-Dcompose.jbr.skia.command.nativeBitmapContentKeyPixels=<pixels>` can still override this). The focused Markdown
