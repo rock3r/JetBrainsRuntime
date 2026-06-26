@@ -5,6 +5,23 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-26 retained command hot-path property gates:
+  CMP now caches command-compaction system-property toggles per `CommandStreamWriter`, and Skiko now bypasses the
+  command-corruption test chain entirely during normal runs unless a `skiko.jbr.interop.corrupt*` property is true at
+  launch. This removes repeated `System.getProperty`/property-map work from the animated command-stream path while
+  preserving the launch-time corruption harness behavior. Gates passed: CMP full recorder class
+  `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest --console=plain`,
+  Skiko `./gradlew --no-daemon --no-configuration-cache compileKotlinAwt --console=plain`, and a focused Hypnotoad
+  JFR/benchmark row:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-property-cache-skiko-gate-hypnotoad-jfr/suite.tsv`.
+  The focused row stayed strict-clean (`fallback_new_count=0`, `cmp_unsupported_max=0`, `jbr_picture_frames=0`) with
+  `app_new_fps=399.1`, `jbr_command_fps=199.6`, `new_avg_cpu=84.24`, and `new_avg_rss_kb=859952`. The pre-change warm
+  Hypnotoad JFR had `java.lang.System.getProperty(String)` at 4 samples / 8.51%:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jfr-probes/hypnotoad-current-jfr-warm.jfr`; the combined
+  candidate profile no longer showed `System.getProperty` in the top hot methods:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jfr-probes/hypnotoad-property-cache-skiko-gate.jfr`.
+  This is a retained performance cleanup, not a visual-coverage closure; the raw README/yellow-badge rendering issue
+  below remains open and must still gate any future 100% showcase claim.
 - 2026-06-26 raw README/yellow-badge coverage gap isolated:
   Magic Jewel now has an explicit raw README Markdown mode (`rawReadme*`) and
   `jewel.standalone.markdownStableImages` toggle so the standalone showcase can exercise the unstripped README badge
