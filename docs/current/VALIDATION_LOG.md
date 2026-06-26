@@ -5,6 +5,25 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-26 fixed stale Swing fallback repaint after failed JBR command attempts:
+  User-side visual validation reported the no-badge command path as clean while the yellow fallback-badge path showed
+  markdown blocks overlapping after the warning section. A narrow forced command-capability fallback reproduced the
+  issue:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-forced-fallback-static-repro/markdown-preview-readme80-static/report.md`.
+  The row had the expected `fallback_new_count=1`, `cmp_unsupported_max=0`, and `jbr_command_frames=0`, but the captured
+  fallback screenshot showed stale lower markdown/code-block pixels under later blocks. Explicit `picture` render mode
+  on the same static preview was visually clean, isolating the corruption to the failed-command fallback repaint path
+  rather than Markdown or JBR picture replay:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-picture-static-repro/markdown-preview-readme80-static/report.md`.
+  Skiko now clears the JBR layer destination before delegating to regular `SkiaSwingLayer` painting when a JBR frame
+  attempt returns false. The patched AWT artifact passed
+  `./gradlew --no-daemon --no-configuration-cache compileKotlinAwt awtMainClasses publishAwtPublicationToMavenLocal --console=plain`.
+  The forced fallback repro then passed visually with the expected structured fallback markers at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-forced-fallback-static-clearfix/markdown-preview-readme80-static/report.md`
+  (`fallback_new_count=1`, `cmp_unsupported_max=0`, `jbr_command_frames=0`), and the no-fallback command sanity row
+  stayed strict-clean at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-command-static-after-clearfix/markdown-preview-readme80-static/report.md`
+  with `fallback_new_count=0`, `cmp_unsupported_max=0`, and `jbr_command_frames=5`.
 - 2026-06-26 rejected save-translate/image-roundrect fold extension:
   A post-mask3 `hypnotoad-animation` diagnostic was run with op counts, op words, op pairs, and Skiko command-cache
   logging:
