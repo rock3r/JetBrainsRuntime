@@ -5,6 +5,23 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-26 rejected TextFields save/clip/image candidates:
+  A direct `Components` / `TextFields` focused diagnostic was run with op counts, op words, op pairs, and Skiko
+  command-buffer cache logging:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-showcase-textfields-static-words-pairs-cache/report.md`.
+  The run stayed strict-clean with `fallback_new_count=0`, `cmp_unsupported_max=0`, and `jbr_command_frames=3`; the
+  captured `new-window.png` shows the TextFields page rendering cleanly with icons, outlines, and the yellow
+  `JBR Skia scope` marker visible. The hot words were `drawImageRefFullDrawRoundRect:avg=484.0`,
+  `saveLayerClipRect:avg=221.0`, `drawRoundRect:avg=195.0`, `clearRect:avg=168.0`, and
+  `drawImageRefFull:avg=144.0`. The strongest pair is again the alpha-guarded image/roundrect clear shape
+  (`drawImageRefFullDrawRoundRect>clearRect:avg=580.0`, `clearRect>drawImageRefFullDrawRoundRect:avg=425.3`), so it is
+  correctness-blocked for the same reason as Icons. The remaining `saveTranslate>drawImageRefFull`-style pairs are not a
+  missed local fold: those save-translate scopes also cover following records, and folding only the image would
+  double-translate it unless a compensating transform or new narrow ABI shape were introduced. A preceding component
+  tour slice over `Combo Boxes,TextFields,Scrollbars` also stayed strict-clean at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-component-slice-text-combo-scrollbars/report.md`,
+  but its profile was dominated by the post-tour Hypnotoad loop, so it was used only as coverage evidence, not as an
+  optimisation profile. No code candidate was retained.
 - 2026-06-26 rejected catalog-head op96 run/cache candidates:
   A focused `markdown-preview-catalog-head-auto` diagnostic was run with op counts, op words, op pairs, and Skiko
   command-buffer cache logging:
