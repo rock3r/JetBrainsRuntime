@@ -5,6 +5,19 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-26 rejected Chips and trees image/layer candidates:
+  A direct `Components` / `Chips and trees` focused diagnostic was run with op counts, op words, op pairs, and Skiko
+  command-buffer cache logging:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-showcase-chips-and-trees-static-words-pairs-cache/report.md`.
+  The run stayed strict-clean with `fallback_new_count=0`, `cmp_unsupported_max=0`, `jbr_command_frames=3`,
+  `avg_commands=1969`, warm-frame `commands=1839`, and a clean captured `new-window.png` on the intended Chips and
+  trees page. The first frame defined the page's images (`defineImageBitmap:max=52`), while the warm profile was led by
+  already-known chrome and retained compact records: `drawImageRefFullDrawRoundRect:avg_words=660.0`,
+  `clearRect:avg_words=210.0`, `drawImageRefFullRestoreNSaveTranslateLayerSaveTranslate:avg_words=101.3`,
+  `drawImageRefFullRun:avg_words=128.0`, `fillRoundRect:avg_words=120.0`, and `translate:avg_words=98.3`. The hottest
+  pairs are the alpha-guarded image/roundrect shape plus first-frame image definitions; the only mid-sized
+  image/layer shape is already covered by the retained compound image/layer command. No new code candidate was
+  retained.
 - 2026-06-26 rejected Menus image/control-chrome candidate:
   A direct `Components` / `Menus` focused diagnostic was run with op counts, op words, op pairs, and Skiko
   command-buffer cache logging:
