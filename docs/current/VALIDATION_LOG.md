@@ -5,6 +5,17 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-26 rejected Links image/chrome candidate:
+  A direct `Components` / `Links` focused diagnostic was run with op counts, op words, op pairs, and Skiko
+  command-buffer cache logging:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-showcase-links-static-words-pairs-cache/report.md`.
+  The run stayed strict-clean with `fallback_new_count=0`, `cmp_unsupported_max=0`, `jbr_command_frames=3`, warm-frame
+  `commands=932`, and a clean captured `new-window.png` on the intended Links page. The page did not expose a
+  link-specific command-stream hotspot; its small profile was dominated by side-toolbar/control image chrome:
+  `drawImageRefFullDrawRoundRect:avg_words=484.0`, `clearRect:avg_words=182.0`, first-frame
+  `defineImageBitmap:avg_words=128.3`, `drawImageRefFull:avg_words=108.0`, and `translate:avg_words=70.0`. The leading
+  pairs were the already alpha-guarded image/roundrect shape and first-frame image definitions. No code candidate was
+  retained.
 - 2026-06-26 rejected Segmented Controls image/roundrect candidate:
   A direct `Components` / `Segmented Controls` focused diagnostic was run with op counts, op words, op pairs, and Skiko
   command-buffer cache logging:
