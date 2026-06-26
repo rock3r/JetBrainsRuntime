@@ -203,6 +203,7 @@ public abstract class JBRSkia {
     public static final long COMMAND_CAP64_HIGH_FILL_RECT_RUN = Long.parseLong("72057594037927936");
     public static final long COMMAND_CAP64_HIGH_CLEAR_DRAW_IMAGE_REF_FULL_DRAW_ROUND_RECT =
             Long.parseLong("144115188075855872");
+    public static final long COMMAND_CAP64_HIGH_STROKE_LINE_RUN = Long.parseLong("288230376151711744");
     public static final int COMMAND_CLEAR = Integer.parseInt("1");
     public static final int COMMAND_FILL_RECT = Integer.parseInt("2");
     public static final int COMMAND_STROKE_LINE = Integer.parseInt("3");
@@ -317,6 +318,7 @@ public abstract class JBRSkia {
             Integer.parseInt("107");
     public static final int COMMAND_FILL_RECT_RUN = Integer.parseInt("108");
     public static final int COMMAND_CLEAR_DRAW_IMAGE_REF_FULL_DRAW_ROUND_RECT = Integer.parseInt("109");
+    public static final int COMMAND_STROKE_LINE_RUN = Integer.parseInt("110");
     public static final int COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER = Integer.parseInt("1");
     public static final int COMMAND_EFFECT_DESCRIPTOR_COLOR_MATRIX_FILTER = Integer.parseInt("2");
     public static final int COMMAND_EFFECT_DESCRIPTOR_LIGHTING_FILTER = Integer.parseInt("3");

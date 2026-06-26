@@ -218,6 +218,7 @@ static constexpr jint COMMAND_SAVE_TRANSLATE_ROTATE_TRANSLATE_FILL_OVAL_RESTORE_
 static constexpr jint COMMAND_SAVE_TRANSLATE_ROTATE_TRANSLATE_STROKE_CLOSED_POLYLINE_DELTA_RESTORE = 107;
 static constexpr jint COMMAND_FILL_RECT_RUN = 108;
 static constexpr jint COMMAND_CLEAR_DRAW_IMAGE_REF_FULL_DRAW_ROUND_RECT = 109;
+static constexpr jint COMMAND_STROKE_LINE_RUN = 110;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER = 1;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_COLOR_MATRIX_FILTER = 2;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_LIGHTING_FILTER = 3;
@@ -5616,6 +5617,42 @@ static bool drawCommandList(SkCanvas* canvas,
                                  static_cast<SkScalar>(x2),
                                  static_cast<SkScalar>(y2),
                                  paint);
+                break;
+            }
+            case COMMAND_STROKE_LINE_RUN: {
+                if ((recordFlags & ~COMMAND_RECORD_FLAG_ANTIALIAS) != 0 || offset + 6 > recordEnd) {
+                    return false;
+                }
+                SkPaint paint;
+                paint.setAntiAlias(antiAlias);
+                paint.setStyle(SkPaint::kStroke_Style);
+                paint.setColor(skColorFromArgb(commands[offset++]));
+                jint strokeWidth = commands[offset++];
+                jint strokeCap = commands[offset++];
+                jint strokeJoin = commands[offset++];
+                jint strokeMiter1000 = commands[offset++];
+                if (!isValidStrokeMetadata(strokeWidth, strokeCap, strokeJoin, strokeMiter1000)) {
+                    return false;
+                }
+                paint.setStrokeWidth(static_cast<SkScalar>(strokeWidth));
+                paint.setStrokeCap(static_cast<SkPaint::Cap>(strokeCap));
+                paint.setStrokeJoin(static_cast<SkPaint::Join>(strokeJoin));
+                paint.setStrokeMiter(static_cast<SkScalar>(strokeMiter1000) / 1000.0f);
+                const jint count = commands[offset++];
+                if (count < 2 || count > 4096 || offset + count * 4 != recordEnd) {
+                    return false;
+                }
+                for (jint i = 0; i < count; i++) {
+                    const jint x1 = commands[offset++];
+                    const jint y1 = commands[offset++];
+                    const jint x2 = commands[offset++];
+                    const jint y2 = commands[offset++];
+                    canvas->drawLine(static_cast<SkScalar>(x1),
+                                     static_cast<SkScalar>(y1),
+                                     static_cast<SkScalar>(x2),
+                                     static_cast<SkScalar>(y2),
+                                     paint);
+                }
                 break;
             }
             case COMMAND_STROKE_LINE_DRAW_IMAGE_REF_FULL_RUN:

@@ -202,7 +202,8 @@ public class JBRSkiaService extends JBRSkia {
                     | COMMAND_CAP64_HIGH_SAVE_TRANSLATE_ROTATE_TRANSLATE_FILL_OVAL_RESTORE_RUN
                     | COMMAND_CAP64_HIGH_SAVE_TRANSLATE_ROTATE_TRANSLATE_STROKE_CLOSED_POLYLINE_DELTA_RESTORE
                     | COMMAND_CAP64_HIGH_FILL_RECT_RUN
-                    | COMMAND_CAP64_HIGH_CLEAR_DRAW_IMAGE_REF_FULL_DRAW_ROUND_RECT;
+                    | COMMAND_CAP64_HIGH_CLEAR_DRAW_IMAGE_REF_FULL_DRAW_ROUND_RECT
+                    | COMMAND_CAP64_HIGH_STROKE_LINE_RUN;
     private static final boolean NATIVE_BRIDGE_AVAILABLE = loadNativeBridge();
     private static final AtomicLong NEXT_SCOPE_ID = new AtomicLong(1);
     private static final int MAX_CACHED_IMAGES = 256;
@@ -524,6 +525,7 @@ public class JBRSkiaService extends JBRSkia {
         if (op == COMMAND_SAVE_TRANSLATE_ROTATE_TRANSLATE_FILL_OVAL_RESTORE_RUN) return -42;
         if (op == COMMAND_SAVE_TRANSLATE_ROTATE_TRANSLATE_STROKE_CLOSED_POLYLINE_DELTA_RESTORE) return -43;
         if (op == COMMAND_FILL_RECT_RUN) return -44;
+        if (op == COMMAND_STROKE_LINE_RUN) return -45;
         if (op == COMMAND_SAVE_TRANSLATE_LAYER) return 10;
         if (op == COMMAND_SAVE_LAYER) return 8;
         if (op == COMMAND_SAVE_LAYER_SAVE_TRANSLATE || op == COMMAND_SAVE_SAVE_LAYER_SAVE_TRANSLATE) return 10;
@@ -746,6 +748,9 @@ public class JBRSkiaService extends JBRSkia {
         }
         if (expectedLength == -44 && record.op() == COMMAND_FILL_RECT_RUN) {
             return record.recordLength() >= 16;
+        }
+        if (expectedLength == -45 && record.op() == COMMAND_STROKE_LINE_RUN) {
+            return record.recordLength() >= 17;
         }
         return expectedLength == record.recordLength();
     }
@@ -1341,6 +1346,22 @@ public class JBRSkiaService extends JBRSkia {
                 offset += 6;
             }
             return true;
+        }
+        if (record.op() == COMMAND_STROKE_LINE_RUN) {
+            if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE
+                    && record.recordFlags() != COMMAND_RECORD_FLAG_ANTIALIAS) {
+                return false;
+            }
+            int offset = record.argsStart();
+            int strokeWidth = commands[offset + 1];
+            int strokeCap = commands[offset + 2];
+            int strokeJoin = commands[offset + 3];
+            int strokeMiter = commands[offset + 4];
+            int lineCount = commands[offset + 5];
+            return isValidStrokeMetadata(strokeWidth, strokeCap, strokeJoin, strokeMiter)
+                    && lineCount >= 2
+                    && lineCount <= 4096
+                    && offset + 6 + lineCount * 4 == record.recordEnd();
         }
         if (record.op() == COMMAND_DRAW_SHADOW_PATH) {
             if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE
@@ -5450,6 +5471,33 @@ public class JBRSkiaService extends JBRSkia {
                             } else {
                                 current.fillRect(x, y, width, height);
                             }
+                        }
+                    } else if (op == COMMAND_STROKE_LINE_RUN) {
+                        if (offset + 6 > recordEnd) return false;
+                        applyAntialiasing(current, antiAlias);
+                        current.setColor(new Color(commands[offset++], true));
+                        int strokeWidth = Math.max(1, commands[offset++]);
+                        int strokeCap = commands[offset++];
+                        int strokeJoin = commands[offset++];
+                        float strokeMiter = commands[offset++] / 1000f;
+                        int lineCount = commands[offset++];
+                        if (lineCount < 2 || lineCount > 4096 || offset + lineCount * 4 != recordEnd) {
+                            return false;
+                        }
+                        java.awt.Stroke previous = current.getStroke();
+                        java.awt.BasicStroke stroke = basicStroke(strokeWidth, strokeCap, strokeJoin, strokeMiter);
+                        if (stroke == null) return false;
+                        try {
+                            current.setStroke(stroke);
+                            for (int i = 0; i < lineCount; i++) {
+                                int x1 = commands[offset++];
+                                int y1 = commands[offset++];
+                                int x2 = commands[offset++];
+                                int y2 = commands[offset++];
+                                current.drawLine(x1, y1, x2, y2);
+                            }
+                        } finally {
+                            current.setStroke(previous);
                         }
                     } else if (op == COMMAND_FILL_RECT_SAVE_LAYER_CLIP_RECT) {
                         if (offset + 17 != recordEnd) return false;

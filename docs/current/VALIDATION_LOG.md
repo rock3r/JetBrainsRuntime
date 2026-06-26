@@ -5,6 +5,21 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-26 retained Sliders stroke-line run compaction:
+  A direct `Components` / `Sliders` focused diagnostic first exposed repeated same-paint `strokeLine` records:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-showcase-sliders-static-words-pairs-cache/report.md`.
+  The retained change adds `COMMAND_STROKE_LINE_RUN` (`op=110`) plus high capability bit `288230376151711744` for
+  adjacent solid-color stroke lines sharing flags/color/stroke metadata, with Java parser validation, Java2D diagnostic
+  replay, native Metal replay, translated-scope/layer-bound handling, and CMP compaction/logging support. Narrow gates
+  passed: CMP `:compose:ui:ui-graphics:compileKotlinDesktop`, local JBR overlay rebuild via
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/scripts/rebuild-jbr-skia-local-artifacts.sh`, local CMP desktop
+  publish, `REBUILD_LOCAL_ARTIFACTS=false ./scripts/test-jbr-skia-api.sh`, and the focused Sliders run:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-showcase-sliders-static-stroke-line-run/report.md`.
+  The focused run stayed strict-clean with `fallback_new_count=0`, `cmp_unsupported_max=0`, `jbr_command_frames=3`,
+  and a clean captured `new-window.png`. The Sliders command stream average dropped from `1341` to `1167` words/frame;
+  `strokeLine` dropped from `avg=32.0`/`avg_words=384.0` to `avg=8.0`/`avg_words=96.0`, with
+  `strokeLineRun:avg=2.0` and `avg_words=114.0`, removing the hot `strokeLine>strokeLine` pair from the top of the
+  page profile.
 - 2026-06-26 rejected Brushes gradient lead:
   A direct `Components` / `Brushes` focused diagnostic was run with op counts, op words, op pairs, and Skiko
   command-buffer cache logging:

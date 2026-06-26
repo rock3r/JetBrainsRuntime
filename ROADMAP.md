@@ -56,6 +56,15 @@ This is the small working roadmap for the current PoC. The full historical check
 ## Latest Validations
 
 - Focused ABI 111 command-stream compaction checkpoint:
+  Added `COMMAND_STROKE_LINE_RUN` (`op=110`) plus matching high capability bit `288230376151711744` for adjacent
+  same-paint stroked line records. Narrow gates passed: CMP `ui-graphics` desktop compile, local JBR overlay rebuild,
+  local CMP desktop publish, JBR Skia API/parser smoke, and focused Jewel standalone `Components` / `Sliders`
+  validation. The focused Sliders slice stayed strict-clean with `fallback_new_count=0`, `cmp_unsupported_max=0`,
+  `jbr_command_frames=3`, and a clean captured window. Logged command stream average dropped from `1341` to `1167`
+  words/frame; `strokeLine` dropped from `avg=32.0`/`avg_words=384.0` to `avg=8.0`/`avg_words=96.0`, with
+  `strokeLineRun:avg=2.0` and `avg_words=114.0`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-showcase-sliders-static-stroke-line-run/report.md`.
+- Focused ABI 111 command-stream compaction checkpoint:
   Added `COMMAND_STROKE_OVAL_RUN` (`op=103`) plus matching high capability bit `4503599627370496` for adjacent
   stroked oval records with shared record flags and per-entry color/bounds/stroke metadata. Narrow gates passed: CMP
   focused recorder test, Skiko interop test, local CMP/Skiko publishes, `./scripts/rebuild-jbr-skia-local-artifacts.sh`,

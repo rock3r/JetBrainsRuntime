@@ -242,7 +242,8 @@ public class JBRSkiaApiTest {
                 | JBRSkia.COMMAND_CAP64_HIGH_SAVE_TRANSLATE_ROTATE_TRANSLATE_FILL_OVAL_RESTORE_RUN
                 | JBRSkia.COMMAND_CAP64_HIGH_SAVE_TRANSLATE_ROTATE_TRANSLATE_STROKE_CLOSED_POLYLINE_DELTA_RESTORE
                 | JBRSkia.COMMAND_CAP64_HIGH_FILL_RECT_RUN
-                | JBRSkia.COMMAND_CAP64_HIGH_CLEAR_DRAW_IMAGE_REF_FULL_DRAW_ROUND_RECT;
+                | JBRSkia.COMMAND_CAP64_HIGH_CLEAR_DRAW_IMAGE_REF_FULL_DRAW_ROUND_RECT
+                | JBRSkia.COMMAND_CAP64_HIGH_STROKE_LINE_RUN;
     }
 
     private static void assertCommandStreamValidation() {
@@ -253,6 +254,8 @@ public class JBRSkiaApiTest {
                 JBRSkia.COMMAND_CLEAR, 16, JBRSkia.COMMAND_RECORD_FLAG_ANTIALIAS, 0xff000000
         }, "valid antialiased clear stream");
         assertValidCommandStream(validStrokeLineStream(), "valid stroke metadata stream");
+        assertValidCommandStream(validStrokeLineRunStream(), "valid stroke line run stream");
+        assertInvalidCommandStream(invalidStrokeLineRunCountStream(), "invalid stroke line run count");
         assertValidCommandStream(validTransformStream(), "valid transform stream");
         assertValidCommandStream(validSaveTranslateRotateStream(), "valid save translate rotate stream");
         assertValidCommandStream(
@@ -833,6 +836,23 @@ public class JBRSkiaApiTest {
                 JBRSkia.COMMAND_STROKE_LINE, 48, JBRSkia.COMMAND_RECORD_FLAG_ANTIALIAS,
                 0xffffffff, 1, 2, 11, 12, 3, 1, 0, 4000
         };
+    }
+
+    private static int[] validStrokeLineRunStream() {
+        return new int[] {
+                JBRSkia.COMMAND_STREAM_MAGIC, JBRSkia.ABI_ID, JBRSkia.COMMAND_STREAM_FLAGS_NONE, 17,
+                JBRSkia.COMMAND_COORDINATE_SPACE_SWING_USER, JBRSkia.COMMAND_PAINT_FORMAT_SOLID_ARGB,
+                JBRSkia.COMMAND_STROKE_LINE_RUN, 68, JBRSkia.COMMAND_RECORD_FLAG_ANTIALIAS,
+                0xffffffff, 3, 1, 0, 4000, 2,
+                1, 2, 11, 12,
+                13, 14, 21, 22
+        };
+    }
+
+    private static int[] invalidStrokeLineRunCountStream() {
+        int[] commands = validStrokeLineRunStream();
+        commands[14] = 1;
+        return commands;
     }
 
     private static int[] validTransformStream() {
