@@ -5,6 +5,19 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-26 rejected Markdown catalog follow-up micro-candidates:
+  A latest-state `markdown-preview-catalog-auto` diagnostic was run as a broader one-case command-stream candidate
+  search after the Icons clear/image rejection:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-catalog-auto-pair-word-diagnostic/markdown-preview-catalog-auto/report.md`.
+  The narrow run stayed strict-clean with `fallback_new_count=0`, `cmp_unsupported_max=0`, `jbr_command_frames=821`,
+  `avg_commands=592`, and no image-cache clears or evicts. Catalog frames are still dominated by retained compact
+  layer/image records: `saveTranslateLayerSaveTranslateDrawImageRefFullRestoreN:avg=77.2` command words,
+  `drawImageRefFullRun:avg=56.5`, `fillRectSaveLayerClipRectSaveSaveLayerSaveTranslate:avg=50.0`, and
+  `drawImageRefFullRestoreN:avg=48.4`. The hottest simple pair,
+  `drawImageRefFullRestoreN>drawRoundRectRestoreN:avg=48.2`, is the same post-op97 candidate previously rejected
+  because the prototype did not prove exercise and crawled. Other top pairs either chain already-retained large records
+  or save only one record header while increasing ABI/replay complexity. No code candidate was retained from this
+  catalog sweep.
 - 2026-06-26 rejected latest Icons clear/image micro-compaction candidate:
   After retaining the guarded direct clear/image/roundrect fold, a latest-state `showcase-icons` diagnostic was run with
   op counts, op words, and op pairs enabled:
