@@ -5,6 +5,21 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-26 rejected catalog-head op96 run/cache candidates:
+  A focused `markdown-preview-catalog-head-auto` diagnostic was run with op counts, op words, op pairs, and Skiko
+  command-buffer cache logging:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-catalog-head-auto-words-pairs-cache/markdown-preview-catalog-head-auto/report.md`.
+  The run stayed strict-clean with `fallback_new_count=0`, `cmp_unsupported_max=0`, `jbr_command_frames=1029`, and
+  command-mode app FPS/CPU ahead of the old path in this sample (`new_fps=3.9` vs `old_fps=3.2`,
+  `new_avg_cpu=96.75` vs `old_avg_cpu=122.90`; host load was still non-idle at `host_load_1m=6.68`). The top word and
+  pair were repeated `COMMAND_SAVE_TRANSLATE_LAYER_SAVE_TRANSLATE_DRAW_IMAGE_REF_FULL_RESTORE_N`
+  (`saveTranslateLayerSaveTranslateDrawImageRefFullRestoreN:avg=134.1`,
+  `saveTranslateLayerSaveTranslateDrawImageRefFullRestoreN>saveTranslateLayerSaveTranslateDrawImageRefFullRestoreN:avg=172.7`).
+  A dedicated run record for this shape would be a new public/native ABI op with nearly all per-item payload still
+  required (layer translate/bounds/alpha, nested translate, destination rect, image key, and restore count) and would not
+  reduce the underlying Skia save/layer/draw/restore work, so the command-count win is too narrow for the ABI cost. The
+  command-buffer cache ended at `hits=335 misses=917 skipped=0 deferred=188`, which does not overturn the earlier tiny
+  LRU rejection. No code candidate was retained.
 - 2026-06-26 rejected Icons clear/image/roundrect alpha fold retry:
   A focused `showcase-icons` diagnostic was run with op counts, op words, op pairs, and Skiko command-buffer cache
   logging:
