@@ -5,6 +5,17 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-26 retained Magic Jewel raw README layout-image sanitizer:
+  Magic Jewel commit `5de37b1` keeps the raw README shield-badge coverage while applying the same README layout-image
+  cleanup used by the sanitized/no-badge path. This removes the local `readme/jewel-logo.svg` fixture image from the
+  raw/yellow-badge validation path, avoiding the gray SVG placeholder that masked the actual badge/title rendering
+  signal. Narrow gates passed: `./gradlew --no-daemon --no-configuration-cache compileKotlin --console=plain`, focused
+  raw badge validation
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-yellow-badge-strip-local-logo-raw/markdown-preview-raw-readme80-static/report.md`,
+  and the no-badge guardrail
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-yellow-badge-strip-local-logo/markdown-preview-readme80-static/report.md`.
+  Both focused rows stayed strict-clean (`fallback_new_count=0`, `cmp_unsupported_max=0`, `jbr_picture_frames=0`) and
+  passed screenshot assertion. Treat the raw badge row as the current Markdown badge visual guardrail.
 - 2026-06-26 rejected trailing translate suffix broadening:
   A CMP prototype broadened the existing trailing translated image-ref suffix fold to also bake trailing translates
   into round-rect/image-run suffix records. The first broad version was too aggressive around integer-grid records and
