@@ -5,6 +5,24 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-26 rejected adjacent `drawImageRefFullRun` merge and removed the local README logo fixture:
+  A CMP prototype added a group-1 pass to merge adjacent `drawImageRefFullRun` records after translated-layer folding.
+  Focused recorder validation passed, but same-harness Jewel catalog A/B did not show a useful runtime or command-profile
+  win, so the CMP source/test changes were removed. The prototype report was
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-catalog-auto-image-run-merge-prototype/markdown-preview-catalog-auto/report.md`
+  (`fallback_new_count=0`, `cmp_unsupported_max=0`, `jbr_command_frames=215`, `new_avg_cpu=23.97`,
+  `new_avg_rss_kb=520981`), while the pass-disabled control was
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-catalog-auto-image-run-merge-control-pass9-disabled/markdown-preview-catalog-auto/report.md`
+  (`jbr_command_frames=218`, `new_avg_cpu=23.83`, `new_avg_rss_kb=505056`) with effectively identical op summaries.
+  Separately, the yellow-watermark README preview still depended on the local `readme/jewel-logo.svg` markdown image,
+  which rendered as a large placeholder or blank gap depending on the render path. Magic Jewel now removes that local
+  logo line as part of `SanitizedJewelReadme`, matching the existing remote badge/layout-image cleanup. Narrow
+  validation passed with `./gradlew --no-daemon --no-configuration-cache processResources compileKotlin --console=plain`
+  and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-yellow-badge-no-local-logo-fixture/markdown-preview-readme80-static/report.md`
+  (`fallback_new_count=0`, `cmp_unsupported_max=0`, `cmp_unsupported_reasons=none`, `jbr_picture_frames=0`,
+  `jbr_command_frames=1`, `screenshot_yellow=7043`). The captured `new-window.png` shows a clean title and body with no
+  badge/image replacement overlap.
 - 2026-06-26 added a Menus popup harness and hardened the README Markdown fixture:
   Magic Jewel commit `9ea2bfd` tags the Menus buttons and adds a focused `menuPopup` Spectre mode. Opening the popup
   first exposed the missing runtime dependency on `androidx.navigationevent:navigationevent-compose-desktop:1.1.0-alpha01`,
