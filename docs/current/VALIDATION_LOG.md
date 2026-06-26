@@ -5,6 +5,16 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-26 retained Magic Jewel Coil SVG decoder dependency for raw README badges:
+  The user-confirmed failure was specific to the yellow-badge/raw README path: the no-badge sanitized path was clean,
+  while the raw path could show Markdown image replacement text overlapping the `Jewel` title. Magic Jewel now carries
+  an explicit `io.coil-kt.coil3:coil-svg` dependency so the local shields.io badge SVG resources decode through Coil
+  instead of falling back to alt/replacement text. Narrow validation passed after `./gradlew --no-daemon
+  --no-configuration-cache compileKotlin --console=plain`: the paired static README run
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-coil-svg-badge-fix/suite.tsv`
+  reported both `markdown-preview-readme80-static` and `markdown-preview-raw-readme80-static` as passed with
+  `fallback_new_count=0`, `cmp_unsupported_max=0`, `jbr_picture_frames=0`, and screenshot assertions enabled. Visual
+  inspection of the raw screenshot confirmed the badge SVGs render above the title with no replacement-text overlap.
 - 2026-06-26 rejected CMP image-pair direct-copy prototype:
   A CMP-only prototype removed two tiny `copyOfRange()` allocations from the `drawImageRefFull+drawRoundRect` and
   `drawImageRefFull+fillRect` compact-command builders by staging the six image arguments in locals. The first draft
