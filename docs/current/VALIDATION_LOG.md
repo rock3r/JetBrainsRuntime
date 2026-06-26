@@ -5,6 +5,21 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-26 rejected tiny encoded-command-buffer LRU prototype:
+  A focused catalog cache diagnostic with `-Dskiko.jbr.interop.logCommandBufferCache=true` established the retained
+  single-entry/adaptive encoded-buffer baseline:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-catalog-auto-command-cache-diagnostic/markdown-preview-catalog-auto/report.md`.
+  The run stayed strict-clean with `fallback_new_count=0`, `cmp_unsupported_max=0`, `jbr_command_frames=811`, and the
+  raw Skiko cache counters ended at `hits=143 misses=823 skipped=0 deferred=234`. A Skiko prototype replaced the
+  single cached encoded stream with a tiny exact LRU, preserving full `contentEquals` verification and the existing
+  adaptive fingerprint gate for medium streams. The focused Skiko interop test class passed, and the prototype was
+  published locally for a matching catalog probe:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-catalog-auto-command-cache-lru-prototype/markdown-preview-catalog-auto/report.md`.
+  That run also stayed strict-clean, but the final counters only moved to
+  `hits=146 misses=821 skipped=0 deferred=233`, a negligible gain within run noise while adding extra retained buffers
+  and lookup work. The Skiko prototype and temporary test were removed, `JbrSkiaInteropTest` passed again, and the
+  clean Skiko snapshot was republished to Maven local so later Magic Jewel probes do not accidentally use the rejected
+  cache implementation.
 - 2026-06-26 rejected Markdown catalog follow-up micro-candidates:
   A latest-state `markdown-preview-catalog-auto` diagnostic was run as a broader one-case command-stream candidate
   search after the Icons clear/image rejection:
