@@ -5,6 +5,20 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-26 rejected Tooltips hover/resting-page candidates and added a focused hover harness:
+  A static `Components` / `Tooltips` diagnostic first passed strict-clean but did not exercise the tooltip popup
+  (`popup_new_shown=0`):
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-showcase-tooltips-static-words-pairs-cache/report.md`.
+  Magic Jewel then gained a stable `jewel.tooltip.hoverTarget` test tag plus a narrow `tooltipHover` Spectre mode that
+  navigates to Tooltips and moves the AWT mouse to the hover target. The corrected hover run is:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-showcase-tooltips-hover-v3-words-pairs-cache/report.md`.
+  It stayed strict-clean with `fallback_new_count=0`, `cmp_unsupported_max=0`, and command-path frames only. The hover
+  interaction produced a transient frame with `commands=1065`, `defineImageBitmap=2`, `drawImageRefColorFilter=1`, and
+  slightly higher tooltip/control chrome (`drawImageRefFullDrawRoundRect=528` words, `fillRoundRect=50` words), then
+  settled to `commands=973`. The final capture did not retain a visible tooltip bubble and popup counters remained zero,
+  so this is useful command evidence for hover-triggered repaint but not durable visual popup evidence. The hot pairs are
+  still dominated by the already alpha-guarded image/roundrect shape; the tooltip-specific additions are one-off and too
+  small for new command surface. No code candidate was retained.
 - 2026-06-26 rejected Chips and trees image/layer candidates:
   A direct `Components` / `Chips and trees` focused diagnostic was run with op counts, op words, op pairs, and Skiko
   command-buffer cache logging:
