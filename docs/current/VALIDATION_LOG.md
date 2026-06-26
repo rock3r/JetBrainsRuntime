@@ -5,6 +5,15 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-26 rejected CMP group-1 compaction prerequisite gates:
+  A CMP-only prototype extended op-counter prerequisite gates to group-1 compaction passes. The full CMP recorder class
+  passed, and both focused Hypnotoad A/B rows stayed strict-clean (`fallback_new_count=0`, `cmp_unsupported_max=0`,
+  `jbr_picture_frames=0`), but the gated row lost throughput versus the disabled-control row. Gated:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-group1-2-3-op-gates-hypnotoad/suite.tsv`
+  reported `app_new_fps=368.2`, `jbr_command_fps=184.2`, and `new_avg_cpu=79.72`; disabled control:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-group1-2-3-op-gates-disabled-control-hypnotoad/suite.tsv`
+  reported `app_new_fps=392.1`, `jbr_command_fps=196.1`, and `new_avg_cpu=84.48`. The prototype was removed with no
+  CMP code retained. Keep group-1 pass ordering ungated unless a future profile shows a clearer target.
 - 2026-06-26 retained CMP group-2 compaction prerequisite gates:
   CMP extends the per-op prerequisite gates to the group-2 command-compaction passes. These gates skip full-stream
   scans when a pass's source op families are absent, while the old ungated sequence remains available through
