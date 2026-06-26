@@ -5,6 +5,17 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-26 retained CMP op-counter allocation optimisation:
+  CMP replaced the per-writer boxed `LinkedHashMap<Int, Int>` command-op counter with a fixed `IntArray` plus live-entry
+  count. This preserves the debug op summary contract while avoiding per-command boxed map churn called out by the
+  Hypnotoad JFR allocation profile. Gates passed: full CMP recorder class
+  `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest --console=plain`
+  (`247/247`), local `ui-graphics` desktop Maven Local publish, and a focused Hypnotoad command benchmark:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-opcount-intarray-hypnotoad/suite.tsv`.
+  The focused row stayed strict-clean with `fallback_new_count=0`, `cmp_unsupported_max=0`, `jbr_picture_frames=0`,
+  and `jbr_command_frames=4006`. The CPU comparison is noisy rather than a headline win (`old_avg_cpu=83.43`,
+  `new_avg_cpu=83.59`), but the no-copy side retained the expected lower RSS (`new_avg_rss_kb=874887` vs
+  `old_avg_rss_kb=1295546`) and did not regress the recent Hypnotoad mask-probe range.
 - 2026-06-26 retained `COMMAND_STROKE_LINE_RUN` coordinate preservation fix:
   CMP now snapshots the first `COMMAND_STROKE_LINE` coordinate quad before rewriting the record in-place as
   `COMMAND_STROKE_LINE_RUN`, preventing the new run header from overwriting the first segment's endpoints. Narrow
