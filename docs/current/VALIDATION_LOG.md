@@ -5,6 +5,19 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-26 retained Skiko encoded command-buffer cold-cache bypass:
+  Skiko now stops copying command arrays into `EncodedCommandBufferCache` after a short run of same-size misses with no
+  hits, while periodically probing again so stable same-size streams can recover cache reuse. This avoids paying both
+  `contentEquals()` and `IntArray.copyOf()` on animated/scrolling command streams that never repeat exactly. The
+  diagnostic parser now records the new `skiko_command_buffer_cache_bypassed` counter. Gates passed: Skiko
+  `./gradlew --no-daemon --no-configuration-cache compileKotlinAwt publishAwtPublicationToMavenLocal --console=plain`
+  and a two-row focused Magic Jewel command benchmark with command-buffer cache logging:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-command-buffer-cache-bypass-probe/suite.tsv`.
+  The scrolling Markdown row stayed strict-clean (`fallback_new_count=0`, `cmp_unsupported_max=0`,
+  `jbr_picture_frames=0`) and showed the bypass engaging (`skiko_command_buffer_cache_bypassed=366`,
+  `misses=432`, `hits=0`) with lower no-copy RSS than the immediately preceding logged baseline
+  (`new_avg_rss_kb=3506619` vs `4167672`). The static Markdown smoke row also stayed strict-clean and did not enter
+  bypass mode (`skiko_command_buffer_cache_bypassed=0`, `misses=1`), preserving the low-frame path.
 - 2026-06-26 retained CMP lazy record-start index optimisation:
   CMP now keeps a lazy internal record-start index inside `CommandStreamWriter` so `previousRecordStart()` can avoid
   repeatedly scanning the whole command payload from the beginning. Structural compactions mark the index dirty, simple
