@@ -5,6 +5,18 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-26 rejected Borders image/path candidates:
+  A direct `Components` / `Borders` focused diagnostic was run with op counts, op words, op pairs, and Skiko
+  command-buffer cache logging:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-showcase-borders-static-words-pairs-cache/report.md`.
+  The run stayed strict-clean with `fallback_new_count=0`, `cmp_unsupported_max=0`, `jbr_command_frames=3`, warm-frame
+  `commands=1432`, and a clean captured `new-window.png` on the intended Borders page. The hot words were modest and
+  familiar: `drawImageRefFullDrawRoundRect:avg_words=572.0`, `clearRect:avg_words=189.0`, first-frame
+  `defineImageBitmap:avg_words=150.3`, `translate:avg_words=140.0`, `drawPath:avg_words=130.0`, and
+  `drawImageRefFull:avg_words=126.0`. The leading pairs were again alpha-guarded image/roundrect and first-frame image
+  definition traffic; the only non-image lead was `drawPath>drawPath:avg=130.0` followed by
+  `drawPath>restoreN:avg=87.0`, but there are only two path records and the cost is path payload, not repeated command
+  headers. Existing fill/image folds already cover the small surrounding chrome. No code candidate was retained.
 - 2026-06-26 rejected Tabs stroke/image/clip candidates:
   A direct `Components` / `Tabs` focused diagnostic was run with op counts, op words, op pairs, and Skiko command-buffer
   cache logging:
