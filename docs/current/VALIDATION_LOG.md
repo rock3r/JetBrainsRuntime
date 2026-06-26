@@ -5,6 +5,21 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-26 rejected Banners image/clip candidates:
+  A direct `Components` / `Banners` focused diagnostic was run with op counts, op words, op pairs, and Skiko
+  command-buffer cache logging:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-showcase-banners-static-words-pairs-cache/report.md`.
+  The animated timer page stayed strict-clean with `fallback_new_count=0`, `cmp_unsupported_max=0`,
+  `jbr_command_frames=453`, `avg_commands=3140`, and a clean captured `new-window.png` on the intended Banners page.
+  The stable hot profile was dominated by known image/banner chrome and clip payloads:
+  `drawImageRefFullDrawRoundRect:avg_words=770.0`, `clipPath:avg_words=420.0`, `clearRect:avg_words=350.0`,
+  `translate:avg_words=320.0`, `fillRect:avg_words=270.0`, `drawImageRefFullRun:avg_words=258.0`, and
+  `saveLayer:avg_words=104.0`. The top pairs were the already alpha-guarded image/roundrect shape
+  (`clearRect>drawImageRefFullDrawRoundRect:avg=1015.0`,
+  `drawImageRefFullDrawRoundRect>clearRect:avg=667.0`) plus `saveLayer>clipPath:avg=500.0`. The clip lead is not a
+  good ABI candidate: the payload is mostly the path itself (`clipPath:avg_words=420.0`), so fusing save-layer/clip
+  headers would save little and would not change the underlying Skia save-layer/clip work. Existing image-run compaction
+  already fired (`drawImageRefFullRun:avg=12.0`). No code candidate was retained.
 - 2026-06-26 rejected Combo Boxes image/translate candidates:
   A direct `Components` / `Combo Boxes` focused diagnostic was run with op counts, op words, op pairs, and Skiko
   command-buffer cache logging:
