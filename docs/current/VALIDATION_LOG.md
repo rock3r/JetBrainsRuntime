@@ -10,9 +10,12 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   `COMMAND_STROKE_LINE_RUN`, preventing the new run header from overwriting the first segment's endpoints. Narrow
   recorder gates passed:
   `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesPointLineRecords --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesRawPointPolygonRecords --console=plain`.
-  A full `JbrSkiaCommandRecorderTest` control run remains red with 18 failures, but the same 18 failures reproduce when
-  disabling only line-run compaction via `-Dcompose.jbr.skia.command.compactionGroup1PassMask=255`, so they are existing
-  broader recorder-suite expectation drift rather than a regression from this coordinate fix.
+  The full `JbrSkiaCommandRecorderTest` control run initially exposed 18 stale expectations that also reproduced when
+  disabling only line-run compaction via `-Dcompose.jbr.skia.command.compactionGroup1PassMask=255`; those expectations
+  were updated to assert the current default compact record families (`80`, `81`, `83`, `84`, `86`, `87`, `99`, and
+  `108`) directly. The full recorder class now passes:
+  `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest --console=plain`
+  completed `247/247` tests successfully.
 - 2026-06-26 rejected closed-polyline allocation candidate:
   A CMP prototype tried to avoid the common `closedPolylinePoints()` allocation by parsing line-only closed paths
   directly into `COMMAND_STROKE_CLOSED_POLYLINE_DELTA` payloads and only materializing raw points when signed-short
