@@ -5,6 +5,19 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-26 rejected Typography image-run candidates:
+  A direct `Components` / `Typography` focused diagnostic was run with op counts, op words, op pairs, and Skiko
+  command-buffer cache logging:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-showcase-typography-static-words-pairs-cache/report.md`.
+  The run stayed strict-clean with `fallback_new_count=0`, `cmp_unsupported_max=0`, `jbr_command_frames=3`,
+  `avg_commands=1159`, warm-frame `commands=979`, and a clean captured `new-window.png` on the intended Typography
+  page. The text-heavy page did not emit command text fallback (`avg_text_commands=0.0`,
+  `avg_paragraph_text_commands=0.0`); its command stream is still image/chrome based:
+  `drawImageRefFullDrawRoundRect:avg_words=484.0`, first-frame `defineImageBitmap:avg_words=183.3`,
+  `clearRect:avg_words=161.0`, and the already-retained `drawImageRefFullRun:avg_words=146.0`. The warm leading
+  pairs (`drawImageRefFullRun>drawImageRefFullFillRect`, `saveLayer>drawImageRefFullRun`,
+  `drawImageRefFull>translate`) either involve existing compact records or small layout headers. No code candidate was
+  retained.
 - 2026-06-26 rejected SplitLayout pane/chrome candidates:
   A direct `Components` / `SplitLayout` focused diagnostic was run with op counts, op words, op pairs, and Skiko
   command-buffer cache logging:
