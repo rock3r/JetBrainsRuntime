@@ -5,6 +5,24 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-26 fixed alpha-unsafe clear/image/roundrect compaction:
+  User-side visual validation confirmed the no-badge Markdown run was clean while the yellow-badge path still showed
+  rendering corruption. A focused preview repro isolated the issue to `COMMAND_CLEAR_DRAW_IMAGE_REF_FULL_DRAW_ROUND_RECT`:
+  disabling only the clear/image/roundrect compaction removed the black/opaque transparent-image artifact while keeping
+  `fallback_new_count=0` and `cmp_unsupported_max=0`. CMP now records each full-image-ref cache key's alpha bit and
+  refuses the op109 clear/image/roundrect fold when the image is transparent or unknown, matching the older
+  clear/full-image safety rule. The rebuilt CMP desktop artifact passed
+  `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:compileKotlinDesktop :compose:ui:ui-graphics:desktopJar --console=plain`
+  and was published locally with
+  `./gradlew --no-daemon --no-configuration-cache --no-configure-on-demand -PartifactRedirection.targetNames= :compose:ui:ui-graphics:publishDesktopPublicationToMavenLocal --console=plain`.
+  Narrow yellow-badge preview validation passed at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-alpha-guard-yellow-badge-preview/markdown-preview-readme80-static/report.md`
+  with `fallback_new_count=0`, `cmp_unsupported_max=0`, `jbr_command_frames=1`, and the captured logo rendered without
+  the black clear box. Narrow Icons validation passed at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-alpha-guard-icons/showcase-icons/report.md`
+  with `fallback_new_count=0`, `cmp_unsupported_max=0`, and `jbr_command_frames=3`. The Icons op109 count intentionally
+  dropped to zero because the affected icon/logo images carry alpha; the remaining grey/white icon surrounds are asset
+  content rather than command fallback or unsupported replay.
 - 2026-06-26 rejected README160 auto-scroll follow-up candidates:
   A latest-state `markdown-preview-readme160-auto` diagnostic was run with op counts, op words, op pairs, and Skiko
   encoded command-buffer cache logging:
