@@ -5,6 +5,20 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-26 rejected README160 auto-scroll follow-up candidates:
+  A latest-state `markdown-preview-readme160-auto` diagnostic was run with op counts, op words, op pairs, and Skiko
+  encoded command-buffer cache logging:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-readme160-auto-pair-cache-diagnostic/markdown-preview-readme160-auto/report.md`.
+  The narrow run stayed strict-clean with `fallback_new_count=0`, `cmp_unsupported_max=0`, `jbr_command_frames=389`,
+  `avg_commands=454`, and no command-cache clears. The encoded-buffer cache counters reached only
+  `hits=27 misses=522 skipped=0 deferred=51`, so there is no cache-policy candidate on this surface. The top command
+  words are still dominated by retained compact records:
+  `saveTranslateLayerSaveTranslateDrawImageRefFullRestoreNSaveTranslateLayerSaveTranslate:avg=68.2`,
+  `fillRectSaveLayerClipRectSaveSaveLayerSaveTranslate:avg=52.0`, and `drawImageRefFullRun:avg=41.0`.
+  The most tempting new pair, `clearRect>drawImageRefColorFilter:avg=37.0`, would require a new ABI/native replay op to
+  combine a clear with a filtered image draw and would save only one record header per occurrence. Other top pairs
+  either chain already-retained compact layer/image records or match the previously rejected
+  `drawImageRefFullRestoreN>drawRoundRectRestoreN` shape. No code candidate was retained.
 - 2026-06-26 rejected tiny encoded-command-buffer LRU prototype:
   A focused catalog cache diagnostic with `-Dskiko.jbr.interop.logCommandBufferCache=true` established the retained
   single-entry/adaptive encoded-buffer baseline:
