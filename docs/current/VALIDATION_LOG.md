@@ -5,6 +5,18 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-26 retained command-buffer cache summary instrumentation:
+  While triaging the next optimisation candidate, the existing Skiko logs already exposed
+  `SKIKO_JBR_INTEROP_COMMAND_BUFFER_CACHE hits=... misses=... skipped=... deferred=...`, but Magic Jewel summaries only
+  reported command-cache clears. The report harness now records the last observed encoded command-buffer cache tuple as
+  stable `summary.properties` keys (`skiko_command_buffer_cache_hits`, `misses`, `skipped`, and `deferred`) and includes
+  a matching Markdown report row. Narrow validation passed with `./scripts/test-jbr-skia-report-validation.sh` and a
+  focused `showcase-icons` smoke:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-command-buffer-cache-summary-smoke/showcase-icons/report.md`.
+  The smoke stayed strict-clean with `fallback_new_count=0`, `cmp_unsupported_max=0`, `cmp_unsupported_reasons=none`,
+  `jbr_picture_frames=0`, `jbr_command_frames=3`, and the new cache summary fields present
+  (`hits=0`, `misses=0`, `skipped=0`, `deferred=0`). This keeps future cache/delta candidates measurable without
+  manual log greps.
 - 2026-06-26 rejected adjacent `drawImageRefFullRun` merge and removed the local README logo fixture:
   A CMP prototype added a group-1 pass to merge adjacent `drawImageRefFullRun` records after translated-layer folding.
   Focused recorder validation passed, but same-harness Jewel catalog A/B did not show a useful runtime or command-profile
