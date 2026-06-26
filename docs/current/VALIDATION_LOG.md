@@ -5,6 +5,19 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-26 retained ABI 111 saveLayer+clipPath compaction:
+  Added `COMMAND_SAVE_LAYER_CLIP_PATH` (`op=111`) plus high capability bit `576460752303423488` for compact
+  `saveLayer; clipPath` records with variable path payloads. The target came from the focused Jewel Banners pair
+  diagnostic, where `saveLayer>clipPath` was a hot pair at `avg=500.0` per frame. Gates passed: CMP full
+  `JbrSkiaCommandRecorderTest`, Skiko `JbrSkiaInteropTest` plus local AWT publish, Magic Jewel
+  `./scripts/test-jbr-skia-api.sh`, local patched JBR bridge rebuild, CMP desktop publish, and focused Banners
+  validation:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-op111-save-layer-clip-path-banners-v2/showcase-banners-static/report.md`.
+  The focused Banners slice stayed strict-clean (`fallback_new_count=0`, `cmp_unsupported_max=0`,
+  `jbr_picture_frames=0`) and emitted `saveLayerClipPath:avg=10.0` / `avg_words=470.0` per frame. Average command
+  words dropped from the previous Banners baseline's `3140` to `3103`, and the old `saveLayer>clipPath` pair
+  disappeared from the top-pair list. Treat this as a modest but broad Jewel-control command-stream reduction; CPU/FPS
+  remain secondary because host load and frame counts differed between the static runs.
 - 2026-06-26 retained Skiko adaptive command-cache probe interval endpoint:
   Skiko now probes adaptive command-buffer cache bypass every 3840 bypassed frames instead of every 1920. This keeps
   the retained deferral threshold at `2` while further reducing periodic fingerprint reprobes on non-repeating

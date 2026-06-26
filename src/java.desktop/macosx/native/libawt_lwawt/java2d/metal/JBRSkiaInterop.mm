@@ -219,6 +219,7 @@ static constexpr jint COMMAND_SAVE_TRANSLATE_ROTATE_TRANSLATE_STROKE_CLOSED_POLY
 static constexpr jint COMMAND_FILL_RECT_RUN = 108;
 static constexpr jint COMMAND_CLEAR_DRAW_IMAGE_REF_FULL_DRAW_ROUND_RECT = 109;
 static constexpr jint COMMAND_STROKE_LINE_RUN = 110;
+static constexpr jint COMMAND_SAVE_LAYER_CLIP_PATH = 111;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER = 1;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_COLOR_MATRIX_FILTER = 2;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_LIGHTING_FILTER = 3;
@@ -3532,6 +3533,40 @@ static bool drawCommandList(SkCanvas* canvas,
                                                   static_cast<SkScalar>(clipY),
                                                   static_cast<SkScalar>(clipWidth),
                                                   static_cast<SkScalar>(clipHeight)),
+                                 clipOp == COMMAND_CLIP_OP_DIFFERENCE ? SkClipOp::kDifference : SkClipOp::kIntersect,
+                                 antiAlias);
+                break;
+            }
+            case COMMAND_SAVE_LAYER_CLIP_PATH: {
+                if (offset + 8 > recordEnd) {
+                    return false;
+                }
+                jint x = commands[offset++];
+                jint y = commands[offset++];
+                jint layerWidth = commands[offset++];
+                jint layerHeight = commands[offset++];
+                jint alpha1000 = commands[offset++];
+                jint clipOp = commands[offset++];
+                jint fillType = commands[offset++];
+                jint pathDataLength = commands[offset++];
+                if (alpha1000 < 0 || alpha1000 > 1000 ||
+                        (clipOp != COMMAND_CLIP_OP_INTERSECT && clipOp != COMMAND_CLIP_OP_DIFFERENCE) ||
+                        (fillType != COMMAND_PATH_FILL_NON_ZERO && fillType != COMMAND_PATH_FILL_EVEN_ODD) ||
+                        pathDataLength < 0 ||
+                        offset + pathDataLength != recordEnd) {
+                    return false;
+                }
+                SkPath path;
+                if (!pathFromCommandData(commands, offset, recordEnd, fillType, &path)) {
+                    return false;
+                }
+                offset = recordEnd;
+                SkRect bounds = SkRect::MakeXYWH(static_cast<SkScalar>(x),
+                                                 static_cast<SkScalar>(y),
+                                                 static_cast<SkScalar>(layerWidth),
+                                                 static_cast<SkScalar>(layerHeight));
+                canvas->saveLayerAlphaf(&bounds, static_cast<float>(alpha1000) / 1000.0f);
+                canvas->clipPath(path,
                                  clipOp == COMMAND_CLIP_OP_DIFFERENCE ? SkClipOp::kDifference : SkClipOp::kIntersect,
                                  antiAlias);
                 break;

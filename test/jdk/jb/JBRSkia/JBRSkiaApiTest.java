@@ -243,7 +243,8 @@ public class JBRSkiaApiTest {
                 | JBRSkia.COMMAND_CAP64_HIGH_SAVE_TRANSLATE_ROTATE_TRANSLATE_STROKE_CLOSED_POLYLINE_DELTA_RESTORE
                 | JBRSkia.COMMAND_CAP64_HIGH_FILL_RECT_RUN
                 | JBRSkia.COMMAND_CAP64_HIGH_CLEAR_DRAW_IMAGE_REF_FULL_DRAW_ROUND_RECT
-                | JBRSkia.COMMAND_CAP64_HIGH_STROKE_LINE_RUN;
+                | JBRSkia.COMMAND_CAP64_HIGH_STROKE_LINE_RUN
+                | JBRSkia.COMMAND_CAP64_HIGH_SAVE_LAYER_CLIP_PATH;
     }
 
     private static void assertCommandStreamValidation() {

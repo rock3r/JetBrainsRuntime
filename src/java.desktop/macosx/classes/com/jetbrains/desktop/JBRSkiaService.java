@@ -203,7 +203,8 @@ public class JBRSkiaService extends JBRSkia {
                     | COMMAND_CAP64_HIGH_SAVE_TRANSLATE_ROTATE_TRANSLATE_STROKE_CLOSED_POLYLINE_DELTA_RESTORE
                     | COMMAND_CAP64_HIGH_FILL_RECT_RUN
                     | COMMAND_CAP64_HIGH_CLEAR_DRAW_IMAGE_REF_FULL_DRAW_ROUND_RECT
-                    | COMMAND_CAP64_HIGH_STROKE_LINE_RUN;
+                    | COMMAND_CAP64_HIGH_STROKE_LINE_RUN
+                    | COMMAND_CAP64_HIGH_SAVE_LAYER_CLIP_PATH;
     private static final boolean NATIVE_BRIDGE_AVAILABLE = loadNativeBridge();
     private static final AtomicLong NEXT_SCOPE_ID = new AtomicLong(1);
     private static final int MAX_CACHED_IMAGES = 256;
@@ -526,6 +527,7 @@ public class JBRSkiaService extends JBRSkia {
         if (op == COMMAND_SAVE_TRANSLATE_ROTATE_TRANSLATE_STROKE_CLOSED_POLYLINE_DELTA_RESTORE) return -43;
         if (op == COMMAND_FILL_RECT_RUN) return -44;
         if (op == COMMAND_STROKE_LINE_RUN) return -45;
+        if (op == COMMAND_SAVE_LAYER_CLIP_PATH) return -46;
         if (op == COMMAND_SAVE_TRANSLATE_LAYER) return 10;
         if (op == COMMAND_SAVE_LAYER) return 8;
         if (op == COMMAND_SAVE_LAYER_SAVE_TRANSLATE || op == COMMAND_SAVE_SAVE_LAYER_SAVE_TRANSLATE) return 10;
@@ -631,6 +633,9 @@ public class JBRSkiaService extends JBRSkia {
         }
         if (expectedLength == -6 && record.op() == COMMAND_CLIP_PATH) {
             return record.recordLength() >= 6;
+        }
+        if (expectedLength == -46 && record.op() == COMMAND_SAVE_LAYER_CLIP_PATH) {
+            return record.recordLength() >= 11;
         }
         if (expectedLength == -7 && record.op() == COMMAND_DRAW_PATH) {
             return record.recordLength() >= 11;
@@ -829,6 +834,22 @@ public class JBRSkiaService extends JBRSkia {
                     && alpha1000 >= 0
                     && alpha1000 <= 1000
                     && (clipOp == COMMAND_CLIP_OP_INTERSECT || clipOp == COMMAND_CLIP_OP_DIFFERENCE);
+        }
+        if (record.op() == COMMAND_SAVE_LAYER_CLIP_PATH) {
+            int alpha1000 = commands[record.argsStart() + 4];
+            int clipOp = commands[record.argsStart() + 5];
+            int fillType = commands[record.argsStart() + 6];
+            int pathDataLength = commands[record.argsStart() + 7];
+            return (record.recordFlags() == COMMAND_RECORD_FLAGS_NONE
+                    || record.recordFlags() == COMMAND_RECORD_FLAG_ANTIALIAS)
+                    && alpha1000 >= 0
+                    && alpha1000 <= 1000
+                    && (clipOp == COMMAND_CLIP_OP_INTERSECT || clipOp == COMMAND_CLIP_OP_DIFFERENCE)
+                    && (fillType == COMMAND_PATH_FILL_NON_ZERO || fillType == COMMAND_PATH_FILL_EVEN_ODD)
+                    && pathDataLength >= 0
+                    && pathDataLength <= 4096
+                    && record.argsStart() + 8 + pathDataLength == record.recordEnd()
+                    && validatePathData(commands, record.argsStart() + 8, record.recordEnd());
         }
         if (record.op() == COMMAND_SAVE_TRANSLATE_LAYER) {
             return record.recordFlags() == COMMAND_RECORD_FLAGS_NONE
@@ -4673,6 +4694,38 @@ public class JBRSkiaService extends JBRSkia {
                             current.setClip(clip);
                         } else {
                             return false;
+                        }
+                    } else if (op == COMMAND_SAVE_LAYER_CLIP_PATH) {
+                        if (offset + 8 > recordEnd) return false;
+                        int x = commands[offset++];
+                        int y = commands[offset++];
+                        int width = commands[offset++];
+                        int height = commands[offset++];
+                        int alpha1000 = commands[offset++];
+                        int clipOp = commands[offset++];
+                        int fillType = commands[offset++];
+                        int pathDataLength = commands[offset++];
+                        if (alpha1000 < 0 || alpha1000 > 1000 ||
+                                (clipOp != COMMAND_CLIP_OP_INTERSECT && clipOp != COMMAND_CLIP_OP_DIFFERENCE) ||
+                                (fillType != COMMAND_PATH_FILL_NON_ZERO && fillType != COMMAND_PATH_FILL_EVEN_ODD) ||
+                                pathDataLength < 0 ||
+                                offset + pathDataLength != recordEnd) {
+                            return false;
+                        }
+                        Path2D path = pathFromCommandData(commands, offset, recordEnd, fillType);
+                        if (path == null) return false;
+                        offset = recordEnd;
+                        stack.addLast(current);
+                        current = (Graphics2D) current.create();
+                        current.clipRect(x, y, width, height);
+                        if (clipOp == COMMAND_CLIP_OP_INTERSECT) {
+                            current.clip(path);
+                        } else {
+                            Shape previousClip = current.getClip();
+                            if (previousClip == null) return false;
+                            Area clip = new Area(previousClip);
+                            clip.subtract(new Area(path));
+                            current.setClip(clip);
                         }
                     } else if (op == COMMAND_SAVE_LAYER_COLOR_FILTER) {
                         if (record.recordFlags() != COMMAND_RECORD_FLAGS_NONE || offset + 7 != recordEnd) return false;
