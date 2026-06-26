@@ -5,6 +5,26 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-26 refined the guarded CMP compaction default after a group-1 pass-mask census:
+  The earlier safe default disabled all of compaction group 1 to avoid the yellow-badge Jewel markdown editor blanking
+  bug. A narrower visual sweep showed the unsafe interaction with structural group 2 is specifically the adjacent
+  image-ref/roundrect passes inside group 1, not the translated-layer folds or later image-run folds. With
+  `compose.jbr.skia.command.compactionGroupMask=6`, pass masks `0x0f`, `0x0c`, `0x04`, and `0x08` reproduced the
+  toolbar-only blank editor body, while `0xf0` and `0x03` rendered correctly. CMP now defaults to all compaction
+  groups enabled (`0b1111`) and keeps only group-1 passes 2 and 3 off by default via
+  `defaultCompactionGroup1PassMask=0xf3`; `compose.jbr.skia.command.compactionGroup1PassMask` remains a diagnostic
+  override. Narrow validation passed after rebuilding CMP with
+  `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:compileKotlinDesktop :compose:ui:ui-graphics:desktopJar --console=plain`.
+  The direct default yellow-badge editor/preview report
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-default-g1-passmask-f3-readme20/markdown-editor-preview-readme20-static/report.md`
+  passed with `fallback_new_count=0`, `cmp_unsupported_max=0`, `jbr_command_frames=4`, `new_avg_cpu=0.35`, and a
+  captured `new-window.png` showing both editor and preview bodies. Compared with the all-group-1-off default, the
+  markdown repro recovered useful command compaction: `drawImageRefFull` dropped from `avg=6.2` to `avg=4.8`, and the
+  top word contributors shifted accordingly. A narrow Hypnotoad guard also passed:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-default-g1-passmask-f3-hypnotoad/suite.tsv`
+  (`fallbacks=0`, `unsupported_max=0`, `jbr_command_frames=619`), with the existing animation-heavy word profile still
+  dominated by `saveTranslateRotateTranslateStrokeClosedPolylineDeltaRestore`, `saveTranslateRotateTranslateFillOvalRestoreRun`,
+  and `strokeOvalRun`.
 - 2026-06-26 retained guarded CMP command-stream compaction default for the yellow-badge Jewel markdown editor:
   User-side inspection confirmed the no-badge run was visually clean while the yellow debug-badge/interoperability
   task could still blank the markdown editor/preview body even when structured markers reported
