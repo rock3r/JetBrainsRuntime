@@ -5,6 +5,17 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-26 retained Skiko adaptive command-cache deferral threshold follow-up:
+  Skiko tightens the adaptive command-buffer cache bypass threshold again, from 8 to 4 consecutive medium-stream
+  fingerprint deferrals. This further reduces work on animated streams that do not repeat exactly, while the Markdown
+  guardrail proves the useful repeated-stream cache path remains active. Gates passed: Skiko
+  `./gradlew --no-daemon --no-configuration-cache compileKotlinAwt awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest publishAwtPublicationToMavenLocal --console=plain`
+  and focused Magic Jewel Hypnotoad/Markdown command-cache validation:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-adaptive-deferral-threshold-4-candidate/suite.tsv`.
+  Compared with the retained threshold-8 row, Hypnotoad deferrals dropped from `144` to `72` and stayed strict-clean
+  (`fallback_new_count=0`, `cmp_unsupported_max=0`, `jbr_picture_frames=0`). The Markdown auto-scroll guardrail
+  preserved cache reuse (`hits=261`, `misses=214`, `deferred=5`, `bypassed=0`) and stayed strict-clean too. Treat this
+  as an incremental cache-work reduction; FPS and CPU remain host-load-sensitive secondary signals.
 - 2026-06-26 rejected native closed-polyline delta path-reuse prototype:
   A JBR-native prototype cached the immediately previous decoded closed-polyline-delta `SkPath` inside one command
   replay pass, targeting the current Hypnotoad diagnostic where
