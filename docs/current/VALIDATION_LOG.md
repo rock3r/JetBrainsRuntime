@@ -5,6 +5,17 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-26 retained Skiko adaptive command-cache deferral threshold final tightening:
+  Skiko tightens the adaptive command-buffer cache bypass threshold from 4 to 2 consecutive medium-stream fingerprint
+  deferrals. This keeps reducing wasted fingerprint work on non-repeating animated streams while preserving the
+  Markdown repeated-stream cache guardrail. Gates passed: Skiko
+  `./gradlew --no-daemon --no-configuration-cache compileKotlinAwt awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest publishAwtPublicationToMavenLocal --console=plain`
+  and focused Magic Jewel Hypnotoad/Markdown command-cache validation:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-adaptive-deferral-threshold-2-candidate/suite.tsv`.
+  Compared with the retained threshold-4 row, Hypnotoad deferrals dropped from `72` to `40` and stayed strict-clean
+  (`fallback_new_count=0`, `cmp_unsupported_max=0`, `jbr_picture_frames=0`). The Markdown auto-scroll guardrail
+  preserved cache reuse (`hits=333`, `misses=262`, `deferred=5`, `bypassed=0`) and stayed strict-clean too. Treat this
+  as another incremental cache-work reduction; FPS and CPU remain host-load-sensitive secondary signals.
 - 2026-06-26 retained Skiko adaptive command-cache deferral threshold follow-up:
   Skiko tightens the adaptive command-buffer cache bypass threshold again, from 8 to 4 consecutive medium-stream
   fingerprint deferrals. This further reduces work on animated streams that do not repeat exactly, while the Markdown
