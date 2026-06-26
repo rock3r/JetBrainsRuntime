@@ -47,6 +47,14 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   reverted and no code was retained. The evidence still points at recorder-side repeated record-boundary scanning and
   allocation churn as the next optimisation area, but the next attempt needs a correctness-preserving record-index or
   pass-local scan design with explicit save/restore tests before any benchmark run.
+- 2026-06-26 rejected `previousRecordStart` memoization prototype:
+  A narrower CMP prototype tried to preserve all call sites and only memoize the previous-of-previous record boundary
+  from the last `previousRecordStart(endOffset)` scan. This also compiled, but the same focused recorder regression
+  class rejected it with the same class of 20 failures as the earlier local scan rewrite:
+  `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest --console=plain`.
+  The failure mode shows that caching by `payloadSize` is not a valid invariant: several compaction paths mutate record
+  contents or record boundaries while leaving the total payload size unchanged, so stale previous-record state can make
+  later folds fire against the wrong stream shape. The source change was reverted and no code was retained.
 - 2026-06-26 fresh badge visual check and Hypnotoad thread-CPU evidence:
   A fresh current-build static README preview pair was captured after a user-reported yellow-badge visual regression.
   Both the scoped-label run and the attempted no-badge comparison passed strict command validation and rendered without
