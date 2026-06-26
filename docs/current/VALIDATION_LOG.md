@@ -5,6 +5,19 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-26 rejected CMP run-builder streaming prototype:
+  A CMP-only prototype removed the temporary `IntArray` lists from
+  `compactAdjacentSaveTranslateRotateTranslateFillOvalRestoreRuns()` and `compactAdjacentStrokeOvalRuns()` by copying
+  each run body directly into the compacted output record. The full CMP recorder class passed, including the affected
+  run-compaction tests, and both focused Hypnotoad rows stayed strict-clean (`fallback_new_count=0`,
+  `cmp_unsupported_max=0`, `jbr_picture_frames=0`). The allocation-free default row:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-run-builder-streaming-hypnotoad/suite.tsv`
+  reported `app_new_fps=320.1`, `jbr_command_fps=160.1`, `new_avg_cpu=78.02`, and `new_avg_rss_kb=863124`; the
+  disabled-control row using the old builder:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-run-builder-streaming-disabled-control-hypnotoad/suite.tsv`
+  reported `app_new_fps=348.9`, `jbr_command_fps=174.4`, `new_avg_cpu=78.80`, and `new_avg_rss_kb=853414`. The
+  prototype was removed with no CMP code retained; do not revisit these two builders without lower-level allocation
+  profiling that proves the list/copy path is still material.
 - 2026-06-26 rejected CMP group-1 compaction prerequisite gates:
   A CMP-only prototype extended op-counter prerequisite gates to group-1 compaction passes. The full CMP recorder class
   passed, and both focused Hypnotoad A/B rows stayed strict-clean (`fallback_new_count=0`, `cmp_unsupported_max=0`,
