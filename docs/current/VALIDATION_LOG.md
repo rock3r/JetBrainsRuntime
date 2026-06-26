@@ -5,6 +5,19 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-26 rejected Segmented Controls image/roundrect candidate:
+  A direct `Components` / `Segmented Controls` focused diagnostic was run with op counts, op words, op pairs, and Skiko
+  command-buffer cache logging:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-showcase-segmented-controls-static-words-pairs-cache/report.md`.
+  The run stayed strict-clean with `fallback_new_count=0`, `cmp_unsupported_max=0`, `jbr_command_frames=3`, warm-frame
+  `commands=1075`, and a clean captured `new-window.png` on the intended Segmented Controls page. The profile was small
+  and dominated by the same control-chrome image/roundrect shape already rejected elsewhere:
+  `drawImageRefFullDrawRoundRect:avg_words=660.0`, `clearRect:avg_words=154.0`, first-frame
+  `defineImageBitmap:avg_words=113.7`, `fillRoundRect:avg_words=96.7`, and `translate:avg_words=60.0`. The leading
+  pairs (`drawImageRefFullDrawRoundRect>clearRect:avg=580.0`,
+  `clearRect>drawImageRefFullDrawRoundRect:avg=425.3`, and first-frame
+  `defineImageBitmap>drawImageRefFullDrawRoundRect:avg=330.0`) are either alpha-guarded or definition traffic. Existing
+  round-rect/fill folds already cover the remaining small chrome. No code candidate was retained.
 - 2026-06-26 rejected Scrollbars translated-image/rect candidates:
   A direct `Components` / `Scrollbars` focused diagnostic was run with op counts, op words, op pairs, and Skiko
   command-buffer cache logging:
