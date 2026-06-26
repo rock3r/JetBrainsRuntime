@@ -5,6 +5,28 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-26 rejected previous-record scan micro-prototype after JFR:
+  A narrow Hypnotoad command-mode report with a JFR recording on the custom/new side was captured at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-hypnotoad-new-jfr/report.md`
+  with recording
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-hypnotoad-new-jfr/new-profile.jfr`.
+  The row stayed strict-clean (`fallback_new_count=0`, `cmp_unsupported_max=0`, `jbr_picture_frames=0`,
+  `jbr_command_frames=1437`) and showed old/copy vs new/no-copy RSS still strongly reduced
+  (`old_avg_rss_kb=1155877`, `new_avg_rss_kb=574869`). The JFR hot-method view made the remaining CPU shape concrete:
+  `CommandStreamWriter.previousRecordStart(int)` accounted for 39/88 execution samples (44.32%), followed by
+  `Arrays.copyOf(Object[], int)` at 9/88 samples. Allocation pressure was dominated by `int[]` (34.83%),
+  `Integer` (17.38%), `Object[]` (11.61%), `Point` (9.42%), `byte[]` (9.08%), and `PathSegment` (8.60%).
+  A CMP prototype tried to collapse two fixed trailing-restore helper patterns into one local scan using a 3-slot scratch
+  array, avoiding repeated `previousRecordStart` scans without changing command ABI or output intent. It compiled, but
+  the focused recorder regression class rejected it:
+  `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest --console=plain`
+  failed with 20 recorder-test failures, including save/restore compaction invariants and compact image/restore
+  expectations (`foldsNestedSaveTranslateIntoTransformableScopeBeforeRestoreN`,
+  `foldsSaveTranslateIntoCompactFullImageRefBeforeRestore`, `writesRawPointPolygonRecords`,
+  `writesCompactClearFullImageRefAndRoundRectRecord`, and related nested translate/image folds). The source change was
+  reverted and no code was retained. The evidence still points at recorder-side repeated record-boundary scanning and
+  allocation churn as the next optimisation area, but the next attempt needs a correctness-preserving record-index or
+  pass-local scan design with explicit save/restore tests before any benchmark run.
 - 2026-06-26 fresh badge visual check and Hypnotoad thread-CPU evidence:
   A fresh current-build static README preview pair was captured after a user-reported yellow-badge visual regression.
   Both the scoped-label run and the attempted no-badge comparison passed strict command validation and rendered without
