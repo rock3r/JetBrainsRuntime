@@ -5,6 +5,19 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-26 rejected latest Icons clear/image micro-compaction candidate:
+  After retaining the guarded direct clear/image/roundrect fold, a latest-state `showcase-icons` diagnostic was run with
+  op counts, op words, and op pairs enabled:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-latest-icons-pair-word-diagnostic/showcase-icons/report.md`.
+  The narrow run passed with `fallback_new_count=0`, `cmp_unsupported_max=0`, `jbr_command_frames=3`, and preserved the
+  retained icon profile `clearDrawImageRefFullDrawRoundRect:avg=22.0`. The largest remaining unfused simple pair was
+  `clearRect>drawImageRefFull:avg=96.0` pair words, but CMP already has the existing clear/full-image machinery and
+  deliberately refuses that fold when `imageHasAlpha` is true. The remaining Icons pairs are therefore the transparent
+  icon cases where compacting a clear under the image would be semantically unsafe and risks reintroducing the alpha
+  bugs seen in earlier Jewel icon work. No code candidate was retained. The live Icons capture is unchanged from the
+  earlier transparent-asset checkpoint: the large Jewel logo backgrounds come from `icons/jewel-logo.svg` painting a
+  white diamond, while the small theme-icon SVGs use white `clipPath` scaffolding rather than a painted opaque
+  background.
 - 2026-06-26 retained repeated direct clear/image/roundrect compaction with a markdown visual guard:
   Re-enabling the adjacent image-ref/roundrect group-1 passes restored the useful icon-grid
   `clearDrawImageRefFullDrawRoundRect` compaction, but an unsafe prototype that also folded isolated direct
