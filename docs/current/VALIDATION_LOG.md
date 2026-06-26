@@ -5,6 +5,23 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-26 retained guarded CMP command-stream compaction default for the yellow-badge Jewel markdown editor:
+  User-side inspection confirmed the no-badge run was visually clean while the yellow debug-badge/interoperability
+  task could still blank the markdown editor/preview body even when structured markers reported
+  `fallback_new_count=0` and `cmp_unsupported_max=0`. The culprit was not markdown parsing: a no-compaction diagnostic
+  rendered the split editor/preview correctly with low CPU, while the full compaction set could either pin the EDT in
+  compaction or erase the editor body. A visual group-mask sweep narrowed the visual blanking to the interaction
+  between compaction group 1 (translated image/layer folds) and group 2 (structural save/layer/restore folds):
+  mask `6` reproduced the blank body, while masks `1`, `2`, `4`, `8`, `10`, `12`, and candidate mask `13` rendered the
+  editor and preview body. CMP now keeps group 1 off by default via `defaultCompactionGroupMask=0b1101`, while leaving
+  the diagnostic `compose.jbr.skia.command.compactionGroupMask` and `disableCompaction` switches available for narrow
+  isolation. The retained default was rebuilt with
+  `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:compileKotlinDesktop :compose:ui:ui-graphics:desktopJar --console=plain`
+  in `/Users/rock3r/src/jbr-skia-zero-copy/cmp` and validated by the direct default yellow-badge editor/preview report:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-default-mask13-readme20/markdown-editor-preview-readme20-static/report.md`.
+  The report passed with `fallback_new_count=0`, `cmp_unsupported_max=0`, `jbr_command_frames=4`,
+  `new_avg_cpu=0.15`, `new_max_cpu=0.20`, and the captured `new-window.png` shows both the editor text and rendered
+  preview body under the yellow `JBR Skia scope` marker.
 - 2026-06-26 retained CMP adjacent op-pair diagnostics for command-stream candidate discovery:
   CMP now optionally logs `CMP_JBR_COMMAND_RECORDER_OP_PAIRS` behind
   `-Dcompose.jbr.skia.command.logOpPairs=true`, and the Magic Jewel report parser records it as
