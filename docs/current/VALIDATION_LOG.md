@@ -5,6 +5,22 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-26 rejected CMP oval-run allocation-copy prototype:
+  A CMP prototype changed the existing
+  `saveTranslateRotateTranslateFillOvalRestoreRun` and `strokeOvalRun` compaction passes to scan run length first and
+  copy run bodies in-place instead of allocating one `IntArray` per source record. The command ABI and payload shape were
+  unchanged. Focused recorder validation passed:
+  `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.compactsAdjacentSaveTranslateRotateTranslateFillOvalRestoreRun --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.compactsAdjacentStrokeOvalRun --console=plain`.
+  After publishing the prototype CMP artifact locally, a corrected focused controls-slice probe passed strict command
+  validation:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-cmp-oval-run-copy-prototype-controls-slice-v3/report.md`.
+  It remained clean (`fallback_new_count=0`, `cmp_unsupported_max=0`, `cmp_unsupported_reasons=none`,
+  `jbr_picture_frames=0`) with comparable command shape (`jbr_command_frames=1596`, `avg_commands=1738`), but it did
+  not improve measured behavior against the earlier controls-slice baseline
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-component-slice-text-combo-scrollbars/report.md`.
+  Baseline/prototype JBR timing was effectively flat (`avg_total_ms=3.613` vs `3.611`, `avg_draw_ms=1.605` vs
+  `1.597`, `avg_flush_ms=1.698` vs `1.696`), while coarse new-mode CPU moved the wrong direction (`101.83` to
+  `108.00`). The CMP source change was reverted and no code was retained.
 - 2026-06-26 rejected cache-policy and same-op controls run candidates from the refreshed focused-report census:
   A repo-clean census over the current 2026-06-26 focused benchmark reports used the retained command-buffer cache
   summary fields where present and fell back to the raw final `SKIKO_JBR_INTEROP_COMMAND_BUFFER_CACHE` marker for older
