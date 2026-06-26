@@ -5,6 +5,23 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-26 rejected refreshed focused-report command/cache census follow-ups:
+  A repo-clean census over the current 2026-06-26 focused Magic Jewel summaries re-ranked strict-clean rows by
+  `cmp_recorder_top_op_words` and command-buffer cache counters. The largest remaining command-word row is still
+  `Components` / `Scrollbars`
+  (`/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-showcase-scrollbars-static-words-pairs-cache/report.md`),
+  led by per-item `translate`, `drawImageRefFull`, first-frame `defineImageBitmap`, and `fillRect` traffic already
+  rejected as payload-heavy repeated geometry rather than a safe compact-record shape. `Tabs`
+  (`/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-showcase-tabs-static-words-pairs-cache/report.md`)
+  remains led by the previously rejected image/clip surface: `drawImageRefFullDrawRoundRect:avg_words=484.0`,
+  `saveLayerClipRect:avg_words=455.0`, `clearRect:avg_words=427.0`, and `translate:avg_words=345.0`; the hot
+  `saveLayerClipRect` chains still carry real layer/clip payload and would save only headers. The cache census also
+  shows the post-op111 `Banners` row skipping all large command streams
+  (`skipped=1440`, `hits=0`, `misses=0`, `deferred=0`) at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-op111-save-layer-clip-path-banners-v2/showcase-banners-static/report.md`,
+  but the already-rejected large adaptive cache prototype showed that raising the ceiling only moved large non-repeating
+  frames from skipped to deferred fingerprinting without producing hits. No source change was retained from this
+  refreshed census.
 - 2026-06-26 retained Magic Jewel raw README layout-image sanitizer:
   Magic Jewel commit `5de37b1` keeps the raw README shield-badge coverage while applying the same README layout-image
   cleanup used by the sanitized/no-badge path. This removes the local `readme/jewel-logo.svg` fixture image from the
