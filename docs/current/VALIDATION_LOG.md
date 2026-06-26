@@ -5,6 +5,22 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-26 retained Skiko adaptive command-cache deferral threshold tightening:
+  Skiko now enters the adaptive command-buffer cache bypass after 8 consecutive medium-stream fingerprint deferrals
+  instead of 16. This reduces repeated fingerprint work for animated command streams that never repeat exactly while
+  preserving the exact small-stream cache and periodic bypass probing. Gates passed: Skiko
+  `./gradlew --no-daemon --no-configuration-cache compileKotlinAwt awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest --console=plain`,
+  local `publishAwtPublicationToMavenLocal`, and focused Magic Jewel command-cache rows. The paired baseline:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-adaptive-deferral-threshold-baseline/suite.tsv`
+  reported Hypnotoad `deferred=320`, `bypassed=2320`, `fallback_new_count=0`, `cmp_unsupported_max=0`, and
+  `jbr_picture_frames=0`; the threshold-8 candidate:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-adaptive-deferral-threshold-8-candidate/suite.tsv`
+  reduced Hypnotoad deferrals to `144` with `bypassed=2136` and stayed strict-clean. The Markdown auto-scroll guardrail
+  preserved real cache reuse (`hits=258`, `misses=217`, `deferred=5`, `bypassed=0`) so the useful repeated-frame path
+  was not pushed into bypass. A longer Hypnotoad confirmation:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-adaptive-deferral-threshold-8-hypnotoad-confirm/suite.tsv`
+  stayed strict-clean and reported `deferred=184`, `bypassed=2696`, and lower no-copy CPU (`new_avg_cpu=73.70`). Treat
+  this as a cache-work reduction; FPS remains too host-load-sensitive for a headline.
 - 2026-06-26 retained Magic Jewel Coil SVG decoder dependency for raw README badges:
   The user-confirmed failure was specific to the yellow-badge/raw README path: the no-badge sanitized path was clean,
   while the raw path could show Markdown image replacement text overlapping the `Jewel` title. Magic Jewel now carries
