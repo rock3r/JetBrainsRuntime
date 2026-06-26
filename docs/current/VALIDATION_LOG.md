@@ -5,6 +5,20 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-26 rejected remaining image-definition follow-ups:
+  A focused read of CMP `JbrSkiaCommandRecorder.defineImageIfNeeded()` and the current reports shows the remaining
+  `defineImageBitmap` traffic is first-frame native-handle setup, not recurring image-definition churn. The retained
+  native bitmap content-key default is already `1,048,576` pixels and keeps the Markdown auto-scroll workload down to
+  `avg_image_defines=0.1`, `max_image_defines=5`, and `avg_image_define_words=0.7` at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-native-bitmap-content-key-1m-default/markdown-preview-readme80-auto/report.md`
+  versus the old-default `avg_image_defines=3.1` / `avg_image_define_words=21.5` baseline. The largest remaining
+  apparent definition burst, Scrollbars, reports `avg_image_defines=114.0`, `max_image_defines=342`, and
+  `avg_image_define_words=798.0` over three frames at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-showcase-scrollbars-static-words-pairs-cache/report.md`,
+  which matches one cold frame defining roughly `342` native images followed by warm frames with no repeats. CMP records
+  `previousFrameImageKeys` and `confirmedNativeImageKeys`, and Skiko calls `markInteropImageDefinitionsRendered()`, so
+  skipping that first native-handle definition would remove the only proof JBR has for the image key. No source change
+  was retained from this image-definition pass.
 - 2026-06-26 rejected Banners-sized adaptive encoded-buffer cache:
   A narrower Skiko prototype raised `MAX_ADAPTIVE_CACHED_ENCODED_COMMAND_WORDS` only from `2048` to `4096`, targeting
   Banners-sized static frames (`avg_commands=3103`) without admitting the larger Scrollbars-class streams covered by the
