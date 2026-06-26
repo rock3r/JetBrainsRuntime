@@ -5,6 +5,18 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-26 retained Skiko adaptive command-cache probe interval follow-up:
+  Skiko now probes adaptive command-buffer cache bypass every 480 bypassed frames instead of every 240. The retained
+  deferral threshold remains `2`, preserving the second fingerprint chance for medium streams before entering bypass.
+  Gates passed: Skiko
+  `./gradlew --no-daemon --no-configuration-cache compileKotlinAwt awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest publishAwtPublicationToMavenLocal --console=plain`
+  and focused Magic Jewel Hypnotoad/Markdown command-cache validation:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-adaptive-bypass-probe-interval-480-candidate/suite.tsv`.
+  Compared with the retained probe-240 row, Hypnotoad deferrals dropped from `18` to `12` and stayed strict-clean
+  (`fallback_new_count=0`, `cmp_unsupported_max=0`, `jbr_picture_frames=0`). The Markdown auto-scroll guardrail
+  preserved the repeated-stream cache path (`hits=259`, `misses=216`, `deferred=5`, `bypassed=0`) and stayed
+  strict-clean. Treat this as a small cache-work reduction; the Markdown CPU/FPS counters were host-load-sensitive and
+  not used as a headline performance claim.
 - 2026-06-26 retained Skiko adaptive command-cache probe interval tuning:
   Skiko now probes adaptive command-buffer cache bypass every 240 bypassed frames instead of every 120 after a
   non-repeating medium command stream has entered bypass. The retained deferral threshold remains `2`, so medium
