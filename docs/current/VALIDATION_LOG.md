@@ -5,6 +5,22 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-26 retained CMP lazy record-start index optimisation:
+  CMP now keeps a lazy internal record-start index inside `CommandStreamWriter` so `previousRecordStart()` can avoid
+  repeatedly scanning the whole command payload from the beginning. Structural compactions mark the index dirty, simple
+  appends update it directly, and `-Dcompose.jbr.skia.command.disableRecordStartIndex=true` preserves the old linear
+  scan path for A/B probes. Gates passed: full CMP recorder class
+  `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest --console=plain`
+  (`247/247`), local `ui-graphics` desktop Maven Local publish, focused Hypnotoad command benchmark with the index
+  enabled, and the same focused Hypnotoad row with the index disabled. Both focused rows stayed strict-clean with
+  `fallback_new_count=0`, `cmp_unsupported_max=0`, and `jbr_picture_frames=0`; per-frame command words stayed the same
+  (`saveTranslateRotateTranslateStrokeClosedPolylineDeltaRestore:avg=980.0`, `drawImageRefFullDrawRoundRect:avg=66.0`).
+  The enabled row improved no-copy app/command frame rate (`app_new_fps=321.4`, `jbr_command_fps=160.7`) versus the
+  disabled-index control (`app_new_fps=279.2`, `jbr_command_fps=139.6`) with slightly lower no-copy CPU
+  (`new_avg_cpu=86.38` vs `89.55`):
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-record-start-index-hypnotoad/suite.tsv`
+  and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-record-start-index-disabled-hypnotoad/suite.tsv`.
 - 2026-06-26 retained CMP op-counter allocation optimisation:
   CMP replaced the per-writer boxed `LinkedHashMap<Int, Int>` command-op counter with a fixed `IntArray` plus live-entry
   count. This preserves the debug op summary contract while avoiding per-command boxed map churn called out by the
