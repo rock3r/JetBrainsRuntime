@@ -5,6 +5,26 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-26 fresh badge visual check and Hypnotoad thread-CPU evidence:
+  A fresh current-build static README preview pair was captured after a user-reported yellow-badge visual regression.
+  Both the scoped-label run and the attempted no-badge comparison passed strict command validation and rendered without
+  the earlier replacement-text/title overlap in the captured preview:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-fresh-yellow-vs-no-badge-preview/markdown-preview-readme80-static/report.md`
+  and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-fresh-no-badge-preview/markdown-preview-readme80-static/report.md`.
+  Both rows reported `fallback_new_count=0`, `cmp_unsupported_max=0`, `cmp_unsupported_reasons=none`, and
+  `jbr_command_frames=4`. The attempted no-badge run did set `MAGIC_JEWEL_BACKGROUND_WINDOW=false` in the summary, but
+  the yellow `JBR Skia scope` overlay remained visible, confirming that label belongs to the Skiko/JBR debug overlay
+  path rather than the background-window knob. For performance evidence, a narrow Hypnotoad command-mode run with
+  `COLLECT_THREAD_CPU=true` was captured at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-thread-cpu-hypnotoad-current/hypnotoad-animation/report.md`.
+  The row stayed strict-clean (`fallback_new_count=0`, `cmp_unsupported_max=0`, `jbr_picture_frames=0`,
+  `jbr_command_frames=1154`). Coarse process CPU/RSS improved from old/copy to new/no-copy (`old_avg_cpu=98.78`,
+  `new_avg_cpu=73.90`, `old_avg_rss_kb=1193878`, `new_avg_rss_kb=557947`), but the sampled top render thread remained
+  dominant (`old thread 27 avg=58.94 max=62.20`; `new thread 27 avg=51.30 max=68.70`). Since `asprof` was unavailable
+  on PATH, this identifies the remaining bottleneck shape but not the exact hot Java/native frames; the next useful
+  optimisation step needs an async-profiler/JFR trace for that thread or another lower-level CPU profile, not more
+  report-corpus command-family mining.
 - 2026-06-26 current optimisation closure audit:
   Current clean heads are JBR `332013e6051`, CMP `0a8bef58b7f`, Skiko `a31f9c67b`, and Magic Jewel `6ab3511`.
   The current retained command-stream optimisation surface is the ABI-111 compact-command family through the latest
