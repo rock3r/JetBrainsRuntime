@@ -5,6 +5,18 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-26 rejected Menus image/control-chrome candidate:
+  A direct `Components` / `Menus` focused diagnostic was run with op counts, op words, op pairs, and Skiko
+  command-buffer cache logging:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-showcase-menus-static-words-pairs-cache/report.md`.
+  The run stayed strict-clean with `fallback_new_count=0`, `cmp_unsupported_max=0`, `jbr_command_frames=3`,
+  `avg_commands=1195`, warm-frame `commands=1070`, and a clean captured `new-window.png` on the intended Menus page.
+  The static page did not exercise open popup/menu replay; its profile is small and led by side-toolbar/control chrome:
+  `drawImageRefFullDrawRoundRect:avg_words=572.0`, `clearRect:avg_words=154.0`, first-frame
+  `defineImageBitmap:avg_words=128.3`, `translate:avg_words=85.0`, `drawImageRefFull:avg_words=72.0`,
+  `fillRoundRect:avg_words=56.7`, and `fillRect:avg_words=45.0`. The top pairs are the already alpha-guarded
+  image/roundrect shape plus first-frame image definitions; the remaining fill/translate pairs are too small and
+  payload-specific for a new command. No code candidate was retained.
 - 2026-06-26 rejected TextAreas save/clip/image candidates:
   A direct `Components` / `TextAreas` focused diagnostic was run with op counts, op words, op pairs, and Skiko
   command-buffer cache logging:
