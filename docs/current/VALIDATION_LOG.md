@@ -5,6 +5,23 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-26 retained Magic Jewel raw README badge resource normalization:
+  The user-confirmed visual regression was specific to the raw/yellow-badge README path when the app was on the
+  fallback renderer: failed badge images could paint their replacement labels above the `Jewel` title, while the
+  sanitized/no-badge row stayed visually clean. Magic Jewel now normalizes visible shields badges to bundled resource
+  paths with empty alt text before Markdown parsing, so the raw badge row still exercises local badge images on the
+  command path while fallback/image-failure states cannot leak badge labels into the document layout. Gate:
+  `./gradlew --no-daemon compileKotlin --console=plain`. Focused command-path validation passed for the raw badge row
+  and no-badge guardrail:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-raw-badge-resource-normalization/markdown-preview-raw-readme80-static/report.md`
+  (`fallback_new_count=0`, `cmp_unsupported_max=0`, `jbr_picture_frames=0`, `jbr_command_frames=5`,
+  `screenshot_status=passed`) and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-raw-badge-resource-normalization/markdown-preview-readme80-static/report.md`
+  (`fallback_new_count=0`, `cmp_unsupported_max=0`, `jbr_picture_frames=0`, `jbr_command_frames=4`,
+  `screenshot_status=passed`). A direct forced-fallback visual check also passed structurally at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-raw-badge-resource-normalization-forced-fallback/report.md`
+  (`expect_command_fallback=true`, `fallback_new_count=1`, `cmp_unsupported_max=0`, `jbr_picture_frames=0`,
+  `jbr_command_frames=0`), and the captured fallback screenshot no longer shows replacement text above the title.
 - 2026-06-26 rejected remaining image-definition follow-ups:
   A focused read of CMP `JbrSkiaCommandRecorder.defineImageIfNeeded()` and the current reports shows the remaining
   `defineImageBitmap` traffic is first-frame native-handle setup, not recurring image-definition churn. The retained
