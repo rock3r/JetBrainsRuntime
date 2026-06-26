@@ -5,6 +5,22 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-26 rejected Combo Boxes image/translate candidates:
+  A direct `Components` / `Combo Boxes` focused diagnostic was run with op counts, op words, op pairs, and Skiko
+  command-buffer cache logging:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-showcase-combo-boxes-static-words-pairs-cache/report.md`.
+  The run stayed strict-clean with `fallback_new_count=0`, `cmp_unsupported_max=0`, `jbr_command_frames=3`, and a clean
+  captured `new-window.png` on the intended Combo Boxes page. The page is heavier than the previously checked
+  checkbox/radio controls (`avg_commands=2528`, warm-frame `commands=2249`), but the hot words are still dominated by
+  image/button chrome and existing folds: `drawImageRefFullDrawRoundRect:avg_words=792.0`,
+  `defineImageBitmap:avg_words=282.3`, `drawImageRefFull:avg_words=261.0`, `clearRect:avg_words=259.0`,
+  `translate:avg_words=290.0`, and `fillRoundRect:avg_words=176.7`. The leading pairs are either first-frame image
+  definition traffic (`defineImageBitmap>drawImageRefFullDrawRoundRect:avg=396.0`) or the known alpha-guarded
+  clear/image/roundrect shape (`clearRect>drawImageRefFullDrawRoundRect:avg=618.7`,
+  `drawImageRefFullDrawRoundRect>clearRect:avg=580.0`). The remaining structural pairs such as
+  `translate>fillRoundRect:avg=240.0` and `drawImageRefFull>translate:avg=350.0` are small header-only opportunities
+  around ordinary draw work and do not justify a new ABI/native command. Existing `drawImageRefFullRun:avg=3.0` already
+  fired. No code candidate was retained.
 - 2026-06-26 rejected Checkboxes image/roundrect candidate:
   A direct `Components` / `Checkboxes` focused diagnostic was run with op counts, op words, op pairs, and Skiko
   command-buffer cache logging:
