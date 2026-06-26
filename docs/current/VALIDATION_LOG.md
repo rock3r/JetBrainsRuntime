@@ -5,6 +5,14 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-26 rejected Skiko adaptive command-cache threshold-1 candidate:
+  A Skiko-only probe tried reducing `MAX_CONSECUTIVE_DEFERRALS_BEFORE_BYPASS` from the retained `2` to `1`. The
+  focused Skiko gate rejected it before GUI validation:
+  `./gradlew --no-daemon --no-configuration-cache compileKotlinAwt awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest publishAwtPublicationToMavenLocal --console=plain`
+  failed `encodedCommandBufferCacheDefersMediumStreamsUntilFingerprintRepeats` because a medium stream no longer got
+  the second fingerprint chance required to enter the reusable path. The candidate was reverted to the retained
+  threshold `2`, and the focused Skiko gate then passed. Keep threshold `2` as the current lower bound unless the
+  adaptive cache semantics change.
 - 2026-06-26 retained Skiko adaptive command-cache deferral threshold final tightening:
   Skiko tightens the adaptive command-buffer cache bypass threshold from 4 to 2 consecutive medium-stream fingerprint
   deferrals. This keeps reducing wasted fingerprint work on non-repeating animated streams while preserving the
