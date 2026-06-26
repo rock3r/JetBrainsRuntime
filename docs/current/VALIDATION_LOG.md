@@ -5,6 +5,20 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-26 retained Skiko adaptive command-cache probe interval second follow-up:
+  Skiko now probes adaptive command-buffer cache bypass every 1920 bypassed frames instead of every 480. A 960
+  candidate also passed, but the 1920 row provided the stronger cache-work reduction while preserving the same
+  Markdown guardrail. Gates passed: Skiko
+  `./gradlew --no-daemon --no-configuration-cache compileKotlinAwt awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest publishAwtPublicationToMavenLocal --console=plain`
+  and focused Magic Jewel Hypnotoad/Markdown command-cache validation:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-adaptive-bypass-probe-interval-1920-candidate/suite.tsv`.
+  Compared with the retained probe-480 row, Hypnotoad deferrals dropped from `12` to `4` and stayed strict-clean
+  (`fallback_new_count=0`, `cmp_unsupported_max=0`, `jbr_picture_frames=0`). The Markdown auto-scroll guardrail
+  preserved the repeated-stream cache path (`hits=328`, `misses=267`, `deferred=5`, `bypassed=0`) and stayed
+  strict-clean. The intermediate 960 candidate also passed at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-adaptive-bypass-probe-interval-960-candidate/suite.tsv`
+  with Hypnotoad `deferred=6`, so 1920 is retained as the better endpoint rather than a separate checkpoint. Treat
+  this as another small cache-work reduction; CPU/FPS counters remained host-load-sensitive secondary signals.
 - 2026-06-26 retained Skiko adaptive command-cache probe interval follow-up:
   Skiko now probes adaptive command-buffer cache bypass every 480 bypassed frames instead of every 240. The retained
   deferral threshold remains `2`, preserving the second fingerprint chance for medium streams before entering bypass.
