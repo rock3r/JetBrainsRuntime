@@ -5,6 +5,16 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-26 fixed standalone README badge fallback overlap:
+  User-side visual validation confirmed the no-badge run was clean while the yellow-badge run still showed image
+  replacement text overlapping the `Jewel` title. The standalone demo previously sanitized the README by deleting the
+  entire shields.io badge line, which hid the problematic top-of-document path in normal focused runs; the remaining
+  badge-image path could route through Coil's failed-image replacement UI and draw text into badge-sized space above the
+  title. Magic Jewel now preserves the badge row as deterministic text links by converting shields.io badge image syntax
+  to regular markdown links instead of removing the line. Narrow validation passed with
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-readme80-static-badge-links/markdown-preview-readme80-static/report.md`
+  (`fallback_new_count=0`, `cmp_unsupported_max=0`, `jbr_command_frames=5`), and the captured `new-window.png` shows the
+  badge labels as links with clear spacing before `# Jewel` while keeping the yellow `JBR Skia scope` run marker visible.
 - 2026-06-26 fixed stale Swing fallback repaint after failed JBR command attempts:
   User-side visual validation reported the no-badge command path as clean while the yellow fallback-badge path showed
   markdown blocks overlapping after the warning section. A narrow forced command-capability fallback reproduced the
