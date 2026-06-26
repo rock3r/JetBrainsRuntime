@@ -5,6 +5,25 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-26 retained repeated direct clear/image/roundrect compaction with a markdown visual guard:
+  Re-enabling the adjacent image-ref/roundrect group-1 passes restored the useful icon-grid
+  `clearDrawImageRefFullDrawRoundRect` compaction, but an unsafe prototype that also folded isolated direct
+  `clearRect + drawImageRefFull + drawRoundRect` sequences reproduced the yellow-badge Jewel markdown failure:
+  markers could still report `fallback_new_count=0` and `cmp_unsupported_max=0` while the captured editor/preview
+  surface was blank or incomplete. CMP now keeps the image/roundrect branch split under
+  `compose.jbr.skia.command.imageRefRoundRectCompactionMask` and only applies the direct clear/image/roundrect fold
+  when a frame has at least two such candidates, preserving repeated icon-grid savings while leaving isolated
+  markdown badge/logo/replacement-image cases on the safer unfused path. The rebuilt CMP artifact passed
+  `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:compileKotlinDesktop :compose:ui:ui-graphics:desktopJar --console=plain`.
+  Narrow yellow-badge markdown validation passed at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-direct-clear-image-roundrect-threshold-readme20-rerun/markdown-editor-preview-readme20-static/report.md`
+  with `fallback_new_count=0`, `cmp_unsupported_max=0`, `jbr_command_frames=4`, `new_avg_cpu=0.20`, and a captured
+  `new-window.png` showing both editor and rendered preview bodies. Narrow Icons validation passed at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-direct-clear-image-roundrect-threshold-icons/showcase-icons/report.md`
+  with `fallback_new_count=0`, `cmp_unsupported_max=0`, `jbr_command_frames=3`, and the recovered op profile
+  `clearDrawImageRefFullDrawRoundRect:avg=22.0,max=22,total=66` plus
+  `clearDrawImageRefFullDrawRoundRect` command words `avg=572.0`. The captured Icons window still shows the separate
+  known opaque icon/background issue, so this entry does not claim full showcase visual coverage.
 - 2026-06-26 refined the guarded CMP compaction default after a group-1 pass-mask census:
   The earlier safe default disabled all of compaction group 1 to avoid the yellow-badge Jewel markdown editor blanking
   bug. A narrower visual sweep showed the unsafe interaction with structural group 2 is specifically the adjacent
