@@ -5,6 +5,27 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-26 rejected cache-policy and same-op controls run candidates from the refreshed focused-report census:
+  A repo-clean census over the current 2026-06-26 focused benchmark reports used the retained command-buffer cache
+  summary fields where present and fell back to the raw final `SKIKO_JBR_INTEROP_COMMAND_BUFFER_CACHE` marker for older
+  reports. The remaining hot surfaces do not support another narrow cache optimisation. `Progressbar` stayed dynamic
+  with no hits (`hits=0`, `misses=543`, `skipped=0`, `deferred=1017`) in
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-showcase-progressbar-static-words-pairs-cache/report.md`.
+  `Banners` skipped all large command streams (`hits=0`, `misses=0`, `skipped=720`, `deferred=0`) in
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-showcase-banners-static-words-pairs-cache/report.md`.
+  `catalog-head` did show cache reuse (`hits=335`, `misses=917`, `skipped=0`, `deferred=188`) in
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-catalog-head-auto-words-pairs-cache/markdown-preview-catalog-head-auto/report.md`,
+  but this matches the already-rejected tiny-LRU and catalog follow-up evidence rather than exposing a new policy win.
+  The hottest controls slice stayed strict-clean but is dominated by already-retained compact records:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-component-slice-text-combo-scrollbars/report.md`
+  reported `fallback_new_count=0`, `cmp_unsupported_max=0`, `jbr_command_frames=1654`,
+  `avg_commands=1737`, and top words
+  `saveTranslateRotateTranslateStrokeClosedPolylineDeltaRestore:avg=980.0`,
+  `saveTranslateRotateTranslateFillOvalRestoreRun:avg=507.4`, and `strokeOvalRun:avg=85.0`. Its hottest adjacent pair
+  is same-op adjacency
+  `saveTranslateRotateTranslateStrokeClosedPolylineDeltaRestore>saveTranslateRotateTranslateStrokeClosedPolylineDeltaRestore:avg=1568.0`,
+  but that is repeated opcode shape, not proven identical payload shape. Collapsing it would require a new JBR ABI/replay
+  command rather than a safe local cache or recorder pass. No source change was retained from this census.
 - 2026-06-26 retained command-buffer cache summary instrumentation:
   While triaging the next optimisation candidate, the existing Skiko logs already exposed
   `SKIKO_JBR_INTEROP_COMMAND_BUFFER_CACHE hits=... misses=... skipped=... deferred=...`, but Magic Jewel summaries only
