@@ -5,6 +5,20 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-26 rejected SplitLayout pane/chrome candidates:
+  A direct `Components` / `SplitLayout` focused diagnostic was run with op counts, op words, op pairs, and Skiko
+  command-buffer cache logging:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-showcase-splitlayout-static-words-pairs-cache/report.md`.
+  The run stayed strict-clean with `fallback_new_count=0`, `cmp_unsupported_max=0`, `jbr_command_frames=3`,
+  `avg_commands=1102`, warm-frame `commands=1013`, and a clean captured `new-window.png` on the intended SplitLayout
+  page. The profile is small and dominated by the familiar control/image chrome:
+  `drawImageRefFullDrawRoundRect:avg_words=520.7`, `clearRect:avg_words=154.0`, first-frame
+  `defineImageBitmap:avg_words=106.3`, `translate:avg_words=50.0`, `fillRoundRect:avg_words=46.7`,
+  `drawImageRefFull:avg_words=42.0`, and `fillRect:avg_words=33.0`. The strongest non-image pairs
+  (`translate>fillRect`, `fillRect>translate`, `drawImageRefFull>saveLayerClipRect`,
+  `drawRoundRect>translate`, `restoreN>drawRoundRect`, `saveLayerClipRect>saveTranslate`) are tiny pane/control
+  layout sequences and mostly payload-bound. Existing save/layer/image folds already cover the nearby larger shapes.
+  No code candidate was retained.
 - 2026-06-26 rejected Tooltips hover/resting-page candidates and added a focused hover harness:
   A static `Components` / `Tooltips` diagnostic first passed strict-clean but did not exercise the tooltip popup
   (`popup_new_shown=0`):
