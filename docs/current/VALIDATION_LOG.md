@@ -5,6 +5,18 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-26 rejected remaining focused-report command-family follow-ups:
+  A follow-up aggregate pass over passed 2026-06-26 focused reports with at least 20 command frames ranked total command
+  words by operation family. The largest remaining totals are not fresh command-stream candidates: Hypnotoad/controls are
+  dominated by already-retained `saveTranslateRotateTranslateStrokeClosedPolylineDeltaRestore`,
+  `saveTranslateRotateTranslateFillOvalRestoreRun`, and `strokeOvalRun`; Banners/Progressbar are the already-rejected
+  image/clip/cache surfaces; Markdown catalog/head is dominated by retained op90/op96/op97/op98 layered image/save-layer
+  compactions and their already-rejected post-op97/op98 follow-ups. The only timing outlier outside those families was
+  `Components` / `Brushes`
+  (`/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-showcase-brushes-static-words-pairs-cache/report.md`),
+  which passed strict command validation but produced only three command frames and spent almost all time in native flush
+  (`avg_total_ms=53.199`, `avg_draw_ms=2.730`, `avg_flush_ms=49.006`) with `app_new_frames=0`, so it is not a
+  recorder/encoding optimisation target. No source change was attempted from this archaeology pass.
 - 2026-06-26 rejected CMP oval-run allocation-copy prototype:
   A CMP prototype changed the existing
   `saveTranslateRotateTranslateFillOvalRestoreRun` and `strokeOvalRun` compaction passes to scan run length first and
