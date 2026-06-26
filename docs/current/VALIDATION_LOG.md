@@ -5,6 +5,18 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-26 rejected Brushes gradient lead:
+  A direct `Components` / `Brushes` focused diagnostic was run with op counts, op words, op pairs, and Skiko
+  command-buffer cache logging:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-showcase-brushes-static-words-pairs-cache/report.md`.
+  The run stayed strict-clean with `fallback_new_count=0`, `cmp_unsupported_max=0`, and `jbr_command_frames=3`; the
+  captured `new-window.png` shows the CSS-like linear gradient and controls rendering cleanly with the yellow
+  `JBR Skia scope` marker visible. Despite being the gradient page, this view only emitted one gradient-specific command
+  (`fillRoundRectLinearGradient:avg=1.0`, `avg_words=21.0`). The hot words and pairs were dominated by already-analyzed
+  icon/image and outline primitives (`drawImageRefFullDrawRoundRect:avg=484.0`, `clearRect:avg=154.0`,
+  `drawRoundRect:avg=165.0`, `saveLayerClipRect:avg=104.0`,
+  `drawImageRefFullDrawRoundRect>clearRect:avg=580.0`). No new shader/gradient command-stream optimisation candidate
+  was retained.
 - 2026-06-26 rejected TextFields save/clip/image candidates:
   A direct `Components` / `TextFields` focused diagnostic was run with op counts, op words, op pairs, and Skiko
   command-buffer cache logging:
