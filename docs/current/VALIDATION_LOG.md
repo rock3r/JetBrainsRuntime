@@ -5,6 +5,21 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-26 raw README/yellow-badge coverage gap isolated:
+  Magic Jewel now has an explicit raw README Markdown mode (`rawReadme*`) and
+  `jewel.standalone.markdownStableImages` toggle so the standalone showcase can exercise the unstripped README badge
+  and logo image path instead of only the stable sanitized fixture. The narrow raw run reproduced the user-visible
+  problem while command validation stayed green:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-raw-readme-yellow-badge-repro/suite.tsv`
+  passed with `fallback_new_count=0`, `cmp_unsupported_max=0`, and `jbr_picture_frames=0`, but the screenshot showed
+  five raw `img.shields.io` badge/image links rendered as text before the title plus the local
+  `readme/jewel-logo.svg` as a grey alpha/composition block (`markdownReadmeLogoGray=12348`). Disabling command
+  compaction did not change the logo counter:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-raw-readme-disable-compaction/suite.tsv`.
+  A rejected CMP experiment that forced transparent native bitmaps through ARGB definitions also left the logo counter
+  unchanged and inflated command frames to million-word payloads, so the remaining suspect is not the compact-command
+  family or simply "native alpha images must use ARGB"; continue from native bitmap/SVG/image-renderer semantics and
+  make the raw README case a visual gate before claiming showcase coverage.
 - 2026-06-26 retained Magic Jewel README visual guard:
   The focused command-window screenshot assertion now has a Markdown README-specific path. When the standalone demo is
   launched on the Markdown README, the assertion skips the synthetic command-probe palette anchors, still checks the
