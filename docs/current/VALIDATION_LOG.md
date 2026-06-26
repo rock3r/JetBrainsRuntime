@@ -5,6 +5,18 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-26 rejected Banners-sized adaptive encoded-buffer cache:
+  A narrower Skiko prototype raised `MAX_ADAPTIVE_CACHED_ENCODED_COMMAND_WORDS` only from `2048` to `4096`, targeting
+  Banners-sized static frames (`avg_commands=3103`) without admitting the larger Scrollbars-class streams covered by the
+  earlier `8192` rejection. Skiko focused gate and local publish passed:
+  `./gradlew --no-daemon --no-configuration-cache compileKotlinAwt awtTest --tests org.jetbrains.skiko.jbr.JbrSkiaInteropTest publishAwtPublicationToMavenLocal --console=plain`.
+  The focused Banners probe stayed strict-clean at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-adaptive-cache-4096-banners/showcase-banners-static/report.md`,
+  but still produced no cache reuse: the op111 baseline skipped the large stream
+  (`skipped=1440`, `hits=0`, `misses=0`, `deferred=0`), while the prototype reported
+  `skipped=0`, `deferred=2`, `bypassed=1438`, `hits=0`, and `misses=0`. This only converts skipped frames into
+  adaptive fingerprint/probe work. The Skiko source change was reverted, and the retained Skiko snapshot was republished
+  locally with the same focused gate above. No source change was retained.
 - 2026-06-26 rejected refreshed focused-report command/cache census follow-ups:
   A repo-clean census over the current 2026-06-26 focused Magic Jewel summaries re-ranked strict-clean rows by
   `cmp_recorder_top_op_words` and command-buffer cache counters. The largest remaining command-word row is still
