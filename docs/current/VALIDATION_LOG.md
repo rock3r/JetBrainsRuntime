@@ -5,6 +5,21 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-26 rejected Tabs stroke/image/clip candidates:
+  A direct `Components` / `Tabs` focused diagnostic was run with op counts, op words, op pairs, and Skiko command-buffer
+  cache logging:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-showcase-tabs-static-words-pairs-cache/report.md`.
+  The run stayed strict-clean with `fallback_new_count=0`, `cmp_unsupported_max=0`, `jbr_command_frames=3`, and a clean
+  captured `new-window.png` on the intended Tabs page. The first frame defined tab/icon images
+  (`defineImageBitmap:max=88`), while warm frames stabilized at `commands=3203`. The top words were
+  `drawImageRefFullDrawRoundRect:avg_words=484.0`, `saveLayerClipRect:avg_words=455.0`,
+  `clearRect:avg_words=427.0`, `translate:avg_words=345.0`, `strokeLine:avg_words=288.0`,
+  `drawImageRefColorFilter:avg_words=228.0`, and `drawImageRefFullRun:avg_words=176.0`. The image/roundrect pairs are
+  the same alpha-guarded shape already rejected, and the `strokeLine` traffic does not appear as an adjacent same-paint
+  run suitable for the retained `COMMAND_STROKE_LINE_RUN`; its strongest pair is `strokeLine>translate:avg=408.0`.
+  Remaining `saveLayerClipRect` chains carry clip/layer payloads and would only save small headers without changing
+  the Skia work. Existing image-run compaction already fired (`drawImageRefFullRun:avg=11.0`). No code candidate was
+  retained.
 - 2026-06-26 rejected Banners image/clip candidates:
   A direct `Components` / `Banners` focused diagnostic was run with op counts, op words, op pairs, and Skiko
   command-buffer cache logging:
