@@ -5,6 +5,21 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-26 retained CMP native-bitmap content-key threshold increase:
+  CMP now uses content-derived cache keys for native bitmap images up to `1,048,576` pixels by default
+  (`-Dcompose.jbr.skia.command.nativeBitmapContentKeyPixels=<pixels>` can still override this). The focused Markdown
+  auto-scroll workload was repeatedly creating new native bitmap identities for visually stable image content, so the
+  old `262,144` pixel threshold caused thousands of tiny `COMMAND_DEFINE_IMAGE_BITMAP` records even after Skiko/JBR
+  confirmed previous image definitions. Gates passed: full CMP recorder class
+  `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest --console=plain`
+  (`247/247`), local `ui-graphics` desktop Maven Local publish, and a focused Magic Jewel command benchmark with the
+  new default:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-native-bitmap-content-key-1m-default/suite.tsv`.
+  The focused row stayed strict-clean (`fallback_new_count=0`, `cmp_unsupported_max=0`, `jbr_picture_frames=0`) while
+  dropping image definitions from the old-default baseline's `2978` definitions / `20846` definition words to `88`
+  definitions / `616` definition words. The same row also reduced no-copy RSS (`new_avg_rss_kb=1182011` vs
+  `3746939`) and CPU (`new_avg_cpu=68.90` vs `100.97`) versus
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-native-bitmap-content-key-default/suite.tsv`.
 - 2026-06-26 retained Skiko encoded command-buffer cold-cache bypass:
   Skiko now stops copying command arrays into `EncodedCommandBufferCache` after a short run of same-size misses with no
   hits, while periodically probing again so stable same-size streams can recover cache reuse. This avoids paying both
