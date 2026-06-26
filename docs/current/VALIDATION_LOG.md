@@ -5,6 +5,31 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-26 rejected Buttons and Progressbar image/clip candidates:
+  A direct `Components` / `Buttons` focused diagnostic was run with op counts, op words, op pairs, and Skiko
+  command-buffer cache logging:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-showcase-buttons-static-words-pairs-cache/report.md`.
+  The run stayed strict-clean with `fallback_new_count=0`, `cmp_unsupported_max=0`, `jbr_command_frames=2`, and a clean
+  captured `new-window.png`. The hot words were dominated by icon/button image traffic
+  (`drawImageRefFullDrawRoundRect:avg=1078.0`, first-frame `defineImageBitmap:avg=434.5`,
+  `clearRect:avg=287.0`, `drawImageRefFull:avg=180.0`, `fillRoundRect:avg=180.0`). The apparent hot pairs either
+  include first-frame image definitions or revisit the already alpha-guarded clear/image/roundrect pattern, so no
+  command-stream fold was retained.
+
+  A first attempted Progressbar run used the wrong initial component title (`Progress bars`) and therefore remained on
+  Buttons:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-showcase-progressbars-static-words-pairs-cache/report.md`.
+  It is intentionally not used as Progressbar evidence. The corrected direct `Components` / `Progressbar` diagnostic
+  is:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-showcase-progressbar-static-words-pairs-cache/report.md`.
+  That animated page stayed strict-clean with `fallback_new_count=0`, `cmp_unsupported_max=0`, and
+  `jbr_command_frames=934`; it rendered at `jbr_command_fps=155.7`, `avg_commands=1223`, and
+  `avg_total_ms=1.839`. Image cache markers stayed quiet (`jbr_image_cache_evict_frames=0`,
+  `jbr_image_cache_clear_frames=0`). The command-buffer cache finished with `hits=0 misses=543 skipped=0 deferred=1017`
+  because the animation changes the command stream each frame. The non-image hotspot is
+  `saveLayer>clipPath>fillRect`, but the large cost is variable clip-path payload (`clipPath:avg_words=156.0`) rather
+  than repeated command headers; a dedicated fused ABI command would save too little relative to the new public/native
+  surface and would not change the underlying Skia save/clip/fill work. No code candidate was retained.
 - 2026-06-26 retained Sliders stroke-line run compaction:
   A direct `Components` / `Sliders` focused diagnostic first exposed repeated same-paint `strokeLine` records:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-showcase-sliders-static-words-pairs-cache/report.md`.
