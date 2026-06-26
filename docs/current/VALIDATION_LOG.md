@@ -5,6 +5,26 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-26 Hypnotoad compaction-mask isolation sweep:
+  After the JFR showed `CommandStreamWriter.previousRecordStart(int)` as the top sampled Java method, a narrow
+  Hypnotoad command-mode mask sweep tested whether disabling any top-level compaction group exposed a simple retained
+  optimisation. All rows passed strict command validation with `fallback_new_count=0`, `cmp_unsupported_max=0`, and
+  `jbr_picture_frames=0`, but none produced a safe win over the current default. Disabling group 1
+  (`compose.jbr.skia.command.compactionGroupMask=13`) raised new RSS and CPU while expanding image/roundrect records:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-hypnotoad-mask-no-group1/hypnotoad-animation/report.md`
+  reported `new_avg_cpu=103.47`, `new_avg_rss_kb=901680`, `jbr_command_frames=1396`, and top thread
+  `avg=63.20`. Disabling group 3 (`mask=7`) removed the Hypnotoad compact families and expanded back to raw
+  `translate`/`restore`/`saveTranslate`/`rotate`/`fillOval` records:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-hypnotoad-mask-no-group3/hypnotoad-animation/report.md`
+  reported `new_avg_cpu=96.33`, `new_avg_rss_kb=878395`, `jbr_command_frames=1384`, and top thread `avg=64.97`.
+  Disabling group 0 (`mask=14`) similarly raised RSS and the top render thread:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-hypnotoad-mask-no-group0/hypnotoad-animation/report.md`
+  reported `new_avg_cpu=100.47`, `new_avg_rss_kb=876523`, `jbr_command_frames=1376`, and top thread `avg=66.10`.
+  Disabling group 2 (`mask=11`) preserved RSS but worsened CPU:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-hypnotoad-mask-no-group2/hypnotoad-animation/report.md`
+  reported `new_avg_cpu=111.90`, `new_avg_rss_kb=566032`, `jbr_command_frames=1482`, and top thread `avg=69.10`.
+  These masks are useful diagnostics but not retained behaviour changes: the current compactions remain beneficial, and
+  the next viable optimisation should preserve their output while reducing repeated record-boundary scans.
 - 2026-06-26 rejected previous-record scan micro-prototype after JFR:
   A narrow Hypnotoad command-mode report with a JFR recording on the custom/new side was captured at
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-hypnotoad-new-jfr/report.md`
