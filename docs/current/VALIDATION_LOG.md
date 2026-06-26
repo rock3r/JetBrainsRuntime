@@ -5,6 +5,19 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-26 rejected TextAreas save/clip/image candidates:
+  A direct `Components` / `TextAreas` focused diagnostic was run with op counts, op words, op pairs, and Skiko
+  command-buffer cache logging:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-showcase-textareas-static-words-pairs-cache/report.md`.
+  The run stayed strict-clean with `fallback_new_count=0`, `cmp_unsupported_max=0`, `jbr_command_frames=3`,
+  `avg_commands=1559`, warm-frame `commands=1452`, and a clean captured `new-window.png` on the intended TextAreas
+  page. The profile was still led by familiar chrome and text-area outline records:
+  `drawImageRefFullDrawRoundRect:avg_words=484.0`, `clearRect:avg_words=154.0`,
+  `defineImageBitmap:avg_words=154.0`, `saveLayerClipRect:avg_words=143.0`,
+  `drawRoundRect:avg_words=120.0`, and `fillRoundRect:avg_words=116.7`. The top pair remains the alpha-guarded
+  image/roundrect shape; the save/clip pairs (`saveTranslate>saveLayerClipRect:avg=108.0`,
+  `drawImageRefFull>saveLayerClipRect:avg=88.0`) carry scoped layout/image payloads and are too small for a new ABI
+  command. Existing save/layer and image folds already cover the surrounding patterns. No code candidate was retained.
 - 2026-06-26 rejected Links image/chrome candidate:
   A direct `Components` / `Links` focused diagnostic was run with op counts, op words, op pairs, and Skiko
   command-buffer cache logging:
