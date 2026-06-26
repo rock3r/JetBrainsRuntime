@@ -5,6 +5,22 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-26 retained alpha-safe non-clear image/roundrect default:
+  After the alpha guard made `COMMAND_CLEAR_DRAW_IMAGE_REF_FULL_DRAW_ROUND_RECT` safe for transparent images by refusing
+  the clear fold, the non-clear `drawImageRefFull + drawRoundRect` branch could be restored. CMP now defaults
+  `compose.jbr.skia.command.imageRefRoundRectCompactionMask` to `0b11`, keeping the alpha-guarded clear branch and
+  re-enabling the non-clear image/roundrect branch. A diagnostic override run first passed yellow-badge preview and
+  Icons with mask `3`, then the default was rebuilt and published locally. CMP passed
+  `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:compileKotlinDesktop :compose:ui:ui-graphics:desktopJar --console=plain`
+  and
+  `./gradlew --no-daemon --no-configuration-cache --no-configure-on-demand -PartifactRedirection.targetNames= :compose:ui:ui-graphics:publishDesktopPublicationToMavenLocal --console=plain`.
+  Narrow default validation passed at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-default-mask3-yellow-icons/suite.tsv`.
+  `markdown-preview-readme80-static` stayed strict-clean with `fallback_new_count=0`, `cmp_unsupported_max=0`,
+  `jbr_command_frames=5`, and `avg_commands=284`. `showcase-icons` stayed strict-clean with `fallback_new_count=0`,
+  `cmp_unsupported_max=0`, `jbr_command_frames=3`, and recovered
+  `drawImageRefFullDrawRoundRect:avg=22.0,max=22,total=66`, reducing Icons from the post-alpha-guard
+  `avg_commands=1475` profile to `avg_commands=1364` without restoring the unsafe clear/image/roundrect alpha fold.
 - 2026-06-26 fixed alpha-unsafe clear/image/roundrect compaction:
   User-side visual validation confirmed the no-badge Markdown run was clean while the yellow-badge path still showed
   rendering corruption. A focused preview repro isolated the issue to `COMMAND_CLEAR_DRAW_IMAGE_REF_FULL_DRAW_ROUND_RECT`:
