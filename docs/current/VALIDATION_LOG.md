@@ -5,6 +5,21 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-26 retained CMP group-3 compaction prerequisite gates:
+  CMP now uses the writer's existing per-op counters to skip group-3 command-compaction passes whose source record
+  families are absent or too sparse to form a run, and caches the `disableRecordStartIndex` debug toggle beside the
+  other command-stream property gates. The old group-3 pass sequence remains available for A/B probes via
+  `-Dcompose.jbr.skia.command.disableCompactionOpPrerequisiteGates=true`. Gates passed: CMP full recorder class
+  `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest --console=plain`,
+  focused Hypnotoad with gates enabled, and focused Hypnotoad with the gates disabled:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-group3-op-gates-hypnotoad/suite.tsv`
+  and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-group3-op-gates-disabled-control-hypnotoad/suite.tsv`.
+  Both rows stayed strict-clean (`fallback_new_count=0`, `cmp_unsupported_max=0`, `jbr_picture_frames=0`) and emitted
+  the same top op shape. The gated row was a modest throughput win under similar load (`app_new_fps=388.2`,
+  `jbr_command_fps=194.1`, `new_avg_rss_kb=838874`) versus the disabled-control row (`app_new_fps=343.1`,
+  `jbr_command_fps=171.6`, `new_avg_rss_kb=848989`). CPU remains noisy rather than headline-worthy, but CPU per app
+  frame stayed roughly flat while command throughput improved.
 - 2026-06-26 retained command hot-path property gates:
   CMP now caches command-compaction system-property toggles per `CommandStreamWriter`, and Skiko now bypasses the
   command-corruption test chain entirely during normal runs unless a `skiko.jbr.interop.corrupt*` property is true at
