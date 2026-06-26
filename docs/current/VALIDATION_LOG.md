@@ -5,6 +5,18 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-26 rejected native closed-polyline delta path-reuse prototype:
+  A JBR-native prototype cached the immediately previous decoded closed-polyline-delta `SkPath` inside one command
+  replay pass, targeting the current Hypnotoad diagnostic where
+  `saveTranslateRotateTranslateStrokeClosedPolylineDeltaRestore>saveTranslateRotateTranslateStrokeClosedPolylineDeltaRestore`
+  is the hottest adjacent pair. The prototype required no ABI change and rebuilt successfully with
+  `./scripts/rebuild-jbr-skia-local-artifacts.sh`, but the focused Hypnotoad candidate:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-native-delta-path-reuse-hypnotoad-candidate/suite.tsv`
+  did not prove a replay win. It stayed strict-clean (`fallback_new_count=0`, `cmp_unsupported_max=0`,
+  `jbr_picture_frames=0`) and no-copy CPU was lower in a noisy run, but average JBR draw timing regressed versus the
+  current-state diagnostic (`avg_draw_ms=1.764` vs `1.694`). The native prototype was removed and the local bridge was
+  rebuilt back to retained state; do not revisit immediate path reuse without lower-level profiling that shows
+  `SkPathBuilder`/path decode as the bottleneck.
 - 2026-06-26 retained Skiko adaptive command-cache deferral threshold tightening:
   Skiko now enters the adaptive command-buffer cache bypass after 8 consecutive medium-stream fingerprint deferrals
   instead of 16. This reduces repeated fingerprint work for animated command streams that never repeat exactly while
