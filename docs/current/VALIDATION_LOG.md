@@ -5,6 +5,18 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-26 rejected Radio Buttons image/roundrect candidate:
+  A direct `Components` / `Radio Buttons` focused diagnostic was run with op counts, op words, op pairs, and Skiko
+  command-buffer cache logging:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-showcase-radio-buttons-static-words-pairs-cache/report.md`.
+  The run stayed strict-clean with `fallback_new_count=0`, `cmp_unsupported_max=0`, `jbr_command_frames=3`, and a clean
+  captured `new-window.png`. The hot profile was small and already familiar:
+  `drawImageRefFullDrawRoundRect:avg_words=484.0`, `clearRect:avg_words=182.0`, first-frame
+  `defineImageBitmap:avg_words=113.7`, `drawImageRefFull:avg_words=63.0`, and `translate:avg_words=55.0`; the top
+  pairs were `drawImageRefFullDrawRoundRect>clearRect:avg=580.0` and
+  `clearRect>drawImageRefFullDrawRoundRect:avg=425.3`. The only existing run-style win already fired
+  (`drawImageRefFullRun:avg=1.0`), while the remaining image/roundrect clear sequence is the same transparent/unknown
+  alpha-sensitive shape guarded after the icon-background regression. No code candidate was retained.
 - 2026-06-26 rejected Buttons and Progressbar image/clip candidates:
   A direct `Components` / `Buttons` focused diagnostic was run with op counts, op words, op pairs, and Skiko
   command-buffer cache logging:
