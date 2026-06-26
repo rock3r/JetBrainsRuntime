@@ -5,6 +5,18 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-26 rejected CMP image-pair direct-copy prototype:
+  A CMP-only prototype removed two tiny `copyOfRange()` allocations from the `drawImageRefFull+drawRoundRect` and
+  `drawImageRefFull+fillRect` compact-command builders by staging the six image arguments in locals. The first draft
+  exposed an overlap bug and the full CMP recorder class caught it; after fixing the overlap hazard, the full recorder
+  class passed. Focused Buttons static A/B rows both stayed strict-clean and had identical command/op-word/op-pair
+  shape, so the candidate did not prove a command-stream or image-cache behavior improvement. Baseline:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-image-pair-direct-copy-baseline-buttons/showcase-buttons-static/summary.properties`
+  and candidate:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-image-pair-direct-copy-candidate-buttons/showcase-buttons-static/summary.properties`
+  both reported `fallback_new_count=0`, `cmp_unsupported_max=0`, `jbr_picture_frames=0`, `jbr_command_frames=2`, and
+  matching top-op summaries; candidate RSS was slightly higher under higher host load. The prototype was removed with
+  no CMP code retained.
 - 2026-06-26 retained Magic Jewel raw README badge-image harness fix:
   The yellow-badge raw README failure was not a Metal fallback regression: command validation stayed clean, but the raw
   README badge line exposed Markdown/image-fixture problems. `logo=data:` query payloads made the shields.io Markdown
