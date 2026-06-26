@@ -5,6 +5,24 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-26 rejected save-translate/image-roundrect fold extension:
+  A post-mask3 `hypnotoad-animation` diagnostic was run with op counts, op words, op pairs, and Skiko command-cache
+  logging:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-post-mask3-hypnotoad-diagnostic/hypnotoad-animation/report.md`.
+  The run stayed strict-clean with `fallback_new_count=0`, `cmp_unsupported_max=0`, `jbr_command_frames=1009`, and
+  `avg_commands=1762`. The dominant words remain the retained
+  `saveTranslateRotateTranslateStrokeClosedPolylineDeltaRestore:avg=980.0`,
+  `saveTranslateRotateTranslateFillOvalRestoreRun:avg=509.2`, and `strokeOvalRun:avg=85.0`; command-buffer cache
+  counters only accumulated deferred streams for the animation. A CMP prototype generalized the small
+  save-translate/image helper from `drawImageRefFull` to `drawImageRefFullDrawRoundRect`, compiled, published locally,
+  and passed a matching focused Hypnotoad run:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-save-translate-image-roundrect-prototype-hypnotoad/hypnotoad-animation/report.md`.
+  It did not improve the profile (`avg_commands=1763`, same hot op/pair mix, and the
+  `saveTranslate>drawImageRefFullDrawRoundRect` pair remained), so the prototype was removed. CMP was rebuilt and the
+  clean artifact republished locally with
+  `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:compileKotlinDesktop :compose:ui:ui-graphics:desktopJar --console=plain`
+  and
+  `./gradlew --no-daemon --no-configuration-cache --no-configure-on-demand -PartifactRedirection.targetNames= :compose:ui:ui-graphics:publishDesktopPublicationToMavenLocal --console=plain`.
 - 2026-06-26 retained alpha-safe non-clear image/roundrect default:
   After the alpha guard made `COMMAND_CLEAR_DRAW_IMAGE_REF_FULL_DRAW_ROUND_RECT` safe for transparent images by refusing
   the clear fold, the non-clear `drawImageRefFull + drawRoundRect` branch could be restored. CMP now defaults
