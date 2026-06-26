@@ -5,6 +5,18 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-26 retained Magic Jewel README visual guard:
+  The focused command-window screenshot assertion now has a Markdown README-specific path. When the standalone demo is
+  launched on the Markdown README, the assertion skips the synthetic command-probe palette anchors, still checks the
+  README heading text, and fails if the local `readme/jewel-logo.svg` replacement block reappears as a large neutral
+  grey shape in the upper-left content area. This catches the yellow-badge visual regression class where the local logo
+  image pushed/overlapped the README intro while command counters still reported success. Direct guard check:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-yellow-badge-current-fresh-overlap-check/markdown-preview-readme80-static/new-window.png`
+  now fails the assertion with `markdownReadmeLogoGray=48626`; the current clean capture stays below threshold
+  (`markdownReadmeLogoGray=5677`). Narrow gate passed with strict screenshot validation enabled:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-readme-logo-visual-guard/suite.tsv`.
+  The row stayed command-clean (`fallback_new_count=0`, `cmp_unsupported_max=0`, `jbr_picture_frames=0`) and reported
+  `screenshot_status=passed`.
 - 2026-06-26 retained Skiko adaptive command-buffer deferral bypass:
   Skiko now extends `EncodedCommandBufferCache`'s cold-cache bypass to adaptive-cache deferrals. After repeated adaptive
   fingerprint misses with no cache hit, it temporarily skips fingerprinting larger command streams and periodically
