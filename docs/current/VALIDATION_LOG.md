@@ -5,6 +5,18 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-26 retained Magic Jewel raw README badge-image harness fix:
+  The yellow-badge raw README failure was not a Metal fallback regression: command validation stayed clean, but the raw
+  README badge line exposed Markdown/image-fixture problems. `logo=data:` query payloads made the shields.io Markdown
+  hard to parse, linked badge images were preserved as literal image syntax, and the local `readme/jewel-logo.svg`
+  needed an app-classloader image resolver. Magic Jewel now normalizes only the embedded badge-logo query payloads,
+  unwraps linked shields badges into plain badge images, maps shields.io badge URLs to deterministic bundled badge SVGs,
+  and resolves local README images through the standalone app classloader. Narrow two-row validation with screenshot
+  assertions enabled passed for both raw and sanitized README:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-raw-readme-local-badges-assertion/suite.tsv`.
+  Both rows stayed strict command-clean (`fallback_new_count=0`, `cmp_unsupported_max=0`, `jbr_picture_frames=0`);
+  the raw row also asserted badge-color pixels (`green=4594`, `yellow=2270`, `orange=1517`, `purple=1918`) so the
+  replacement-text overlap class is now covered by the screenshot gate.
 - 2026-06-26 rejected CMP run-builder streaming prototype:
   A CMP-only prototype removed the temporary `IntArray` lists from
   `compactAdjacentSaveTranslateRotateTranslateFillOvalRestoreRuns()` and `compactAdjacentStrokeOvalRuns()` by copying
