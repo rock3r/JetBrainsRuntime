@@ -5,6 +5,21 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-26 rejected Scrollbars translated-image/rect candidates:
+  A direct `Components` / `Scrollbars` focused diagnostic was run with op counts, op words, op pairs, and Skiko
+  command-buffer cache logging:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-showcase-scrollbars-static-words-pairs-cache/report.md`.
+  The run stayed strict-clean with `fallback_new_count=0`, `cmp_unsupported_max=0`, `jbr_command_frames=3`,
+  `avg_commands=8092`, warm-frame `commands=6849`, and a clean captured `new-window.png` on the intended Scrollbars
+  page. Unlike the smaller control pages, this one is heavy, but the hot words are per-item geometry/image traffic:
+  `translate:avg_words=1491.7`, `drawImageRefFull:avg_words=1368.0`, first-frame
+  `defineImageBitmap:avg_words=1257.7`, `fillRect:avg_words=1251.0`,
+  `drawImageRefFullDrawRoundRect:avg_words=946.0`, and `drawImageRefFullRun:avg_words=826.0`. The top pairs
+  (`drawImageRefFull>translate:avg=2128.0`, `translate>fillRect:avg=1932.0`,
+  `fillRect>translate:avg=1918.0`, `translate>drawImageRefFull:avg=1372.0`) look repetitive, but each row still carries
+  its own translate, destination rect/image key, and fill geometry; a fused mega-record would mostly move payload around
+  and would not reduce the underlying Skia draw/fill work. Existing `drawImageRefFullRun` already fires for the only
+  adjacent image-run shape. No code candidate was retained.
 - 2026-06-26 rejected Borders image/path candidates:
   A direct `Components` / `Borders` focused diagnostic was run with op counts, op words, op pairs, and Skiko
   command-buffer cache logging:
