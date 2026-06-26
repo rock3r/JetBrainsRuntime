@@ -5,6 +5,23 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-26 command-stream optimisation batch closure audit:
+  Current clean heads are JBR `80bc0bf7179f`, CMP `5e467dd0b87a`, Skiko `611ffc240519`, and Magic Jewel
+  `102f260267ac`. The current optimisation batch evaluated the retained/rejected command-stream and image-cache
+  follow-ups exposed by the 2026-06-26 focused Jewel report corpus and Hypnotoad JFR evidence. Retained changes in this
+  batch include the ABI-111 `saveLayer; clipPath` compaction, Skiko adaptive command-cache bypass tuning, CMP
+  native-bitmap content-key threshold increase, CMP lazy record-start indexing, CMP op-counter allocation cleanup, and
+  `COMMAND_STROKE_LINE_RUN`; each retained change has focused strict-clean validation and a documented command/cache
+  behaviour improvement in this ledger. Rejected follow-ups include cache threshold/size broadening, same-op/run ABI
+  ideas, oval-run allocation-copy, image-pair direct copy, trailing translate broadening, image-definition skipping,
+  native path reuse, closed-polyline allocation shortcuts, previous-record scan memoization/micro-prototypes, component
+  page image/clip/chrome families, Markdown catalog/head micro-candidates, Banners/Progressbar cache/image surfaces, and
+  the Brushes native-flush outlier. The remaining JFR hot spots are either already retained (`previousRecordStart`
+  improved by lazy indexing) or rejected by focused prototypes (`previousRecordStart` memoization/local-scan rewrites,
+  path/closed-polyline allocation shortcuts). The current report corpus therefore has no known unclosed
+  command-stream/image-cache candidate with a narrow validation path and a measured improvement hypothesis; new
+  optimisation work should start from new workload evidence, a lower-level CPU/native profile that identifies a fresh
+  hot path, or a deliberately new command-family design.
 - 2026-06-26 rejected same-op compact-record run ABI follow-up:
   A temporary CMP diagnostic behind `compose.jbr.skia.command.logSameOpPayloads=true` fingerprinted adjacent same-op
   record payloads after existing compactions, then was reverted and the clean CMP desktop artifact was republished to
