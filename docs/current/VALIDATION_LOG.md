@@ -5,6 +5,16 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-26 rejected closed-polyline allocation candidate:
+  A CMP prototype tried to avoid the common `closedPolylinePoints()` allocation by parsing line-only closed paths
+  directly into `COMMAND_STROKE_CLOSED_POLYLINE_DELTA` payloads and only materializing raw points when signed-short
+  delta packing failed. The narrow recorder subset initially passed after updating a stale raw point-polygon expectation,
+  but the full `JbrSkiaCommandRecorderTest` class failed with 19 regressions, including save/restore fold expectations,
+  compact image/roundrect expectations, and nested image/translate folds. The experiment was reverted and no CMP code was
+  retained. During the probe, `writesRawPointPolygonRecords` exposed a separate retained `COMMAND_STROKE_LINE_RUN`
+  hazard: the compactor currently writes the run header before copying the first line's coordinate quad, so a corrected
+  line-run payload would require a dedicated source fix plus broad recorder expectation updates. Do not mix that fix with
+  the closed-polyline allocation optimisation.
 - 2026-06-26 compact debug-overlay marker after yellow-badge overlap report:
   The Skiko/JBR debug overlay was changed so `skiko.jbr.interop.debugOverlay=true` paints a compact 14px corner marker
   by default instead of the previous text badge; the old text label remains opt-in through
