@@ -5,6 +5,18 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-26 rejected Icons clear/image/roundrect alpha fold retry:
+  A focused `showcase-icons` diagnostic was run with op counts, op words, op pairs, and Skiko command-buffer cache
+  logging:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-showcase-icons-words-pairs-cache/showcase-icons/report.md`.
+  The run stayed strict-clean with `fallback_new_count=0`, `cmp_unsupported_max=0`, and `jbr_command_frames=3`.
+  The hot words were `drawImageRefFullDrawRoundRect:avg=484.0`, `clearRect:avg=266.0`, `drawImageRefFull:avg=117.0`,
+  and the hot pairs were `drawImageRefFullDrawRoundRect>clearRect:avg=580.0` and
+  `clearRect>drawImageRefFullDrawRoundRect:avg=425.3`. This looks tempting, but the existing
+  `COMMAND_CLEAR_DRAW_IMAGE_REF_FULL_DRAW_ROUND_RECT` fold is already present and intentionally refuses transparent or
+  unknown-alpha images. The remaining Icons occurrences are therefore correctness-blocked by the alpha guard that fixed
+  the previous solid-background icon/logo artifact; bypassing it would trade command count for known-bad rendering. No
+  code candidate was retained.
 - 2026-06-26 fixed standalone README badge fallback overlap:
   User-side visual validation confirmed the no-badge run was clean while the yellow-badge run still showed image
   replacement text overlapping the `Jewel` title. The standalone demo previously sanitized the README by deleting the
