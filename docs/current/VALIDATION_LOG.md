@@ -5,6 +5,17 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-26 rejected trailing translate suffix broadening:
+  A CMP prototype broadened the existing trailing translated image-ref suffix fold to also bake trailing translates
+  into round-rect/image-run suffix records. The first broad version was too aggressive around integer-grid records and
+  pinned the recorder test worker, so it was narrowed to 1000-based image/round-rect records only. The narrowed
+  prototype passed focused recorder tests and the full CMP `JbrSkiaCommandRecorderTest`, then was published locally and
+  checked against the focused Jewel Banners static slice:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-trailing-translate-roundrect-suffix-banners/showcase-banners-static/report.md`.
+  The GUI row stayed strict-clean (`fallback_new_count=0`, `cmp_unsupported_max=0`, `jbr_picture_frames=0`), but it
+  produced no real workload improvement over the op111 baseline: `avg_commands` remained `3103`, `translate:avg`
+  remained `64.0`, and the top op-word/pair profiles were unchanged. The prototype was reverted; do not revisit this
+  suffix broadening unless a new target shows changed op counts, not just a passing recorder micro-test.
 - 2026-06-26 retained ABI 111 saveLayer+clipPath compaction:
   Added `COMMAND_SAVE_LAYER_CLIP_PATH` (`op=111`) plus high capability bit `576460752303423488` for compact
   `saveLayer; clipPath` records with variable path payloads. The target came from the focused Jewel Banners pair
