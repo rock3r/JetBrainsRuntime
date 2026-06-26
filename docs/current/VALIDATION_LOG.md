@@ -5,6 +5,22 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-26 rejected same-op compact-record run ABI follow-up:
+  A temporary CMP diagnostic behind `compose.jbr.skia.command.logSameOpPayloads=true` fingerprinted adjacent same-op
+  record payloads after existing compactions, then was reverted and the clean CMP desktop artifact was republished to
+  Maven local. The hot Hypnotoad row stayed strict-clean at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-same-op-payload-diagnostic-hypnotoad/report.md`
+  (`fallback_new_count=0`, `cmp_unsupported_max=0`, `jbr_picture_frames=0`, `jbr_command_frames=1618`) and still showed
+  the known same-op pair
+  `saveTranslateRotateTranslateStrokeClosedPolylineDeltaRestore>saveTranslateRotateTranslateStrokeClosedPolylineDeltaRestore:avg=1568.0`,
+  but every adjacent op107 body in the run was distinct:
+  `saveTranslateRotateTranslateStrokeClosedPolylineDeltaRestore=runs:1,records:5,maxRun:5,uniquePayloads:5` on sampled
+  frames. The small controls probe also stayed strict-clean at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-same-op-payload-diagnostic-controls/report.md`,
+  but only exposed tiny `saveTranslate` / first-frame `defineImageBitmap` same-op runs, again with all payloads unique.
+  A new "run of op107" ABI would therefore save mostly per-record headers while still carrying each transform/stroke/path
+  payload, and would add replay/validation surface without evidence of command/image-cache improvement. No source change
+  was retained.
 - 2026-06-26 retained Magic Jewel raw README badge resource normalization:
   The user-confirmed visual regression was specific to the raw/yellow-badge README path when the app was on the
   fallback renderer: failed badge images could paint their replacement labels above the `Jewel` title, while the
