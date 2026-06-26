@@ -55,6 +55,14 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused Skiko/JBR debug-overlay visual fix:
+  The yellow debug overlay now defaults to a compact 14px marker, with the old text badge opt-in via
+  `skiko.jbr.interop.debugOverlayLabel=true`, after the user confirmed the no-badge run was clean and the yellow-badge
+  run caused the visual overlap. Narrow gates passed: Skiko `compileKotlinAwt`, local Skiko AWT/KMP Maven Local publish,
+  Skiko `JbrSkiaInteropTest`, and focused Magic Jewel README preview validation. The preview stayed strict-clean with
+  `fallback_new_count=0`, `cmp_unsupported_max=0`, `jbr_picture_frames=0`, `jbr_command_frames=2`, and a clean compact
+  marker capture:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-compact-debug-overlay-preview/markdown-preview-readme80-static/report.md`.
 - Focused ABI 111 command-stream compaction checkpoint:
   Added `COMMAND_STROKE_LINE_RUN` (`op=110`) plus matching high capability bit `288230376151711744` for adjacent
   same-paint stroked line records. Narrow gates passed: CMP `ui-graphics` desktop compile, local JBR overlay rebuild,

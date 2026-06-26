@@ -5,6 +5,16 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-26 compact debug-overlay marker after yellow-badge overlap report:
+  The Skiko/JBR debug overlay was changed so `skiko.jbr.interop.debugOverlay=true` paints a compact 14px corner marker
+  by default instead of the previous text badge; the old text label remains opt-in through
+  `skiko.jbr.interop.debugOverlayLabel=true`. This is a diagnostic-overlay-only fix, not a renderer fallback or
+  coverage claim. Narrow gates passed: Skiko `compileKotlinAwt`, the documented local Skiko AWT/KMP Maven Local publish
+  set, Skiko `JbrSkiaInteropTest`, and a focused Magic Jewel README preview smoke:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-compact-debug-overlay-preview/markdown-preview-readme80-static/report.md`.
+  The focused row stayed strict-clean with `fallback_new_count=0`, `cmp_unsupported_max=0`, `jbr_picture_frames=0`,
+  `jbr_command_frames=2`, and the captured window showed only the compact yellow marker in the bottom-right instead of
+  a content-overlapping label.
 - 2026-06-26 Hypnotoad compaction-mask isolation sweep:
   After the JFR showed `CommandStreamWriter.previousRecordStart(int)` as the top sampled Java method, a narrow
   Hypnotoad command-mode mask sweep tested whether disabling any top-level compaction group exposed a simple retained
