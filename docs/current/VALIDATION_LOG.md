@@ -5,6 +5,23 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-26 added a Menus popup harness and hardened the README Markdown fixture:
+  Magic Jewel commit `9ea2bfd` tags the Menus buttons and adds a focused `menuPopup` Spectre mode. Opening the popup
+  first exposed the missing runtime dependency on `androidx.navigationevent:navigationevent-compose-desktop:1.1.0-alpha01`,
+  which is now declared by the standalone sample. The corrected focused popup run is
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-showcase-menus-popup-basic-v3-words-pairs-cache/report.md`.
+  It stayed strict-clean with `fallback_new_count=0`, `cmp_unsupported_max=0`, `jbr_command_frames=6`, and the captured
+  `new-window.png` visually shows the basic popup menu open. Generic popup counters still report zero, so the visual
+  capture plus the post-click command profile are the popup evidence. Static Menus warm frames were `commands=1070`;
+  the opened menu reached `commands=1378` on the first popup frame and `commands=1334` on warm popup frames. The added
+  popup traffic (`clipPath`, `drawImageRefColorFilter`, extra `fillRoundRect`, `translate`, `saveLayerClipRect`, and
+  `saveSaveLayerSaveTranslate`) stayed small and did not justify a new command candidate.
+  The same commit also removes unstable remote README shields/Vimeo HTML image fixtures before Markdown processing, so
+  failed remote-image replacement text cannot collide with the `Jewel` title or leak into the alert content. The focused
+  yellow-watermark verification is
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260626-yellow-badge-readme-fixture-final/markdown-preview-readme80-static/report.md`;
+  it passed with `fallback_new_count=0`, `cmp_unsupported_max=0`, `jbr_command_frames=5`, `screenshot_yellow=7043`, and
+  a clean `new-window.png` title area.
 - 2026-06-26 rejected Typography image-run candidates:
   A direct `Components` / `Typography` focused diagnostic was run with op counts, op words, op pairs, and Skiko
   command-buffer cache logging:
