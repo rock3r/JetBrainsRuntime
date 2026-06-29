@@ -12,6 +12,13 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 ## Current Snapshot
 
 - ABI 111 artifacts are current across JBR private API, JBR API mirror, Skiko, CMP, and Magic Jewel.
+- CMP now avoids native bitmap definitions when transparent pixels are discovered in a native-backed image whose bitmap
+  metadata reports opaque, preserving alpha by emitting ARGB pixels for that edge case. Magic Jewel's standalone Spectre
+  tour gate now waits for the initial Components/Buttons page before starting tour modes and forwards the requested
+  component slice into the app. The focused Combo Boxes/TextFields/Scrollbars tour plus Hypnotoad stress passed with
+  `spectre_tour_complete=1`, `fallback_new_count=0`, `cmp_unsupported_max=0`, `jbr_picture_frames=0`, and
+  `jbr_command_frames=6787`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260629-233229/suite.tsv`.
 - The zero-unsupported macOS/Metal coverage goal is now tracked in
   [`docs/current/UNSUPPORTED_COMMAND_CENSUS.md`](docs/current/UNSUPPORTED_COMMAND_CENSUS.md). The latest completed
   full/default command-probe evidence passed `549/549`, but recorded 79 unsupported rows with 78,827 picture fallback

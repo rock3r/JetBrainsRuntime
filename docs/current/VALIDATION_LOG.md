@@ -56,6 +56,26 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-29 focused Jewel showcase/Spectre critical-tour gate:
+  CMP `aed34b72234` preserves transparent pixels for native-backed images whose bitmap metadata reports opaque by
+  using ARGB pixel definitions for discovered-alpha images. Magic Jewel hardened the standalone Spectre tour startup
+  so tour modes wait for `jewel.components.Buttons` instead of Hypnotoad and pass the requested component slice into the
+  app. Narrow gates passed: Magic Jewel `bash -n scripts/jbr-skia-interop-report.sh`,
+  `bash -n scripts/jewel-standalone-focused-benchmark-suite.sh`, `./gradlew compileKotlin`, and CMP
+  `./gradlew :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest`.
+  Focused app validation passed with
+  `CASES=showcase-critical-tour DURATION_SECONDS=45 WARMUP_SECONDS=3 SAMPLE_INTERVAL_SECONDS=2 COLLECT_POWERMETRICS=false EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jewel-standalone-focused-benchmark-suite.sh`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260629-233229/suite.tsv`.
+  The row reported `spectre_started=1`, `spectre_tour_complete=1`, `spectre_errors=0`,
+  `spectre_tour_components=Combo Boxes,TextFields,Scrollbars`, `fallback_new_count=0`, `cmp_unsupported_max=0`,
+  `jbr_picture_frames=0`, and `jbr_command_frames=6787`. This is a narrow critical-component tour, not a full
+  all-components coverage claim.
+- 2026-06-29 focused Jewel Buttons icon-alpha visual check:
+  After the CMP discovered-alpha image fix, a direct Buttons-page command-path probe passed with
+  `fallback_new_count=0`, `cmp_unsupported_max=0`, `jbr_picture_frames=0`, and `jbr_command_frames=2`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260629-232409-buttons-alpha/report.md`.
+  The saved `new-window.png` was inspected and showed the non-selected toolbar/action icons without the solid square
+  fills seen in the user-reported screenshot; the selected `OK` left-nav item retained its normal selection background.
 - 2026-06-26 command-stream optimisation batch closure audit:
   Current clean heads are JBR `80bc0bf7179f`, CMP `5e467dd0b87a`, Skiko `611ffc240519`, and Magic Jewel
   `102f260267ac`. The current optimisation batch evaluated the retained/rejected command-stream and image-cache

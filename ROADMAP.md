@@ -55,6 +55,14 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused Jewel showcase/Spectre coverage refresh:
+  CMP now preserves transparent pixels for native-backed images whose bitmap metadata reports opaque by emitting ARGB
+  pixels instead of a native bitmap definition for that discovered-alpha case. Magic Jewel also hardened the standalone
+  Spectre showcase-tour gate so tour modes wait for the initial Components/Buttons page rather than Hypnotoad and pass
+  the requested component slice into the app. Narrow validation passed for the critical Combo Boxes/TextFields/Scrollbars
+  tour plus Hypnotoad stress with `spectre_tour_complete=1`, `spectre_errors=0`, `fallback_new_count=0`,
+  `cmp_unsupported_max=0`, `jbr_picture_frames=0`, and `jbr_command_frames=6787`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260629-233229/suite.tsv`.
 - Focused Skiko/JBR debug-overlay visual fix:
   The yellow debug overlay now defaults to a compact 14px marker, with the old text badge opt-in via
   `skiko.jbr.interop.debugOverlayLabel=true`, after the user confirmed the no-badge run was clean and the yellow-badge
