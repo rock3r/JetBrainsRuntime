@@ -33,10 +33,14 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   with zero paragraph and shadow commands. Even without Markdown parse/scroll work, the current short-run zero-copy path
   is still heavier: old `avg_cpu=15.01`, `avg_rss_kb=1893414`, `max_thread_cpu=9.90`; new `avg_cpu=110.46`,
   `avg_rss_kb=2321090`, `max_thread_cpu=83.10`.
-  Visual-gated redraw runs remain open: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260630-003635/suite.tsv`
-  and `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260630-003948/suite.tsv`
-  both found `magic.benchmark.page.redraw` via Spectre but failed to produce `MAGIC_JEWEL_IDE_BENCHMARK_PAINT_PROBE status=captured`
-  before ScreenCaptureKit reported stream interruption at shutdown.
+  Visual-gated redraw remains open, but Magic Jewel now runs the ScreenCaptureKit paint probe off the EDT with bounded
+  attempts/timeouts so it fails with useful evidence instead of hanging silently. Narrow `redraw`/`new` validation with
+  `PAINT_PROBE=true` found `magic.benchmark.page.redraw`, stayed on command replay with `new_picture_frames=0` and
+  `new_fallbacks=0`, then reported four timed-out `MAGIC_JEWEL_IDE_BENCHMARK_CAPTURE_ATTEMPT label=toolWindow` entries
+  with ScreenCaptureKit `SCStream` interruption:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260630-011525/suite.tsv`.
+  A temporary component-paint fallback was tried and rejected because it captured a blank Compose buffer rather than a
+  valid on-screen proof; keep the visual gate open until ScreenCaptureKit/window capture can produce a nonblank crop.
 - 2026-06-30 retained Magic Jewel IDE benchmark old/new visual and thread-CPU probes:
   Magic Jewel now preserves the Spectre toolwindow paint probe per variant as
   `old-toolwindow-paint-probe.png` and `new-toolwindow-paint-probe.png`, instead of letting the `new` capture overwrite
