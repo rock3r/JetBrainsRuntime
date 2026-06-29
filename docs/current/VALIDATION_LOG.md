@@ -5,6 +5,18 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest IDE Plugin Benchmarks
 
+- 2026-06-29 closed Magic Jewel IDE Hypnotoad app-frame marker gap:
+  Magic Jewel now emits `MAGIC_JEWEL_IDE_BENCHMARK_FRAME mode=hypnotoad` from the presenter, and the IDE benchmark
+  suite now fails rows with zero app-frame markers instead of accepting command frames alone. The paint-probe parser was
+  also tightened to match only `MAGIC_JEWEL_IDE_BENCHMARK_PAINT_PROBE status=...`, avoiding false positives from the
+  overlapping expected-node marker. Narrow compile gate passed:
+  `./gradlew --no-daemon --no-configuration-cache :ide-benchmark-plugin:compileKotlin --console=plain`. A narrow
+  `hypnotoad`/`new` Spectre-window run then passed at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260629-230349/suite.tsv`
+  with `new_benchmark_ticks=68`, `new_benchmark_frames=194`, `new_command_frames=1364`,
+  `new_picture_frames=0`, and `new_fallbacks=0`. The expected Spectre node marker was present for
+  `magic.benchmark.page.hypnotoad`; the saved `hypnotoad/toolwindow-paint-probe.png` was inspected and showed the
+  right IDE toolwindow with the animated Hypnotoad page and controls.
 - 2026-06-29 retained Magic Jewel IDE benchmark Spectre window-capture probe:
   The first IDE paint probe used `java.awt.Robot` against screen coordinates and could be fooled by unrelated foreground
   windows; a two-case run at
