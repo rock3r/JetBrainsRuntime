@@ -12,6 +12,13 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 ## Current Snapshot
 
 - ABI 111 artifacts are current across JBR private API, JBR API mirror, Skiko, CMP, and Magic Jewel.
+- Magic Jewel now includes an IDE `redraw` benchmark mode with a low-computation presenter-driven Canvas page. A
+  metrics-only redraw old/new run passed with `new_command_frames=226`, `new_picture_frames=0`, `new_fallbacks=0`,
+  and `new_command_summary=frames=227 avg_commands=341.0 max_commands=341`, but still showed higher short-run CPU/RSS
+  for the zero-copy path than the old path:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260630-004221/suite.tsv`.
+  Visual-gated redraw validation remains open because ScreenCaptureKit did not finish the paint probe before shutdown,
+  despite Spectre finding the expected Compose page node.
 - Magic Jewel's IDE benchmark suite now preserves old/new Spectre toolwindow crops separately, samples per-thread CPU,
   records powermetrics status, and summarizes command-frame command counts for IDE runs. A short chat old/new run
   passed with expected Spectre nodes, `new_command_frames=1056`, `new_picture_frames=0`, and `new_fallbacks=0`, while

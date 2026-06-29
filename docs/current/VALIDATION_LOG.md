@@ -5,6 +5,24 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest IDE Plugin Benchmarks
 
+- 2026-06-30 added Magic Jewel IDE simple-redraw attribution mode:
+  Magic Jewel added a low-computation `redraw` IDE benchmark page driven by a presenter frame loop and a small Canvas,
+  avoiding the Markdown parsing/auto-scroll work in `chat` and the intentionally heavy geometry in `hypnotoad`. The
+  startup/Spectre probe now uses a shared mode-to-test-tag helper, and the benchmark harness waits briefly for paint
+  probes before shutdown. The optional full-frame diagnostic ScreenCaptureKit capture is non-fatal so it cannot discard
+  a completed toolwindow crop. Narrow compile gate passed:
+  `./gradlew --no-daemon --no-configuration-cache :ide-benchmark-plugin:compileKotlin --console=plain`.
+  A metrics-only redraw run passed with
+  `CASES="redraw" VARIANTS="old new" SAMPLE_SECONDS=20 COLLECT_POWERMETRICS=false COLLECT_THREAD_CPU=true PAINT_PROBE=false ./scripts/jewel-ide-plugin-benchmark-suite.sh`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260630-004221/suite.tsv`.
+  The new path stayed on command replay with `new_command_frames=226`, `new_picture_frames=0`, `new_fallbacks=0`, and
+  `new_command_summary=frames=227 avg_commands=341.0 max_commands=341`. Even without Markdown parse/scroll work, the
+  current short-run zero-copy path is still heavier: old `avg_cpu=16.17`, `avg_rss_kb=1865048`,
+  `max_thread_cpu=11.70`; new `avg_cpu=94.27`, `avg_rss_kb=2229619`, `max_thread_cpu=74.70`.
+  Visual-gated redraw runs remain open: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260630-003635/suite.tsv`
+  and `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260630-003948/suite.tsv`
+  both found `magic.benchmark.page.redraw` via Spectre but failed to produce `MAGIC_JEWEL_IDE_BENCHMARK_PAINT_PROBE status=captured`
+  before ScreenCaptureKit reported stream interruption at shutdown.
 - 2026-06-30 retained Magic Jewel IDE benchmark old/new visual and thread-CPU probes:
   Magic Jewel now preserves the Spectre toolwindow paint probe per variant as
   `old-toolwindow-paint-probe.png` and `new-toolwindow-paint-probe.png`, instead of letting the `new` capture overwrite

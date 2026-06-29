@@ -55,6 +55,15 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused IDE redraw attribution checkpoint:
+  Magic Jewel now has a low-computation IDE `redraw` page to separate rendering/replay pressure from Markdown parsing
+  and the heavier Hypnotoad geometry. A metrics-only old/new redraw run passed with `new_command_frames=226`,
+  `new_picture_frames=0`, `new_fallbacks=0`, and `new avg_commands=341.0`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260630-004221/suite.tsv`.
+  The zero-copy path is still heavier in this focused run (`new avg_cpu=94.27`, `new avg_rss_kb=2229619`,
+  `new max_thread_cpu=74.70`) versus old (`old avg_cpu=16.17`, `old avg_rss_kb=1865048`,
+  `old max_thread_cpu=11.70`). Visual-gated redraw remains open because ScreenCaptureKit did not complete the
+  toolwindow paint probe before shutdown, even though Spectre found `magic.benchmark.page.redraw`.
 - Focused IDE benchmark visual/perf evidence refresh:
   Magic Jewel's IDE benchmark suite now preserves Spectre toolwindow crops per variant, records per-thread CPU CSVs,
   exposes hot-thread summaries, records powermetrics status, and summarizes command-frame command counts for old/new IDE
