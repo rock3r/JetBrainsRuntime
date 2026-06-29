@@ -66,12 +66,14 @@ This is the small working roadmap for the current PoC. The full historical check
   also stayed strict-clean while exercising 40 cached bitmap icon definitions.
 - Focused IDE redraw attribution checkpoint:
   Magic Jewel now has a low-computation IDE `redraw` page to separate rendering/replay pressure from Markdown parsing
-  and the heavier Hypnotoad geometry. A metrics-only old/new redraw run passed with `new_command_frames=226`,
-  `new_picture_frames=0`, `new_fallbacks=0`, and `new avg_commands=341.0`:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260630-004221/suite.tsv`.
-  The zero-copy path is still heavier in this focused run (`new avg_cpu=94.27`, `new avg_rss_kb=2229619`,
-  `new max_thread_cpu=74.70`) versus old (`old avg_cpu=16.17`, `old avg_rss_kb=1865048`,
-  `old max_thread_cpu=11.70`). Visual-gated redraw remains open because ScreenCaptureKit did not complete the
+  and the heavier Hypnotoad geometry. The IDE suite now summarizes native command timing markers. A metrics-only old/new
+  redraw run passed with `new_command_frames=223`, `new_picture_frames=0`, `new_fallbacks=0`,
+  `new avg_commands=341.0`, and
+  `new_timing_summary=frames=223 avg_total_ms=1.022 max_total_ms=27.068 avg_draw_ms=0.231 avg_flush_ms=0.718`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260630-010321/suite.tsv`.
+  The zero-copy path is still heavier in this focused run (`new avg_cpu=110.46`, `new avg_rss_kb=2321090`,
+  `new max_thread_cpu=83.10`) versus old (`old avg_cpu=15.01`, `old avg_rss_kb=1893414`,
+  `old max_thread_cpu=9.90`). Visual-gated redraw remains open because ScreenCaptureKit did not complete the
   toolwindow paint probe before shutdown, even though Spectre found `magic.benchmark.page.redraw`.
 - Focused IDE benchmark visual/perf evidence refresh:
   Magic Jewel's IDE benchmark suite now preserves Spectre toolwindow crops per variant, records per-thread CPU CSVs,

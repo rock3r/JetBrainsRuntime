@@ -23,13 +23,16 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   probes before shutdown. The optional full-frame diagnostic ScreenCaptureKit capture is non-fatal so it cannot discard
   a completed toolwindow crop. Narrow compile gate passed:
   `./gradlew --no-daemon --no-configuration-cache :ide-benchmark-plugin:compileKotlin --console=plain`.
-  A metrics-only redraw run passed with
+  Magic Jewel then added IDE-suite command timing summaries for native `JBR_SKIA_INTEROP_COMMAND_TIMING` markers. Syntax
+  gate passed with `bash -n scripts/jewel-ide-plugin-benchmark-suite.sh`. A refreshed metrics-only redraw run passed with
   `CASES="redraw" VARIANTS="old new" SAMPLE_SECONDS=20 COLLECT_POWERMETRICS=false COLLECT_THREAD_CPU=true PAINT_PROBE=false ./scripts/jewel-ide-plugin-benchmark-suite.sh`:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260630-004221/suite.tsv`.
-  The new path stayed on command replay with `new_command_frames=226`, `new_picture_frames=0`, `new_fallbacks=0`, and
-  `new_command_summary=frames=227 avg_commands=341.0 max_commands=341`. Even without Markdown parse/scroll work, the
-  current short-run zero-copy path is still heavier: old `avg_cpu=16.17`, `avg_rss_kb=1865048`,
-  `max_thread_cpu=11.70`; new `avg_cpu=94.27`, `avg_rss_kb=2229619`, `max_thread_cpu=74.70`.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260630-010321/suite.tsv`.
+  The new path stayed on command replay with `new_command_frames=223`, `new_picture_frames=0`, `new_fallbacks=0`, and
+  `new_command_summary=frames=223 avg_commands=341.0 max_commands=341`. The new timing summary reported
+  `frames=223 avg_total_ms=1.022 max_total_ms=27.068 avg_draw_ms=0.231 max_draw_ms=8.722 avg_flush_ms=0.718 max_flush_ms=8.559`,
+  with zero paragraph and shadow commands. Even without Markdown parse/scroll work, the current short-run zero-copy path
+  is still heavier: old `avg_cpu=15.01`, `avg_rss_kb=1893414`, `max_thread_cpu=9.90`; new `avg_cpu=110.46`,
+  `avg_rss_kb=2321090`, `max_thread_cpu=83.10`.
   Visual-gated redraw runs remain open: `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260630-003635/suite.tsv`
   and `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260630-003948/suite.tsv`
   both found `magic.benchmark.page.redraw` via Spectre but failed to produce `MAGIC_JEWEL_IDE_BENCHMARK_PAINT_PROBE status=captured`
