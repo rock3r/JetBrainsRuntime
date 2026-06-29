@@ -5,6 +5,32 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest IDE Plugin Benchmarks
 
+- 2026-06-30 retained Magic Jewel IDE benchmark old/new visual and thread-CPU probes:
+  Magic Jewel now preserves the Spectre toolwindow paint probe per variant as
+  `old-toolwindow-paint-probe.png` and `new-toolwindow-paint-probe.png`, instead of letting the `new` capture overwrite
+  the `old` capture in the case directory. The IDE benchmark suite also samples `ps -M` per-thread CPU into
+  `<variant>-thread-cpu.csv` and includes `old_thread_cpu` / `new_thread_cpu` max-thread summaries in `suite.tsv`.
+  Syntax gate passed: `bash -n scripts/jewel-ide-plugin-benchmark-suite.sh`.
+  A short `chat` old/new Spectre validation passed with
+  `CASES="chat" VARIANTS="old new" SAMPLE_SECONDS=20 COLLECT_POWERMETRICS=false COLLECT_THREAD_CPU=true PAINT_PROBE=true ./scripts/jewel-ide-plugin-benchmark-suite.sh`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260630-001141/suite.tsv`.
+  The row reported `new_command_frames=920`, `new_picture_frames=0`, `new_fallbacks=0`, expected Spectre node
+  markers present for both variants, and preserved separate old/new toolwindow crops. Current short-run perf evidence
+  is not a win: `old_ps=samples=10 avg_cpu=82.28 max_cpu=155.50 avg_rss_kb=1990534 max_rss_kb=2083232`,
+  `new_ps=samples=10 avg_cpu=158.06 max_cpu=533.70 avg_rss_kb=2342350 max_rss_kb=2513680`,
+  `old_thread_cpu=samples=1509 max_thread_cpu=56.70`, and
+  `new_thread_cpu=samples=1624 max_thread_cpu=85.60`. Powermetrics stayed disabled because sudo was not cached.
+- 2026-06-29 focused Magic Jewel IDE old/new benchmark comparison:
+  A two-page IDE benchmark comparison passed with
+  `CASES="hypnotoad chat" VARIANTS="old new" SAMPLE_SECONDS=60 COLLECT_POWERMETRICS=false PAINT_PROBE=true ./scripts/jewel-ide-plugin-benchmark-suite.sh`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260629-235808/suite.tsv`.
+  Both pages reported expected Spectre node markers and zero fallback/picture frames in the new path. Hypnotoad:
+  old `avg_cpu=125.90 max_cpu=336.30 avg_rss_kb=1883291`, new
+  `avg_cpu=149.40 max_cpu=314.30 avg_rss_kb=2577318`, `new_command_frames=10546`. Chat:
+  old `avg_cpu=51.84 max_cpu=189.20 avg_rss_kb=1994542`, new
+  `avg_cpu=78.33 max_cpu=196.90 avg_rss_kb=2511030`, `new_command_frames=3192`. This run predated
+  variant-specific crop preservation, so use it for numeric old/new comparison and the later 2026-06-30 row for
+  retained old/new visual artifacts and thread-CPU evidence.
 - 2026-06-29 closed Magic Jewel IDE Hypnotoad app-frame marker gap:
   Magic Jewel now emits `MAGIC_JEWEL_IDE_BENCHMARK_FRAME mode=hypnotoad` from the presenter, and the IDE benchmark
   suite now fails rows with zero app-frame markers instead of accepting command frames alone. The paint-probe parser was

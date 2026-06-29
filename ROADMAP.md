@@ -55,6 +55,16 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused IDE benchmark visual/perf evidence refresh:
+  Magic Jewel's IDE benchmark suite now preserves Spectre toolwindow crops per variant and records per-thread CPU CSVs
+  for old/new IDE runs. A short chat validation passed with `new_command_frames=920`, `new_picture_frames=0`,
+  `new_fallbacks=0`, and expected Spectre node markers in both variants:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260630-001141/suite.tsv`.
+  The current short-run perf evidence is not a win for the zero-copy path (`new avg_cpu=158.06`, `new avg_rss_kb=2342350`,
+  `new max_thread_cpu=85.60`) versus old (`old avg_cpu=82.28`, `old avg_rss_kb=1990534`,
+  `old max_thread_cpu=56.70`), with powermetrics disabled because sudo was not cached. A longer two-page old/new IDE
+  comparison also passed for Hypnotoad and chat at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260629-235808/suite.tsv`.
 - Focused Jewel showcase/Spectre coverage refresh:
   CMP now preserves transparent pixels for native-backed images whose bitmap metadata reports opaque by emitting ARGB
   pixels instead of a native bitmap definition for that discovered-alpha case. Magic Jewel also hardened the standalone

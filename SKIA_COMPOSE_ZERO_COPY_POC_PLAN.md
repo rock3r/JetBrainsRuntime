@@ -12,6 +12,12 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 ## Current Snapshot
 
 - ABI 111 artifacts are current across JBR private API, JBR API mirror, Skiko, CMP, and Magic Jewel.
+- Magic Jewel's IDE benchmark suite now preserves old/new Spectre toolwindow crops separately and samples per-thread
+  CPU for IDE runs. A short chat old/new run passed with expected Spectre nodes, `new_command_frames=920`,
+  `new_picture_frames=0`, and `new_fallbacks=0`, while showing worse current short-run process/thread/RSS numbers for
+  the zero-copy path than the old path:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260630-001141/suite.tsv`.
+  Powermetrics remains pending until sudo is cached before the run.
 - CMP now avoids native bitmap definitions when transparent pixels are discovered in a native-backed image whose bitmap
   metadata reports opaque, preserving alpha by emitting ARGB pixels for that edge case. Magic Jewel's standalone Spectre
   tour gate now waits for the initial Components/Buttons page before starting tour modes and forwards the requested
