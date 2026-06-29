@@ -16,7 +16,10 @@ entries here, and move older narrative detail to `docs/history/` only when this 
   with `new_benchmark_ticks=68`, `new_benchmark_frames=194`, `new_command_frames=1364`,
   `new_picture_frames=0`, and `new_fallbacks=0`. The expected Spectre node marker was present for
   `magic.benchmark.page.hypnotoad`; the saved `hypnotoad/toolwindow-paint-probe.png` was inspected and showed the
-  right IDE toolwindow with the animated Hypnotoad page and controls.
+  right IDE toolwindow with the animated Hypnotoad page and controls. The matching narrow `chat`/`new` guard run passed
+  at `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260629-230640/suite.tsv`
+  with `new_benchmark_ticks=65`, `new_benchmark_frames=187`, `new_command_frames=671`, `new_picture_frames=0`,
+  and `new_fallbacks=0`; its Spectre crop showed the streaming Jewel Markdown toolwindow.
 - 2026-06-29 retained Magic Jewel IDE benchmark Spectre window-capture probe:
   The first IDE paint probe used `java.awt.Robot` against screen coordinates and could be fooled by unrelated foreground
   windows; a two-case run at
