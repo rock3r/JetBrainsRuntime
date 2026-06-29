@@ -23,10 +23,13 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `avg_total_ms=1.022`, `avg_draw_ms=0.231`, `avg_flush_ms=0.718`, but still showed higher short-run CPU/RSS for the
   zero-copy path than the old path:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260630-010321/suite.tsv`.
-  Visual-gated redraw validation remains open, but Magic Jewel now records bounded off-EDT ScreenCaptureKit capture
-  attempts instead of hanging silently; the latest `redraw`/`new` visual run found the expected Compose page node and
-  zero fallback/picture frames, then failed with four explicit timed-out toolwindow capture attempts:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260630-011525/suite.tsv`.
+  A follow-up visual-gated redraw run passed after the paint probe began writing the mandatory toolwindow proof before
+  the optional full-window diagnostic and falling back to Spectre `RobotDriver.screenshot(region)` when native
+  ScreenCaptureKit capture times out. The run found the expected Compose page node, stayed at `new_picture_frames=0`
+  and `new_fallbacks=0`, logged `MAGIC_JEWEL_IDE_BENCHMARK_CAPTURE_SOURCE label=toolWindow source=spectre-robot-region`,
+  and saved a nonblank `new-toolwindow-paint-probe.png` showing the redraw benchmark toolwindow:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260630-013410/suite.tsv`.
+  Native ScreenCaptureKit full-window capture still times out and remains a diagnostic follow-up.
 - Magic Jewel's IDE benchmark suite now preserves old/new Spectre toolwindow crops separately, samples per-thread CPU,
   records powermetrics status, and summarizes command-frame command counts for IDE runs. A short chat old/new run
   passed with expected Spectre nodes, `new_command_frames=1056`, `new_picture_frames=0`, and `new_fallbacks=0`, while

@@ -73,11 +73,11 @@ This is the small working roadmap for the current PoC. The full historical check
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260630-010321/suite.tsv`.
   The zero-copy path is still heavier in this focused run (`new avg_cpu=110.46`, `new avg_rss_kb=2321090`,
   `new max_thread_cpu=83.10`) versus old (`old avg_cpu=15.01`, `old avg_rss_kb=1893414`,
-  `old max_thread_cpu=9.90`). Visual-gated redraw remains open, but the probe now records bounded off-EDT
-  ScreenCaptureKit attempts instead of hanging silently; the latest `redraw`/`new` visual run found
-  `magic.benchmark.page.redraw`, stayed at zero fallback/picture frames, and failed with four explicit timed-out
-  toolwindow capture attempts:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260630-011525/suite.tsv`.
+  `old max_thread_cpu=9.90`). A follow-up visual-gated `redraw`/`new` run passed after the mandatory toolwindow proof
+  was written before the optional full-window diagnostic and native ScreenCaptureKit timeouts fell back to Spectre
+  `RobotDriver.screenshot(region)`. The run found `magic.benchmark.page.redraw`, stayed at zero fallback/picture frames,
+  logged `source=spectre-robot-region`, and saved a nonblank toolwindow crop showing the redraw benchmark UI:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260630-013410/suite.tsv`.
 - Focused IDE benchmark visual/perf evidence refresh:
   Magic Jewel's IDE benchmark suite now preserves Spectre toolwindow crops per variant, records per-thread CPU CSVs,
   exposes hot-thread summaries, records powermetrics status, and summarizes command-frame command counts for old/new IDE
