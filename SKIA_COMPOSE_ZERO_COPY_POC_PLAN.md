@@ -12,6 +12,11 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
 ## Current Snapshot
 
 - ABI 111 artifacts are current across JBR private API, JBR API mirror, Skiko, CMP, and Magic Jewel.
+- JBR now preserves alpha for cached bitmap image imports whose raw pixels contain transparency despite opaque
+  `SkPixmap` metadata. This fixes the Jewel showcase Buttons icon-background regression in command replay. The exact
+  Buttons-page capture passed strict-clean after rebuilding local artifacts, with `fallback_new_count=0`,
+  `cmp_unsupported_max=0`, `jbr_picture_frames=0`, and transparent `IconButton`/`IconActionButton` glyph backgrounds:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/manual-buttons-alpha-20260630-005843/report.md`.
 - Magic Jewel now includes an IDE `redraw` benchmark mode with a low-computation presenter-driven Canvas page. A
   metrics-only redraw old/new run passed with `new_command_frames=226`, `new_picture_frames=0`, `new_fallbacks=0`,
   and `new_command_summary=frames=227 avg_commands=341.0 max_commands=341`, but still showed higher short-run CPU/RSS

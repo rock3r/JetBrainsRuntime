@@ -5,6 +5,17 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest IDE Plugin Benchmarks
 
+- 2026-06-30 fixed JBR cached-bitmap alpha import for Jewel icons:
+  The standalone Jewel Buttons page exposed a native replay edge where cached `COMMAND_DEFINE_IMAGE_BITMAP` images could
+  carry transparent pixels while the imported `SkPixmap` metadata still said opaque, producing solid tiles behind small
+  icons. JBR now scans raw 32-bit/alpha bitmap pixels before caching and upgrades only discovered-alpha opaque metadata to
+  premultiplied alpha. Local JBR artifacts were rebuilt with `./scripts/rebuild-jbr-skia-local-artifacts.sh`. A direct
+  Buttons-page capture passed with `fallback_new_count=0`, `cmp_unsupported_max=0`, `jbr_picture_frames=0`, and
+  `jbr_command_frames=2`; visual inspection of `new-window.png` confirmed the Buttons `IconButton`/`IconActionButton`
+  glyphs no longer render with solid backgrounds:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/manual-buttons-alpha-20260630-005843/report.md`.
+  A companion `showcase-icons` row also stayed strict-clean with 40 `defineImageBitmap` operations exercised:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260630-005656/suite.tsv`.
 - 2026-06-30 added Magic Jewel IDE simple-redraw attribution mode:
   Magic Jewel added a low-computation `redraw` IDE benchmark page driven by a presenter frame loop and a small Canvas,
   avoiding the Markdown parsing/auto-scroll work in `chat` and the intentionally heavy geometry in `hypnotoad`. The

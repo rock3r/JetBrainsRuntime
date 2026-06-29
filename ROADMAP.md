@@ -55,6 +55,15 @@ This is the small working roadmap for the current PoC. The full historical check
 
 ## Latest Validations
 
+- Focused Jewel icon-alpha fix:
+  JBR now corrects cached bitmap image imports whose raw pixels contain transparency even when `SkPixmap` metadata reports
+  opaque, fixing solid backgrounds behind Jewel showcase icons in command replay. Rebuilt local artifacts and captured the
+  exact Buttons page at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/manual-buttons-alpha-20260630-005843/report.md`; it passed with
+  `fallback_new_count=0`, `cmp_unsupported_max=0`, `jbr_picture_frames=0`, and `jbr_command_frames=2`, and visual
+  inspection confirmed transparent `IconButton`/`IconActionButton` glyph backgrounds. A companion `showcase-icons` row at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260630-005656/suite.tsv`
+  also stayed strict-clean while exercising 40 cached bitmap icon definitions.
 - Focused IDE redraw attribution checkpoint:
   Magic Jewel now has a low-computation IDE `redraw` page to separate rendering/replay pressure from Markdown parsing
   and the heavier Hypnotoad geometry. A metrics-only old/new redraw run passed with `new_command_frames=226`,

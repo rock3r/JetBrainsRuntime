@@ -31,6 +31,7 @@
 #include <chrono>
 #include <cmath>
 #include <cstdio>
+#include <cstdint>
 #include <cstdlib>
 #include <cstring>
 #include <functional>
@@ -1592,6 +1593,48 @@ static sk_sp<SkImage> makeRasterImage(CommandWords commands, jsize pixelOffset, 
     }
     SkPixmap pixmap(imageInfo, pixels.data(), static_cast<size_t>(imageWidth) * sizeof(jint));
     return SkImages::RasterFromPixmapCopy(pixmap);
+}
+
+static bool pixmapHasTransparentPixels(const SkPixmap& pixmap) {
+    const SkColorType colorType = pixmap.colorType();
+    if (colorType == kN32_SkColorType ||
+            colorType == kRGBA_8888_SkColorType ||
+            colorType == kBGRA_8888_SkColorType) {
+        for (int y = 0; y < pixmap.height(); y++) {
+            const auto* row = static_cast<const uint32_t*>(pixmap.addr(0, y));
+            if (row == nullptr) {
+                return false;
+            }
+            for (int x = 0; x < pixmap.width(); x++) {
+                if ((row[x] >> 24) != 0xff) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    if (colorType == kAlpha_8_SkColorType) {
+        for (int y = 0; y < pixmap.height(); y++) {
+            const auto* row = static_cast<const uint8_t*>(pixmap.addr(0, y));
+            if (row == nullptr) {
+                return false;
+            }
+            for (int x = 0; x < pixmap.width(); x++) {
+                if (row[x] != 0xff) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    for (int y = 0; y < pixmap.height(); y++) {
+        for (int x = 0; x < pixmap.width(); x++) {
+            if (SkColorGetA(pixmap.getColor(x, y)) != 0xff) {
+                return true;
+            }
+        }
+    }
+    return false;
 }
 
 static bool skBlendModeForFill(jint commandBlendMode, SkBlendMode* blendMode) {
@@ -3830,7 +3873,9 @@ static bool drawCommandList(SkCanvas* canvas,
                     return false;
                 }
                 SkImageInfo imageInfo = pixmap.info();
-                if (imageHasAlpha == 1 && imageInfo.alphaType() == kOpaque_SkAlphaType) {
+                if ((imageHasAlpha == 1 ||
+                        (imageInfo.alphaType() == kOpaque_SkAlphaType && pixmapHasTransparentPixels(pixmap))) &&
+                        imageInfo.alphaType() == kOpaque_SkAlphaType) {
                     imageInfo = imageInfo.makeAlphaType(kPremul_SkAlphaType);
                 }
                 SkPixmap cachedPixmap(imageInfo, pixmap.addr(), pixmap.rowBytes());
