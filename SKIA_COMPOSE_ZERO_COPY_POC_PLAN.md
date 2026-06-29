@@ -19,6 +19,11 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `spectre_tour_complete=1`, `fallback_new_count=0`, `cmp_unsupported_max=0`, `jbr_picture_frames=0`, and
   `jbr_command_frames=6787`:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260629-233229/suite.tsv`.
+  Follow-up controls/menu and layout/text tour slices also passed with zero fallback, zero unsupported rows, and zero
+  picture frames:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260629-234006/suite.tsv`
+  and
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260629-234322/suite.tsv`.
 - The zero-unsupported macOS/Metal coverage goal is now tracked in
   [`docs/current/UNSUPPORTED_COMMAND_CENSUS.md`](docs/current/UNSUPPORTED_COMMAND_CENSUS.md). The latest completed
   full/default command-probe evidence passed `549/549`, but recorded 79 unsupported rows with 78,827 picture fallback

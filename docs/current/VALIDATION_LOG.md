@@ -56,6 +56,24 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-29 focused Jewel showcase controls/layout tour expansion:
+  Magic Jewel added two reusable focused-suite rows, `showcase-controls-tour` and `showcase-layout-text-tour`, so
+  broader standalone showcase coverage can be run in bounded component batches instead of relying on one-off
+  environment overrides or a full all-components sweep. Syntax gate passed:
+  `bash -n scripts/jewel-standalone-focused-benchmark-suite.sh`.
+  The controls/menu slice passed with
+  `CASES=showcase-controls-tour DURATION_SECONDS=55 WARMUP_SECONDS=3 SAMPLE_INTERVAL_SECONDS=2 COLLECT_POWERMETRICS=false EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jewel-standalone-focused-benchmark-suite.sh`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260629-234006/suite.tsv`.
+  It reported `spectre_tour_components=Buttons,Radio Buttons,Checkboxes,Menus,Tabs,Tooltips`,
+  `spectre_tour_complete=1`, `spectre_errors=0`, `fallback_new_count=0`, `cmp_unsupported_max=0`,
+  `jbr_picture_frames=0`, and `jbr_command_frames=7645`.
+  The layout/text slice passed with
+  `CASES=showcase-layout-text-tour DURATION_SECONDS=55 WARMUP_SECONDS=3 SAMPLE_INTERVAL_SECONDS=2 COLLECT_POWERMETRICS=false EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jewel-standalone-focused-benchmark-suite.sh`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260629-234322/suite.tsv`.
+  It reported `spectre_tour_components=TextAreas,SplitLayout,Banners,Typography,Brushes`,
+  `spectre_tour_complete=1`, `spectre_errors=0`, `fallback_new_count=0`, `cmp_unsupported_max=0`,
+  `jbr_picture_frames=0`, and `jbr_command_frames=7924`. These are broader narrow slices; they do not yet cover every
+  showcase component in one pass.
 - 2026-06-29 focused Jewel showcase/Spectre critical-tour gate:
   CMP `aed34b72234` preserves transparent pixels for native-backed images whose bitmap metadata reports opaque by
   using ARGB pixel definitions for discovered-alpha images. Magic Jewel hardened the standalone Spectre tour startup

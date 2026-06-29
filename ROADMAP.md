@@ -63,6 +63,13 @@ This is the small working roadmap for the current PoC. The full historical check
   tour plus Hypnotoad stress with `spectre_tour_complete=1`, `spectre_errors=0`, `fallback_new_count=0`,
   `cmp_unsupported_max=0`, `jbr_picture_frames=0`, and `jbr_command_frames=6787`:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260629-233229/suite.tsv`.
+  Two broader component tour slices also passed after adding reusable focused-suite rows: controls/menu coverage
+  (`Buttons`, `Radio Buttons`, `Checkboxes`, `Menus`, `Tabs`, `Tooltips`) passed with `fallbacks=0`,
+  `unsupported_max=0`, `jbr_picture_frames=0`, and `jbr_command_frames=7645` at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260629-234006/suite.tsv`;
+  layout/text coverage (`TextAreas`, `SplitLayout`, `Banners`, `Typography`, `Brushes`) passed with `fallbacks=0`,
+  `unsupported_max=0`, `jbr_picture_frames=0`, and `jbr_command_frames=7924` at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260629-234322/suite.tsv`.
 - Focused Skiko/JBR debug-overlay visual fix:
   The yellow debug overlay now defaults to a compact 14px marker, with the old text badge opt-in via
   `skiko.jbr.interop.debugOverlayLabel=true`, after the user confirmed the no-badge run was clean and the yellow-badge
