@@ -5,6 +5,23 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest IDE Plugin Benchmarks
 
+- 2026-06-29 retained Magic Jewel IDE benchmark Spectre window-capture probe:
+  The first IDE paint probe used `java.awt.Robot` against screen coordinates and could be fooled by unrelated foreground
+  windows; a two-case run at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260629-224043/suite.tsv`
+  passed numerically while both saved toolwindow crops showed another app. Magic Jewel now uses Spectre
+  `AutoScreenshotter` / ScreenCaptureKit window capture (`spectre-recording` plus `spectre-recording-macos`) against
+  the IDE frame, crops the target toolwindow from that captured window using the window-image scale, and requires the
+  expected Spectre Compose test tag before accepting a paint probe. Narrow compile gate passed:
+  `./gradlew --no-daemon --no-configuration-cache :ide-benchmark-plugin:compileKotlin --console=plain`. Narrow IDE
+  coverage then passed with Spectre-captured crops for both `chat` and `hypnotoad`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260629-225246/suite.tsv`.
+  Both rows had `new_picture_frames=0`, `new_fallbacks=0`, expected-node markers present, and all native command frames
+  at `destinationX=1806,destinationY=168` (`chat=948`, `hypnotoad=3277`). Visual inspection of
+  `chat/toolwindow-paint-probe.png` showed the streaming Jewel Markdown page; visual inspection of
+  `hypnotoad/toolwindow-paint-probe.png` showed the animated Hypnotoad page and controls. `hypnotoad` still reports
+  `new_benchmark_frames=0`, so use command-frame counts plus Spectre visual capture for that page until app-level frame
+  markers are added there.
 - 2026-06-29 retained Skiko command-frame replay stabilization for the IDE benchmark toolwindow:
   Magic Jewel IDE benchmark diagnostics showed the toolwindow content composed once, did not dispose, and kept emitting
   presenter/frame markers after the user-visible blink-to-blank symptom. Picture-frame mode rendered through the patched
