@@ -3,6 +3,25 @@
 This file keeps the rolling validation ledger out of the top-level roadmap and plan. Keep the newest high-signal
 entries here, and move older narrative detail to `docs/history/` only when this file starts getting noisy.
 
+## Latest IDE Plugin Benchmarks
+
+- 2026-06-29 retained Skiko command-frame replay stabilization for the IDE benchmark toolwindow:
+  Magic Jewel IDE benchmark diagnostics showed the toolwindow content composed once, did not dispose, and kept emitting
+  presenter/frame markers after the user-visible blink-to-blank symptom. Picture-frame mode rendered through the patched
+  IDEA/JBR stack, isolating the suspect surface to Skiko's native command-frame replay path. Skiko now uses the
+  int-array command-frame path by default and leaves the direct reusable `ByteBuffer` frame path behind the opt-in
+  `skiko.jbr.interop.useCommandDirectBufferFrames=true` property. The retained Skiko head is
+  `aa392c22c Stabilize JBR command frame replay`. Gate:
+  `./gradlew :skiko:compileKotlinAwt :skiko:awtJar` in `/Users/rock3r/src/jbr-skia-zero-copy/skiko`.
+  Focused IDE benchmark validation passed for a 60-second `chat` run against `/Users/rock3r/src/uel`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260629-123450/suite.tsv`.
+  The run reported `new_benchmark_ticks=388`, `new_benchmark_frames=750`, `new_command_frames=3229`,
+  `new_picture_frames=0`, and `new_fallbacks=0`; the tail of `new.log` continued reporting
+  `JBR_SKIA_INTEROP_COMMAND_FRAME ... rendered=true` with `unsupported=0` recorder frames near shutdown. No
+  `COMMAND_RETRY`, `COMMAND_RENDER_FALSE`, `rendered=false`, non-zero unsupported, or fallback markers were found in the
+  focused log scan. Local screenshot capture remains unavailable, so persistent visual rendering still needs an
+  observer confirmation before treating the blink-to-blank report as fully closed.
+
 ## Latest Standalone Demo Benchmarks
 
 - 2026-06-26 command-stream optimisation batch closure audit:
