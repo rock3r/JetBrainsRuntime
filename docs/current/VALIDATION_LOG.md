@@ -56,6 +56,19 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest Standalone Demo Benchmarks
 
+- 2026-06-29 focused Jewel showcase remaining-component tour slice:
+  Magic Jewel added `showcase-misc-tour` for the remaining standalone showcase components not covered by the critical,
+  controls/menu, and layout/text tour slices: `Chips and trees`, `Progressbar`, `Icons`, `Links`, `Borders`,
+  `Segmented Controls`, and `Sliders`. Syntax gate passed:
+  `bash -n scripts/jewel-standalone-focused-benchmark-suite.sh`.
+  Focused validation passed with
+  `CASES=showcase-misc-tour DURATION_SECONDS=65 WARMUP_SECONDS=3 SAMPLE_INTERVAL_SECONDS=2 COLLECT_POWERMETRICS=false EXPECT_SCREENSHOT_ASSERTION=false ./scripts/jewel-standalone-focused-benchmark-suite.sh`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260629-235036/suite.tsv`.
+  The row reported `spectre_tour_components=Chips and trees,Progressbar,Icons,Links,Borders,Segmented Controls,Sliders`,
+  `spectre_tour_complete=1`, `spectre_errors=0`, `fallback_new_count=0`, `cmp_unsupported_max=0`,
+  `jbr_picture_frames=0`, and `jbr_command_frames=9372`. Together with the critical, controls/menu, layout/text, and
+  Buttons icon-alpha visual probes below, the current standalone showcase component list is covered by bounded batched
+  runs; this checkpoint still avoids claiming a fresh single-pass all-components tour.
 - 2026-06-29 focused Jewel showcase controls/layout tour expansion:
   Magic Jewel added two reusable focused-suite rows, `showcase-controls-tour` and `showcase-layout-text-tour`, so
   broader standalone showcase coverage can be run in bounded component batches instead of relying on one-off

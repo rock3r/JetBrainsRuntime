@@ -24,6 +24,12 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260629-234006/suite.tsv`
   and
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260629-234322/suite.tsv`.
+  The remaining misc component slice (`Chips and trees`, `Progressbar`, `Icons`, `Links`, `Borders`,
+  `Segmented Controls`, `Sliders`) also passed with `spectre_tour_complete=1`, `spectre_errors=0`, zero fallback,
+  zero unsupported rows, zero picture frames, and `jbr_command_frames=9372`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260629-235036/suite.tsv`.
+  These bounded standalone slices now cover the current showcase component list across batched runs, while preserving
+  the one-broad-validation-per-day constraint.
 - The zero-unsupported macOS/Metal coverage goal is now tracked in
   [`docs/current/UNSUPPORTED_COMMAND_CENSUS.md`](docs/current/UNSUPPORTED_COMMAND_CENSUS.md). The latest completed
   full/default command-probe evidence passed `549/549`, but recorded 79 unsupported rows with 78,827 picture fallback

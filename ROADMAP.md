@@ -70,6 +70,12 @@ This is the small working roadmap for the current PoC. The full historical check
   layout/text coverage (`TextAreas`, `SplitLayout`, `Banners`, `Typography`, `Brushes`) passed with `fallbacks=0`,
   `unsupported_max=0`, `jbr_picture_frames=0`, and `jbr_command_frames=7924` at
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260629-234322/suite.tsv`.
+  The remaining misc component slice (`Chips and trees`, `Progressbar`, `Icons`, `Links`, `Borders`,
+  `Segmented Controls`, `Sliders`) passed with `spectre_tour_complete=1`, `spectre_errors=0`, `fallbacks=0`,
+  `unsupported_max=0`, `jbr_picture_frames=0`, and `jbr_command_frames=9372` at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260629-235036/suite.tsv`.
+  Together with the dedicated Buttons icon-alpha visual probe, the bounded standalone slices cover the current
+  showcase component list without a new full all-components pass.
 - Focused Skiko/JBR debug-overlay visual fix:
   The yellow debug overlay now defaults to a compact 14px marker, with the old text badge opt-in via
   `skiko.jbr.interop.debugOverlayLabel=true`, after the user confirmed the no-badge run was clean and the yellow-badge
