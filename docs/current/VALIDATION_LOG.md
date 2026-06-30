@@ -5,6 +5,20 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest IDE Plugin Benchmarks
 
+- 2026-06-30 added a clean-machine readiness gate to the Magic Jewel IDE perf confirmation wrapper. Magic Jewel commit
+  `e6ac6d5` records `preflight_load_1`, `preflight_top_cpu`, `preflight_ready`, and `preflight_reason` in
+  `machine-preflight.txt`; non-`PREFLIGHT_ONLY` runs now fail before launching when
+  `REQUIRE_CLEAN_PREFLIGHT=true` and either one-minute load exceeds `MAX_PREFLIGHT_LOAD_1` (default `6.0`) or the
+  hottest process exceeds `MAX_PREFLIGHT_TOP_CPU` (default `75.0`). Narrow validation passed with `bash -n
+  scripts/jewel-ide-plugin-perf-confirmation-suite.sh`; `PREFLIGHT_ONLY=true` on the no-sudo path wrote
+  `/tmp/jewel-ide-preflight-readiness-sudo-missing/machine-preflight.txt` with
+  `preflight_reason=powermetrics-sudo-missing load1>6.0` and exited 2 as expected; `COLLECT_POWERMETRICS=false
+  PREFLIGHT_ONLY=true` wrote `/tmp/jewel-ide-preflight-readiness-no-pm/machine-preflight.txt` and exited 0 while
+  still reporting `preflight_ready=false`; and a non-preflight dry gate with `COLLECT_POWERMETRICS=false
+  MAX_PREFLIGHT_LOAD_1=0.1` exited 3 before launching the IDE. A real unsandboxed preflight wrote
+  `/tmp/jewel-ide-preflight-readiness-real-20260630-055530/machine-preflight.txt` and confirmed the machine was still
+  not ready: `powermetrics_sudo_cached=false`, `preflight_load_1=20.20`, `preflight_top_cpu=129.2`, and
+  `preflight_reason=powermetrics-sudo-missing load1>6.0 top-cpu>75.0`.
 - 2026-06-30 improved the Magic Jewel IDE perf preflight so readiness failures are still auditable. Magic Jewel commit
   `84b1885` writes `machine-preflight.txt` before rejecting `COLLECT_POWERMETRICS=true` without a cached sudo
   credential, records `powermetrics_sudo_cached`, and suppresses sandbox `ps` noise when process listing is
