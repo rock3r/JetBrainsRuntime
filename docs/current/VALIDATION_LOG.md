@@ -5,6 +5,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest IDE Plugin Benchmarks
 
+- 2026-06-30 added `REQUIRE_POWERMETRICS=true` to the Magic Jewel standalone focused-suite analyzer in commit
+  `35e76f3`, matching the IDE analyzer's refusal to treat non-sampled rows as GPU/Metal evidence. Narrow validation
+  passed with `bash -n scripts/analyze-jewel-standalone-focused-benchmark-suite.sh`; the retained all-slice standalone
+  showcase suite correctly failed strict powermetrics because all four rows have old/new `disabled` powermetrics
+  statuses; and a synthetic one-row suite with non-disabled old/new powermetrics statuses passed
+  `REQUIRE_POWERMETRICS=true REQUIRE_COMMAND_CLEAN=true REQUIRE_TOUR_COMPLETE=true REQUIRE_CASES=showcase-controls-tour
+  REQUIRE_COMPONENTS=Buttons`. This keeps standalone command/tour coverage and GPU/Metal perf evidence separated.
 - 2026-06-30 tightened the Magic Jewel standalone focused-suite analyzer in commit `1e51581` with `REQUIRE_CASES=...`,
   so a partial retained suite cannot satisfy the all-showcase proof just because component names happen to appear.
   Narrow validation passed with `bash -n scripts/analyze-jewel-standalone-focused-benchmark-suite.sh`; strict analysis
