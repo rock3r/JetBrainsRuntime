@@ -5,13 +5,18 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest IDE Plugin Benchmarks
 
-- 2026-06-30 fixed native image alpha rescue for JBR-owned Skia bitmap image definitions by retagging opaque-reported
-  bitmaps with discovered/requested alpha as unpremultiplied, matching the ARGB command path and avoiding leaked RGB
-  from transparent icon pixels. Narrow validation rebuilt the local JBR Skia artifacts with
-  `./scripts/rebuild-jbr-skia-local-artifacts.sh`, then ran
-  `CASES=showcase-icons DURATION_SECONDS=20 WARMUP_SECONDS=2 SAMPLE_INTERVAL_SECONDS=1 EXPECT_SCREENSHOT_ASSERTION=false OUT_ROOT=/tmp/jewel-alpha-icons ./scripts/jewel-standalone-focused-benchmark-suite.sh`.
-  The direct Icons-page row passed with `fallbacks=0`, `unsupported_max=0`, `defineImageBitmap=40`, `imageRefs=40`,
-  and screenshot evidence at `/tmp/jewel-alpha-icons/showcase-icons/new-window.png`.
+- 2026-06-30 fixed native image alpha rescue for JBR-owned Skia bitmap image definitions by sanitizing
+  alpha-bearing 32-bit bitmap pixmaps before caching them as images: transparent RGB is cleared and partial-alpha
+  color bytes are premultiplied while preserving the source byte order. The earlier opaque-to-unpremul retag was not
+  enough for Jewel icon sources because filtered/tinted transparent-edge RGB still leaked visually. Narrow validation
+  rebuilt the local JBR Skia artifacts with `./scripts/rebuild-jbr-skia-local-artifacts.sh`, then ran
+  `CASES=showcase-buttons DURATION_SECONDS=20 WARMUP_SECONDS=2 SAMPLE_INTERVAL_SECONDS=1 EXPECT_SCREENSHOT_ASSERTION=false OUT_ROOT=/tmp/jewel-alpha-buttons ./scripts/jewel-standalone-focused-benchmark-suite.sh`
+  and
+  `CASES=showcase-icons DURATION_SECONDS=20 WARMUP_SECONDS=2 SAMPLE_INTERVAL_SECONDS=1 EXPECT_SCREENSHOT_ASSERTION=false OUT_ROOT=/tmp/jewel-alpha-icons-sanitized ./scripts/jewel-standalone-focused-benchmark-suite.sh`.
+  The direct Buttons-page row passed with `fallbacks=0`, `unsupported_max=0`, and screenshot evidence at
+  `/tmp/jewel-alpha-buttons/showcase-buttons/new-window.png`. The direct Icons-page row passed with `fallbacks=0`,
+  `unsupported_max=0`, `defineImageBitmap=40`, `imageRefs=40`, and screenshot evidence at
+  `/tmp/jewel-alpha-icons-sanitized/showcase-icons/new-window.png`.
 - 2026-06-30 updated `scripts/jbr-skia-current-validation-status.sh` in Magic Jewel commit `391a34a` to emit explicit
   `coverage_ready`, `perf_evidence_ready`, and `completion_ready` verdicts for the retained evidence bundle. Narrow
   validation passed with `bash -n`; an unsandboxed no-launch run with

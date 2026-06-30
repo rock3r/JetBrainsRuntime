@@ -1640,6 +1640,49 @@ static bool pixmapHasTransparentPixels(const SkPixmap& pixmap) {
     return false;
 }
 
+static bool isByteAlphaLastColorType(SkColorType colorType) {
+    return colorType == kN32_SkColorType ||
+            colorType == kRGBA_8888_SkColorType ||
+            colorType == kBGRA_8888_SkColorType;
+}
+
+static sk_sp<SkImage> makeSanitizedPremulImageCopy(const SkPixmap& pixmap, SkImageInfo imageInfo) {
+    const int width = pixmap.width();
+    const int height = pixmap.height();
+    if (width <= 0 || height <= 0 || !isByteAlphaLastColorType(pixmap.colorType())) {
+        return nullptr;
+    }
+    std::vector<uint32_t> pixels(static_cast<size_t>(width) * static_cast<size_t>(height));
+    for (int y = 0; y < height; y++) {
+        const auto* row = static_cast<const uint32_t*>(pixmap.addr(0, y));
+        if (row == nullptr) {
+            return nullptr;
+        }
+        for (int x = 0; x < width; x++) {
+            const uint32_t pixel = row[x];
+            const uint32_t alpha = pixel >> 24;
+            if (alpha == 0) {
+                pixels[static_cast<size_t>(y) * static_cast<size_t>(width) + static_cast<size_t>(x)] = 0;
+            } else if (alpha == 0xff) {
+                pixels[static_cast<size_t>(y) * static_cast<size_t>(width) + static_cast<size_t>(x)] = pixel;
+            } else {
+                const uint32_t c0 = pixel & 0xff;
+                const uint32_t c1 = (pixel >> 8) & 0xff;
+                const uint32_t c2 = (pixel >> 16) & 0xff;
+                pixels[static_cast<size_t>(y) * static_cast<size_t>(width) + static_cast<size_t>(x)] =
+                        (alpha << 24) |
+                        (((c2 * alpha + 127) / 255) << 16) |
+                        (((c1 * alpha + 127) / 255) << 8) |
+                        ((c0 * alpha + 127) / 255);
+            }
+        }
+    }
+    SkPixmap cachedPixmap(imageInfo.makeAlphaType(kPremul_SkAlphaType),
+                          pixels.data(),
+                          static_cast<size_t>(width) * sizeof(uint32_t));
+    return SkImages::RasterFromPixmapCopy(cachedPixmap);
+}
+
 static bool skBlendModeForFill(jint commandBlendMode, SkBlendMode* blendMode) {
     switch (commandBlendMode) {
         case COMMAND_BLEND_MODE_PLUS:
@@ -3876,13 +3919,20 @@ static bool drawCommandList(SkCanvas* canvas,
                     return false;
                 }
                 SkImageInfo imageInfo = pixmap.info();
-                if ((imageHasAlpha == 1 ||
-                        (imageInfo.alphaType() == kOpaque_SkAlphaType && pixmapHasTransparentPixels(pixmap))) &&
-                        imageInfo.alphaType() == kOpaque_SkAlphaType) {
-                    imageInfo = imageInfo.makeAlphaType(kUnpremul_SkAlphaType);
+                const bool alphaRequested = imageHasAlpha == 1;
+                const bool opaqueWithTransparentPixels =
+                        imageInfo.alphaType() == kOpaque_SkAlphaType && pixmapHasTransparentPixels(pixmap);
+                sk_sp<SkImage> image;
+                if ((alphaRequested || opaqueWithTransparentPixels) &&
+                        isByteAlphaLastColorType(imageInfo.colorType())) {
+                    image = makeSanitizedPremulImageCopy(pixmap, imageInfo);
+                } else {
+                    if (opaqueWithTransparentPixels) {
+                        imageInfo = imageInfo.makeAlphaType(kUnpremul_SkAlphaType);
+                    }
+                    SkPixmap cachedPixmap(imageInfo, pixmap.addr(), pixmap.rowBytes());
+                    image = SkImages::RasterFromPixmapCopy(cachedPixmap);
                 }
-                SkPixmap cachedPixmap(imageInfo, pixmap.addr(), pixmap.rowBytes());
-                sk_sp<SkImage> image = SkImages::RasterFromPixmapCopy(cachedPixmap);
                 if (image == nullptr || image->width() != imageWidth || image->height() != imageHeight) {
                     return false;
                 }
