@@ -5,6 +5,15 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest IDE Plugin Benchmarks
 
+- 2026-06-30 hardened the Magic Jewel command screenshot oracle for the Jewel Buttons page so the selected sidebar
+  background is no longer confused with opaque icon pixels. The Buttons component path now uses component-specific
+  checks and reports `screenshot_buttonsBodyIconTileVeryLight`, `screenshot_buttonsBodyIconGlyphPixels`, and
+  `screenshot_buttonsSelectedNavBackground`; it fails when body icon crops gain a very-light opaque tile while allowing
+  the selected navigation item's intentional background. Narrow validation on the retained Buttons command screenshot
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260630-051441/showcase-buttons/new-window.png`
+  passed with `buttonsBodyIconTileVeryLight=0`, `buttonsBodyIconGlyphPixels=1594`, and
+  `buttonsSelectedNavBackground=2858`. An intentionally impossible threshold
+  `MAX_BUTTONS_BODY_ICON_TILE_VERY_LIGHT=-1` failed as expected, proving the new gate is active.
 - 2026-06-30 persisted a fresh IDE perf confirmation preflight without launching the IDE benchmark:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260630-0521-preflight/machine-preflight.txt`.
   The machine was still unsuitable for final perf confirmation: `sudo -n true` was unavailable for powermetrics, load
