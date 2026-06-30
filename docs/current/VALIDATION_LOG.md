@@ -5,6 +5,14 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest IDE Plugin Benchmarks
 
+- 2026-06-30 extended `scripts/jbr-skia-current-validation-status.sh` in Magic Jewel commit `41def2f` so the one-command
+  status report includes strict standalone and IDE powermetrics evidence gates, not just retained coverage plus
+  readiness. The helper writes separate analysis artifacts and captures strict-gate stderr next to them. Narrow
+  validation passed with `bash -n`; an unsandboxed no-launch run with
+  `OUT_ROOT=/tmp/jbr-skia-current-validation-status-4 ./scripts/jbr-skia-current-validation-status.sh` exited 3 as
+  expected, with retained standalone command/tour/component and IDE command/visual gates passing, standalone and IDE
+  powermetrics evidence gates failing, and readiness false: `reason=powermetrics-sudo-missing load1>6.0 top-cpu>75.0`,
+  `load_1=12.31`, `top_cpu=382.2`, `powermetrics_sudo_cached=false`.
 - 2026-06-30 added `scripts/jbr-skia-current-validation-status.sh` in Magic Jewel commit `fbb9f49` as a no-launch
   current-state audit helper. It reruns the retained standalone focused-suite strict analyzer, the retained IDE
   command/visual analyzer, and the IDE perf readiness preflight into one timestamped status directory. Narrow
