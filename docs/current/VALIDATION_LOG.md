@@ -5,6 +5,15 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest IDE Plugin Benchmarks
 
+- 2026-06-30 rechecked the standalone Buttons icon transparency after a live screenshot showed solid-looking icon
+  backgrounds. Narrow validation used the exact Buttons row only:
+  `CASES=showcase-buttons ./scripts/jewel-standalone-focused-benchmark-suite.sh`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260630-044837/suite.tsv`.
+  The row passed with `fallback_new_count=0`, `cmp_unsupported_max=0`, `jbr_picture_frames=0`,
+  `jbr_command_frames=2`, and `defineImageBitmap=79` through command replay. Visual inspection of
+  `showcase-buttons/new-window.png` confirmed the selected/default split-button chevrons and the Buttons body
+  `IconButton`/`IconActionButton` glyphs render without the previous solid/white icon tiles; no Jewel validation
+  processes were left running afterward.
 - 2026-06-30 audited the remaining IDE/perf side after the standalone showcase reached strict-clean command coverage.
   The newest retained IDE benchmark evidence is
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260630-022412/suite.tsv`,
