@@ -5,6 +5,20 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest IDE Plugin Benchmarks
 
+- 2026-06-30 audited the remaining IDE/perf side after the standalone showcase reached strict-clean command coverage.
+  The newest retained IDE benchmark evidence is
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260630-022412/suite.tsv`,
+  covering old/new `hypnotoad` and `chat` with Spectre toolwindow visual probes, per-thread CPU samples, command-count
+  summaries, and native command timing summaries. Both rows passed with `new_picture_frames=0`, `new_fallbacks=0`, and
+  nonzero command replay: Hypnotoad `new_command_frames=5672`, `avg_commands=2076.8`, `avg_total_ms=2.461`,
+  `avg_draw_ms=1.384`, `avg_flush_ms=1.035`; chat `new_command_frames=2136`, `avg_commands=813.3`,
+  `avg_total_ms=1.718`, `avg_draw_ms=0.174`, `avg_flush_ms=1.513`. Current non-powermetrics old/new process samples
+  still do not show a CPU/RSS win for the zero-copy path: Hypnotoad old/new `avg_cpu=110.33`/`126.86` and
+  `avg_rss_kb=1864762`/`2137711`; chat old/new `avg_cpu=66.61`/`89.40` and
+  `avg_rss_kb=1918802`/`2228648`. Powermetrics remains missing because no cached sudo credential is available
+  (`sudo -n true` reports that a password is required), and a fresh run was deferred because the machine was not
+  measurement-clean: `diagnosticd`, `log`, `replayd`, `WindowServer`, and `mds_stores` were consuming substantial CPU
+  during the audit window.
 - 2026-06-30 completed an all-slice Jewel standalone showcase confirmation pass after fixing the hidden layout/text
   crash discovered by the focused tour. The layout/text slice initially reported `passed` but contained repeated
   `ArrayIndexOutOfBoundsException` stacks in `JbrSkiaCommandRecorder` while visiting `SplitLayout`/`Banners`; CMP now
