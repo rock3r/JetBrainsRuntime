@@ -5,6 +5,20 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest IDE Plugin Benchmarks
 
+- 2026-06-30 fixed the remaining standalone Buttons split-button icon transparency regression in CMP command
+  recording. The earlier JBR bitmap-alpha import fix made ordinary icons transparent, but the selected/default
+  split-button chevron cell still showed the page background because CMP preserved an exact `BlendMode.Clear` rectangle
+  immediately before a transparent full-image draw. The recorder now folds that matching clear for full-image refs
+  regardless of discovered alpha, allowing the transparent chevron bitmap to composite over the already-painted blue
+  button fill. Focused CMP validation passed with
+  `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.removesClearBeforeFullImageWithDiscoveredAlpha --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesCompactFullImageRefRecord --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesCompactFullImageRefAndRoundRectRecord --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesCompactFullImageRefAndFillRectRecord`
+  in `/Users/rock3r/src/jbr-skia-zero-copy/cmp`. After rebuilding
+  `:compose:ui:ui-graphics:desktopJar`, the narrow Buttons focused suite passed with `fallback_new_count=0`,
+  `cmp_unsupported_max=0`, `jbr_picture_frames=0`, `jbr_command_frames=2`, and `defineImageBitmap=79`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260630-034226/suite.tsv`.
+  Pixel spot-checks on `old-window.png` and `new-window.png` matched exactly in the selected/default chevron crop
+  (`#4573e8=4705`, `#f7f8fa=1272`) and the submenu chevron crop (`#4573e8=4669`, `#f7f8fa=1355`), confirming the
+  remaining visible square background was removed without command fallback.
 - 2026-06-30 refreshed the standalone Buttons icon-alpha guardrail:
   Magic Jewel now has an exact `showcase-buttons` focused-suite row, and the wrapper forwards
   `CAPTURE_OLD_SCREENSHOT` to the underlying report script. A follow-up harness fix added a standalone ready marker for
