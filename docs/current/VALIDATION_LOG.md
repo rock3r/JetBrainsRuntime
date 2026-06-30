@@ -5,6 +5,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest IDE Plugin Benchmarks
 
+- 2026-06-30 updated `scripts/jbr-skia-current-validation-status.sh` in Magic Jewel commit `391a34a` to emit explicit
+  `coverage_ready`, `perf_evidence_ready`, and `completion_ready` verdicts for the retained evidence bundle. Narrow
+  validation passed with `bash -n`; an unsandboxed no-launch run with
+  `OUT_ROOT=/tmp/jbr-skia-current-validation-status-6 ./scripts/jbr-skia-current-validation-status.sh` exited 3 as
+  expected and reported `coverage_ready=true`, `perf_evidence_ready=false`, `completion_ready=false`,
+  `readiness=false`, `reason=powermetrics-sudo-missing load1>6.0 top-cpu>75.0`, `load_1=21.72`, `top_cpu=106.5`,
+  and `powermetrics_sudo_cached=false`.
 - 2026-06-30 extended `scripts/jbr-skia-current-validation-status.sh` in Magic Jewel commit `41def2f` so the one-command
   status report includes strict standalone and IDE powermetrics evidence gates, not just retained coverage plus
   readiness. The helper writes separate analysis artifacts and captures strict-gate stderr next to them. Narrow
