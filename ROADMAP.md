@@ -71,9 +71,11 @@ This is the small working roadmap for the current PoC. The full historical check
   `new avg_commands=341.0`, and
   `new_timing_summary=frames=223 avg_total_ms=1.022 max_total_ms=27.068 avg_draw_ms=0.231 avg_flush_ms=0.718`:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260630-010321/suite.tsv`.
-  The zero-copy path is still heavier in this focused run (`new avg_cpu=110.46`, `new avg_rss_kb=2321090`,
-  `new max_thread_cpu=83.10`) versus old (`old avg_cpu=15.01`, `old avg_rss_kb=1893414`,
-  `old max_thread_cpu=9.90`). A follow-up visual-gated `redraw`/`new` run passed after the mandatory toolwindow proof
+  A later focused old/new redraw run after stale stop-file cleanup passed with `new_command_frames=450`,
+  `new_picture_frames=0`, `new_fallbacks=0`, `new avg_cpu=21.94`, `new avg_rss_kb=1944060`, and
+  `new max_thread_cpu=47.90` versus old `avg_cpu=22.89`, `avg_rss_kb=1842581`, and `max_thread_cpu=42.50`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260630-021720/suite.tsv`.
+  A follow-up visual-gated `redraw`/`new` run passed after the mandatory toolwindow proof
   was written before the optional full-window diagnostic and native ScreenCaptureKit timeouts fell back to Spectre
   `RobotDriver.screenshot(region)`. The run found `magic.benchmark.page.redraw`, stayed at zero fallback/picture frames,
   logged `source=spectre-robot-region`, and saved a nonblank toolwindow crop showing the redraw benchmark UI:

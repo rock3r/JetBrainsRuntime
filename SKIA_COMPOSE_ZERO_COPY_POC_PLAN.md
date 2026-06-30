@@ -17,12 +17,15 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   Buttons-page capture passed strict-clean after rebuilding local artifacts, with `fallback_new_count=0`,
   `cmp_unsupported_max=0`, `jbr_picture_frames=0`, and transparent `IconButton`/`IconActionButton` glyph backgrounds:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/manual-buttons-alpha-20260630-005843/report.md`.
-- Magic Jewel now includes an IDE `redraw` benchmark mode with a low-computation presenter-driven Canvas page. A
-  metrics-only redraw old/new run passed with `new_command_frames=223`, `new_picture_frames=0`, `new_fallbacks=0`,
-  `new_command_summary=frames=223 avg_commands=341.0 max_commands=341`, and native timing summary
-  `avg_total_ms=1.022`, `avg_draw_ms=0.231`, `avg_flush_ms=0.718`, but still showed higher short-run CPU/RSS for the
-  zero-copy path than the old path:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260630-010321/suite.tsv`.
+- Magic Jewel now includes an IDE `redraw` benchmark mode with a low-computation presenter-driven Canvas page. After
+  clearing stale per-variant stop requests and making paint-probe wait timeouts fail the variant, a focused old/new
+  redraw run passed with `new_command_frames=450`, `new_picture_frames=0`, `new_fallbacks=0`,
+  `new_command_summary=frames=450 avg_commands=341.0 max_commands=341`, and native timing summary
+  `avg_total_ms=0.971`, `avg_draw_ms=0.199`, `avg_flush_ms=0.733`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260630-021720/suite.tsv`.
+  In this fresh short run the zero-copy path was CPU-comparable to old (`new avg_cpu=21.94` vs `old avg_cpu=22.89`),
+  with slightly higher RSS and hot-thread CPU (`new avg_rss_kb=1944060`, `new max_thread_cpu=47.90`) versus old
+  (`old avg_rss_kb=1842581`, `old max_thread_cpu=42.50`). Powermetrics remained disabled because sudo was not cached.
   A follow-up visual-gated redraw run passed after the paint probe began writing the mandatory toolwindow proof before
   the optional full-window diagnostic and falling back to Spectre `RobotDriver.screenshot(region)` when native
   ScreenCaptureKit capture times out. The run found the expected Compose page node, stayed at `new_picture_frames=0`

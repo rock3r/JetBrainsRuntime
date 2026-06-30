@@ -5,6 +5,18 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest IDE Plugin Benchmarks
 
+- 2026-06-30 refreshed old/new IDE redraw perf after hardening stop-file handling:
+  Magic Jewel now clears `stop-requested` before each old/new variant and treats paint-probe wait timeouts as variant
+  failures, preventing a stale old-variant stop request from making the new variant exit before capture. Syntax gate
+  passed with `bash -n scripts/jewel-ide-plugin-benchmark-suite.sh`. A focused old/new redraw run passed with
+  `CASES="redraw" VARIANTS="old new" SAMPLE_SECONDS=30 COLLECT_POWERMETRICS=false COLLECT_THREAD_CPU=true PAINT_PROBE=true ./scripts/jewel-ide-plugin-benchmark-suite.sh`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260630-021720/suite.tsv`.
+  Both variants exited gracefully, captured nonblank toolwindow probes with the expected Spectre page tag, and reported
+  zero fallbacks. Old path: `avg_cpu=22.89`, `avg_rss_kb=1842581`, `max_thread_cpu=42.50`,
+  `hottest_avg_thread_cpu=5.48`. New path: `avg_cpu=21.94`, `avg_rss_kb=1944060`, `max_thread_cpu=47.90`,
+  `hottest_avg_thread_cpu=6.91`, `new_command_frames=450`, `avg_commands=341.0`,
+  `avg_total_ms=0.971`, `avg_draw_ms=0.199`, and `avg_flush_ms=0.733`. Powermetrics stayed disabled because sudo was
+  not cached.
 - 2026-06-30 cleaned IDE benchmark shutdown and refreshed broader visual coverage:
   Magic Jewel now asks the IDE benchmark plugin to exit through a per-case `stop-requested` file after samples and paint
   probes complete, and the paint probe retries target discovery before reporting `missing-component`. The previous
