@@ -5,6 +5,32 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest IDE Plugin Benchmarks
 
+- 2026-06-30 completed an all-slice Jewel standalone showcase confirmation pass after fixing the hidden layout/text
+  crash discovered by the focused tour. The layout/text slice initially reported `passed` but contained repeated
+  `ArrayIndexOutOfBoundsException` stacks in `JbrSkiaCommandRecorder` while visiting `SplitLayout`/`Banners`; CMP now
+  validates command-record boundaries before the translated-layer and stroke/image compaction passes, drops invalid
+  zero-op nested payloads before later compaction groups, and Magic Jewel strict-command validation now fails any
+  `Exception in thread` marker in `new.log`. Focused CMP validation passed with
+  `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.removesClearBeforeFullImageWithDiscoveredAlpha --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesCompactFullImageRefRecord --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesCompactFullImageRefAndRoundRectRecord --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest.writesCompactFullImageRefAndFillRectRecord`
+  in `/Users/rock3r/src/jbr-skia-zero-copy/cmp`.
+- 2026-06-30 final Jewel standalone showcase confirmation used
+  `CASES='showcase-critical-tour showcase-controls-tour showcase-layout-text-tour showcase-misc-tour' DURATION_SECONDS=60 WARMUP_SECONDS=2 SAMPLE_INTERVAL_SECONDS=2 COLLECT_POWERMETRICS=false EXPECT_SCREENSHOT_ASSERTION=false CAPTURE_OLD_SCREENSHOT=true ./scripts/jewel-standalone-focused-benchmark-suite.sh`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260630-042508/suite.tsv`.
+  All four rows passed with `fallback_new_count=0`, `cmp_unsupported_max=0`, `spectre_tour_complete=1`,
+  `spectre_errors=0`, `jbr_picture_frames=0`, no hidden JVM exceptions, and command replay throughout:
+  critical `jbr_command_frames=8586`, controls `8817`, layout/text `10104`, and misc `9471`. The four slices cover
+  `Buttons,Radio Buttons,Checkboxes,Menus,Tabs,Tooltips`, `Combo Boxes,TextFields,Scrollbars`,
+  `TextAreas,SplitLayout,Banners,Typography,Brushes`, and
+  `Chips and trees,Progressbar,Icons,Links,Borders,Segmented Controls,Sliders`.
+- 2026-06-30 ran the second broader post-fix Jewel showcase coverage slice. The focused critical tour covered
+  `Combo Boxes,TextFields,Scrollbars`, completed the Spectre tour, and then entered Hypnotoad. Narrow validation used
+  `CASES=showcase-critical-tour DURATION_SECONDS=60 WARMUP_SECONDS=2 SAMPLE_INTERVAL_SECONDS=2 COLLECT_POWERMETRICS=false EXPECT_SCREENSHOT_ASSERTION=false CAPTURE_OLD_SCREENSHOT=true ./scripts/jewel-standalone-focused-benchmark-suite.sh`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260630-035529/suite.tsv`.
+  The row passed with `fallback_new_count=0`, `cmp_unsupported_max=0`, `spectre_tour_complete=1`,
+  `spectre_errors=0`, `jbr_picture_frames=0`, `jbr_command_frames=9368`, `jbr_command_fps=156.1`, and
+  `cmp_frame_kind_full_scene=9368`. Process samples reported old/new app frame rates of `7.8`/`7.8` fps and average
+  RSS of `1304865`/`1049040` KB. Spectre markers in `new.log` prove the critical component pages were reached, and the
+  final `new-window.png` was nonblank in command mode at the post-tour Hypnotoad page.
 - 2026-06-30 ran the first broader post-fix Jewel showcase coverage slice after the Buttons alpha/clear fix. The
   focused controls tour covered `Buttons,Radio Buttons,Checkboxes,Menus,Tabs,Tooltips`, completed the Spectre tour,
   and then entered Hypnotoad. Narrow validation used
