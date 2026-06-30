@@ -5,6 +5,17 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest IDE Plugin Benchmarks
 
+- 2026-06-30 refreshed the standalone Buttons icon-alpha guardrail:
+  Magic Jewel now has an exact `showcase-buttons` focused-suite row, and the wrapper forwards
+  `CAPTURE_OLD_SCREENSHOT` to the underlying report script for future visual parity probes. Narrow validation passed
+  with `DURATION_SECONDS=4 WARMUP_SECONDS=1 SAMPLE_INTERVAL_SECONDS=1 CASES="showcase-buttons" COLLECT_POWERMETRICS=false EXPECT_SCREENSHOT_ASSERTION=false CAPTURE_OLD_SCREENSHOT=true ./scripts/jewel-standalone-focused-benchmark-suite.sh`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260630-023821/suite.tsv`.
+  The command-path row stayed strict-clean with `fallback_new_count=0`, `cmp_unsupported_max=0`,
+  `jbr_picture_frames=0`, and `jbr_command_frames=2`. Visual inspection of `new-window.png` shows the Buttons body
+  `IconButton`/`IconActionButton` glyphs still transparent; the selected left-rail Buttons glyph has Jewel selection
+  chrome and the source `button.svg` itself draws an OK-button outline, so that top-left shape is not the previous
+  solid-background alpha regression. Old static-window screenshot capture still needs a non-command-frame capture
+  marker before it can emit `old-window.png` for this idle row.
 - 2026-06-30 refreshed old/new IDE redraw perf after hardening stop-file handling:
   Magic Jewel now clears `stop-requested` before each old/new variant and treats paint-probe wait timeouts as variant
   failures, preventing a stale old-variant stop request from making the new variant exit before capture. Syntax gate

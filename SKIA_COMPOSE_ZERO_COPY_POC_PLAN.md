@@ -17,6 +17,11 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   Buttons-page capture passed strict-clean after rebuilding local artifacts, with `fallback_new_count=0`,
   `cmp_unsupported_max=0`, `jbr_picture_frames=0`, and transparent `IconButton`/`IconActionButton` glyph backgrounds:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/manual-buttons-alpha-20260630-005843/report.md`.
+  Magic Jewel now includes a dedicated `showcase-buttons` focused-suite row; the refreshed command-path capture at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260630-023821/suite.tsv`
+  stayed strict-clean and confirms the body icon transparency guardrail. The selected left-rail Buttons item still shows
+  Jewel selection chrome; old idle-window parity capture needs a non-command-frame marker before it can emit an
+  `old-window.png` baseline for that row.
 - Magic Jewel now includes an IDE `redraw` benchmark mode with a low-computation presenter-driven Canvas page. After
   clearing stale per-variant stop requests and making paint-probe wait timeouts fail the variant, a focused old/new
   redraw run passed with `new_command_frames=450`, `new_picture_frames=0`, `new_fallbacks=0`,
