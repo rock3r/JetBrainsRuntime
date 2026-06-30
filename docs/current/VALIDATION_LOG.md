@@ -5,6 +5,18 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest IDE Plugin Benchmarks
 
+- 2026-06-30 added a Magic Jewel analyzer for IDE plugin benchmark suites:
+  `scripts/analyze-jewel-ide-plugin-benchmark-suite.sh`. The analyzer reads an IDE `suite.tsv`, writes `analysis.md`
+  next to it by default, summarizes command cleanliness, powermetrics coverage, old/new process CPU, RSS, hot-thread
+  CPU, command-frame counts, and native timing, and explicitly labels suites without powermetrics as incomplete for
+  GPU/Metal claims. Narrow gates passed with `bash -n scripts/analyze-jewel-ide-plugin-benchmark-suite.sh` and
+  `scripts/analyze-jewel-ide-plugin-benchmark-suite.sh
+  out/jewel-ide-plugin-benchmark-suite/20260630-022412/suite.tsv /tmp/jewel-ide-analysis-check.md`. The retained
+  `20260630-022412` suite analyzed as command-clean for `2/2` rows but powermetrics-backed for `0/2` rows; Hypnotoad
+  old/new CPU was `110.33`/`126.86` (`+15.0%`), RSS `1864762`/`2137711` KB (`+14.6%`), and hot-thread CPU
+  `27.76`/`43.35` (`+56.2%`); chat old/new CPU was `66.61`/`89.40` (`+34.2%`), RSS `1918802`/`2228648` KB
+  (`+16.1%`), and hot-thread CPU `24.62`/`33.47` (`+35.9%`). This formalizes the current state: IDE command coverage
+  is clean in the retained suite, but the perf claim remains unproven until a clean powermetrics-backed run exists.
 - 2026-06-30 checked whether the machine was ready for the clean IDE perf confirmation pass and deferred the long run.
   Readiness was not acceptable: `sudo -n true` still reported `sudo: a password is required`; `uptime` reported load
   averages around `13.53 17.42 18.44`; and top CPU consumers included a Gradle daemon, Kotlin/Gradle workers,
