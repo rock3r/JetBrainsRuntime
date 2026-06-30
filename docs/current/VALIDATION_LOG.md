@@ -5,6 +5,20 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest IDE Plugin Benchmarks
 
+- 2026-06-30 updated the Magic Jewel IDE benchmark/perf analyzer to make the next clean-machine run answer the
+  per-core and GPU questions directly. Magic Jewel commit `dd3849d` records `old_powermetrics_summary` and
+  `new_powermetrics_summary` in `suite.tsv`, summarizing powermetrics samples, CPU power, GPU power, GPU active/idle
+  residency, hottest average CPU core residency, and max per-core active residency. The analyzer now reports old/new
+  hot-core, GPU mW, and GPU active columns, and `REQUIRE_POWERMETRICS=true` requires real sampled powermetrics summary
+  data instead of accepting a started/disabled status string. Narrow validation passed with `bash -n` for
+  `scripts/jewel-ide-plugin-benchmark-suite.sh` and `scripts/analyze-jewel-ide-plugin-benchmark-suite.sh`; old-format
+  analysis of the retained `20260630-022412` suite remained compatible and still reported `powermetrics rows: 0/2`;
+  strict powermetrics failed as expected on that retained disabled-powermetrics suite; a synthetic sampled-powermetrics
+  TSV passed `REQUIRE_COMMAND_CLEAN=true REQUIRE_VISUAL_PROBES=true REQUIRE_POWERMETRICS=true`; and the extracted
+  powermetrics summarizer parsed the older real capture
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260628-222639/hypnotoad/new-powermetrics.txt`
+  as `samples=174`, `gpu_power_avg_mw=1714`, `gpu_active_avg=92.95`, `hottest_cpu=CPU1`,
+  `hottest_cpu_active_avg=88.51`, `max_cpu=CPU0`, and `max_cpu_active=100.00`.
 - 2026-06-30 updated the Magic Jewel IDE benchmark analyzer to summarize Spectre visual-proof coverage directly in
   `analysis.md` instead of only using it as a strict failure gate. Magic Jewel commit `7354fa2` reports a new
   `Visual Proof` column plus `visual-proof rows`. Narrow validation on
