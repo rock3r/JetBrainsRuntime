@@ -5,6 +5,16 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest IDE Plugin Benchmarks
 
+- 2026-06-30 ran the first broader post-fix Jewel showcase coverage slice after the Buttons alpha/clear fix. The
+  focused controls tour covered `Buttons,Radio Buttons,Checkboxes,Menus,Tabs,Tooltips`, completed the Spectre tour,
+  and then entered Hypnotoad. Narrow validation used
+  `CASES=showcase-controls-tour DURATION_SECONDS=60 WARMUP_SECONDS=2 SAMPLE_INTERVAL_SECONDS=2 COLLECT_POWERMETRICS=false EXPECT_SCREENSHOT_ASSERTION=false CAPTURE_OLD_SCREENSHOT=true ./scripts/jewel-standalone-focused-benchmark-suite.sh`:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260630-034827/suite.tsv`.
+  The row passed with `fallback_new_count=0`, `cmp_unsupported_max=0`, `spectre_tour_complete=1`,
+  `spectre_errors=0`, `jbr_picture_frames=0`, `jbr_command_frames=8570`, `jbr_command_fps=142.8`, and
+  `cmp_frame_kind_full_scene=8569`. Process samples reported old/new app frame rates of `7.4`/`7.2` fps and average
+  RSS of `1316666`/`905188` KB. The final `new-window.png` was nonblank in command mode at the post-tour Hypnotoad
+  page; per-page coverage is proven by the Spectre component markers in `new.log`.
 - 2026-06-30 fixed the remaining standalone Buttons split-button icon transparency regression in CMP command
   recording. The earlier JBR bitmap-alpha import fix made ordinary icons transparent, but the selected/default
   split-button chevron cell still showed the page background because CMP preserved an exact `BlendMode.Clear` rectangle
