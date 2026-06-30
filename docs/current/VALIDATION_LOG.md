@@ -5,6 +5,17 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest IDE Plugin Benchmarks
 
+- 2026-06-30 improved the Magic Jewel IDE perf preflight so readiness failures are still auditable. Magic Jewel commit
+  `84b1885` writes `machine-preflight.txt` before rejecting `COLLECT_POWERMETRICS=true` without a cached sudo
+  credential, records `powermetrics_sudo_cached`, and suppresses sandbox `ps` noise when process listing is
+  unavailable. Narrow validation passed with `bash -n scripts/jewel-ide-plugin-perf-confirmation-suite.sh`; the
+  expected no-sudo path wrote `/tmp/jewel-ide-preflight-sudo-missing-final/machine-preflight.txt` and exited 2; and
+  `COLLECT_POWERMETRICS=false PREFLIGHT_ONLY=true` wrote
+  `/tmp/jewel-ide-preflight-no-pm-final/machine-preflight.txt` and exited 0. A real unsandboxed preflight also wrote
+  `/tmp/jewel-ide-preflight-real-20260630-055136/machine-preflight.txt` without launching the IDE. It confirmed the
+  machine was still not suitable for final perf: `powermetrics_sudo_cached=false`, load averages around
+  `15.14 14.64 12.24`, a Gradle daemon at roughly `301.7%` CPU, plus `diagnosticd`, `replayd`, `log`,
+  `WindowServer`, and Codex in the hot process list.
 - 2026-06-30 updated the Magic Jewel IDE benchmark/perf analyzer to make the next clean-machine run answer the
   per-core and GPU questions directly. Magic Jewel commit `dd3849d` records `old_powermetrics_summary` and
   `new_powermetrics_summary` in `suite.tsv`, summarizing powermetrics samples, CPU power, GPU power, GPU active/idle
