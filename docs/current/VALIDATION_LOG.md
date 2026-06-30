@@ -5,6 +5,15 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest IDE Plugin Benchmarks
 
+- 2026-06-30 added `scripts/jbr-skia-current-validation-status.sh` in Magic Jewel commit `fbb9f49` as a no-launch
+  current-state audit helper. It reruns the retained standalone focused-suite strict analyzer, the retained IDE
+  command/visual analyzer, and the IDE perf readiness preflight into one timestamped status directory. Narrow
+  validation passed with `bash -n`; an unsandboxed run with
+  `OUT_ROOT=/tmp/jbr-skia-current-validation-status ./scripts/jbr-skia-current-validation-status.sh` exited 3, as
+  expected while perf readiness is false, and wrote `/tmp/jbr-skia-current-validation-status/status.md`. The retained
+  standalone command/tour/component gate passed, the retained IDE command/visual gate passed, and the readiness section
+  reported `readiness=false`, `reason=powermetrics-sudo-missing load1>6.0 top-cpu>75.0`, `load_1=8.29`,
+  `top_cpu=128.3`, and `powermetrics_sudo_cached=false`.
 - 2026-06-30 added `REQUIRE_POWERMETRICS=true` to the Magic Jewel standalone focused-suite analyzer in commit
   `35e76f3`, matching the IDE analyzer's refusal to treat non-sampled rows as GPU/Metal evidence. Narrow validation
   passed with `bash -n scripts/analyze-jewel-standalone-focused-benchmark-suite.sh`; the retained all-slice standalone
