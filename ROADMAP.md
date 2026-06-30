@@ -65,9 +65,9 @@ This is the small working roadmap for the current PoC. The full historical check
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260630-005656/suite.tsv`
   also stayed strict-clean while exercising 40 cached bitmap icon definitions.
   Magic Jewel now also has a dedicated `showcase-buttons` focused-suite row; the refreshed command-path capture at
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260630-023821/suite.tsv`
-  stayed strict-clean and visually preserved transparent body icons. Old idle-window capture still needs a non-command
-  marker before it can produce `old-window.png` for side-by-side parity.
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260630-024448/suite.tsv`
+  stayed strict-clean and now emits both old/new screenshots. Visual inspection confirmed the selected left-rail
+  Buttons item matches the baseline and the command-path body icons stay transparent.
 - Focused IDE redraw attribution checkpoint:
   Magic Jewel now has a low-computation IDE `redraw` page to separate rendering/replay pressure from Markdown parsing
   and the heavier Hypnotoad geometry. The IDE suite now summarizes native command timing markers. A metrics-only old/new
