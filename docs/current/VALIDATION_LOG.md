@@ -5,17 +5,19 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest IDE Plugin Benchmarks
 
-- 2026-06-30 broadened IDE visual coverage after fixing the Spectre toolwindow proof:
-  A narrow new-stack-only run covered both animated `hypnotoad` and streaming Markdown `chat` with
+- 2026-06-30 cleaned IDE benchmark shutdown and refreshed broader visual coverage:
+  Magic Jewel now asks the IDE benchmark plugin to exit through a per-case `stop-requested` file after samples and paint
+  probes complete, and the paint probe retries target discovery before reporting `missing-component`. The previous
+  shutdown-time EDT `IllegalStateException: Check failed` no longer appears in the refreshed narrow new-stack-only
+  coverage. The run covered both animated `hypnotoad` and streaming Markdown `chat` with
   `CASES="hypnotoad chat" VARIANTS="new" SAMPLE_SECONDS=30 COLLECT_POWERMETRICS=false COLLECT_THREAD_CPU=true PAINT_PROBE=true ./scripts/jewel-ide-plugin-benchmark-suite.sh`:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260630-013843/suite.tsv`.
-  Both rows passed with expected Spectre page tags, nonblank Spectre `RobotDriver.screenshot(region)` toolwindow crops,
-  `new_picture_frames=0`, and `new_fallbacks=0`. Hypnotoad reported `new_command_frames=4745`,
-  `avg_commands=2079.5`, `avg_total_ms=2.456`, and `avg_draw_ms=1.386`; chat reported
-  `new_command_frames=1859`, `avg_commands=813.4`, `avg_total_ms=1.818`, and `avg_draw_ms=0.195`. The saved
-  `new-toolwindow-paint-probe.png` files visibly show the intended benchmark toolwindow for both pages. Both new-stack
-  logs still print shutdown-time EDT `IllegalStateException: Check failed` after the accepted capture/sample window;
-  keep that as a harness shutdown diagnostic to clean up before a final claim. A single old-stack chat paint probe at
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260630-015916/suite.tsv`.
+  Both rows passed with `benchmark_exit=graceful waited=3`, expected Spectre page tags, nonblank Spectre
+  `RobotDriver.screenshot(region)` toolwindow crops, `new_picture_frames=0`, and `new_fallbacks=0`. Hypnotoad reported
+  `new_command_frames=5769`, `avg_commands=2078.2`, `avg_total_ms=2.421`, and `avg_draw_ms=1.360`; chat reported
+  `new_command_frames=1993`, `avg_commands=814.0`, `avg_total_ms=1.747`, and `avg_draw_ms=0.191`. The saved
+  `new-toolwindow-paint-probe.png` files visibly show the intended benchmark toolwindow for both pages. A single
+  old-stack chat paint probe at
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260630-014308/suite.tsv`
   shows the same dark block-quote/inline-code styling seen in the new chat capture, so that visual wart is currently
   baseline/demo styling rather than zero-copy replay evidence.

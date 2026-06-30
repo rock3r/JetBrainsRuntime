@@ -78,11 +78,11 @@ This is the small working roadmap for the current PoC. The full historical check
   `RobotDriver.screenshot(region)`. The run found `magic.benchmark.page.redraw`, stayed at zero fallback/picture frames,
   logged `source=spectre-robot-region`, and saved a nonblank toolwindow crop showing the redraw benchmark UI:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260630-013410/suite.tsv`.
-  A narrow new-stack-only `hypnotoad chat` visual run also passed with expected Spectre page tags, nonblank toolwindow
-  crops, `new_picture_frames=0`, and `new_fallbacks=0`:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260630-013843/suite.tsv`.
-  New-stack IDE logs still show shutdown-time EDT `IllegalStateException: Check failed` after accepted capture/sample
-  windows, so keep that as a harness cleanup item before making a final 100% claim.
+  After adding a `stop-requested` graceful IDE exit path and bounded paint-target discovery retries, a refreshed narrow
+  new-stack-only `hypnotoad chat` visual run passed with expected Spectre page tags, nonblank toolwindow crops,
+  `new_picture_frames=0`, `new_fallbacks=0`, and `benchmark_exit=graceful` in both rows:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260630-015916/suite.tsv`.
+  The previous shutdown-time EDT `IllegalStateException: Check failed` did not recur.
 - Focused IDE benchmark visual/perf evidence refresh:
   Magic Jewel's IDE benchmark suite now preserves Spectre toolwindow crops per variant, records per-thread CPU CSVs,
   exposes hot-thread summaries, records powermetrics status, and summarizes command-frame command counts for old/new IDE

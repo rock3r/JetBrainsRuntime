@@ -30,14 +30,15 @@ Metal destination when ABI/capability checks match, and must fall back cleanly o
   and saved a nonblank `new-toolwindow-paint-probe.png` showing the redraw benchmark toolwindow:
   `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260630-013410/suite.tsv`.
   Native ScreenCaptureKit full-window capture still times out and remains a diagnostic follow-up.
-- Broader narrow IDE visual coverage now passes for the other benchmark pages on the new stack:
-  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260630-013843/suite.tsv`.
-  `hypnotoad` and `chat` both found expected Spectre page tags, saved nonblank toolwindow crops showing the intended
-  UI, and stayed at `new_picture_frames=0` / `new_fallbacks=0`. The same dark Markdown block-quote/inline-code styling
+- Broader narrow IDE visual coverage now passes cleanly for the other benchmark pages on the new stack:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260630-015916/suite.tsv`.
+  `hypnotoad` and `chat` both exited via the graceful `stop-requested` harness path, found expected Spectre page tags,
+  saved nonblank toolwindow crops showing the intended UI, and stayed at `new_picture_frames=0` / `new_fallbacks=0`.
+  The same dark Markdown block-quote/inline-code styling
   appears in an old-stack chat baseline
   (`/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260630-014308/suite.tsv`),
-  so it is not zero-copy-specific. New-stack IDE runs still emit shutdown-time EDT `IllegalStateException: Check failed`
-  after accepted samples/captures; clean up or classify that harness shutdown noise before any final 100% claim.
+  so it is not zero-copy-specific. The previous shutdown-time EDT `IllegalStateException: Check failed` did not recur
+  in the refreshed `20260630-015916` run.
 - Magic Jewel's IDE benchmark suite now preserves old/new Spectre toolwindow crops separately, samples per-thread CPU,
   records powermetrics status, and summarizes command-frame command counts for IDE runs. A short chat old/new run
   passed with expected Spectre nodes, `new_command_frames=1056`, `new_picture_frames=0`, and `new_fallbacks=0`, while
