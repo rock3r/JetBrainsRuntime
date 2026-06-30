@@ -5,6 +5,13 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest IDE Plugin Benchmarks
 
+- 2026-06-30 persisted a fresh IDE perf confirmation preflight without launching the IDE benchmark:
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260630-0521-preflight/machine-preflight.txt`.
+  The machine was still unsuitable for final perf confirmation: `sudo -n true` was unavailable for powermetrics, load
+  averages were `6.30 7.97 12.88`, and hot background processes included `diagnosticd`, several `log` processes,
+  `WindowServer`, `replayd`, Codex, and Logitech Options. The strict analyzer gates remain the acceptance path for the
+  next real IDE perf run: command-clean and Spectre visual proof must pass, and powermetrics must be present before GPU
+  or Metal claims are treated as confirmed.
 - 2026-06-30 hardened the Magic Jewel IDE benchmark analyzer with strict gates:
   `REQUIRE_COMMAND_CLEAN=true` fails on non-passing rows, missing new command frames, picture frames, or new fallbacks;
   `REQUIRE_VISUAL_PROBES=true` reads each case `summary.properties` and fails if either old/new Spectre toolwindow
