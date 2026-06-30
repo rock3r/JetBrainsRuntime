@@ -1627,6 +1627,9 @@ static bool pixmapHasTransparentPixels(const SkPixmap& pixmap) {
         }
         return false;
     }
+    if (pixmap.alphaType() == kOpaque_SkAlphaType) {
+        return false;
+    }
     for (int y = 0; y < pixmap.height(); y++) {
         for (int x = 0; x < pixmap.width(); x++) {
             if (SkColorGetA(pixmap.getColor(x, y)) != 0xff) {
@@ -3876,7 +3879,7 @@ static bool drawCommandList(SkCanvas* canvas,
                 if ((imageHasAlpha == 1 ||
                         (imageInfo.alphaType() == kOpaque_SkAlphaType && pixmapHasTransparentPixels(pixmap))) &&
                         imageInfo.alphaType() == kOpaque_SkAlphaType) {
-                    imageInfo = imageInfo.makeAlphaType(kPremul_SkAlphaType);
+                    imageInfo = imageInfo.makeAlphaType(kUnpremul_SkAlphaType);
                 }
                 SkPixmap cachedPixmap(imageInfo, pixmap.addr(), pixmap.rowBytes());
                 sk_sp<SkImage> image = SkImages::RasterFromPixmapCopy(cachedPixmap);
