@@ -5,6 +5,15 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest IDE Plugin Benchmarks
 
+- 2026-06-30 tightened the Magic Jewel standalone focused-suite analyzer in commit `1e51581` with `REQUIRE_CASES=...`,
+  so a partial retained suite cannot satisfy the all-showcase proof just because component names happen to appear.
+  Narrow validation passed with `bash -n scripts/analyze-jewel-standalone-focused-benchmark-suite.sh`; strict analysis
+  of the retained all-slice suite
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260630-042508/suite.tsv`
+  passed with required cases `showcase-controls-tour`, `showcase-critical-tour`, `showcase-layout-text-tour`, and
+  `showcase-misc-tour`, plus the required component list and command/tour gates. A forced
+  `REQUIRE_CASES='showcase-controls-tour,Definitely Missing Case'` run failed as expected with
+  `strict failure: missing case Definitely Missing Case`, proving the case gate is active.
 - 2026-06-30 added `scripts/analyze-jewel-standalone-focused-benchmark-suite.sh` in Magic Jewel commit `71d15de` so
   retained standalone showcase coverage has the same kind of reusable report/strict gate as the IDE benchmark suites.
   The analyzer writes `analysis.md`, summarizes command-clean rows, Spectre-tour-complete rows, component coverage,
