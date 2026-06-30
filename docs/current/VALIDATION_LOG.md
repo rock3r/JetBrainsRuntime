@@ -5,6 +5,17 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest IDE Plugin Benchmarks
 
+- 2026-06-30 added `scripts/analyze-jewel-standalone-focused-benchmark-suite.sh` in Magic Jewel commit `71d15de` so
+  retained standalone showcase coverage has the same kind of reusable report/strict gate as the IDE benchmark suites.
+  The analyzer writes `analysis.md`, summarizes command-clean rows, Spectre-tour-complete rows, component coverage,
+  CPU/RSS/FPS deltas, and powermetrics coverage, and supports `REQUIRE_COMMAND_CLEAN=true`,
+  `REQUIRE_TOUR_COMPLETE=true`, and `REQUIRE_COMPONENTS=...`. Narrow validation passed with `bash -n`; strict analysis
+  of `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260630-042508/suite.tsv`
+  passed with `command-clean rows: 4/4`, `Spectre-tour-clean rows: 4/4`, and every required showcase component
+  observed across the four slices (`Buttons`, `Radio Buttons`, `Checkboxes`, `Menus`, `Tabs`, `Tooltips`,
+  `Combo Boxes`, `TextFields`, `Scrollbars`, `TextAreas`, `SplitLayout`, `Banners`, `Typography`, `Brushes`,
+  `Chips and trees`, `Progressbar`, `Icons`, `Links`, `Borders`, `Segmented Controls`, and `Sliders`). A forced
+  `REQUIRE_COMPONENTS='Definitely Missing Component'` run failed as expected, proving the component gate is active.
 - 2026-06-30 added `scripts/jewel-ide-plugin-perf-readiness.sh` in Magic Jewel commit `bc1aceb` as a no-launch poller
   for the IDE perf confirmation gate. The helper forces `PREFLIGHT_ONLY=true`, preserves the same preflight artifact,
   prints `readiness`, `reason`, `load_1`, `top_cpu`, `powermetrics_sudo_cached`, and the preflight path, and exits
