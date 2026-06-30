@@ -5,6 +5,16 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest IDE Plugin Benchmarks
 
+- 2026-06-30 added `scripts/jewel-ide-plugin-perf-readiness.sh` in Magic Jewel commit `bc1aceb` as a no-launch poller
+  for the IDE perf confirmation gate. The helper forces `PREFLIGHT_ONLY=true`, preserves the same preflight artifact,
+  prints `readiness`, `reason`, `load_1`, `top_cpu`, `powermetrics_sudo_cached`, and the preflight path, and exits
+  nonzero when `preflight_ready=false`. Narrow validation passed with `bash -n
+  scripts/jewel-ide-plugin-perf-readiness.sh` and `bash -n
+  scripts/jewel-ide-plugin-perf-confirmation-suite.sh`. A real unsandboxed helper run wrote
+  `/tmp/jewel-ide-readiness-helper/machine-preflight.txt` and correctly returned nonzero without launching the IDE:
+  `readiness=false`, `reason=powermetrics-sudo-missing load1>6.0 top-cpu>75.0`, `load_1=25.36`,
+  `top_cpu=109.5`, and `powermetrics_sudo_cached=false`. The hot process list included `diagnosticd`, `pi`, `log`,
+  `WindowServer`, `mds_stores`, and Codex, so the long powermetrics-backed run remains deferred.
 - 2026-06-30 added a clean-machine readiness gate to the Magic Jewel IDE perf confirmation wrapper. Magic Jewel commit
   `e6ac6d5` records `preflight_load_1`, `preflight_top_cpu`, `preflight_ready`, and `preflight_reason` in
   `machine-preflight.txt`; non-`PREFLIGHT_ONLY` runs now fail before launching when
