@@ -5,6 +5,17 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest IDE Plugin Benchmarks
 
+- 2026-06-30 checked whether the machine was ready for the clean IDE perf confirmation pass and deferred the long run.
+  Readiness was not acceptable: `sudo -n true` still reported `sudo: a password is required`; `uptime` reported load
+  averages around `13.53 17.42 18.44`; and top CPU consumers included a Gradle daemon, Kotlin/Gradle workers,
+  `diagnosticd`, `log`, `replayd`, `WindowServer`, and `mds_stores`. To make future readiness checks auditable without
+  launching the IDE, Magic Jewel's perf confirmation wrapper now accepts `PREFLIGHT_ONLY=true`, creates `OUT_ROOT`
+  before launching, and writes the preflight snapshot to `machine-preflight.txt`. Narrow gates passed:
+  `bash -n scripts/jewel-ide-plugin-perf-confirmation-suite.sh` and
+  `OUT_ROOT=/tmp/jewel-ide-preflight-check COLLECT_POWERMETRICS=false PREFLIGHT_ONLY=true
+  scripts/jewel-ide-plugin-perf-confirmation-suite.sh`, which wrote
+  `/tmp/jewel-ide-preflight-check/machine-preflight.txt` and exited without starting the IDE. Fresh powermetrics-backed
+  old/new IDE perf numbers remain pending.
 - 2026-06-30 prepared the clean-machine IDE perf confirmation rerun without consuming another broad validation slot.
   Magic Jewel now has `scripts/jewel-ide-plugin-perf-confirmation-suite.sh`, a wrapper around the IDE plugin benchmark
   suite that defaults to `CASES="redraw hypnotoad chat"`, `VARIANTS="old new"`, `SAMPLE_SECONDS=60`,
