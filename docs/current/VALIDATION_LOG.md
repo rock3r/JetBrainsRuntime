@@ -5,6 +5,16 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest IDE Plugin Benchmarks
 
+- 2026-06-30 hardened the Magic Jewel IDE benchmark analyzer with strict gates:
+  `REQUIRE_COMMAND_CLEAN=true` fails on non-passing rows, missing new command frames, picture frames, or new fallbacks;
+  `REQUIRE_VISUAL_PROBES=true` reads each case `summary.properties` and fails if either old/new Spectre toolwindow
+  proof is missing, blank, timed out, lacks the expected page node, or lacks the saved probe image; and
+  `REQUIRE_POWERMETRICS=true` fails if either old/new powermetrics status is missing or disabled. Narrow gates passed:
+  `bash -n scripts/analyze-jewel-ide-plugin-benchmark-suite.sh`,
+  normal analysis of `out/jewel-ide-plugin-benchmark-suite/20260630-022412/suite.tsv`,
+  and `REQUIRE_COMMAND_CLEAN=true REQUIRE_VISUAL_PROBES=true` on that retained suite. The expected strict
+  powermetrics gate failed on the same retained suite with old/new `disabled` statuses for Hypnotoad and chat, proving
+  the analyzer will not silently accept non-GPU perf evidence as final confirmation.
 - 2026-06-30 added a Magic Jewel analyzer for IDE plugin benchmark suites:
   `scripts/analyze-jewel-ide-plugin-benchmark-suite.sh`. The analyzer reads an IDE `suite.tsv`, writes `analysis.md`
   next to it by default, summarizes command cleanliness, powermetrics coverage, old/new process CPU, RSS, hot-thread
