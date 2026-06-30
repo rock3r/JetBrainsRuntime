@@ -5,6 +5,15 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest IDE Plugin Benchmarks
 
+- 2026-06-30 prepared the clean-machine IDE perf confirmation rerun without consuming another broad validation slot.
+  Magic Jewel now has `scripts/jewel-ide-plugin-perf-confirmation-suite.sh`, a wrapper around the IDE plugin benchmark
+  suite that defaults to `CASES="redraw hypnotoad chat"`, `VARIANTS="old new"`, `SAMPLE_SECONDS=60`,
+  `COLLECT_POWERMETRICS=true`, `COLLECT_THREAD_CPU=true`, and `PAINT_PROBE=true`. It prints a preflight process/load
+  snapshot and exits before launching the IDE if `sudo -n true` is unavailable, so powermetrics-backed CPU/GPU evidence
+  cannot be accidentally replaced by a non-GPU run. Narrow gates only: `bash -n
+  scripts/jewel-ide-plugin-perf-confirmation-suite.sh`, `bash -n scripts/jewel-ide-plugin-benchmark-suite.sh`, and the
+  expected no-sudo failure path (`COLLECT_POWERMETRICS=true scripts/jewel-ide-plugin-perf-confirmation-suite.sh`
+  exited 2 with the `sudo -v` instruction). Fresh clean-machine perf numbers remain pending.
 - 2026-06-30 rechecked the standalone Buttons icon transparency after a live screenshot showed solid-looking icon
   backgrounds. Narrow validation used the exact Buttons row only:
   `CASES=showcase-buttons ./scripts/jewel-standalone-focused-benchmark-suite.sh`:
