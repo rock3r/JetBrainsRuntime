@@ -5,6 +5,15 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest IDE Plugin Benchmarks
 
+- 2026-06-30 updated the Magic Jewel IDE benchmark analyzer to summarize Spectre visual-proof coverage directly in
+  `analysis.md` instead of only using it as a strict failure gate. Magic Jewel commit `7354fa2` reports a new
+  `Visual Proof` column plus `visual-proof rows`. Narrow validation on
+  `/Users/rock3r/src/jbr-skia-zero-copy/magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260630-022412/suite.tsv`
+  passed with `command-clean rows: 2/2` and `visual-proof rows: 2/2`; the strict command+visual invocation
+  `REQUIRE_COMMAND_CLEAN=true REQUIRE_VISUAL_PROBES=true` also passed. The expected
+  `REQUIRE_POWERMETRICS=true` invocation failed for the retained suite because both Hypnotoad and chat have old/new
+  powermetrics `disabled`, so the suite remains valid for command-path and Spectre-visible toolwindow proof but not
+  final GPU/Metal perf claims.
 - 2026-06-30 hardened the Magic Jewel command screenshot oracle for the Jewel Buttons page so the selected sidebar
   background is no longer confused with opaque icon pixels. The Buttons component path now uses component-specific
   checks and reports `screenshot_buttonsBodyIconTileVeryLight`, `screenshot_buttonsBodyIconGlyphPixels`, and
