@@ -75,6 +75,7 @@ import java.util.concurrent.atomic.AtomicLong;
 public class JBRSkiaService extends JBRSkia {
     private static final String PROPERTY = "sun.java2d.skia.interop";
     private static final String NATIVE_DIAGNOSTIC_PROPERTY = "sun.java2d.skia.interop.nativeDiagnostic";
+    private static final String APPKIT_RENDER_PROPERTY = "sun.java2d.skia.interop.appkitRender";
     private static final String NATIVE_LIBRARY_PROPERTY = "sun.java2d.skia.interop.library";
     private static final String COMMAND_CAPABILITIES_MASK_PROPERTY =
             "sun.java2d.skia.interop.commandCapabilitiesMaskForTest";
@@ -3183,7 +3184,8 @@ public class JBRSkiaService extends JBRSkia {
                 logHandleLifecycleMarkers(decodeCommandBuffer(commandBuffer), contextPtr, "native");
                 return nativeRenderCommandDirectFrame(nativeOpsPtr, metalTexturePtr,
                         deviceSpaceClip.x, deviceSpaceClip.y, deviceSpaceClip.width, deviceSpaceClip.height,
-                        width, height, frameTimeNanos, commandBuffer, commandByteCount);
+                        width, height, frameTimeNanos, commandBuffer, commandByteCount,
+                        Boolean.getBoolean(APPKIT_RENDER_PROPERTY));
             }
             if (width <= 0 || height <= 0) {
                 return false;
@@ -7058,10 +7060,11 @@ public class JBRSkiaService extends JBRSkia {
                                                                 byte[] commands);
 
     private static native boolean nativeRenderCommandDirectFrame(long nativeOpsPtr, long metalTexturePtr,
-                                                                int destinationX, int destinationY,
-                                                                int destinationWidth, int destinationHeight,
-                                                                int width, int height, long frameTimeNanos,
-                                                                ByteBuffer commands, int commandByteCount);
+                                                                 int destinationX, int destinationY,
+                                                                 int destinationWidth, int destinationHeight,
+                                                                 int width, int height, long frameTimeNanos,
+                                                                 ByteBuffer commands, int commandByteCount,
+                                                                 boolean renderOnAppKitThread);
 
     private static native boolean nativeRenderPictureFrame(long nativeOpsPtr, long metalTexturePtr,
                                                           int destinationX, int destinationY,

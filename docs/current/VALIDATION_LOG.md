@@ -5,6 +5,24 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest IDE Plugin Benchmarks
 
+- 2026-07-01 tested the direct command renderer on the AppKit main thread behind opt-in property
+  `sun.java2d.skia.interop.appkitRender=true`. The machine is a headless Mac Studio driven through macOS Screen
+  Sharing, so this is the right validation environment for the current workstation but still a variable to call out
+  before making AppKit-thread rendering the default policy for every Mac display/input configuration. The AppKit run
+  passed strict powermetrics-backed IDE analysis:
+  `/Users/seb/src/jbr-skia-zero-copy/magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260701-203151/suite.tsv`.
+  `REQUIRE_COMMAND_CLEAN=true REQUIRE_VISUAL_PROBES=true REQUIRE_POWERMETRICS=true
+  ./scripts/analyze-jewel-ide-plugin-benchmark-suite.sh ...` passed with `rows=3`, `command-clean rows=3/3`,
+  `visual-proof rows=3/3`, and `powermetrics rows=3/3`; a narrow log scan found no
+  `AWT-EventQueue-0` `Check failed` shutdown exception in this suite. The new JBR command path had no picture replay
+  and no fallback rows. `redraw` reported `new_command_frames=676`, `new_fallbacks=0`, `avg_total_ms=1.228`,
+  old/new CPU `75.25 -> 99.49`, GPU power `133 -> 140` mW, and GPU active `30.91 -> 31.70`. `hypnotoad` reported
+  `new_command_frames=17445`, `new_fallbacks=0`, `avg_total_ms=1.416`, old/new CPU `210.60 -> 202.46`, GPU power
+  `910 -> 633` mW, and GPU active `88.36 -> 96.17`. `chat` reported `new_command_frames=3359`,
+  `new_fallbacks=0`, `avg_total_ms=1.638`, old/new CPU `109.99 -> 109.30`, GPU power `151 -> 171` mW, and GPU active
+  `32.67 -> 40.17`. Decision for now: keep AppKit-thread rendering opt-in while retaining it as the preferred next
+  candidate, then promote only after one more clean validation pass that includes the same gates and acknowledges the
+  Screen Sharing display path.
 - 2026-07-01 regenerated local validation evidence on `/Users/seb/src/jbr-skia-zero-copy` after moving the handoff to
   the new machine. Magic Jewel first needed a benchmark harness fix because `pgrep -f` missed a live IDE process and
   left Gradle-orphaned IDE launches; `scripts/jewel-ide-plugin-benchmark-suite.sh` now finds benchmark IDE processes
