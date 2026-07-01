@@ -5,6 +5,37 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest IDE Plugin Benchmarks
 
+- 2026-07-01 regenerated local validation evidence on `/Users/seb/src/jbr-skia-zero-copy` after moving the handoff to
+  the new machine. Magic Jewel first needed a benchmark harness fix because `pgrep -f` missed a live IDE process and
+  left Gradle-orphaned IDE launches; `scripts/jewel-ide-plugin-benchmark-suite.sh` now finds benchmark IDE processes
+  by scanning `ps -axo pid=,command=` for `/jbr/Contents/Home/bin/java` plus the requested
+  `magic.jewel.benchmark.mode`. A short old/new `redraw` check then passed with complete visual proof,
+  `new_command_frames=333`, `new_fallbacks=0`, and `new_picture_frames=0`.
+- 2026-07-01 fresh powermetrics-backed IDE perf confirmation passed strict analysis:
+  `/Users/seb/src/jbr-skia-zero-copy/magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260701-160048/suite.tsv`.
+  `REQUIRE_COMMAND_CLEAN=true REQUIRE_VISUAL_PROBES=true REQUIRE_POWERMETRICS=true
+  ./scripts/analyze-jewel-ide-plugin-benchmark-suite.sh ...` passed with `rows=3`, `command-clean rows=3/3`,
+  `visual-proof rows=3/3`, and `powermetrics rows=3/3`. The new JBR command path had no picture replay and no
+  fallback rows: `redraw` `new_command_frames=806`, `new_fallbacks=0`, `gpu_power_avg_mw=109`,
+  `gpu_active_avg=32.53`, hottest core `CPU0=67.75`; `hypnotoad` `new_command_frames=3176`, `new_fallbacks=0`,
+  `gpu_power_avg_mw=199`, `gpu_active_avg=43.91`, hottest core `CPU2=93.12`; `chat`
+  `new_command_frames=4287`, `new_fallbacks=0`, `gpu_power_avg_mw=160`, `gpu_active_avg=39.18`, hottest core
+  `CPU0=37.26`.
+- 2026-07-01 regenerated local standalone all-showcase coverage because the retained `/Users/rock3r/...` suite was
+  not present on this machine:
+  `/Users/seb/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260701-161913/suite.tsv`.
+  Strict standalone analysis passed with `rows=4`, `command-clean rows=4/4`, `Spectre-tour-clean rows=4/4`, all
+  required cases observed, and all required components covered. JBR command replay stayed active with no fallbacks:
+  controls `14579` command frames, critical `11375`, layout/text `18152`, and misc `18299`.
+- 2026-07-01 current-status helper with the fresh standalone and IDE suite paths reported local coverage ready but not
+  final completion:
+  `STANDALONE_SUITE=.../20260701-161913/suite.tsv IDE_SUITE=.../20260701-160048/suite.tsv
+  ./scripts/jbr-skia-current-validation-status.sh` wrote
+  `/Users/seb/src/jbr-skia-zero-copy/magic-jewel/out/current-validation-status/20260701-163117/status.md` and exited
+  3 with standalone command/tour/component gate passed, IDE command/visual gate passed, IDE powermetrics evidence gate
+  passed, `coverage_ready=true`, `perf_evidence_ready=false`, and `completion_ready=false`. The remaining false
+  verdicts are from the helper's standalone powermetrics gate and this Codex session lacking a cached sudo credential
+  for the readiness probe, not from missing IDE powermetrics evidence.
 - 2026-06-30 fixed native image alpha rescue for JBR-owned Skia bitmap image definitions by sanitizing
   alpha-bearing 32-bit bitmap pixmaps before caching them as images: transparent RGB is cleared and partial-alpha
   color bytes are premultiplied while preserving the source byte order. The earlier opaque-to-unpremul retag was not
