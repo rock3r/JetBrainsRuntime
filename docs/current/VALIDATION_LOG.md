@@ -5,6 +5,19 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest IDE Plugin Benchmarks
 
+- 2026-07-02 promoted AppKit-main-thread direct command rendering to the default local policy, keeping
+  `sun.java2d.skia.interop.appkitRender=false` as the opt-out, and reran the strict IDE perf suite from a local
+  Terminal with a physical display attached and no explicit AppKit JVM property:
+  `/Users/seb/src/jbr-skia-zero-copy/magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260702-131610/suite.tsv`.
+  Preflight was clean (`load_1=3.37`, `top_cpu=36.9`) with no Screen Sharing process in the captured top list.
+  Strict analysis passed with `rows=3`, `command-clean rows=3/3`, `visual-proof rows=3/3`, and
+  `powermetrics rows=3/3`. The default command path stayed off picture replay and reported no fallbacks:
+  `redraw` had `new_command_frames=705`, `avg_total_ms=1.139`, old/new CPU `84.97 -> 88.35`, GPU power
+  `50 -> 58` mW, and GPU active `15.13 -> 17.70`; `hypnotoad` had `new_command_frames=18068`,
+  `avg_total_ms=1.238`, old/new CPU `190.20 -> 200.72`, GPU power `676 -> 537` mW, and GPU active
+  `87.70 -> 93.87`; `chat` had `new_command_frames=3445`, `avg_total_ms=1.337`, old/new CPU `107.97 -> 106.31`,
+  GPU power `120 -> 123` mW, and GPU active `27.90 -> 31.73`. This confirms the default-on policy through the same
+  command, visual, and powermetrics gates as the opt-in physical-display pass below.
 - 2026-07-02 reran the AppKit-main-thread direct command renderer probe from a local Terminal with a physical display
   attached to the Mac Studio and no Screen Sharing process in preflight:
   `/Users/seb/src/jbr-skia-zero-copy/magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260702-122703/suite.tsv`.

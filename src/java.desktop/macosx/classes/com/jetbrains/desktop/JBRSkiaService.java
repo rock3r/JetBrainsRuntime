@@ -3185,7 +3185,7 @@ public class JBRSkiaService extends JBRSkia {
                 return nativeRenderCommandDirectFrame(nativeOpsPtr, metalTexturePtr,
                         deviceSpaceClip.x, deviceSpaceClip.y, deviceSpaceClip.width, deviceSpaceClip.height,
                         width, height, frameTimeNanos, commandBuffer, commandByteCount,
-                        Boolean.getBoolean(APPKIT_RENDER_PROPERTY));
+                        Boolean.parseBoolean(System.getProperty(APPKIT_RENDER_PROPERTY, "true")));
             }
             if (width <= 0 || height <= 0) {
                 return false;
