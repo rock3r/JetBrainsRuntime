@@ -5,6 +5,18 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest IDE Plugin Benchmarks
 
+- 2026-07-02 reran the AppKit-main-thread direct command renderer probe from a local Terminal with a physical display
+  attached to the Mac Studio and no Screen Sharing process in preflight:
+  `/Users/seb/src/jbr-skia-zero-copy/magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260702-122703/suite.tsv`.
+  Preflight was clean (`load_1=3.02`, `top_cpu=22.8`) and strict analysis passed with `rows=3`,
+  `command-clean rows=3/3`, `visual-proof rows=3/3`, and `powermetrics rows=3/3`. The AppKit command path stayed off
+  picture replay and reported no fallbacks. `redraw` had `new_command_frames=689`, `avg_total_ms=1.144`, old/new CPU
+  `142.57 -> 92.17`, GPU power `52 -> 59` mW, and GPU active `16.66 -> 18.72`. `hypnotoad` had
+  `new_command_frames=18872`, `avg_total_ms=1.246`, old/new CPU `183.58 -> 199.67`, GPU power `670 -> 545` mW, and
+  GPU active `87.93 -> 96.57`. `chat` had `new_command_frames=3451`, `avg_total_ms=1.341`, old/new CPU
+  `130.88 -> 105.71`, GPU power `118 -> 124` mW, and GPU active `28.67 -> 32.44`. This is the cleanest current
+  AppKit-thread perf evidence: real display, no Screen Sharing preflight row, strict command/visual/powermetrics pass,
+  and no headless graphics-environment failure.
 - 2026-07-02 attempted a cold remote-free AppKit-main-thread IDE perf run with Screen Sharing absent from preflight:
   `/Users/seb/src/jbr-skia-zero-copy/magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260702-111126/suite.tsv`.
   Preflight was clean (`load_1=3.00`, `top_cpu=30.8`, no `ScreensharingAgent` row), but all old/new IDE launches
