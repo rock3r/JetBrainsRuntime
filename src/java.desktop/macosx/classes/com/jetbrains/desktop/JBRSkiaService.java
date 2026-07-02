@@ -75,6 +75,8 @@ import java.util.concurrent.atomic.AtomicLong;
 public class JBRSkiaService extends JBRSkia {
     private static final String PROPERTY = "sun.java2d.skia.interop";
     private static final String NATIVE_DIAGNOSTIC_PROPERTY = "sun.java2d.skia.interop.nativeDiagnostic";
+    // Default direct command replay to AppKit because macOS Metal/AppKit surface presentation is more stable there.
+    // Set this property to false for diagnostics or machine-specific fallback.
     private static final String APPKIT_RENDER_PROPERTY = "sun.java2d.skia.interop.appkitRender";
     private static final String NATIVE_LIBRARY_PROPERTY = "sun.java2d.skia.interop.library";
     private static final String COMMAND_CAPABILITIES_MASK_PROPERTY =

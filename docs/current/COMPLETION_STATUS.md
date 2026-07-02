@@ -80,6 +80,46 @@ New renderer summary:
 
 The default command path stayed off picture replay and reported no fallbacks.
 
+Opt-out diagnostic smoke:
+
+```text
+/tmp/jbr-skia-optout-redraw-smoke-old-new/suite.tsv
+```
+
+This short non-powermetrics run used `-Dsun.java2d.skia.interop.appkitRender=false` and passed the intended diagnostic
+scope:
+
+- `rows=1`
+- `command-clean rows=1/1`
+- `visual-proof rows=1/1`
+- `powermetrics rows=0/1`
+
+It is not GPU/Metal perf evidence.
+
+Popup/menu compositing smoke:
+
+```text
+/tmp/jbr-skia-popup-menu-appkit-default-smoke-final/suite.tsv
+```
+
+The existing command-probe popup/menu rows passed after narrowing their screenshot gates to the targeted surface:
+
+| Case | Fallbacks | Unsupported | JBR Picture Frames | JBR Command Frames |
+| --- | ---: | --- | ---: | ---: |
+| `commands-popup` | 0 | none | 0 | 1162 |
+| `commands-popup-window` | 0 | none | 0 | 975 |
+| `commands-menu` | 0 | none | 0 | 474 |
+
+## Environment Matrix
+
+| Environment | Suite | Result | Note |
+| --- | --- | --- | --- |
+| Screen Sharing connected, AppKit opt-in | `20260701-203151` | strict IDE powermetrics pass | Valid for the current remote workstation, but Screen Sharing was active. |
+| Screen Sharing closed after launch, AppKit opt-in | `20260701-230506` | strict IDE powermetrics pass | Completed unattended after GUI context was established. |
+| Physical display attached, AppKit opt-in | `20260702-122703` | strict IDE powermetrics pass | No Screen Sharing process in preflight. |
+| Physical display attached, AppKit default-on | `20260702-131610` | strict IDE powermetrics pass | Current best evidence; no explicit AppKit property. |
+| SSH only, no GUI context | `20260702-111126` | launch failure before rendering | Environment limitation: IDE could not detect a graphics environment. |
+
 ## Known Non-Blockers
 
 - The standalone powermetrics audit is informational. Standalone validation is the broad coverage surface; IDE validation
@@ -89,6 +129,49 @@ The default command path stayed off picture replay and reported no fallbacks.
 - A fully remote-free SSH/no-GUI run failed before rendering with `Unable to detect graphics environment` and one
   `HeadlessException`. This is an environment limitation of the headless Mac Studio without a live GUI graphics
   context, not a renderer regression.
+
+## Post-Completion Hardening Experiments
+
+These are useful follow-ups, but they do not block the completed status above.
+
+1. Broader opt-out sanity:
+
+   ```bash
+   cd /Users/seb/src/jbr-skia-zero-copy/magic-jewel
+   JBR_SKIA_INTEROP_EXTRA_JVM_ARGS='-Dcompose.jbr.skia.command.logOpCounts=true -Dcompose.jbr.skia.command.strict=true -Dsun.java2d.skia.interop.appkitRender=false' \
+     CASES=redraw SAMPLE_SECONDS=20 COLLECT_POWERMETRICS=false \
+     ./scripts/jewel-ide-plugin-benchmark-suite.sh
+   ```
+
+   A narrow redraw smoke already passed. Use this pattern for broader targeted cases only; do not treat non-powermetrics
+   runs as GPU/Metal evidence.
+
+2. Popup/menu command-probe refresh:
+
+   ```bash
+   cd /Users/seb/src/jbr-skia-zero-copy/magic-jewel
+   CASES='commands-popup commands-popup-window commands-menu' \
+     ./scripts/jbr-skia-command-probe-suite.sh
+   ```
+
+   These rows already passed once after the screenshot-oracle cleanup above. They cover glass-pane popup layering, real
+   popup-window capture, and Swing menu popup layering. Run them again after AppKit-thread changes if popup/compositing
+   behavior is suspect.
+
+3. Broad command-probe refresh:
+
+   ```bash
+   cd /Users/seb/src/jbr-skia-zero-copy/magic-jewel
+   JBR_SKIA_ALLOW_EXTRA_BROAD_VALIDATION=true ./scripts/jbr-skia-command-probe-suite.sh
+   ```
+
+   This is expensive and should be treated as a deliberate broad-validation slot, not routine iteration.
+
+4. Physical-console IDE soak:
+
+   Start the IDE or benchmark from a local Terminal while a physical display/keyboard session is active, then exercise
+   window moves/resizes, dialogs, popups, menus, tooltips, and shutdown. This is the highest-value manual check because
+   SSH-only sessions cannot provide the GUI context needed for the IDE benchmark.
 
 ## Next Session
 
