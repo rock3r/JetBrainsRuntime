@@ -60,7 +60,7 @@ This passed all retained command/tour/component coverage gates:
 Default-on AppKit IDE powermetrics evidence:
 
 ```text
-/Users/seb/src/jbr-skia-zero-copy/magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260702-131610/suite.tsv
+/Users/seb/src/jbr-skia-zero-copy/magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260702-181115/suite.tsv
 ```
 
 Strict analysis passed:
@@ -74,9 +74,9 @@ New renderer summary:
 
 | Case | Command Frames | Avg Total ms | Old CPU | New CPU | Old GPU mW | New GPU mW | Old GPU Active | New GPU Active |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| `redraw` | 705 | 1.139 | 84.97 | 88.35 | 50 | 58 | 15.13 | 17.70 |
-| `hypnotoad` | 18068 | 1.238 | 190.20 | 200.72 | 676 | 537 | 87.70 | 93.87 |
-| `chat` | 3445 | 1.337 | 107.97 | 106.31 | 120 | 123 | 27.90 | 31.73 |
+| `redraw` | 691 | 1.095 | 84.77 | 99.12 | 46 | 50 | 14.57 | 15.38 |
+| `hypnotoad` | 18323 | 1.226 | 190.61 | 223.92 | 682 | 536 | 88.16 | 93.61 |
+| `chat` | 3501 | 1.331 | 131.30 | 109.47 | 113 | 122 | 26.51 | 31.30 |
 
 The default command path stayed off picture replay and reported no fallbacks.
 
@@ -110,6 +110,17 @@ The existing command-probe popup/menu rows passed after narrowing their screensh
 | `commands-popup-window` | 0 | none | 0 | 975 |
 | `commands-menu` | 0 | none | 0 | 474 |
 
+Live-animation command-probe smoke:
+
+```text
+/tmp/jbr-skia-live-animation-physical-threshold-smoke-2/suite.tsv
+```
+
+This rerun passed after making the screenshot text oracle scale with the captured image size and current font
+anti-aliasing:
+
+- `commands-live-animation`: `fallbacks=0`, `unsupported=none`, `jbr_picture_frames=0`, `jbr_command_frames=550`
+
 ## Environment Matrix
 
 | Environment | Suite | Result | Note |
@@ -117,7 +128,7 @@ The existing command-probe popup/menu rows passed after narrowing their screensh
 | Screen Sharing connected, AppKit opt-in | `20260701-203151` | strict IDE powermetrics pass | Valid for the current remote workstation, but Screen Sharing was active. |
 | Screen Sharing closed after launch, AppKit opt-in | `20260701-230506` | strict IDE powermetrics pass | Completed unattended after GUI context was established. |
 | Physical display attached, AppKit opt-in | `20260702-122703` | strict IDE powermetrics pass | No Screen Sharing process in preflight. |
-| Physical display attached, AppKit default-on | `20260702-131610` | strict IDE powermetrics pass | Current best evidence; no explicit AppKit property. |
+| Physical display attached, AppKit default-on | `20260702-181115` | strict IDE powermetrics pass | Current best evidence; no explicit AppKit property. |
 | SSH only, no GUI context | `20260702-111126` | launch failure before rendering | Environment limitation: IDE could not detect a graphics environment. |
 
 ## Known Non-Blockers
