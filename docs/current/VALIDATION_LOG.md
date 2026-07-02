@@ -5,6 +5,14 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest IDE Plugin Benchmarks
 
+- 2026-07-02 attempted a cold remote-free AppKit-main-thread IDE perf run with Screen Sharing absent from preflight:
+  `/Users/seb/src/jbr-skia-zero-copy/magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260702-111126/suite.tsv`.
+  Preflight was clean (`load_1=3.00`, `top_cpu=30.8`, no `ScreensharingAgent` row), but all old/new IDE launches
+  failed before rendering with `Start Failed: Unable to detect graphics environment` and one `HeadlessException`.
+  Strict analysis therefore failed with `visual-proof rows=0/3`, `powermetrics rows=0/3`, and no command/timing rows.
+  This is an environment result, not a rendering regression: on the headless Mac Studio the benchmark needs a live GUI
+  graphics environment. The valid low-remote-overhead evidence remains the Screen Sharing-disconnected-after-launch run
+  below, where preflight still had a GUI context and the suite completed unattended.
 - 2026-07-01 reran the AppKit-main-thread direct command renderer probe with macOS Screen Sharing closed after launch
   on the headless Mac Studio. Preflight still recorded `ScreensharingAgent` before disconnect
   (`top_cpu=25.6`, `load_1=3.16`), but the full suite completed unattended with Spectre visual captures and strict
