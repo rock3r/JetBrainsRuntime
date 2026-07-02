@@ -5,6 +5,22 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest IDE Plugin Benchmarks
 
+- 2026-07-01 reran the AppKit-main-thread direct command renderer probe with macOS Screen Sharing closed after launch
+  on the headless Mac Studio. Preflight still recorded `ScreensharingAgent` before disconnect
+  (`top_cpu=25.6`, `load_1=3.16`), but the full suite completed unattended with Spectre visual captures and strict
+  powermetrics evidence:
+  `/Users/seb/src/jbr-skia-zero-copy/magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260701-230506/suite.tsv`.
+  `REQUIRE_COMMAND_CLEAN=true REQUIRE_VISUAL_PROBES=true REQUIRE_POWERMETRICS=true
+  ./scripts/analyze-jewel-ide-plugin-benchmark-suite.sh ...` passed with `rows=3`, `command-clean rows=3/3`,
+  `visual-proof rows=3/3`, and `powermetrics rows=3/3`. The new command path again stayed off picture replay and
+  reported no fallbacks: `redraw` `new_command_frames=686`, `avg_total_ms=1.108`, old/new CPU `87.57 -> 92.01`,
+  GPU power `61 -> 65` mW, GPU active `22.02 -> 22.40`; `hypnotoad` `new_command_frames=18315`,
+  `avg_total_ms=1.309`, old/new CPU `181.19 -> 199.23`, GPU power `769 -> 552` mW, GPU active `89.36 -> 95.35`;
+  `chat` `new_command_frames=3401`, `avg_total_ms=1.590`, old/new CPU `102.95 -> 113.43`, GPU power `126 -> 139`
+  mW, GPU active `30.20 -> 36.90`. Compared with the connected Screen Sharing AppKit run below, the disconnected run
+  reduced new-path average total time in all three cases and lowered new-path GPU power for `redraw`, `hypnotoad`, and
+  `chat`. This strengthens the AppKit-thread candidate, but the Screen Sharing transition is still an environment
+  detail to preserve in the evidence chain.
 - 2026-07-01 tested the direct command renderer on the AppKit main thread behind opt-in property
   `sun.java2d.skia.interop.appkitRender=true`. The machine is a headless Mac Studio driven through macOS Screen
   Sharing, so this is the right validation environment for the current workstation but still a variable to call out
