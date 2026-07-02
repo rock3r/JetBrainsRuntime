@@ -6,6 +6,8 @@ Use the short top-level files for current work. Load the archives only when exac
 
 - [`../ROADMAP.md`](../ROADMAP.md): small current roadmap and broad validation pointers.
 - [`../SKIA_COMPOSE_ZERO_COPY_POC_PLAN.md`](../SKIA_COMPOSE_ZERO_COPY_POC_PLAN.md): compact current plan and next steps.
+- [`current/COMPLETION_STATUS.md`](current/COMPLETION_STATUS.md): final current-cycle completion verdict and next-session
+  instructions.
 - [`current/VALIDATION_LOG.md`](current/VALIDATION_LOG.md): rolling current-cycle validation ledger.
 - [`../doc/skia-shader-factory.md`](../doc/skia-shader-factory.md): shader/effect descriptor design.
 
