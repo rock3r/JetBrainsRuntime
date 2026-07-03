@@ -1591,6 +1591,30 @@ static bool appendUtf16CommandText(std::string& text, CommandWords commands, jsi
     return true;
 }
 
+static void clearCommandCachesForContext(void* imageCacheContextKey) {
+    int cleared;
+    {
+        std::lock_guard<std::mutex> lock(gImageCacheMutex);
+        cleared = clearImageCacheForContext(imageCacheContextKey);
+    }
+    int clearedShaders;
+    {
+        std::lock_guard<std::mutex> lock(gShaderCacheMutex);
+        clearedShaders = clearShaderCacheForContext(imageCacheContextKey);
+    }
+    int clearedEffects;
+    {
+        std::lock_guard<std::mutex> lock(gColorFilterCacheMutex);
+        clearedEffects = clearEffectCacheForContext(imageCacheContextKey);
+    }
+    std::fprintf(stderr,
+                 "JBR_SKIA_INTEROP_IMAGE_CACHE_CLEAR backend=native contextId=%p cleared=%d shaderDescriptorsCleared=%d effectDescriptorsCleared=%d\n",
+                 imageCacheContextKey,
+                 cleared,
+                 clearedShaders,
+                 clearedEffects);
+}
+
 struct IntCommandWords {
     const jint* words;
 
@@ -1621,6 +1645,38 @@ static sk_sp<SkImage> makeRasterImage(CommandWords commands, jsize pixelOffset, 
     }
     SkPixmap pixmap(imageInfo, pixels.data(), static_cast<size_t>(imageWidth) * sizeof(jint));
     return SkImages::RasterFromPixmapCopy(pixmap);
+}
+
+template<typename CommandWords>
+static bool commandListHasCacheClear(CommandWords commands, jsize commandCount, jsize payloadLength, bool* hasCacheClear) {
+    *hasCacheClear = false;
+    jsize offset = COMMAND_STREAM_HEADER_SIZE;
+    jsize commandEnd = COMMAND_STREAM_HEADER_SIZE + payloadLength;
+    while (offset < commandEnd) {
+        jsize recordStart = offset;
+        jint op = commands[offset++];
+        if (offset >= commandEnd) {
+            return false;
+        }
+        jint recordByteLength = commands[offset++];
+        if (offset >= commandEnd) {
+            return false;
+        }
+        jint recordFlags = commands[offset++];
+        jsize recordLength = recordLengthFromBytes(recordByteLength);
+        jsize recordEnd = recordStart + recordLength;
+        if ((recordFlags & ~COMMAND_RECORD_FLAG_ANTIALIAS) != 0 || recordLength < 3 || recordEnd > commandEnd) {
+            return false;
+        }
+        if (op == COMMAND_CLEAR_IMAGE_CACHE) {
+            if (recordFlags != COMMAND_RECORD_FLAGS_NONE || offset != recordEnd) {
+                return false;
+            }
+            *hasCacheClear = true;
+        }
+        offset = recordEnd;
+    }
+    return offset == commandCount;
 }
 
 static bool pixmapHasTransparentPixels(const SkPixmap& pixmap) {
@@ -1880,6 +1936,14 @@ static bool drawCommandList(SkCanvas* canvas,
         return false;
     }
 
+    bool hasCacheClear = false;
+    if (!commandListHasCacheClear(commands, commandCount, payloadLength, &hasCacheClear)) {
+        return false;
+    }
+    if (hasCacheClear) {
+        clearCommandCachesForContext(imageCacheContextKey);
+    }
+
     jsize offset = COMMAND_STREAM_HEADER_SIZE;
     jsize commandEnd = COMMAND_STREAM_HEADER_SIZE + payloadLength;
     while (offset < commandEnd) {
@@ -1934,27 +1998,6 @@ static bool drawCommandList(SkCanvas* canvas,
                 if (recordFlags != COMMAND_RECORD_FLAGS_NONE || offset != recordEnd) {
                     return false;
                 }
-                int cleared;
-                {
-                    std::lock_guard<std::mutex> lock(gImageCacheMutex);
-                    cleared = clearImageCacheForContext(imageCacheContextKey);
-                }
-                int clearedShaders;
-                {
-                    std::lock_guard<std::mutex> lock(gShaderCacheMutex);
-                    clearedShaders = clearShaderCacheForContext(imageCacheContextKey);
-                }
-                int clearedEffects;
-                {
-                    std::lock_guard<std::mutex> lock(gColorFilterCacheMutex);
-                    clearedEffects = clearEffectCacheForContext(imageCacheContextKey);
-                }
-                std::fprintf(stderr,
-                             "JBR_SKIA_INTEROP_IMAGE_CACHE_CLEAR backend=native contextId=%p cleared=%d shaderDescriptorsCleared=%d effectDescriptorsCleared=%d\n",
-                             imageCacheContextKey,
-                             cleared,
-                             clearedShaders,
-                             clearedEffects);
                 break;
             }
             case COMMAND_EVICT_IMAGE_CACHE_KEY: {
