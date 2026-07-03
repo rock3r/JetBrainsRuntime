@@ -1506,6 +1506,19 @@ static int clearImageCacheForContext(void* contextKey) {
     return cleared;
 }
 
+static int clearShaderCacheForContext(void* contextKey) {
+    int cleared = 0;
+    for (auto it = gShadersByKey.begin(); it != gShadersByKey.end();) {
+        if (it->first.context == contextKey) {
+            it = gShadersByKey.erase(it);
+            cleared++;
+        } else {
+            ++it;
+        }
+    }
+    return cleared;
+}
+
 static bool appendUtf8CodePoint(std::string& text, uint32_t codePoint) {
     if (codePoint <= 0x7f) {
         text.push_back(static_cast<char>(codePoint));
@@ -1908,12 +1921,21 @@ static bool drawCommandList(SkCanvas* canvas,
                 if (recordFlags != COMMAND_RECORD_FLAGS_NONE || offset != recordEnd) {
                     return false;
                 }
-                std::lock_guard<std::mutex> lock(gImageCacheMutex);
-                int cleared = clearImageCacheForContext(imageCacheContextKey);
+                int cleared;
+                {
+                    std::lock_guard<std::mutex> lock(gImageCacheMutex);
+                    cleared = clearImageCacheForContext(imageCacheContextKey);
+                }
+                int clearedShaders;
+                {
+                    std::lock_guard<std::mutex> lock(gShaderCacheMutex);
+                    clearedShaders = clearShaderCacheForContext(imageCacheContextKey);
+                }
                 std::fprintf(stderr,
-                             "JBR_SKIA_INTEROP_IMAGE_CACHE_CLEAR backend=native contextId=%p cleared=%d\n",
+                             "JBR_SKIA_INTEROP_IMAGE_CACHE_CLEAR backend=native contextId=%p cleared=%d shaderDescriptorsCleared=%d\n",
                              imageCacheContextKey,
-                             cleared);
+                             cleared,
+                             clearedShaders);
                 break;
             }
             case COMMAND_EVICT_IMAGE_CACHE_KEY: {
