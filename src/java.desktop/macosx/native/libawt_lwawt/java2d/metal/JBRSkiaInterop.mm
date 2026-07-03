@@ -1519,6 +1519,19 @@ static int clearShaderCacheForContext(void* contextKey) {
     return cleared;
 }
 
+static int clearEffectCacheForContext(void* contextKey) {
+    int cleared = 0;
+    for (auto it = gColorFiltersByKey.begin(); it != gColorFiltersByKey.end();) {
+        if (it->first.context == contextKey) {
+            it = gColorFiltersByKey.erase(it);
+            cleared++;
+        } else {
+            ++it;
+        }
+    }
+    return cleared;
+}
+
 static bool appendUtf8CodePoint(std::string& text, uint32_t codePoint) {
     if (codePoint <= 0x7f) {
         text.push_back(static_cast<char>(codePoint));
@@ -1931,11 +1944,17 @@ static bool drawCommandList(SkCanvas* canvas,
                     std::lock_guard<std::mutex> lock(gShaderCacheMutex);
                     clearedShaders = clearShaderCacheForContext(imageCacheContextKey);
                 }
+                int clearedEffects;
+                {
+                    std::lock_guard<std::mutex> lock(gColorFilterCacheMutex);
+                    clearedEffects = clearEffectCacheForContext(imageCacheContextKey);
+                }
                 std::fprintf(stderr,
-                             "JBR_SKIA_INTEROP_IMAGE_CACHE_CLEAR backend=native contextId=%p cleared=%d shaderDescriptorsCleared=%d\n",
+                             "JBR_SKIA_INTEROP_IMAGE_CACHE_CLEAR backend=native contextId=%p cleared=%d shaderDescriptorsCleared=%d effectDescriptorsCleared=%d\n",
                              imageCacheContextKey,
                              cleared,
-                             clearedShaders);
+                             clearedShaders,
+                             clearedEffects);
                 break;
             }
             case COMMAND_EVICT_IMAGE_CACHE_KEY: {
