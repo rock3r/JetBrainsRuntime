@@ -5,6 +5,20 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest IDE Plugin Benchmarks
 
+- 2026-07-05 reran the IDE perf confirmation from a local terminal with a 30-second disconnect window before
+  preflight, producing fresh powermetrics-backed evidence at
+  `/Users/seb/src/jbr-skia-zero-copy/magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260705-113005/suite.tsv`.
+  Preflight was clean after Screen Sharing was disconnected (`load_1=3.27`, `top_cpu=11.7`,
+  `powermetrics_sudo_cached=true`, `preflight_ready=true`). Both normal and strict analysis passed:
+  `REQUIRE_COMMAND_CLEAN=true REQUIRE_VISUAL_PROBES=true REQUIRE_POWERMETRICS=true
+  ./scripts/analyze-jewel-ide-plugin-benchmark-suite.sh ...` reported `rows=3`, `command-clean rows=3/3`,
+  `visual-proof rows=3/3`, and `powermetrics rows=3/3`. The command path stayed off picture replay and reported
+  no fallback rows. `redraw` had `new_command_frames=690`, `avg_total_ms=1.488`, old/new CPU `112.54 -> 95.56`,
+  GPU power `58 -> 67` mW, GPU active `18.81 -> 21.52`, and hottest-core residency `CPU0 38.54 -> CPU1 84.15`.
+  `hypnotoad` had `new_command_frames=18256`, `avg_total_ms=1.305`, old/new CPU `188.21 -> 199.51`, GPU power
+  `675 -> 520` mW, GPU active `89.21 -> 94.03`, and hottest-core residency `CPU2 43.62 -> CPU0 66.75`. `chat`
+  had `new_command_frames=3408`, `avg_total_ms=1.469`, old/new CPU `106.08 -> 141.59`, GPU power `119 -> 136` mW,
+  GPU active `29.20 -> 36.20`, and hottest-core residency `CPU1 45.10 -> CPU0 43.98`.
 - 2026-07-05 re-audited the current local completion bundle after the broad command-probe hardening work. The status
   helper selected standalone coverage
   `/Users/seb/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260701-161913/suite.tsv`
