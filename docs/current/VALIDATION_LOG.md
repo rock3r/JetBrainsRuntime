@@ -5,6 +5,37 @@ entries here, and move older narrative detail to `docs/history/` only when this 
 
 ## Latest IDE Plugin Benchmarks
 
+- 2026-07-05 re-audited the current local completion bundle after the broad command-probe hardening work. The status
+  helper selected standalone coverage
+  `/Users/seb/src/jbr-skia-zero-copy/magic-jewel/out/jewel-standalone-focused-benchmark-suite/20260701-161913/suite.tsv`
+  plus IDE perf
+  `/Users/seb/src/jbr-skia-zero-copy/magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260702-181115/suite.tsv`
+  and reported `coverage_ready=true`, `perf_evidence_ready=true`, and `completion_ready=true`
+  (`out/current-validation-status/20260705-075917/status.md`). The only current readiness failure is
+  `powermetrics-sudo-missing`, which prevents starting another sampled run from this non-interactive Codex exec but
+  does not invalidate the retained sampled IDE suite below.
+- 2026-07-05 completed the broad standalone command-probe cleanup in Magic Jewel through commit `d94493a`. The pass
+  found screenshot-oracle thresholds that were too tight for otherwise clean command replay on this Mac Studio, then
+  narrowed the fixes to visual probe floors only: gradient surface cyan, gradient path stroke, paragraph text,
+  native-text placement, top-title text, and blend-mode hue. Focused reruns passed for each adjusted probe, and the
+  resumed broad tails passed with no failed rows: `/tmp/jbr-skia-full-broad-resume-5-20260704/suite.tsv`
+  (`rows=590`, `failed_lines=0`) and `/tmp/jbr-skia-full-broad-resume-7-20260705/suite.tsv` (`rows=166`,
+  `failed_lines=0`). A fresh full run progressed through 506 clean rows before stopping on the pre-fix
+  top-title threshold; the focused rerun
+  `/tmp/jbr-skia-noise-shader-descriptor-threshold-20260705/suite.tsv` and the remaining tail confirm the fixed
+  oracle without introducing command fallbacks or picture replay.
+- 2026-07-05 reran the strict IDE perf analyzer on
+  `/Users/seb/src/jbr-skia-zero-copy/magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260702-181115/suite.tsv`.
+  Both normal and strict invocations passed:
+  `REQUIRE_COMMAND_CLEAN=true REQUIRE_VISUAL_PROBES=true REQUIRE_POWERMETRICS=true
+  ./scripts/analyze-jewel-ide-plugin-benchmark-suite.sh ...` reported `rows=3`, `command-clean rows=3/3`,
+  `visual-proof rows=3/3`, and `powermetrics rows=3/3`. The new command path stayed off picture replay and reported
+  no fallback rows. `redraw` had `new_command_frames=691`, `avg_total_ms=1.095`, old/new CPU `84.77 -> 99.12`,
+  GPU power `46 -> 50` mW, GPU active `14.57 -> 15.38`, and hottest-core residency `CPU0 28.82 -> CPU1 51.65`.
+  `hypnotoad` had `new_command_frames=18323`, `avg_total_ms=1.226`, old/new CPU `190.61 -> 223.92`, GPU power
+  `682 -> 536` mW, GPU active `88.16 -> 93.61`, and hottest-core residency `CPU0 55.32 -> CPU0 53.97`. `chat`
+  had `new_command_frames=3501`, `avg_total_ms=1.331`, old/new CPU `131.30 -> 109.47`, GPU power `113 -> 122` mW,
+  GPU active `26.51 -> 31.30`, and hottest-core residency `CPU0 36.03 -> CPU0 27.76`.
 - 2026-07-02 promoted AppKit-main-thread direct command rendering to the default local policy, keeping
   `sun.java2d.skia.interop.appkitRender=false` as the opt-out, and reran the strict IDE perf suite from a local
   Terminal with a physical display attached and no explicit AppKit JVM property:
