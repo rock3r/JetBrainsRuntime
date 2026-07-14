@@ -39,7 +39,7 @@ public abstract class JBRSkia {
     public static final int ABI_ID = Integer.parseInt("111");
     public static final int NATIVE_ABI_VERSION = Integer.parseInt("5");
     public static final String SKIA_REVISION = "m147-" + "64a2414108";
-    public static final String SKIA_FLAGS_HASH = "macos-release-metal-poc:" + Integer.parseInt("1");
+    public static final String SKIA_FLAGS_HASH = platformFlagsHash();
     public static final String BUILD_ID = buildId();
     public static final int COMMAND_STREAM_MAGIC = Integer.parseInt("1246972723");
     public static final int COMMAND_STREAM_HEADER_SIZE = Integer.parseInt("6");
@@ -381,6 +381,19 @@ public abstract class JBRSkia {
                 + ";native=" + NATIVE_ABI_VERSION;
     }
 
+    /**
+     * The flags hash identifies the enabled native backend build; it must
+     * stay in lockstep with the native BUILD_ID of the backend that
+     * {@code loadNativeBridge} loads on this platform.
+     */
+    private static String platformFlagsHash() {
+        String os = System.getProperty("os.name", "").toLowerCase(java.util.Locale.ROOT);
+        String platform = os.contains("win")
+                ? "windows-release-d3d-poc:"
+                : "macos-release-metal-poc:";
+        return platform + Integer.parseInt("1");
+    }
+
     public abstract int getCommandCapabilities();
 
     public abstract long getCommandCapabilities64();
@@ -405,6 +418,7 @@ public abstract class JBRSkia {
 
     public abstract static class ScopedSkiaCanvas implements AutoCloseable {
         public static final int BACKEND_METAL = Integer.parseInt("1");
+        public static final int BACKEND_DIRECT3D = Integer.parseInt("2");
 
         public abstract long getScopeId();
 
@@ -419,6 +433,15 @@ public abstract class JBRSkia {
         public abstract long getDirectContextPtr();
 
         public abstract long getMetalTexturePtr();
+
+        /**
+         * Backend-neutral surface handle: the Metal texture pointer on
+         * {@link #BACKEND_METAL}, the shareable consumer texture pointer on
+         * {@link #BACKEND_DIRECT3D}.
+         */
+        public long getBackendSurfaceHandle() {
+            return getMetalTexturePtr();
+        }
 
         public abstract int getPixelFormat();
 

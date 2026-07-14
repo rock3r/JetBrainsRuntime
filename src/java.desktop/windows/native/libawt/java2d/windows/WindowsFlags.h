@@ -28,11 +28,13 @@
 
 extern BOOL      useD3D;             // d3d enabled flag
 extern BOOL      forceD3DUsage;      // force d3d on or off
+extern BOOL      useD3D9Ex;          // create the d3d device via Direct3D 9Ex
 extern BOOL      setHighDPIAware;    // whether to set High DPI Aware flag on Vista
 
 void SetD3DEnabledFlag(JNIEnv *env, BOOL d3dEnabled, BOOL d3dSet);
 
 BOOL IsD3DEnabled();
 BOOL IsD3DForced();
+BOOL IsD3D9ExEnabled();
 
 #endif // WINDOWSFLAGS_H

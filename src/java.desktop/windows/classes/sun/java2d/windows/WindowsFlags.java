@@ -89,6 +89,7 @@ public final class WindowsFlags {
     private static boolean d3dEnabled;
     private static boolean d3dVerbose;
     private static boolean d3dSet;
+    private static boolean d3d9ExEnabled;
     private static boolean d3dOnScreenEnabled;
     private static boolean oglEnabled;
     private static boolean oglVerbose;
@@ -177,6 +178,10 @@ public final class WindowsFlags {
             false);
         d3dOnScreenEnabled =
             getBooleanProp("sun.java2d.d3d.onscreen", d3dEnabled);
+        // Experimental: create the Direct3D pipeline device via Direct3D 9Ex.
+        // Required for opening shared texture handles (SharedTextures API).
+        d3d9ExEnabled = d3dEnabled &&
+            getBooleanProp("sun.java2d.d3d9ex", false);
         oglEnabled = getBooleanProp("sun.java2d.opengl", false);
         if (oglEnabled) {
             oglVerbose = isBooleanPropTrueVerbose("sun.java2d.opengl");
@@ -244,6 +249,10 @@ public final class WindowsFlags {
 
     public static boolean isD3DOnScreenEnabled() {
         return d3dOnScreenEnabled;
+    }
+
+    public static boolean isD3D9ExEnabled() {
+        return d3d9ExEnabled;
     }
 
     public static boolean isD3DVerbose() {

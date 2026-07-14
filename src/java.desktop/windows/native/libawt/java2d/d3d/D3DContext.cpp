@@ -612,6 +612,24 @@ D3DContext::ConfigureContext(D3DPRESENT_PARAMETERS *pNewParams)
         // dwBehaviorFlags |= D3DCREATE_NOWINDOWCHANGES;
         J2dRlsTrace(J2D_TRACE_VERBOSE,"\n");
 
+        D3DPipelineManager *pMgr = D3DPipelineManager::GetInstance();
+        if (pMgr != NULL && pMgr->IsD3D9Ex()) {
+            // 9Ex mode: the device must be created via CreateDeviceEx for
+            // shared-handle support; IDirect3DDevice9Ex inherits
+            // IDirect3DDevice9 so the rest of the pipeline is unaffected.
+            IDirect3DDevice9Ex *pd3dDeviceEx = NULL;
+            if (FAILED(res = pMgr->GetD3DExObject()->
+                    CreateDeviceEx(adapterOrdinal, devType, focusHWND,
+                                   dwBehaviorFlags, pNewParams, NULL,
+                                   &pd3dDeviceEx)))
+            {
+                DebugPrintD3DError(res,
+                    "D3DContext::ConfigureContext: error creating "\
+                    "d3d 9Ex device");
+                return res;
+            }
+            pd3dDevice = pd3dDeviceEx;
+        } else
         if (FAILED(res = pd3dObject->CreateDevice(adapterOrdinal, devType,
                                                   focusHWND,
                                                   dwBehaviorFlags,

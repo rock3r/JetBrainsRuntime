@@ -96,6 +96,14 @@ public:
                              { Init(pRes, NULL); }
                          D3DResource(IDirect3DSwapChain9 *pSC)
                              { Init(NULL, pSC); }
+    // Swap chain with an explicit persistent content surface used as the
+    // rendering target (9Ex FLIPEX mode: the flip backbuffer contents are
+    // undefined after Present, so rendering accumulates in pContent and is
+    // copied to the backbuffer at present time). Takes ownership of the
+    // pContent reference.
+                         D3DResource(IDirect3DSwapChain9 *pSC,
+                                     IDirect3DSurface9 *pContent)
+                             { Init(NULL, pSC, pContent); }
     IDirect3DResource9*  GetResource() { return pResource; }
     IDirect3DTexture9*   GetTexture() { return pTexture; }
     IDirect3DSurface9*   GetSurface() { return pSurface; }
@@ -110,7 +118,8 @@ protected:
     // ResourceManager
 virtual                 ~D3DResource();
 virtual void             Release();
-    void                 Init(IDirect3DResource9*, IDirect3DSwapChain9*);
+    void                 Init(IDirect3DResource9*, IDirect3DSwapChain9*,
+                              IDirect3DSurface9* pContent = NULL);
 
 private:
     // prevents accidental bad things like copying the object

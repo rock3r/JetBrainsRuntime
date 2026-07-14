@@ -85,6 +85,7 @@ D3DPipelineManager * D3DPipelineManager::GetInstance(void)
 D3DPipelineManager::D3DPipelineManager(void)
 {
     pd3d9 = NULL;
+    pd3d9Ex = NULL;
     hLibD3D9 = NULL;
     pAdapters = NULL;
     adapterCount = 0;
@@ -105,6 +106,8 @@ HRESULT D3DPipelineManager::ReleaseD3D(void)
 
     ReleaseAdapters();
 
+    // pd3d9Ex, when set, aliases pd3d9 (single reference)
+    pd3d9Ex = NULL;
     SAFE_RELEASE(pd3d9);
 
     if (hLibD3D9 != NULL) {
@@ -127,16 +130,43 @@ HRESULT D3DPipelineManager::InitD3D(void)
         return E_FAIL;
     }
 
-    FnDirect3DCreate9 *d3dcreate9 = NULL;
-    d3dcreate9 = (FnDirect3DCreate9*)
-        ::GetProcAddress(hLibD3D9, "Direct3DCreate9");
-    if (d3dcreate9 == NULL) {
-        J2dRlsTraceLn(J2D_TRACE_ERROR, "InitD3D: no Direct3DCreate9");
-        ::FreeLibrary(hLibD3D9);
-        return E_FAIL;
+    // Experimental 9Ex mode (sun.java2d.d3d9ex): required for opening
+    // shared texture handles (SharedTextures interop). IDirect3D9Ex
+    // inherits IDirect3D9, so the rest of the pipeline is unaffected;
+    // device creation and the managed-pool substitution are handled at
+    // their respective sites based on IsD3D9Ex().
+    if (IsD3D9ExEnabled()) {
+        typedef HRESULT WINAPI FnDirect3DCreate9Ex(UINT SDKVersion,
+                                                   IDirect3D9Ex **ppD3D);
+        FnDirect3DCreate9Ex *d3dcreate9ex = (FnDirect3DCreate9Ex*)
+            ::GetProcAddress(hLibD3D9, "Direct3DCreate9Ex");
+        if (d3dcreate9ex != NULL &&
+            SUCCEEDED(d3dcreate9ex(D3D_SDK_VERSION, &pd3d9Ex)) &&
+            pd3d9Ex != NULL)
+        {
+            J2dRlsTraceLn(J2D_TRACE_INFO,
+                "InitD3D: created IDirect3D9Ex object (9Ex mode)");
+            pd3d9 = pd3d9Ex; // alias: one reference, released via pd3d9
+        } else {
+            J2dRlsTraceLn(J2D_TRACE_WARNING,
+                "InitD3D: Direct3DCreate9Ex unavailable/failed, "\
+                "falling back to Direct3DCreate9");
+            pd3d9Ex = NULL;
+        }
     }
 
-    pd3d9 = d3dcreate9(D3D_SDK_VERSION);
+    if (pd3d9 == NULL) {
+        FnDirect3DCreate9 *d3dcreate9 = NULL;
+        d3dcreate9 = (FnDirect3DCreate9*)
+            ::GetProcAddress(hLibD3D9, "Direct3DCreate9");
+        if (d3dcreate9 == NULL) {
+            J2dRlsTraceLn(J2D_TRACE_ERROR, "InitD3D: no Direct3DCreate9");
+            ::FreeLibrary(hLibD3D9);
+            return E_FAIL;
+        }
+
+        pd3d9 = d3dcreate9(D3D_SDK_VERSION);
+    }
     if (pd3d9 == NULL) {
         J2dRlsTraceLn(J2D_TRACE_ERROR,
             "InitD3D: unable to create IDirect3D9 object");

@@ -72,6 +72,10 @@ public:
     HWND SetFSFocusWindow(UINT, HWND);
 
     LPDIRECT3D9 GetD3DObject() { return pd3d9; }
+    // non-NULL only when the pipeline runs on Direct3D 9Ex
+    // (requested via sun.java2d.d3d9ex and supported by the OS)
+    IDirect3D9Ex* GetD3DExObject() { return pd3d9Ex; }
+    BOOL IsD3D9Ex() { return pd3d9Ex != NULL; }
     D3DDEVTYPE GetDeviceType() { return devType; }
 
     // returns the d3d adapter ordinal given GDI screen number:
@@ -121,6 +125,9 @@ private:
     UINT adapterCount;
     // Pointer to Direct3D9 Object mainained by the pipeline manager
     LPDIRECT3D9 pd3d9;
+    // Direct3D 9Ex interface of pd3d9 when running in 9Ex mode, NULL otherwise.
+    // Not a separate reference: released via pd3d9 alias handling in ReleaseD3D.
+    IDirect3D9Ex* pd3d9Ex;
     // d3d9.dll lib
     HINSTANCE hLibD3D9;
 

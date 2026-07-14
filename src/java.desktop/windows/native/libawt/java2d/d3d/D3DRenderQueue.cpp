@@ -68,9 +68,8 @@ D3DRQ_SwapBuffers(D3DPipelineManager *pMgr, D3DSDOps *d3dsdo,
     IDirect3DSwapChain9 *pSwapChain;
     RECT srcRect, dstRect, *pSrcRect, *pDstRect;
 
-    J2dTraceLn(J2D_TRACE_INFO, "D3DRQ_SwapBuffers");
-    J2dTraceLn(J2D_TRACE_VERBOSE, "  x1=%d y1=%d x2=%d y2=%d",
-               x1, y1, x2, y2);
+    J2dRlsTraceLn(J2D_TRACE_INFO, "D3DRQ_SwapBuffers x1=%d y1=%d x2=%d y2=%d",
+                  x1, y1, x2, y2);
 
     RETURN_STATUS_IF_NULL(pMgr, E_FAIL);
     RETURN_STATUS_IF_NULL(d3dsdo, E_FAIL);
@@ -90,6 +89,10 @@ D3DRQ_SwapBuffers(D3DPipelineManager *pMgr, D3DSDOps *d3dsdo,
 
     pCtx->EndScene();
 
+    D3DPRESENT_PARAMETERS scParams;
+    pSwapChain->GetPresentParameters(&scParams);
+    BOOL isFlipEx = (scParams.SwapEffect == D3DSWAPEFFECT_FLIPEX);
+
     // This is a workaround for what apparently is a DWM bug.
     // If the dimensions of the back-buffer don't match the dimensions of
     // the window, Present() will flash the whole window with black.
@@ -97,19 +100,24 @@ D3DRQ_SwapBuffers(D3DPipelineManager *pMgr, D3DSDOps *d3dsdo,
     // It is ok to do so since a repaint event is coming due to the resize that
     // just happened.
     //
-    // REMIND: this will need to be updated if we switch to creating
-    // back-buffers of the size of the client area instead of the whole window
-    // (use GetClientRect() instead of GetWindowRect()).
+    // For FLIPEX chains the backbuffer is client-area-sized, so the client
+    // rect is the one that must match.
     if (DWMIsCompositionEnabled()) {
         RECT r;
         D3DPRESENT_PARAMETERS params;
 
         pSwapChain->GetPresentParameters(&params);
-        GetWindowRect(params.hDeviceWindow, &r);
+        if (isFlipEx) {
+            RECT cr = { 0, 0, 0, 0 };
+            GetClientRect(params.hDeviceWindow, &cr);
+            r = cr;
+        } else {
+            GetWindowRect(params.hDeviceWindow, &r);
+        }
         int ww = r.right - r.left;
         int wh = r.bottom - r.top;
         if (ww != params.BackBufferWidth || wh != params.BackBufferHeight) {
-            J2dTraceLn(J2D_TRACE_WARNING,
+            J2dRlsTraceLn(J2D_TRACE_WARNING,
                        "D3DRQ_SwapBuffers: surface/window dimensions mismatch: "\
                        "win: w=%d h=%d, bb: w=%d h=%d",
                        ww, wh, params.BackBufferWidth, params.BackBufferHeight);
@@ -124,6 +132,40 @@ D3DRQ_SwapBuffers(D3DPipelineManager *pMgr, D3DSDOps *d3dsdo,
 
             return S_OK;
         }
+    }
+
+    if (isFlipEx) {
+        // Flip-model present: copy the client-area region of the persistent
+        // content surface into the flip backbuffer and present it whole
+        // (FLIPEX does not support partial presents and leaves backbuffer
+        // contents undefined after Present).
+        IDirect3DSurface9 *pBB = NULL;
+        res = pSwapChain->GetBackBuffer(0, D3DBACKBUFFER_TYPE_MONO, &pBB);
+        if (SUCCEEDED(res)) {
+            RECT srcR = { -d3dsdo->xoff, -d3dsdo->yoff,
+                          -d3dsdo->xoff + (LONG)scParams.BackBufferWidth,
+                          -d3dsdo->yoff + (LONG)scParams.BackBufferHeight };
+            if (srcR.right > d3dsdo->width)  srcR.right = d3dsdo->width;
+            if (srcR.bottom > d3dsdo->height) srcR.bottom = d3dsdo->height;
+            RECT dstR = { 0, 0, srcR.right - srcR.left,
+                          srcR.bottom - srcR.top };
+            if (dstR.right > 0 && dstR.bottom > 0) {
+                res = pCtx->Get3DDevice()->
+                    StretchRect(d3dsdo->pResource->GetSurface(), &srcR,
+                                pBB, &dstR, D3DTEXF_NONE);
+            }
+            pBB->Release();
+        }
+        if (SUCCEEDED(res)) {
+            res = pSwapChain->Present(NULL, NULL, 0, NULL, 0);
+        }
+        J2dRlsTraceLn(J2D_TRACE_INFO,
+                      "D3DRQ_SwapBuffers: FLIPEX Present hr=0x%08x bb=%dx%d "\
+                      "off=(%d,%d)",
+                      res, scParams.BackBufferWidth, scParams.BackBufferHeight,
+                      d3dsdo->xoff, d3dsdo->yoff);
+        res = D3DRQ_MarkLostIfNeeded(res, d3dsdo);
+        return res;
     }
 
     if (d3dsdo->swapEffect == D3DSWAPEFFECT_COPY) {
@@ -167,6 +209,13 @@ D3DRQ_SwapBuffers(D3DPipelineManager *pMgr, D3DSDOps *d3dsdo,
     }
 
     res = pSwapChain->Present(pSrcRect, pDstRect, 0, NULL, 0);
+    J2dRlsTraceLn(J2D_TRACE_INFO,
+                  "D3DRQ_SwapBuffers: Present hr=0x%08x swapEffect=%d "\
+                  "src=(%d,%d,%d,%d) off=(%d,%d)",
+                  res, d3dsdo->swapEffect,
+                  pSrcRect ? pSrcRect->left : -1, pSrcRect ? pSrcRect->top : -1,
+                  pSrcRect ? pSrcRect->right : -1, pSrcRect ? pSrcRect->bottom : -1,
+                  d3dsdo->xoff, d3dsdo->yoff);
     if (enablePresentStatistic) {
         if (FAILED(res)) {
             lastFramePresented = 0;

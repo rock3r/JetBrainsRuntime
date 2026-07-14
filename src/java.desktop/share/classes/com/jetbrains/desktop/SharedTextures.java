@@ -33,6 +33,15 @@ import java.awt.*;
 public abstract class SharedTextures {
     public final static int UNDEFINED_TEXTURE_TYPE = 0;
     public final static int METAL_TEXTURE_TYPE = 1;
+    /**
+     * Windows / Direct3D 9Ex pipeline. The {@code texture} value passed to
+     * {@link #wrapTexture} is a pointer to an {@code ID3D11Texture2D} created
+     * with {@code D3D11_RESOURCE_MISC_SHARED} on the same adapter as the
+     * Java2D device; the pipeline opens its shared handle on the Java2D
+     * Direct3D 9Ex device. Requires {@code -Dsun.java2d.d3d=true} and
+     * {@code -Dsun.java2d.d3d9ex=true}.
+     */
+    public final static int D3D9EX_SHARED_HANDLE_TEXTURE_TYPE = 2;
 
     public abstract int getTextureType();
 

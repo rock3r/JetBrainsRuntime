@@ -26,10 +26,12 @@
 #include "D3DResourceManager.h"
 #include "awt.h"
 #include "D3DPaints.h"
+#include "D3DPipelineManager.h"
 #include "D3DTextRenderer.h"
 
 void
-D3DResource::Init(IDirect3DResource9 *pRes, IDirect3DSwapChain9 *pSC)
+D3DResource::Init(IDirect3DResource9 *pRes, IDirect3DSwapChain9 *pSC,
+                  IDirect3DSurface9 *pContent)
 {
     J2dTraceLn(J2D_TRACE_INFO, "D3DResource::Init");
 
@@ -40,6 +42,17 @@ D3DResource::Init(IDirect3DResource9 *pRes, IDirect3DSwapChain9 *pSC)
     pOps       = NULL;
     ZeroMemory(&desc, sizeof(desc));
     desc.Format = D3DFMT_UNKNOWN;
+
+    if (pSC != NULL && pContent != NULL) {
+        // 9Ex FLIPEX chain: render into the persistent content surface
+        // (ownership of the reference is transferred to this resource);
+        // the backbuffer is only touched at present time.
+        pSurface = pContent;
+        pSurface->GetDesc(&desc);
+        SAFE_PRINTLN(pSurface);
+        SAFE_PRINTLN(pSwapChain);
+        return;
+    }
 
     if (pRes != NULL) {
         pResource = pRes;
@@ -296,6 +309,17 @@ D3DResourceManager::CreateTexture(UINT width, UINT height,
             pool = pCtx->IsHWRasterizer() ?
                 D3DPOOL_MANAGED : D3DPOOL_SYSTEMMEM;
         }
+        // Direct3D 9Ex devices do not support the managed pool; use the
+        // standard 9Ex substitution of a dynamic default-pool texture.
+        if (pool == D3DPOOL_MANAGED) {
+            D3DPipelineManager *pMgr = D3DPipelineManager::GetInstance();
+            if (pMgr != NULL && pMgr->IsD3D9Ex()) {
+                pool = D3DPOOL_DEFAULT;
+                if (pCtx->IsDynamicTextureSupported()) {
+                    dwUsage |= D3DUSAGE_DYNAMIC;
+                }
+            }
+        }
     }
 
     if (pCtx->IsPow2TexturesOnly()) {
@@ -468,6 +492,17 @@ D3DResourceManager::CreateSwapChain(HWND hWnd, UINT numBuffers,
         }
         res = pd3dDevice->GetSwapChain(0, &pSwapChain);
     } else {
+        // In 9Ex mode use a flip-model (FLIPEX) chain: windowed blt-model
+        // presents can be silently dropped (persistent S_PRESENT_OCCLUDED
+        // on some Windows 11 / driver combinations). Rendering goes into a
+        // persistent window-sized content surface; the client-area-sized
+        // flip backbuffer is filled at present time (see D3DRQ_SwapBuffers).
+        BOOL useFlipEx = FALSE;
+        {
+            D3DPipelineManager *pMgrEx = D3DPipelineManager::GetInstance();
+            useFlipEx = (pMgrEx != NULL && pMgrEx->IsD3D9Ex());
+        }
+
         ZeroMemory(&newParams, sizeof(D3DPRESENT_PARAMETERS));
         newParams.BackBufferWidth = width;
         newParams.BackBufferHeight = height;
@@ -477,7 +512,49 @@ D3DResourceManager::CreateSwapChain(HWND hWnd, UINT numBuffers,
         newParams.SwapEffect = swapEffect;
         newParams.PresentationInterval = presentationInterval;
 
+        if (useFlipEx) {
+            RECT cr = { 0, 0, (LONG)width, (LONG)height };
+            GetClientRect(hWnd, &cr);
+            if (cr.right > 0 && cr.bottom > 0) {
+                newParams.BackBufferWidth = cr.right;
+                newParams.BackBufferHeight = cr.bottom;
+            }
+            newParams.SwapEffect = D3DSWAPEFFECT_FLIPEX;
+            if (newParams.BackBufferCount < 2) {
+                newParams.BackBufferCount = 2;
+            }
+        }
+
         res = pd3dDevice->CreateAdditionalSwapChain(&newParams, &pSwapChain);
+
+        if (SUCCEEDED(res) && useFlipEx) {
+            D3DSURFACE_DESC bbDesc;
+            IDirect3DSurface9 *pBB = NULL;
+            IDirect3DSurface9 *pContent = NULL;
+            res = pSwapChain->GetBackBuffer(0, D3DBACKBUFFER_TYPE_MONO, &pBB);
+            if (SUCCEEDED(res)) {
+                pBB->GetDesc(&bbDesc);
+                pBB->Release();
+                res = pd3dDevice->CreateRenderTarget(width, height,
+                                                     bbDesc.Format,
+                                                     D3DMULTISAMPLE_NONE, 0,
+                                                     FALSE /*lockable*/,
+                                                     &pContent, NULL);
+            }
+            if (FAILED(res)) {
+                DebugPrintD3DError(res,
+                    "D3DRM::CreateSwapChain: content surface failed");
+                pSwapChain->Release();
+                *ppSwapChainResource = NULL;
+                return res;
+            }
+            J2dRlsTraceLn(J2D_TRACE_INFO,
+                "D3DRM::CreateSwapChain: FLIPEX chain %dx%d + content %dx%d",
+                newParams.BackBufferWidth, newParams.BackBufferHeight,
+                width, height);
+            *ppSwapChainResource = new D3DResource(pSwapChain, pContent);
+            return AddResource(*ppSwapChainResource);
+        }
     }
 
     if (SUCCEEDED(res)) {

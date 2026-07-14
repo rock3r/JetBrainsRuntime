@@ -269,6 +269,31 @@ public class D3DSurfaceData extends SurfaceData implements AccelSurface {
         D3DRenderQueue.setPresentStatistic(frameStatisticEnabled ? 1 : 0);
     }
 
+    /**
+     * Constructor for subclasses that wrap an externally provided native
+     * resource (see {@code D3DTextureWrapperSurfaceData}). Does NOT create
+     * a native surface: the caller is responsible for initializing
+     * {@code pResource} of the native ops (on the render queue thread).
+     * Native dimensions are set by that initialization.
+     */
+    protected D3DSurfaceData(D3DGraphicsConfig gc, ColorModel cm, int type) {
+        super(getCustomSurfaceType(type), cm);
+        this.graphicsDevice = gc.getD3DDevice();
+        this.scaleX = type == TEXTURE ? 1 : graphicsDevice.getDefaultScaleX();
+        this.scaleY = type == TEXTURE ? 1 : graphicsDevice.getDefaultScaleY();
+        this.peer = null;
+        this.type = type;
+        this.width = 0;
+        this.height = 0;
+        this.offscreenImage = null;
+        this.backBuffersNum = 0;
+        this.swapEffect = SWAP_DISCARD;
+        this.syncType = VSYNC_DEFAULT;
+
+        initOps(graphicsDevice.getScreen(), 0, 0);
+        setBlitProxyCache(gc.getSurfaceDataProxyCache());
+    }
+
     @Override
     public double getDefaultScaleX() {
         return scaleX;
