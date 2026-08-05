@@ -48,8 +48,10 @@ public class FramePacingTest {
     public static void main(String[] args) throws Exception {
         FramePacing service = FramePacingTestUtil.createPlatformService();
 
-        Asserts.assertEquals(service.getQuality(), FramePacing.QUALITY_ESTIMATED,
-                "shared backend must report ESTIMATED quality");
+        int quality = service.getQuality();
+        Asserts.assertTrue(quality >= FramePacing.QUALITY_ESTIMATED
+                        && quality <= FramePacing.QUALITY_DISPLAY_LINK,
+                "headed service must report a usable quality tier, got " + quality);
 
         GraphicsConfiguration gc = GraphicsEnvironment.getLocalGraphicsEnvironment()
                 .getDefaultScreenDevice()

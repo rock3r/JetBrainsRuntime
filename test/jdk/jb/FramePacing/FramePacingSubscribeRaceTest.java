@@ -43,13 +43,15 @@ import java.util.function.BooleanSupplier;
  * set, the tick thread has already emptied the listener list, and subscribe()
  * must not read that emptiness as "no clock is running yet", or it starts a
  * second tick thread alongside the first. Both states are planted directly
- * rather than raced for, so the test is deterministic.
+ * rather than raced for, so the test is deterministic. The raced logic is
+ * backend-independent, so the test pins the shared timer backend, whose
+ * tick threads are observable by name; native tick sources are not.
  * @key headful
  * @library /test/lib
  * @compile --add-exports java.desktop/sun.awt=ALL-UNNAMED
  * --add-exports java.base/com.jetbrains.exported=ALL-UNNAMED
  * FramePacingTestUtil.java FramePacingSubscribeRaceTest.java
- * @run main/othervm
+ * @run main/othervm -Djbr.framePacing.forceEstimated=true
  * --add-exports java.desktop/sun.awt=ALL-UNNAMED
  * --add-exports java.base/com.jetbrains.exported=ALL-UNNAMED
  * --add-opens java.desktop/sun.awt=ALL-UNNAMED
@@ -168,16 +170,29 @@ public class FramePacingSubscribeRaceTest {
     }
 
     private static void setStopped(Object clock, boolean value) throws Exception {
-        Field field = clock.getClass().getDeclaredField("stopped");
-        field.setAccessible(true);
-        field.setBoolean(clock, value);
+        findField(clock, "stopped").setBoolean(clock, value);
     }
 
     @SuppressWarnings("unchecked")
     private static List<Object> listenerRefs(Object clock) throws Exception {
-        Field field = clock.getClass().getDeclaredField("listenerRefs");
-        field.setAccessible(true);
-        return (List<Object>) field.get(clock);
+        return (List<Object>) findField(clock, "listenerRefs").get(clock);
+    }
+
+    /**
+     * The registered clock may be a platform subclass of the shared clock
+     * (native backends), so the field is looked up along the class hierarchy.
+     */
+    private static Field findField(Object obj, String name) throws NoSuchFieldException {
+        for (Class<?> c = obj.getClass(); c != null; c = c.getSuperclass()) {
+            try {
+                Field field = c.getDeclaredField(name);
+                field.setAccessible(true);
+                return field;
+            } catch (NoSuchFieldException ignored) {
+                // Declared further up the hierarchy.
+            }
+        }
+        throw new NoSuchFieldException(name);
     }
 
     private static boolean await(BooleanSupplier condition) throws InterruptedException {

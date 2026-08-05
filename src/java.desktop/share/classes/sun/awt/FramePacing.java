@@ -70,6 +70,10 @@ public abstract class FramePacing {
     private static final boolean TRACE = Boolean.getBoolean("jbr.framePacing.trace");
     private static final PlatformLogger LOGGER = PlatformLogger.getLogger("JBR-FramePacing");
 
+    /** Debug escape: forces the shared timer backend even where a native clock exists. */
+    protected static final boolean FORCE_ESTIMATED =
+            Boolean.getBoolean("jbr.framePacing.forceEstimated");
+
     private final Map<Long, DisplayClock> clocks = new HashMap<>();
 
     protected FramePacing() {
@@ -87,8 +91,22 @@ public abstract class FramePacing {
      */
     protected abstract long deviceId(GraphicsDevice device);
 
+    /**
+     * Backend quality tier. The shared timer backend reports ESTIMATED;
+     * platform services override when a native clock is available.
+     */
     public int getQuality() {
         return QUALITY_ESTIMATED;
+    }
+
+    /**
+     * Creates the tick source for a display. The default is the shared timer
+     * clock; platform services override to provide native clocks and are
+     * expected to fall back to the timer when the native source cannot be
+     * created for a given display.
+     */
+    protected DisplayClock createClock(long displayId, long periodNanos) {
+        return new TimerClock(this, displayId, periodNanos);
     }
 
     public long displayId(GraphicsConfiguration gc) {
@@ -126,7 +144,7 @@ public abstract class FramePacing {
             // Replacing the entry is safe: a clock is only ever retired with a
             // value-matching remove, which no longer matches once replaced.
             long period = refreshPeriodNanos(displayId);
-            clock = new DisplayClock(this, displayId, period > 0 ? period : FALLBACK_PERIOD_NANOS);
+            clock = createClock(displayId, period > 0 ? period : FALLBACK_PERIOD_NANOS);
             clocks.put(displayId, clock);
         }
 
@@ -170,6 +188,7 @@ public abstract class FramePacing {
         }
 
         clock.stopped = true;
+        clock.onStop();
         removeClock(clock);
         return true;
     }
@@ -246,27 +265,36 @@ public abstract class FramePacing {
     }
 
     /**
-     * One refcounted tick source per display. The thread starts with the
-     * first listener and exits when the last one is removed or the display
-     * disappears. Hotplug is checked roughly once per second.
+     * One refcounted tick source per display: keeps the listener list, starts
+     * the source with the first listener, stops it with the last or when the
+     * display disappears (checked roughly once per second). Subclasses supply
+     * the tick generation by overriding {@link #onStart()} / {@link #onStop()}
+     * and calling {@link #deliver(long)} once per tick.
      */
-    private static final class DisplayClock implements Runnable {
+    protected abstract static class DisplayClock {
         final long displayId;
+        final FramePacing service;
+        final long periodNanos;
 
-        private final FramePacing service;
-        private final long periodNanos;
         private final long hotplugCheckTicks;
         private final CopyOnWriteArrayList<WeakReference<Listener>> listenerRefs = new CopyOnWriteArrayList<>();
+        private long ticks;
 
-        private volatile boolean stopped;
+        volatile boolean stopped;
         private boolean started;
 
-        DisplayClock(FramePacing service, long displayId, long periodNanos) {
+        protected DisplayClock(FramePacing service, long displayId, long periodNanos) {
             this.service = service;
             this.displayId = displayId;
             this.periodNanos = periodNanos;
             this.hotplugCheckTicks = Math.max(1, 1_000_000_000L / periodNanos);
         }
+
+        /** Starts the tick source. Called with the first listener added. */
+        protected abstract void onStart();
+
+        /** Stops the tick source. Called after {@code stopped} is set. */
+        protected abstract void onStop();
 
         void add(WeakReference<Listener> listenerRef) {
             // Deliberately not "the listener list is empty": the tick thread
@@ -280,11 +308,9 @@ public abstract class FramePacing {
             listenerRefs.add(listenerRef);
 
             if (first) {
-                Thread thread = InnocuousThread.newSystemThread("JBR-FramePacing-" + displayId, this);
-                thread.setDaemon(true);
-                thread.setContextClassLoader(null);
-                thread.start();
-                if (TRACE) trace("clock started display=" + displayId + " period=" + periodNanos + "ns");
+                onStart();
+                if (TRACE) trace("clock started display=" + displayId + " period=" + periodNanos
+                        + "ns impl=" + getClass().getSimpleName());
             }
         }
 
@@ -305,9 +331,66 @@ public abstract class FramePacing {
 
             if (listenerRefs.isEmpty()) {
                 stopped = true;
+                onStop();
+                if (TRACE) trace("clock stopped display=" + displayId);
                 return true;
             }
             return false;
+        }
+
+        /**
+         * Delivers one tick to all listeners and runs the periodic hotplug
+         * check. Tick sources call this once per display refresh; delivery is
+         * skipped after the clock stopped.
+         */
+        protected final void deliver(long timeNanos) {
+            if (stopped) return;
+
+            for (WeakReference<Listener> listenerRef : listenerRefs) {
+                try {
+                    Listener listener = listenerRef.get();
+                    if (listener != null) {
+                        listener.onTick(displayId, timeNanos);
+                    } else {
+                        // Clean up stale references
+                        listenerRefs.remove(listenerRef);
+                    }
+                } catch (Throwable e) {
+                    LOGGER.severe("FramePacing clock listener threw an exception", e);
+                }
+            }
+
+            ticks++;
+            // Only a candidate: this is evaluated without the service
+            // lock, so a subscriber may be arriving right now. retireIfIdle
+            // re-checks under the lock and stops the clock only if none did.
+            if (ticks % hotplugCheckTicks == 0 && !service.isDisplayPresent(displayId) || listenerRefs.isEmpty()) {
+                service.retireIfIdle(this);
+            }
+        }
+    }
+
+    /**
+     * Default ESTIMATED tick source: a daemon thread parked until the next
+     * period boundary. Missed periods are skipped, never queued.
+     */
+    protected static class TimerClock extends DisplayClock implements Runnable {
+
+        protected TimerClock(FramePacing service, long displayId, long periodNanos) {
+            super(service, displayId, periodNanos);
+        }
+
+        @Override
+        protected void onStart() {
+            Thread thread = InnocuousThread.newSystemThread("JBR-FramePacing-" + displayId, this);
+            thread.setDaemon(true);
+            thread.setContextClassLoader(null);
+            thread.start();
+        }
+
+        @Override
+        protected void onStop() {
+            // The thread observes the stopped flag and winds down.
         }
 
         @Override
@@ -318,7 +401,6 @@ public abstract class FramePacing {
             // tick timing is gated by the monotonic-clock comparison, not by
             // park precision (which is only as good as the OS scheduler).
             long deadline = System.nanoTime() + periodNanos;
-            long ticks = 0;
 
             while (!stopped) {
                 long now = System.nanoTime();
@@ -332,29 +414,8 @@ public abstract class FramePacing {
                 // than delivering catch-up bursts.
                 deadline += ((now - deadline) / periodNanos + 1) * periodNanos;
 
-                for (WeakReference<Listener> listenerRef : listenerRefs) {
-                    try {
-                        Listener listener = listenerRef.get();
-                        if (listener != null) {
-                            listener.onTick(displayId, now);
-                        } else {
-                            // Clean up stale references
-                            listenerRefs.remove(listenerRef);
-                        }
-                    } catch (Throwable e) {
-                        LOGGER.severe("FramePacing clock listener threw an exception", e);
-                    }
-                }
-
-                ticks++;
-                // Only a candidate: this is evaluated without the service
-                // lock, so a subscriber may be arriving right now. retireIfIdle
-                // re-checks under the lock and stops the clock only if none did.
-                if (ticks % hotplugCheckTicks == 0 && !service.isDisplayPresent(displayId) || listenerRefs.isEmpty()) {
-                    service.retireIfIdle(this);
-                }
+                deliver(now);
             }
-            if (TRACE) trace("clock stopped display=" + displayId);
         }
     }
 
