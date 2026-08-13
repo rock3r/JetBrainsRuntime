@@ -3,8 +3,906 @@
 This file keeps the rolling validation ledger out of the top-level roadmap and plan. Keep the newest high-signal
 entries here, and move older narrative detail to `docs/history/` only when this file starts getting noisy.
 
+## Live-Layer Replay Validation (Pre-Registered 2026-07-17)
+
+- **Artifact identity gate:** the unified local bundle must use command-stream ABI `111` and native metadata ABI `5`.
+  ABI `5` is intentional: a stale native-ABI-`4` dylib can share the prior build-id fields while lacking opcodes
+  `112/113`; the version bump must therefore trigger the existing `native-abi-mismatch` fallback rather than silently
+  replaying blank live-layer references.
+- **a. Smoke:** command mode with hoisting default-on; scene must be visibly rendered with zero picture frames,
+  fallbacks, and unsupported records.
+- **b. Parity/identity:** hoisting-off stream identity is compared with the fixed pre-hoisting baseline; hoisting-on
+  must retain visual parity with the software arm. The only allowed byte difference versus the older unfixed baseline
+  is first-fusion opcode `80`: the prior in-place header write could overwrite the first fused pair's destination-left
+  payload, so the corrected compact record is a required correctness difference rather than a hoisting regression.
+- **c. SharedLayer twoshot:** both consumers of the shared layer must continue moving.
+- **d. Nested-moving:** the nested child must continue moving while its parent remains cached.
+- **e. ImageGrid eviction:** with image-key cap `8` and `60` distinct images, every tile must remain rendered.
+- **f. LayerGrid directional perf:** compare forced recording and hoisting using `buildMicros` and `layerRecords`; no
+  performance threshold is changed by this row.
+- **g. Surface reset:** cross-display move must log `layersCleared`, force a full next-frame layer define, and leave no
+  blank layers.
+- **Rejected pre-gate smoke (2026-07-17):** command-mode `LayerGrid` opened and then strictly fell back on every
+  frame (`service-unavailable`, no command replay), so it is invalid/no-data for rows a-g. The rebuilt
+  `JBRSkiaService` had classfile version `70` from a Java 26 compiler while the Gradle launcher selected JBR 25
+  (maximum `69`), causing `UnsupportedClassVersionError` during direct patched-service discovery. The fallback
+  contained the mismatch without corruption. The rebuild script now invokes its configured `JAVA_HOME` compiler and
+  explicitly targets Java 21 classfiles before the ladder restarts.
+- **Rejected restart smoke (2026-07-17):** after correcting the Java class target, the visible `LayerGrid` run again
+  produced only strict fallback, now `native-abi-mismatch`, and is likewise invalid/no-data. Direct JBR 25 probes
+  confirmed the rebuilt Java/native bundle reports ABI `111`/native ABI `5` with matching build IDs. The fault was
+  the `runJbrSkiaInterop` task omitting the local `skiko-awt-0.0.0-SNAPSHOT.jar`, thereby launching a dependency
+  Skiko with stale native expectations. This is the native-ABI `5` bump proving its intended stale-pairing guard:
+  it refused the mismatched renderer before it could silently replay blank layer references. The task now prepends
+  the local jar, matching the standalone interop tasks.
+- **a. Smoke passed (2026-07-17):** visible `LayerGrid` command-mode run after correcting the artifact and local
+  Skiko pairing: one acquired ABI-`111`/native-ABI-`5` scope, `469` rendered command frames, one window geometry
+  marker, and zero fallback, picture-frame, or nonzero-unsupported-record markers in
+  `/tmp/jbr-skia-layer-grid-a.log`.
+- **b-stream passed (2026-07-17):** the deterministic, rect-only nested-layer fixture now pins the fixed
+  pre-hoist `39`-word stream. `replayRecordedLayerEmitsDefineLayerAndDrawLayerRefInsteadOfFlattening` passed in
+  separate JVMs with default hoisting and `-Dcompose.jbr.hoistLayers=false`, proving byte identity; this fixture
+  contains no image-plus-round-rect first-fusion pair, so the documented opcode-`80` correction is not applicable.
+- **b-visible deferred, environment-invalid (2026-07-17):** under active Screen Sharing, the visible
+  `parity-graphics-layer` hoisting-off capture rendered `148` command frames with zero fallbacks and zero picture
+  frames, but the trusted absolute screenshot probe failed on both arms before pixel comparison
+  (`paragraphCentered`: old `122`, new `140`, required `>=150`). No threshold was weakened or bypassed; retain
+  `magic-jewel/out/jbr-skia-live-layer-ladder/20260717-b-hoist-off/parity-graphics-layer/report/` as invalid
+  provenance and rerun hoisting-off pixel identity plus hoisting-on software parity only in the quiet environment.
+- **f. LayerGrid directional perf deferred (2026-07-17):** Screen Sharing is active. Do not collect or ledger
+  directional `buildMicros` or `layerRecords` values until the quiet-environment queue resumes.
+- **c. SharedLayer twoshot passed (2026-07-17, Screen Sharing active):** visible `SharedLayer` standalone command
+  probe (`JEWEL_STANDALONE_READY view=SharedLayer`) produced two same-window captures 250 ms apart. The left blue
+  circle centroid moved `x=62.5 -> 134.5` and the right shared-layer consumer moved `x=238.5 -> 310.5`; both
+  retained `788` blue pixels. The command path acquired ABI `111`/native ABI `5` and rendered with no fallback.
+  Artifacts: `magic-jewel/out/jbr-skia-live-layer-ladder/20260717-c-shared-layer-t1.png` and `...-t2.png`.
+- **d. Nested-moving passed (2026-07-17, Screen Sharing active):** visible `LayerGrid` standalone command probe
+  with one cell and nested animation enabled moved its inner blue child `x=49.5 -> 54.5` across 250 ms while the
+  `188`-pixel child footprint remained intact. Artifacts:
+  `magic-jewel/out/jbr-skia-live-layer-ladder/20260717-d-nested-moving-t1.png` and `...-t2.png`.
+- **e. ImageGrid eviction passed (2026-07-17, Screen Sharing active):** visible `ImageGrid` command probe with
+  `compose.jbr.maxImageKeys=8` and `60` distinct images rendered all `60/60` tile centers non-background. Artifact:
+  `magic-jewel/out/jbr-skia-live-layer-ladder/20260717-e-image-grid-cap8.png`. The cap drive repeatedly emitted
+  nested image defines while retaining complete output; this is correctness evidence only, not a performance score.
+- **e telemetry note (2026-07-17):** `imageDefineNestedMiss=60` with `imageCacheEvicts=0` is expected for this
+  probe's nested recordings, not an LRU accounting fault. `recordImage` takes the self-contained
+  `updateSharedResourceCaches=false` branch for nested command streams, so it deliberately emits nested misses
+  without mutating the shared `definedImageKeys` LRU; only top-level misses can increment the eviction counter.
+- **g structural passed (2026-07-17, synthetic context change):** the visible, focused `LayerGrid` standalone
+  command probe (`JEWEL_STANDALONE_READY view=LayerGrid`) forced one JBR context identity change. The native path
+  logged `SKIKO_JBR_INTEROP_COMMAND_CACHES_CLEARED reason=contextChanged`, then the immediately following command
+  frame logged `imageCacheClears=1 layerDefines=5` and rendered successfully; native reported `layersCleared=5`.
+  The focused capture contains all four animated tiles with no blank output:
+  `magic-jewel/out/jbr-skia-live-layer-ladder/20260717-g-structural-counter-verified-focused.png`.
+  The full log contains no fallback, nonzero-unsupported, or `rendered=false` marker:
+  `/tmp/jbr-skia-g-structural-counter-verified.log`. The `layerDefines` field is emitted from finalized frame
+  assembly, after hoisted `DEFINE_LAYER` records are prepended; the preexisting recorder-op summary intentionally
+  cannot see them. The run also shows the current collector prepends those five layer definitions on ordinary
+  frames, not only on the forced reset frame.
+- **Hoisted-layer lifecycle correction (2026-07-17):** replay must emit `LAYER_REF` only. The previous replay path
+  re-registered every cached layer on every frame, so a clean 96-cell `LayerGrid` issued `97` layer definitions
+  despite recording only two layers. `registerLayerDefine` now queues an out-of-frame fresh-layer definition for
+  the next top-level frame; `recordFrame` drains that queue before its active collector, letting same-frame dirty
+  registrations win. Interop-cache clearing also clears the queue, so the forced owner-layer re-record pass is the
+  only source of definitions following a surface/context clear. The queue is synchronized because the recorder has
+  no formal single-thread registration invariant.
+- **Post-fix lifecycle probe passed (2026-07-17, Screen Sharing active):** visible command-mode 96-cell
+  `LayerGrid` produced `layerDefines=97` on its initial I-frame, then `layerDefines=2` and `layerRecords=2` in
+  steady state with no fallback. The animated orange-cell centroid moved `x=56.5 -> 73.51` between verified
+  captures, confirming that the P-frame is both visible and live. Artifacts:
+  `magic-jewel/out/jbr-skia-live-layer-ladder/20260717-layer-grid-96-postfix.png` and
+  `.../20260717-layer-grid-96-postfix-t2.png`; log: `/tmp/jbr-skia-layer-grid-96-postfix.log`.
+- **Post-fix shared/nested and stream checks passed (2026-07-17):** the shared-layer consumers both moved
+  (`x=128.5 -> 64.5`, `x=304.5 -> 240.5`) while retaining 772 blue pixels each; the cached nested child moved
+  (`x=71.5 -> 43.5`, 188 blue pixels). The 39-word b-stream fixture remained byte-identical in separate default
+  hoisting and `-Dcompose.jbr.hoistLayers=false` JVMs. These fixtures explicitly model `SkiaGraphicsLayer.record()`
+  registering a freshly recorded layer; the sole clean-ref-only test deliberately does not.
+- **Post-fix clear recovery passed (2026-07-17):** the visible four-tile structural probe showed
+  startup-full -> clear-full -> steady-2 layer definitions, with `layersCleared=5`, zero fallback, zero
+  nonzero-unsupported records, and no `rendered=false`. The mechanism only consumes the forced frame's clean
+  cached recordings; delaying the clear by more P-frames changes no input to that force-full path, so this proves
+  clean-state clear recovery without a test-only delay hook. Artifact:
+  `magic-jewel/out/jbr-skia-live-layer-ladder/20260717-g-structural-postfix.png`; log:
+  `/tmp/jbr-skia-g-structural-postfix.log`.
+- **Regression coverage (2026-07-17):** `JbrSkiaCommandRecorderTest` now covers clean ref-only replay, deferred
+  outside-frame definition, and clear dropping a stale pending definition. The full focused desktop gate passed:
+  282 `JbrSkiaCommandRecorderTest` and 30 `SkiaGraphicsLayerTest` tests, zero failures; `git diff --check` is
+  clean. Windows remains a latent audit item: confirm whether its `SkiaGraphicsLayer.record()` can enter JBR with
+  `isRecording=false`, where it would need the same deferred-definition contract.
+- **g topology deferred, operator-conditional (2026-07-17):** the required real cross-display move cannot run on
+  the current single-display Mac. It remains a non-blocking future row: attach the 4K display, move the live
+  standalone window across displays, and require the same `layersCleared`/full-define/nonblank/zero-fallback
+  evidence before treating topology as validated.
+
 ## Latest IDE Plugin Benchmarks
 
+- 2026-07-13 final quiet, pinned `456x909` CVDisplayLink chat N=1: **primary pacing criterion passed; bridge
+  remains default-off and the pacing campaign is closed.** The first automated agent-blackout launch requested the
+  earlier `456x579` signature and correctly guard-rejected before scoring because the live surface was
+  `456x909` / `414504` pixels at 1x and 60 Hz. That rejected row is no-data, but resolves the prior workload
+  discontinuity: `456x579` was observed while interactive agent applications were open, whereas the quiesced
+  harness renders `456x909`. The layout mechanism remains unidentified; the association is bounded by guarded
+  live evidence rather than inferred from display mode, code, or time.
+
+  Seb reran the same light-telemetry ceremony with the quiet `456x909` signature pinned. The completed pair at
+  `magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260713-rig-579-light-n1/` passed all guards: fresh
+  sandboxes, expected-node visual probes, 1x/60Hz old/new/start/end signature equality, remote samples `0`,
+  foreign watched CPU `0.20%` old / `0.00%` new under the `1.0%` hard threshold, and zero picture/fallback
+  frames. The fixed 60-second deep metric recorded `690 -> 154` consecutive paint intervals over `50` ms, a
+  `77.68%` reduction exceeding the frozen primary `>=60%` target. The depth bins were:
+
+  | Arm | <=16.667 ms | 16.667-25 ms | 25-50 ms | 50-75 ms | 75-100 ms | >100 ms |
+  | --- | ---: | ---: | ---: | ---: | ---: |
+  | timer old | 3723 | 2 | 7 | 445 | 245 | 0 |
+  | CVDisplayLink new | 1621 | 639 | 437 | 149 | 5 | 0 |
+
+  New p95 was `53.317` ms, which misses the provisional `<=45` ms ceiling; p99 was `60.113` ms. This is therefore
+  a clean N=1 primary-depth pass with a provisional p95 miss, not permission to change the default or launch N=5.
+  Per Seb's closure decision, bank the bridge as implemented/correct with the default off. It is a candidate for a
+  single confirming N=5 only if the campaign is explicitly reopened. Local-JBR phase timing is documented as a
+  resume option and is not authorized now; pacing work ends here and the active effort returns to Windows.
+
+- 2026-07-13 light-telemetry, guarded `456x579` CVDisplayLink chat diagnostic: **the bridge remains
+  experimental/flag-off; this is a mechanism diagnostic, not a replacement N>=5 score.** The single fresh pair at
+  `magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260713-bridge-light-telemetry-chat/` disabled
+  powermetrics, thread-CPU, and machine-CPU collection while retaining fresh sandboxes, expected-node visual
+  probes, zero picture frames/fallbacks, display-link handshake, and the new runtime guards. Both arms recorded
+  the same live display signature: `1920x1080` at `60 Hz`, `1.000` backing scale, and toolwindow
+  `456x579` / `264024` pixels. This is the first live toolwindow marker and closes the retracted 2x hypothesis.
+
+  The frozen depth metric is the **count of consecutive paint intervals over `50` ms in the same 60-second active
+  window**, so raw counts have a common time denominator and must not be divided by paint count. Old recorded
+  `689` deep events (`11.48/s`, p95 `75.641` ms); new recorded `489` (`8.15/s`, p95 `58.655` ms): a `29.03%`
+  reduction, below the frozen `>=60%` requirement, with p95 also above the frozen `<=45` ms ceiling. The
+  paint-normalized fractions (`11.81%` old, `20.04%` new) answer a different question because timer-old overdraws
+  at `97.2` paint/s; they are not a replacement score.
+
+  This pair also bounds a measurement-protocol fault. Removing heavy collection changed timer-old from
+  `45.5..45.9` to `97.2` paint/s while the new arm stayed at about `40.7` paint/s and retained its approximately
+  `56..59` ms p95. The prior N=5 therefore remains a failed frozen gate with the default off, but is
+  protocol-perturbed for pacing causal attribution rather than clean evidence of a bridge regression. The new
+  pair cannot supersede it: it is N=1, has no CPU/GPU score, and its foreign-process census saw a new-arm watched
+  CPU transient. That single five-second census sample cannot alone explain the miss: passing would require at
+  least `214` deep events to disappear, while the bridge produced about `203` paint intervals in five seconds;
+  p95 would require at least `367` removals. The historical `456x909` light gate predates the census and passed,
+  but also had a materially different command workload (`660.5` versus `511.4` average commands/frame here).
+  The later agent-blackout guard rejection resolved its environment qualification: this was an agent-app-open
+  `456x579` diagnostic rather than the quiet benchmark workload. It remains useful for the collector-perturbation
+  finding, but is not the final representative pacing result.
+
+- 2026-07-13 confirmatory CVDisplayLink paced chat N=5: **valid-but-incomparable with the banked quiet N=5s
+  because workload geometry and old-arm throughput changed; failed frozen default-flip criteria; bridge stays
+  experimental/flag-off and no target changes are
+  authorized.** The verified-quiet, fresh-per-variant run at
+  `magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260712-bridge-confirmatory-paced-n5/` completed `5/5`
+  rows with bounded preflight backfill, powermetrics, expected-node visual probes, command replay, zero picture
+  frames, and zero fallbacks. Every retained new arm logged both
+  `SKIKO_JBR_DISPLAY_LINK_PACING status=registered` and `CMP_SWING_DISPLAY_LINK_PACING status=handshake`; no
+  timer-fallback marker was found. The bridge therefore exercised correctly, but did not meet its performance
+  acceptance gate.
+
+  Direct active-window counts show `>50` ms misses `2590 -> 2467`, a `4.7%` reduction rather than the required
+  `>=60%` (short by `55.3` points). New-arm p95 was `56.873`, `57.167`, `57.551`, `57.027`, and `55.950` ms,
+  all above the frozen `<=45` ms ceiling. The frozen gate therefore remains failed and the default remains off.
+
+  A post-run artifact audit found a cross-run workload discontinuity that invalidates comparison with the banked
+  quiet N=5s, not the paired correctness result. Display mode/refresh is not the cause: every earlier scoreable
+  bridge active window and every confirmatory row shows `60 Hz` from its display-link counters (`2,940` ticks over
+  50 seconds earlier; `3,540` between retained boundary samples over 60 seconds in N=5), while timer-old p50
+  remained `9.647..10.996` ms earlier and `10.670..11.161` ms in N=5. Tool content geometry nevertheless changed
+  from `456x909` in both quiet N=5s to `456x579`, and the timer old arm itself collapsed before the bridge could
+  affect it:
+
+  | Suite | Old paint/s | Old CPU/kFrame | Old GPU mW/kFrame |
+  | --- | ---: | ---: | ---: |
+  | Closing reference quiet N=5 | 78.42 | 8.21 | 56.52 |
+  | Malloc-purge quiet N=5 | 78.59 | 8.64 | 53.11 |
+  | Confirmatory paced N=5 | 45.55 | 14.20 | 52.91 |
+
+  A one-command audit of every retained sampler CSV found no `screensharingd`, `ScreensharingAgent`, `AppleVNC`, or
+  `com.apple.screensharing` text; Seb confirmed Screen Sharing connected only after this N=5 completed. It is
+  therefore not a sampling contaminant. The exact cause of the geometry/throughput discontinuity remains open.
+  Accordingly this N=5 is valid for its frozen paired FAIL, but is **not evidence that the bridge regressed against
+  earlier same-regime gates**. The suite now records start/end CoreGraphics mode and refresh,
+  asserts same mode across arms and repetitions, and censuses remote-session plus configured foreign interactive
+  GPU-watch processes during the sample. Re-run only after the operator confirms the remote display/session state;
+  retain the bridge and its watchdog/counter protections, and do not ratchet a threshold.
+
+  The brief 2x re-bank hypothesis was retracted before any run: AppKit and
+  system-profiler both report the active framebuffer as 1x 1920x1080 at 60Hz;
+  the Settings "retina" label was not an active 2x mode. The retained
+  re-registration packet is explicitly marked VOID. The new scored-suite guard
+  remains useful: it logs the actual toolwindow AWT backing scale and derived
+  pixel area, then rejects a row at readiness if the pre-registered signature is
+  requested and does not match. Historical logs lack this marker, so the
+  geometry/throughput discontinuity remains an open cause rather than a display
+  scaling claim.
+
+- 2026-07-12 CVDisplayLink next-frame-OK bridge verdict: architectural success, experimental/flag-off pending
+  daylight renegotiation of default-flip criteria. The paired, visual-proofed chat pacing gate at
+  `magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260712-chat-pacing-active-window-rerun/` showed refresh-paced
+  new frames (p50 `16.294` ms versus the timer arm's bursty `10.996` ms), jitter `21.134 -> 11.819` ms, p95
+  `68.721 -> 41.826` ms (`-39%`), and p99 `73.350 -> 58.463` ms (`-20%`). The paint-rate miss fraction stayed
+  essentially shared (`20.7%` versus `20.6%`), so the frozen p95/p99/miss-rate targets remain unmet; do not
+  relabel them. Depth is materially better: the initial active-window histogram reduced `>=50` ms misses from
+  `376` to `103` (`73%`) and `>=75` ms from `19` to `1`. Across the implementation gates, the bridge exercised
+  its truthful display-link handshake, watchdog fallback, idle permit discipline, and command replay with zero
+  picture/fallback correctness regressions. The present-time contract remains truthful: this host reports zero
+  `CAMetalDrawable.presentedTime`, so present-call cadence is diagnostic only and never stands in for glass time.
+
+  The shared approximately `91--103` ms miss actor is bounded below the JVM and symmetric across arms. The
+  diagnostic-only, reused-sandbox correlation run at
+  `magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260712-chat-pacing-edt-gc-calibrated/` retained normal
+  readiness, expected-node, pixel, command, and zero-fallback gates while explicitly recording
+  `diagnostic_sandbox_reused=true`; it is not perf-scoreable. Content/tick work was already exonerated. The
+  IntelliJ-native `IdeEventQueue` observer then found zero slow-EDT overlap with `>25` ms paint gaps:
+
+  | Arm | `>25` ms gaps | `>50` ms gaps | Slow EDT events | EDT-overlapping gaps | GC pauses (`>=5`/`>=10` ms) | GC-overlapping gaps |
+  | --- | ---: | ---: | ---: | ---: | ---: | ---: |
+  | timer old | 584 | 402 | 65 | 0 | 34 / 20 | 0 |
+  | CVDisplayLink new | 524 | 134 | 46 | 0 | 26 / 15 | 0 |
+
+  GC correlation is exact rather than inferred: each logged slow EDT event carried both `System.nanoTime` and JVM
+  uptime; the system-minus-uptime calibration spread was under `0.964` ms old and `0.956` ms new, below the
+  `25` ms miss threshold. File-backed `-Xlog:gc*:uptimenanos` was aligned through that offset and found zero
+  overlap in either arm, including every `>=5` ms and `>=10` ms pause. This closes five shared-cause checks
+  (content, benchmark ticks, EDT occupancy, JVM GC, and host-presented-time fabrication) without changing a
+  threshold. The remaining actor is compositor/WindowServer territory; attribution is optional backlog because it
+  cannot alter bridge safety or the measured tail-depth improvement. Proposed future default-flip criteria, to be
+  fixed before a confirmatory fresh N=5, are `>=60%` reduction in `>50` ms misses versus the paired timer arm,
+  p95 `<=45` ms, zero correctness regressions across the full gate set, and paced CPU/GPU within noise of the
+  closing reference. ABI squash to `1` remains share-prep work.
+
+- 2026-07-12 D software-fallback uplift verdict: bounded on the available macOS display configuration. The
+  compatible base path is `AcceleratedSwingPainter`: Skiko renders to an offscreen Metal texture, shares it through
+  the JBR/Metal scope, and Java2D blits it to the drawable. It remains a GPU blit path, though synchronous CPU
+  completion can still stall the caller. The fallback triggers when shared-texture construction fails or the
+  GraphicsConfiguration is incompatible; `SoftwareSwingPainter` then reads pixels into a `BufferedImage` before
+  Swing draws it. JBR command replay is scoped to the shared-texture JBR+Metal path.
+
+  The standalone D runner fingerprints the first classpath entry (`skiko-awt-0.0.0-SNAPSHOT.jar` SHA-256
+  `d2380d4d6942e82064cee2c15799367440c8790d1423e80cb66019203b97dd06`), records the observed painter class,
+  render mode, scope registration, logical dimensions, backing scale, derived pixel area, and a live Spectre
+  Hypnotoad stress marker. Absence of the painter marker invalidates a row. All rows below are fresh process runs;
+  they are directional single-30-second CPU samples, not a powermetrics or N>1 claim.
+
+  | Surface | Pipeline identity | Pixels | CPU | Software delta versus JBR accelerated |
+  | --- | --- | ---: | ---: | ---: |
+  | Chat-size 1x | AcceleratedSwingPainter / JBR command / scope acquired | 1.08M | 39.91% | baseline |
+  | Chat-size 1x | SoftwareSwingPainter forced / JBR command / scope acquired | 1.08M | 43.04% | `+3.13` points, `+7.8%` |
+  | Maximized 1x | AcceleratedSwingPainter / JBR command / scope acquired | 1.80M | 39.62% | baseline |
+  | Maximized 1x | SoftwareSwingPainter forced / JBR command / scope acquired | 1.80M | 41.17% | `+1.55` points, `+3.9%` |
+
+  The two directional deltas are mutually indistinguishable at single-row (`+-2--3` point) resolution; the smaller
+  apparent penalty at larger area is not a trend. The available clamshell session has exactly one `1920x1080` 1x
+  display (`system_profiler SPDisplaysDataType` and Java both report it), so the intended `4--6x` retina pixel-area
+  test is not available. Finding: on macOS unified memory at 1x surfaces through about `1.8M` pixels, even the
+  forced software readback path costs only single-digit relative CPU. The dramatic-uplift thesis is not supported at
+  these surfaces. macOS zero-copy value remains correctness, architecture, pacing-depth improvement, and memory;
+  the dramatic-throughput market is Windows software-only paths and potentially retina surfaces.
+
+  Invalid-row register: `20260712-d-uplift-maximized-fresh` and
+  `20260712-d-uplift-maximized-rerun` were rejected because their requested maximization initially remained at the
+  chat-size surface or lacked explicit pixel-area metadata. `20260712-d-uplift-retina-fresh` was rejected for the
+  retina decision because the requested internal target still reported the sole 1x `Display 123`; its CPU values
+  are not quoted. Operator-conditional extension: when Seb opens the lid or attaches a hi-DPI display, run one
+  fresh three-variant directional row with observed `backingScale=2x` and roughly `4.5--5M` derived pixels. No
+  further D runs are authorized until that display condition or a new operator direction.
+
+  Open snapshot: bridge default-flip criteria await Seb; retina D row is operator-conditional; Windows fallback
+  follow-up is strategic; compositor attribution is optional backlog; ABI squash to `1` is share-prep.
+
+- 2026-07-12 CVDisplayLink presented-time correction: the review-approved
+  `handlerCallback` fallback was wrong and has been removed from the
+  `JBR_SKIA_FRAME_PRESENTED` metric. `CAMetalDrawable.addPresentedHandler` on
+  this host fires with `presentedTime == 0`; JBR's own branch classifies that as
+  dropped, not presented. The rendered, bridge-handshaken correlation boot at
+  `magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260712-present-handler-correlation/`
+  proved the same drawable travels from `presentDrawable` to that true handler,
+  but its handler fires 0.264--14.317 ms after the present call with no usable
+  presented timestamp. Zero-time events now log only
+  `JBR_SKIA_FRAME_PRESENT_CALLBACK outcome=dropped`; `REQUIRE_PRESENT_PACING`
+  therefore rejects this host rather than accepting invented cadence evidence.
+  Do not quote its unsliced lifecycle paint intervals either. The reviewer
+  correction and native site inventory are retained as diagnostics; no
+  present-call timestamp fallback is authorized pending an explicit downgrade
+  decision.
+- 2026-07-12 CVDisplayLink amendment 5 evidence: the readiness-gated Hypnotoad pointer diagnostic passed visual
+  proof with `2,354` command frames and zero picture/fallback frames. Native registration and every capped command
+  flush used the same `nativeOps` pointer, while `MTLSDOps.layer` was null throughout. The replay destination cannot
+  anchor an `MTLLayer` listener; the sentinel's `startRedraw` branch is consequently a no-op on command replay, and
+  ordinary Java2D window presentation arms the display link. The original per-layer registration handshake was a
+  false positive because Java reported a call attempt rather than a registry-confirmed insertion, the same end-to-end
+  bridge-contract failure class previously seen in the recorder classloader work. Amendment 5 replaces it with one
+  display-scoped native listener that emits display ID/timestamp ticks and Java-side per-window permit multiplexing.
+  The watchdog regression passed for both zero-permit fallback and consumed-permit cancellation.
+- 2026-07-12 CVDisplayLink runtime-build bootstrap: installed user-local Temurin `26.0.1+8` through SDKMAN at
+  `/Users/seb/.sdkman/candidates/java/26.0.1-tem` because the JBR 27 checkout accepts only boot JDK `26` or `27`
+  (the preinstalled JDKs were 21/25). Seb completed `sudo xcodebuild -runFirstLaunch` and installed the Metal
+  Toolchain component `17F109`; `xcrun metal --version` now reports Apple metal `32023.883` for `air64`.
+  The exact release arm64 configure line is:
+  `bash configure --with-boot-jdk=/Users/seb/.sdkman/candidates/java/26.0.1-tem --with-debug-level=release --with-jvm-variants=server --without-macosx-codesign --with-skia-interop=/Users/seb/src/jbr-skia-zero-copy/skiko/skiko/dependencies/skia/m147-64a2414108/Skia-m147-64a2414108-macos-Release-arm64`.
+  `make images` passed and produced `images/jdk/lib/libjbrskiainterop.dylib` plus `libawt_lwawt.dylib`; the built
+  runtime reports `27-internal-adhoc.seb.jbr`. The listener registry was moved into
+  `libawt`/`MTLContext` (the owner of CVDisplayLink) so `libjbrskiainterop` invokes exported libawt registration
+  functions rather than requiring libawt to link back to the separately loaded interop dylib. The Skiko one-time
+  painter identity probe now reports accelerated, accelerated-to-software fallback, and direct software paths; its
+  AWT compilation passed with the checkout's JDK 21.
+- 2026-07-11 CVDisplayLink pacing Phase 0 and full-screen uplift thesis are separate from the closed performance
+  cycle. Static copy-path inspection shows the compatible macOS Metal base path is not GPU-to-CPU readback: Skiko
+  renders to an offscreen `MTLTexture`, wraps it through JBR `SharedTextures`/`MTLTextureWrapperSurfaceData`, and
+  Java2D `MTLLayer` performs one GPU `copyFromTexture` blit to the `CAMetalDrawable`. The revised, pre-registered
+  full-screen expectation is therefore modest area-scaling GPU bandwidth/power separation, roughly flat CPU, and
+  modest texture-residency improvement; a null GPU result is valid unified-memory evidence, while a large CPU result
+  needs independent explanation. The old path pays this texture and blit per Compose island.
+  A distinct fallback remains important: `MetalSwingRedrawer` chooses `SoftwareSwingPainter` when JBR shared-texture
+  construction fails or the `GraphicsConfiguration` is not `MTLGraphicsConfig`; that fallback calls
+  `Surface.readPixels`, copies into a `BufferedImage` raster, and then draws it. Zero-copy avoids a genuine readback
+  there, so the value story is parity on the accelerated best case, a large fallback-case win, and smoother pacing.
+  Swing Timer pacing remains the stopgap; CVDisplayLink next-frame-OK is the project end-state.
+- 2026-07-11 CVDisplayLink Phase B is approved for implementation behind an experimental flag. The timer baseline
+  is a visual-proofed old chat run at
+  `/Users/seb/src/jbr-skia-zero-copy/magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260711-timer-pacing-chat-proof-v3/`:
+  2,643 active-window paint intervals, p50 `14.566` ms, p95 `68.339` ms, p99 `72.720` ms, jitter `24.146` ms, and
+  474 misses (`17.9%`). Markers span 50.092 seconds from benchmark start to stop request, covering 187 ticks and
+  589 benchmark frames, with only two gaps above 100 ms; this is not an idle-window artifact. Pre-registered bridge
+  targets are p95 <= `33.333` ms, p99 <= `50` ms, and misses <= `10%`, with no correctness regression. Old paint is
+  the sync-CPU completion proxy; new uses the existing Metal-sentinel completion proxy. True presented timestamps
+  require a full JBR runtime build and are deferred. The approved design is
+  `docs/current/CVDISPLAYLINK_NEXT_FRAME_OK_DESIGN.md`; it requires native-owned/EDT-consumed coalesced permits,
+  registered-delegate-proxy JNI delivery, a four-refresh-period EDT stall watchdog, an explicit first-frame arm,
+  generation-safe migration, and no blocking main-thread hop while RenderQueue/Metal/layer locks are held.
+- 2026-07-11 final reference and cycle close. The one authorized confirmatory run at
+  `/Users/seb/src/jbr-skia-zero-copy/magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260711-final-reference-quiet-n5/`
+  completed with one bounded preflight retry, `5/5` command-clean/visual-proofed/powermetrics-backed rows, and zero
+  pictures or fallbacks. The final frozen-policy GPU result is `56.52 -> 54.45` mW/kFrame (`-3.7%`) and
+  `9.75 -> 9.70` active/kFrame (`-0.5%`) on three retained rows. It is the closing reference, while the accepted
+  cross-suite GPU claim remains the earlier delta-versus-delta closure (`+12.7..+14.9%` original band to `+1.4%`
+  mW/kFrame, `+2.8%` active) because absolute levels vary by run environment.
+  CPU/kFrame is `8.21 -> 9.49` (`+15.6%`) on the same mechanically selected rows. `r01` is warmup and `r04` is
+  excluded for new-side `mds_stores` at `82.8%`; retained r02/r05 still carry variable process CPU despite clean
+  machine-window samples. This is environmental variance, not a reason to alter the frozen `75%` policy or rerun.
+  The accepted CPU conclusion is parity-adjacent from the preceding named-thread adjudication, not this noisy final
+  aggregate. The performance cycle is closed.
+
+  | Milestone | CPU/kFrame delta | GPU mW/kFrame delta | Interpretation |
+  | --- | ---: | ---: | --- |
+  | Cycle start, before caching/define convergence | about +22% [malloc probe not yet isolated] | about +18% | Initial directional chat gap |
+  | Define purge | about +9.3% [malloc-probe-contaminated] | about +13.4% | Baked image defines converge after confirmation |
+  | saveLayer elision guarded reference | +12.3% [malloc-probe-contaminated] | +4.8% | Offscreen isolation removed from plain layers |
+  | caller-thread replay, P1-5 lock/default flip | +11.2% [malloc-probe-contaminated] | +3.6% | AppKit dispatch removed; correctness closed |
+  | malloc-probe purge reference | +11.4% frozen-policy aggregate; parity-adjacent by named threads | +1.4% | Always-on `malloc_zone_statistics` removed |
+  | final authorized reference | +15.6% (environment-variable; no rerun) | -3.7% | Closing reference; 5/5 correctness rows |
+
+  Historical CPU correction: every bracketed result above included the unconditional new-path
+  `malloc_zone_statistics(malloc_default_zone(), ...)` diagnostic probe, later measured at about `0.87` ms/frame;
+  it must not be used to attribute command-path CPU cost or evaluate the current threshold. Context creation
+  (`~0.003` ms), surface wrap (`~0.014` ms), and purge (`~0.0003` ms) were exonerated separately. The remaining
+  measured cost is real architecture: roughly `0.29` ms/frame serialization/bookkeeping and `~1.7` renderer CPU
+  points on the EDT/Flusher path.
+
+  Ranked backlog, explicitly outside this cycle: (1) optional serialization/bookkeeping micro-win (`~0.29` ms/frame),
+  (2) residual EDT recording cost (`~1.7` points; architectural), (3) P1-10 stale RenderNode on strict-fallback
+  frames, (4) threshold-ratchet fault-injection proof, and (5) pacing end-state. Swing Timer pacing is the stopgap;
+  CVDisplayLink next-frame-OK is the end-state and the natural next project, not a performance-cycle follow-up.
+- 2026-07-11 closes the chat GPU-performance chapter. The quiet guarded N=5 at
+  `/Users/seb/src/jbr-skia-zero-copy/magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260711-malloc-probe-purge-quiet-n5/`
+  produced `5/5` command-clean, visual-proofed, powermetrics-backed rows with zero picture replay or fallbacks.
+  Under the pre-registered policy (discard warmup `r01`; retain the unchanged `75%` foreground-load ceiling),
+  GPU mW/kFrame was `53.11 -> 53.87` (`+1.4%`) and GPU active/kFrame was `9.43 -> 9.70` (`+2.8%`). This is the
+  accepted headline: compared with the original quiet chat `+12.7..+14.9%` GPU mW/kFrame band, the structural GPU
+  gap is closed. Cross-suite absolute levels remain non-comparable, so this claim is delta-versus-delta only. The
+  native malloc diagnostic probe was simultaneously removed from the steady command path: the new native timing
+  average was `0.372..0.382` ms/frame with `mallocNanos` averaging zero, and the named context/surface/draw/flush
+  components account for the measured total.
+  CPU is intentionally not promoted to parity and no threshold was changed. The same frozen-policy aggregate is
+  `8.64 -> 9.62` CPU/kFrame (`+11.4%`), driven by r02/r05 process-level spikes. Existing in-JVM five-second
+  `ThreadMXBean` evidence is flat across r02-r05 for renderer-owned threads: new `AWT-EventQueue-0`
+  `15.74..15.98%`, `AWT-AppKit` `1.14..1.16%`, and `Java2D Queue Flusher` `1.27..1.30%`; r02/r05 have no
+  corresponding renderer-thread rise. Paint denominators are symmetric (`4726/4741`, `4681/4729`, `4712/4696`,
+  `4711/4731` old/new), so no per-frame normalization artifact is claimed. The machine timelines instead show a
+  one-sample `spotlightknowledged.updater` burst in r02 new and two Chrome-renderer bursts in r05 new. This supports
+  a load-sensitive/external classification for the two spikes, but the `+11.4%` aggregate remains the honest current
+  policy result pending any separately authorized confirmatory run. Swing Timer pacing remains the stopgap;
+  CVDisplayLink next-frame-OK remains the end-state.
+  The subsequent artifact adjudication is accepted as CPU parity-adjacent on the frozen policy: the uncontaminated
+  r03/r04 CPU/kFrame rows are `-0.9%` and `+5.0%`, inside the pre-registered `0..+5%` band, while the renderer-owned
+  costs below remain flat across every policy row. Values are CPU percent of one core from five-second ThreadMXBean
+  deltas; the table is retained verbatim for the ruling.
+
+  | Row | Old EDT/AppKit/Flusher | New EDT/AppKit/Flusher | Old named | New named |
+  | --- | --- | --- | ---: | ---: |
+  | r02 | 14.25 / 1.20 / 1.12 | 15.91 / 1.16 / 1.30 | 16.58 | 18.37 |
+  | r03 | 14.31 / 1.21 / 1.13 | 15.74 / 1.14 / 1.28 | 16.66 | 18.16 |
+  | r04 | 14.31 / 1.22 / 1.13 | 15.98 / 1.15 / 1.27 | 16.66 | 18.40 |
+  | r05 | 14.50 / 1.23 / 1.11 | 15.97 / 1.16 / 1.28 | 16.84 | 18.41 |
+
+  The true steady named renderer delta is therefore about `+1.7` CPU points (`+~1.5` EDT and `+~0.16` Flusher,
+  AppKit flat), not the r02/r05 process-CPU excursions. One final quiet guarded N=5 is authorized as a bankable
+  reference; its result closes this performance cycle whether clean or environmentally contaminated. No threshold
+  change and no further reruns are authorized after it.
+- 2026-07-10 resolved the replay serialization race from review item P1-5 and the per-frame AppKit dispatch from
+  P1-3. `JBRSkiaService` now drains pending Java2D Metal work with `MTLRenderQueue.flushNow()` and executes native
+  diagnostic, picture, int/byte command, and direct-command replay on the caller while retaining the render-queue
+  lock. This excludes the Java2D Queue Flusher and the locked `MTLSurfaceData.flush()`/`dispose(long)` plus
+  `MTLLayer.validate()` resize/disposal paths while raw native-ops/texture pointers and the shared
+  `MTLContext`/`GrDirectContext` are in use. The helper rejects AppKit dispatch while locked; native call-graph audit
+  found no synchronous main-thread hop in any lock-held entry point. Command sentinel completion retains its existing
+  nonblocking `performOnMainThreadNowOrLater:NO` redraw arm. The direct-command default is now
+  `sun.java2d.skia.interop.appkitRender=false`; `true` remains a deprecated, not-P1-5-safe legacy escape hatch.
+  A fresh `./scripts/test-jbr-skia-api.sh` rebuild/smoke passed, and default-path live-animation smoke (no property
+  override) passed with `556` JBR command frames, zero pictures/fallbacks/unsupported commands, and a green visual
+  assertion at
+  `/Users/seb/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-command-probe-suite/20260710-appkit-default-false-live/`.
+  Before the default flip, the fixed `appkitRender=false` presentation set passed: popup `457`, popup-window `681`,
+  menu `464`, and geometry-corrected live-animation `555` command frames, all with zero picture replay, fallbacks, or
+  unsupported commands. New-path-only `MTL_DEBUG_LAYER=1` probes under
+  `/Users/seb/src/jbr-skia-zero-copy/magic-jewel/out/run-evidence/20260710-appkit-false-lock/` also passed: the idle
+  scene produced only `2` Compose scene frames while safely replaying/completing `289` cached command frames; a
+  `100`-step resize storm produced `98` observed surface/cache/image-clear cycles and `1099/1099` rendered/completed
+  command frames. Both had zero pictures, fallbacks, failed replays, compaction aborts, exceptions, or Metal
+  validation errors.
+  The 35-second chat attribution gate at
+  `/Users/seb/src/jbr-skia-zero-copy/magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260710-appkit-false-lock-short/`
+  passed with old/new paints `2954/2970` (`+0.54%`), `2970` new command frames, green expected-node probes, and zero
+  pictures/fallbacks. Seven five-second in-JVM samples show the former constant CPU component is gone:
+  `AWT-AppKit 1.192% -> 1.154%`; replay moved to `AWT-EventQueue-0 12.454% -> 19.947%` (`+7.493` points), while
+  `Java2D Queue Flusher 1.076% -> 1.199%`. Steady state after 300 frames remained healthy:
+  `imageDefines=0.522`/frame, `imageRefs=18.173`, `layerRecords=1.238`, `layerReplays=1.000`,
+  `compactionNanos=35,527`/frame, with zero compaction aborts, unsupported commands, or evictions. This is a
+  correctness/attribution gate, not the CPU headline.
+  The quiet guarded default-path N=5 at
+  `/Users/seb/src/jbr-skia-zero-copy/magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260710-appkit-default-false-guarded-quiet-n5-retry/`
+  then completed without retry/backfill: `5/5` command-clean, visual-proofed, powermetrics-backed rows, with only
+  warmup `r01` excluded by policy. Paint pacing was symmetric on the four policy rows (`-0.09..+0.99%` new versus
+  old). Policy-clean CPU/kFrame was `10.76 -> 11.96` (`+11.2%`), still above the unchanged `10%` threshold; the
+  strict analyzer exits `1` on that gate alone. This is an honest measurement of the remaining replay-path cost, not
+  a failure of the P1-5/P1-3 threading fix. GPU
+  mW/kFrame was `50.87 -> 52.71` (`+3.6%`) and GPU active/kFrame was `10.13 -> 10.90` (`+7.6%`), preserving the
+  saveLayer-elision improvement. Every row had zero pictures and fallbacks; new command timing was stable at
+  `1.248..1.274` ms/frame after warmup, with `0.193..0.196` ms draw, `0.126..0.128` ms flush, and
+  `0.509..0.518` ms completion.
+  Named in-JVM samples localize the remaining constant component. Across policy rows, old/new `AWT-AppKit` stayed
+  at baseline (`1.177..1.202% -> 1.101..1.126%`), while `AWT-EventQueue-0` was
+  `13.968..14.228% -> 19.274..19.581%`; Java2D Queue Flusher moved only
+  `1.075..1.113% -> 1.187..1.223%`. The former AppKit-dispatch cost has therefore been relocated off the main
+  thread as intended. The prior high-row variable component largely collapsed. This is consistent with, but does not
+  prove, main-thread convoying in the old default: synchronous replay could wait behind unrelated row-varying AppKit
+  work. Only about `0.6..1.5` additional process CPU points remain unexplained in `r04/r05`.
+  The open constant CPU decomposition is the roughly `+5.3..5.6` EDT points spanning CMP command recording and
+  serialization, JNI/native replay (`~0.19` ms draw plus `~0.13` ms flush), and render-queue lock/`flushNow` overhead.
+  A short span-based chat trace, not another N=5, should separate those terms before selecting the next optimization;
+  the measured `~35` us/frame compaction cost already makes the standing O(R*W) fold scans an unlikely answer at
+  this scene scale. Accepted claims remain P1-5 correctness closure by lock-held replay, P1-3 deadlock-exposure
+  closure by the default flip, AppKit liberation, and preserved pacing symmetry; no broader CPU parity claim is made.
+  During these gates the screenshot heuristic was corrected after artifact metadata disproved an initial 1x/2x
+  capture-scale diagnosis: both captures were exactly `1.000x1.000`; an 18-pixel content-height change caused
+  full-window proportional text regions to clip valid lower lines. Command screenshot assertions now require and log
+  mechanical capture scale plus JBR destination geometry, use content-relative probe regions and scale-derived pixel
+  thresholds, and fail loudly with `reason=geometry-unavailable`. Old/control captures use a startup/resize-only app
+  geometry marker; main-window popup/menu overlays use main geometry, while the separate Swing popup retains its own
+  assertion. The four manual text-threshold overrides were removed. Both the formerly failing and older reference
+  captures pass, as do `compileKotlin`, `bash -n`, the full report-validation suite, and `git diff --check`.
+  Swing Timer pacing remains the stopgap; CVDisplayLink next-frame-OK remains the end-state.
+- 2026-07-10 Opaque plain graphics-layer replay now skips `saveLayer` unless isolation is required by alpha,
+  offscreen clipping, or destination-affecting child ops. The short chat gate at
+  `/Users/seb/src/jbr-skia-zero-copy/magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260710-save-layer-elision-short-fold-fixed/`
+  passed with `3123` command frames, `3124` Swing paints, a green expected-node visual probe, `picture_frames=0`,
+  `fallbacks=0`, and no unsupported commands. Steady state after 300 recorder frames: `imageDefines=0.497`/frame,
+  `imageRefs=18.195`/frame, image evictions `0`, `layerRecords=1.253`/frame, and `layerReplays=1.000`/frame. Every
+  save-layer-family op was absent from steady tails, including `saveLayer`, `saveTranslateLayer`,
+  `saveTranslateLayerSaveTranslate`, and their image/restore fused forms. The pre-N=5 `avg_commands<632` proxy is
+  superseded by that direct structural criterion: steady words rose from `632.755` to `661.509` because the old
+  stream packed about `11-13` `saveTranslateLayer*DrawImageRefFullRestoreN` records/frame, while removing isolation
+  necessarily dissolves them into about `34-37` plain `saveTranslate` plus `12-13` `drawImageRefFullRestoreN`
+  records. Serialized words rose by about 29/frame while GPU isolation work fell to zero; no threshold was changed.
+  During the gate, saveLayer elision exposed a latent in-place compaction bug: any splice placing a fused
+  `DRAW_IMAGE_REF_FULL_RESTORE` before a parent restore and following record could overwrite the consumed restore
+  opcode before using it to advance, step into the following record, and freeze the EDT on a bogus zero record
+  length. The elision changed adjacency but did not create the defect. The fold now snapshots the next opcode and
+  restore count before the overlapping write; `nestedImageRestoreFoldPreservesFollowingParentRecord` pins the exact
+  shape. The full `JbrSkiaCommandRecorderTest` class, including compaction-equivalence tests, passes. Plain
+  saveTranslate/image compaction is deferred until N=5 shows whether the extra records have measurable CPU cost, and
+  any new fold must follow a gate-visible compaction-abort tripwire.
+  The first post-elision chat N=5 at
+  `/Users/seb/src/jbr-skia-zero-copy/magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260710-save-layer-elision-n5-rerun/`
+  completed with one bounded preflight retry, `5/5` command-clean rows, `5/5` visual-proof rows, `5/5` powermetrics
+  rows, and a strict analyzer exit of zero. Policy discarded warmup `chat#r01` (also sampled Claude at `80.3%`),
+  leaving four clean rows: CPU/kFrame `11.83 -> 12.52` (`+5.9%`), GPU mW/kFrame `229.68 -> 224.72`
+  (`-2.2%`), and GPU active/kFrame `12.75 -> 12.90` (`+1.2%`). These normalized deltas are directional only, not
+  the reference headline: every row rendered `2.11..4.33%` more new-path paints than old-path paints
+  (`4270/4407`, `4314/4405`, `4306/4440`, `4337/4525`, `4311/4446`), while `avconferenced` used about `28..31%`
+  CPU, `VTEncoderXPCService` used about `13..18%`, and raw GPU power was about `991.5 -> 1001` mW on the four
+  policy rows. The large common-mode GPU load plus paint-count asymmetry mechanically biases per-kFrame power.
+  The defensible cross-suite result is delta-vs-delta: the raw within-row GPU penalty contracted from about `+13%`
+  in the quiet define-purge suite to about `+1%` here, consistent with the structural removal of all save-layer ops,
+  but absolute per-kFrame levels are not comparable across the prior 90-second and current 60-second launcher
+  contracts. This run is formally retired as a headline source; its `-2.2%` GPU/kFrame result must not be quoted as
+  eliminating the gap. Across all five new rows after 300 recorder frames,
+  `imageDefines=0.504..0.512`/frame, `layerRecords=1.142..1.285`/frame,
+  `layerReplays=1.000`/frame, save-layer-family ops `0`, unsupported commands `0`, and image evictions `0`.
+  Before that rerun, the confirmation harness and both old/new variant preflights now sample idle GPU power for
+  ten seconds and reject missing samples, averages above `400` mW, or peaks above `500` mW. These gates were chosen
+  before new benchmark data: the average ceiling is twice the roughly `200` mW quiet-run level, the peak condition
+  prevents a fluctuating encoder burst from hiding inside an acceptable average, and both remain well below this
+  encoder-loaded run's roughly `1000` mW. A real preflight smoke rejected that environment at `782` mW average and
+  `790` mW peak, then passed after the encoders stopped at `122`/`153` mW. Paint-count asymmetry remains an explicit
+  pacing diagnostic: if a quiet rerun does not return to the
+  prior suite's `-0.63..+0.51%` old/new symmetry, investigate the Swing pacer rather than accepting normalized
+  power deltas. Swing Timer pacing remains the stopgap; CVDisplayLink next-frame-OK remains the end-state.
+  The guarded reference chat N=5 at
+  `/Users/seb/src/jbr-skia-zero-copy/magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260710-save-layer-elision-guarded-quiet-n5-rerun/`
+  used a silent driver with no terminal/mailbox polling during measurement, completed after one bounded preflight
+  retry, and produced `5/5` command-clean, visual-proofed, powermetrics-backed rows. All suite and variant GPU
+  preflights passed at `124..149` mW average and `146..198` mW peak; warmup `r01` was the only policy exclusion.
+  Four policy rows report GPU mW/kFrame `51.02 -> 53.46` (`+4.8%`) and GPU active/kFrame `10.45 -> 11.13`
+  (`+6.5%`). This is the accepted reference headline: saveLayer elision closed roughly two-thirds of the prior
+  `+12.7..+14.9%` chat GPU-power gap, and every row (`+1.3..+7.8%`) is below the old band's floor. Cross-day
+  absolute levels remain non-comparable; use delta-vs-delta only. The GPU delta carries about `+/-1%` uncertainty
+  from residual `0.45..2.16%` new-over-old paint asymmetry; pacing diagnosis remains open, with `r05` (`+2.16%`
+  paints, `+7.8%` GPU, `+17.0%` CPU/kFrame) as the study row. Structural counters remained green after 300 frames:
+  `imageDefines=0.518..0.525`/frame, `imageRefs=18.165..18.172`/frame,
+  `layerRecords=1.164..1.333`/frame, `layerReplays=1.000`/frame, save-layer-family ops `0`, unsupported commands `0`,
+  image evictions `0`, picture frames `0`, and fallbacks `0`.
+  CPU is not accepted: CPU/kFrame `10.76 -> 12.08` (`+12.3%`) exceeds the unchanged `10%` threshold, so the strict
+  analyzer exits `1` and this is the top open performance regression. Initial existing-artifact attribution suggested
+  dirty re-record work over replay dispatch: row CPU deltas `+8.3,+8.3,+15.9,+17.0%` track layer records/frame
+  `1.164,1.191,1.235,1.333` (`r=0.876`, only `n=4`), while defines and replay words are flat
+  (`avg_commands=660.5..660.8`) and
+  command total/draw time does not rise in the high-CPU rows. Thread samples show a persistent roughly `+6.1` CPU
+  point cost on the first listed new-path thread plus distributed row-varying work, but the sampler retained only
+  per-process thread ordinals, not TIDs/names, so it cannot honestly distinguish EDT, render, or GC ownership. RSS
+  is flat and no GC markers were logged. The follow-up short attribution gate at
+  `/Users/seb/src/jbr-skia-zero-copy/magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260710-cpu-attribution-short/`
+  replaced ordinal inference with symmetric in-JVM `ThreadMXBean` top-delta markers. Seven five-second samples name
+  the constant component: `AWT-AppKit` used `1.17%` old versus `6.52%` new (`+5.35` CPU points), while
+  `AWT-EventQueue-0` was `14.25 -> 14.51%` and `Java2D Queue Flusher` was `1.04 -> 1.13%`. The constant CPU target is
+  therefore new-path AppKit/presentation interaction, not EDT recording, replay dispatch, or GC.
+  The same gate directly measured final compaction-group cost after 300 frames: `35,423` ns/frame average and zero
+  aborts. Frames with `0,1,2,3,4` layer records averaged `14,478`, `37,904`, `49,593`, `57,654`, and `54,041` ns;
+  even the `0 -> 4` spread is only about `0.24` CPU points at 60 fps, so final O(R*W) scans are exonerated at this
+  scene scale and layer-record correlation was a proxy rather than the cause. Do not select the deferred
+  saveTranslate/image fold from this evidence. Before this measurement, the mandated compaction tripwire landed:
+  compaction snapshots the uncompacted payload/op index, validates record progress after each group, restores the
+  snapshot instead of falling back on malformed/non-advancing records, and exposes `compactionAborted`; the forced
+  corruption regression and full recorder test class pass. Any future fold remains behind this tripwire.
+- 2026-07-10 IDE benchmark startup was made deterministic after three saveLayer-elision short-chat attempts failed
+  before `status=started`. The clean-sandbox attempt reached `status=project-opened`; its EDT thread dump proved the
+  queued benchmark tool-window activation was blocked in
+  `NewUiOnboardingStartupActivity.execute -> NewUiOnboardingService.showOnboardingDialog -> Dialog.show`. Preserved
+  evidence:
+  `/Users/seb/src/jbr-skia-zero-copy/magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260710-save-layer-elision-short-clean-sandbox/chat/new-startup-failure-thread-dump.txt`.
+  Autorun launches now pin `intellij.startup.wizard=false`, `idea.initially.ask.config=never`,
+  `ide.newUsersOnboarding=false`, and the actual New UI quick-tour registry key
+  `ide.experimental.ui.onboarding=false`. A subsequent fresh launch exposed another first-run blocker, IntelliJ's
+  `Trust and Open Project` dialog, so autorun also pins `idea.trust.all.projects=true`; screenshot evidence is under
+  `/Users/seb/src/jbr-skia-zero-copy/magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260710-save-layer-elision-short-launcher-fixed/chat/new-startup-failure-screen.png`.
+  The suite explicitly uses a fresh IDE sandbox per variant, refusing to reset one owned by a live IDE. Startup
+  timeout handling retains the uniquely owned pre-readiness PID by matching `magic.jewel.benchmark.out`, captures
+  owned-IDE window titles through CoreGraphics plus the screen, log tail, and IDE log into row artifacts,
+  then sends SIGTERM and SIGKILL after a bounded grace period to both IDE and Gradle processes. This replaces the
+  previous mode-only PID lookup that discarded the PID until readiness and leaked two IDEs on timeout. The benchmark
+  readiness contract now also waits for five consecutive seconds of IntelliJ smart mode before tool-window activation
+  and emits `status=indexing-complete elapsedMs=... stableSeconds=5`; both paced-old and new variants use this same
+  path. A fresh new-path launch at
+  `/Users/seb/src/jbr-skia-zero-copy/magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260710-save-layer-elision-short-ready-fixed/`
+  reached that marker after `205258` ms, then reached `status=started`. It was not an acceptance run because the stale
+  macOS ChatGPT-to-System Events consent prompt created by the now-removed first evidence helper blocked subsequent UI
+  paints (`853` presenter frames but only one Swing paint/command frame). The helper now uses read-only CoreGraphics
+  instead of System Events. The benchmark plugin and smoke
+  sources compile with the new launcher/readiness contract. CMP's saveLayer-elision follow-up also documents
+  that `hasDestinationAffectingLayerLocalOps` must remain synchronized with every compacted record embedding
+  `COMMAND_CLEAR_RECT`.
+- 2026-07-10 Cached-layer baked-define purge landed after diagnosing the post-layer-caching image-define regression.
+  The 2026-07-09 chat-cache N=5 tail showed steady-state `imageDefines=2.909`/frame, all from `imageDefineNestedMiss`
+  with `imageDefines>0` on `4646/4646` steady frames: cached layer recordings replay their command bytes verbatim via
+  `appendRecords`, so `COMMAND_DEFINE_IMAGE_BITMAP` records baked in at record time (before render confirmation) were
+  re-sent every frame forever. Fix: `JbrSkiaCommandRecorder.isLayerRecordingReusable` now reports a recording
+  non-reusable once every key in its `imageDefinedKeys` is in `confirmedNativeImageKeys`, forcing exactly one
+  re-record that emits references without definitions (no thrash: the refreshed recording has an empty
+  `imageDefinedKeys`; `imageCacheHasDefinitions=false` can only coexist with an empty confirmed set because both are
+  reset together by `clearInteropCaches`). Embedded-child defines converge through the existing recursive
+  child-revision validity walk. Two tests that encoded the old expectation were rewritten
+  (`layerRecordingWithBakedDefinesInvalidatedOnceConfirmed`,
+  `nestedOnlyLayerRecordingWithBakedDefinesInvalidatedOnceConfirmed`) plus a new partial-confirmation guard
+  (`layerRecordingWithPartiallyConfirmedDefinesStaysReusable`); the surface-change and eviction invalidation tests
+  dropped their now-invalid confirmed-baseline setup step. Layer-cache effectiveness is now observable without
+  Perfetto: `CMP_JBR_COMMAND_RECORDER_FRAME` logs `layerRecords`/`layerReplays` (plus a `layerReplayCount` trace
+  counter), and `jbr-skia-interop-report.sh` aggregates `avg_layer_records`/`avg_layer_replays` and excludes both
+  fields from unsupported-reason summaries. Verification:
+  `./gradlew --no-daemon --no-configuration-cache :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest --tests androidx.compose.ui.graphics.layer.SkiaGraphicsLayerTest`
+  passed (272 + 30 tests) and `./scripts/test-jbr-skia-report-validation.sh` passed. Short chat gate at
+  `/Users/seb/src/jbr-skia-zero-copy/magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260710-define-purge-short/`
+  passed (new-only, 35s, no powermetrics): `2008` command frames, `picture_frames=0`, `fallbacks=0`,
+  `avg_commands=635.3` (down from `666` in the N=5), and steady state after 300 frames of `imageDefines=0.492`/frame
+  (`nestedMiss=0.467`, `ensure=0.025`, `known=0`, evicts `0`), zero-define frames `1267/1708`, matching the
+  pre-layer-caching `0.4833`/frame acceptance level. Layer caching confirmed effective: `layerRecords=1.20`/frame
+  (dirty re-records) and `layerReplays=1.00`/frame (cache replays) against `imageRefs=18.85`/frame. Caveats: this
+  driver shell surfaced a locale hazard — comma-decimal `LC_NUMERIC` corrupted the ps-sampler CSV
+  (`printf "%.2f"` emitted `820,00` and rejected dot-decimal inputs), so this gate's `avg_cpu` columns are unusable
+  (log-derived counters were unaffected); all four harness entry scripts now `export LC_ALL=C`
+  (`jewel-ide-plugin-benchmark-suite.sh`, `analyze-jewel-ide-plugin-benchmark-suite.sh`,
+  `jbr-skia-run-evidence-pass.sh`, `jbr-skia-interop-report.sh`). Machine-noise root cause progressed: every suite
+  run copies a `4.1G` patched IDE into `magic-jewel/out` (now `156G` total), which Spotlight indexes during the
+  measurement window (`mds_stores` top-CPU exclusions on 3/5 N=5 rows); recommended user action remains adding the
+  workspace or at least `magic-jewel/out` to Spotlight Privacy since `mdutil` is volume-scoped and needs interactive
+  root. Next: full N=5 chat evidence pass (with `LC_ALL=C` now baked in) to re-score CPU/GPU per kFrame with defines
+  at the accepted level; prior directional tail was `+9.3%` CPU and `+13.4%` GPU mW per kFrame.
+- 2026-07-09 Replacement N=5 after the exclusion-policy fix completed at
+  `/Users/seb/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-evidence-pass/20260709-policy-fixed-n5/`. The suite still
+  exits nonzero, but for the right reasons now: `15` scheduled rows, `14` measured rows, `1` bounded preflight skip
+  (`redraw#r02`, `old_preflight_ready=false` after the initial attempt plus two retries), and `3` total retry/backfill
+  attempts. The analyzer now classifies that row as `preflight-skipped` rather than reporting false command,
+  powermetrics, and visual-probe failures. Coverage for measured rows is clean: command replay, Spectre visual proof,
+  and powermetrics all cover `14/14` launched rows, with zero fallbacks in every new-path row. The machine-window sampler
+  now names the top foreign process, confirming that the previous self-trigger was fixed; exclusions cite real sampled
+  processes such as `mds_stores`, `spotlightknowledged`, `WindowServer`, `Codex`,
+  `PerfPowerServicesSignpostReader`, and `Google`, not the IDE-under-test process tree.
+  Strict policy-clean aggregates remain sparse because the machine was still noisy: `10` rows were policy-excluded, so
+  policy-clean survivors were `redraw=2`, `hypnotoad=1`, `chat=1`. Those policy-clean rows report `redraw` CPU/GPU per
+  kFrame `+8.4%`/`-0.3%`, `hypnotoad` `+10.0%`/`+4.6%`, and `chat` `+46.5%`/`+19.5%`; strict perf gate fails on chat
+  CPU, chat GPU mW, chat GPU active, and knife-edge hypnotoad CPU. Because chat has only one policy-clean survivor, also
+  keep the explicitly labeled all-measured non-warmup aggregate for directional evidence: `redraw` rows=3 CPU/kFrame
+  `89.74 -> 87.44` (`-2.6%`), GPU mW/kFrame `188.63 -> 189.53` (`+0.5%`), GPU active/kFrame `49.20 -> 49.75`
+  (`+1.1%`); `hypnotoad` rows=4 CPU/kFrame `22.55 -> 25.28` (`+12.1%`), GPU mW/kFrame `72.45 -> 73.38` (`+1.3%`),
+  GPU active/kFrame `13.05 -> 13.70` (`+5.0%`); `chat` rows=4 CPU/kFrame `26.35 -> 32.18` (`+22.1%`), GPU mW/kFrame
+  `59.43 -> 70.13` (`+18.0%`), GPU active/kFrame `13.04 -> 14.91` (`+14.3%`). Interpretation: image-definition storm
+  stayed fixed, hypnotoad/redraw GPU are effectively flat post-sentinel, and the remaining material regression is chat
+  replay/recording cost: CPU clearly high and GPU mW still just above threshold even after async flush plus confirmation
+  fixes. Follow-up should reduce observer noise in future runs as well: avoid Codex-side polling during measurement or
+  exclude the Codex renderer when it is the benchmark driver, and consider whether `PerfPowerServicesSignpostReader`
+  should be treated as measurement overhead rather than foreign contamination.
+- 2026-07-09 N=5 exclusion-policy calibration fix landed after review of
+  `/Users/seb/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-evidence-pass/20260709-proxy-callback-n5-rerun/`. The
+  previous machine-window top-CPU rule was capable of self-triggering on benchmark work: `sample_machine_cpu` excluded
+  only the exact IDE PID, not the IDE-under-test process tree. Future samples now build a PID/PPID map and ignore the
+  IDE PID plus all descendants before choosing the top machine process; the machine summary also records
+  `max_top_process` separately from `max_top_command`, and analyzer exclusion reasons include the process name, e.g.
+  `old-machine-top-cpu 84.5>75.0 (mds_stores)`. This fixes future exclusion calibration but cannot repair old suites,
+  because their `*-machine-cpu.csv` files stored only the already-selected top process per sample. The suite also now
+  has bounded preflight-skip backfill: `MAX_PREFLIGHT_RETRIES_PER_SLOT` defaults to `2`, retries only slots whose
+  `old_skip_reason` or `new_skip_reason` is `preflight`, keeps retried artifacts in `-attemptNN` directories, and writes
+  an `attempts` TSV column. The analyzer remains backward-compatible with old TSVs and reports total
+  `retry/backfill attempts`. Verification: `bash -n` passed for `jewel-ide-plugin-benchmark-suite.sh` and
+  `analyze-jewel-ide-plugin-benchmark-suite.sh`; reanalysis of the old suite shows the new reason format but `unknown`
+  process names for historical rows, as expected. Spotlight check on this machine reports `Spotlight server is disabled`
+  for the workspace/output query, so no additional `mdutil` change was applied in this pass.
+- 2026-07-09 Narrow passwordless powermetrics setup is installed and recognized by the harness. The root-owned wrapper
+  `/usr/local/sbin/jbr-powermetrics-cpu-gpu` and sudoers drop-in `/etc/sudoers.d/jbr-skia-powermetrics` were installed
+  by `magic-jewel/scripts/install-jbr-powermetrics-sudoer.sh`; Codex verified
+  `sudo -n /usr/local/sbin/jbr-powermetrics-cpu-gpu --check` and a preflight-only IDE confirmation run reported
+  `powermetrics_sudo_cached=true`. The wrapper only allows `cpu_power,gpu_power`, intervals from `100` to `5000` ms,
+  and output files under `magic-jewel/out`, rejecting symlink outputs. The evidence scripts now auto-detect this wrapper
+  and still keep the screen-sharing disconnect delay even when no interactive sudo refresh is needed.
+- 2026-07-09 Proxy-callback image-confirm acceptance run completed at
+  `/Users/seb/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-evidence-pass/20260709-image-confirm-proxy-callback/`.
+  The run was command-clean and visual-proofed with zero fallbacks: `chat` old/new paint frames `1742`/`1765`, new
+  command frames `1765`, `avg_commands=635.8`, and new timing avg draw/flush/completion `0.208`/`0.357`/`1.237` ms
+  (`avg_gpu_ms=1.207`). The delegate callback reached the active recorder: `SKIKO_JBR_INTEROP_RECORDER_DELEGATE_IDENTITY`
+  and `CMP_JBR_COMMAND_RECORDER_IDENTITY` both reported the same IntelliJ
+  `PluginClassLoader(plugin=ContentModuleDescriptor(id=intellij.libraries.compose.foundation.desktop))`. The forced
+  clear path also reached the active run (`SKIKO_JBR_INTEROP_COMMAND_CACHES_CLEARED reason=contextChanged` followed by
+  `SKIKO_JBR_INTEROP_SURFACE_CHANGED ... contextChanged=true surfaceChanged=false`). Most importantly, steady-state
+  `imageDefines` collapsed from the previous `18.8664`/frame to `0.4833`/frame while `imageRefs` stayed at
+  `18.8532`/frame; branch attribution dropped from `imageDefineKnown=18.8664`/frame to `0.4567`/frame with
+  `imageDefineNestedMiss=0` and `imageDefineEnsure=0.0266`. This accepts the classloader/bridge fix and the nested
+  confirmation fix as removing the image-definition storm (about `97.4%` fewer redundant defines). Remaining small
+  steady-state define trickle is not the original every-frame failure: after skipping the first `300` recorder frames,
+  `1090/1465` frames had zero defines and the nonzero frames were mostly one or two defines. Follow-up should determine
+  whether that residual is real dynamic bitmap content, enter-frame ensure behavior, or a smaller cache-key churn source
+  before attributing any remaining chat GPU gap to image definitions.
+- 2026-07-09 A first powermetrics-backed N=5 rerun after the proxy-callback fix completed at
+  `/Users/seb/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-evidence-pass/20260709-proxy-callback-n5-rerun/`, but it
+  is partial evidence rather than a confirmation run. The wrapper and harness automation worked: two-sample readiness
+  passed with `powermetrics_sudo_cached=true`, the 30-second disconnect delay ran, and `14/15` rows collected
+  powermetrics without any interactive sudo prompt. The one missing row was `hypnotoad#r04`, skipped before launch by
+  per-variant preflight (`old_preflight_ready=false`, `preflight_top_cpu=84.5`, `preflight_reason=top-cpu>75.0`), so
+  the analyzer correctly reported command/visual/powermetrics coverage as `14/15` and failed the suite. A stale harness
+  default also surfaced on the first attempt (`BENCHMARK_PROJECT_PATH=/Users/rock3r/src/uel`); this was fixed so
+  `jewel-ide-plugin-benchmark-suite.sh` and `jbr-skia-run-evidence-pass.sh` default to the local `magic-jewel` root and
+  pass that path through explicitly.
+  The mechanical outlier policy excluded `13` rows, leaving no clean aggregate for `redraw` or `chat` and only
+  `hypnotoad#r02` as a policy-clean row (`CPU/kFrame +12.9%`, `GPU mW/kFrame +5.7%`, `GPU active/kFrame +16.6%`).
+  This means the run should not be used to claim N=5 performance deltas. Still, it does reinforce two useful facts:
+  command replay stayed clean in all launched new rows (`0` fallbacks), and normal benchmark-mode chat logs reproduce the
+  image-define collapse without the confirmation-debug flag: across `chat-r01..r05`, skipping the first `300` recorder
+  frames gives steady-state `imageDefines` about `0.45-0.49`/frame while `imageRefs` stays about `18.82-18.84`/frame
+  (`imageDefineKnown` about `0.43-0.46`/frame, `imageDefineEnsure` about `0.022-0.026`/frame). Remaining work before a
+  real N=5 is environmental/retry plumbing, not another threshold adjustment: bounded backfill for preflight-skipped
+  rows and a quieter machine, likely with Spotlight/metadata activity controlled.
+- 2026-07-08 CMP nested image confirmation fix landed in
+  `/Users/seb/src/jbr-skia-zero-copy/cmp/compose/ui/ui-graphics/src/skikoMain/kotlin/androidx/compose/ui/graphics/JbrSkiaCommandRecorder.skiko.kt`.
+  The `defineImageIfNeeded` miss branch now preserves the nested-recorder write-skip invariant while still reading the
+  render-confirmed image set: top-level recorders still evict/insert and define on first sight, but nested recorders now
+  define only when `forceResourceDefinitions` is set or the cache key is not in `confirmedNativeImageKeys`. This targets
+  the steady-state chat finding where bitmap definitions stayed at about `18.8`/frame with zero evictions, i.e. same-key
+  redundant nested bitmap definitions rather than unbounded new-key churn. Regression coverage added in
+  `JbrSkiaCommandRecorderTest`: confirmed nested images skip bitmap definitions, unconfirmed nested images still define,
+  surface-change force-definition still wins for nested recordings, and a discarded strict frame does not confirm a nested
+  image. Focused verification passed:
+  `./gradlew :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest`.
+  Runtime counter acceptance failed in the short `chat` run at
+  `/Users/seb/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-evidence-pass/20260708-nested-image-acceptance-2/`:
+  the run was command-clean and visual-proofed with zero fallbacks, but the new path still reported `1875` command
+  frames with steady-state `imageDefines=18.8458`/frame, `imageRefs=18.8458`/frame, `imageDefinePixels=0`,
+  `imageCacheEvicts=0`, and `imageDefines>0` on `1563/1563` steady-state frames. This disproves the narrow acceptance
+  hypothesis for the landed branch change; the next targeted run should enable `skiko.jbr.interop.logImageDefinitionConfirm`
+  and compare confirmed keys against the repeated define keys.
+- 2026-07-08 Follow-up discriminator instrumentation added for the failed nested-image acceptance. CMP frame summaries
+  now include image-definition branch attribution counters: `imageDefineKnown`, `imageDefineTopMiss`,
+  `imageDefineNestedMiss`, and `imageDefineEnsure`. A full-loop regression test now covers `recordFrame` containing a
+  nested layer, confirmation from the actual final command stream, and the next frame's reuse behavior. Skiko's
+  `skiko.jbr.interop.logImageDefinitionConfirm` path now logs empty confirmation attempts and emits confirmation-walk
+  diagnostics (`argbRecords`, `bitmapRecords`, accepted counts, first bitmap record shape), so the next short `chat` run
+  separates three cases: stale deployment, empty/malformed confirmation walk, or confirmed-but-wrong-emitting-branch.
+  Verification passed:
+  `./gradlew :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest` and
+  `./gradlew :skiko:compileKotlinAwt`.
+- 2026-07-08 Image-confirm discriminator run completed at
+  `/Users/seb/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-evidence-pass/20260708-image-confirm-discriminator/`.
+  The run split the failure cleanly: deployment was fresh, confirmation walks were not empty, and bitmap records matched
+  the walk guards (`1767` walk lines and `1767` confirm lines; examples show `bitmapRecords=19 bitmapAccepted=19`,
+  `firstBitmapShape=offset=40 words=11 flags=0`). However, steady-state recorder frames still showed
+  `imageDefines=18.8676`/frame and every define came from the known-key branch:
+  `imageDefineKnown=18.8676`, `imageDefineTopMiss=0`, `imageDefineNestedMiss=0`, `imageDefineEnsure=0`,
+  `imageDefinePixels=0`, `imageCacheEvicts=0`, with `imageDefines>0` on `1473/1473` steady-state frames. This points to
+  the bridge invoking `markInteropImageDefinitionsRendered` on a different recorder class/singleton than the active
+  recorder, most likely because Skiko's `Class.forName` used Skiko's defining classloader. The first follow-up attempt
+  captured the `JbrSkiaCommandRenderDelegate` classloader before surface-identity handling and resolved the recorder
+  through that loader for the entire bridge surface. That was still insufficient: the
+  `20260709-image-confirm-delegate-loader` rerun showed the active recorder loaded by IntelliJ's
+  `PluginClassLoader(plugin=ContentModuleDescriptor(id=intellij.libraries.compose.foundation.desktop))`, while the
+  bridge-resolved recorder came from `com.intellij.util.lang.PathClassLoader`; steady state remained unchanged at
+  `imageDefines=18.8664`/frame and `imageDefineKnown=18.8664`/frame with `imageDefines>0` on `1504/1504` frames. The
+  forced context-change path did fire (`SKIKO_JBR_INTEROP_COMMAND_CACHES_CLEARED reason=contextChanged` and
+  `SKIKO_JBR_INTEROP_SURFACE_CHANGED ... contextChanged=true surfaceChanged=false`), proving the clear hook was exercised
+  but still aimed at the wrong class. The fix was then strengthened to remove recorder-class reflection from the command
+  path entirely: `JbrSkiaCommandRenderDelegate` now exposes cache-clear, image/shader/effect confirmation, and recorder
+  identity hooks, and CMP's dynamic proxy implements those hooks by calling the active `JbrSkiaCommandRecorder` directly.
+  The old reflective `JbrSkiaCommandRecorderCacheBridge` remains only as a fallback for non-CMP diagnostic command frames.
+  Identity diagnostics remain on both sides:
+  `CMP_JBR_COMMAND_RECORDER_IDENTITY` from the active recorder and
+  `SKIKO_JBR_INTEROP_RECORDER_DELEGATE_IDENTITY` from the delegate callback. Verification:
+  `./gradlew :compose:ui:ui:desktopJar :compose:ui:ui-graphics:desktopTest --tests androidx.compose.ui.graphics.JbrSkiaCommandRecorderTest`
+  and `./gradlew :skiko:awtJar`. Next acceptance rerun should keep
+  `skiko.jbr.interop.logImageDefinitionConfirm=true` and add
+  `skiko.jbr.interop.forceContextChangeOnceForTesting=true`; expected steady-state branch shift is
+  `imageDefineKnown` about `18.9`/frame to near `0`, with `imageDefines` near `0`, matching recorder identity lines, and
+  a successful `SKIKO_JBR_INTEROP_COMMAND_CACHES_CLEARED reason=contextChanged` marker proving the clear path reaches the
+  active recorder.
+- 2026-07-08 N=5 paced-vs-paced IDE evidence pass completed at
+  `/Users/seb/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-evidence-pass/20260708-132825/`. Treat this as useful
+  partial evidence, not confirmation-grade N=5 statistics. The one-terminal wrapper, sudo refresh, 30-second
+  disconnect delay, and two-sample readiness gate worked. The suite then measured 8/15 rows and rejected/skipped 7/15
+  rows under strict per-variant preflight, mostly because Spotlight metadata work woke mid-suite (`mds_stores` around
+  `75-81%` CPU). The analyzer therefore produced only one policy-clean survivor per case after warmup/noise exclusions.
+  Passed rows were command-clean, visual-proofed, and powermetrics-backed with zero picture frames and zero fallbacks;
+  sentinel GPU envelopes stayed stable by case: `redraw` about `0.79-0.82` ms, `hypnotoad` about `0.65-0.76` ms, and
+  `chat` about `1.22-1.23` ms. The most stable signal is still chat's GPU gap across measured rows: GPU mW/kFrame
+  `+27.4%`, `+27.5%`, `+24.6%`; GPU active/kFrame `+26.2%`, `+26.4%`, `+23.0%`. CPU remains noisier, with the single
+  policy-clean chat survivor at CPU/kFrame `+18.1%`.
+  Follow-up from the same logs: skipping roughly the first 10 seconds of each measured chat run still leaves steady-state
+  `CMP_JBR_COMMAND_RECORDER_FRAME` summaries at about `18.8` `imageDefines`/frame, `18.8` `imageRefs`/frame,
+  `imageDefinePixels=0`, and `imageCacheEvicts=0` on every frame (`chat-r01`, `chat-r03`, `chat-r05`, and the earlier
+  `20260708-092941/chat-r02` all match). The churn is therefore real and steady-state, but it is
+  `COMMAND_DEFINE_IMAGE_BITMAP` handle-definition churn, not proven raw `COMMAND_DEFINE_IMAGE_ARGB` pixel-upload churn.
+  The zero eviction count rules out the simple "new unique keys every frame until LRU churn" branch; it points instead
+  to same-key redundant bitmap definitions or a confirmation/protocol gap. JBR's native replay short-circuits a repeated
+  bitmap define when the keyed image is already cached with matching dimensions, so do not claim full texture upload
+  from these counters alone. The retained suspicion is image confirmation-state churn and per-frame bitmap-definition
+  validation/replay overhead; the next targeted measurement should enable image-definition confirmation logging and
+  compare adjacent key sets to prove whether the same keys are redefined after being marked rendered. Harness follow-up:
+  implement bounded, visible retry/backfill for preflight-skipped slots and record attempt counts in the TSV; also
+  exclude the workspace/output trees from Spotlight before the next long pass, since metadata churn has now invalidated
+  or thinned multiple evidence runs.
+- 2026-07-08 post-sentinel chat attribution confirmation completed at
+  `/Users/seb/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-evidence-pass/20260708-092941/`. The one-terminal
+  wrapper, 30-second disconnect delay, two-sample readiness gate, and watched-process quiet policy all worked:
+  readiness passed on attempts 1 and 2, `chat#r01` was mechanically excluded as warmup plus old-side `mds_stores`
+  contamination (`old-machine-top-cpu=121.4%`), and `chat#r02` is the first policy-clean post-sentinel chat
+  attribution row. `chat#r02` was command-clean, visual-proofed, and powermetrics-backed with old/new frames
+  `3364`/`3425`. It reported CPU/kFrame `+28.9%`, GPU mW/kFrame `+27.9%`, and GPU active/kFrame `+29.4%`;
+  new-path command frames `3425` over the 60-second window (~`57.1` fps); and command-completion timing
+  `avg_gpu_ms=1.225`, `p95_gpu_ms=1.391`. That gives a replay queue+execution envelope of roughly `70` ms/sec,
+  while the measured GPU-active delta is `42.36 - 32.16 = 10.20` points (~`102` ms/sec). Treat the envelope as an
+  upper bound, not an additive attribution share: it can include queue wait on the Java2D-shared Metal queue, and the
+  new path replaces the old path's own rendering rather than adding on top of it. The retained claim is that replay-side
+  work is a primary contributor because the queue+execution envelope is the same order as the remaining GPU-active
+  delta; the exact split versus presentation, atlas/upload churn, and old-render-equivalent cost remains unresolved.
+  Op-count logging for the same clean row shows this chat scene is not paragraph/text-op dominated at the command-stream
+  level (`textCommands=0`, `paragraphTextCommands=0`); the leading per-frame shapes are `defineImageBitmap` (~`18.9`),
+  image-ref/translated-layer replay records (~`6-7` each), `fillRect` (~`6.4`), gradient round-rects (~`3`), and
+  saveLayer/clip scaffolding (~`1`).
+- 2026-07-07 post-sentinel chat attribution run completed at
+  `/Users/seb/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-evidence-pass/20260707-162608/`. The one-terminal
+  wrapper, 30-second disconnect delay, and initial `WAIT_FOR_QUIET=true` readiness pass all worked; readiness passed
+  on attempt 1 with `preflight_ready=true`, `top_cpu=9.8`, and no watched Spotlight/FSEvents process active. Both
+  `chat` rows were command-clean, visual-proofed, powermetrics-backed, and had `gpuTimingAvailable=true` for every
+  new-path command frame. The run is still not policy-clean: `chat#r01` was excluded as warmup plus old-side
+  `mds_stores` contamination (`old-machine-top-cpu=124.0%`), and `chat#r02` was excluded for new-side `mds_stores`
+  contamination (`new-machine-top-cpu=90.3%`). Attribution signal: `chat#r01` had `3340` command frames, `avg_gpu_ms=1.249`,
+  about `55.7` fps, so replay queue+GPU envelope is about `69.5` ms/sec versus measured GPU-active delta
+  `41.72 - 32.55 = 9.17` points (~`91.7` ms/sec). `chat#r02` had `3367` command frames, `avg_gpu_ms=1.241`, about
+  `56.1` fps, so replay envelope is about `69.6` ms/sec versus measured GPU-active delta `40.87 - 32.49 = 8.38`
+  points (~`83.8` ms/sec). Directionally, the replay queue+execution envelope is the same order as chat's remaining
+  GPU-active gap, making replay-side work a primary contributor while the exact split versus presentation/atlas remains
+  unresolved;
+  rerun once Spotlight is truly quiet for a confirmation-grade aggregate. Harness follow-up: a single readiness sample
+  is insufficient on this machine because `mds_stores` can wake mid-window after clean preflight; require consecutive
+  quiet samples and/or auto-abort/retry rows whose machine-window sampler crosses the watched-process cap.
+- 2026-07-07 sentinel command-buffer presentation/retention cutover accepted. Command replay no longer relies on
+  Ganesh `fFinishedProc` for presentation arming or borrowed texture/layer release; it submits a FIFO sentinel
+  `MTLCommandBuffer` on the same Java2D `MTLCommandQueue` after `directContext->submit()`, and the sentinel completed
+  handler runs `startRedraw`, releases retained objects, and logs `completionNanos` plus `gpuNanos`. Evidence lives
+  under `/Users/seb/src/jbr-skia-zero-copy/magic-jewel/out/run-evidence/20260707-sentinel-completion/`. Continuous
+  smoke: `591` command frames/completions, no fallbacks/errors, mean completion `0.854` ms, p95 `1.751` ms, max
+  `3.118` ms, `gpuTimingAvailable=true` for every frame. Idle-frame smoke: with `magic.jewel.idleSmoke=true`, only
+  `3` command frames/completions before auto-exit, no fallbacks/errors, completions `1.088`, `0.870`, and `0.507` ms;
+  this covers the "last frame before idle presents without waiting for the next context interaction" correctness edge.
+  Resize-storm soak with `MTL_DEBUG_LAYER=1`: `300` programmatic resizes, `299` surface changes, `299` image-cache
+  clears, `5677` command frames/completions, no fallbacks, no `rendered=false`, no assertion/exception/error/SIGABRT,
+  and no Metal validation failure; mean completion `0.502` ms, p95 `0.876` ms, max `2.961` ms, with GPU timing
+  available for all completions. The previous ~`19.7` ms completion proxy was therefore confirmed to be Ganesh
+  finished-proc deferral to the next context interaction, not replay GPU duration.
+- 2026-07-06 chat completion-attribution run completed at
+  `/Users/seb/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-evidence-pass/20260706-225942/`. The wrapper and
+  analysis passed with two command-clean, visual-proofed, powermetrics-backed `chat` rows, but the policy-clean
+  aggregate intentionally has zero rows: `chat#r01` was excluded as warmup plus `mds_stores` contamination
+  (`old-machine-top-cpu=120.8%`, `new-machine-top-cpu=80.9%`), and `chat#r02` was excluded for old-side
+  `mds_stores` contamination (`old-machine-top-cpu=90.0%`). The completion proxy is still informative: new-path
+  command timing was stable at about `3346-3347` command frames, `avg_draw_ms=0.213`, `avg_flush_ms=0.330-0.332`,
+  and `avg_completion_ms=19.66-19.77`. At about `55.8` command frames/sec, mean completion latency implies roughly
+  `1.10` seconds of overlapping completion latency per wall-clock second, far above the measured GPU-active delta
+  (`+7.26` to `+8.38` points, about `73-84` ms/sec). Treat `completionNanos` as a broad submit-to-completion
+  latency envelope, not replay GPU execution time. Use a later `MTLCommandQueue` proxy or Ganesh Metal hook for
+  true `GPUStartTime`/`GPUEndTime` attribution before using this metric to choose between replay work and
+  presentation/texture-upload suspects.
+- 2026-07-06 pre-sentinel attribution/logging note: command-frame logging briefly emitted
+  `JBR_SKIA_INTEROP_COMMAND_COMPLETION completionNanos=... gpuNanos=-1 gpuTimingAvailable=false` from the Skia
+  `finishedProc` path. The 2026-07-07 sentinel cutover above supersedes this: completion logging now comes from a
+  FIFO Metal command-buffer completed handler and includes `gpuNanos` when Metal exposes command-buffer timing.
+- 2026-07-06 async-flush N=5 IDE evidence pass completed at
+  `/Users/seb/src/jbr-skia-zero-copy/magic-jewel/out/jbr-skia-evidence-pass/20260706-180502-async-flush-n5/`.
+  Wrapper status is failed because `redraw#r01` was skipped by per-variant preflight
+  (`fseventsd` at `87.9%` CPU), leaving one empty row; the remaining 14 rows were command-clean, visual-proofed,
+  and powermetrics-backed with zero fallbacks. Treat `r01` as warmup/contamination: `hypnotoad#r01` also shows the
+  old-side first-run CPU signature (`old_cpu=241.20`, `old_cpu_power_avg_mw=8513`). A brief Screen Sharing reconnect
+  likely contaminated `chat#r03/new`: GPU power jumped to `970` mW while command timing stayed normal; exclude that
+  row for GPU interpretation. Clean aggregate after excluding all `r01` rows and `chat#r03`: `redraw` CPU/kFrame
+  `+21.1%`, GPU mW/kFrame `+8.8%`, GPU active/kFrame `+11.3%`; `hypnotoad` CPU/kFrame `+17.4%`, GPU mW/kFrame
+  `+5.9%`, GPU active/kFrame `+13.4%`; `chat` CPU/kFrame `+9.3%`, GPU mW/kFrame `+24.2%`, GPU active/kFrame
+  `+22.0%`. Async flush therefore narrowed the GPU gap substantially for `hypnotoad`/`redraw`, but `chat` still has
+  a stable per-frame GPU gap, pointing back to per-frame replay/recording work rather than flush serialization.
+- 2026-07-06 finishedProc resize-storm acceptance: new-path-only Magic Jewel command-mode soak with
+  `MTL_DEBUG_LAYER=1`, `MAGIC_JEWEL_AUTO_RESIZE_STORM=true`, 300 programmatic content-growth resize steps, and
+  auto-exit after 65 seconds completed successfully. Evidence:
+  `/Users/seb/src/jbr-skia-zero-copy/magic-jewel/out/run-evidence/20260706-1722-finishedproc-resize-storm/content-growth-storm.log`.
+  Counters: `MAGIC_JEWEL_WINDOW_RESIZE=300`,
+  `SKIKO_JBR_INTEROP_SURFACE_CHANGED=299`, `SKIKO_JBR_INTEROP_COMMAND_CACHES_CLEARED=299`,
+  `JBR_SKIA_INTEROP_IMAGE_CACHE_CLEAR=299`, with `SKIKO_JBR_INTEROP_FALLBACK=0`, `rendered=false=0`,
+  `failed assertion=0`, `SIGABRT=0`, `Exception=0`, `ERROR=0`, and no Metal validation failure. The near-1:1
+  image-cache clear count is expected with the current coarse surface-change cache invalidation and is retained as
+  baseline evidence for the later scoped-clearing fix.
+- 2026-07-06 Metal validation tooling note: `MTL_DEBUG_LAYER=1` is new-path-only validation
+  coverage for this series. The old/control Java2D Metal leg aborts under the validation layer with
+  `colorAttachment[0] usage (0x01) doesn't specify MTLTextureUsageRenderTarget (0x04)`, a pre-existing
+  upstream texture-usage issue unrelated to JBR Skia command replay. Use new-path-only resize soaks for
+  finishedProc texture-lifetime acceptance until that old-path validation issue is fixed upstream.
+- 2026-07-06 command-flush timing cutover: command replay started defaulting to
+  `sun.java2d.skia.interop.commandFlushSyncCpu=false`. In the first async-flush revision presentation was armed from
+  Skia's GPU `finishedProc`; the 2026-07-07 sentinel cutover above supersedes that callback path.
+  Runs after this point report `JBR_SKIA_INTEROP_COMMAND_TIMING avg_flush_ms` as native flush/submit wall time,
+  not as a CPU-side wait for GPU completion. Do not compare `avg_flush_ms` across this boundary; use
+  powermetrics and Perfetto for GPU-side attribution. If `compose.swing.render.pacing.enabled=false` is set,
+  command replay forces sync CPU flushes to restore the old backpressure behavior while pacing is disabled.
+- 2026-07-05 baseline-definition cutover: Magic Jewel IDE perf suites now default to
+  `PACE_OLD_BASELINE=true`, so the `old` variant means patched IDE product with patched/paced CMP jars and JBR
+  interop disabled. Suites before this cutover, including
+  `/Users/seb/src/jbr-skia-zero-copy/magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260705-181627/suite.tsv`
+  and the retained completion evidence below, used an unpaced stock-IDE old baseline. Do not compare old-column
+  numbers across this boundary. The expected visible effect in the first paced-vs-paced run is that old `hypnotoad`
+  GPU power collapses from the previous churn signature, e.g. about `763` mW in `20260705-181627`, to the low
+  hundreds because the baseline gained pacing; that is not a new-path regression.
 - 2026-07-05 reran the IDE perf confirmation from a local terminal with a 30-second disconnect window before
   preflight, producing fresh powermetrics-backed evidence at
   `/Users/seb/src/jbr-skia-zero-copy/magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260705-113005/suite.tsv`.

@@ -63,6 +63,12 @@ Default-on AppKit IDE powermetrics evidence:
 /Users/seb/src/jbr-skia-zero-copy/magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260702-181115/suite.tsv
 ```
 
+Baseline-definition caveat: this retained suite predates the 2026-07-05 paced-baseline cutover. Its `old` variant is
+the stock unpaced IDE baseline. New IDE perf suites now default to `PACE_OLD_BASELINE=true`, where `old` means patched
+IDE product with patched/paced CMP jars and JBR interop disabled. Do not compare old-column values across that
+boundary; the first paced-vs-paced run should show old `hypnotoad` GPU power dropping from the old churn signature to
+the low hundreds because the baseline gained pacing.
+
 Strict analysis passed:
 
 - `rows=3`

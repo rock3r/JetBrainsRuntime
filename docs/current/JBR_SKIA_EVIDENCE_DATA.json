@@ -1,0 +1,272 @@
+{
+  "schema_version": 1,
+  "generated_on": "2026-07-12",
+  "scope": "Canonical, source-linked headline evidence for the macOS JBR Skia zero-copy performance and pacing work.",
+  "conventions": {
+    "cpu": "CPU percent of one core normalized per benchmark frame where stated.",
+    "gpu_mw_per_kframe": "Average GPU power divided by benchmark-frame count, scaled to 1,000 frames.",
+    "gpu_active_per_kframe": "GPU active percentage normalized per benchmark frame, scaled to 1,000 frames.",
+    "policy": "Values retain the run's pre-registered exclusions. Cross-suite absolute power is not comparable; use within-run deltas or explicitly labeled delta-versus-delta conclusions.",
+    "source_ledger": "jbr/docs/current/VALIDATION_LOG.md"
+  },
+  "performance_cycle_milestones": [
+    {
+      "milestone": "Cycle start before caching and define convergence",
+      "cpu_delta_percent": 22.0,
+      "cpu_qualification": "directional; malloc probe not yet isolated",
+      "gpu_mw_per_kframe_delta_percent": 18.0,
+      "interpretation": "Initial chat gap",
+      "sources": ["magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260709-chat-cache-n5/suite.tsv", "jbr/docs/current/VALIDATION_LOG.md"]
+    },
+    {
+      "milestone": "Baked image-define purge",
+      "cpu_delta_percent": 9.3,
+      "cpu_qualification": "malloc-probe-contaminated directional tail",
+      "gpu_mw_per_kframe_delta_percent": 13.4,
+      "interpretation": "Cached recordings re-record once all baked image defines are confirmed",
+      "sources": ["magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260710-define-purge-n5/suite.tsv", "jbr/docs/current/VALIDATION_LOG.md"]
+    },
+    {
+      "milestone": "Plain-layer saveLayer elision",
+      "cpu_delta_percent": 12.3,
+      "cpu_qualification": "malloc-probe-contaminated",
+      "gpu_mw_per_kframe_delta_percent": 4.8,
+      "interpretation": "Unnecessary offscreen isolation removed from opaque plain graphics layers",
+      "sources": ["magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260710-save-layer-elision-guarded-quiet-n5-rerun/suite.tsv", "jbr/docs/current/VALIDATION_LOG.md"]
+    },
+    {
+      "milestone": "Caller-thread replay and AppKit default flip",
+      "cpu_delta_percent": 11.2,
+      "cpu_qualification": "malloc-probe-contaminated",
+      "gpu_mw_per_kframe_delta_percent": 3.6,
+      "interpretation": "Lock-held replay correctness closed and AppKit dispatch removed",
+      "sources": ["magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260710-appkit-default-false-guarded-quiet-n5-retry/suite.tsv", "jbr/docs/current/VALIDATION_LOG.md"]
+    },
+    {
+      "milestone": "Malloc diagnostic probe purge",
+      "cpu_delta_percent": 11.4,
+      "cpu_qualification": "frozen-policy aggregate; renderer-owned named threads support parity-adjacent conclusion",
+      "gpu_mw_per_kframe_delta_percent": 1.4,
+      "gpu_active_per_kframe_delta_percent": 2.8,
+      "interpretation": "Always-on malloc_zone_statistics removed from the command path",
+      "sources": ["magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260711-malloc-probe-purge-quiet-n5/suite.tsv", "jbr/docs/current/VALIDATION_LOG.md"]
+    },
+    {
+      "milestone": "Final authorized reference",
+      "cpu_delta_percent": 15.6,
+      "cpu_qualification": "environment-variable; no rerun authorized",
+      "gpu_mw_per_kframe_delta_percent": -3.7,
+      "gpu_active_per_kframe_delta_percent": -0.5,
+      "interpretation": "Closing reference with three retained policy rows",
+      "sources": ["magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260711-final-reference-quiet-n5/suite.tsv", "jbr/docs/current/VALIDATION_LOG.md"]
+    }
+  ],
+  "quiet_n5_aggregates": [
+    {
+      "name": "saveLayer elision guarded reference",
+      "run_directory": "magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260710-save-layer-elision-guarded-quiet-n5-rerun",
+      "retained_policy_rows": 4,
+      "gpu_mw_per_kframe": {"old": 51.02, "new": 53.46, "delta_percent": 4.8},
+      "gpu_active_per_kframe": {"old": 10.45, "new": 11.13, "delta_percent": 6.5},
+      "cpu_per_kframe": {"old": 10.76, "new": 12.08, "delta_percent": 12.3},
+      "qualification": "Pre-malloc-probe-purge CPU is not current-path attribution; power result is a guarded reference."
+    },
+    {
+      "name": "malloc-probe purge quiet N=5",
+      "run_directory": "magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260711-malloc-probe-purge-quiet-n5",
+      "retained_policy_rows": 4,
+      "gpu_mw_per_kframe": {"old": 53.11, "new": 53.87, "delta_percent": 1.4},
+      "gpu_active_per_kframe": {"old": 9.43, "new": 9.70, "delta_percent": 2.8},
+      "cpu_per_kframe": {"old": 8.64, "new": 9.62, "delta_percent": 11.4},
+      "qualification": "r01 warmup excluded; CPU aggregate includes external process spikes, while named renderer threads support parity-adjacent classification."
+    },
+    {
+      "name": "final authorized quiet reference",
+      "run_directory": "magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260711-final-reference-quiet-n5",
+      "retained_policy_rows": 3,
+      "gpu_mw_per_kframe": {"old": 56.52, "new": 54.45, "delta_percent": -3.7},
+      "gpu_active_per_kframe": {"old": 9.75, "new": 9.70, "delta_percent": -0.5},
+      "cpu_per_kframe": {"old": 8.21, "new": 9.49, "delta_percent": 15.6},
+      "qualification": "r01 warmup and r04 new-side mds_stores contamination excluded; CPU remains environment-variable and was not rerun by policy."
+    }
+  ],
+  "pacing": {
+    "timer_baseline": {
+      "run_directory": "magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260711-timer-pacing-chat-proof-v3",
+      "active_window": {"intervals": 2643, "p50_ms": 14.566, "p95_ms": 68.339, "p99_ms": 72.720, "jitter_ms": 24.146, "misses": 474, "miss_fraction_percent": 17.9},
+      "benchmark": {"window_seconds": 50.092, "ticks": 187, "frames": 589, "gaps_over_100ms": 2}
+    },
+    "paired_bridge_gate": {
+      "run_directory": "magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260712-chat-pacing-active-window-rerun",
+      "scoreability": "Visual-proofed functional gate, not CPU/GPU scoreable because powermetrics was disabled.",
+      "timer_old": {"paint_frames": 2614, "intervals": 2613, "p50_ms": 10.996, "p95_ms": 68.721, "p99_ms": 73.350, "mean_ms": 19.153, "jitter_ms": 21.134, "misses_over_25ms": 540, "miss_fraction_percent": 20.7},
+      "display_link_new": {"paint_frames": 2396, "intervals": 2395, "p50_ms": 16.294, "p95_ms": 41.826, "p99_ms": 58.463, "mean_ms": 20.870, "jitter_ms": 11.819, "misses_over_25ms": 493, "miss_fraction_percent": 20.6, "command_frames": 2396, "pictures": 0, "fallbacks": 0},
+      "depth_histogram": {
+        "definition": "Consecutive CMP_SWING_SKIA_LAYER_PAINT intervals in each active-window log.",
+        "timer_old": {"at_or_under_16_667ms": 1708, "16_667_to_25ms": 365, "25_to_50ms": 164, "50_to_75ms": 357, "75_to_100ms": 19, "over_100ms": 0, "deep_misses_over_50ms": 376},
+        "display_link_new": {"at_or_under_16_667ms": 1341, "16_667_to_25ms": 561, "25_to_50ms": 390, "50_to_75ms": 102, "75_to_100ms": 1, "over_100ms": 0, "deep_misses_over_50ms": 103},
+        "deep_miss_reduction_percent": 72.6
+      },
+      "deep_miss_inter_arrival": {
+        "definition": "Elapsed time between starts of consecutive paint intervals over 50ms.",
+        "timer_old": {"events": 376, "inter_arrivals": 375, "at_or_under_100ms": 265, "100_to_250ms": 79, "250ms_to_1s": 30, "over_1s": 1},
+        "display_link_new": {"events": 103, "inter_arrivals": 102, "at_or_under_100ms": 19, "100_to_250ms": 20, "250ms_to_1s": 57, "over_1s": 6}
+      },
+      "source_files": ["chat/summary.properties", "chat/old-active-window.log", "chat/new-active-window.log", "suite.tsv"]
+    },
+    "confirmatory_paced_n5": {
+      "run_directory": "magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260712-bridge-confirmatory-paced-n5",
+      "verdict": "failed_frozen_default_flip_criteria_bridge_remains_flag_off",
+      "legitimacy": {
+        "rows_passed": 5,
+        "command_clean_rows": 5,
+        "visual_proof_rows": 5,
+        "powermetrics_rows": 5,
+        "new_arm_display_link_handshakes": 5,
+        "new_arm_picture_frames": 0,
+        "new_arm_fallbacks": 0
+      },
+      "deep_misses_over_50ms": {
+        "timer_old": 2590,
+        "display_link_new": 2467,
+        "reduction_percent": 4.7,
+        "required_reduction_percent": 60.0,
+        "shortfall_percentage_points": 55.3
+      },
+      "new_active_window_p95_ms": [56.873, 57.167, 57.551, 57.027, 55.950],
+      "required_new_active_window_p95_ms_at_most": 45.0,
+      "policy_clean_r02_r05_per_kframe": {
+        "cpu": {"old": 14.20, "new": 18.25, "delta_percent": 28.5},
+        "gpu_mw": {"old": 52.91, "new": 76.24, "delta_percent": 44.1},
+        "gpu_active": {"old": 10.43, "new": 15.01, "delta_percent": 43.9}
+      },
+      "comparability": {
+        "classification": "valid_but_incomparable_to_banked_quiet_n5s_due_to_content_geometry_and_old_arm_throughput_discontinuity",
+        "frozen_gate_status": "failed; bridge remains flag-off",
+        "not_evidence_of": "a bridge regression versus earlier same-regime gates",
+        "display_link_refresh_comparison": {
+          "earlier_bridge_active_windows_hz": 60.0,
+          "confirmatory_n5_hz": 60.0,
+          "result": "no refresh-regime boundary found"
+        },
+        "active_window_emitted_tick_delta": 3540,
+        "active_window_seconds": 60,
+        "content_geometry": {"banked_quiet_n5": "456x909", "confirmatory_n5": "456x579"},
+        "old_arm_absolute_discontinuity": [
+          {"suite": "20260711-final-reference-quiet-n5", "paint_per_second": 78.42, "cpu_per_kframe": 8.21, "gpu_mw_per_kframe": 56.52},
+          {"suite": "20260711-malloc-probe-purge-quiet-n5", "paint_per_second": 78.59, "cpu_per_kframe": 8.64, "gpu_mw_per_kframe": 53.11},
+          {"suite": "20260712-bridge-confirmatory-paced-n5", "paint_per_second": 45.55, "cpu_per_kframe": 14.20, "gpu_mw_per_kframe": 52.91}
+        ],
+        "screen_sharing_artifact_check": "No matching process names appear in retained CSVs; operator confirmed Screen Sharing connected only after the N=5 completed."
+      },
+      "qualification": "Old/new paint denominators were asymmetric (old 2706..2751, new 2439..2454). The frozen paired performance gate failed, but the run cannot support a comparison with the banked quiet N=5s or a positive efficiency claim; no threshold was changed.",
+      "source_files": ["suite.tsv", "analysis.md", "chat-r01/summary.properties", "chat-r01/old-active-window.log", "chat-r01/new-active-window.log"]
+    },
+    "light_telemetry_579_diagnostic": {
+      "run_directory": "magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260713-bridge-light-telemetry-chat",
+      "scoreability": "N=1 mechanism diagnostic only: powermetrics, thread-CPU, and machine-CPU collection were disabled, so this is not a CPU/GPU score or a replacement N>=5 gate.",
+      "legitimacy": {
+        "status": "passed",
+        "zero_picture_frames": true,
+        "zero_fallbacks": true,
+        "same_arm_display_regime": "display=134; mode=1920x1080; refresh_hz=60.000; backing_scale=1.000; toolwindow=456x579; pixel_area=264024"
+      },
+      "fixed_window_deep_misses_over_50ms": {
+        "definition": "Count of consecutive CMP_SWING_SKIA_LAYER_PAINT intervals over 50ms in each fixed 60-second active window.",
+        "timer_old": {"paint_intervals": 5833, "deep_events": 689, "deep_events_per_second": 11.48, "p95_ms": 75.641, "paint_per_second": 97.23},
+        "display_link_new": {"paint_intervals": 2440, "deep_events": 489, "deep_events_per_second": 8.15, "p95_ms": 58.655, "paint_per_second": 40.68},
+        "reduction_percent": 29.03,
+        "required_reduction_percent": 60.0,
+        "required_new_p95_ms_at_most": 45.0,
+        "qualification": "The common denominator is active-window time, not paint count. Paint-normalized deep fractions are diagnostic only because timer-old overdraws."
+      },
+      "protocol_finding": "Heavy collection changes timer-old paint rate materially while the new arm remains near 40.7 paint/s; the earlier N=5 preserves its frozen failed outcome but is protocol-perturbed for pacing causal attribution.",
+      "foreign_process_caveat": {
+        "remote_samples": 0,
+        "old_watched_cpu_average_percent": 0.63,
+        "old_watched_cpu_max_percent": 2.8,
+        "new_watched_cpu_average_percent": 7.33,
+        "new_watched_cpu_max_percent": 51.3,
+        "interpretation": "The census is not a GPU-power measurement. Its five-second sample cannot by itself remove the 214 deep events needed to pass, nor the 367 events needed for p95 at most 45ms."
+      },
+      "workload_comparison": {
+        "earlier_456x909_light_gate_new_avg_commands": 660.5,
+        "current_456x579_light_gate_new_avg_commands": 511.4,
+        "interpretation": "The later guarded agent-blackout launch rejected the requested 456x579 signature because the live quiet surface was 456x909. The layout mechanism remains unidentified, but this diagnostic was measured under the agent-app-open environment rather than the final quiet workload."
+      },
+      "source_files": ["suite.tsv", "chat/summary.properties", "chat/old-active-window.log", "chat/new-active-window.log", "chat/old-runtime-environment.csv", "chat/new-runtime-environment.csv"]
+    },
+    "quiet_909_closing_n1": {
+      "run_directory": "magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260713-rig-579-light-n1",
+      "scoreability": "Clean light-telemetry N=1 pacing gate only; not a CPU/GPU score and not an N=5 authorization.",
+      "quiet_surface_provenance": {
+        "archived_guard_rejection": "The initial request for logical=456x579;backing=1.000x1.000;pixels=456x579;area=264024 rejected before scoring because the live surface was logical=456x909;backing=1.000x1.000;pixels=456x909;area=414504.",
+        "accepted_rerun_surface": "logical=456x909;backing=1.000x1.000;pixels=456x909;area=414504",
+        "qualification": "The association is guarded live evidence for agent-app-open versus quiesced environment, not an identified layout mechanism."
+      },
+      "legitimacy": {
+        "status": "passed",
+        "display_regime": "display=138; mode=1920x1080; refresh_hz=60.000; backing_scale=1.000",
+        "remote_samples": 0,
+        "foreign_gpu_watch_max_cpu_percent": {"old": 0.20, "new": 0.00, "threshold": 1.0},
+        "zero_picture_frames": true,
+        "zero_fallbacks": true
+      },
+      "fixed_window_deep_misses_over_50ms": {
+        "definition": "Count of consecutive CMP_SWING_SKIA_LAYER_PAINT intervals over 50ms in each fixed 60-second active window.",
+        "timer_old": {"paint_intervals": 4422, "deep_events": 690, "paint_per_second": 73.72, "depth_bins": {"at_or_under_16_667ms": 3723, "16_667_to_25ms": 2, "25_to_50ms": 7, "50_to_75ms": 445, "75_to_100ms": 245, "over_100ms": 0}},
+        "display_link_new": {"paint_intervals": 2851, "deep_events": 154, "paint_per_second": 47.53, "depth_bins": {"at_or_under_16_667ms": 1621, "16_667_to_25ms": 639, "25_to_50ms": 437, "50_to_75ms": 149, "75_to_100ms": 5, "over_100ms": 0}},
+        "reduction_percent": 77.68,
+        "required_reduction_percent": 60.0,
+        "result": "passed"
+      },
+      "provisional_p95": {"new_p95_ms": 53.317, "target_ms_at_most": 45.0, "result": "not_met", "new_p99_ms": 60.113},
+      "closure": "Default remains off. Bank as a clean N=1 primary-depth pass with provisional p95 miss; a confirming N=5 requires an explicit future campaign reopen, and phase timing is a resume option only.",
+      "source_files": ["suite.tsv", "chat/summary.properties", "chat/old-active-window.log", "chat/new-active-window.log", "chat/old-runtime-environment.csv", "chat/new-runtime-environment.csv", "20260713-rig-579-light-n1.prev-134247/chat/summary.properties"]
+    }
+  },
+  "shared_cause_exoneration": {
+    "diagnostic_run_directory": "magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260712-chat-pacing-edt-gc-calibrated",
+    "scoreability": "Diagnostic-only; sandbox reuse is explicitly recorded and it is not a performance score.",
+    "counts": {
+      "timer_old": {"paint_gaps_over_25ms": 584, "paint_gaps_over_50ms": 402, "slow_edt_events": 65, "edt_overlapping_gaps": 0, "gc_pauses_at_least_5ms": 34, "gc_pauses_at_least_10ms": 20, "gc_overlapping_gaps": 0, "clock_calibration_spread_ms_under": 0.964},
+      "display_link_new": {"paint_gaps_over_25ms": 524, "paint_gaps_over_50ms": 134, "slow_edt_events": 46, "edt_overlapping_gaps": 0, "gc_pauses_at_least_5ms": 26, "gc_pauses_at_least_10ms": 15, "gc_overlapping_gaps": 0, "clock_calibration_spread_ms_under": 0.956}
+    },
+    "five_checks": [
+      {"cause": "content work", "result": "exonerated before the EDT/GC diagnostic"},
+      {"cause": "benchmark ticks", "result": "exonerated before the EDT/GC diagnostic"},
+      {"cause": "EDT occupancy", "result": "zero overlap with all qualifying paint gaps"},
+      {"cause": "JVM GC", "result": "zero overlap with all qualifying paint gaps after calibrated uptime alignment"},
+      {"cause": "fabricated host-presented time", "result": "excluded; host reports zero CAMetalDrawable.presentedTime and only dropped callbacks are logged"}
+    ],
+    "source_files": ["jbr/docs/current/VALIDATION_LOG.md", "magic-jewel/out/jewel-ide-plugin-benchmark-suite/20260712-chat-pacing-edt-gc-calibrated"]
+  },
+  "software_fallback_directional_rows": [
+    {
+      "surface": "Chat-size 1x",
+      "run_directory": "magic-jewel/out/jewel-standalone-software-fallback-suite/20260712-d-uplift-fresh",
+      "pixels": 1080000,
+      "accelerated_cpu_percent": 39.91,
+      "forced_software_cpu_percent": 43.04,
+      "software_delta_points": 3.13,
+      "software_delta_percent": 7.8,
+      "qualification": "Fresh 30-second directional CPU row; renderer mode, painter probe, scope registration, and Spectre stress were required."
+    },
+    {
+      "surface": "Maximized 1x",
+      "run_directory": "magic-jewel/out/jewel-standalone-software-fallback-suite/20260712-d-uplift-maximized-pixel-area",
+      "pixels": 1804320,
+      "accelerated_cpu_percent": 39.62,
+      "forced_software_cpu_percent": 41.17,
+      "software_delta_points": 1.55,
+      "software_delta_percent": 3.9,
+      "qualification": "Fresh 30-second directional CPU row; observed accelerated/software areas differ by 2,016 pixels from window sizing."
+    }
+  ],
+  "provenance_notes": [
+    "All paths are relative to the workspace root /Users/seb/src/jbr-skia-zero-copy.",
+    "Historical patched IDE product copies were pruned on 2026-07-12; their run logs, TSVs, summaries, probes, GC logs, and traces remain as evidence.",
+    "The confirmatory paced N=5 was added after the initial extraction and failed its frozen default-flip criteria; the experimental bridge remains flag-off.",
+    "A post-run artifact audit classified the confirmatory paced N=5 as valid-but-incomparable with banked quiet N=5s because content geometry and old-arm paint rate changed materially; display-link counters found no refresh-regime boundary and the operator confirmed Screen Sharing began only after sampling completed."
+  ]
+}

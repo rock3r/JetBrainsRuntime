@@ -37,7 +37,7 @@ import java.nio.ByteBuffer;
  */
 public abstract class JBRSkia {
     public static final int ABI_ID = Integer.parseInt("111");
-    public static final int NATIVE_ABI_VERSION = Integer.parseInt("3");
+    public static final int NATIVE_ABI_VERSION = Integer.parseInt("5");
     public static final String SKIA_REVISION = "m147-" + "64a2414108";
     public static final String SKIA_FLAGS_HASH = "macos-release-metal-poc:" + Integer.parseInt("1");
     public static final String BUILD_ID = buildId();
@@ -395,6 +395,14 @@ public abstract class JBRSkia {
 
     public abstract ScopedSkiaCanvas acquireCanvas(Graphics2D graphics);
 
+    /**
+     * Receives a coalesced permission to schedule one more frame from the
+     * destination Metal display-link. Implementations must return immediately.
+     */
+    public interface FramePacingListener {
+        void onNextFrameOk(long displayId, long timeNanos);
+    }
+
     public abstract static class ScopedSkiaCanvas implements AutoCloseable {
         public static final int BACKEND_METAL = Integer.parseInt("1");
 
@@ -429,6 +437,15 @@ public abstract class JBRSkia {
         public abstract boolean renderCommandDirectFrame(int width, int height, long frameTimeNanos, ByteBuffer commands);
 
         public abstract boolean renderPictureFrame(int width, int height, long frameTimeNanos, byte[] pictureData);
+
+        /**
+         * Registers a listener for experimental display-link pacing. A false
+         * result means the caller must continue with timer pacing.
+         */
+        public abstract boolean registerFramePacingListener(FramePacingListener listener, long generation);
+
+        /** Removes the active display-link pacing listener, if any. */
+        public abstract void unregisterFramePacingListener(long generation);
 
         public abstract void flush();
 

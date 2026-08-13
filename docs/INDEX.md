@@ -8,6 +8,8 @@ Use the short top-level files for current work. Load the archives only when exac
 - [`../SKIA_COMPOSE_ZERO_COPY_POC_PLAN.md`](../SKIA_COMPOSE_ZERO_COPY_POC_PLAN.md): compact current plan and next steps.
 - [`current/COMPLETION_STATUS.md`](current/COMPLETION_STATUS.md): final current-cycle completion verdict and next-session
   instructions.
+- [`current/ZERO_COPY_PRD.md`](current/ZERO_COPY_PRD.md): high-level product snapshot, platform priorities, and
+  published-spec pointer.
 - [`current/VALIDATION_LOG.md`](current/VALIDATION_LOG.md): rolling current-cycle validation ledger.
 - [`../doc/skia-shader-factory.md`](../doc/skia-shader-factory.md): shader/effect descriptor design.
 

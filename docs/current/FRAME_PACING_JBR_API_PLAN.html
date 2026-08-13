@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FramePacing JBR API — Cross-OS Action Plan</title>
+<style>
+  :root {
+    --bg: #0f1218;
+    --surface: #171b24;
+    --surface2: #1e2430;
+    --border: #2a3344;
+    --text: #e8ecf4;
+    --muted: #9aa6bc;
+    --accent: #6ea8fe;
+    --accent2: #8bd5a0;
+    --warn: #e6b35a;
+    --danger: #e07070;
+    --code-bg: #0b0e14;
+    --shadow: 0 1px 0 rgba(255,255,255,0.04) inset, 0 8px 24px rgba(0,0,0,0.35);
+    --radius: 10px;
+    --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    --sans: "Segoe UI", system-ui, -apple-system, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    font-family: var(--sans);
+    background: radial-gradient(1200px 600px at 10% -10%, #1a2740 0%, transparent 50%),
+                radial-gradient(900px 500px at 100% 0%, #1a2e28 0%, transparent 45%),
+                var(--bg);
+    color: var(--text);
+    line-height: 1.55;
+    font-size: 15.5px;
+  }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .wrap {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 2rem 1.25rem 4rem;
+  }
+  header.hero {
+    background: linear-gradient(145deg, var(--surface), var(--surface2));
+    border: 1px solid var(--border);
+    border-radius: calc(var(--radius) + 4px);
+    padding: 1.75rem 1.75rem 1.5rem;
+    box-shadow: var(--shadow);
+    margin-bottom: 1.5rem;
+  }
+  header.hero h1 {
+    margin: 0 0 0.4rem;
+    font-size: 1.75rem;
+    letter-spacing: -0.02em;
+  }
+  header.hero .subtitle {
+    color: var(--muted);
+    margin: 0 0 1rem;
+    font-size: 1.02rem;
+  }
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.25rem 0.65rem;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--code-bg);
+    color: var(--muted);
+    font-size: 0.8rem;
+  }
+  .pill strong { color: var(--text); font-weight: 600; }
+  .pill.ok { border-color: #2d5a40; color: var(--accent2); }
+  .pill.warn { border-color: #5a4a2d; color: var(--warn); }
+  .pill.no { border-color: #5a2d2d; color: var(--danger); }
+
+  nav.toc {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1rem 1.25rem;
+    margin-bottom: 2rem;
+    position: sticky;
+    top: 0.5rem;
+    z-index: 5;
+    box-shadow: var(--shadow);
+  }
+  nav.toc h2 {
+    margin: 0 0 0.6rem;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+  }
+  nav.toc ol {
+    margin: 0;
+    padding-left: 1.2rem;
+    columns: 2;
+    gap: 1.5rem;
+  }
+  nav.toc li { margin: 0.2rem 0; break-inside: avoid; }
+  nav.toc a { color: var(--text); }
+  nav.toc a:hover { color: var(--accent); }
+  @media (max-width: 720px) {
+    nav.toc ol { columns: 1; }
+    nav.toc { position: static; }
+  }
+
+  section {
+    margin: 0 0 2.25rem;
+    scroll-margin-top: 1rem;
+  }
+  section > h2 {
+    font-size: 1.35rem;
+    margin: 0 0 0.85rem;
+    padding-bottom: 0.45rem;
+    border-bottom: 1px solid var(--border);
+    letter-spacing: -0.01em;
+  }
+  h3 {
+    font-size: 1.08rem;
+    margin: 1.35rem 0 0.55rem;
+    color: #d5dceb;
+  }
+  h4 {
+    font-size: 0.95rem;
+    margin: 1rem 0 0.4rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  p { margin: 0.55rem 0; }
+  ul, ol { margin: 0.4rem 0 0.7rem; padding-left: 1.35rem; }
+  li { margin: 0.25rem 0; }
+  li > ul { margin-top: 0.2rem; }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1rem 1.15rem;
+    margin: 0.85rem 0;
+    box-shadow: var(--shadow);
+  }
+  .card.goal { border-left: 3px solid var(--accent2); }
+  .card.warn { border-left: 3px solid var(--warn); }
+  .card.danger { border-left: 3px solid var(--danger); }
+  .card.note { border-left: 3px solid var(--accent); }
+  .card h3 { margin-top: 0; }
+
+  .grid2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.85rem;
+  }
+  @media (max-width: 720px) {
+    .grid2 { grid-template-columns: 1fr; }
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0.75rem 0 1rem;
+    font-size: 0.92rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  th, td {
+    text-align: left;
+    padding: 0.55rem 0.7rem;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  th {
+    background: var(--surface2);
+    color: var(--muted);
+    font-weight: 600;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(110, 168, 254, 0.04); }
+  td code, p code, li code {
+    font-family: var(--mono);
+    font-size: 0.86em;
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 0.05em 0.35em;
+  }
+
+  pre {
+    margin: 0.75rem 0;
+    padding: 1rem 1.1rem;
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow-x: auto;
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    line-height: 1.45;
+    color: #c8d0e0;
+  }
+  pre .c { color: #6a7385; }
+  pre .k { color: #c792ea; }
+  pre .t { color: #82aaff; }
+  pre .s { color: #c3e88d; }
+  pre .n { color: #f78c6c; }
+
+  .diagram {
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    line-height: 1.35;
+    white-space: pre;
+    overflow-x: auto;
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1rem;
+    color: #b8c4d8;
+  }
+
+  .phase {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+    margin: 0.85rem 0;
+    overflow: hidden;
+  }
+  .phase > summary {
+    list-style: none;
+    cursor: pointer;
+    padding: 0.85rem 1.1rem;
+    background: var(--surface2);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 0.85rem;
+    user-select: none;
+  }
+  .phase > summary::-webkit-details-marker { display: none; }
+  .phase > summary::before {
+    content: "▸";
+    color: var(--accent);
+    font-size: 0.85rem;
+  }
+  .phase[open] > summary::before { content: "▾"; }
+  .phase .body { padding: 0.85rem 1.1rem 1.1rem; }
+  .phase .id {
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    color: var(--accent);
+    font-weight: 600;
+  }
+  .phase .title { font-weight: 600; }
+  .phase .effort {
+    margin-left: auto;
+    color: var(--muted);
+    font-size: 0.82rem;
+  }
+  .checklist { list-style: none; padding-left: 0; }
+  .checklist li {
+    padding: 0.3rem 0 0.3rem 1.5rem;
+    position: relative;
+  }
+  .checklist li::before {
+    content: "☐";
+    position: absolute;
+    left: 0;
+    color: var(--muted);
+  }
+  .gate {
+    margin-top: 0.75rem;
+    padding: 0.65rem 0.85rem;
+    background: rgba(110, 168, 254, 0.08);
+    border: 1px solid rgba(110, 168, 254, 0.25);
+    border-radius: 8px;
+    font-size: 0.92rem;
+  }
+  .gate strong { color: var(--accent); }
+
+  footer {
+    margin-top: 3rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 0.88rem;
+  }
+  .pr-flow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    align-items: center;
+    margin: 0.75rem 0;
+  }
+  .pr-flow .step {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.45rem 0.7rem;
+    font-size: 0.85rem;
+  }
+  .pr-flow .arrow { color: var(--muted); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="hero">
+  <h1>FramePacing JBR API</h1>
+  <p class="subtitle">
+    Cross-OS action plan for a clean JetBrains Runtime + jbr-api foundation.
+    Skiko / CMP consumers are deliberately Phase&nbsp;2 — designed against, not built in this program.
+  </p>
+  <div class="meta">
+    <span class="pill"><strong>Scope</strong> JBR + jbr-api only</span>
+    <span class="pill ok"><strong>OS</strong> macOS · Windows · Linux</span>
+    <span class="pill warn"><strong>Out of scope</strong> CMP pacer · Skiko permits · Jewel · zero-copy</span>
+    <span class="pill"><strong>Status</strong> Review draft</span>
+    <span class="pill"><strong>Related</strong> CMP-8124 · existing PoC pacing bridges</span>
+  </div>
+</header>
+
+<nav class="toc" aria-label="Table of contents">
+  <h2>Contents</h2>
+  <ol>
+    <li><a href="#goal">Goal</a></li>
+    <li><a href="#principles">Principles</a></li>
+    <li><a href="#api">Public API</a></li>
+    <li><a href="#backends">Platform backends</a></li>
+    <li><a href="#arch">Internal architecture</a></li>
+    <li><a href="#phases">Delivery phases</a></li>
+    <li><a href="#prs">PR sequence</a></li>
+    <li><a href="#tests">Test plan</a></li>
+    <li><a href="#nongoals">Non-goals</a></li>
+    <li><a href="#phase2">Phase 2 expectations</a></li>
+    <li><a href="#effort">Effort</a></li>
+    <li><a href="#next">First step</a></li>
+  </ol>
+</nav>
+
+<!-- ========== GOAL ========== -->
+<section id="goal">
+  <h2>1. Goal</h2>
+  <div class="card goal">
+    <p>
+      Expose one stable abstraction across all headed JBR platforms:
+    </p>
+    <p style="font-size:1.05rem; margin:0.8rem 0;">
+      <strong>“For display <em>D</em>, call me roughly once per refresh with a monotonic timestamp,
+      on a non-EDT thread, without blocking the compositor or AWT.”</strong>
+    </p>
+    <p style="margin-bottom:0; color:var(--muted);">
+      Clients (later: CMP / Skiko) decide <em>when</em> to paint.
+      JBR never calls <code>repaint()</code>, never tracks dirty state, never knows about Compose or Skia interop.
+    </p>
+  </div>
+
+  <h3>Success criteria</h3>
+  <ul>
+    <li><code>JBR.getFramePacing()</code> works the same way on macOS, Windows, and Linux.</li>
+    <li>Backend <strong>quality is queryable</strong> — clients can refuse weak clocks.</li>
+    <li><strong>Zero cost when unused</strong> — no tick threads / display links until the first subscriber.</li>
+    <li>Independent of <code>JBRSkia</code> / zero-copy / command ABI.</li>
+    <li>Phase 2 can consume the API without forcing a v2 redesign.</li>
+  </ul>
+
+  <div class="card note">
+    <h3>Why not timer-only?</h3>
+    <p>
+      Timer-based limiters (<code>FrameLimiter</code>, Swing <code>Timer</code>) are good <strong>rate governors</strong>
+      but inherently jittery as a <strong>phase-locked cadence</strong> (OS timer granularity, scheduler, wrong refresh rate).
+      This API exists so clients can get a real (or composition-aligned) tick when the OS provides one,
+      with an estimated timer only as the honest weak tier.
+    </p>
+  </div>
+</section>
+
+<!-- ========== PRINCIPLES ========== -->
+<section id="principles">
+  <h2>2. Principles</h2>
+  <table>
+    <thead>
+      <tr><th>#</th><th>Principle</th><th>Implication</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>1</td><td><strong>Ticks only</strong></td><td>No permits, no EDT scheduling, no Skia, no Swing</td></tr>
+      <tr><td>2</td><td><strong>Display-scoped</strong></td><td>Subscribe by <code>displayId</code>, not by Component / ScopedSkiaCanvas</td></tr>
+      <tr><td>3</td><td><strong>Honest quality tiers</strong></td><td>API reports how good the clock is</td></tr>
+      <tr><td>4</td><td><strong>One API, three backends</strong></td><td>Same Java surface; native impls differ</td></tr>
+      <tr><td>5</td><td><strong>Zero cost unused</strong></td><td>Refcount start/stop of native clocks</td></tr>
+      <tr><td>6</td><td><strong>Decouple from JBRSkia</strong></td><td>Must not live under Skia interop ABI or flags</td></tr>
+      <tr><td>7</td><td><strong>Stable for consumers</strong></td><td>Phase 2 adds client code only — no JBR API churn</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ========== API ========== -->
+<section id="api">
+  <h2>3. Public API (jbr-api)</h2>
+  <p>
+    New <code>@Service</code> in the standalone jbr-api jar, following existing patterns
+    (<code>JBR.getFramePacing()</code> / <code>JBR.isFramePacingSupported()</code>).
+    Names are bikesheddable; the shape matters.
+  </p>
+
+<pre><span class="k">package</span> com.jetbrains;
+
+<span class="c">/**
+ * Display-aligned frame pacing clock.
+ * Delivers asynchronous ticks for rate-limiting UI work.
+ * Not a present-completion or drawable callback.
+ * Listeners must return immediately and must not enter AWT locks.
+ */</span>
+<span class="t">@Service</span> <span class="t">@Provided</span>
+<span class="k">public interface</span> <span class="t">FramePacing</span> {
+
+    <span class="k">enum</span> <span class="t">Quality</span> {
+        <span class="c">/** True display link (e.g. CVDisplayLink). */</span>
+        <span class="n">DISPLAY_LINK</span>,
+        <span class="c">/** OS composition / vblank-aligned clock — not glass present time. */</span>
+        <span class="n">COMPOSITION_CLOCK</span>,
+        <span class="c">/** Best-effort high-res timer at estimated refresh rate. */</span>
+        <span class="n">ESTIMATED</span>,
+        <span class="n">NONE</span>
+    }
+
+    <span class="t">Quality</span> getQuality();
+
+    <span class="c">/** Opaque stable id for the screen of {@code gc}, or -1 if unknown. */</span>
+    <span class="k">long</span> displayId(<span class="t">GraphicsConfiguration</span> gc);
+
+    <span class="c">/** Nominal period in ns, or 0 if unknown. Advisory only. */</span>
+    <span class="k">long</span> refreshPeriodNanos(<span class="k">long</span> displayId);
+
+    <span class="c">/** @return subscription, or null if that display cannot be paced */</span>
+    <span class="t">Subscription</span> subscribe(<span class="k">long</span> displayId, <span class="t">Listener</span> listener);
+
+    <span class="t">@Provides</span>
+    <span class="k">interface</span> <span class="t">Listener</span> {
+        <span class="c">/** Non-EDT thread. timeNanos is monotonic, for interval math. */</span>
+        <span class="k">void</span> onTick(<span class="k">long</span> displayId, <span class="k">long</span> timeNanos);
+    }
+
+    <span class="t">@Provided</span>
+    <span class="k">interface</span> <span class="t">Subscription</span> <span class="k">extends</span> <span class="t">AutoCloseable</span> {
+        <span class="k">long</span> displayId();
+        <span class="t">@Override</span> <span class="k">void</span> close(); <span class="c">// idempotent</span>
+    }
+}</pre>
+
+  <h3>API rules</h3>
+  <div class="grid2">
+    <div class="card">
+      <h3>Availability</h3>
+      <ul>
+        <li><code>getFramePacing()</code> non-null when any backend exists at quality ≥ <code>ESTIMATED</code></li>
+        <li><code>null</code> on non-JBR, headless, or hard failure</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Listener contract</h3>
+      <ul>
+        <li>Return immediately</li>
+        <li>No AWT painting, no <code>invokeAndWait</code>, no <code>RenderQueue</code></li>
+        <li>May <code>invokeLater</code> (client choice)</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Multi-subscriber</h3>
+      <ul>
+        <li>N listeners per <code>displayId</code></li>
+        <li>One native clock per display (refcount)</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Hotplug / sleep</h3>
+      <ul>
+        <li>Display gone → stop ticks for that id</li>
+        <li>Client re-resolves <code>displayId(gc)</code> after config change</li>
+        <li>JBR does not track windows</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>What this is not</h3>
+  <ul>
+    <li>Not present-timestamp / CAMetalDrawable completion</li>
+    <li>Not a replacement for heavyweight Skiko <code>MetalRedrawer</code> vsync</li>
+    <li>Not Java2D <code>BufferStrategy</code> vsync</li>
+    <li>Not tied to <code>JBRSkia.ScopedSkiaCanvas</code></li>
+  </ul>
+
+  <div class="card note">
+    <h3>Optional extension (can wait)</h3>
+    <p>
+      <code>long sourceGeneration(long displayId)</code> — bumps on mode change / wake so clients can drop
+      coalesced permits. Nice for Phase&nbsp;2; not required for v1.
+    </p>
+  </div>
+</section>
+
+<!-- ========== BACKENDS ========== -->
+<section id="backends">
+  <h2>4. Platform backends</h2>
+
+  <table>
+    <thead>
+      <tr><th>OS</th><th>Primary backend</th><th>Quality</th><th>Notes</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>macOS</strong></td>
+        <td>Per-display <code>CVDisplayLink</code></td>
+        <td><code>DISPLAY_LINK</code></td>
+        <td>Recommend FramePacing-<em>owned</em> link (see below)</td>
+      </tr>
+      <tr>
+        <td><strong>Windows</strong></td>
+        <td><code>DwmGetCompositionTimingInfo</code> + waitable timer to next boundary</td>
+        <td><code>COMPOSITION_CLOCK</code></td>
+        <td><strong>Do not</strong> use in-process <code>DwmFlush</code> as production tick</td>
+      </tr>
+      <tr>
+        <td><strong>Linux X11</strong></td>
+        <td>Timer @ refresh; optional GLX video-sync upgrade</td>
+        <td><code>ESTIMATED</code> → maybe <code>COMPOSITION_CLOCK</code></td>
+        <td>Probe at service create</td>
+      </tr>
+      <tr>
+        <td><strong>Linux Wayland</strong></td>
+        <td>Timer @ output refresh (v1)</td>
+        <td><code>ESTIMATED</code></td>
+        <td>Surface frame callbacks are surface-scoped — poor fit for a display clock</td>
+      </tr>
+      <tr>
+        <td><strong>Any fail</strong></td>
+        <td>High-res timer @ <code>DisplayMode</code> rate (fallback 60)</td>
+        <td><code>ESTIMATED</code></td>
+        <td>Always available when headed</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>4.1 macOS</h3>
+  <div class="card">
+    <p><strong>Decision to lock in J0:</strong></p>
+    <table>
+      <thead><tr><th>Option</th><th>Pros</th><th>Cons</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>A. FramePacing-owned CVDisplayLink</strong> (recommended)</td>
+          <td>Clear ownership; works without Java2D Metal traffic; no KEEP_ALIVE idle stop coupling</td>
+          <td>Possible dual-link if Metal blit link also runs</td>
+        </tr>
+        <tr>
+          <td><strong>B. Piggyback MTLContext link</strong></td>
+          <td>One link per display; less power when both active</td>
+          <td>Coupled to blit keep-alive; idle link stops hurt pure Compose animation</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>
+      <code>displayId</code>: <code>CGDirectDisplayID</code> zero-extended to <code>long</code>,
+      mapped from <code>GraphicsConfiguration</code> via existing AWT paths.
+    </p>
+  </div>
+
+  <h3>4.2 Windows</h3>
+  <div class="card warn">
+    <h3>Reject: DwmFlush as production tick</h3>
+    <p>
+      PoC measurements: in the live process <code>DwmFlush</code> can return S_OK yet block ~250&nbsp;ms
+      (~4&nbsp;Hz) because it waits for DWM to compose frames that include this process’s presents —
+      a feedback stall when the client gates presents on the same tick.
+    </p>
+  </div>
+  <ul>
+    <li><strong>Accept:</strong> read DWM composition timing → wait to next vblank boundary with high-res waitable timer.</li>
+    <li>Daemon thread, <code>AttachCurrentThreadAsDaemon</code>, JNI <code>onTick</code>.</li>
+    <li>DWM off / remote → fall back to <code>ESTIMATED</code> timer.</li>
+    <li><code>displayId</code>: <code>HMONITOR</code> or stable device-name hash round-tripping with GC.</li>
+    <li><strong>v1 multi-monitor:</strong> prefer per-HMONITOR threads if cheap; primary-only cadence is acceptable if documented.</li>
+  </ul>
+
+  <h3>4.3 Linux</h3>
+  <div class="card note">
+    <p>
+      Design for <strong>graceful degradation</strong>, not perfection. Linux v1 ships with
+      <code>ESTIMATED</code>; better backends are quality upgrades behind the same API.
+    </p>
+  </div>
+  <ol>
+    <li>Resolve refresh: XRR / Wayland output mode / <code>DisplayMode</code>.</li>
+    <li>Thread: <code>clock_nanosleep</code> / waitable timer aligned to period → <code>ESTIMATED</code>.</li>
+    <li>Optional: X11 + GLX <code>glXGetVideoSyncSGI</code> / wait → upgrade to <code>COMPOSITION_CLOCK</code> if safe.</li>
+    <li>Wayland: do <strong>not</strong> invent a dummy <code>wl_surface</code> just for ticks in v1.</li>
+  </ol>
+</section>
+
+<!-- ========== ARCH ========== -->
+<section id="arch">
+  <h2>5. Internal architecture</h2>
+  <div class="diagram">jbr-api: com.jetbrains.FramePacing
+         │
+         ▼
+share/.../FramePacingService.java     @Service create(), quality, displayId, subscribe
+         │
+    ┌────┼────────────────────┐
+    ▼    ▼                    ▼
+ macos/  windows/           unix/
+ FramePacingMac.mm          FramePacingWin.cpp   FramePacingLinux.c
+ CVDisplayLink              DWM timing thread    timer / optional GLX
+    │    │                    │
+    └────┴────────────────────┘
+         │
+  shared multi-subscriber registry
+  displayId → list&lt;Listener global refs&gt;</div>
+
+  <h3>Shared responsibilities</h3>
+  <div class="grid2">
+    <div class="card">
+      <h3>Java</h3>
+      <ul>
+        <li>Listener list + generation tokens</li>
+        <li>Refcount start/stop native clock</li>
+        <li>Exception clearing around callbacks</li>
+        <li><code>displayId(GraphicsConfiguration)</code> via toolkit peers</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Native</h3>
+      <ul>
+        <li>Daemon attach with stable name <code>JBR-FramePacing</code></li>
+        <li>Never block waiting for Java</li>
+        <li>Clear pending JNI exceptions after each listener</li>
+      </ul>
+    </div>
+  </div>
+  <div class="card danger">
+    <p style="margin:0">
+      <strong>Do not</strong> put this under <code>JBRSkiaService</code> / <code>JBRSkiaInterop.*</code>
+      or behind <code>sun.java2d.skia.interop.*</code> flags.
+    </p>
+  </div>
+</section>
+
+<!-- ========== PHASES ========== -->
+<section id="phases">
+  <h2>6. Delivery phases (JBR + API only)</h2>
+
+  <details class="phase" open>
+    <summary>
+      <span class="id">J0</span>
+      <span class="title">Spec freeze</span>
+      <span class="effort">1–2 days</span>
+    </summary>
+    <div class="body">
+      <ul class="checklist">
+        <li>Short design doc: API + quality matrix + listener rules + non-goals</li>
+        <li><code>FramePacing.java</code> interface final enough for review</li>
+        <li>Sign-off: jbr-api maintainers + AWT/Metal + Windows AWT</li>
+      </ul>
+      <h4>Decisions to lock</h4>
+      <ul>
+        <li>macOS: own CVDisplayLink vs Metal piggyback</li>
+        <li>Windows: composition timing (confirm no DwmFlush)</li>
+        <li>Linux v1 = ESTIMATED is acceptable</li>
+        <li>Win/Linux: global vs per-display threads</li>
+      </ul>
+      <div class="gate"><strong>Gate:</strong> written API review approval before code lands as permanent public surface.</div>
+    </div>
+  </details>
+
+  <details class="phase" open>
+    <summary>
+      <span class="id">J1</span>
+      <span class="title">jbr-api surface</span>
+      <span class="effort">0.5–1 day</span>
+    </summary>
+    <div class="body">
+      <ul class="checklist">
+        <li>Add <code>com.jetbrains.FramePacing</code></li>
+        <li>Wire <code>JBR.getFramePacing()</code> / <code>isFramePacingSupported()</code></li>
+        <li>Javadoc + version bump</li>
+      </ul>
+      <div class="gate"><strong>Gate:</strong> clients can compile against the interface; impl may follow same train.</div>
+    </div>
+  </details>
+
+  <details class="phase" open>
+    <summary>
+      <span class="id">J2</span>
+      <span class="title">Shared skeleton + macOS backend</span>
+      <span class="effort">3–5 days</span>
+    </summary>
+    <div class="body">
+      <ul class="checklist">
+        <li><code>FramePacingService</code> multi-subscriber registry</li>
+        <li>macOS CVDisplayLink → <code>DISPLAY_LINK</code></li>
+        <li><code>displayId(gc)</code> + <code>refreshPeriodNanos</code></li>
+        <li>Headless → service unavailable</li>
+        <li>Tests: N ticks in ~N periods; two listeners; double-close; no ticks after close</li>
+      </ul>
+      <div class="gate"><strong>Gate:</strong> macOS headed; zero overhead with no subscribers.</div>
+    </div>
+  </details>
+
+  <details class="phase" open>
+    <summary>
+      <span class="id">J3</span>
+      <span class="title">Windows backend</span>
+      <span class="effort">4–7 days</span>
+    </summary>
+    <div class="body">
+      <ul class="checklist">
+        <li>Composition-clock thread (timing info + wait, not DwmFlush)</li>
+        <li>Quality <code>COMPOSITION_CLOCK</code>; DWM off → <code>ESTIMATED</code></li>
+        <li>Stress: subscribe/unsubscribe storms; no ~250&nbsp;ms stalls under gated presents</li>
+        <li>Document multi-monitor behavior</li>
+      </ul>
+      <div class="gate"><strong>Gate:</strong> median tick interval within ~5% of refresh over 5&nbsp;s idle; no feedback stall.</div>
+    </div>
+  </details>
+
+  <details class="phase" open>
+    <summary>
+      <span class="id">J4</span>
+      <span class="title">Linux backend</span>
+      <span class="effort">3–5 days</span>
+    </summary>
+    <div class="body">
+      <ul class="checklist">
+        <li><code>ESTIMATED</code> timer aligned to refresh (required)</li>
+        <li>Optional GLX video-sync probe → quality upgrade</li>
+        <li>X11 + Wayland: non-null service when headed</li>
+        <li>CI under Xvfb / Weston as available</li>
+      </ul>
+      <div class="gate"><strong>Gate:</strong> ticks fire; quality honest; no headless crash.</div>
+    </div>
+  </details>
+
+  <details class="phase" open>
+    <summary>
+      <span class="id">J5</span>
+      <span class="title">Hardening for consumers</span>
+      <span class="effort">2–3 days</span>
+    </summary>
+    <div class="body">
+      <p>Still no CMP — make the API boring and safe to build on:</p>
+      <table>
+        <thead><tr><th>Item</th><th>Why Phase 2 needs it</th></tr></thead>
+        <tbody>
+          <tr><td>Stable <code>displayId</code> across GC recreation when same screen</td><td>Window move / DPI</td></tr>
+          <tr><td><code>refreshPeriodNanos</code> best-effort</td><td>Timer fallback alignment</td></tr>
+          <tr><td>Subscriber refcount start/stop</td><td>Power</td></tr>
+          <tr><td>1000× subscribe/close stress</td><td>Plugin reload</td></tr>
+          <tr><td><code>-Djbr.framePacing.trace=true</code></td><td>Bring-up telemetry</td></tr>
+          <tr><td>No present-complete API in v1</td><td>Avoid false hopes</td></tr>
+        </tbody>
+      </table>
+      <div class="gate"><strong>Gate:</strong> documented client cookbook; stress green on three OSes.</div>
+    </div>
+  </details>
+
+  <details class="phase">
+    <summary>
+      <span class="id">J6</span>
+      <span class="title">Deprecate PoC Skia-tied hooks</span>
+      <span class="effort">~1 day</span>
+    </summary>
+    <div class="body">
+      <ul class="checklist">
+        <li>Remove / never ship <code>ScopedSkiaCanvas.registerFramePacingListener</code> as public contract</li>
+        <li>Drop <code>sun.java2d.skia.interop.displayLinkPacing</code> as the API flag</li>
+        <li>PoC Skiko migrates in Phase 2 — not a gate for this program</li>
+      </ul>
+    </div>
+  </details>
+</section>
+
+<!-- ========== PRS ========== -->
+<section id="prs">
+  <h2>7. PR sequence</h2>
+  <div class="pr-flow">
+    <span class="step"><strong>PR1</strong> Design + <code>FramePacing.java</code></span>
+    <span class="arrow">→</span>
+    <span class="step"><strong>PR2</strong> Skeleton + macOS</span>
+    <span class="arrow">→</span>
+    <span class="step"><strong>PR3</strong> Windows</span>
+    <span class="arrow">→</span>
+    <span class="step"><strong>PR4</strong> Linux</span>
+    <span class="arrow">→</span>
+    <span class="step"><strong>PR5</strong> Harden / trace</span>
+    <span class="arrow">→</span>
+    <span class="step"><strong>PR6</strong> Remove PoC hooks</span>
+  </div>
+  <p>
+    Each backend PR is independently reviewable. API does not churn after PR1.
+    PR1+PR2 can merge without Windows/Linux; quality tiers let incomplete platforms still ship.
+  </p>
+</section>
+
+<!-- ========== TESTS ========== -->
+<section id="tests">
+  <h2>8. Test plan (JBR only)</h2>
+  <table>
+    <thead>
+      <tr><th>Test</th><th>OS</th><th>Assert</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Service null / unavailable headless</td><td>all</td><td>No crash; no background threads</td></tr>
+      <tr><td>Quality constant</td><td>all</td><td>Matches backend tier</td></tr>
+      <tr><td>Tick rate</td><td>all</td><td>~refresh over 3–5&nbsp;s (looser on ESTIMATED)</td></tr>
+      <tr><td>Unsubscribe stops</td><td>all</td><td>No callbacks after close (+ short grace)</td></tr>
+      <tr><td>Multi-listener</td><td>all</td><td>Both receive</td></tr>
+      <tr><td>displayId stable</td><td>all</td><td>Same GC → same id</td></tr>
+      <tr><td>Windows no DwmFlush stall</td><td>win</td><td>Tick p99 ≲ 30&nbsp;ms while app presents gated frames</td></tr>
+      <tr><td>Hotplug (manual)</td><td>mac/win</td><td>No crash; re-subscribe documented</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ========== NONGOALS ========== -->
+<section id="nongoals">
+  <h2>9. Non-goals (this program)</h2>
+  <ul>
+    <li>CMP <code>SwingRepaintPacer</code>, Skiko permit/watchdog, Jewel flags</li>
+    <li>Command interop / zero-copy / <code>JBRSkia</code> ABI</li>
+    <li>Present timestamps / “frame actually on glass”</li>
+    <li>Replacing Skiko heavyweight redrawer vsync</li>
+    <li>Guaranteeing tear-free Swing blits</li>
+    <li>Perfect Wayland presentation-time in v1</li>
+  </ul>
+</section>
+
+<!-- ========== PHASE 2 ========== -->
+<section id="phase2">
+  <h2>10. Phase 2 expectations (not this plan’s work)</h2>
+  <p>When J0–J5 land, CMP/Skiko only need:</p>
+  <ol>
+    <li><code>JBR.getFramePacing()</code></li>
+    <li><code>displayId(component.graphicsConfiguration)</code></li>
+    <li><code>subscribe</code> while dirty / animating</li>
+    <li>Coalesce one repaint per tick</li>
+    <li>Timer fallback if null / quality too low / watchdog miss</li>
+  </ol>
+  <div class="diagram">CMP SwingRepaintPacer
+  dirty + coalesce + timer fallback + mode flag
+           │ subscribe / onTick
+           ▼
+  Skiko thin adapter (optional)
+  GC → displayId · Subscription lifecycle
+           │ JBR.getFramePacing()
+           ▼
+  jbr-api FramePacing  ←  this program
+           │
+  macOS DL · Win composition · Linux estimated</div>
+  <p>
+    Old SwingGraphics path and new zero-copy path share the same clock.
+    No reflective <code>JbrSkiaSwingLayer.requestDisplayLinkPacedRepaint</code>.
+  </p>
+</section>
+
+<!-- ========== EFFORT ========== -->
+<section id="effort">
+  <h2>11. Effort (ballpark)</h2>
+  <table>
+    <thead>
+      <tr><th>Phase</th><th>Effort</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>J0 Spec</td><td>1–2 days</td></tr>
+      <tr><td>J1 API</td><td>0.5–1 day</td></tr>
+      <tr><td>J2 macOS + skeleton</td><td>3–5 days</td></tr>
+      <tr><td>J3 Windows</td><td>4–7 days (timing correctness is the risk)</td></tr>
+      <tr><td>J4 Linux</td><td>3–5 days</td></tr>
+      <tr><td>J5 Hardening</td><td>2–3 days</td></tr>
+      <tr><td>J6 PoC cleanup</td><td>~1 day</td></tr>
+      <tr><td><strong>Total</strong></td><td><strong>~2–4 engineer-weeks</strong> (calendar + review), excluding Phase 2 clients</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ========== NEXT ========== -->
+<section id="next">
+  <h2>12. First concrete step</h2>
+  <div class="card goal">
+    <p><strong>Lock J0 decisions</strong> in a one-pager / review of this HTML:</p>
+    <ol>
+      <li>API = display-scoped ticks + <code>Quality</code> enum (as above).</li>
+      <li>macOS = FramePacing-owned <code>CVDisplayLink</code> (recommended) vs Metal piggyback.</li>
+      <li>Windows = DWM composition timing + wait — never <code>DwmFlush</code> as production tick.</li>
+      <li>Linux v1 = <code>ESTIMATED</code> required; better backends are upgrades.</li>
+      <li>Service independent of <code>JBRSkia</code>.</li>
+    </ol>
+    <p style="margin-bottom:0">
+      Then land <strong>PR1 + PR2</strong> (API + macOS) so the contract is real before Windows/Linux fill in.
+    </p>
+  </div>
+</section>
+
+<footer>
+  <p>
+    File: <code>jbr/docs/current/FRAME_PACING_JBR_API_PLAN.html</code> ·
+    Review draft for JBR + jbr-api FramePacing ·
+    Open in a browser for sticky TOC and collapsible phases.
+  </p>
+</footer>
+
+</div>
+</body>
+</html>

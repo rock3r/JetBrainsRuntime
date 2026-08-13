@@ -24,6 +24,9 @@
  */
 
 #import <sys/sysctl.h>
+#include <mach/mach_time.h>
+#include <stdlib.h>
+#include <string.h>
 #import "PropertiesUtilities.h"
 #import "MTLGraphicsConfig.h"
 #import "MTLLayer.h"
@@ -42,6 +45,36 @@ static jclass jc_JavaLayer = NULL;
 #define TRACE_DISPLAY   TRACE_DISPLAY_ENABLED
 
 const NSTimeInterval DF_BLIT_FRAME_TIME=1.0/120.0;
+
+static BOOL JBRSkiaPacingMarkersEnabled() {
+    static int enabled = -1;
+    if (enabled == -1) {
+        const char *value = getenv("JBR_SKIA_PACING_MARKERS");
+        enabled = value != NULL && (strcmp(value, "1") == 0 || strcmp(value, "true") == 0);
+    }
+    return enabled == 1;
+}
+
+static BOOL JBRSkiaDisplayLinkDebugEnabled() {
+    const char *value = getenv("JBR_SKIA_DISPLAY_LINK_DEBUG");
+    return value != NULL && (strcmp(value, "1") == 0 || strcmp(value, "true") == 0);
+}
+
+static void JBRSkiaLogPresentationSite(const char *site, MTLLayer *layer, id<CAMetalDrawable> drawable) {
+    static int logCount = 0;
+    if (JBRSkiaDisplayLinkDebugEnabled() && logCount++ < 32) {
+        fprintf(stderr, "JBR_SKIA_PRESENT_SITE site=%s layer=%p drawable=%p\n", site, layer, drawable);
+    }
+}
+
+static uint64_t JBRSkiaHandlerTimeNanos() {
+    static mach_timebase_info_data_t timebase;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        mach_timebase_info(&timebase);
+    });
+    return (uint64_t)(((__uint128_t)mach_absolute_time() * timebase.numer) / timebase.denom);
+}
 
 extern BOOL isColorMatchingEnabled();
 
@@ -173,6 +206,10 @@ BOOL MTLLayer_isExtraRedrawEnabled() {
 }
 
 - (void) blitTexture {
+    static int pacingMarkerBlitLogCount = 0;
+    if (JBRSkiaDisplayLinkDebugEnabled() && pacingMarkerBlitLogCount++ < 10) {
+        fprintf(stderr, "JBR_SKIA_FRAME_PRESENT_BLIT markersEnabled=%d\n", JBRSkiaPacingMarkersEnabled());
+    }
     if (self.ctx == NULL || self.javaLayer == NULL || self.buffer == NULL || *self.buffer == nil ||
         self.ctx.device == nil)
     {
@@ -275,12 +312,27 @@ BOOL MTLLayer_isExtraRedrawEnabled() {
                     destinationOrigin:MTLOriginMake(0, 0, 0)];
             [blitEncoder endEncoding];
 
+            __block uint64_t presentCallTimeNanos = 0;
             if (@available(macOS 10.15.4, *)) {
+                JBRSkiaLogPresentationSite("presentedHandlerAttach", self, mtlDrawable);
                 [self retain];
                 [mtlDrawable addPresentedHandler:^(id <MTLDrawable> drawable) {
                     // note: called anyway even if drawable.present() not called!
                     const CFTimeInterval presentedTime = drawable.presentedTime;
+                    const uint64_t handlerTimeNanos = JBRSkiaHandlerTimeNanos();
+                    static int pacingMarkerHandlerLogCount = 0;
+                    if (JBRSkiaDisplayLinkDebugEnabled() && pacingMarkerHandlerLogCount++ < 10) {
+                        fprintf(stderr, "JBR_SKIA_FRAME_PRESENT_HANDLER markersEnabled=%d presentsWithTransaction=%d presentCallNanos=%llu handlerFireNanos=%llu presentedTimeNanos=%.0f drawable=%p\n",
+                                JBRSkiaPacingMarkersEnabled(), self.presentsWithTransaction,
+                                (unsigned long long)presentCallTimeNanos,
+                                (unsigned long long)handlerTimeNanos,
+                                presentedTime * 1000000000.0, drawable);
+                    }
                     if (presentedTime != 0.0) {
+                        if (JBRSkiaPacingMarkersEnabled()) {
+                            fprintf(stderr, "JBR_SKIA_FRAME_PRESENTED timeNanos=%.0f timeSource=presentedTime\n",
+                                    presentedTime * 1000000000.0);
+                        }
                         if (self.perfCountersEnabled) {
                             [self countFramePresentedCallback];
                         }
@@ -297,6 +349,10 @@ BOOL MTLLayer_isExtraRedrawEnabled() {
                         self.lastPresentedTime = presentedTime;
 #endif
                     } else {
+                        if (JBRSkiaPacingMarkersEnabled()) {
+                            fprintf(stderr, "JBR_SKIA_FRAME_PRESENT_CALLBACK outcome=dropped timeNanos=%llu timeSource=handlerCallback\n",
+                                    (unsigned long long)handlerTimeNanos);
+                        }
                         if (self.perfCountersEnabled) {
                             [self countFrameDroppedCallback];
                         }
@@ -322,12 +378,21 @@ BOOL MTLLayer_isExtraRedrawEnabled() {
                               "[%.6lf] MTLLayer.blitTexture: layer[%p] present drawable(%d)",
                               CACurrentMediaTime(), self, drawableId);
             }
+            presentCallTimeNanos = JBRSkiaHandlerTimeNanos();
+            static int pacingMarkerPresentCallLogCount = 0;
+            if (JBRSkiaDisplayLinkDebugEnabled() && pacingMarkerPresentCallLogCount++ < 10) {
+                fprintf(stderr, "JBR_SKIA_FRAME_PRESENT_CALL timeNanos=%llu layer=%p drawable=%p\n",
+                        (unsigned long long)presentCallTimeNanos, self, mtlDrawable);
+            }
             if (isDisplaySyncEnabled()) {
+                JBRSkiaLogPresentationSite("commandBufferPresentDrawableDisplaySync", self, mtlDrawable);
                 [commandBuf presentDrawable:mtlDrawable];
             } else {
                 if (@available(macOS 10.15.4, *)) {
+                    JBRSkiaLogPresentationSite("commandBufferPresentDrawablePaced", self, mtlDrawable);
                     [commandBuf presentDrawable:mtlDrawable afterMinimumDuration:self.avgBlitFrameTime];
                 } else {
+                    JBRSkiaLogPresentationSite("commandBufferPresentDrawableFallback", self, mtlDrawable);
                     [commandBuf presentDrawable:mtlDrawable];
                 }
             }
@@ -441,6 +506,7 @@ BOOL MTLLayer_isExtraRedrawEnabled() {
     } else {
             [ThreadUtilities performOnMainThreadNowOrLater:NO // critical
                                                      block:^(){
+            JBRSkiaLogPresentationSite("immediateSetNeedsDisplay", self, nil);
             [self setNeedsDisplay];
         }];
     }

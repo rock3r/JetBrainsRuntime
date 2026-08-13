@@ -24,12 +24,14 @@
  */
 
 #include <stdlib.h>
+#include <string.h>
 #import <ThreadUtilities.h>
 
 #include "sun_java2d_SunGraphics2D.h"
 
 #include "jlong.h"
 #import "MTLContext.h"
+
 #include "MTLRenderQueue.h"
 #import "MTLSamplerManager.h"
 #import "MTLStencilManager.h"
@@ -70,6 +72,18 @@ extern BOOL isValidDisplayMode(CGDisplayModeRef mode);
 
 #define TRACE_DISPLAY       0
 
+static BOOL JBRSkiaPresentationSiteDebugEnabled() {
+    const char *value = getenv("JBR_SKIA_DISPLAY_LINK_DEBUG");
+    return value != NULL && (strcmp(value, "1") == 0 || strcmp(value, "true") == 0);
+}
+
+static void JBRSkiaLogSetNeedsDisplaySite(const char *site, MTLLayer *layer) {
+    static int logCount = 0;
+    if (JBRSkiaPresentationSiteDebugEnabled() && logCount++ < 32) {
+        fprintf(stderr, "JBR_SKIA_PRESENT_SITE site=%s layer=%p drawable=(nil)\n", site, layer);
+    }
+}
+
 #define CHECK_CVLINK(op, source, dl, cmd)                                               \
 {                                                                                       \
     CVReturn ret = (CVReturn) (cmd);                                                    \
@@ -85,6 +99,105 @@ extern BOOL isValidDisplayMode(CGDisplayModeRef mode);
 /* 60 fps typically => exponential smoothing on 0.5s */
 static const NSTimeInterval EXP_AVG_WEIGHT = (1.0 / 30.0);
 static const NSTimeInterval EXP_INV_WEIGHT = (1.0 - EXP_AVG_WEIGHT);
+
+@interface JBRSkiaFramePacingRegistration : NSObject {
+@public
+    jobject listener;
+    jmethodID notifyMethod;
+    jlong generation;
+}
+@end
+
+@implementation JBRSkiaFramePacingRegistration
+@end
+
+static NSLock *jbrSkiaFramePacingLock;
+static JBRSkiaFramePacingRegistration *jbrSkiaFramePacingRegistration;
+static JavaVM *jbrSkiaFramePacingJavaVm;
+
+static BOOL JBRSkiaFramePacingDebugEnabled(void) {
+    const char *value = getenv("JBR_SKIA_DISPLAY_LINK_DEBUG");
+    return value != NULL && (strcmp(value, "1") == 0 || strcmp(value, "true") == 0);
+}
+
+static void ensureJBRSkiaFramePacingRegistry(void) {
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        jbrSkiaFramePacingLock = [[NSLock alloc] init];
+    });
+}
+
+__attribute__((visibility("default")))
+BOOL JBRSkiaRegisterDisplayLinkPacingListener(JNIEnv *env, jobject listener, jlong generation) {
+    if (env == NULL || listener == NULL) return NO;
+    ensureJBRSkiaFramePacingRegistry();
+    jclass listenerClass = (*env)->GetObjectClass(env, listener);
+    if (listenerClass == NULL) return NO;
+    jmethodID notifyMethod = (*env)->GetMethodID(env, listenerClass, "onNextFrameOk", "(JJ)V");
+    (*env)->DeleteLocalRef(env, listenerClass);
+    if (notifyMethod == NULL) { (*env)->ExceptionClear(env); return NO; }
+    jobject globalListener = (*env)->NewGlobalRef(env, listener);
+    if (globalListener == NULL) return NO;
+    JavaVM *javaVm = NULL;
+    (*env)->GetJavaVM(env, &javaVm);
+    [jbrSkiaFramePacingLock lock];
+    JBRSkiaFramePacingRegistration *old = jbrSkiaFramePacingRegistration;
+    if (old != nil) {
+        (*env)->DeleteGlobalRef(env, old->listener);
+        [old release];
+    }
+    JBRSkiaFramePacingRegistration *registration = [[JBRSkiaFramePacingRegistration alloc] init];
+    registration->listener = globalListener;
+    registration->notifyMethod = notifyMethod;
+    registration->generation = generation;
+    jbrSkiaFramePacingRegistration = registration;
+    jbrSkiaFramePacingJavaVm = javaVm;
+    [jbrSkiaFramePacingLock unlock];
+    if (JBRSkiaFramePacingDebugEnabled()) {
+        fprintf(stderr, "JBR_SKIA_DISPLAY_LINK register scope=display generation=%ld\n", (long)generation);
+    }
+    return YES;
+}
+
+__attribute__((visibility("default")))
+void JBRSkiaUnregisterDisplayLinkPacingListener(JNIEnv *env, jlong generation) {
+    if (env == NULL) return;
+    ensureJBRSkiaFramePacingRegistry();
+    [jbrSkiaFramePacingLock lock];
+    JBRSkiaFramePacingRegistration *registration = jbrSkiaFramePacingRegistration;
+    if (registration != nil && registration->generation == generation) {
+        (*env)->DeleteGlobalRef(env, registration->listener);
+        [registration release];
+        jbrSkiaFramePacingRegistration = nil;
+    }
+    [jbrSkiaFramePacingLock unlock];
+}
+
+void JBRSkiaNotifyDisplayLinkTick(jlong displayID) {
+    if (jbrSkiaFramePacingJavaVm == NULL) return;
+    ensureJBRSkiaFramePacingRegistry();
+    [jbrSkiaFramePacingLock lock];
+    JBRSkiaFramePacingRegistration *registration = [jbrSkiaFramePacingRegistration retain];
+    [jbrSkiaFramePacingLock unlock];
+    if (registration == nil) return;
+    if (JBRSkiaFramePacingDebugEnabled()) {
+        fprintf(stderr, "JBR_SKIA_DISPLAY_LINK tick displayID=%ld generation=%ld\n",
+                (long)displayID, (long)registration->generation);
+    }
+    JNIEnv *env = NULL;
+    BOOL attached = NO;
+    if ((*jbrSkiaFramePacingJavaVm)->GetEnv(jbrSkiaFramePacingJavaVm, (void **)&env, JNI_VERSION_1_6) != JNI_OK) {
+        if ((*jbrSkiaFramePacingJavaVm)->AttachCurrentThreadAsDaemon(jbrSkiaFramePacingJavaVm, (void **)&env, NULL) != JNI_OK) {
+            [registration release]; return;
+        }
+        attached = YES;
+    }
+    (*env)->CallVoidMethod(env, registration->listener, registration->notifyMethod,
+                           displayID, (jlong)(CACurrentMediaTime() * 1000000000.0));
+    if ((*env)->ExceptionCheck(env)) (*env)->ExceptionClear(env);
+    if (attached) (*jbrSkiaFramePacingJavaVm)->DetachCurrentThread(jbrSkiaFramePacingJavaVm);
+    [registration release];
+}
 
 static struct TxtVertex verts[PGRAM_VERTEX_COUNT] = {
         {{-1.0, 1.0}, {0.0, 0.0}},
@@ -1068,9 +1181,11 @@ extern void initSamplers(id<MTLDevice> device);
     // Process layers:
     for (MTLLayer *layer in _layers) {
         if (layer.displayID == displayID) {
+            JBRSkiaLogSetNeedsDisplaySite("displayLinkSetNeedsDisplay", layer);
             [layer setNeedsDisplay];
         }
     }
+    JBRSkiaNotifyDisplayLinkTick(displayID);
     if (dlState->redrawCount > 0) {
         dlState->redrawCount--;
     } else {
@@ -1149,6 +1264,7 @@ CVReturn mtlDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeStamp*
 
     if (MTLLayer_isExtraRedrawEnabled()) {
         // Request for redraw before starting display link to avoid rendering problem on M2 processor
+        JBRSkiaLogSetNeedsDisplaySite("startRedrawSetNeedsDisplay", layer);
         [layer setNeedsDisplay];
     }
     [self handleDisplayLink:YES displayID:displayID source:"startRedraw"];

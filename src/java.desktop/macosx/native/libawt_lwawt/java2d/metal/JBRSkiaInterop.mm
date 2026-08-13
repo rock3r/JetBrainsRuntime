@@ -24,10 +24,12 @@
  */
 
 #import <Metal/Metal.h>
+#import <QuartzCore/QuartzCore.h>
 #include <dispatch/dispatch.h>
 #include <jni.h>
 #include <malloc/malloc.h>
 #include <algorithm>
+#include <atomic>
 #include <array>
 #include <chrono>
 #include <cmath>
@@ -91,14 +93,17 @@
 #include "ports/SkFontMgr_mac_ct.h"
 
 #include "MTLSurfaceDataBase.h"
+#include "MTLSurfaceData.h"
 
 static constexpr jint ABI_ID = 111;
-static constexpr jint NATIVE_ABI_VERSION = 3;
-static constexpr const char* BUILD_ID = "skia=m147-64a2414108;flags=macos-release-metal-poc:1;abi=111;native=3";
+static constexpr jint NATIVE_ABI_VERSION = 5;
+static constexpr const char* BUILD_ID = "skia=m147-64a2414108;flags=macos-release-metal-poc:1;abi=111;native=5";
 static constexpr size_t MAX_CACHED_RUNTIME_EFFECTS = 1024;
 static constexpr jint COMMAND_STREAM_MAGIC = 1246972723;
 static constexpr jint COMMAND_STREAM_HEADER_SIZE = 6;
 static constexpr jint COMMAND_STREAM_FLAGS_NONE = 0;
+static std::atomic<int> gDisplayLinkFrameFlushLogCount{0};
+static std::atomic<uintptr_t> gDisplayLinkLastFrameOps{0};
 
 static float commandBitsToFloat(jint bits) {
     float value;
@@ -222,6 +227,8 @@ static constexpr jint COMMAND_FILL_RECT_RUN = 108;
 static constexpr jint COMMAND_CLEAR_DRAW_IMAGE_REF_FULL_DRAW_ROUND_RECT = 109;
 static constexpr jint COMMAND_STROKE_LINE_RUN = 110;
 static constexpr jint COMMAND_SAVE_LAYER_CLIP_PATH = 111;
+static constexpr jint COMMAND_DEFINE_LAYER = 112;
+static constexpr jint COMMAND_DRAW_LAYER_REF = 113;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER = 1;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_COLOR_MATRIX_FILTER = 2;
 static constexpr jint COMMAND_EFFECT_DESCRIPTOR_LIGHTING_FILTER = 3;
@@ -337,6 +344,8 @@ struct ColorFilterScopedKeyHash {
 
 static std::mutex gImageCacheMutex;
 static std::unordered_map<ImageCacheScopedKey, sk_sp<SkImage>, ImageCacheScopedKeyHash> gImagesByKey;
+static std::mutex gLayerCacheMutex;
+static std::unordered_map<ImageCacheScopedKey, std::shared_ptr<std::vector<jint>>, ImageCacheScopedKeyHash> gLayerStreamsByKey;
 static std::mutex gColorFilterCacheMutex;
 static std::unordered_map<ColorFilterScopedKey, ColorFilterDescriptor, ColorFilterScopedKeyHash> gColorFiltersByKey;
 static std::mutex gShaderCacheMutex;
@@ -353,27 +362,16 @@ static sk_sp<SkFontMgr> gCoreTextFontMgr;
 
 @class AWTView;
 @class MTLLayer;
-@class MTLContext;
-@class EncoderManager;
-
-@interface EncoderManager : NSObject
-- (void)endEncoder;
-@end
-
-@interface MTLContext : NSObject
-@property (readonly, strong) id<MTLDevice> device;
-@property (strong) id<MTLCommandQueue> commandQueue;
-@property (readonly) EncoderManager* encoderManager;
-@end
-
-typedef struct _JBRSkiaMTLGraphicsConfigInfo {
-    MTLContext* context;
-    jint displayID;
-} JBRSkiaMTLGraphicsConfigInfo;
 
 static uint64_t imageCacheKey(jint high, jint low);
 static bool parseFontDataHandle(const std::string& fontFamily, uint64_t* handle);
 static sk_sp<GrDirectContext> makeDirectContextForSurface(jlong nativeOpsPtr, id<MTLTexture> texture);
+extern "C" {
+BOOL JBRSkiaRegisterDisplayLinkPacingListener(JNIEnv* env, jobject listener, jlong generation)
+        __attribute__((weak_import));
+void JBRSkiaUnregisterDisplayLinkPacingListener(JNIEnv* env, jlong generation)
+        __attribute__((weak_import));
+}
 
 static sk_sp<SkFontMgr> coreTextFontMgr() {
     std::scoped_lock lock(gParagraphDependenciesMutex);
@@ -449,13 +447,32 @@ static long long monotonicNanos() {
 }
 
 static bool mallocDiagnosticEnabled() {
-    const char* value = std::getenv("JBR_SKIA_MALLOC_DIAGNOSTIC");
-    return value != nullptr && std::strcmp(value, "0") != 0 && std::strcmp(value, "false") != 0;
+    static const bool enabled = [] {
+        const char* value = std::getenv("JBR_SKIA_MALLOC_DIAGNOSTIC");
+        return value != nullptr && std::strcmp(value, "0") != 0 && std::strcmp(value, "false") != 0;
+    }();
+    return enabled;
 }
 
 static bool directDiagnosticModeIs(const char* expected) {
     const char* value = std::getenv("JBR_SKIA_DIRECT_DIAGNOSTIC_MODE");
     return value != nullptr && std::strcmp(value, expected) == 0;
+}
+
+static bool commandFrameLoggingEnabled() {
+    static const bool enabled = [] {
+        const char* value = std::getenv("JBR_SKIA_LOG_COMMAND_FRAMES");
+        return value != nullptr && (std::strcmp(value, "1") == 0 || std::strcmp(value, "true") == 0);
+    }();
+    return enabled;
+}
+
+static bool displayLinkDebugEnabled() {
+    static const bool enabled = [] {
+        const char* value = std::getenv("JBR_SKIA_DISPLAY_LINK_DEBUG");
+        return value != nullptr && (std::strcmp(value, "1") == 0 || std::strcmp(value, "true") == 0);
+    }();
+    return enabled;
 }
 
 static size_t defaultMallocBytesInUse() {
@@ -505,12 +522,13 @@ static void purgeUnlockedResourcesAfterFrame(GrDirectContext* directContext) {
     }
 }
 
-typedef struct _JBRSkiaMTLSDOps {
-    AWTView* peerData;
-    MTLLayer* layer;
-    jint argb[4];
-    JBRSkiaMTLGraphicsConfigInfo* configInfo;
-} JBRSkiaMTLSDOps;
+static GrSyncCpu commandFlushSyncCpu(jboolean syncCpu) {
+    return syncCpu == JNI_TRUE ? GrSyncCpu::kYes : GrSyncCpu::kNo;
+}
+
+static const char* jniBoolString(jboolean value) {
+    return value == JNI_TRUE ? "true" : "false";
+}
 
 static MTLContext* getContextFromNativeOps(jlong nativeOpsPtr) {
     if (nativeOpsPtr == 0) {
@@ -522,11 +540,127 @@ static MTLContext* getContextFromNativeOps(jlong nativeOpsPtr) {
         return nil;
     }
 
-    JBRSkiaMTLSDOps* mtlOps = static_cast<JBRSkiaMTLSDOps*>(baseOps->privOps);
+    MTLSDOps* mtlOps = static_cast<MTLSDOps*>(baseOps->privOps);
     if (mtlOps->configInfo == nullptr) {
         return nil;
     }
     return mtlOps->configInfo->context;
+}
+
+static MTLLayer* getLayerFromNativeOps(jlong nativeOpsPtr) {
+    if (nativeOpsPtr == 0) {
+        return nil;
+    }
+
+    BMTLSDOps* baseOps = reinterpret_cast<BMTLSDOps*>(static_cast<uintptr_t>(nativeOpsPtr));
+    if (baseOps == nullptr || baseOps->privOps == nullptr) {
+        return nil;
+    }
+
+    MTLSDOps* mtlOps = static_cast<MTLSDOps*>(baseOps->privOps);
+    return mtlOps->layer;
+}
+
+static id<MTLCommandQueue> getCommandQueueFromNativeOps(jlong nativeOpsPtr) {
+    MTLContext* mtlc = getContextFromNativeOps(nativeOpsPtr);
+    if (mtlc == nil) {
+        return nil;
+    }
+    return mtlc.commandQueue;
+}
+
+struct CommandFramePresentationContext {
+    id<MTLTexture> texture;
+    MTLLayer* layer;
+    long long submitStartNanos;
+    CFTimeInterval submitHostSeconds;
+    bool logCompletion;
+};
+
+static CommandFramePresentationContext* makeCommandFramePresentationContext(id<MTLTexture> texture,
+                                                                            MTLLayer* layer,
+                                                                            bool logCompletion) {
+    CommandFramePresentationContext* context = new CommandFramePresentationContext;
+    context->texture = texture;
+    context->layer = layer;
+    context->submitStartNanos = 0;
+    context->submitHostSeconds = 0;
+    context->logCompletion = logCompletion;
+    [context->texture retain];
+    [context->layer retain];
+    return context;
+}
+
+static void releaseCommandFramePresentationContext(CommandFramePresentationContext* context) {
+    if (context == nullptr) {
+        return;
+    }
+    [context->texture release];
+    [context->layer release];
+    delete context;
+}
+
+static void commandFrameSentinelCompleted(CommandFramePresentationContext* context,
+                                          id<MTLCommandBuffer> commandBuffer) {
+    @autoreleasepool {
+        if (context == nullptr) {
+            return;
+        }
+        if (context->logCompletion && context->submitStartNanos > 0) {
+            long long gpuDoneNanos = -1;
+            bool gpuTimingAvailable = false;
+            if (commandBuffer != nil && context->submitHostSeconds > 0 &&
+                    commandBuffer.GPUStartTime > 0) {
+                gpuDoneNanos = static_cast<long long>(
+                        (commandBuffer.GPUStartTime - context->submitHostSeconds) * 1000000000.0);
+                gpuTimingAvailable = gpuDoneNanos >= 0;
+            }
+            std::fprintf(stderr,
+                         "JBR_SKIA_INTEROP_COMMAND_COMPLETION completionNanos=%lld gpuNanos=%lld gpuTimingAvailable=%s\n",
+                         monotonicNanos() - context->submitStartNanos,
+                         gpuDoneNanos,
+                         gpuTimingAvailable ? "true" : "false");
+        }
+        if (context->layer != nil) {
+            [context->layer startRedraw];
+        } else if (displayLinkDebugEnabled()) {
+            std::fprintf(stderr, "JBR_SKIA_DISPLAY_LINK sentinelStartRedraw layer=null\n");
+        }
+        releaseCommandFramePresentationContext(context);
+    }
+}
+
+static void flushCommandFrame(GrDirectContext* directContext,
+                              SkSurface* surface,
+                              id<MTLTexture> texture,
+                              MTLLayer* layer,
+                              id<MTLCommandQueue> commandQueue,
+                              jboolean syncCpu) {
+    CommandFramePresentationContext* presentationContext =
+            makeCommandFramePresentationContext(texture, layer, commandFrameLoggingEnabled());
+    GrFlushInfo flushInfo = {};
+    directContext->flush(surface, flushInfo);
+    presentationContext->submitStartNanos = monotonicNanos();
+    presentationContext->submitHostSeconds = CACurrentMediaTime();
+    directContext->submit(commandFlushSyncCpu(syncCpu));
+
+    id<MTLCommandBuffer> sentinel = commandQueue == nil ? nil : [commandQueue commandBuffer];
+    if (sentinel == nil) {
+        if (presentationContext->logCompletion) {
+            std::fprintf(stderr,
+                         "JBR_SKIA_INTEROP_COMMAND_COMPLETION completionNanos=%lld gpuNanos=-1 gpuTimingAvailable=false sentinel=false\n",
+                         monotonicNanos() - presentationContext->submitStartNanos);
+        }
+        if (presentationContext->layer != nil) {
+            [presentationContext->layer startRedraw];
+        }
+        releaseCommandFramePresentationContext(presentationContext);
+        return;
+    }
+    [sentinel addCompletedHandler:^(id<MTLCommandBuffer> commandBuffer) {
+        commandFrameSentinelCompleted(presentationContext, commandBuffer);
+    }];
+    [sentinel commit];
 }
 
 static void drawDiagnosticPattern(SkCanvas* canvas, int width, int height, jlong frameTimeNanos) {
@@ -1607,12 +1741,25 @@ static void clearCommandCachesForContext(void* imageCacheContextKey) {
         std::lock_guard<std::mutex> lock(gColorFilterCacheMutex);
         clearedEffects = clearEffectCacheForContext(imageCacheContextKey);
     }
+    int clearedLayers = 0;
+    {
+        std::lock_guard<std::mutex> lock(gLayerCacheMutex);
+        for (auto it = gLayerStreamsByKey.begin(); it != gLayerStreamsByKey.end();) {
+            if (it->first.context == imageCacheContextKey) {
+                it = gLayerStreamsByKey.erase(it);
+                clearedLayers++;
+            } else {
+                ++it;
+            }
+        }
+    }
     std::fprintf(stderr,
-                 "JBR_SKIA_INTEROP_IMAGE_CACHE_CLEAR backend=native contextId=%p cleared=%d shaderDescriptorsCleared=%d effectDescriptorsCleared=%d\n",
+                 "JBR_SKIA_INTEROP_IMAGE_CACHE_CLEAR backend=native contextId=%p cleared=%d shaderDescriptorsCleared=%d effectDescriptorsCleared=%d layersCleared=%d\n",
                  imageCacheContextKey,
                  cleared,
                  clearedShaders,
-                 clearedEffects);
+                 clearedEffects,
+                 clearedLayers);
 }
 
 struct IntCommandWords {
@@ -1922,7 +2069,8 @@ static bool drawCommandList(SkCanvas* canvas,
                             int width,
                             int height,
                             void* imageCacheContextKey,
-                            CommandReplayMetrics* metrics = nullptr) {
+                            CommandReplayMetrics* metrics = nullptr,
+                            int layerDepth = 0) {
     if (commandCount < COMMAND_STREAM_HEADER_SIZE ||
             commands[0] != COMMAND_STREAM_MAGIC ||
             commands[1] != ABI_ID ||
@@ -4028,6 +4176,49 @@ static bool drawCommandList(SkCanvas* canvas,
                 }
                 break;
             }
+            case COMMAND_DEFINE_LAYER: {
+                if (offset + 2 > recordEnd) {
+                    return false;
+                }
+                const uint64_t layerId = imageCacheKey(commands[offset], commands[offset + 1]);
+                offset += 2;
+                auto stream = std::make_shared<std::vector<jint>>();
+                stream->reserve(static_cast<size_t>(recordEnd - offset));
+                for (jsize word = offset; word < recordEnd; word++) {
+                    stream->push_back(static_cast<jint>(commands[word]));
+                }
+                offset = recordEnd;
+                {
+                    std::lock_guard<std::mutex> lock(gLayerCacheMutex);
+                    gLayerStreamsByKey[ImageCacheScopedKey{imageCacheContextKey, layerId}] = std::move(stream);
+                }
+                break;
+            }
+            case COMMAND_DRAW_LAYER_REF: {
+                if (recordFlags != COMMAND_RECORD_FLAGS_NONE || offset + 2 != recordEnd) {
+                    return false;
+                }
+                const uint64_t layerId = imageCacheKey(commands[offset], commands[offset + 1]);
+                offset += 2;
+                if (layerDepth >= 64) {
+                    return false;
+                }
+                std::shared_ptr<std::vector<jint>> stream;
+                {
+                    std::lock_guard<std::mutex> lock(gLayerCacheMutex);
+                    auto found = gLayerStreamsByKey.find(ImageCacheScopedKey{imageCacheContextKey, layerId});
+                    if (found != gLayerStreamsByKey.end()) {
+                        stream = found->second;
+                    }
+                }
+                if (stream != nullptr && stream->size() >= COMMAND_STREAM_HEADER_SIZE) {
+                    if (!drawCommandList(canvas, stream->data(), static_cast<jsize>(stream->size()),
+                                         width, height, imageCacheContextKey, metrics, layerDepth + 1)) {
+                        return false;
+                    }
+                }
+                break;
+            }
             case COMMAND_DRAW_IMAGE_REF: {
                 if ((recordFlags & ~COMMAND_RECORD_FLAG_ANTIALIAS) != 0 || offset + 14 != recordEnd) {
                     return false;
@@ -5295,13 +5486,12 @@ static bool drawCommandList(SkCanvas* canvas,
                 }
                 {
                     std::lock_guard<std::mutex> lock(gColorFilterCacheMutex);
+                    ColorFilterDescriptor descriptor{};
+                    descriptor.type = COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER;
+                    descriptor.argb = filterColor;
+                    descriptor.blendMode = filterBlendMode;
                     gColorFiltersByKey[ColorFilterScopedKey{imageCacheContextKey, handle}] =
-                            ColorFilterDescriptor{
-                                    COMMAND_EFFECT_DESCRIPTOR_TINT_COLOR_FILTER,
-                                    filterColor,
-                                    filterBlendMode,
-                                    {}
-                            };
+                            std::move(descriptor);
                 }
                 break;
             }
@@ -6431,7 +6621,8 @@ static jboolean renderCommandDirectFrameOnCurrentThread(jlong nativeOpsPtr,
                                                         jint height,
                                                         jlong frameTimeNanos,
                                                         jbyte* commandBytes,
-                                                        jint commandByteCount) {
+                                                        jint commandByteCount,
+                                                        jboolean syncCpu) {
     @autoreleasepool {
         if (metalTexturePtr == 0 || destinationWidth <= 0 || destinationHeight <= 0 ||
                 width <= 0 || height <= 0 || commandBytes == nullptr ||
@@ -6446,10 +6637,15 @@ static jboolean renderCommandDirectFrameOnCurrentThread(jlong nativeOpsPtr,
 
         jsize commandCount = commandByteCount / static_cast<jint>(sizeof(jint));
         const long long frameStartNanos = monotonicNanos();
-        const size_t mallocBaseBytes = defaultMallocBytesInUse();
+        const long long mallocStartNanos = monotonicNanos();
+        const bool mallocDiagnostic = mallocDiagnosticEnabled();
+        const size_t mallocBaseBytes = mallocDiagnostic ? defaultMallocBytesInUse() : 0;
+        const long long mallocNanos = monotonicNanos() - mallocStartNanos;
         logMallocPhase("direct-start", mallocBaseBytes, commandCount);
 
+        const long long contextStartNanos = monotonicNanos();
         sk_sp<GrDirectContext> directContext = makeDirectContextForSurface(nativeOpsPtr, texture);
+        const long long contextNanos = monotonicNanos() - contextStartNanos;
         if (directContext == nullptr) {
             return JNI_FALSE;
         }
@@ -6465,16 +6661,20 @@ static jboolean renderCommandDirectFrameOnCurrentThread(jlong nativeOpsPtr,
                          height,
                          commandCount);
             std::fprintf(stderr,
-                         "JBR_SKIA_INTEROP_COMMAND_TIMING totalNanos=%lld drawNanos=0 flushNanos=0 paragraphCommands=0 paragraphNanos=0 shadowCommands=0\n",
-                         monotonicNanos() - frameStartNanos);
+                         "JBR_SKIA_INTEROP_COMMAND_TIMING totalNanos=%lld mallocNanos=%lld contextNanos=%lld surfaceNanos=0 drawNanos=0 flushNanos=0 purgeNanos=0 paragraphCommands=0 paragraphNanos=0 shadowCommands=0\n",
+                         monotonicNanos() - frameStartNanos,
+                         mallocNanos,
+                         contextNanos);
             return JNI_TRUE;
         }
 
+        const long long surfaceStartNanos = monotonicNanos();
         sk_sp<SkSurface> surface = wrapTextureSurface(
                 directContext.get(),
                 texture,
                 static_cast<int>(texture.width),
                 static_cast<int>(texture.height));
+        const long long surfaceNanos = monotonicNanos() - surfaceStartNanos;
         if (surface == nullptr) {
             return JNI_FALSE;
         }
@@ -6490,8 +6690,11 @@ static jboolean renderCommandDirectFrameOnCurrentThread(jlong nativeOpsPtr,
                          height,
                          commandCount);
             std::fprintf(stderr,
-                         "JBR_SKIA_INTEROP_COMMAND_TIMING totalNanos=%lld drawNanos=0 flushNanos=0 paragraphCommands=0 paragraphNanos=0 shadowCommands=0\n",
-                         monotonicNanos() - frameStartNanos);
+                         "JBR_SKIA_INTEROP_COMMAND_TIMING totalNanos=%lld mallocNanos=%lld contextNanos=%lld surfaceNanos=%lld drawNanos=0 flushNanos=0 purgeNanos=0 paragraphCommands=0 paragraphNanos=0 shadowCommands=0\n",
+                         monotonicNanos() - frameStartNanos,
+                         mallocNanos,
+                         contextNanos,
+                         surfaceNanos);
             return JNI_TRUE;
         }
 
@@ -6524,8 +6727,11 @@ static jboolean renderCommandDirectFrameOnCurrentThread(jlong nativeOpsPtr,
                          height,
                          commandCount);
             std::fprintf(stderr,
-                         "JBR_SKIA_INTEROP_COMMAND_TIMING totalNanos=%lld drawNanos=%lld flushNanos=0 paragraphCommands=%d paragraphNanos=%lld shadowCommands=%d\n",
+                         "JBR_SKIA_INTEROP_COMMAND_TIMING totalNanos=%lld mallocNanos=%lld contextNanos=%lld surfaceNanos=%lld drawNanos=%lld flushNanos=0 purgeNanos=0 paragraphCommands=%d paragraphNanos=%lld shadowCommands=%d\n",
                          monotonicNanos() - frameStartNanos,
+                         mallocNanos,
+                         contextNanos,
+                         surfaceNanos,
                          drawNanos,
                          metrics.paragraphCommands,
                          metrics.paragraphNanos,
@@ -6534,27 +6740,45 @@ static jboolean renderCommandDirectFrameOnCurrentThread(jlong nativeOpsPtr,
         }
 
         const long long flushStartNanos = monotonicNanos();
-        directContext->flushAndSubmit(surface.get(), GrSyncCpu::kYes);
+        MTLLayer* layer = getLayerFromNativeOps(nativeOpsPtr);
+        const uintptr_t nativeOpsAddress = static_cast<uintptr_t>(nativeOpsPtr);
+        const uintptr_t previousOpsAddress = gDisplayLinkLastFrameOps.exchange(nativeOpsAddress);
+        if (displayLinkDebugEnabled() &&
+            (gDisplayLinkFrameFlushLogCount.fetch_add(1) < 10 || previousOpsAddress != nativeOpsAddress)) {
+            std::fprintf(stderr, "JBR_SKIA_DISPLAY_LINK frameFlush nativeOps=%p layer=%p\n",
+                         reinterpret_cast<void*>(nativeOpsAddress), layer);
+        }
+        flushCommandFrame(directContext.get(), surface.get(), texture, layer,
+                          getCommandQueueFromNativeOps(nativeOpsPtr), syncCpu);
         const long long flushNanos = monotonicNanos() - flushStartNanos;
+        const long long purgeStartNanos = monotonicNanos();
         purgeUnlockedResourcesAfterFrame(directContext.get());
+        const long long purgeNanos = monotonicNanos() - purgeStartNanos;
         logMallocPhase("direct-flush", mallocBaseBytes, commandCount);
-        std::fprintf(stderr,
-                     "JBR_SKIA_INTEROP_COMMAND_FRAME destinationX=%d destinationY=%d destinationWidth=%d destinationHeight=%d width=%d height=%d commands=%d rendered=true\n",
-                     destinationX,
-                     destinationY,
-                     destinationWidth,
-                     destinationHeight,
-                     width,
-                     height,
-                     commandCount);
-        std::fprintf(stderr,
-                     "JBR_SKIA_INTEROP_COMMAND_TIMING totalNanos=%lld drawNanos=%lld flushNanos=%lld paragraphCommands=%d paragraphNanos=%lld shadowCommands=%d\n",
-                     monotonicNanos() - frameStartNanos,
-                     drawNanos,
-                     flushNanos,
-                     metrics.paragraphCommands,
-                     metrics.paragraphNanos,
-                     metrics.shadowCommands);
+        if (commandFrameLoggingEnabled()) {
+            std::fprintf(stderr,
+                         "JBR_SKIA_INTEROP_COMMAND_FRAME destinationX=%d destinationY=%d destinationWidth=%d destinationHeight=%d width=%d height=%d commands=%d rendered=true\n",
+                         destinationX,
+                         destinationY,
+                         destinationWidth,
+                         destinationHeight,
+                         width,
+                         height,
+                         commandCount);
+            std::fprintf(stderr,
+                         "JBR_SKIA_INTEROP_COMMAND_TIMING totalNanos=%lld mallocNanos=%lld contextNanos=%lld surfaceNanos=%lld drawNanos=%lld flushNanos=%lld purgeNanos=%lld paragraphCommands=%d paragraphNanos=%lld shadowCommands=%d\n",
+                         monotonicNanos() - frameStartNanos,
+                         mallocNanos,
+                         contextNanos,
+                         surfaceNanos,
+                         drawNanos,
+                         flushNanos,
+                         purgeNanos,
+                         metrics.paragraphCommands,
+                         metrics.paragraphNanos,
+                         metrics.shadowCommands);
+            std::fprintf(stderr, "JBR_SKIA_INTEROP_COMMAND_FLUSH syncCpu=%s\n", jniBoolString(syncCpu));
+        }
         return JNI_TRUE;
     }
 }
@@ -6576,6 +6800,37 @@ extern "C" JNIEXPORT jint JNICALL
 Java_com_jetbrains_desktop_JBRSkiaService_nativeGetCommandStreamAbiId
         (JNIEnv* env, jclass cls) {
     return ABI_ID;
+}
+
+extern "C" JNIEXPORT jlong JNICALL
+Java_com_jetbrains_desktop_JBRSkiaService_nativeRegisterFramePacingListener
+        (JNIEnv* env, jclass, jobject listener, jlong generation) {
+    @autoreleasepool {
+        if (displayLinkDebugEnabled()) {
+            std::fprintf(stderr, "JBR_SKIA_DISPLAY_LINK nativeRegister scope=display generation=%lld\n",
+                         static_cast<long long>(generation));
+        }
+        if (listener == nullptr) {
+            return 0;
+        }
+        if (JBRSkiaRegisterDisplayLinkPacingListener == nullptr) {
+            if (displayLinkDebugEnabled()) {
+                std::fprintf(stderr, "JBR_SKIA_DISPLAY_LINK nativeRegister scope=display status=host-unavailable\n");
+            }
+            return 0;
+        }
+        return JBRSkiaRegisterDisplayLinkPacingListener(env, listener, generation) ? generation : 0;
+    }
+}
+
+extern "C" JNIEXPORT void JNICALL
+Java_com_jetbrains_desktop_JBRSkiaService_nativeUnregisterFramePacingListener
+        (JNIEnv* env, jclass, jlong generation) {
+    @autoreleasepool {
+        if (JBRSkiaUnregisterDisplayLinkPacingListener != nullptr) {
+            JBRSkiaUnregisterDisplayLinkPacingListener(env, generation);
+        }
+    }
 }
 
 extern "C" JNIEXPORT jstring JNICALL
@@ -6692,7 +6947,7 @@ extern "C" JNIEXPORT jboolean JNICALL
 Java_com_jetbrains_desktop_JBRSkiaService_nativeRenderCommandFrame
         (JNIEnv* env, jclass cls, jlong nativeOpsPtr, jlong metalTexturePtr,
          jint destinationX, jint destinationY, jint destinationWidth, jint destinationHeight,
-         jint width, jint height, jlong frameTimeNanos, jintArray commandArray) {
+         jint width, jint height, jlong frameTimeNanos, jintArray commandArray, jboolean syncCpu) {
     @autoreleasepool {
         if (metalTexturePtr == 0 || destinationWidth <= 0 || destinationHeight <= 0 ||
                 width <= 0 || height <= 0 || commandArray == nullptr) {
@@ -6749,25 +7004,29 @@ Java_com_jetbrains_desktop_JBRSkiaService_nativeRenderCommandFrame
         }
 
         const long long flushStartNanos = monotonicNanos();
-        directContext->flushAndSubmit(surface.get(), GrSyncCpu::kYes);
+        flushCommandFrame(directContext.get(), surface.get(), texture, getLayerFromNativeOps(nativeOpsPtr),
+                          getCommandQueueFromNativeOps(nativeOpsPtr), syncCpu);
         const long long flushNanos = monotonicNanos() - flushStartNanos;
-        std::fprintf(stderr,
-                     "JBR_SKIA_INTEROP_COMMAND_FRAME destinationX=%d destinationY=%d destinationWidth=%d destinationHeight=%d width=%d height=%d commands=%d rendered=true\n",
-                     destinationX,
-                     destinationY,
-                     destinationWidth,
-                     destinationHeight,
-                     width,
-                     height,
-                     commandCount);
-        std::fprintf(stderr,
-                     "JBR_SKIA_INTEROP_COMMAND_TIMING totalNanos=%lld drawNanos=%lld flushNanos=%lld paragraphCommands=%d paragraphNanos=%lld shadowCommands=%d\n",
-                     monotonicNanos() - frameStartNanos,
-                     drawNanos,
-                     flushNanos,
-                     metrics.paragraphCommands,
-                     metrics.paragraphNanos,
-                     metrics.shadowCommands);
+        if (commandFrameLoggingEnabled()) {
+            std::fprintf(stderr,
+                         "JBR_SKIA_INTEROP_COMMAND_FRAME destinationX=%d destinationY=%d destinationWidth=%d destinationHeight=%d width=%d height=%d commands=%d rendered=true\n",
+                         destinationX,
+                         destinationY,
+                         destinationWidth,
+                         destinationHeight,
+                         width,
+                         height,
+                         commandCount);
+            std::fprintf(stderr,
+                         "JBR_SKIA_INTEROP_COMMAND_TIMING totalNanos=%lld drawNanos=%lld flushNanos=%lld paragraphCommands=%d paragraphNanos=%lld shadowCommands=%d\n",
+                         monotonicNanos() - frameStartNanos,
+                         drawNanos,
+                         flushNanos,
+                         metrics.paragraphCommands,
+                         metrics.paragraphNanos,
+                         metrics.shadowCommands);
+            std::fprintf(stderr, "JBR_SKIA_INTEROP_COMMAND_FLUSH syncCpu=%s\n", jniBoolString(syncCpu));
+        }
         return JNI_TRUE;
     }
 }
@@ -6776,7 +7035,7 @@ extern "C" JNIEXPORT jboolean JNICALL
 Java_com_jetbrains_desktop_JBRSkiaService_nativeRenderCommandBufferFrame
         (JNIEnv* env, jclass cls, jlong nativeOpsPtr, jlong metalTexturePtr,
          jint destinationX, jint destinationY, jint destinationWidth, jint destinationHeight,
-         jint width, jint height, jlong frameTimeNanos, jbyteArray commandArray) {
+         jint width, jint height, jlong frameTimeNanos, jbyteArray commandArray, jboolean syncCpu) {
     @autoreleasepool {
         if (metalTexturePtr == 0 || destinationWidth <= 0 || destinationHeight <= 0 ||
                 width <= 0 || height <= 0 || commandArray == nullptr) {
@@ -6838,25 +7097,29 @@ Java_com_jetbrains_desktop_JBRSkiaService_nativeRenderCommandBufferFrame
         }
 
         const long long flushStartNanos = monotonicNanos();
-        directContext->flushAndSubmit(surface.get(), GrSyncCpu::kYes);
+        flushCommandFrame(directContext.get(), surface.get(), texture, getLayerFromNativeOps(nativeOpsPtr),
+                          getCommandQueueFromNativeOps(nativeOpsPtr), syncCpu);
         const long long flushNanos = monotonicNanos() - flushStartNanos;
-        std::fprintf(stderr,
-                     "JBR_SKIA_INTEROP_COMMAND_FRAME destinationX=%d destinationY=%d destinationWidth=%d destinationHeight=%d width=%d height=%d commands=%d rendered=true\n",
-                     destinationX,
-                     destinationY,
-                     destinationWidth,
-                     destinationHeight,
-                     width,
-                     height,
-                     commandCount);
-        std::fprintf(stderr,
-                     "JBR_SKIA_INTEROP_COMMAND_TIMING totalNanos=%lld drawNanos=%lld flushNanos=%lld paragraphCommands=%d paragraphNanos=%lld shadowCommands=%d\n",
-                     monotonicNanos() - frameStartNanos,
-                     drawNanos,
-                     flushNanos,
-                     metrics.paragraphCommands,
-                     metrics.paragraphNanos,
-                     metrics.shadowCommands);
+        if (commandFrameLoggingEnabled()) {
+            std::fprintf(stderr,
+                         "JBR_SKIA_INTEROP_COMMAND_FRAME destinationX=%d destinationY=%d destinationWidth=%d destinationHeight=%d width=%d height=%d commands=%d rendered=true\n",
+                         destinationX,
+                         destinationY,
+                         destinationWidth,
+                         destinationHeight,
+                         width,
+                         height,
+                         commandCount);
+            std::fprintf(stderr,
+                         "JBR_SKIA_INTEROP_COMMAND_TIMING totalNanos=%lld drawNanos=%lld flushNanos=%lld paragraphCommands=%d paragraphNanos=%lld shadowCommands=%d\n",
+                         monotonicNanos() - frameStartNanos,
+                         drawNanos,
+                         flushNanos,
+                         metrics.paragraphCommands,
+                         metrics.paragraphNanos,
+                         metrics.shadowCommands);
+            std::fprintf(stderr, "JBR_SKIA_INTEROP_COMMAND_FLUSH syncCpu=%s\n", jniBoolString(syncCpu));
+        }
         return JNI_TRUE;
     }
 }
@@ -6866,7 +7129,7 @@ Java_com_jetbrains_desktop_JBRSkiaService_nativeRenderCommandDirectFrame
         (JNIEnv* env, jclass cls, jlong nativeOpsPtr, jlong metalTexturePtr,
          jint destinationX, jint destinationY, jint destinationWidth, jint destinationHeight,
          jint width, jint height, jlong frameTimeNanos, jobject commandBuffer, jint commandByteCount,
-         jboolean renderOnAppKitThread) {
+         jboolean renderOnAppKitThread, jboolean syncCpu) {
     if (commandBuffer == nullptr) {
         return JNI_FALSE;
     }
@@ -6875,13 +7138,18 @@ Java_com_jetbrains_desktop_JBRSkiaService_nativeRenderCommandDirectFrame
     if (commandBytes == nullptr) {
         return JNI_FALSE;
     }
+    jlong commandCapacity = env->GetDirectBufferCapacity(commandBuffer);
+    if (commandByteCount < 0 || commandCapacity < 0 ||
+            static_cast<jlong>(commandByteCount) > commandCapacity) {
+        return JNI_FALSE;
+    }
 
     if (!renderOnAppKitThread || [NSThread isMainThread]) {
         return renderCommandDirectFrameOnCurrentThread(nativeOpsPtr, metalTexturePtr,
                                                        destinationX, destinationY,
                                                        destinationWidth, destinationHeight,
                                                        width, height, frameTimeNanos,
-                                                       commandBytes, commandByteCount);
+                                                       commandBytes, commandByteCount, syncCpu);
     }
 
     __block jboolean result = JNI_FALSE;
@@ -6890,7 +7158,7 @@ Java_com_jetbrains_desktop_JBRSkiaService_nativeRenderCommandDirectFrame
                                                          destinationX, destinationY,
                                                          destinationWidth, destinationHeight,
                                                          width, height, frameTimeNanos,
-                                                         commandBytes, commandByteCount);
+                                                         commandBytes, commandByteCount, syncCpu);
     });
     return result;
 }

@@ -69,15 +69,20 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.BooleanSupplier;
 
 @JBRApi.Service
 @JBRApi.Provides("JBRSkia")
 public class JBRSkiaService extends JBRSkia {
     private static final String PROPERTY = "sun.java2d.skia.interop";
     private static final String NATIVE_DIAGNOSTIC_PROPERTY = "sun.java2d.skia.interop.nativeDiagnostic";
-    // Default direct command replay to AppKit because macOS Metal/AppKit surface presentation is more stable there.
-    // Set this property to false for diagnostics or machine-specific fallback.
+    // Caller-thread replay holds the Java2D Metal render-queue lock. The legacy AppKit
+    // dispatch remains available as a deprecated escape hatch with this property set true.
     private static final String APPKIT_RENDER_PROPERTY = "sun.java2d.skia.interop.appkitRender";
+    private static final String COMMAND_FLUSH_SYNC_CPU_PROPERTY = "sun.java2d.skia.interop.commandFlushSyncCpu";
+    private static final String SWING_RENDER_PACING_ENABLED_PROPERTY = "compose.swing.render.pacing.enabled";
+    private static final String LOG_COMMAND_FRAMES_PROPERTY = "sun.java2d.skia.interop.logCommandFrames";
+    private static final boolean LOG_COMMAND_FRAMES = Boolean.getBoolean(LOG_COMMAND_FRAMES_PROPERTY);
     private static final String NATIVE_LIBRARY_PROPERTY = "sun.java2d.skia.interop.library";
     private static final String COMMAND_CAPABILITIES_MASK_PROPERTY =
             "sun.java2d.skia.interop.commandCapabilitiesMaskForTest";
@@ -3087,7 +3092,9 @@ public class JBRSkiaService extends JBRSkia {
                     && NATIVE_BRIDGE_AVAILABLE
                     && nativeOpsPtr != 0
                     && metalTexturePtr != 0
-                    && nativeRenderDiagnosticFrame(nativeOpsPtr, metalTexturePtr, width, height, frameTimeNanos)) {
+                    && renderNativeFrameWithRenderQueueLock(false,
+                            () -> nativeRenderDiagnosticFrame(
+                                    nativeOpsPtr, metalTexturePtr, width, height, frameTimeNanos))) {
                 return true;
             }
 
@@ -3128,10 +3135,14 @@ public class JBRSkiaService extends JBRSkia {
             if (NATIVE_BRIDGE_AVAILABLE
                     && nativeOpsPtr != 0
                     && metalTexturePtr != 0) {
-                logHandleLifecycleMarkers(commands, contextPtr, "native");
-                return nativeRenderCommandFrame(nativeOpsPtr, metalTexturePtr,
-                        deviceSpaceClip.x, deviceSpaceClip.y, deviceSpaceClip.width, deviceSpaceClip.height,
-                        width, height, frameTimeNanos, commands);
+                if (logCommandFrames()) {
+                    logHandleLifecycleMarkers(commands, contextPtr, "native");
+                }
+                return renderNativeFrameWithRenderQueueLock(false,
+                        () -> nativeRenderCommandFrame(nativeOpsPtr, metalTexturePtr,
+                                deviceSpaceClip.x, deviceSpaceClip.y,
+                                deviceSpaceClip.width, deviceSpaceClip.height,
+                                width, height, frameTimeNanos, commands, commandFlushSyncCpu()));
             }
 
             Graphics2D commandGraphics = (Graphics2D) graphics.create();
@@ -3153,10 +3164,14 @@ public class JBRSkiaService extends JBRSkia {
             if (NATIVE_BRIDGE_AVAILABLE
                     && nativeOpsPtr != 0
                     && metalTexturePtr != 0) {
-                logHandleLifecycleMarkers(decodeCommandBuffer(commands), contextPtr, "native");
-                return nativeRenderCommandBufferFrame(nativeOpsPtr, metalTexturePtr,
-                        deviceSpaceClip.x, deviceSpaceClip.y, deviceSpaceClip.width, deviceSpaceClip.height,
-                        width, height, frameTimeNanos, commands);
+                if (logCommandFrames()) {
+                    logHandleLifecycleMarkers(decodeCommandBuffer(commands), contextPtr, "native");
+                }
+                return renderNativeFrameWithRenderQueueLock(false,
+                        () -> nativeRenderCommandBufferFrame(nativeOpsPtr, metalTexturePtr,
+                                deviceSpaceClip.x, deviceSpaceClip.y,
+                                deviceSpaceClip.width, deviceSpaceClip.height,
+                                width, height, frameTimeNanos, commands, commandFlushSyncCpu()));
             }
             if (width <= 0 || height <= 0) {
                 return false;
@@ -3183,11 +3198,24 @@ public class JBRSkiaService extends JBRSkia {
                     && nativeOpsPtr != 0
                     && metalTexturePtr != 0
                     && commandBuffer.isDirect()) {
-                logHandleLifecycleMarkers(decodeCommandBuffer(commandBuffer), contextPtr, "native");
-                return nativeRenderCommandDirectFrame(nativeOpsPtr, metalTexturePtr,
-                        deviceSpaceClip.x, deviceSpaceClip.y, deviceSpaceClip.width, deviceSpaceClip.height,
-                        width, height, frameTimeNanos, commandBuffer, commandByteCount,
-                        Boolean.parseBoolean(System.getProperty(APPKIT_RENDER_PROPERTY, "true")));
+                if (logCommandFrames()) {
+                    logHandleLifecycleMarkers(decodeCommandBuffer(commandBuffer), contextPtr, "native");
+                }
+                boolean renderOnAppKitThread = Boolean.parseBoolean(
+                        System.getProperty(APPKIT_RENDER_PROPERTY, "false"));
+                if (renderOnAppKitThread) {
+                    return nativeRenderCommandDirectFrame(nativeOpsPtr, metalTexturePtr,
+                            deviceSpaceClip.x, deviceSpaceClip.y,
+                            deviceSpaceClip.width, deviceSpaceClip.height,
+                            width, height, frameTimeNanos, commandBuffer, commandByteCount,
+                            true, commandFlushSyncCpu());
+                }
+                return renderNativeFrameWithRenderQueueLock(false,
+                        () -> nativeRenderCommandDirectFrame(nativeOpsPtr, metalTexturePtr,
+                                deviceSpaceClip.x, deviceSpaceClip.y,
+                                deviceSpaceClip.width, deviceSpaceClip.height,
+                                width, height, frameTimeNanos, commandBuffer, commandByteCount,
+                                false, commandFlushSyncCpu()));
             }
             if (width <= 0 || height <= 0) {
                 return false;
@@ -3232,9 +3260,30 @@ public class JBRSkiaService extends JBRSkia {
                     && NATIVE_BRIDGE_AVAILABLE
                     && nativeOpsPtr != 0
                     && metalTexturePtr != 0
-                    && nativeRenderPictureFrame(nativeOpsPtr, metalTexturePtr,
-                            deviceSpaceClip.x, deviceSpaceClip.y, deviceSpaceClip.width, deviceSpaceClip.height,
-                            width, height, frameTimeNanos, pictureData);
+                    && renderNativeFrameWithRenderQueueLock(false,
+                            () -> nativeRenderPictureFrame(nativeOpsPtr, metalTexturePtr,
+                                    deviceSpaceClip.x, deviceSpaceClip.y,
+                                    deviceSpaceClip.width, deviceSpaceClip.height,
+                                    width, height, frameTimeNanos, pictureData));
+        }
+
+        @Override
+        public boolean registerFramePacingListener(FramePacingListener listener, long generation) {
+            ensureOpen();
+            Objects.requireNonNull(listener, "listener");
+            if (!Boolean.getBoolean("sun.java2d.skia.interop.displayLinkPacing")
+                    || !NATIVE_BRIDGE_AVAILABLE) {
+                return false;
+            }
+            return nativeRegisterFramePacingListener(listener, generation) == generation;
+        }
+
+        @Override
+        public void unregisterFramePacingListener(long generation) {
+            if (!NATIVE_BRIDGE_AVAILABLE) {
+                return;
+            }
+            nativeUnregisterFramePacingListener(generation);
         }
 
         @Override
@@ -6759,6 +6808,25 @@ public class JBRSkiaService extends JBRSkia {
         }
     }
 
+    private static boolean renderNativeFrameWithRenderQueueLock(
+            boolean renderOnAppKitThread,
+            BooleanSupplier replay) {
+        if (renderOnAppKitThread) {
+            throw new IllegalArgumentException(
+                    "AppKit dispatch must not run while holding the Metal render queue lock");
+        }
+        MTLRenderQueue rq = MTLRenderQueue.getInstance();
+        rq.lock();
+        try {
+            // Drain buffered Java2D work before touching its context directly. The lock
+            // remains held while replay runs so the queue flusher and disposal paths wait.
+            rq.flushNow();
+            return replay.getAsBoolean();
+        } finally {
+            rq.unlock();
+        }
+    }
+
     private static MetalSurfaceMetadata getMetalSurfaceMetadata(Graphics2D graphics) {
         if (!(graphics instanceof SunGraphics2D sunGraphics)) {
             return MetalSurfaceMetadata.EMPTY;
@@ -6784,6 +6852,9 @@ public class JBRSkiaService extends JBRSkia {
     }
 
     private static void logHandleLifecycleMarkers(int[] commands, long contextPtr, String backend) {
+        if (!logCommandFrames()) {
+            return;
+        }
         int commandEnd = commandPayloadEnd(commands);
         if (commandEnd < 0) {
             return;
@@ -6947,6 +7018,9 @@ public class JBRSkiaService extends JBRSkia {
             int op,
             Set<ColorFilterCacheKey> frameDefines
     ) {
+        if (!logCommandFrames()) {
+            return;
+        }
         if (!frameDefines.contains(new ColorFilterCacheKey(contextPtr, handle))
                 && EFFECT_HANDLE_MARKER_CACHE.contains(new MarkerHandleKey(backend, contextPtr, handle))) {
             System.err.println("JBR_SKIA_INTEROP_EFFECT_HANDLE_CACHE_HIT backend=" + backend + " contextId=0x"
@@ -6962,6 +7036,9 @@ public class JBRSkiaService extends JBRSkia {
             int op,
             Set<ColorFilterCacheKey> frameDefines
     ) {
+        if (!logCommandFrames()) {
+            return;
+        }
         if (!frameDefines.contains(new ColorFilterCacheKey(contextPtr, handle))
                 && SHADER_HANDLE_MARKER_CACHE.contains(new MarkerHandleKey(backend, contextPtr, handle))) {
             System.err.println("JBR_SKIA_INTEROP_SHADER_HANDLE_CACHE_HIT backend=" + backend + " contextId=0x"
@@ -6979,6 +7056,9 @@ public class JBRSkiaService extends JBRSkia {
             int payloadIntCount,
             boolean legacy
     ) {
+        if (!logCommandFrames()) {
+            return;
+        }
         System.err.println("JBR_SKIA_INTEROP_EFFECT_HANDLE_DEFINE backend=" + backend + " contextId=0x"
                 + Long.toHexString(contextPtr) + " handle=0x" + Long.toHexString(handle)
                 + " type=" + descriptorType + " version=" + descriptorVersion
@@ -6986,12 +7066,18 @@ public class JBRSkiaService extends JBRSkia {
     }
 
     private static void logEffectHandleEvict(String backend, long contextPtr, long handle, boolean removed) {
+        if (!logCommandFrames()) {
+            return;
+        }
         System.err.println("JBR_SKIA_INTEROP_EFFECT_HANDLE_EVICT backend=" + backend + " contextId=0x"
                 + Long.toHexString(contextPtr) + " handle=0x" + Long.toHexString(handle)
                 + " removed=" + removed);
     }
 
     private static void logEffectHandleUse(String backend, long contextPtr, long handle, int op) {
+        if (!logCommandFrames()) {
+            return;
+        }
         System.err.println("JBR_SKIA_INTEROP_EFFECT_HANDLE_USE backend=" + backend + " contextId=0x"
                 + Long.toHexString(contextPtr) + " handle=0x" + Long.toHexString(handle)
                 + " op=" + op);
@@ -7005,6 +7091,9 @@ public class JBRSkiaService extends JBRSkia {
             int descriptorVersion,
             int payloadIntCount
     ) {
+        if (!logCommandFrames()) {
+            return;
+        }
         System.err.println("JBR_SKIA_INTEROP_SHADER_HANDLE_DEFINE backend=" + backend + " contextId=0x"
                 + Long.toHexString(contextPtr) + " handle=0x" + Long.toHexString(handle)
                 + " type=" + descriptorType + " version=" + descriptorVersion
@@ -7012,17 +7101,35 @@ public class JBRSkiaService extends JBRSkia {
     }
 
     private static void logShaderHandleEvict(String backend, long contextPtr, long handle, boolean removed) {
+        if (!logCommandFrames()) {
+            return;
+        }
         System.err.println("JBR_SKIA_INTEROP_SHADER_HANDLE_EVICT backend=" + backend + " contextId=0x"
                 + Long.toHexString(contextPtr) + " handle=0x" + Long.toHexString(handle)
                 + " removed=" + removed);
     }
 
     private static void logShaderHandleUse(String backend, long contextPtr, long handle, int op) {
+        if (!logCommandFrames()) {
+            return;
+        }
         System.err.println("JBR_SKIA_INTEROP_SHADER_HANDLE_USE backend=" + backend + " contextId=0x"
                 + Long.toHexString(contextPtr) + " handle=0x" + Long.toHexString(handle)
                 + " op=" + op);
     }
 
+    private static boolean logCommandFrames() {
+        return LOG_COMMAND_FRAMES;
+    }
+
+    private static boolean commandFlushSyncCpu() {
+        if (Boolean.parseBoolean(System.getProperty(COMMAND_FLUSH_SYNC_CPU_PROPERTY, "false"))) {
+            return true;
+        }
+        return "false".equalsIgnoreCase(System.getProperty(SWING_RENDER_PACING_ENABLED_PROPERTY));
+    }
+
+    @SuppressWarnings("restricted")
     private static boolean loadNativeBridge() {
         String library = System.getProperty(NATIVE_LIBRARY_PROPERTY);
         try {
@@ -7030,6 +7137,13 @@ public class JBRSkiaService extends JBRSkia {
                 System.loadLibrary("jbrskiainterop");
             } else {
                 System.load(library);
+            }
+            int nativeAbiVersion = nativeGetNativeAbiVersion();
+            if (nativeAbiVersion != NATIVE_ABI_VERSION) {
+                System.err.printf(
+                        "JBR_SKIA_INTEROP_NATIVE status=abi-mismatch expected=%d actual=%d; bridge-disabled%n",
+                        NATIVE_ABI_VERSION, nativeAbiVersion);
+                return false;
             }
             return true;
         } catch (RuntimeException | UnsatisfiedLinkError e) {
@@ -7053,24 +7167,29 @@ public class JBRSkiaService extends JBRSkia {
                                                           int destinationX, int destinationY,
                                                           int destinationWidth, int destinationHeight,
                                                           int width, int height, long frameTimeNanos,
-                                                          int[] commands);
+                                                          int[] commands, boolean syncCpu);
 
     private static native boolean nativeRenderCommandBufferFrame(long nativeOpsPtr, long metalTexturePtr,
                                                                 int destinationX, int destinationY,
                                                                 int destinationWidth, int destinationHeight,
                                                                 int width, int height, long frameTimeNanos,
-                                                                byte[] commands);
+                                                                byte[] commands, boolean syncCpu);
 
     private static native boolean nativeRenderCommandDirectFrame(long nativeOpsPtr, long metalTexturePtr,
                                                                  int destinationX, int destinationY,
                                                                  int destinationWidth, int destinationHeight,
                                                                  int width, int height, long frameTimeNanos,
                                                                  ByteBuffer commands, int commandByteCount,
-                                                                 boolean renderOnAppKitThread);
+                                                                 boolean renderOnAppKitThread, boolean syncCpu);
 
     private static native boolean nativeRenderPictureFrame(long nativeOpsPtr, long metalTexturePtr,
                                                           int destinationX, int destinationY,
                                                           int destinationWidth, int destinationHeight,
                                                           int width, int height, long frameTimeNanos,
                                                           byte[] pictureData);
+
+    private static native long nativeRegisterFramePacingListener(FramePacingListener listener,
+                                                                  long generation);
+
+    private static native void nativeUnregisterFramePacingListener(long generation);
 }
