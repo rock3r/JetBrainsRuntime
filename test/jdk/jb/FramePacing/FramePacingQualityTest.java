@@ -26,10 +26,12 @@ import jdk.test.lib.Asserts;
  * @key headful
  * @summary Each platform must report its expected native backend tier, so a
  * silent fallback to the timer (which the contract tests tolerate by
- * design) is caught. macOS expects DISPLAY_LINK, Windows expects
- * COMPOSITION_CLOCK, Linux expects ESTIMATED until v3. Environments
- * where the native clock is legitimately unavailable (e.g. remote
- * sessions with DWM composition off) should exclude this test.
+ * design) is caught. macOS and Windows both expect DISPLAY_LINK — a
+ * per-display hardware vblank, CVDisplayLink and IDXGIOutput respectively
+ * — and Linux expects ESTIMATED until v3. Environments where the
+ * per-display clock is legitimately unavailable should exclude this test;
+ * on Windows that means a remote session, where no output is attached to
+ * the desktop and the service drops to the DWM composition clock.
  * @library /test/lib
  * @compile --add-exports java.desktop/sun.awt=ALL-UNNAMED
  * --add-exports java.base/com.jetbrains.exported=ALL-UNNAMED
@@ -47,10 +49,8 @@ public class FramePacingQualityTest {
 
         String os = System.getProperty("os.name").toLowerCase();
         int expected;
-        if (os.contains("mac")) {
+        if (os.contains("mac") || os.contains("windows")) {
             expected = FramePacing.QUALITY_DISPLAY_LINK;
-        } else if (os.contains("windows")) {
-            expected = FramePacing.QUALITY_COMPOSITION_CLOCK;
         } else {
             expected = FramePacing.QUALITY_ESTIMATED;
         }
