@@ -667,7 +667,7 @@ registry_global(void *data, struct wl_registry *wl_registry,
             process_new_listener_before_end_of_init();
         }
     } else if (strcmp(interface, wl_output_interface.name) == 0) {
-        WLOutputRegister(wl_registry, name);
+        WLOutputRegister(wl_registry, name, version);
         process_new_listener_before_end_of_init();
     } else if (strcmp(interface, xdg_activation_v1_interface.name) == 0) {
         xdg_activation_v1 = wl_registry_bind(wl_registry, name, &xdg_activation_v1_interface, 1);

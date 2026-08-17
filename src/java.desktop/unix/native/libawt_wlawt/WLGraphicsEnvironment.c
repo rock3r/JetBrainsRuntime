@@ -301,14 +301,18 @@ static void RegisterXdgOutput(WLOutput* output)
 }
 
 void
-WLOutputRegister(struct wl_registry *wl_registry, uint32_t id)
+WLOutputRegister(struct wl_registry *wl_registry, uint32_t id, uint32_t version)
 {
     WLOutput * output = calloc(1, sizeof(WLOutput));
     JNIEnv * env = getEnv();
     CHECK_NULL_THROW_OOME(env, output, "Failed to allocate WLOutput");
 
+    // Version 4 delivers the name event (the connector name, "HDMI-2"),
+    // which display-bound facilities such as frame pacing key on; older
+    // compositors simply never send it.
+    uint32_t bindVersion = version < 4 ? version : 4;
     output->id = id;
-    output->wl_output = wl_registry_bind(wl_registry, id, &wl_output_interface, 2);
+    output->wl_output = wl_registry_bind(wl_registry, id, &wl_output_interface, bindVersion);
     if (output->wl_output == NULL) {
         JNU_ThrowByName(env, "java/awt/AWTError", "wl_registry_bind() failed");
         return;
