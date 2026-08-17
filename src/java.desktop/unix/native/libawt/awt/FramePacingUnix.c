@@ -39,11 +39,13 @@
  * whether or not anything on screen is changing, which is what a subscription
  * clock needs; it is also a genuine blocking wait, well under 1% of a core.
  *
- * The CRTC is chosen by matching each active CRTC's mode period against the
- * display's advertised refresh period across all DRM card nodes; device access
- * relies on the logind seat ACL every local desktop session has (remote and
- * headless environments have no accessible display device, and the probe
- * reports the backend unavailable).
+ * The CRTC is bound by connector name when the toolkit can supply one (the
+ * Wayland toolkit's outputs carry the compositor's connector name, e.g.
+ * "HDMI-2" or "DP-1"), and otherwise by matching each active CRTC's mode
+ * period against the display's advertised refresh period, across all DRM card
+ * nodes. Device access relies on the logind seat ACL every local desktop
+ * session has (remote and headless environments have no accessible display
+ * device, and the probe reports the backend unavailable).
  */
 
 #ifdef __linux__
@@ -177,6 +179,128 @@ static int findBestCrtc(int64_t wantPeriodNanos, int *outFd, int *outCrtcIndex)
     return 1;
 }
 
+static const char *connectorTypeName(uint32_t type)
+{
+    switch (type) {
+        case DRM_MODE_CONNECTOR_VGA:         return "VGA";
+        case DRM_MODE_CONNECTOR_DVII:        return "DVI-I";
+        case DRM_MODE_CONNECTOR_DVID:        return "DVI-D";
+        case DRM_MODE_CONNECTOR_DVIA:        return "DVI-A";
+        case DRM_MODE_CONNECTOR_Composite:   return "Composite";
+        case DRM_MODE_CONNECTOR_SVIDEO:      return "SVIDEO";
+        case DRM_MODE_CONNECTOR_LVDS:        return "LVDS";
+        case DRM_MODE_CONNECTOR_Component:   return "Component";
+        case DRM_MODE_CONNECTOR_9PinDIN:     return "DIN";
+        case DRM_MODE_CONNECTOR_DisplayPort: return "DP";
+        case DRM_MODE_CONNECTOR_HDMIA:       return "HDMI-A";
+        case DRM_MODE_CONNECTOR_HDMIB:       return "HDMI-B";
+        case DRM_MODE_CONNECTOR_TV:          return "TV";
+        case DRM_MODE_CONNECTOR_eDP:         return "eDP";
+        case DRM_MODE_CONNECTOR_VIRTUAL:     return "Virtual";
+        case DRM_MODE_CONNECTOR_DSI:         return "DSI";
+        case DRM_MODE_CONNECTOR_DPI:         return "DPI";
+        default:                             return NULL;
+    }
+}
+
+/*
+ * Matches a compositor-supplied output name against a kernel connector.
+ * Kernel names are "<type>-<id>" ("HDMI-A-2"); Mutter drops the HDMI bus
+ * letter and calls the same connector "HDMI-2", so that spelling is accepted
+ * as well.
+ */
+static int connectorNameMatches(const char *wanted, const char *typeName, uint32_t typeId)
+{
+    char name[40];
+    snprintf(name, sizeof(name), "%s-%u", typeName, typeId);
+    if (strcmp(wanted, name) == 0) {
+        return 1;
+    }
+    if (strncmp(typeName, "HDMI-", 5) == 0) {
+        snprintf(name, sizeof(name), "HDMI-%u", typeId);
+        if (strcmp(wanted, name) == 0) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+/*
+ * Finds the CRTC currently driving the named connector. On success the card
+ * stays open and ownership of the descriptor passes to the caller.
+ */
+static int findCrtcByConnector(const char *wanted, int *outFd, int *outCrtcIndex)
+{
+    for (int card = 0; card < 16; card++) {
+        char path[32];
+        snprintf(path, sizeof(path), "/dev/dri/card%d", card);
+        int fd = open(path, O_RDWR | O_CLOEXEC);
+        if (fd < 0) {
+            continue;
+        }
+
+        struct drm_mode_card_res res;
+        uint32_t crtcs[64];
+        uint32_t connectors[64];
+        memset(&res, 0, sizeof(res));
+        if (ioctl(fd, DRM_IOCTL_MODE_GETRESOURCES, &res) != 0 ||
+                res.count_crtcs == 0 || res.count_connectors == 0) {
+            close(fd);
+            continue;
+        }
+        uint32_t crtcCount = res.count_crtcs > 64 ? 64 : res.count_crtcs;
+        uint32_t connCount = res.count_connectors > 64 ? 64 : res.count_connectors;
+        memset(&res, 0, sizeof(res));
+        res.crtc_id_ptr = (uint64_t)(uintptr_t)crtcs;
+        res.count_crtcs = crtcCount;
+        res.connector_id_ptr = (uint64_t)(uintptr_t)connectors;
+        res.count_connectors = connCount;
+        if (ioctl(fd, DRM_IOCTL_MODE_GETRESOURCES, &res) != 0) {
+            close(fd);
+            continue;
+        }
+        if (res.count_crtcs < crtcCount) {
+            crtcCount = res.count_crtcs;
+        }
+        if (res.count_connectors < connCount) {
+            connCount = res.count_connectors;
+        }
+
+        for (uint32_t i = 0; i < connCount; i++) {
+            struct drm_mode_get_connector conn;
+            memset(&conn, 0, sizeof(conn));
+            conn.connector_id = connectors[i];
+            // With no array pointers supplied this fills only the scalar
+            // fields, which is all the match needs.
+            if (ioctl(fd, DRM_IOCTL_MODE_GETCONNECTOR, &conn) != 0 ||
+                    conn.connection != 1 /* connected */ || conn.encoder_id == 0) {
+                continue;
+            }
+            const char *typeName = connectorTypeName(conn.connector_type);
+            if (typeName == NULL ||
+                    !connectorNameMatches(wanted, typeName, conn.connector_type_id)) {
+                continue;
+            }
+
+            struct drm_mode_get_encoder enc;
+            memset(&enc, 0, sizeof(enc));
+            enc.encoder_id = conn.encoder_id;
+            if (ioctl(fd, DRM_IOCTL_MODE_GETENCODER, &enc) != 0 || enc.crtc_id == 0) {
+                continue;
+            }
+            for (uint32_t k = 0; k < crtcCount; k++) {
+                if (crtcs[k] == enc.crtc_id) {
+                    *outFd = fd;
+                    *outCrtcIndex = (int)k;
+                    return 1;
+                }
+            }
+        }
+        close(fd);
+    }
+    return 0;
+}
+
 static void *vblankThreadProc(void *param)
 {
     FramePacingClock *clock = (FramePacingClock *)param;
@@ -296,8 +420,8 @@ Java_sun_awt_FramePacingUnix_nativeProbe(JNIEnv *env, jclass cls)
 }
 
 JNIEXPORT jlong JNICALL
-Java_sun_awt_FramePacingUnix_nativeCreate(JNIEnv *env, jclass cls,
-                                          jobject clockObj, jlong fallbackPeriodNanos)
+Java_sun_awt_FramePacingUnix_nativeCreate(JNIEnv *env, jclass cls, jobject clockObj,
+                                          jlong fallbackPeriodNanos, jstring connectorName)
 {
     (void)cls;
     if (!initShared(env, clockObj)) {
@@ -306,7 +430,15 @@ Java_sun_awt_FramePacingUnix_nativeCreate(JNIEnv *env, jclass cls,
 
     int fd = -1;
     int crtcIndex = -1;
-    if (!findBestCrtc(fallbackPeriodNanos, &fd, &crtcIndex)) {
+    int bound = 0;
+    if (connectorName != NULL) {
+        const char *wanted = (*env)->GetStringUTFChars(env, connectorName, NULL);
+        if (wanted != NULL) {
+            bound = findCrtcByConnector(wanted, &fd, &crtcIndex);
+            (*env)->ReleaseStringUTFChars(env, connectorName, wanted);
+        }
+    }
+    if (!bound && !findBestCrtc(fallbackPeriodNanos, &fd, &crtcIndex)) {
         return 0;
     }
 
@@ -381,13 +513,14 @@ Java_sun_awt_FramePacingUnix_nativeProbe(JNIEnv *env, jclass cls)
 }
 
 JNIEXPORT jlong JNICALL
-Java_sun_awt_FramePacingUnix_nativeCreate(JNIEnv *env, jclass cls,
-                                          jobject clockObj, jlong fallbackPeriodNanos)
+Java_sun_awt_FramePacingUnix_nativeCreate(JNIEnv *env, jclass cls, jobject clockObj,
+                                          jlong fallbackPeriodNanos, jstring connectorName)
 {
     (void)env;
     (void)cls;
     (void)clockObj;
     (void)fallbackPeriodNanos;
+    (void)connectorName;
     return 0;
 }
 

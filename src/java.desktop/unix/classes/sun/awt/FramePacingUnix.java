@@ -43,13 +43,14 @@ import java.util.concurrent.locks.LockSupport;
  * whether or not the subscriber is submitting frames, which the subscription
  * contract requires.
  *
- * <p>The CRTC is chosen by matching each active CRTC's mode period against the
- * display's advertised refresh period, across every DRM card node. On a
- * single-display system that binds the only active CRTC. On X11 the toolkit
- * exposes one device per X screen (the whole desktop under XWayland or
- * Xinerama), so a finer binding is not expressible through the toolkit id;
- * per-monitor binding for the Wayland toolkit's per-output ids is follow-up
- * work.
+ * <p>Under the Wayland toolkit each output carries the compositor's connector
+ * name, and the clock is bound to the CRTC driving exactly that connector, so
+ * every display is paced at its own cadence. Under X11 the toolkit exposes one
+ * device per X screen (the whole desktop under XWayland or Xinerama), a finer
+ * binding is not expressible through the toolkit id, and the CRTC is chosen by
+ * matching mode periods against the display's advertised refresh period across
+ * every DRM card node — exact on a single-display system, one honest cadence
+ * for the union device otherwise.
  *
  * <p>When no DRM display device is accessible (remote X, Xvfb, containers) the
  * service falls back to the shared timer and {@code QUALITY_ESTIMATED}.
@@ -58,10 +59,23 @@ import java.util.concurrent.locks.LockSupport;
 @JBRApi.Provides("FramePacing")
 public class FramePacingUnix extends FramePacing {
 
-    private final boolean vblankClockAvailable;
+    private volatile boolean vblankClockAvailable;
 
     public FramePacingUnix() {
         this.vblankClockAvailable = probe();
+    }
+
+    /**
+     * A negative probe is never pinned: the probe requires an active CRTC, and
+     * a display that is asleep (or not yet connected) when the service is
+     * created would otherwise lock the service to the timer for its lifetime.
+     */
+    private boolean vblankAvailable() {
+        if (vblankClockAvailable) return true;
+
+        boolean available = probe();
+        vblankClockAvailable = available;
+        return available;
     }
 
     private boolean probe() {
@@ -84,15 +98,34 @@ public class FramePacingUnix extends FramePacing {
 
     @Override
     public int getQuality() {
-        return vblankClockAvailable ? QUALITY_DISPLAY_LINK : QUALITY_ESTIMATED;
+        return vblankAvailable() ? QUALITY_DISPLAY_LINK : QUALITY_ESTIMATED;
     }
 
     @Override
     protected DisplayClock createClock(long displayId, long periodNanos) {
-        if (vblankClockAvailable) {
-            return new DrmVBlankClock(this, displayId, periodNanos);
+        if (vblankAvailable()) {
+            return new DrmVBlankClock(this, displayId, periodNanos, connectorName(displayId));
         }
         return super.createClock(displayId, periodNanos);
+    }
+
+    /**
+     * The compositor's connector name for a display, when the toolkit device
+     * carries one (Wayland outputs are named after their connector, e.g.
+     * "HDMI-2"), or null when the id cannot name a single monitor (X11's
+     * per-X-screen devices).
+     */
+    private String connectorName(long displayId) {
+        GraphicsDevice[] devices =
+                GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices();
+        for (GraphicsDevice device : devices) {
+            if (device.getType() != GraphicsDevice.TYPE_RASTER_SCREEN) continue;
+            if (device instanceof WLGraphicsDevice wlDevice
+                    && deviceId(device) == displayId) {
+                return wlDevice.getIDstring();
+            }
+        }
+        return null;
     }
 
     @Override
@@ -118,17 +151,20 @@ public class FramePacingUnix extends FramePacing {
      * display, the clock behaves like the shared timer at the nominal period.
      */
     private static final class DrmVBlankClock extends DisplayClock {
+        private final String connectorName;
         private volatile long ptr;
 
-        DrmVBlankClock(FramePacingUnix service, long displayId, long periodNanos) {
+        DrmVBlankClock(FramePacingUnix service, long displayId, long periodNanos,
+                       String connectorName) {
             super(service, displayId, periodNanos);
+            this.connectorName = connectorName;
         }
 
         @Override
         protected void onStart() {
             long created = 0;
             try {
-                created = nativeCreate(this, periodNanos);
+                created = nativeCreate(this, periodNanos, connectorName);
             } catch (UnsatisfiedLinkError ignored) {
             }
 
@@ -176,7 +212,8 @@ public class FramePacingUnix extends FramePacing {
 
     private static native boolean nativeProbe();
 
-    private static native long nativeCreate(DrmVBlankClock clock, long fallbackPeriodNanos);
+    private static native long nativeCreate(DrmVBlankClock clock, long fallbackPeriodNanos,
+                                            String connectorName);
 
     private static native void nativeStart(long ptr);
 
