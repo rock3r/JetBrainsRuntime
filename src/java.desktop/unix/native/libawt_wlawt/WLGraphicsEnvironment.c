@@ -54,6 +54,7 @@ typedef struct WLOutput {
     uint32_t subpixel;
     uint32_t transform;
     uint32_t scale;
+    int32_t  refresh_mhz; // current mode's refresh rate in mHz, 0 if unknown
 
     char *   make;
     char *   model;
@@ -112,6 +113,7 @@ wl_output_mode(
         WLOutput *output = data;
         output->width = width;
         output->height = height;
+        output->refresh_mhz = refresh;
     }
 }
 
@@ -182,7 +184,8 @@ NotifyOutputConfigured(WLOutput* output)
                            output->height_mm,
                            (jint)output->subpixel,
                            (jint)output->transform,
-                           (jint)output->scale);
+                           (jint)output->scale,
+                           (jint)output->refresh_mhz);
     if (wlListenerCheckException(env)) {
         return;
     }
@@ -276,7 +279,7 @@ WLGraphicsEnvironment_initIDs
     CHECK_NULL_RETURN(
                     notifyOutputConfiguredMID = (*env)->GetMethodID(env, clazz,
                                                                     "notifyOutputConfigured",
-                                                                    "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IIIIIIIIIIII)V"),
+                                                                    "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IIIIIIIIIIIII)V"),
                     JNI_FALSE);
     CHECK_NULL_RETURN(
                     notifyOutputDestroyedMID = (*env)->GetMethodID(env, clazz,

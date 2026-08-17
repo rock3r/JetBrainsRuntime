@@ -152,7 +152,8 @@ public class WLGraphicsEnvironment extends SunGraphicsEnvironment implements HiD
                                         int width, int height,
                                         int widthLogical, int heightLogical,
                                         int widthMm, int heightMm,
-                                        int subpixel, int transform, int scale) {
+                                        int subpixel, int transform, int scale,
+                                        int refreshMilliHz) {
         // Called from native code whenever a new output appears or an existing one changes its properties
         // NB: initially called during WLToolkit.initIDs() on the main thread; later on EDT.
         if (log.isLoggable(Level.FINE)) {
@@ -191,10 +192,12 @@ public class WLGraphicsEnvironment extends SunGraphicsEnvironment implements HiD
             // Some properties of an existing device have changed; update the existing device and
             // let all the windows it hosts know about the change.
             gd.updateConfiguration(humanID, x, y, width, height, widthLogical, heightLogical, widthMm, heightMm, scale);
+            gd.updateOutputInfo(name, refreshMilliHz);
         } else {
             WLGraphicsDevice newGD = WLGraphicsDevice.createWithConfiguration(wlID, humanID,
                     x, y, width, height, widthLogical, heightLogical,
                     widthMm, heightMm, scale);
+            newGD.updateOutputInfo(name, refreshMilliHz);
             synchronized (devices) {
                 devices.add(newGD);
                 lastDeviceStanding = null; // no longer needed/relevant

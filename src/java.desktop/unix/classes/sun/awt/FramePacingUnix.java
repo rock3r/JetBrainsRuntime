@@ -122,7 +122,7 @@ public class FramePacingUnix extends FramePacing {
             if (device.getType() != GraphicsDevice.TYPE_RASTER_SCREEN) continue;
             if (device instanceof WLGraphicsDevice wlDevice
                     && deviceId(device) == displayId) {
-                return wlDevice.getIDstring();
+                return wlDevice.getConnectorName();
             }
         }
         return null;

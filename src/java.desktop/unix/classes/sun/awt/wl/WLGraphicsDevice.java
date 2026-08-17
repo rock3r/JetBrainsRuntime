@@ -71,6 +71,19 @@ public class WLGraphicsDevice extends GraphicsDevice {
     private volatile String name;
 
     /**
+     * The compositor's name for this output's connector (the wl_output.name
+     * event, e.g. "HDMI-2" or "DP-1"), or null when the compositor did not
+     * provide one. NOT considered part of device's identity.
+     */
+    private volatile String connectorName;
+
+    /**
+     * The current mode's refresh rate in mHz (the wl_output.mode event),
+     * or 0 when unknown.
+     */
+    private volatile int refreshMilliHz;
+
+    /**
      * The horizontal location of this device in the multi-monitor configuration.
      */
     private volatile int x;
@@ -278,6 +291,33 @@ public class WLGraphicsDevice extends GraphicsDevice {
     @Override
     public int getType() {
         return TYPE_RASTER_SCREEN;
+    }
+
+    /**
+     * Records output properties that do not participate in configuration
+     * identity: the connector name and the current mode's refresh rate.
+     */
+    void updateOutputInfo(String connectorName, int refreshMilliHz) {
+        this.connectorName = connectorName;
+        this.refreshMilliHz = refreshMilliHz;
+    }
+
+    /**
+     * The compositor's name for this output's connector ("HDMI-2", "DP-1"),
+     * or null when the compositor did not provide one.
+     */
+    public String getConnectorName() {
+        return connectorName;
+    }
+
+    @Override
+    public java.awt.DisplayMode getDisplayMode() {
+        GraphicsConfiguration gc = getDefaultConfiguration();
+        Rectangle bounds = gc.getBounds();
+        int rate = Math.round(refreshMilliHz / 1000.0f);
+        return new java.awt.DisplayMode(bounds.width, bounds.height,
+                java.awt.DisplayMode.BIT_DEPTH_MULTI,
+                rate > 0 ? rate : java.awt.DisplayMode.REFRESH_RATE_UNKNOWN);
     }
 
     @Override

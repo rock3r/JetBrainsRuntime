@@ -435,11 +435,19 @@ Java_sun_awt_FramePacingUnix_nativeCreate(JNIEnv *env, jclass cls, jobject clock
         const char *wanted = (*env)->GetStringUTFChars(env, connectorName, NULL);
         if (wanted != NULL) {
             bound = findCrtcByConnector(wanted, &fd, &crtcIndex);
+            if (getenv("JBR_FRAMEPACING_DEBUG") != NULL) {
+                fprintf(stderr, "FramePacing: connector \"%s\" %s\n", wanted,
+                        bound ? "bound to its CRTC" : "not matched, using period fallback");
+            }
             (*env)->ReleaseStringUTFChars(env, connectorName, wanted);
         }
     }
     if (!bound && !findBestCrtc(fallbackPeriodNanos, &fd, &crtcIndex)) {
         return 0;
+    }
+    if (getenv("JBR_FRAMEPACING_DEBUG") != NULL) {
+        fprintf(stderr, "FramePacing: DRM clock on crtc index %d (%s binding)\n",
+                crtcIndex, bound ? "connector" : "period");
     }
 
     FramePacingClock *clock = (FramePacingClock *)calloc(1, sizeof(FramePacingClock));
