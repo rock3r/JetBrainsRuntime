@@ -21,6 +21,8 @@ import sun.awt.FramePacing;
 
 import jdk.test.lib.Asserts;
 
+import java.io.File;
+
 /**
  * @test
  * @key headful
@@ -28,10 +30,12 @@ import jdk.test.lib.Asserts;
  * silent fallback to the timer (which the contract tests tolerate by
  * design) is caught. macOS and Windows both expect DISPLAY_LINK — a
  * per-display hardware vblank, CVDisplayLink and IDXGIOutput respectively
- * — and Linux expects ESTIMATED until v3. Environments where the
- * per-display clock is legitimately unavailable should exclude this test;
- * on Windows that means a remote session, where no output is attached to
- * the desktop and the service drops to the DWM composition clock.
+ * — and Linux expects DISPLAY_LINK (the DRM vblank clock) when a DRM
+ * display device is accessible, ESTIMATED otherwise (remote X, Xvfb,
+ * containers). Environments where the per-display clock is legitimately
+ * unavailable should exclude this test; on Windows that means a remote
+ * session, where no output is attached to the desktop and the service
+ * drops to the DWM composition clock.
  * @library /test/lib
  * @compile --add-exports java.desktop/sun.awt=ALL-UNNAMED
  * --add-exports java.base/com.jetbrains.exported=ALL-UNNAMED
@@ -51,6 +55,8 @@ public class FramePacingQualityTest {
         int expected;
         if (os.contains("mac") || os.contains("windows")) {
             expected = FramePacing.QUALITY_DISPLAY_LINK;
+        } else if (os.contains("linux") && drmDisplayDevicePresent()) {
+            expected = FramePacing.QUALITY_DISPLAY_LINK;
         } else {
             expected = FramePacing.QUALITY_ESTIMATED;
         }
@@ -58,5 +64,21 @@ public class FramePacingQualityTest {
         Asserts.assertEquals(quality, expected,
                 "unexpected backend tier on " + os + " — a native clock silently "
                         + "failed to initialize, or a backend regressed to the timer");
+    }
+
+    /**
+     * Mirrors the Linux backend's availability signal: an accessible DRM card
+     * node. Approximate on purpose — a card whose CRTCs are all inactive (a
+     * headless VM GPU) passes this check but fails the backend's probe; such
+     * environments should exclude this test rather than have it guess.
+     */
+    private static boolean drmDisplayDevicePresent() {
+        File[] cards = new File("/dev/dri")
+                .listFiles((dir, name) -> name.startsWith("card"));
+        if (cards == null) return false;
+        for (File card : cards) {
+            if (card.canRead() && card.canWrite()) return true;
+        }
+        return false;
     }
 }
