@@ -32,11 +32,13 @@ import java.awt.GraphicsEnvironment;
 import java.util.concurrent.locks.LockSupport;
 
 /**
- * macOS backend: one FramePacing-owned {@code CVDisplayLink} per subscribed
- * display, reporting {@code QUALITY_DISPLAY_LINK}. The link is created with
- * the first subscriber of a display and released with the last, so an idle
- * process keeps no link running. Falls back to the shared timer (and
- * {@code QUALITY_ESTIMATED}) when display links are unavailable.
+ * macOS backend: one FramePacing-owned {@code CADisplayLink}
+ * ({@code NSScreen.displayLink}, macOS 14+) per subscribed display, reporting
+ * {@code QUALITY_DISPLAY_LINK}. The link is created with the first subscriber
+ * of a display and released with the last, so an idle process keeps no link
+ * running. Falls back to the shared timer (and {@code QUALITY_ESTIMATED}) on
+ * macOS 13 and older, or when display links are unavailable. CVDisplayLink is
+ * deliberately not used: it has been deprecated since macOS 15.
  */
 @JBRApi.Service
 @JBRApi.Provides("FramePacing")
@@ -85,7 +87,7 @@ public class FramePacingMac extends FramePacing {
     }
 
     /**
-     * CVDisplayLink-driven tick source. The native callback thread delivers
+     * CADisplayLink-driven tick source. The native runloop thread delivers
      * ticks directly; if link creation fails for this particular display, the
      * clock degrades to a timer thread at the nominal period.
      */
@@ -125,7 +127,7 @@ public class FramePacingMac extends FramePacing {
             // The timer fallback thread, if any, observes the stopped flag.
         }
 
-        /** Called from the CVDisplayLink output callback thread. */
+        /** Called from the CADisplayLink runloop thread. */
         void onNativeTick(long timeNanos) {
             deliver(timeNanos);
         }

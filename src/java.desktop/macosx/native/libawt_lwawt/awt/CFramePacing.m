@@ -23,55 +23,179 @@
  * questions.
  */
 
-#import <CoreVideo/CoreVideo.h>
-#include <mach/mach_time.h>
-#include <stdlib.h>
+#import <AppKit/AppKit.h>
+#import <QuartzCore/QuartzCore.h>
 
 #include "jni.h"
 
 /*
- * FramePacing-owned CVDisplayLink: one link per subscribed display, driving
- * sun.awt.FramePacingMac.DisplayLinkClock.onNativeTick from the display link
- * callback thread (attached as a daemon). Timestamps are the callback's host
- * time converted to the System.nanoTime() time base (both are
- * mach_absolute_time derived).
+ * FramePacing-owned CADisplayLink (NSScreen.displayLink, macOS 14+): one link
+ * per subscribed display, driving sun.awt.FramePacingMac.DisplayLinkClock
+ * .onNativeTick from a dedicated per-clock runloop thread (attached to the VM
+ * as a daemon). CVDisplayLink would offer the same shape on older systems but
+ * is deprecated since macOS 15; on macOS 13 and older the probe reports
+ * unavailable and the Java side paces with the shared timer instead.
+ *
+ * Timestamps: CADisplayLink.timestamp is CACurrentMediaTime()-based, which is
+ * mach_absolute_time-derived — the same monotonic base as System.nanoTime() —
+ * so seconds * 1e9 converts directly.
+ *
+ * The link's preferredFrameRateRange is left at its default, which follows the
+ * display's current refresh behavior — including adaptive rates on ProMotion
+ * panels. Pinning a range here is the tuning point if a client ever wants a
+ * fixed cadence on an adaptive display.
  */
-
-typedef struct {
-    CVDisplayLinkRef link;
-    jobject clockRef;
-} FramePacingLink;
 
 static JavaVM *jvm = NULL;
 static jmethodID onNativeTickMID = NULL;
-static mach_timebase_info_data_t timebase;
 
-static CVReturn framePacingCallback(CVDisplayLinkRef displayLink, const CVTimeStamp *inNow,
-                                    const CVTimeStamp *inOutputTime, CVOptionFlags flagsIn,
-                                    CVOptionFlags *flagsOut, void *ctx)
+/*
+ * NSScreen for a CGDirectDisplayID. NSScreen.screens is class-level state and
+ * is read here from the calling (non-AppKit) thread deliberately: resolving it
+ * via the AppKit thread from inside the FramePacing service lock would invite
+ * an AppKit/EDT lock inversion for a value that is only used to create the
+ * link.
+ */
+static NSScreen *screenForDisplayID(CGDirectDisplayID displayID)
 {
-    FramePacingLink *fpl = (FramePacingLink *)ctx;
+    for (NSScreen *screen in [NSScreen screens]) {
+        NSNumber *screenNumber = [[screen deviceDescription] objectForKey:@"NSScreenNumber"];
+        if (screenNumber != nil && (CGDirectDisplayID)[screenNumber unsignedIntValue] == displayID) {
+            return screen;
+        }
+    }
+    return nil;
+}
+
+@interface CFramePacingClock : NSObject
+- (instancetype)initWithDisplayID:(CGDirectDisplayID)displayID clockRef:(jobject)clockRef;
+- (void)start;
+- (void)stop;
+- (void)joinAndReleaseRef:(JNIEnv *)env;
+@end
+
+@implementation CFramePacingClock {
+    CGDirectDisplayID _displayID;
+    jobject _clockRef; // global ref, deleted in joinAndReleaseRef
+    NSCondition *_doneCondition;
+    CFRunLoopRef _runLoop; // owned by the clock thread; guarded by _doneCondition
+    BOOL _stopped;         // guarded by _doneCondition
+    BOOL _threadExited;    // guarded by _doneCondition
+}
+
+- (instancetype)initWithDisplayID:(CGDirectDisplayID)displayID clockRef:(jobject)clockRef {
+    self = [super init];
+    if (self) {
+        _displayID = displayID;
+        _clockRef = clockRef;
+        _doneCondition = [NSCondition new];
+        _runLoop = NULL;
+        _stopped = NO;
+        _threadExited = NO;
+    }
+    return self;
+}
+
+- (void)dealloc {
+    [_doneCondition release];
+    [super dealloc];
+}
+
+- (void)start {
+    @autoreleasepool {
+        NSThread *thread = [[NSThread alloc] initWithTarget:self
+                                                   selector:@selector(threadMain)
+                                                     object:nil];
+        thread.name = [NSString stringWithFormat:@"JBR-FramePacing-CADisplayLink-%u", _displayID];
+        [thread start];
+        [thread release]; // the running thread retains itself and its target
+    }
+}
+
+- (void)signalThreadExited {
+    [_doneCondition lock];
+    _threadExited = YES;
+    [_doneCondition signal];
+    [_doneCondition unlock];
+}
+
+- (void)threadMain {
+    @autoreleasepool {
+        CADisplayLink *link = nil;
+        if (@available(macOS 14.0, *)) {
+            NSScreen *screen = screenForDisplayID(_displayID);
+            if (screen != nil) {
+                link = [screen displayLinkWithTarget:self selector:@selector(onTick:)];
+            }
+        }
+
+        [_doneCondition lock];
+        if (_stopped || link == nil) {
+            [_doneCondition unlock];
+            [link invalidate];
+            [self signalThreadExited];
+            return;
+        }
+        _runLoop = CFRunLoopGetCurrent();
+        [_doneCondition unlock];
+
+        [link addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
+        CFRunLoopRun(); // exits when stop() calls CFRunLoopStop
+
+        // Invalidation must happen on the runloop thread; it also breaks the
+        // link's retain of this target.
+        [link invalidate];
+        [self signalThreadExited];
+    }
+}
+
+- (void)onTick:(CADisplayLink *)link {
     JNIEnv *env;
     if ((*jvm)->AttachCurrentThreadAsDaemon(jvm, (void **)&env, NULL) != JNI_OK) {
-        return kCVReturnSuccess;
+        return;
     }
-    jlong nanos = (jlong)(inNow->hostTime * timebase.numer / timebase.denom);
-    (*env)->CallVoidMethod(env, fpl->clockRef, onNativeTickMID, nanos);
+    jlong nanos = (jlong)(link.timestamp * 1000000000.0);
+    (*env)->CallVoidMethod(env, _clockRef, onNativeTickMID, nanos);
     if ((*env)->ExceptionCheck(env)) {
         (*env)->ExceptionClear(env);
     }
-    return kCVReturnSuccess;
 }
+
+- (void)stop {
+    [_doneCondition lock];
+    _stopped = YES;
+    if (_runLoop != NULL) {
+        CFRunLoopStop(_runLoop);
+    }
+    [_doneCondition unlock];
+}
+
+- (void)joinAndReleaseRef:(JNIEnv *)env {
+    // The thread exits promptly once stopped (at most one frame callback);
+    // bound the wait so release stays effectively brief even if it wedges.
+    @autoreleasepool {
+        NSDate *deadline = [NSDate dateWithTimeIntervalSinceNow:1.0];
+        [_doneCondition lock];
+        while (!_threadExited && [_doneCondition waitUntilDate:deadline]) {
+            // Re-check _threadExited; waitUntilDate returning NO means timeout.
+        }
+        [_doneCondition unlock];
+    }
+    (*env)->DeleteGlobalRef(env, _clockRef);
+    _clockRef = NULL;
+}
+
+@end
 
 JNIEXPORT jboolean JNICALL
 Java_sun_awt_FramePacingMac_nativeProbe(JNIEnv *env, jclass cls, jint displayID)
 {
-    CVDisplayLinkRef link = NULL;
-    if (CVDisplayLinkCreateWithCGDisplay((CGDirectDisplayID)displayID, &link) != kCVReturnSuccess) {
-        return JNI_FALSE;
+    if (@available(macOS 14.0, *)) {
+        @autoreleasepool {
+            return screenForDisplayID((CGDirectDisplayID)displayID) != nil ? JNI_TRUE : JNI_FALSE;
+        }
     }
-    CVDisplayLinkRelease(link);
-    return JNI_TRUE;
+    return JNI_FALSE;
 }
 
 JNIEXPORT jlong JNICALL
@@ -82,7 +206,6 @@ Java_sun_awt_FramePacingMac_nativeCreate(JNIEnv *env, jclass cls,
         if ((*env)->GetJavaVM(env, &jvm) != JNI_OK) {
             return 0;
         }
-        mach_timebase_info(&timebase);
     }
     if (onNativeTickMID == NULL) {
         jclass clockClass = (*env)->GetObjectClass(env, clock);
@@ -93,52 +216,39 @@ Java_sun_awt_FramePacingMac_nativeCreate(JNIEnv *env, jclass cls,
         }
     }
 
-    CVDisplayLinkRef link = NULL;
-    if (CVDisplayLinkCreateWithCGDisplay((CGDirectDisplayID)displayID, &link) != kCVReturnSuccess) {
+    if (!Java_sun_awt_FramePacingMac_nativeProbe(env, cls, displayID)) {
         return 0;
     }
-    FramePacingLink *fpl = malloc(sizeof(FramePacingLink));
-    if (fpl == NULL) {
-        CVDisplayLinkRelease(link);
+
+    jobject clockRef = (*env)->NewGlobalRef(env, clock);
+    if (clockRef == NULL) {
         return 0;
     }
-    fpl->link = link;
-    fpl->clockRef = (*env)->NewGlobalRef(env, clock);
-    if (fpl->clockRef == NULL) {
-        CVDisplayLinkRelease(link);
-        free(fpl);
-        return 0;
-    }
-    if (CVDisplayLinkSetOutputCallback(link, &framePacingCallback, fpl) != kCVReturnSuccess) {
-        (*env)->DeleteGlobalRef(env, fpl->clockRef);
-        CVDisplayLinkRelease(link);
-        free(fpl);
-        return 0;
-    }
-    return (jlong)(intptr_t)fpl;
+    // The alloc +1 is the reference the jlong carries; nativeRelease drops it.
+    CFramePacingClock *pacingClock =
+            [[CFramePacingClock alloc] initWithDisplayID:(CGDirectDisplayID)displayID
+                                                clockRef:clockRef];
+    return (jlong)(intptr_t)pacingClock;
 }
 
 JNIEXPORT void JNICALL
 Java_sun_awt_FramePacingMac_nativeStart(JNIEnv *env, jclass cls, jlong ptr)
 {
-    FramePacingLink *fpl = (FramePacingLink *)(intptr_t)ptr;
-    CVDisplayLinkStart(fpl->link);
+    CFramePacingClock *pacingClock = (CFramePacingClock *)(intptr_t)ptr;
+    [pacingClock start];
 }
 
 JNIEXPORT void JNICALL
 Java_sun_awt_FramePacingMac_nativeStop(JNIEnv *env, jclass cls, jlong ptr)
 {
-    FramePacingLink *fpl = (FramePacingLink *)(intptr_t)ptr;
-    CVDisplayLinkStop(fpl->link);
+    CFramePacingClock *pacingClock = (CFramePacingClock *)(intptr_t)ptr;
+    [pacingClock stop];
 }
 
 JNIEXPORT void JNICALL
 Java_sun_awt_FramePacingMac_nativeRelease(JNIEnv *env, jclass cls, jlong ptr)
 {
-    FramePacingLink *fpl = (FramePacingLink *)(intptr_t)ptr;
-    // CVDisplayLinkRelease waits for an in-flight callback to return, so the
-    // global ref is safe to delete afterwards.
-    CVDisplayLinkRelease(fpl->link);
-    (*env)->DeleteGlobalRef(env, fpl->clockRef);
-    free(fpl);
+    CFramePacingClock *pacingClock = (CFramePacingClock *)(intptr_t)ptr;
+    [pacingClock joinAndReleaseRef:env];
+    [pacingClock release];
 }
