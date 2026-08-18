@@ -126,6 +126,23 @@ static NSScreen *screenForDisplayID(CGDirectDisplayID displayID)
             NSScreen *screen = screenForDisplayID(_displayID);
             if (screen != nil) {
                 link = [screen displayLinkWithTarget:self selector:@selector(onTick:)];
+                /*
+                 * Experiment knob (v3 spike): JBR_FRAMEPACING_RANGE=max pins
+                 * the link's frame rate range to the display's maximum rate;
+                 * a number pins it to that rate. Unset keeps the default,
+                 * which is system-chosen on adaptive (VRR) displays and can
+                 * differ between subscribers.
+                 */
+                const char *range = getenv("JBR_FRAMEPACING_RANGE");
+                if (link != nil && range != NULL) {
+                    float rate = strcmp(range, "max") == 0
+                            ? (float)screen.maximumFramesPerSecond
+                            : strtof(range, NULL);
+                    if (rate > 0) {
+                        link.preferredFrameRateRange =
+                                CAFrameRateRangeMake(rate, rate, rate);
+                    }
+                }
             }
         }
 
