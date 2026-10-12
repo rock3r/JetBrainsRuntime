@@ -3,6 +3,11 @@
 This is the compact current-state plan. The full historical checkpoint log was archived to
 [`docs/history/SKIA_COMPOSE_ZERO_COPY_POC_PLAN.full.md`](docs/history/SKIA_COMPOSE_ZERO_COPY_POC_PLAN.full.md).
 
+## Public Repositories
+
+- Magic Jewel sample: [rock3r/magic-jewel](https://github.com/rock3r/magic-jewel)
+- Magic Jewel license: [Apache-2.0](https://github.com/rock3r/magic-jewel/blob/magic-jewel-skia-poc/LICENSE)
+
 ## Goal
 
 Render Compose from `ComposePanel(RenderSettings.SwingGraphics)` through a JBR-owned Skia surface during Swing painting,
